@@ -1,0 +1,1491 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Gold Prairie Web App.\n"
+"POT-Creation-Date: 2012-11-08 15:57-0600\n"
+"PO-Revision-Date: 2012-11-08 15:57-0600\n"
+"Last-Translator: Dave Williams <dwilliams@goldprairie.com>\n"
+"Language-Team: Gold Prairie, Inc. <dwilliams@goldprairie.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: application\n"
+
+msgid "Missing doc_id parameter"
+msgstr ""
+
+msgid "Missing file parameter"
+msgstr ""
+
+msgid "Could not process uploaded file"
+msgstr ""
+
+msgid "Operation succeeded"
+msgstr ""
+
+msgid "Missing or invalid id parameter"
+msgstr ""
+
+msgid "Operation failed"
+msgstr ""
+
+msgid "Insufficient privileges"
+msgstr ""
+
+msgid "Missing parameter"
+msgstr ""
+
+msgid "Unknown instance"
+msgstr ""
+
+msgid "Invalid backup type"
+msgstr ""
+
+msgid "Missing claimtype_code parameter"
+msgstr ""
+
+msgid "Claim type already exists"
+msgstr ""
+
+msgid "A valid id must be specified"
+msgstr ""
+
+msgid "Missing reason_code parameter"
+msgstr ""
+
+msgid "Reason type already exists"
+msgstr ""
+
+msgid "Missing name parameter"
+msgstr ""
+
+msgid "The configuration key specified already exists"
+msgstr ""
+
+msgid "Invalid or missing id parameter"
+msgstr ""
+
+msgid "The configuration key does not exist"
+msgstr ""
+
+msgid "Invalid configuration entry or duplicate name"
+msgstr ""
+
+msgid "Invalid request"
+msgstr ""
+
+msgid "Invalid document"
+msgstr ""
+
+msgid "Still running"
+msgstr ""
+
+msgid "Invalid job id"
+msgstr ""
+
+msgid "Job failed"
+msgstr ""
+
+msgid "doc_id must be specified"
+msgstr ""
+
+msgid "Missing doc_id and detail_id parameter; one of these is necessary"
+msgstr ""
+
+msgid "Missing flag or amount parameter"
+msgstr ""
+
+msgid "Operation succeded"
+msgstr ""
+
+msgid "Required parameter missing"
+msgstr ""
+
+msgid "Invalid parameter"
+msgstr ""
+
+msgid "Missing message parameter"
+msgstr ""
+
+msgid "Missing path parameter"
+msgstr ""
+
+msgid "Invalid path parameter"
+msgstr ""
+
+msgid "Target path already exists"
+msgstr ""
+
+msgid "Target filesystem object does not exist"
+msgstr ""
+
+msgid "No file attached"
+msgstr ""
+
+msgid "Missing target_path parameter"
+msgstr ""
+
+msgid "Invalid target_path parameter"
+msgstr ""
+
+msgid "Not implemented"
+msgstr ""
+
+msgid "Missing new_name parameter"
+msgstr ""
+
+msgid "Missing instance parameter"
+msgstr ""
+
+msgid "Missing dbname parameter"
+msgstr ""
+
+msgid "Missing job_id parameter"
+msgstr ""
+
+msgid "Could not read data table file"
+msgstr ""
+
+msgid "Missing or invalid handle"
+msgstr ""
+
+msgid "File type not set"
+msgstr ""
+
+msgid "Invalid file type"
+msgstr ""
+
+msgid "Invalid syntax in config object"
+msgstr ""
+
+msgid "Payment History Processing Source Data"
+msgstr ""
+
+msgid "Vendor Master Data"
+msgstr ""
+
+msgid "Analysis Group"
+msgstr ""
+
+msgid "Importing table(s)"
+msgstr ""
+
+msgid "Analysis Overview"
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Duplicate Vendor"
+msgstr ""
+
+msgid "Duplicate Payment"
+msgstr ""
+
+msgid "Fraud"
+msgstr ""
+
+msgid "No Payment Activity"
+msgstr ""
+
+msgid "Vendor Verification"
+msgstr ""
+
+msgid "Vendor Change"
+msgstr ""
+
+msgid "Vendor/Employee Match"
+msgstr ""
+
+msgid "Cash Discount"
+msgstr ""
+
+msgid "Freight"
+msgstr ""
+
+msgid "Tax"
+msgstr ""
+
+msgid "Scan"
+msgstr ""
+
+msgid "Price"
+msgstr ""
+
+msgid "Promotion"
+msgstr ""
+
+msgid "Notice"
+msgstr ""
+
+msgid "Quantity"
+msgstr ""
+
+msgid "All Dates"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Last 7 Days"
+msgstr ""
+
+msgid "Month to Date"
+msgstr ""
+
+msgid "Year to Date"
+msgstr ""
+
+msgid "Previous Month"
+msgstr ""
+
+msgid "Previous Year"
+msgstr ""
+
+msgid "Specific Date"
+msgstr ""
+
+msgid "Date Range"
+msgstr ""
+
+msgid "Start Date"
+msgstr ""
+
+msgid "End Date"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Prev"
+msgstr ""
+
+msgid "Set Date Range"
+msgstr ""
+
+msgid "January"
+msgstr ""
+
+msgid "February"
+msgstr ""
+
+msgid "March"
+msgstr ""
+
+msgid "April"
+msgstr ""
+
+msgid "May"
+msgstr ""
+
+msgid "June"
+msgstr ""
+
+msgid "July"
+msgstr ""
+
+msgid "August"
+msgstr ""
+
+msgid "September"
+msgstr ""
+
+msgid "October"
+msgstr ""
+
+msgid "November"
+msgstr ""
+
+msgid "December"
+msgstr ""
+
+msgid "Please specify name parameter"
+msgstr ""
+
+msgid "Missing type parameter"
+msgstr ""
+
+msgid "Invalid object"
+msgstr ""
+
+msgid ""
+"Invalid or missing software license file.  Please place a valid 'license."
+"dat' file into the following directory:"
+msgstr ""
+
+msgid "Username is required"
+msgstr ""
+
+msgid "Password is required"
+msgstr ""
+
+msgid "Invalid instance name specified"
+msgstr ""
+
+msgid "Authentication failed"
+msgstr ""
+
+msgid "Operation not permitted"
+msgstr ""
+
+msgid "Invalid name parameter"
+msgstr ""
+
+msgid "Template not found"
+msgstr ""
+
+msgid "List - Duplicate Payment"
+msgstr ""
+
+msgid "List - Duplicate Vendor"
+msgstr ""
+
+msgid "List - Price Error"
+msgstr ""
+
+msgid "List - Promotion Error"
+msgstr ""
+
+msgid "List - Vendor Activity"
+msgstr ""
+
+msgid "List - Vendor Change"
+msgstr ""
+
+msgid "List - Vendor/Employee Match"
+msgstr ""
+
+msgid "List - Vendor Tin"
+msgstr ""
+
+msgid "List - Payment List"
+msgstr ""
+
+msgid "List - Vendor List"
+msgstr ""
+
+msgid "Processing Data - AP History"
+msgstr ""
+
+msgid "Same Vendor #, Similar Invoice #"
+msgstr ""
+
+msgid "Different Vendor #, Similar Invoice #"
+msgstr ""
+
+msgid "Same Vendor #, Different Invoice #, Same Date"
+msgstr ""
+
+msgid "Unpaid Invoices Compared"
+msgstr ""
+
+msgid "Same Vendor #, Different Invoice #, Same Text"
+msgstr ""
+
+msgid "Different Vendor #, Different Invoice #, Same Text"
+msgstr ""
+
+msgid "Different Invoice Amount, Similar Invoice #, Same Text"
+msgstr ""
+
+msgid "Date Used for Invoice #"
+msgstr ""
+
+msgid "Different Cost, Same Po Date"
+msgstr ""
+
+msgid "Different Cost, Same Receipt Date"
+msgstr ""
+
+msgid "Missed Off-Invoice Allowance"
+msgstr ""
+
+msgid "Missed Billback Allowance"
+msgstr ""
+
+msgid "Fraud Analysis - Excessive Amount"
+msgstr ""
+
+msgid "Fraud Analysis - Non-Workday"
+msgstr ""
+
+msgid "Fraud Analysis - Invalid Payment Date"
+msgstr ""
+
+msgid "No Activity"
+msgstr ""
+
+msgid "Vendor Added"
+msgstr ""
+
+msgid "Vendor Deleted"
+msgstr ""
+
+msgid "Vendor Modified"
+msgstr ""
+
+msgid "Vendor Missing Tax ID"
+msgstr ""
+
+msgid "Vendor Malformed Tax ID"
+msgstr ""
+
+msgid "Vendor NonMatching Tax ID"
+msgstr ""
+
+msgid "Vendor/Employee With Same Address"
+msgstr ""
+
+msgid "Vendor/Employee With Same Name"
+msgstr ""
+
+msgid "Vendor/Employee With Same Tax ID"
+msgstr ""
+
+msgid "Same Tax ID"
+msgstr ""
+
+msgid "Same Name"
+msgstr ""
+
+msgid "Similar Name"
+msgstr ""
+
+msgid "Same Address"
+msgstr ""
+
+msgid "Similar Address"
+msgstr ""
+
+msgid "Same Contact Name"
+msgstr ""
+
+msgid "Same Contact Phone"
+msgstr ""
+
+msgid "Same Contact Fax"
+msgstr ""
+
+msgid "Same Contact Email"
+msgstr ""
+
+msgid "Vendors"
+msgstr ""
+
+msgid "Employee Master"
+msgstr ""
+
+msgid "Payment History"
+msgstr ""
+
+msgid "Creating processing jobs"
+msgstr ""
+
+msgid "Uploading payment history data"
+msgstr ""
+
+msgid "Uploading sample source data"
+msgstr ""
+
+msgid "Uploading sample result data"
+msgstr ""
+
+msgid "Uploading sample result data (discount)"
+msgstr ""
+
+msgid "Uploading sample result data (pricing)"
+msgstr ""
+
+msgid "Uploading sample result data (promotion)"
+msgstr ""
+
+msgid "Uploading sample result data (duplicate vendors)"
+msgstr ""
+
+msgid "Running analysis jobs"
+msgstr ""
+
+msgid "Updating item status"
+msgstr ""
+
+msgid "Updating statistics cache"
+msgstr ""
+
+msgid "File successfully uploaded"
+msgstr ""
+
+msgid "Transaction does not exist"
+msgstr ""
+
+msgid "User role is required"
+msgstr ""
+
+msgid "User already exists"
+msgstr ""
+
+msgid "The specified user role is invalid"
+msgstr ""
+
+msgid "Invalid username specified"
+msgstr ""
+
+msgid "Invalid credentials"
+msgstr ""
+
+msgid "You cannot delete yourself from the system"
+msgstr ""
+
+msgid "Could not retrieve user info"
+msgstr ""
+
+msgid "Could not retrieve category types"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Upload Data"
+msgstr ""
+
+msgid "Could not retrieve dashboard summary information"
+msgstr ""
+
+msgid "Could not retrieve dashboard section information"
+msgstr ""
+
+msgid "Show Totals By Test"
+msgstr ""
+
+msgid "Show Totals By Reason"
+msgstr ""
+
+msgid "Show Totals By Vendor"
+msgstr ""
+
+msgid "Show Totals By Date"
+msgstr ""
+
+msgid "Show Last 6 Months"
+msgstr ""
+
+msgid "Show By Status"
+msgstr ""
+
+msgid "Show Counts"
+msgstr ""
+
+msgid "Show Amounts"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Issues Activity"
+msgstr ""
+
+msgid "Totals By Category and Test"
+msgstr ""
+
+msgid "Totals By Category and Reason"
+msgstr ""
+
+msgid "Totals By Category and Vendor"
+msgstr ""
+
+msgid "Totals By Category and Date"
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+msgid "New"
+msgstr ""
+
+msgid "Reviewed"
+msgstr ""
+
+msgid "Confirmed"
+msgstr ""
+
+msgid "Denied"
+msgstr ""
+
+msgid "Top Vendors"
+msgstr ""
+
+msgid ""
+"Server database client software not installed.  Run \"apt-get install php5-"
+"mysql\""
+msgstr ""
+
+msgid "Could not connect.  Database returned:"
+msgstr ""
+
+msgid "Installation failed:"
+msgstr ""
+
+msgid "missing parameter"
+msgstr ""
+
+msgid "configuration directory is not writable"
+msgstr ""
+
+msgid "could not connect to database:"
+msgstr ""
+
+msgid "could not create database instance:"
+msgstr ""
+
+msgid "could not create user:"
+msgstr ""
+
+msgid "could not grant rights:"
+msgstr ""
+
+msgid "table creation failed:"
+msgstr ""
+
+msgid "application administrator user creation failed:"
+msgstr ""
+
+msgid "default dbserver entry creation failed:"
+msgstr ""
+
+msgid "Could not retrieve instance list data"
+msgstr ""
+
+msgid "Missing sequence parameter"
+msgstr ""
+
+msgid "Show Issues by Test"
+msgstr ""
+
+msgid "Show Issues by Reason"
+msgstr ""
+
+msgid "Show Issues By Vendor"
+msgstr ""
+
+msgid "Show Issues by Date"
+msgstr ""
+
+msgid "Could not retrieve issues overview data"
+msgstr ""
+
+msgid "Overview of Issues"
+msgstr ""
+
+msgid "Issue Number: Ascending"
+msgstr ""
+
+msgid "Vendor Number: Ascending"
+msgstr ""
+
+msgid "Amount: Lowest first"
+msgstr ""
+
+msgid "Amount: Highest first"
+msgstr ""
+
+msgid "Date: Most recent first"
+msgstr ""
+
+msgid "Date: Oldest first"
+msgstr ""
+
+msgid "Could not retrieve issues list data"
+msgstr ""
+
+msgid "Issue #"
+msgstr ""
+
+msgid "The specified issue could not be found"
+msgstr ""
+
+msgid "Could not retrieve submit dialog data"
+msgstr ""
+
+msgid "(Multiple Categories)"
+msgstr ""
+
+msgid "(Multiple Vendors)"
+msgstr ""
+
+msgid "Review Issue"
+msgstr ""
+
+msgid "Review Issues"
+msgstr ""
+
+msgid "Deny Issue"
+msgstr ""
+
+msgid "Deny Issues"
+msgstr ""
+
+msgid "Confirm Issue"
+msgstr ""
+
+msgid "Confirm Issues"
+msgstr ""
+
+msgid "Submit Issue"
+msgstr ""
+
+msgid "Submit Issues"
+msgstr ""
+
+msgid "Approve Issue"
+msgstr ""
+
+msgid "Approve Issues"
+msgstr ""
+
+msgid "Deduct Issue"
+msgstr ""
+
+msgid "Deduct Issues"
+msgstr ""
+
+msgid "Cancel Issue"
+msgstr ""
+
+msgid "Cancel Issues"
+msgstr ""
+
+msgid "Close Issue"
+msgstr ""
+
+msgid "Close Issues"
+msgstr ""
+
+msgid "(No Reasons Available)"
+msgstr ""
+
+msgid "Select a reason..."
+msgstr ""
+
+msgid "Could not retrieve issue actions data"
+msgstr ""
+
+msgid "Deny"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Deduct"
+msgstr ""
+
+msgid "No query search parameter was specified"
+msgstr ""
+
+msgid "Could not retrieve document search results"
+msgstr ""
+
+msgid "Could not retrieve vendor search results"
+msgstr ""
+
+msgid "Could not retrieve user search results"
+msgstr ""
+
+msgid "Unknown Failure"
+msgstr ""
+
+msgid "The request failed for an unknown reason."
+msgstr ""
+
+msgid "Service Unavailable"
+msgstr ""
+
+msgid "The service is currently unavailable."
+msgstr ""
+
+msgid "Invalid Version"
+msgstr ""
+
+msgid "The requested API version is invalid"
+msgstr ""
+
+msgid "Invalid Format"
+msgstr ""
+
+msgid "The requested API format is invalid"
+msgstr ""
+
+msgid "Invalid Credentials"
+msgstr ""
+
+msgid ""
+"Either the user isn't logged in or invalid credentials have been supplied."
+msgstr ""
+
+msgid "Insufficient Permission"
+msgstr ""
+
+msgid ""
+"The user doesn't have sufficient permission to perform the requested "
+"operation."
+msgstr ""
+
+msgid "Invalid Request Type"
+msgstr ""
+
+msgid "The request was sent with something besides an HTTP POST request."
+msgstr ""
+
+msgid "Invalid Request Syntax"
+msgstr ""
+
+msgid ""
+"The POST request is missing the variables containing the method and/or "
+"parameters values."
+msgstr ""
+
+msgid "Invalid Request Method"
+msgstr ""
+
+msgid "The request doesn't contain a valid method."
+msgstr ""
+
+msgid "Invalid Request Parameter Syntax"
+msgstr ""
+
+msgid ""
+"The request parameters could not be parsed; check to make sure the "
+"parameters are in proper JSON format."
+msgstr ""
+
+msgid "Invalid Request Parameters"
+msgstr ""
+
+msgid ""
+"The request doesn't contain appropriate parameters for the specified method."
+msgstr ""
+
+msgid "Request Failed"
+msgstr ""
+
+msgid "The requested operation failed."
+msgstr ""
+
+msgid "Configuration Warning"
+msgstr ""
+
+msgid ""
+"One or more potential problems has been detected in the system configuration:"
+msgstr ""
+
+msgid "Ignore and continue"
+msgstr ""
+
+msgid "Issues"
+msgstr ""
+
+msgid "Could not retrieve batch list data"
+msgstr ""
+
+msgid "List of Batches"
+msgstr ""
+
+msgid "Show Issues by Batch"
+msgstr ""
+
+msgid "Overview of Confirmed Issues"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Test"
+msgstr ""
+
+msgid "Reason"
+msgstr ""
+
+msgid "No Reason Code"
+msgstr ""
+
+msgid "Claim Code"
+msgstr ""
+
+msgid "No Claim Code"
+msgstr ""
+
+msgid "Vendor"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Issue"
+msgstr ""
+
+msgid "Document #"
+msgstr ""
+
+msgid "Submitted"
+msgstr ""
+
+msgid "Deducted"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "Closed"
+msgstr ""
+
+msgid "## TEMPLATE NOT FOUND ##"
+msgstr ""
+
+msgid "**** NOTE: YOU'RE ON THE TEST SITE ****"
+msgstr ""
+
+msgid "Tracking"
+msgstr ""
+
+msgid "Admin Tools"
+msgstr ""
+
+msgid "Instance Admin"
+msgstr ""
+
+msgid "Site Admin"
+msgstr ""
+
+msgid "Switch to another instance"
+msgstr ""
+
+msgid "Edit your account settings"
+msgstr ""
+
+msgid "Logout"
+msgstr ""
+
+msgid "Loading..."
+msgstr ""
+
+msgid "Account Settings"
+msgstr ""
+
+msgid "Change Password"
+msgstr ""
+
+msgid "Regional Settings"
+msgstr ""
+
+msgid "First Name"
+msgstr ""
+
+msgid "Last Name"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Phone"
+msgstr ""
+
+msgid "Save Changes"
+msgstr ""
+
+msgid "Current Password"
+msgstr ""
+
+msgid "New Password"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Filter Results"
+msgstr ""
+
+msgid "Hide Filter"
+msgstr ""
+
+msgid "New Issues"
+msgstr ""
+
+msgid "Confirmed Issues"
+msgstr ""
+
+msgid "Show/Hide Filter"
+msgstr ""
+
+msgid "Create Report"
+msgstr ""
+
+msgid "Adobe PDF"
+msgstr ""
+
+msgid "Comma-Delimited"
+msgstr ""
+
+msgid "Assembling Batch %p1"
+msgstr ""
+
+msgid ""
+"Assembling a batch file can take up to a few minutes.  Please wait while the "
+"batch is assembled."
+msgstr ""
+
+msgid "Assembling batch... %p1 complete"
+msgstr ""
+
+msgid "Batch %p1 is ready for download"
+msgstr ""
+
+msgid ""
+"Your batch has successfully been created and is ready for you to download."
+msgstr ""
+
+msgid "Download Batch %p1"
+msgstr ""
+
+msgid "An error occurred"
+msgstr ""
+
+msgid "Message:"
+msgstr ""
+
+msgid "Stack Trace:"
+msgstr ""
+
+msgid "The page you're looking for can't be found"
+msgstr ""
+
+msgid ""
+"Oops!  We can't seem to find that page.  Enter something in the search box "
+"above or choose one of the links below:"
+msgstr ""
+
+msgid "Main Overview"
+msgstr ""
+
+msgid "List of Issues"
+msgstr ""
+
+msgid "Overview of Tracking"
+msgstr ""
+
+msgid "Welcome to Gold Prairie!"
+msgstr ""
+
+msgid "I Accept"
+msgstr ""
+
+msgid "Install Gold Prairie"
+msgstr ""
+
+msgid "Step 1 of 2: Connect to Database"
+msgstr ""
+
+msgid "Hostname"
+msgstr ""
+
+msgid "Port"
+msgstr ""
+
+msgid "DBA Username"
+msgstr ""
+
+msgid "DBA Password"
+msgstr ""
+
+msgid "Step 2 of 2: Create Gold Prairie Database"
+msgstr ""
+
+msgid "Database Name"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Installation Successful!"
+msgstr ""
+
+msgid ""
+"A default Gold Prairie administrator with the following username and "
+"password has been created for you.  Keep a copy of this information in a "
+"safe place:"
+msgstr ""
+
+msgid "Go to Site Admin"
+msgstr ""
+
+msgid "Created:"
+msgstr ""
+
+msgid "Confirmed:"
+msgstr ""
+
+msgid "Gross:"
+msgstr ""
+
+msgid "Adjustment(s):"
+msgstr ""
+
+msgid "Net:"
+msgstr ""
+
+msgid "Last updated:"
+msgstr ""
+
+msgid "Detail"
+msgstr ""
+
+msgid "Attachments"
+msgstr ""
+
+msgid "Paybacks"
+msgstr ""
+
+msgid "History"
+msgstr ""
+
+msgid "Row Actions"
+msgstr ""
+
+msgid "Select All"
+msgstr ""
+
+msgid "Select None"
+msgstr ""
+
+msgid "Review Selected Issues"
+msgstr ""
+
+msgid "Deny Selected Issues"
+msgstr ""
+
+msgid "Confirm Selected Issues"
+msgstr ""
+
+msgid "Submit Selected Issues"
+msgstr ""
+
+msgid "Deduct Selected Issues"
+msgstr ""
+
+msgid "Go back to the overview of issues"
+msgstr ""
+
+msgid "Overview"
+msgstr ""
+
+msgid "Showing %p1 of %p2 results"
+msgstr ""
+
+msgid "Showing 1 result"
+msgstr ""
+
+msgid "Showing 0 results"
+msgstr ""
+
+msgid "All %p1 issues on this page are selected."
+msgstr ""
+
+msgid "Select all %p1 issues"
+msgstr ""
+
+msgid "All %p1 issues are selected."
+msgstr ""
+
+msgid "Clear selection"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Amount"
+msgstr ""
+
+msgid "There are no issues to show"
+msgstr ""
+
+msgid "Comment"
+msgstr ""
+
+msgid "Report"
+msgstr ""
+
+msgid "Show more..."
+msgstr ""
+
+msgid "Logging in..."
+msgstr ""
+
+msgid "Login"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "(Select a value)"
+msgstr ""
+
+msgid "There are no items to show"
+msgstr ""
+
+msgid "The submitted issues have been added as Batch %p1."
+msgstr ""
+
+msgid "(Approval needed)"
+msgstr ""
+
+msgid "Approved"
+msgstr ""
+
+msgid "No Status"
+msgstr ""
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Switch Instance"
+msgstr ""
+
+msgid "You need to select an instance in order to proceed."
+msgstr ""
+
+msgid "Current Instance:"
+msgstr ""
+
+msgid "Switching Instances..."
+msgstr ""
+
+msgid "You need to select a reason in order to proceed."
+msgstr ""
+
+msgid "Account Number (optional)"
+msgstr ""
+
+msgid "* This operation is not allowed for these items"
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "You need to select a reason in order to confirm this issue."
+msgstr ""
+
+msgid "Why did this happen?"
+msgstr ""
+
+msgid "Manage Attachments for Issue #"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Remove filter on vendor %p1"
+msgstr ""
+
+msgid "Remove filter on user %p1"
+msgstr ""
+
+msgid "%p1 to %p2"
+msgstr ""
+
+msgid "Remove filter on amounts from %p1 to %p2"
+msgstr ""
+
+msgid "Greater than or equal to %p1"
+msgstr ""
+
+msgid "Remove filter on amounts greater than or equal to %p1"
+msgstr ""
+
+msgid "Less than or equal to %p1"
+msgstr ""
+
+msgid "Remove filter on amounts less than or equal to %p1"
+msgstr ""
+
+msgid "Remove filter on tag %p1"
+msgstr ""
+
+msgid "Add a vendor..."
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Add a user..."
+msgstr ""
+
+msgid "Min"
+msgstr ""
+
+msgid "Max"
+msgstr ""
+
+msgid "Flag"
+msgstr ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "Add a tag..."
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Add Adjustment"
+msgstr ""
+
+msgid "[No User]"
+msgstr ""
+
+msgid "Adjustment comment..."
+msgstr ""
+
+msgid "Add Payback"
+msgstr ""
+
+msgid "Payback comment..."
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Uploading..."
+msgstr ""
+
+msgid "There are no attachments for this issue"
+msgstr ""
+
+msgid "View all %p1 comments"
+msgstr ""
+
+msgid "Write a comment..."
+msgstr ""
+
+msgid "Your first name is required"
+msgstr ""
+
+msgid "Your last name is required"
+msgstr ""
+
+msgid "Your user information has been updated"
+msgstr ""
+
+msgid "Your current password must be at least 6 characters"
+msgstr ""
+
+msgid "Your new password must be at least 6 characters"
+msgstr ""
+
+msgid "The new passwords do not match"
+msgstr ""
+
+msgid "Your password has been changed"
+msgstr ""
+
+msgid "Submit Values"
+msgstr ""
+
+msgid "First"
+msgstr ""
+
+msgid "Last"
+msgstr ""
+
+msgid "[More]"
+msgstr ""
+
+msgid "Choose Files..."
+msgstr ""
+
+msgid "Choose File..."
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Only %p1 file(s) may be uploaded at a time."
+msgstr ""
+
+msgid "Could not find adjustmentlist script path!"
+msgstr ""
+
+msgid "More than one adjustmentlist script is being loaded!"
+msgstr ""
+
+msgid "A document ID must be specified in order to add an adjustment"
+msgstr ""
+
+msgid "Could not find attachmentpanel script path!"
+msgstr ""
+
+msgid "More than one attachmentpanel script is being loaded!"
+msgstr ""
+
+msgid "Add Attachments..."
+msgstr ""
+
+msgid "Could not find commentlist script path!"
+msgstr ""
+
+msgid "More than one commentlist script is being loaded!"
+msgstr ""
+
+msgid "A document ID must be specified in order to add a comment"
+msgstr ""
+
+msgid "Add Comment"
+msgstr ""
+
+msgid "Could not find uploadbutton script path!"
+msgstr ""
+
+msgid "More than one uploadbutton script is being loaded!"
+msgstr ""
+
+msgid "Upload File..."
+msgstr ""
+
+msgid "Top Categories"
+msgstr ""
+
+msgid "Issue Activity"
+msgstr ""
+
+msgid "item(s)"
+msgstr ""

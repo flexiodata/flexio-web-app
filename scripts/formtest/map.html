@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,700">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.6.1/tachyons.min.css" integrity="sha256-eu1dpzpUytdOAUmB67Qi3mBb6HFjruP8BoAzk4lKiSc=" crossorigin="anonymous" />
+    <style>
+      .flex-fill {
+        flex: 1 1;
+        min-width: 0; /* 1 */
+        min-height: 0; /* 1 */
+      }
+
+      .darken-10:hover,
+      .darken-10:focus {
+        box-shadow: inset 9999px 9999px rgba(0,0,0,0.10)
+      }
+
+      .darken-10:active {
+        box-shadow: inset 9999px 9999px rgba(0,0,0,0.20)
+      }
+    </style>
+  </head>
+  <body>
+      <div class="flex flex-column fixed absolute--fill overflow-hidden">
+        <div class="flex flex-row items-center pa3 bb b--black-20">
+          <div class="f4 dib" style="margin: 0">Chicago Homicides By Year</div>
+          <form class="dib ml3">
+            <input class="input-reset ba b--black-20 pa2 f6 tr w3" name="year" value="2016" />
+            <button type="button" class="btn-submit border-box no-select ba ttu b f6 ph3 pv2 br1 white bg-blue b--blue darken-10">Submit</button>
+          </form>
+        </div>
+        <div id="map" class="flex-fill"></div>
+      </div>
+    </div>
+
+  	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script>
+	  var g_map;
+	  var g_markers = [];
+
+      $(function () {
+
+        var $btn = $('.btn-submit')
+
+        var doSubmit = function()
+        {
+          // disable submit button
+          $btn.addClass('o-40').text('Loading...').prop('disabled', 'true');
+
+          // clear all existing markers
+          for (var i = 0; i < g_markers.length; ++i)
+          {
+            g_markers[i].setMap(null);
+          }
+          g_markers = [];
+
+          $.ajax({
+            type: 'post',
+            url: 'https://www.flex.io/api/v1/pipes/chicago-homicides-v1/run?stream=0',
+            beforeSend: function(xhr) {
+              xhr.setRequestHeader('Authorization', 'Bearer wtxvdvwcwynhyjykvvjv');
+            },
+            data: $('form').serialize(),
+            dataType: "json",
+            success: function (coords) {
+
+              // add new markers
+              var marker;
+
+              for (var i = 0; i < coords.length; ++i)
+              {
+                var coord = {lat: parseFloat(coords[i].latitude), lng: parseFloat(coords[i].longitude)};
+
+                marker = new google.maps.Marker({
+                  position: coord,
+                  map: g_map
+                });
+
+                marker.info = new google.maps.InfoWindow({
+                  content: "<p><b>"+coords[i].description+"</b><br/>"+
+                           coords[i].date+"</p>" +
+                           "<p>"+coords[i].block+"<br/>"+
+                           coords[i]['location description']+"</p>"
+                });
+
+                marker.addListener('click', function() {
+                  this.info.open(this.getMap(), this);
+                });
+
+                g_markers.push(marker);
+
+                // enable submit button
+                $btn.removeClass('o-40').text('Submit').removeProp('disabled');
+              }
+
+            },
+            error: function () {
+              alert('post failed');
+            }
+          });
+        }
+
+        $('form').on('submit', function (evt) {
+          evt.preventDefault();
+          doSubmit();
+        })
+
+        $('.btn-submit').click(function(evt) {
+          doSubmit();
+        });
+      });
+    </script>
+
+    <script>
+      function initMap() {
+        var chicago = {lat: 41.8781, lng:-87.6378};
+        g_map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 11,
+          center: chicago
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxfb6JACKlfD6IJLQlmvj3Gwo_ynvbXt4&callback=initMap">
+    </script>
+  </body>
+</html>

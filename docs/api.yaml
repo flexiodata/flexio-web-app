@@ -1,0 +1,60 @@
+# Flexio API documentation
+swagger: '2.0'
+info:
+  title: Flexio API
+  description: |
+     The Flex.io API allows users to run pipe, configure and manage the running pipe
+     process, and read the resulting pipe process output.  Users can set inputs and
+     read outputs so that files can be easily processed with the pipe logic at runtime.
+  version: "1.0.0"
+# domain
+host: www.flex.io
+# array of Supported schemes
+schemes:
+  - https
+# base path that will be prefixed to all paths
+basePath: /api/v1
+produces:
+  - application/json
+# api endpoints
+paths:
+  /status:
+    get:
+      summary: Status Information
+      description: |
+          Returns information about the currently logged in user.
+      tags:
+        - Status
+      responses:
+        200:
+          description: Information about the currently logged in user.
+          schema:
+            $ref: '#/definitions/Status'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/Error'
+# definitions used in api paths
+definitions:
+  Status:
+    type: object
+    properties:
+      user_loggedin:
+        type: boolean
+        description: |
+          Flag denoting whether or not a user is logged in.
+          True if a user is logged in; false otherwise.
+      user_name:
+         type: string
+         description: The username of the user that's currently logged in.
+      user_eid:
+         type: string
+         description: A unique id representing a user that's logged in.
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string

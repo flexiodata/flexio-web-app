@@ -1,0 +1,66 @@
+.biggrid-scrollbar {
+  display: none;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.15);
+  z-index: 980;
+  border-radius: 7px;
+}
+.biggrid-scrollbar-thumb {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 7px;
+}
+.biggrid-scrollbar-corner {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+  z-index: 980;
+}
+.biggrid-scrollbar-vert {
+  width: 7px;
+  top: 3px;
+  right: 3px;
+  bottom: 13px;
+}
+.biggrid-scrollbar-vert .biggrid-scrollbar-thumb {
+  width: 100%;
+  top: 0;
+  height: 10%;
+}
+.biggrid-scrollbar-horz {
+  height: 7px;
+  left: 3px;
+  bottom: 3px;
+  right: 13px;
+}
+.biggrid-scrollbar-horz .biggrid-scrollbar-thumb {
+  height: 100%;
+  left: 0;
+  width: 10%;
+}
+.biggrid-scrollbar-docked.biggrid-scrollbar-corner {
+  background-color: #eeeeee;
+}
+.biggrid-scrollbar-docked.biggrid-scrollbar {
+  background-color: #eeeeee;
+  border-radius: 0px;
+}
+.biggrid-scrollbar-docked.biggrid-scrollbar .biggrid-scrollbar-thumb {
+  background-color: #bbbbbb;
+  border-radius: 0px;
+}
+.biggrid-scrollbar-docked.biggrid-scrollbar-vert {
+  width: 10px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+.biggrid-scrollbar-docked.biggrid-scrollbar-horz {
+  height: 10px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

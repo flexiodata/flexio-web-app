@@ -1,0 +1,52 @@
+{
+  "name": "paragonie/sodium_compat",
+  "description": "Pure PHP implementation of libsodium; uses the PHP extension if it exists",
+  "keywords": [
+    "PHP",
+    "cryptography",
+    "elliptic curve",
+    "elliptic curve cryptography",
+    "Pure-PHP cryptography",
+    "side-channel resistant",
+    "Curve25519",
+    "X25519",
+    "ECDH",
+    "Elliptic Curve Diffie-Hellman",
+    "Ed25519",
+    "EdDSA",
+    "Edwards-curve Digital Signature Algorithm",
+    "ChaCha20",
+    "Salsa20",
+    "Xsalsa20",
+    "BLAKE2b",
+    "public-key cryptography",
+    "secret-key cryptography",
+    "encryption",
+    "authentication",
+    "libsodium"
+  ],
+  "license": "ISC",
+  "authors": [
+    {
+      "name": "Paragon Initiative Enterprises",
+      "email": "security@paragonie.com"
+    },
+    {
+      "name": "Frank Denis",
+      "email": "jedisct1@pureftpd.org"
+    }
+  ],
+  "autoload": {
+    "files": ["autoload.php"]
+  },
+  "require": {
+    "php": "^5.2.4|^5.3|^5.4|^5.5|^5.6|^7",
+    "paragonie/random_compat": "^1|^2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^3|^4|^5"
+  },
+  "suggest": {
+    "ext-libsodium": "Better performance, password hashing (Argon2i), secure memory management (memzero), and better security."
+  }
+}

@@ -1,0 +1,13 @@
+<div id="i18n-test"></div>
+
+<script type="text/template" id="tmpl-i18n-page">
+    <i18n>Cancel</i18n>
+</script>
+
+<?php $this->inlineScript()->captureStart() ?>
+$(function() {
+    // hide the page loading spinner
+    $('body').removeClass('loading');
+    $('#tmpl-i18n-page').tmpl().appendTo($('#i18n-test').empty());
+});
+<?php $this->inlineScript()->captureEnd() ?>

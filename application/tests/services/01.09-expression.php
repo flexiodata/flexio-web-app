@@ -1,0 +1,787 @@
+<?php
+/**
+ *
+ * Copyright (c) 2016, Gold Prairie, InD.  All rights reserved.
+ *
+ * Project:  Flex.io App
+ * Author:   Aaron L. Williams
+ * Created:  2016-02-08
+ *
+ * @package flexio
+ * @subpackage Tests
+ */
+
+
+class Test
+{
+    public function run(&$results)
+    {
+        // note: expressions support whitespace where appropriate
+        // (e.g. "1>0", "1 > 0", "1  >  0", etc)
+
+        // TODO:
+        //     - add tests to make sure that expressions tolerate whitepsace
+        //       in appropriate places, but only in appropriate places
+        //     - add tests with different kinds of whitespace, include tabs, line terminators, etc;
+        //       include cases where these whitespaces are included in literals as well as outside
+        //       the literals in the expressions themselves
+
+
+        // TEST: don't allow whitespace inside non-string literals
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('n ull');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.1', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('nul l');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.2', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('t rue');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.3', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('tru e');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.4', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('f alse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.5', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('fals e');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.6', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1 23');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.7', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('12 3');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.8', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1 .23');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.9', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1. 23');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.10', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1.2 3');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.11', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1 e2');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.12', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1e 2');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.13', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1e -2');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.14', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1e- 2');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.15', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1.2 e2');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.16', 'Expression; fail if space is included inside non-string literal',  $actual, $expected, $results);
+
+
+
+        // TEST: make sure whitespace inside a string literal is preserved
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('""');
+        $expected = "";
+        TestCheck::assertString('B.1', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('\'\'');
+        $expected = "";
+        TestCheck::assertString('B.2', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('"  "');
+        $expected = "  ";
+        TestCheck::assertString('B.3', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('\'  \'');
+        $expected = "  ";
+        TestCheck::assertString('B.4', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('"   A"');
+        $expected = "   A";
+        TestCheck::assertString('B.5', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('\'   A\'');
+        $expected = "   A";
+        TestCheck::assertString('B.6', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('"A   "');
+        $expected = "A   ";
+        TestCheck::assertString('B.7', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('\'A   \'');
+        $expected = "A   ";
+        TestCheck::assertString('B.8', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('"   A   "');
+        $expected = "   A   ";
+        TestCheck::assertString('B.9', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('\'   A   \'');
+        $expected = "   A   ";
+        TestCheck::assertString('B.10', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('"A   B"');
+        $expected = "A   B";
+        TestCheck::assertString('B.11', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('\'A   B\'');
+        $expected = "A   B";
+        TestCheck::assertString('B.12', 'Expression; whitespace inside string literal should be preserved',  $actual, $expected, $results);
+
+
+
+        // TEST : allow whitepace around literals
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('null');
+        $expected = null;
+        TestCheck::assertNull('C.1', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   null');
+        $expected = null;
+        TestCheck::assertNull('C.2', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('null   ');
+        $expected = null;
+        TestCheck::assertNull('C.3', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   null   ');
+        $expected = null;
+        TestCheck::assertNull('C.4', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true');
+        $expected = true;
+        TestCheck::assertBoolean('C.5', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   true');
+        $expected = true;
+        TestCheck::assertBoolean('C.6', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true   ');
+        $expected = true;
+        TestCheck::assertBoolean('C.7', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   true   ');
+        $expected = true;
+        TestCheck::assertBoolean('C.8', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('false');
+        $expected = false;
+        TestCheck::assertBoolean('C.9', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   false');
+        $expected = false;
+        TestCheck::assertBoolean('C.10', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('false   ');
+        $expected = false;
+        TestCheck::assertBoolean('C.11', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   false   ');
+        $expected = false;
+        TestCheck::assertBoolean('C.12', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1');
+        $expected = 1;
+        TestCheck::assertNumber('C.13', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   1');
+        $expected = 1;
+        TestCheck::assertNumber('C.14', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1   ');
+        $expected = 1;
+        TestCheck::assertNumber('C.15', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   1   ');
+        $expected = 1;
+        TestCheck::assertNumber('C.16', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('-1.2');
+        $expected = -1.2;
+        TestCheck::assertNumber('C.17', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   -1.2');
+        $expected = -1.2;
+        TestCheck::assertNumber('C.18', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('-1.2   ');
+        $expected = -1.2;
+        TestCheck::assertNumber('C.19', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   -1.2   ');
+        $expected = -1.2;
+        TestCheck::assertNumber('C.20', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('"A"');
+        $expected = "A";
+        TestCheck::assertString('C.21', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   "A"');
+        $expected = "A";
+        TestCheck::assertString('C.22', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('"A"   ');
+        $expected = "A";
+        TestCheck::assertString('C.23', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   "A"   ');
+        $expected = "A";
+        TestCheck::assertString('C.24', 'Expression; allow whitespace around literals',  $actual, $expected, $results);
+
+
+
+        // TEST : check for required whitespace between logical OR operator and literals
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('trueortrue');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.1', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(true)or(true)');
+        $expected = true;
+        TestCheck::assertBoolean('D.2', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true(or)true');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.3', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('trueor false');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.4', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('false ortrue');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.5', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('falseor true');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.6', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true orfalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.7', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(True)Or(True)');
+        $expected = true;
+        TestCheck::assertBoolean('D.8', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('True(Or)True');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.9', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('TrueOr False');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.10', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('False OrTrue');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.11', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('FalseOr True');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.12', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('True OrFalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.13', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0or1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.14', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(1>0)or(1>0)');
+        $expected = true;
+        TestCheck::assertBoolean('D.15', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0(or)1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.16', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0or 1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.17', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0 or1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('D.18', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0 or-1<0');
+        $expected = true;
+        TestCheck::assertBoolean('D.19', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+
+
+        // TEST : check for required whitespace between logical AND operator and literals
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('trueandtrue');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.1', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(true)and(true)');
+        $expected = true;
+        TestCheck::assertBoolean('E.2', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true(and)true');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.3', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('trueand false');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.4', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('false andtrue');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.5', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('falseand true');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.6', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true andfalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.7', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('TrueAndTrue');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.8', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(True)And(True)');
+        $expected = true;
+        TestCheck::assertBoolean('E.9', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('True(And)True');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.10', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('TrueAnd False');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.11', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('False AndTrue');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.12', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('FalseAnd True');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.13', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('True AndFalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.14', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0and1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.15', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(1>0)and(1>0)');
+        $expected = true;
+        TestCheck::assertBoolean('E.16', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0(and)1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.17', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0and 1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.18', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0 and1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('E.19', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('1>0 and-1<0');
+        $expected = true;
+        TestCheck::assertBoolean('E.20', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+
+
+        // TEST : check for required whitespace between logical NOT operator and literals;
+        // note: symbolic version of NOT (!) doesn't require whitespace in between it and operand
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('notfalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.1', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('not(false)');
+        $expected = true;
+        TestCheck::assertBoolean('F.2', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(not)false');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.3', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true ornot false');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.4', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(true) ornot (false)');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.5', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true or notfalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.6', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true andnot false');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.7', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true and notfalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.8', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('NotFalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.9', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('True OrNot False');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.10', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('True Or NotFalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.11', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('True AndNot False');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.12', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('True And NotFalse');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.13', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('not1<0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.14', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('not 1<0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.15', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('not(1<0)');
+        $expected = true;
+        TestCheck::assertBoolean('F.16', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('not-1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.17', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('not -1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.18', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('not(-1>0)');
+        $expected = true;
+        TestCheck::assertBoolean('F.19', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('!true');
+        $expected = false;
+        TestCheck::assertBoolean('F.20', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('!false');
+        $expected = true;
+        TestCheck::assertBoolean('F.21', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('! true');
+        $expected = false;
+        TestCheck::assertBoolean('F.22', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('! false');
+        $expected = true;
+        TestCheck::assertBoolean('F.23', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('!(true)');
+        $expected = false;
+        TestCheck::assertBoolean('F.24', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('! (true)');
+        $expected = false;
+        TestCheck::assertBoolean('F.25', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('!(false)');
+        $expected = true;
+        TestCheck::assertBoolean('F.26', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('! (false)');
+        $expected = true;
+        TestCheck::assertBoolean('F.27', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(!)false');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.28', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true or! false');
+        $expected = true;
+        TestCheck::assertBoolean('F.29', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(true) or! (false)');
+        $expected = true;
+        TestCheck::assertBoolean('F.30', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true or !false');
+        $expected = true;
+        TestCheck::assertBoolean('F.31', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true or ! false');
+        $expected = true;
+        TestCheck::assertBoolean('F.32', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true and! false');
+        $expected = true;
+        TestCheck::assertBoolean('F.33', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true and !false');
+        $expected = true;
+        TestCheck::assertBoolean('F.34', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('true and ! false');
+        $expected = true;
+        TestCheck::assertBoolean('F.35', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('!1<0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.36', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('! 1<0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.37', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('!(1<0)');
+        $expected = true;
+        TestCheck::assertBoolean('F.38', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('! (1<0)');
+        $expected = true;
+        TestCheck::assertBoolean('F.39', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('!-1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.40', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('! -1>0');
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('F.41', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('!(-1>0)');
+        $expected = true;
+        TestCheck::assertBoolean('F.42', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('! (-1>0)');
+        $expected = true;
+        TestCheck::assertBoolean('F.43', 'Expression; fail if logical operators don\'t have appropriate whitespace',  $actual, $expected, $results);
+
+
+
+        // TEST : allow whitepace around grouping operator
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(true)');
+        $expected = true;
+        TestCheck::assertBoolean('G.1', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   (true)');
+        $expected = true;
+        TestCheck::assertBoolean('G.2', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(true)   ');
+        $expected = true;
+        TestCheck::assertBoolean('G.3', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   (true)   ');
+        $expected = true;
+        TestCheck::assertBoolean('G.4', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(   true)');
+        $expected = true;
+        TestCheck::assertBoolean('G.5', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(true   )');
+        $expected = true;
+        TestCheck::assertBoolean('G.6', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(   true   )');
+        $expected = true;
+        TestCheck::assertBoolean('G.7', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('((true))');
+        $expected = true;
+        TestCheck::assertBoolean('G.8', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(   (true))');
+        $expected = true;
+        TestCheck::assertBoolean('G.9', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('((true)   )');
+        $expected = true;
+        TestCheck::assertBoolean('G.10', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('(   (true)   )');
+        $expected = true;
+        TestCheck::assertBoolean('G.11', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('   (   (true)   )   ');
+        $expected = true;
+        TestCheck::assertBoolean('G.12', 'Expression; allow whitespace around grouping operator',  $actual, $expected, $results);
+    }
+}

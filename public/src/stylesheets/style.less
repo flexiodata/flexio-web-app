@@ -1,0 +1,34 @@
+//@import (less)"../../node_modules/tachyons/css/tachyons.css";
+//@import (less) "../../node_modules/awesomplete/awesomplete.css";
+@import (less) "../../node_modules/keen-ui/dist/keen-ui.css";
+@import (less) "../../node_modules/codemirror/lib/codemirror.css";
+@import "variables.less";
+@import "core.less";
+@import "size.less";
+@import "./awesomplete/style.less";
+@import "./tachyons-ext/tachyons-ext.less";
+@import "./material-design-ext/style.less";
+@import "./keen-ui-ext/style.less";
+@import "/fontawesome-ext/style.less";
+@import "../vendor/biggrid-2.0.0/less/biggrid.less";
+@import "../vendor/biggrid-2.0.0/less/biggrid-theme-default.less";
+
+// -- codemirror --
+
+.CodeMirror {
+  width: 100%;
+  height: 100%;
+}
+
+// -- hint.css --
+
+// turn off transitions for all hint.css tooltips
+[class*=hint--]:after,
+[class*=hint--]:before {
+  transition-duration: 0ms !important;
+}
+
+// [class*=hint--] is position: relative and needs to be overriden
+.static[class*=hint--] { position: static; }
+.absolute[class*=hint--] { position: absolute; }
+.fixed[class*=hint--] { position: fixed; }

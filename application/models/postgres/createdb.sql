@@ -1,0 +1,351 @@
+
+
+--
+-- Table structure for table tbl_object
+-- note: require any specified enames to be unique, but allow blanks
+--
+
+DROP TABLE IF EXISTS tbl_object;
+CREATE TABLE tbl_object (
+  id serial,
+  eid varchar(12) NOT NULL default '',
+  eid_type varchar(3) NOT NULL default '',
+  eid_status varchar(1) NOT NULL default '',
+  ename varchar(40) NOT NULL default '',
+  rights json,
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid)
+);
+
+CREATE UNIQUE INDEX idx_ename ON tbl_object (ename) WHERE ename != '';
+
+
+
+--
+-- Table structure for table tbl_association
+--
+
+DROP TABLE IF EXISTS tbl_association;
+CREATE TABLE tbl_association (
+  id serial,
+  source_eid varchar(12) NOT NULL default '',
+  target_eid varchar(12) NOT NULL default '',
+  association_type varchar(3) NOT NULL default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (source_eid,association_type,target_eid),
+  UNIQUE (target_eid,association_type,source_eid)
+);
+
+
+
+--
+-- Table structure for table tbl_user
+--
+
+DROP TABLE IF EXISTS tbl_user;
+CREATE TABLE tbl_user (
+    id serial,
+    eid varchar(12) NOT NULL,
+    user_name varchar(80) NOT NULL default '',
+    email varchar(255) default '',
+    description text default '',
+    full_name text default '',
+    first_name text default '',
+    last_name text default '',
+    phone text default '',
+    location_city text default '',
+    location_state text default '',
+    location_country text default '',
+    company_name text default '',
+    company_url text default '',
+    locale_language varchar(30) NOT NULL default 'en_US',
+    locale_decimal varchar(1) NOT NULL default '.',
+    locale_thousands varchar(1) NOT NULL default ',',
+    locale_dateformat varchar(30) NOT NULL default 'm/d/Y',
+    timezone varchar(30) NOT NULL default 'UTC',
+    password varchar(80) NOT NULL default '',
+    verify_code varchar(40) NOT NULL default '',
+    config json,
+    created timestamp NULL default NULL,
+    updated timestamp NULL default NULL,
+    PRIMARY KEY (id),
+    UNIQUE (eid),
+    UNIQUE (user_name),
+    UNIQUE (email)
+);
+
+
+
+--
+-- Table structure for table tbl_token
+--
+
+DROP TABLE IF EXISTS tbl_token;
+CREATE TABLE tbl_token (
+    id serial,
+    eid varchar(12) NOT NULL,
+    user_eid varchar(12) NOT NULL,
+    access_code varchar(255) NOT NULL default '',
+    secret_code varchar(255) NOT NULL default '',
+    created timestamp NULL default NULL,
+    updated timestamp NULL default NULL,
+    PRIMARY KEY (id),
+    UNIQUE (eid),
+    UNIQUE (access_code)
+);
+
+CREATE INDEX idx_token_user_eid ON tbl_token (user_eid);
+
+
+
+--
+-- Table structure for table tbl_project
+--
+
+DROP TABLE IF EXISTS tbl_project;
+CREATE TABLE tbl_project (
+  id serial,
+  eid varchar(12) NOT NULL default '',
+  name text default '',
+  description text default '',
+  display_icon text default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid)
+);
+
+
+
+--
+-- Table structure for table tbl_pipe
+--
+
+-- schedule_status values
+--    A - active
+--    I - inactive
+
+DROP TABLE IF EXISTS tbl_pipe;
+CREATE TABLE tbl_pipe (
+  id serial,
+  eid varchar(12) NOT NULL default '',
+  name text default '',
+  description text default '',
+  display_icon text default '',
+  task json,
+  input json,
+  output json,
+  schedule text default '',
+  schedule_status varchar(1) NOT NULL default 'I',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid)
+);
+
+CREATE INDEX idx_pipe_schedule_status ON tbl_pipe (schedule_status);
+
+
+
+--
+-- Table structure for table tbl_connection
+--
+
+DROP TABLE IF EXISTS tbl_connection;
+CREATE TABLE tbl_connection (
+  id serial,
+  eid varchar(12) NOT NULL default '',
+  name text default '',
+  description text default '',
+  display_icon text default '',
+  connection_type varchar(40) NOT NULL default '',
+  host text NOT NULL default '',
+  port int NOT NULL,
+  username text NOT NULL default '',
+  password text NOT NULL default '',
+  token text NOT NULL default '',
+  refresh_token text NOT NULL default '',
+  token_expires timestamp NULL default NULL,
+  database text NOT NULL default '',
+  connection_status varchar(1) NOT NULL default 'U',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid)
+);
+
+
+
+--
+-- Table structure for table tbl_process
+--
+
+DROP TABLE IF EXISTS tbl_process;
+CREATE TABLE tbl_process (
+  id serial,
+  eid varchar(12) NOT NULL default '',
+  parent_eid varchar(12) NOT NULL default '',
+  process_eid varchar(12) NOT NULL default '',
+  process_mode varchar(1) NOT NULL default '',
+  process_hash varchar(40) NOT NULL default '',
+  impl_revision varchar(40) NOT NULL default '',
+  task_type text default '',
+  task_version int NOT NULL default 0,
+  task json,
+  input json,
+  output json,
+  input_params json,
+  output_params json,
+  started_by varchar(12) NOT NULL default '',
+  started timestamp NULL default NULL,
+  finished timestamp NULL default NULL,
+  process_info json,
+  process_status varchar(1) NOT NULL default '',
+  cache_used varchar(1) NOT NULL default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid)
+);
+
+CREATE INDEX idx_process_eid ON tbl_process (eid);
+CREATE INDEX idx_process_parent_eid ON tbl_process (parent_eid);
+CREATE INDEX idx_process_process_eid ON tbl_process (process_eid);
+CREATE INDEX idx_process_process_hash ON tbl_process (process_hash);
+CREATE INDEX idx_process_task_type ON tbl_process (task_type);
+
+
+
+--
+-- Table structure for table tbl_stream
+--
+
+DROP TABLE IF EXISTS tbl_stream;
+CREATE TABLE tbl_stream (
+  id serial,
+  eid varchar(12) NOT NULL default '',
+  name text default '',
+  path text default '',
+  size numeric(12,0) default NULL,
+  hash varchar(40) NOT NULL default '',
+  mime_type text default '',
+  structure json,
+  file_created timestamp NULL default NULL,
+  file_modified timestamp NULL default NULL,
+  connection_eid varchar(12) NOT NULL default '',
+  cache_path text default '',
+  cache_connection_eid varchar(12) NOT NULL default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid)
+);
+
+CREATE INDEX idx_stream_connection_eid ON tbl_stream (connection_eid);
+
+
+
+--
+-- Table structure for table tbl_comment
+--
+
+DROP TABLE IF EXISTS tbl_comment;
+CREATE TABLE tbl_comment (
+  id serial,
+  eid varchar(12) NOT NULL default '',
+  comment text default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid)
+);
+
+
+
+--
+-- Table structure for table tbl_action
+--
+
+DROP TABLE IF EXISTS tbl_action;
+CREATE TABLE tbl_action (
+  id serial,
+  user_eid varchar(12) NOT NULL default '',
+  request_method text default '',
+  url_params text default '',
+  query_params text default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE INDEX idx_action_user_eid ON tbl_action (user_eid);
+
+
+
+--
+-- Table structure for table tbl_notification
+--
+
+DROP TABLE IF EXISTS tbl_notification;
+CREATE TABLE tbl_notification (
+  id serial,
+  eid varchar(12) NOT NULL default '',
+  user_eid varchar(12) NOT NULL default '',
+  source_user_eid varchar(12) NOT NULL default '',
+  object_eid varchar(12) NOT NULL default '',
+  subject_eid varchar(12) NOT NULL default '',
+  notice_type varchar(20) NOT NULL default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid)
+);
+
+CREATE INDEX idx_notification_user_eid ON tbl_notification (user_eid);
+CREATE INDEX idx_notification_source_user_eid ON tbl_notification (source_user_eid);
+CREATE INDEX idx_notification_object_eid ON tbl_notification (object_eid);
+CREATE INDEX idx_notification_subject_eid ON tbl_notification (subject_eid);
+CREATE INDEX idx_notification_notice_type ON tbl_notification (notice_type);
+CREATE INDEX idx_notification_created ON tbl_notification (created);
+
+
+
+--
+-- Table structure for table tbl_registry
+--
+
+DROP TABLE IF EXISTS tbl_registry;
+CREATE TABLE tbl_registry (
+  id serial,
+  object_eid varchar(12) NOT NULL default '',
+  name varchar(80) NOT NULL default '',
+  mime_type varchar(80) NOT NULL default '',
+  value_type varchar(1) default '',
+  value text default NULL,
+  expires timestamp NULL default NULL,
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (object_eid, name)
+);
+
+
+
+--
+-- Table structure for table tbl_system
+--
+
+DROP TABLE IF EXISTS tbl_system;
+CREATE TABLE tbl_system (
+  id serial,
+  name varchar(80) NOT NULL default '',
+  value text default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (name)
+);

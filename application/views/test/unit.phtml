@@ -1,0 +1,302 @@
+
+<div class="fx-page">
+    <div id="container">
+        <div class="form-group clearfix" style="margin: 0; padding: 5px; border-bottom: 1px solid #ddd">
+            <div class="pull-right" id="test-summary-stats"></div>
+            <button type="button" class="btn btn-sm btn-primary fx-btn-widest" id="btn-run">Run Tests</button>
+            <button type="button" class="btn btn-sm btn-danger fx-btn-widest" id="btn-stop">Cancel</button>
+        </div>
+        <div id="selection-header">
+            <table class="table fx-table fx-table-no-cell-border fx-no-margin">
+                <colgroup>
+                    <col class="fx-col-min-40">
+                    <col class="fx-col-pct-100">
+                </colgroup>
+                <thead style="background: #f5f5f5; border-bottom: 1px solid #ddd">
+                    <tr>
+                        <th class="text-center"><input type="checkbox" id="input-selectall" checked /></th>
+                        <th>Name/Result</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="selection" class="pos-fill pos-overflow-y-auto hidden" style="top: 80px">
+            <table class="table table-hover fx-table fx-table-no-cell-border fx-no-margin">
+                <colgroup>
+                    <col class="fx-col-min-40">
+                    <col class="fx-col-pct-100">
+                </colgroup>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/template" id="tmpl-test-summary">
+    <div class="h3" style="margin: 2px 0 0">
+        <span class="text-success" style="margin: 0 5px">Passed: {{passed_cnt}}</span> /
+        <span class="text-danger" style="margin: 0 5px">Failed: {{failed_cnt}}</span> /
+        <span style="margin: 0 5px">Total: {{total_cnt}}</span>
+    </div>
+</script>
+
+<script type="text/template" id="tmpl-test-item">
+    <tr data-name="{{name}}">
+        <td class="text-center">
+            <div style="padding: 14px 0 11px">
+                <input type="checkbox" data-name="{{name}}" checked />
+            </div>
+        </td>
+        <td class="result"><div style="padding: 14px 0 11px">{{name}}</div></td>
+    </tr>
+</script>
+
+<script type="text/template" id="tmpl-result-init">
+    <div style="padding: 14px 0 11px">{{name}}</div>
+</script>
+
+<script type="text/template" id="tmpl-result-running">
+    <div class="fx-callout test-running clearfix" style="margin: 0; padding: 10px">
+        <div><strong>Running {{name}}...&nbsp; <span class="fa fa-spinner fa-spin"></span></div>
+    </div>
+</script>
+
+<script type="text/template" id="tmpl-result-cancelled">
+    <div class="fx-callout fx-callout-danger test-cancelled clearfix" style="margin: 0; padding: 10px">
+        <div class="text-bold text-uppercase text-danger pull-right" style="margin-right: 10px">
+            Cancelled
+        </div>
+        <div><strong>Running {{name}}...</div>
+    </div>
+</script>
+
+<script type="text/template" id="tmpl-result-http-error">
+    <div class="fx-callout fx-callout-danger fx-collapsible test-http-error" style="margin: 0; padding: 10px">
+        <div class="clearfix text-danger fx-btn-toggle-collapse" style="cursor: pointer">
+            <div class="text-bold text-uppercase pull-right text-danger" style="margin-right: 10px">
+                Error
+            </div>
+            <span class="text-danger">
+                <span class="fa fa-fw fa-chevron-down fx-icon-collapse"></span>
+                <span class="fa fa-fw fa-chevron-right fx-icon-expand"></span>
+                &nbsp;<strong>{{name}}</strong>
+            </span>
+        </div>
+        <div class="collapse" style="margin: 12px 100px 0 0">
+            <pre>{{error}}</pre>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="tmpl-result-finished">
+    <div class="fx-callout test-finished fx-collapsible <% if (passed) { %>fx-callout-success fx-collapsed<% } else { %>fx-callout-danger<% } %>" style="margin: 0; padding: 10px">
+        <div class="clearfix <% if (passed) { %>text-success<% } else { %>text-danger<% } %> fx-btn-toggle-collapse" style="cursor: pointer">
+            <div class="text-bold text-uppercase pull-right <% if (passed) { %>text-success<% } else { %>text-danger<% } %>" style="margin-right: 10px">
+                <% if (passed) { %>Passed<% } else { %>Failed<% } %>
+            </div>
+            <span class="<% if (passed) { %>text-success<% } else { %>text-danger<% } %>">
+                <span class="fa fa-fw fa-chevron-down fx-icon-collapse"></span>
+                <span class="fa fa-fw fa-chevron-right fx-icon-expand"></span>
+                &nbsp;<strong>{{name}}</strong>: <%-message%>
+            </span>
+        </div>
+        <div class="collapse" style="margin: 12px 0 0">
+            <table class="table table-condensed fx-table fx-table-no-cell-border fx-no-margin">
+                <colgroup>
+                    <col class="fx-col-min-50">
+                    <col class="fx-col-pct-100">
+                    <col class="fx-col-min-100">
+                </colgroup>
+                <tbody>
+                    <% _.each(details, function(d) { %>
+                        <tr class="<% if (d.passed) { %>success text-success<% } else { %>danger text-danger<% } %>">
+                            <td style="padding-left: 10px"><strong>{{d.name}}</strong>:</td>
+                            <td>{{d.description}}<% if (passed === false) { %>: <%-d.message%> <% } %></td>
+                            <td class="text-right text-bold text-uppercase" style="padding-right: 10px">
+                                <% if (d.passed) { %>Passed<% } else { %>Failed<% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+
+<?php $this->headStyle()->appendStyle("
+    body {
+        margin-top: 60px;
+    }
+"); ?>
+
+<?php $this->inlineScript()->captureStart() ?>
+$(function() {
+
+    var $container = $('#container'),
+        $selection = $('#selection'),
+        $selectall_input = $('#input-selectall'),
+        $run_btn = $('#btn-run'),
+        $stop_btn = $('#btn-stop');
+
+    var all_tests = [],
+        all_test_names = [],
+        selected_test_names = [],
+        next_test_idx = 0,
+        active_xhr = undefined,
+        summary_stats = {
+            total_cnt: 0,
+            passed_cnt: 0,
+            failed_cnt: 0
+        };
+
+    $.getJSON('/api/v1/tests/configure')
+        .done(function(res) {
+            all_test_names = res;
+
+            all_tests = _.map(res, function(test_name) {
+                return { 'name': test_name };
+            });
+
+            App.Util.tmpl('#tmpl-test-item', all_tests).appendTo($selection.removeClass('hidden').find('tbody').empty());
+        })
+        .fail(function() {
+            $container.empty().append('<p>There was an error retrieving the tests from the configuration query.</p>');
+        });
+
+    $('#fx-app-statusbar').remove();
+
+    // render the container
+    $container.appendTo('#fx-app-content').drawers();
+
+    var drawers = $container.data('drawers');
+
+    drawers.getWrapperEl().css({
+        position: 'fixed',
+        top: 60,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 'auto'
+    });
+
+    $selectall_input.click(function() {
+        var checked = this.checked;
+
+        $selection.find('input[type="checkbox"]').attr('checked', checked);
+    });
+
+    $('body').on('click', '#selection tbody td', function(evt) {
+        var $td = $(this),
+            $tr = $td.closest('tr'),
+            $checkbox = $tr.find('input[type="checkbox"]'),
+            checked = $checkbox.get(0).checked;
+
+        $checkbox.attr('checked', !checked);
+    });
+
+    $('body').on('click', '#selection tbody td input[type="checkbox"]', function(evt) {
+        evt.stopPropagation();
+    });
+
+    // don't toggle checkbox when click on the alerts
+    $('body').on('click', '#selection tbody td .fx-callout', function(evt) {
+        evt.stopPropagation();
+    });
+
+    $run_btn.click(function(evt) {
+        Util.xhrCancelActive(active_xhr);
+
+        resetResultRows();
+
+        selected_test_names = [];
+
+        var $checked_rows = $selection.find('input:checked');
+        $checked_rows.each(function() {
+            var id = $(this).data('name');
+            selected_test_names.push(id);
+        });
+
+        next_test_idx = 0;
+
+        summary_stats = {
+            total_cnt: 0,
+            passed_cnt: 0,
+            failed_cnt: 0
+        };
+
+        updateCounts();
+        runTest(selected_test_names[next_test_idx]);
+    });
+
+    $stop_btn.click(function(evt) {
+        Util.xhrCancelActive(active_xhr);
+
+        var $result = $('.test-running'),
+            $tr = $result.closest('tr'),
+            test_name = $tr.data('name');
+
+        App.Util.tmpl('#tmpl-result-cancelled', { name: test_name }).replaceAll($result);
+    });
+
+    function resetResultRows()
+    {
+        $selection.find('tr').each(function() {
+            var $tr = $(this),
+                $result = $tr.find('.result');
+
+            App.Util.tmpl('#tmpl-result-init', { name: $tr.data('name') }).appendTo($result.empty());
+        });
+    }
+
+    function updateCounts()
+    {
+        App.Util.tmpl('#tmpl-test-summary', summary_stats).appendTo($('#test-summary-stats').empty());
+    }
+
+    function runTest(test_name)
+    {
+        var $tr = $('tr[data-name="'+test_name+'"]'),
+            $result = $tr.find('.result');
+
+        App.Util.tmpl('#tmpl-result-running', { name: test_name }).appendTo($result.empty());
+
+        active_xhr = $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '/api/v1/tests/run?id='+test_name,
+            success: function(res) {
+                if (Util.xhrIsAborted(active_xhr))
+                    return;
+
+                var $item = App.Util.tmpl('#tmpl-result-finished', res).appendTo($result.empty());
+
+                next_test_idx++;
+
+                summary_stats.total_cnt += res.test_cnt;
+                summary_stats.passed_cnt += res.passed_cnt;
+                summary_stats.failed_cnt += res.failed_cnt;
+
+                updateCounts();
+
+                if (next_test_idx < selected_test_names.length)
+                    runTest(selected_test_names[next_test_idx]);
+            },
+            error: function(xhr) {
+                if (Util.xhrIsAborted(active_xhr))
+                    return;
+
+                var $item = App.Util.tmpl('#tmpl-result-http-error', {
+                    name: test_name,
+                    error: xhr.responseText
+                }).appendTo($result.empty());
+
+                next_test_idx++;
+
+                if (next_test_idx < selected_test_names.length)
+                    runTest(selected_test_names[next_test_idx]);
+            }
+        });
+    }
+
+});
+<?php $this->inlineScript()->captureEnd() ?>

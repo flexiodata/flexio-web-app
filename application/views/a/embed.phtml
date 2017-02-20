@@ -1,0 +1,34 @@
+
+<div class="js-layout">
+    <div class="js-embed"></div>
+</div>
+
+<?php $this->headStyle()->appendStyle("
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer {
+        display: none !important;
+    }
+
+    .ui.segment {
+        margin: 0
+    }
+ "); ?>
+
+<?php
+    if (IS_DEBUG())
+    {
+        $this->inlineScript()->appendFile('/src/app/js/pages/embed.js');
+    }
+     else
+    {
+        $this->inlineScript()->appendFile('/dist/app/js/pages/embed.min.js');
+    }
+?>
+
+<?php $this->inlineScript()->captureStart() ?>
+    $(function() { new FxEmbedPage(); })
+<?php $this->inlineScript()->captureEnd() ?>

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd /srv/exdata/src/exdata
+exec nodejs ./main.js >> /var/log/exdata.log 2>> /var/log/exdata_error.log
+
+
+

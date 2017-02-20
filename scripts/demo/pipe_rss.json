@@ -1,0 +1,33 @@
+{
+  "name": "Tech News RSS Aggregator",
+  "description": "Technology RSS feed aggregator",
+  "task": [
+    {
+      "type": "flexio.input",
+      "metadata":
+        "connection_type": "rss.api"
+      },
+      "params": {
+        "items": [
+          { "path": "http://feeds.feedburner.com/TechCrunch/" },
+          { "path": "http://spectrum.ieee.org/rss/fulltext" },
+          { "path": "https://www.technologyreview.com/stories.rss" },
+          { "path": "http://www.cnet.com/rss/all/" },
+          { "path": "http://rss.cnn.com/rss/cnn_tech.rss" }
+        ]
+      }
+    },
+    {
+      "type": "flexio.merge",
+      "params": {
+      }
+    },
+    {
+      "type": "flexio.distinct",
+      "params": {
+        "distinct": [ "title" ],
+        "columns": [ "*" ]
+      }
+    }
+  ]
+}

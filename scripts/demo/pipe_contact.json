@@ -1,0 +1,27 @@
+{
+    "name": "contacts",
+    "description": "",
+    "task": [
+        {
+            "type": "flexio.transform",
+            "params": {
+                "capitalize": "upper",
+                "columns": [
+                    "*"
+                ]
+            }
+        },
+        {
+            "type": "flexio.transform",
+            "params": {
+                "remove": {
+                    "location": "any",
+                    "character_class": "punct"
+                },
+                "columns": [
+                    "streetaddress"
+                ]
+            }
+        }
+    ]
+}

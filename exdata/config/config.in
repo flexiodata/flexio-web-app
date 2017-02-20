@@ -1,0 +1,13 @@
+var config = {};
+
+
+// to turn on ssl, set the following to true and point the ssl_key and
+// ssl_cert parameters to the pem-format key and certficate files
+
+config.ssl = false;
+config.ssl_key = __dirname + '';
+config.ssl_cert = __dirname + '';
+config.ssl_ca = __dirname + '';
+
+module.exports = config;
+

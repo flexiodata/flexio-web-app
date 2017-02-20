@@ -1,0 +1,49 @@
+{
+    "directory_database_type": "mysql",
+    "directory_database_host": "",
+    "directory_database_port": "",
+    "directory_database_username": "",
+    "directory_database_password": "",
+    "directory_database_dbname": "",
+
+    "directory_authserv_url": "",
+    "directory_authserv_directory_name": "",
+    "directory_authserv_password": "",
+
+    "private_key": "2Uwr79paYAfUvu54SPuwReyUCeCRedeyTH4GufrU4ruK7zAnaphujA8W6TRa7uVE",
+
+    "debug": true,
+    "tests_allowed": false,
+    "maintenance": false,
+    "version_major": 2,
+    "version_minor": 0,
+    "version_subminor": 0,
+
+    "session_timeout": 7200,
+
+    "datastore_type": "postgres",
+    "datastore_host": "localhost",
+    "datastore_port": 5432,
+    "datastore_dbname": "fxdata",
+    "datastore_username": "fxdata",
+    "datastore_password": "fxdata",
+
+    "/profiling": false,
+    "/query_log": "<put path here>",
+    "/debug_error_log": "<put path here>",
+
+    "analytics": false,
+    "show_raw_json_definition": false,
+    "show_custom_job_option": false,
+
+    "ses_access_key": "",
+    "ses_secret_key": "",
+
+    "googledrive_client_id": "",
+    "googledrive_client_secret": "",
+
+    "dropbox_client_id": "",
+    "dropbox_client_secret": "",
+
+    "helpscout_api_key": ""
+}

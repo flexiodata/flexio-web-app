@@ -1,0 +1,18 @@
+<div id="test">
+    <div class="alert">Test text</div>
+    <div class="alert alert-default">Test text</div>
+    <div class="alert alert-primary">Test text</div>
+    <div class="alert alert-success">Test text</div>
+    <div class="alert alert-warning">Test text</div>
+    <div class="alert alert-danger">Test text</div>
+    <div class="alert alert-info">Test text</div>
+</div>
+
+
+<?php $this->inlineScript()->captureStart() ?>
+
+    $(function() {
+        $('#test').appendTo('#fx-app-content').css('margin', '20px');
+    });
+
+<?php $this->inlineScript()->captureEnd() ?>

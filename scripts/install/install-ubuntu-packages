@@ -1,0 +1,12 @@
+apt-get update
+apt-get -y install git
+apt-get -y install php5
+apt-get -y install libapache2-mod-php5
+apt-get -y install php5-mcrypt php5-curl php5-cli php5-gd php5-mysql php5-pgsql php5-sqlite php5-xcache php5-imagick
+
+apt-get -y install w3m
+apt-get -y install pdftk
+
+
+a2enmod headers ssl include headers rewrite
+

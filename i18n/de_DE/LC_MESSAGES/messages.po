@@ -1,0 +1,3988 @@
+﻿msgid ""
+msgstr ""
+"Project-Id-Version: Gold Prairie Web App.\n"
+"POT-Creation-Date: 2013-08-01 18:08+0100\n"
+"PO-Revision-Date: 2013-08-05 17:16+0100\n"
+"Last-Translator: \n"
+"Language-Team: Gold Prairie, Inc. <dwilliams@goldprairie.com>\n"
+"Language: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: application\n"
+
+msgid "Missing doc_eid parameter"
+msgstr "Parameter \"doc_eid\" fehlt"
+
+msgid "Missing file parameter"
+msgstr "Fehlender \"file\" Parameter"
+
+msgid "Service unavailable"
+msgstr "Service nicht verfÃ¼gbar"
+
+msgid "Could not process uploaded file"
+msgstr "Konnte hochgeladene Datei nicht verarbeiten"
+
+msgid "Operation succeeded"
+msgstr "Operation hat erfolgt"
+
+msgid "Missing or invalid id parameter"
+msgstr "Parameter \"id\" fehlt"
+
+msgid "Operation failed"
+msgstr "Operation fehlgeschlagen"
+
+msgid "Insufficient privileges"
+msgstr "Unzureichende Zugriffsrechte"
+
+msgid "Missing claimtype_code parameter"
+msgstr "Parameter \"claimtype_code\" fehlt"
+
+msgid "Claim type already exists"
+msgstr "Claim-Code existiert bereits"
+
+msgid "A valid id must be specified"
+msgstr "Eine gÃ¼ltige ID-Nummer muss angegeben werden"
+
+msgid "Missing parameter"
+msgstr "Fehlender Parameter"
+
+msgid "Reason type already exists"
+msgstr "Reason-Code existiert bereits"
+
+msgid "Missing message parameter"
+msgstr "Parameter \"message\" fehlt"
+
+msgid "Operation succeded"
+msgstr "Operation hat erfolgt"
+
+msgid "Missing name parameter"
+msgstr "Parameter \"name\" fehlt"
+
+msgid "The configuration key specified already exists"
+msgstr "Der angegebene KonfigurationsschlÃ¼ssel existiert bereits"
+
+msgid "Invalid or missing id parameter"
+msgstr "Fehlender oder ungÃ¼ltiger ID-Parameter"
+
+msgid "The configuration key does not exist"
+msgstr "Dieser KonfigurationsschÃ¼ssel existiert nicht"
+
+msgid "Invalid configuration entry or duplicate name"
+msgstr "UngÃ¼ltiger Konfigurationseintrag oder duplizierter Name"
+
+msgid "Invalid request"
+msgstr "UngÃ¼ltige Abfrage"
+
+msgid "Invalid document"
+msgstr "UngÃ¼ltiges Dokument"
+
+msgid "Still running"
+msgstr "Job wird noch ausgefÃ¼hrt"
+
+msgid "Invalid job id"
+msgstr "UngÃ¼ltige job_id"
+
+msgid "Job failed"
+msgstr "Job ist fehlgeschlagen"
+
+msgid "doc_id must be specified"
+msgstr "doc_id muss spezifiziert werden"
+
+msgid "Missing doc_id and detail_id parameter; one of these is necessary"
+msgstr ""
+"Fehlender doc_id und detail_id Parameter; mindestens einer von diesen "
+"Parametern wird benÃ¶tigt"
+
+msgid "Missing flag or amount parameter"
+msgstr "Parameter \"flag\" und/oder Parameter \"amount\" fehlt"
+
+msgid "Required parameter missing"
+msgstr "Erforderlicher Parameter fehlt"
+
+msgid "Invalid parameter"
+msgstr "UngÃ¼ltiger Parameter"
+
+msgid "Invalid path parameter"
+msgstr "Parameter \"path\" ungÃ¼ltig"
+
+msgid "Missing path parameter"
+msgstr "Parameter \"path\" fehlt"
+
+msgid "Target path already exists"
+msgstr "Ausgangspfad existiert bereits"
+
+msgid "Target filesystem object does not exist"
+msgstr "Ausgangsobjekt existiert nicht"
+
+msgid "No file attached"
+msgstr "Keine Datei angehÃ¤ngt"
+
+msgid "Missing target_path parameter"
+msgstr "Parameter \"target_path\" fehlt"
+
+msgid "Invalid target_path parameter"
+msgstr "Parameter \"target_path\" ungÃ¼ltig"
+
+msgid "Not implemented"
+msgstr "Nicht implementiert"
+
+msgid "Missing new_name parameter"
+msgstr "Parameter \"new_name\" fehlt"
+
+msgid "Missing instance parameter"
+msgstr "Parameter \"instance\" fehlt"
+
+msgid "Missing dbname parameter"
+msgstr "Parameter \"dbname\" fehlt"
+
+msgid "Missing task_id parameter"
+msgstr "Parameter \"task_id\" fehlt"
+
+msgid "Missing event_name parameter"
+msgstr "Parameter \"event_name\" fehlt"
+
+msgid "General"
+msgstr "Allgemeine PrÃ¼flÃ¤ufe"
+
+msgid "Duplicate Vendor"
+msgstr "Doppelte LieferanteneintrÃ¤ge"
+
+msgid "Duplicate Payment"
+msgstr "Doppelzahlungen"
+
+msgid "Fraud"
+msgstr "Betrug"
+
+msgid "No Payment Activity"
+msgstr "ZahlungsaktivitÃ¤t"
+
+msgid "Vendor Verification"
+msgstr "Lieferantenverifizierung"
+
+msgid "Vendor Change"
+msgstr "VerÃ¤nderungen bei LieferanteneintrÃ¤gen"
+
+msgid "Vendor/Employee Match"
+msgstr "Vergleich Lieferanten-/Personalstamm"
+
+msgid "Cash Discount"
+msgstr "Skonto"
+
+msgid "Freight"
+msgstr "Fracht"
+
+msgid "Tax"
+msgstr "Steuer"
+
+msgid "Scan"
+msgstr "Scan"
+
+msgid "Price"
+msgstr "Preisverhalten"
+
+msgid "Promotion"
+msgstr "VerkaufsfÃ¶rderung"
+
+msgid "Notice"
+msgstr "Notifikation"
+
+msgid "Quantity"
+msgstr "Mengenanalyse"
+
+msgid "All Dates"
+msgstr "Alle Daten"
+
+msgid "Today"
+msgstr "Heute"
+
+msgid "Last 7 Days"
+msgstr "Letzte 7 Tage"
+
+msgid "Month to Date"
+msgstr "Laufender Monat"
+
+msgid "Year to Date"
+msgstr "Laufendes Jahr"
+
+msgid "Previous Month"
+msgstr "Voriger Monat "
+
+msgid "Previous Year"
+msgstr "Letztes Jahr"
+
+msgid "Specific Date"
+msgstr "Bestimmtes Datum"
+
+msgid "Date Range"
+msgstr "Datumsbereich"
+
+msgid "Start Date"
+msgstr "Startdatum"
+
+msgid "End Date"
+msgstr "Enddatum"
+
+msgid "Next"
+msgstr "Weiter"
+
+msgid "Prev"
+msgstr "Vorige"
+
+msgid "Set Date Range"
+msgstr "Datumsbereich festlegen"
+
+msgid "January"
+msgstr "Januar"
+
+msgid "February"
+msgstr "Februar"
+
+msgid "March"
+msgstr "MÃ¤rz"
+
+msgid "April"
+msgstr "April"
+
+msgid "May"
+msgstr "Mai"
+
+msgid "June"
+msgstr "Juni"
+
+msgid "July"
+msgstr "Juli"
+
+msgid "August"
+msgstr "August"
+
+msgid "September"
+msgstr "September"
+
+msgid "October"
+msgstr "Oktober"
+
+msgid "November"
+msgstr "November"
+
+msgid "December"
+msgstr "Dezember"
+
+msgid "Please specify name parameter"
+msgstr "Parameter \"name\" muss angegeben werden"
+
+msgid ""
+"Invalid or missing software license file.  Please place a valid 'license."
+"dat' file into the following directory:"
+msgstr ""
+"UngÃ¼ltige oder fehlende Lizenzdatei.  Bitte kopieren Sie eine gÃ¼ltige "
+"\"license.dat' Datei in den folgenden Ordner:"
+
+msgid "Username is required"
+msgstr "Benutzername ist erforderlich"
+
+msgid "Password is required"
+msgstr "Passwort ist erforderlich"
+
+msgid "Invalid instance name specified"
+msgstr "UngÃ¼ltiger Instanzname wurde angegeben"
+
+msgid "Authentication failed"
+msgstr "Anmeldung fehlgeschlagen"
+
+msgid "Operation not permitted"
+msgstr "Operation nicht gestattet"
+
+msgid "Invalid name parameter"
+msgstr "Parameter \"name\" ungÃ¼ltig"
+
+msgid "Missing tag parameter"
+msgstr "Fehlender Parameter 'tag'"
+
+msgid "Template not found"
+msgstr "Template konnte nicht gefunden werden"
+
+msgid "List - Duplicate Payment"
+msgstr "Listenansicht - Doppelzahlungen"
+
+msgid "List - Duplicate Vendor"
+msgstr "Listenansicht - DoppellieferanteneintrÃ¤ge"
+
+msgid "List - Price Error"
+msgstr "Listenansicht - Preisfehler"
+
+msgid "List - Promotion Error"
+msgstr "Listenansicht - VerkaufsfÃ¶rderung"
+
+msgid "List - Vendor Activity"
+msgstr "Listenansicht - LieferantenaktivitÃ¤t"
+
+msgid "List - Vendor Change"
+msgstr "Listenansicht - VerÃ¤nderungsanalyse fÃ¼r den Lieferantenstamm"
+
+msgid "List - Vendor/Employee Match"
+msgstr "Listenansicht - Lieferanten-/Personalstamm"
+
+msgid "List - Vendor Tax ID"
+msgstr "Listenansicht - Lieferantensteuernummer"
+
+msgid "List - Payment List"
+msgstr "Listenansicht - Zahlungen"
+
+msgid "List - Vendor List"
+msgstr "Listenansicht - Lieferanten"
+
+msgid "Processing Data - AP History"
+msgstr "Daten - Zahlungsdaten"
+
+msgid "Same Vendor #, Similar Invoice #"
+msgstr "Gleiche Lieferantennr, Ãhnliche Rechnungsnr"
+
+msgid "Different Vendor #, Similar Invoice #"
+msgstr "Ungleiche Lieferantennr, Ãhnliche Rechnungsnr"
+
+msgid "Same Vendor #, Different Invoice #, Same Date"
+msgstr "Gleiche Lieferantennr, Ungleiche Rechnungsnr, Gleiches Datum"
+
+msgid "Unpaid Invoices Compared"
+msgstr "Vergleich unbezahlter Rechnungen"
+
+msgid "Same Vendor #, Different Invoice #, Same Text"
+msgstr "Gleiche Lieferantennr, Ungleiche Rechnungsnr, Gleicher Text"
+
+msgid "Different Vendor #, Different Invoice #, Same Text"
+msgstr "Ungleiche Lieferantennr, Ungleicht Rechnungsnr, Gleicher Text"
+
+msgid "Different Invoice Amount, Similar Invoice #, Same Text"
+msgstr "Ungleicht Rechnungsbetrag, Ãhnliche Rechnungsnr, Gleicher Text"
+
+msgid "Date Used for Invoice #"
+msgstr "Datum verwendet fÃ¼r Rechnungsnr"
+
+msgid "Different Cost, Same Po Date"
+msgstr "Ungleicher Betrag, Gleiches Bestelldatum"
+
+msgid "Different Cost, Same Receipt Date"
+msgstr "Ungleicher Betrag, Gleiches Empfangsdatum"
+
+msgid "Missed Off-Invoice Allowance"
+msgstr "Fehlende Rechnungsrabatte"
+
+msgid "Missed Billback Allowance"
+msgstr "Fehlende RÃ¼ckbelastungen"
+
+msgid "Fraud Analysis - Excessive Amount"
+msgstr "Betrugsanalyse - ÃbermÃ¤Ãige BetrÃ¤ge"
+
+msgid "Fraud Analysis - Non-Workday"
+msgstr "Betrugsanalyse - Transaktionen an Nichtwerktagen"
+
+msgid "Fraud Analysis - Invalid Payment Date"
+msgstr "Betrugsanalyse - UngÃ¼ltiges Zahlungsdatum"
+
+msgid "No Activity"
+msgstr "Keine AktivitÃ¤t"
+
+msgid "Vendor Added"
+msgstr "Lieferant wurde hinzugefÃ¼gt"
+
+msgid "Vendor Deleted"
+msgstr "Lieferant wurde gelÃ¶scht"
+
+msgid "Vendor Modified"
+msgstr "GeÃ¤nderte Lieferanten"
+
+msgid "Vendor Missing Tax ID"
+msgstr "Lieferenten mit fehlender Steuernummer"
+
+msgid "Vendor Malformed Tax ID"
+msgstr "Lieferenten mit ungÃ¼ltiger Steuernummer"
+
+msgid "Vendor Non-Matching/Invalid Tax ID"
+msgstr "Lieferenten mit ungleicher Steuernummer"
+
+msgid "Vendor/Employee With Same Address"
+msgstr "Lieferenten/Angestellten mit gleichen Adressen"
+
+msgid "Vendor/Employee With Same Name"
+msgstr "Lieferenten/Angestellten mit gleichen Namen"
+
+msgid "Vendor/Employee With Same Tax ID"
+msgstr "Lieferenten/Angestellten mit gleichen Steuernummern"
+
+msgid "Same Tax ID"
+msgstr "Gleiche Steuernummer"
+
+msgid "Same Name"
+msgstr "Gleicher Name"
+
+msgid "Similar Name"
+msgstr "Ãhnlicher Name"
+
+msgid "Same Address"
+msgstr "Gleiche Adresse"
+
+msgid "Similar Address"
+msgstr "Ãhnliche Adresse"
+
+msgid "Same Contact Name"
+msgstr "Gleicher Kontaktname"
+
+msgid "Same Contact Phone"
+msgstr "Gleiche Kontakttelefonnumer"
+
+msgid "Same Contact Fax"
+msgstr "Gleiche Fax-Nummer"
+
+msgid "Same Contact Email"
+msgstr "Gleiche Kontakt-E-Mail-Adresse"
+
+msgid "Vendors"
+msgstr "Lieferanten"
+
+msgid "Employee Master"
+msgstr "Personalstammdatei"
+
+msgid "Payment History"
+msgstr "AP-Datei"
+
+msgid "Creating processing jobs"
+msgstr "PrÃ¼flÃ¤ufe werden erstellt"
+
+msgid "Uploading payment history data"
+msgstr "AP-Daten werden hochgeladen"
+
+msgid "Uploading sample data"
+msgstr "Beispieldaten werden hochgeladen"
+
+msgid "Uploading sample result data"
+msgstr "Beispielausgangsdaten werden hochgeladen"
+
+msgid "Uploading sample result data (discount)"
+msgstr "Beispieldaten (discount) werden hochgeladen"
+
+msgid "Uploading sample result data (pricing)"
+msgstr "Beispieldaten (pricingdiscount) werden hochgeladen"
+
+msgid "Uploading sample result data (promotion)"
+msgstr "Beispieldaten (promotion) werden hochgeladen"
+
+msgid "Uploading sample result data (duplicate vendors)"
+msgstr "Beispieldaten (doppelte lieferanten) werden hochgeladen"
+
+msgid "Running analysis jobs"
+msgstr "PrÃ¼flÃ¤ufe werden ausgefÃ¼hrt"
+
+msgid "Updating item status"
+msgstr "Dokument-Statuseinstellungen werden aktualisiert"
+
+msgid "Updating statistics cache"
+msgstr "Statistiken-Cache wird aktualisiert"
+
+msgid "Uploads are currently disabled"
+msgstr "Uploads sind zur Zeit deaktiviert"
+
+msgid "Transaction already exists"
+msgstr "Transaktion existiert bereits"
+
+msgid "Cannot start upload transaction"
+msgstr "Uploadtranskation kann nicht gestartet werden"
+
+msgid "Invalid transaction"
+msgstr "UngÃ¼ltige Transaktion"
+
+msgid "User role is required"
+msgstr "Benutzerrolle ist erforderlich"
+
+msgid "User already exists"
+msgstr "Benutzer existiert bereits"
+
+msgid "The specified user role is invalid"
+msgstr "Die angegebene Benutzerrolle ist ungÃ¼ltig"
+
+msgid "Invalid username specified"
+msgstr "UngÃ¼ltiger Benutzername"
+
+msgid "Invalid credentials"
+msgstr "UngÃ¼ltige Zugangsdaten"
+
+msgid "You cannot delete yourself from the system"
+msgstr "Sie kÃ¶nnen Ihren eigenen Benutzer vom System nicht lÃ¶schen"
+
+msgid "Could not retrieve content data"
+msgstr "Dateninhalt konnte nicht geladen werden"
+
+msgid "Period (123.45)"
+msgstr "Punkt (123.45)"
+
+msgid "Comma (123,45)"
+msgstr "Komma (123,45)"
+
+msgid "Comma (1,234,567)"
+msgstr "Komma (1,234,567)"
+
+msgid "Period (1.234.567)"
+msgstr "Punkt (1.234.567)"
+
+msgid "Space (1 234 567)"
+msgstr "Leerzeichen (1 234 567)"
+
+msgid "mm/dd/yyyy"
+msgstr "mm/tt/jjjj"
+
+msgid "mm-dd-yyyy"
+msgstr "mm-tt-jjjj"
+
+msgid "dd/mm/yyyy"
+msgstr "tt/mm/jjjj"
+
+msgid "dd-mm-yyyy"
+msgstr "tt-mm-jjjj"
+
+msgid "dd.mm.yyyy"
+msgstr "tt.mm.jjjj"
+
+msgid "yyyy.mm.dd"
+msgstr "jjjj.mm.tt"
+
+msgid "Australia/Sydney (Australian Eastern Standard Time)"
+msgstr "Australien/Sydney (Ostaustralische Zeit)"
+
+msgid "Australia/South (Australia / South)"
+msgstr "Australien/SÃ¼d (SÃ¼daustralische Zeit)"
+
+msgid "Australia/North (Australia / Northern Territory)"
+msgstr "Australien/Nord (Nordaustralische Zeit)"
+
+msgid "Australia/West (Australia Western Standard Time)"
+msgstr "Australien/West (Westaustralische Zeit)"
+
+msgid "Europe/Berlin (Central European Time)"
+msgstr "Europa/Berlin (MitteleuropÃ¤ische Zeit)"
+
+msgid "Europe/London (Western European Time)"
+msgstr "Europa/London (WesteuropÃ¤ische Zeit)"
+
+msgid "Europe/Paris (Central European Time)"
+msgstr "Europa/Paris (MitteleuropÃ¤ische Zeit)"
+
+msgid "Europe/Kyev (Eastern European Time)"
+msgstr "Europa/Kiew (OsteuropÃ¤ische Zeit)"
+
+msgid "Europe/Moscow (Moscow Time)"
+msgstr "Europe/Moskau (Moskauer Zeit)"
+
+msgid "US/Central (North America - Central Time)"
+msgstr "US/Central (North America - Central Time)"
+
+msgid "US/Eastern (North America - Eastern Time)"
+msgstr "US/Eastern (North America - Eastern Time)"
+
+msgid "US/Mountain (North America - Mountain Time)"
+msgstr "US/Mountain (North America - Mountain Time)"
+
+msgid "US/Pacific (North America - Pacific Time)"
+msgstr "US/Pacific (North America - Pacific Time)"
+
+msgid "Uploads data to the specified data feed."
+msgstr ""
+"Mit dieser Funktion kÃ¶nnen Daten auf einen Daten-Feed hochgeladen werden."
+
+msgid "Upload Data"
+msgstr "Daten hochladen"
+
+msgid "Quickly set up an instance with default data feeds and tests."
+msgstr ""
+"Mit dieser Funktion kÃ¶nnen Sie eine Instanz mit Daten-Feeds und PrÃ¼flÃ¤ufen "
+"einrichten."
+
+msgid "Configure Analysis"
+msgstr "PrÃ¼flauf konfigurieren"
+
+msgid "Runs all analysis jobs."
+msgstr "Alle PrÃ¼flÃ¤ufe werden ausgefÃ¼hrt"
+
+msgid "Run Analysis Jobs"
+msgstr "PrÃ¼flÃ¤ufe ausfÃ¼hren"
+
+msgid "Clears out the specified data feed."
+msgstr "LÃ¶scht alle Daten im Daten-Feed"
+
+msgid "Clear Data Feed"
+msgstr "Inhalt eines Daten-Feeds lÃ¶schen"
+
+msgid ""
+"Clears out all data from the system, except for the configuration settings "
+"and templates."
+msgstr "LÃ¶scht alle Daten "
+
+msgid "Clear All Content"
+msgstr "Inhalt lÃ¶schen"
+
+msgid "Resets all items to \"New Analysis\""
+msgstr "Setzt alle Issues auf 'Neu' zurÃ¼ck."
+
+msgid "Reset Analysis Status"
+msgstr "Status zurÃ¼cksetzen"
+
+msgid ""
+"Deletes temporary tables that are generated by the system during data and "
+"claim analysis."
+msgstr "TemporÃ¤re Tabellen, die "
+
+msgid "Clean Database"
+msgstr "Datenbank bereinigen"
+
+msgid ""
+"Analyzes all database tables in the system. Performing this operation "
+"occasionally gives the database optimizer more information to be able to run "
+"queries quickly."
+msgstr ""
+"Analysiert alle Datenbanktabellen im System und beschleunigt dabei "
+"Datenbankabfragen."
+
+msgid "Optimize Database"
+msgstr "Datenbank optimieren"
+
+msgid ""
+"Updates the document tags from the data feeds so that the documents can be "
+"found using search."
+msgstr "Aktualisiert die Suchindizes fÃ¼r Dokumente."
+
+msgid "Update Document Tags"
+msgstr "DokumentschlÃ¼sselwÃ¶rter aktualisieren"
+
+msgid ""
+"Synchronizes the vendor references on each analysis row. This is sometimes "
+"necessary when vendor information is uploaded after data has been inserted "
+"into the system which relies on this vendor information."
+msgstr ""
+"Synchronisiert die Lieferantenreferenzen in den DetaildatensÃ¤tzen.   Dies "
+"ist mÃ¶glicherweise nÃ¶tig, wenn Lieferantendaten aktualisiert werden, nachdem "
+"andere Daten schon auf den Server hochgeladen worden sind."
+
+msgid "Synchronize Vendors"
+msgstr "Lieferanten synchronisieren"
+
+msgid ""
+"Installs demonstration data on the current instance. Please note, this will "
+"overwrite all data in the current instance."
+msgstr ""
+"Demo-Daten werden auf die aktuelle Instanz hochgeladen.   Hinweis: dieses "
+"Verfahren Ã¼berschreibt alle bestehenden Daten in der aktuellen Instanz."
+
+msgid "Install Demo Data"
+msgstr "Demo-Daten laden"
+
+msgid "Employee"
+msgstr "Personalstamm"
+
+msgid "Inactive Vendor"
+msgstr "Inaktiver Lieferant"
+
+msgid "Non-workday"
+msgstr "Nicht-Werktag"
+
+msgid "Invalid Date"
+msgstr "UngÃ¼ltiges Datum"
+
+msgid "Excessive Amount"
+msgstr "ÃbermÃ¤Ãiger Betrag"
+
+msgid "Added"
+msgstr "Erstellt"
+
+msgid "Deleted"
+msgstr "GelÃ¶scht"
+
+msgid "Modified"
+msgstr "GeÃ¤ndert"
+
+msgid "Missing/Empty Tax IDs"
+msgstr "Fehlende/Leere Steuernummer"
+
+msgid "Malformed Tax IDs"
+msgstr "UngÃ¼ltige Steuernummer"
+
+msgid "Non-Matching Names/Tax IDs"
+msgstr "Lieferenten mit ungleicher Steuernummer"
+
+msgid "(Demo Only) Non-Matching Names/Tax IDs"
+msgstr "(Nur fÃ¼r Demo-Modus) Lieferenten mit ungleicher Steuernummer"
+
+msgid "Match on Address"
+msgstr "Adresse vergleichen"
+
+msgid "Match on Name"
+msgstr "Namen vergleichen"
+
+msgid "Match on Tax ID Numbers"
+msgstr "Gleiche Steuernummer"
+
+msgid "Client Administrator"
+msgstr "Client-Administrator lÃ¶schen"
+
+msgid "Client Manager"
+msgstr "Client-Manager"
+
+msgid "Audit Manager"
+msgstr "Audit-Manager"
+
+msgid "Audit Supervisor"
+msgstr "Audit-Leiter"
+
+msgid "Audit User"
+msgstr "Audit-Benutzer"
+
+msgid "IT User"
+msgstr "IT-Benutzer"
+
+msgid "Unique Record Key"
+msgstr "Eindeutiger DatensatzschlÃ¼ssel"
+
+msgid "Unique Group"
+msgstr "Eindeutige Gruppen"
+
+msgid "Analysis Result Data"
+msgstr "Analysedaten"
+
+msgid "Payment Data"
+msgstr "AP-Daten"
+
+msgid "Vendor Data"
+msgstr "Lieferantendaten"
+
+msgid "Generic"
+msgstr "Allgemein"
+
+msgid "Processing Data"
+msgstr "Verarbeitungsdaten"
+
+msgid "Duplicate Test"
+msgstr "Doppelzahlungsanalyse"
+
+msgid "Discount Test"
+msgstr "Skonto-Analyse"
+
+msgid "Fraud Test"
+msgstr "Betrugs-Analyse"
+
+msgid "Vendor Activity"
+msgstr "LieferantenaktivitÃ¤t"
+
+msgid "Vendor/Employee Matching"
+msgstr "Lieferanten-/Personalstamm-Analyse"
+
+msgid "Processing Server (External)"
+msgstr "Verarbeitunsserver"
+
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "Inactive"
+msgstr "Inaktiv"
+
+msgid "Clean Field"
+msgstr "Feld bereinigen"
+
+msgid "Exclude Cancellations"
+msgstr "Stornierungen ausfiltern"
+
+msgid "Minimum Amount"
+msgstr "Mindestbetrag"
+
+msgid "Minimum Date"
+msgstr "Mindestdatum"
+
+msgid "Transposed Digits"
+msgstr "Zahlendreher"
+
+msgid "Include Records"
+msgstr "DatensÃ¤tze einschlieÃen"
+
+msgid "Exclude Records"
+msgstr "DatensÃ¤tze ausschlieÃen"
+
+msgid "Include Groups"
+msgstr "Gruppen einschlieÃen"
+
+msgid "Maximum Hits Per Group"
+msgstr "Max. DatensÃ¤tze pro Gruppe"
+
+msgid "Maximum Distance"
+msgstr "Maximale Distanz"
+
+msgid "Test Unique Records"
+msgstr "Eindeutige DatensÃ¤tze testen"
+
+msgid "Similar Spelling (Soundex)"
+msgstr "Ãhnliche Buchstabierung"
+
+msgid "All Letters, Zeros"
+msgstr "Alle Buchstaben, Nullen"
+
+msgid "Leading Letters, Zeros"
+msgstr "FÃ¼hrende Buchstaben, Nullen"
+
+msgid "Trailing Letters, Zeros"
+msgstr "AngehÃ¤ngte Buchstaben, Nullen"
+
+msgid "Leading/Trailing Letters, Zeros"
+msgstr "FÃ¼hrende/AngehÃ¤ngte Buchstaben, Nullen"
+
+msgid "All Letters"
+msgstr "Alle Buchstaben"
+
+msgid "Leading Letters"
+msgstr "FÃ¼hrende Buchstaben"
+
+msgid "Trailing Letters"
+msgstr "AngehÃ¤ngte Buchstaben"
+
+msgid "Leading/Trailing Letters"
+msgstr "FÃ¼hrende/AngehÃ¤ngte Buchstaben"
+
+msgid "Access denied"
+msgstr "Zugriff verweigert"
+
+msgid "Issue confirmations"
+msgstr "BestÃ¤tigte Issues"
+
+msgid "Issue activity"
+msgstr "Issues-AktivitÃ¤t"
+
+msgid "Issue history"
+msgstr "Issue-Historie"
+
+msgid "Issue status"
+msgstr "Issue-Status"
+
+msgid "Issue age"
+msgstr "Issue-Alterung"
+
+msgid "By test"
+msgstr "Nach PrÃ¼flauf"
+
+msgid "By reason"
+msgstr "Nach Reason"
+
+msgid "By vendor"
+msgstr "Nach Lieferanten"
+
+msgid "By date"
+msgstr "Nach Datum"
+
+msgid "By user"
+msgstr "Nach Benutzer"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Totals By Category and Test"
+msgstr "Summen, gruppiert nach Kategorie und PrÃ¼flauf"
+
+msgid "Totals By Category and Reason"
+msgstr "Summen, gruppiert nach Kategorie und Reason"
+
+msgid "Totals By Category and Vendor"
+msgstr "Summen, gruppiert nach Kategorie und Lieferanten"
+
+msgid "Totals By Category and Date"
+msgstr "Summen, gruppiert nach Kategorie und Datum"
+
+msgid "No Reason Code"
+msgstr "Kein Reason-Code"
+
+msgid "Unassigned"
+msgstr "Nicht zugeordnet"
+
+msgid "New"
+msgstr "Neu"
+
+msgid "Reviewed"
+msgstr "In Bearbeitung"
+
+msgid "Confirmed"
+msgstr "BestÃ¤tigt"
+
+msgid "Denied"
+msgstr "Abgelehnt"
+
+msgid "Less Than 30 Days"
+msgstr "Weniger als 30 Tage"
+
+msgid "30-60 Days"
+msgstr "30-60 Tage"
+
+msgid "60-90 Days"
+msgstr "60-90 Tage"
+
+msgid "Over 90 Days"
+msgstr "Ãber 90 Tage"
+
+msgid "Created"
+msgstr "Erstellt"
+
+msgid "Unresolved"
+msgstr "UngelÃ¶st"
+
+msgid "Overall"
+msgstr "Insgesamt"
+
+msgid "Issue Status by Category and Test"
+msgstr "Issue-Status, gruppiert nach Kategorie und PrÃ¼flauf"
+
+msgid "Issue Status by Category and Reason"
+msgstr "Issue-Status, gruppiert nach Kategorie und Reason"
+
+msgid "Issue Status by Category and Vendor"
+msgstr "Issue-Status, gruppiert nach Kategorie und Lieferanten"
+
+msgid "Issue Status by Category and Date"
+msgstr "Issue-Status, gruppiert nach Kategorie und Datum"
+
+msgid "Issue Status by User and Test"
+msgstr "Issue-Status, gruppiert nach Kategorie und PrÃ¼flauf"
+
+msgid "Issue Age by Category and Test"
+msgstr "Issue-Alterung, gruppiert nach Kategorie und PrÃ¼flauf"
+
+msgid "Issue Age by Category and Reason"
+msgstr "Issue-Alterung, gruppiert nach Kategorie und Reason"
+
+msgid "Issue Age by Category and Vendor"
+msgstr "Issue-Alterung, gruppiert nach Kategorie und Lieferanten"
+
+msgid "Issue Age by Category and Date"
+msgstr "Issue-Alterung, gruppiert nach Kategorie und Datum"
+
+msgid "Issue Age by User and Test"
+msgstr "Issue-Alterung, gruppiert nach Benutzer und PrÃ¼flauf"
+
+msgid "Issue History by Category and Test"
+msgstr "Issue-Historie, gruppiert nach Kategorie und PrÃ¼flauf"
+
+msgid "Issue History by Category and Reason"
+msgstr "Issue-Historie, gruppiert nach Kategorie und Reason"
+
+msgid "Issue History by Category and Vendor"
+msgstr "Issue-Historie, gruppiert nach Kategorie und Lieferanten"
+
+msgid "Issue History by Category and Date"
+msgstr "Issue-Historie, gruppiert nach Kategorie und Datum"
+
+msgid "Issue History by User and Test"
+msgstr "Issue-Historie, gruppiert nach Benutzer und PrÃ¼flauf"
+
+msgid "Last Status Update by Category and Test"
+msgstr "Letzte Status-Aktualisierung, gruppiert nach Kategorie und PrÃ¼flauf"
+
+msgid "Last Status Update by Category and Reason"
+msgstr "Letzte Status-Aktualisierung, gruppiert nach Kategorie und Reason"
+
+msgid "Last Status Update by Category and Vendor"
+msgstr "Letzte Status-Aktualisierung, gruppiert nach Kategorie und Lieferanten"
+
+msgid "Last Status Update by Category and Date"
+msgstr "Letzte Status-Aktualisierung, gruppiert nach Kategorie und Datum"
+
+msgid "Last Status Update by User and Test"
+msgstr "Letzte Status-Aktualisierung, gruppiert nach Benutzer und PrÃ¼flauf"
+
+msgid "Issue Confirmations by Category and Test"
+msgstr "Issue-BestÃ¤tigungen, gruppiert nach Kategorie und PrÃ¼flauf"
+
+msgid "Issue Confirmations by Category and Reason"
+msgstr "Issue-BestÃ¤tigungen, gruppiert nach Kategorie und Reason"
+
+msgid "Issue Confirmations by Category and Vendor"
+msgstr "Issue-BestÃ¤tigungen, gruppiert nach Kategorie und Lieferanten"
+
+msgid "Issue Confirmations by Category and Date"
+msgstr "Issue-BestÃ¤tigungen, gruppiert nach Kategorie und Datum"
+
+msgid "Issue Confirmations by User and Test"
+msgstr "Issue-BestÃ¤tigungen, gruppiert nach Benutzer und PrÃ¼flauf"
+
+msgid "Invalid path"
+msgstr "UngÃ¼ltiger Pfad"
+
+msgid "Missing Parameter"
+msgstr "Fehlender Parameter"
+
+msgid "Invalid Path"
+msgstr "UngÃ¼ltiger Pfad"
+
+msgid "Invalid resource"
+msgstr "UngÃ¼ltige Ressource"
+
+msgid "Malformed request"
+msgstr "Fehlerhafte Abfrage"
+
+msgid "Path does not exist"
+msgstr "Pfad existiert nicht"
+
+msgid "Gold Prairie is already installed."
+msgstr "Gold Prairie ist bereits installiert."
+
+msgid ""
+"Server database client software not installed.  Run \"apt-get install php5-"
+"mysql\""
+msgstr ""
+"Auf dem Server ist die Datenbank-Client-Komponente nicht installiert.  Bitte "
+"geben Sie das Kommando  \"apt-get install php5-mysql\" auf der Konsole ein."
+
+msgid "Could not connect.  Database returned:"
+msgstr ""
+"Verbindung konnte nicht hergestellt werden.   Fehlermeldung der Datenbank:"
+
+msgid "Installation failed:"
+msgstr "Installation fehlgeschlagen:"
+
+msgid "missing parameter"
+msgstr "Fehlender Parameter"
+
+msgid "configuration directory is not writable"
+msgstr "Konfigurationsorder ist nicht schreibbar"
+
+msgid "could not connect to database:"
+msgstr "Konnte Verbindung zur Datenbank nicht herstellen"
+
+msgid "could not create database instance:"
+msgstr "Konnte Datenbank-Instanz nicht erstellen"
+
+msgid "could not create user:"
+msgstr "konnte Benutzer nicht erstellen"
+
+msgid "could not grant rights:"
+msgstr "konnte Rechte nicht vergeben:"
+
+msgid "table creation failed:"
+msgstr "Erstellen von Tabelle fehlgeschlagen:"
+
+msgid "application administrator user creation failed:"
+msgstr "Administrator konnte nicht erstellt werden:"
+
+msgid "default dbserver entry creation failed:"
+msgstr "Die Standard-Datenbank-Eintrag konnte nicht erstellt werden:"
+
+msgid "Missing sequence parameter"
+msgstr "Parameter \"sequence\" fehlt"
+
+msgid "Missing doc_id parameter"
+msgstr "Parameter \"doc_id\" fehlt"
+
+msgid "Show Issues by Test"
+msgstr "Issues anzeigen (Nach PrÃ¼flauf gruppiert)"
+
+msgid "Show Issues by Reason"
+msgstr "Issues anzeigen (Nach Reason gruppiert)"
+
+msgid "Show Issues By Vendor"
+msgstr "Issues anzeigen (Nach Lieferanten gruppiert)"
+
+msgid "Show Issues by Date"
+msgstr "Issues anzeigen (Nach Datum gruppiert)"
+
+msgid "Overview of Issues"
+msgstr "Issues-Ãbersicht"
+
+msgid "Issue Number: Ascending"
+msgstr "Issue-Nummer: Aufsteigend"
+
+msgid "Vendor Number: Ascending"
+msgstr "Lieferantennummer: Aufsteigend"
+
+msgid "Amount: Lowest first"
+msgstr "Betrag: Niedrigster zuerst"
+
+msgid "Amount: Highest first"
+msgstr "Betrag: HÃ¶chster zuerst"
+
+msgid "Date: Most recent first"
+msgstr "Datum (aktuellstes zuerst)"
+
+msgid "Date: Oldest first"
+msgstr "Datum (Ã¤ltestest zuerst)"
+
+msgid "Issue #"
+msgstr "Issue #"
+
+msgid "List of Issues"
+msgstr "Issues-Liste"
+
+msgid "The specified issue could not be found"
+msgstr "Das angeforderte Issue konnte nicht gefunden werden"
+
+msgid "(Multiple Categories)"
+msgstr "(Mehrere Kategorien)"
+
+msgid "(Multiple Vendors)"
+msgstr "(Mehrere Lieferanten)"
+
+msgid "Review Issue"
+msgstr "Issue als \"In Bearbeitung\" markieren"
+
+msgid "Review Issues"
+msgstr "Issues als \"In Bearbeitung\" markieren"
+
+msgid "Deny Issue"
+msgstr "Issue als abgelehnt markieren"
+
+msgid "Deny Issues"
+msgstr "Issues als abgelehnt markieren"
+
+msgid "Confirm Issue"
+msgstr "Issue bestÃ¤tigen"
+
+msgid "Confirm Issues"
+msgstr "Issues bestÃ¤tigen"
+
+msgid "Submit Issue"
+msgstr "Issue einreichen"
+
+msgid "Submit Issues"
+msgstr "Issues einreichen"
+
+msgid "Approve Issue"
+msgstr "Issue freigeben"
+
+msgid "Approve Issues"
+msgstr "Issues freigeben"
+
+msgid "Deduct Issue"
+msgstr "Issue als abgerechnet markieren"
+
+msgid "Deduct Issues"
+msgstr "Issues als abgerechnet markieren"
+
+msgid "Cancel Issue"
+msgstr "Issue als abgelehnt markieren"
+
+msgid "Cancel Issues"
+msgstr "Issues als abgelehnt markieren"
+
+msgid "Close Issue"
+msgstr "Issue als abgeschlossen markieren"
+
+msgid "Close Issues"
+msgstr "Issues als abgeschlossen markieren"
+
+msgid "(No Reasons Available)"
+msgstr "(Keine Reasons vorhanden)"
+
+msgid "Select a reason..."
+msgstr "WÃ¤hlen Sie bitte ein Reason..."
+
+msgid "Deny"
+msgstr "Ablehnen"
+
+msgid "Confirm"
+msgstr "BestÃ¤tigen"
+
+msgid "Review"
+msgstr "In Bearbeitung"
+
+msgid "Approve"
+msgstr "Freigeben"
+
+msgid "Submit"
+msgstr "Einreichen"
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Deduct"
+msgstr "Abgerechnet"
+
+msgid "List of Jobs"
+msgstr "Jobs-Liste"
+
+msgid "The specified job could not be found"
+msgstr "Der angeforderte Job konnte nicht gefunden werden"
+
+msgid "List of Resources"
+msgstr "Ressourcenliste"
+
+msgid "A valid resource was not specified"
+msgstr "Eine gÃ¼ltige Ressource muss angegeben werden"
+
+msgid "The specified resource could not be found"
+msgstr "Die angeforderte Ressource konnte nicht gefunden werden"
+
+msgid "No query search parameter was specified"
+msgstr "Kein Abfrageparameter wurde spezifiziert"
+
+msgid "Unknown Failure"
+msgstr "Unbekannter Fehler"
+
+msgid "The request failed for an unknown reason."
+msgstr "Die Operation ist aus unbekannten GrÃ¼den fehlgeschlagen."
+
+msgid "Service Unavailable"
+msgstr "Service nicht verfÃ¼gbar"
+
+msgid "The service is currently unavailable."
+msgstr "Das Service ist derzeit nicht verfÃ¼gbar"
+
+msgid "Invalid Version"
+msgstr "UngÃ¼ltige Version"
+
+msgid "The requested API version is invalid"
+msgstr "Die angeforderte API-Version ist ungÃ¼ltig"
+
+msgid "Invalid Format"
+msgstr "UngÃ¼ltiges Format"
+
+msgid "The requested API format is invalid"
+msgstr "Das angeforderte API-Format ist ungÃ¼ltig"
+
+msgid "Invalid Credentials"
+msgstr "UngÃ¼ltige Zugangsdaten"
+
+msgid ""
+"Either the user isn't logged in or invalid credentials have been supplied."
+msgstr ""
+"Entweder ist der Benutzer nicht angemelden, oder ungÃ¼ltige Zugangsdaten sind "
+"spezifiziert worden"
+
+msgid "Insufficient Permission"
+msgstr "Unzureichende Zugriffsrechte"
+
+msgid ""
+"The user doesn't have sufficient permission to perform the requested "
+"operation."
+msgstr ""
+"Der Benutzer hat nicht die erforderlichen Rechte, um die angeforderte "
+"Operation auszufÃ¼hren."
+
+msgid "Invalid Request Type"
+msgstr "UngÃ¼ltiger Abfragetyp"
+
+msgid "The request was sent with something besides an HTTP POST request."
+msgstr "Die Abfrage wurde nicht mit der POST-Methode gesendet"
+
+msgid "Invalid Request Syntax"
+msgstr "Die Abfragesyntax ist ungÃ¼ltig"
+
+msgid ""
+"The POST request is missing the variables containing the method and/or "
+"parameters values."
+msgstr ""
+"Bei der POST-Abfrage fehlen Werte fÃ¼r die Abfragemethode und/oder "
+"Parmeterwerte"
+
+msgid "Invalid Request Method"
+msgstr "UngÃ¼ltige Abfrage-Methode"
+
+msgid "The request doesn't contain a valid method."
+msgstr "Die Abfrage enthÃ¤lt keine gÃ¼ltige Methode"
+
+msgid "Invalid Request Parameter Syntax"
+msgstr "UngÃ¼ltige Abfrageparametersyntax"
+
+msgid ""
+"The request parameters could not be parsed; check to make sure the "
+"parameters are in proper JSON format."
+msgstr ""
+"Die Anfrageparameter konnten nicht eingelesen werden:  Bitte stellen Sie "
+"sicher, dass die Parameter dem JSON-Format entsprechen."
+
+msgid "Invalid Request Parameters"
+msgstr "UngÃ¼ltige Abfrageparameter"
+
+msgid ""
+"The request doesn't contain appropriate parameters for the specified method."
+msgstr ""
+"Die Abfrage enthÃ¤lt nicht die richtige Parameter fÃ¼r die angegebene Methode."
+
+msgid "Request Failed"
+msgstr "Anfrage fehlgeschlagen"
+
+msgid "The requested operation failed."
+msgstr "Die angeforderte Operation ist fehlgeschlagen"
+
+msgid "Configuration Warning"
+msgstr "Konfigurationswarnung"
+
+msgid ""
+"One or more potential problems has been detected in the system configuration:"
+msgstr ""
+"Eins oder mehrere Probleme sind in der Systemkonfiguration festgestellt "
+"worden:"
+
+msgid "Ignore and continue"
+msgstr "Ignorieren und fortsetzen"
+
+msgid "Production"
+msgstr "Produktion"
+
+msgid "Test"
+msgstr "PrÃ¼flauf"
+
+msgid "Issues"
+msgstr "Issues"
+
+msgid "List of Batches"
+msgstr "Batch-Liste"
+
+msgid "Show Issues by Batch"
+msgstr "Issues anzeigen (nach Batch gruppiert)"
+
+msgid "Overview of Confirmed Issues"
+msgstr "Ãbersicht der bestÃ¤tigten Issues"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Reason"
+msgstr "Reason"
+
+msgid "Claim Code"
+msgstr "Claim-Code"
+
+msgid "No Claim Code"
+msgstr "Kein Claim-Code"
+
+msgid "Vendor"
+msgstr "Lieferant"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Issue"
+msgstr "Issue"
+
+msgid "Document #"
+msgstr "Dokument #"
+
+msgid "Submitted"
+msgstr "Eingereicht"
+
+msgid "Deducted"
+msgstr "Abgerechnet"
+
+msgid "Cancelled"
+msgstr "Abgelehnt"
+
+msgid "Closed"
+msgstr "Abgeschlossen"
+
+msgid "## TEMPLATE NOT FOUND ##"
+msgstr "## VORLAGE NICHT GEFUNDEN ##"
+
+msgid "Added in test \"%s\" (%s)"
+msgstr "Im PrÃ¼flauf \"%s\" (%s)"
+
+msgid "Doc No:"
+msgstr "Belegnr.:"
+
+msgid "Doc Date:"
+msgstr "Belegdatum:"
+
+msgid "Vendor ID:"
+msgstr "Lieferantennr.:"
+
+msgid "Subtotal:"
+msgstr "Zwischensumme:"
+
+msgid "Adjustments:"
+msgstr "Berichtigung(en):"
+
+msgid "Total:"
+msgstr "Gesamtsumme:"
+
+msgid "Amount"
+msgstr "Betrag"
+
+msgid "One or more of the following items may contain the following error(s):"
+msgstr ""
+"Eine oder mehrere der folgenden Issues kÃ¶nnten folgende Fehler enthalten:"
+
+msgid "Please contact us at audit@goldprairie.com if you have any questions"
+msgstr ""
+"Falls Sie Fragen haben, kontaktieren Sie uns bitte unter audit@goldprairie."
+"com"
+
+msgid "ISSUE"
+msgstr "ISSUE"
+
+msgid "(none)"
+msgstr "(keine)"
+
+msgid "DEBIT MEMO"
+msgstr "LASTSCHRIFT"
+
+msgid "Page %n"
+msgstr "Seite %n"
+
+msgid "Finished"
+msgstr "Fertig"
+
+msgid "Running"
+msgstr "Operation wird ausgefÃ¼hrt"
+
+msgid "**** NOTE: YOU'RE ON THE TEST SITE ****"
+msgstr "HINWEIS: SIE BEFINDEN SICH AUF DER TESTSITE"
+
+msgid "Tracking"
+msgstr "Tracking"
+
+msgid "Resources"
+msgstr "Ressourcen"
+
+msgid "Jobs"
+msgstr "Jobs"
+
+msgid "Admin Tools"
+msgstr "Administration"
+
+msgid "Instance Admin"
+msgstr "Instanzadministration"
+
+msgid "Site Admin"
+msgstr "Site-Administration"
+
+msgid "Switch to another instance"
+msgstr "Zu einer anderen Instanz wechseln"
+
+msgid "Edit your account settings"
+msgstr "Kontoeinstellungen bearbeiten"
+
+msgid "Sign out"
+msgstr "Ausloggen"
+
+msgid "Loading..."
+msgstr "Wird geladen..."
+
+msgid "First Name"
+msgstr "Vorname"
+
+msgid "Last Name"
+msgstr "Name"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "Company"
+msgstr "Firma"
+
+msgid "Password"
+msgstr "Passwort"
+
+msgid "Confirm Password"
+msgstr "Passwort bestÃ¤tigen"
+
+msgid "Creating account..."
+msgstr "Konto wird erstellt..."
+
+msgid "Sign Up"
+msgstr "Jetzt anmelden"
+
+msgid "Already have an account?"
+msgstr "Haben Sie schon ein Benutzerkonto?"
+
+msgid "Account Settings"
+msgstr "Kontoeinstellungen"
+
+msgid "General Settings"
+msgstr "Allgemein"
+
+msgid "Change Password"
+msgstr "Passwort Ã¤ndern"
+
+msgid "Region"
+msgstr "Region"
+
+msgid "Back to site"
+msgstr "ZurÃ¼ck zur Site"
+
+msgid "Instance Settings"
+msgstr "Instanzeinstellungen"
+
+msgid "Actions"
+msgstr "Aktionen"
+
+msgid "Users"
+msgstr "Benutzer"
+
+msgid "Templates"
+msgstr "Vorlagen"
+
+msgid "Data Feeds"
+msgstr "Daten-Feeds"
+
+msgid "Tests"
+msgstr "PrÃ¼flÃ¤ufe"
+
+msgid "Claim Types"
+msgstr "Claim-Codes"
+
+msgid "Log"
+msgstr "Log"
+
+msgid "Configuration"
+msgstr "Konfiguration"
+
+msgid "Filesystem"
+msgstr "Dateisystem"
+
+msgid "Filter Results"
+msgstr "Ergebnisse filtern"
+
+msgid "Hide Filter"
+msgstr "Filter ausblenden"
+
+msgid "Show/Hide Filter"
+msgstr "Filter ein-/ausblenden"
+
+msgid "Counts"
+msgstr "Summen"
+
+msgid "Amounts"
+msgstr "BetrÃ¤ge"
+
+msgid "Reports"
+msgstr "Berichte"
+
+msgid "Adobe PDF"
+msgstr "Adobe PDF"
+
+msgid "Comma-Delimited"
+msgstr "Kommagetrennte Datei"
+
+msgid "Assembling Batch %p1"
+msgstr "Batch %p1 wird zusammengestellt"
+
+msgid ""
+"Assembling a batch file can take up to a few minutes.  Please wait while the "
+"batch is assembled."
+msgstr ""
+"Es kann ein paar Minuten dauern, um eine Batch-Datei zu erstellen.   Bitte "
+"warten Sie einen Augenblick."
+
+msgid "Assembling batch"
+msgstr "Batch wird zusammengestellt"
+
+msgid "%p1 complete"
+msgstr "%p1 fertig"
+
+msgid "Batch %p1 is ready for download"
+msgstr "Batch %p1 ist zum Download bereit"
+
+msgid ""
+"Your batch has successfully been created and is ready for you to download."
+msgstr ""
+"Ihre Batch-Datei wurde erfolgreich erstellt und steht zum Download bereit."
+
+msgid "Download Batch %p1"
+msgstr "Batch %p1 herunterladen"
+
+msgid "An error occurred"
+msgstr "Ein Fehler ist aufgetreten"
+
+msgid "Message:"
+msgstr "Nachricht:"
+
+msgid "Stack Trace:"
+msgstr "Stacktrace:"
+
+msgid "The page you're looking for can't be found"
+msgstr "Die Seite, die Sie suchen, kann nicht gefunden werden."
+
+msgid ""
+"Oops!  We can't seem to find that page.  Enter something in the search box "
+"above or choose one of the links below:"
+msgstr ""
+"Leider konnte die von Ihnen angeforderte Seite nicht gefunden werden.  Bitte "
+"geben Sie einen Suchbegriff ein oder klicken Sie auf einen der folgenden "
+"Links.  "
+
+msgid "Main Overview"
+msgstr "Ãberblick"
+
+msgid "Overview of Tracking"
+msgstr "Tracking-Ãbersicht"
+
+msgid "Welcome to Gold Prairie!"
+msgstr "Willkommen bei Gold Prairie"
+
+msgid "I Accept"
+msgstr "Ich stimme zu"
+
+msgid "Install Gold Prairie"
+msgstr "Gold Prairie installieren"
+
+msgid "Step 1 of 2: Connect to Database"
+msgstr "Schritt 1 von 2: Verbindung zur Datenbank herstellen"
+
+msgid "Host"
+msgstr "Servername"
+
+msgid "Port"
+msgstr "Port"
+
+msgid "DBA Username"
+msgstr "DBA-Benutzername"
+
+msgid "DBA Password"
+msgstr "DBA-Passwort"
+
+msgid "Step 2 of 2: Create Gold Prairie Directory Database"
+msgstr "Schritt 2 von 2: Gold Prairie Directory-Datenbank erstellen"
+
+msgid "Database Name"
+msgstr "Datenbankname"
+
+msgid "Username"
+msgstr "Benutzername"
+
+msgid "Previous"
+msgstr "ZurÃ¼ck"
+
+msgid "Installation Successful!"
+msgstr "Installation erfolgreich abgeschlossen!"
+
+msgid ""
+"A default Gold Prairie administrator with the following username and "
+"password has been created for you.  Keep a copy of this information in a "
+"safe place:"
+msgstr ""
+"Ein Administratorkonto wurde mit dem folgenden Benutzername und Passwort "
+"erstellt.  Bitte notieren Sie sich diese Daten."
+
+msgid "Go to Site Admin"
+msgstr "Site-Administration"
+
+msgid "Created:"
+msgstr "Erstellt:"
+
+msgid "Last Status Change:"
+msgstr "Letzte Status-Ãnderung"
+
+msgid "Gross:"
+msgstr "Brutto:"
+
+msgid "Adjustment(s):"
+msgstr "Berichtigung(en):"
+
+msgid "Net:"
+msgstr "Netto:"
+
+msgid "Last updated:"
+msgstr "Letzte Aktualisierung "
+
+msgid "Adjustments"
+msgstr "Berichtigung(en):"
+
+msgid "Detail"
+msgstr "Detail"
+
+msgid "Attachments"
+msgstr "AnhÃ¤nge"
+
+msgid "Paybacks"
+msgstr "RÃ¼ckzahlungen"
+
+msgid "Select All"
+msgstr "Alles markieren"
+
+msgid "Select None"
+msgstr "Nichts auswÃ¤hlen"
+
+msgid "Review Selected Issues"
+msgstr "Selektierte Issues als \"In Bearbeitung\" markieren"
+
+msgid "Deny Selected Issues"
+msgstr "Selektierte Issues als Abgelehnt markieren"
+
+msgid "Confirm Selected Issues"
+msgstr "Selektierte Issues als BestÃ¤tigt markieren"
+
+msgid "Submit Selected Issues"
+msgstr "Selektierte Issues als Eingereicht markieren"
+
+msgid "Deduct Selected Issues"
+msgstr "Selektierte Issues als Abgerechnet markieren"
+
+msgid "Showing %p1 of %p2 results"
+msgstr "Ergebnisse %p1 von %p2 werden angezeigt"
+
+msgid "Showing 1 result"
+msgstr "1 Ergebnis wird angezeigt"
+
+msgid "Showing 0 results"
+msgstr "Keine Ergebnisse"
+
+msgid "All %p1 issues on this page are selected."
+msgstr "Alle %p1 Issues auf dieser Seite sind selektiert"
+
+msgid "Select all %p1 issues"
+msgstr "Alle %p1 Issues selektieren"
+
+msgid "All %p1 issues are selected."
+msgstr "Alle %p1 Issues sind selektiert."
+
+msgid "Clear selection"
+msgstr "Auswahl aufheben"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "There are no issues to show"
+msgstr "Keine Treffer gefunden"
+
+msgid "Comment"
+msgstr "Kommentare"
+
+msgid "Report"
+msgstr "Bericht"
+
+msgid "Show more..."
+msgstr "Mehr..."
+
+msgid "Back to job list"
+msgstr "ZurÃ¼ck zur Jobliste"
+
+msgid "Created by:"
+msgstr "Erstellt von:"
+
+msgid "Created date:"
+msgstr "Erstellungsdatum:"
+
+msgid "Last updated date:"
+msgstr "Letzte Aktualisierung:"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "Click to edit"
+msgstr "Hier klicken, um Objekt zu bearbeiten"
+
+msgid "Job command JSON goes here..."
+msgstr "Job-JSON hier eingeben..."
+
+msgid "Add a step"
+msgstr "Jobschritt hinzufÃ¼gen"
+
+msgid "Add New Job"
+msgstr "Neuer Job"
+
+msgid "All %p1 jobs on this page are selected."
+msgstr "Alle %p1 Jobs auf dieser Seite sind selektiert"
+
+msgid "Select all %p1 jobs"
+msgstr "Alle %p1 Jobs selektieren"
+
+msgid "All %p1 jobs are selected."
+msgstr "Alle %p1 Jobs sind selektiert."
+
+msgid "Edit Job"
+msgstr "Job bearbeiten"
+
+msgid "Delete Job"
+msgstr "PrÃ¼flauf lÃ¶schen"
+
+msgid "You"
+msgstr "Sie"
+
+msgid "5 more"
+msgstr "5 mehr"
+
+msgid "Add Stacks"
+msgstr "Stack erstellen"
+
+msgid "Add stacks"
+msgstr "Stack erstellen"
+
+msgid "(No stacks)"
+msgstr "(Keine Stacks)"
+
+msgid "Add tags"
+msgstr "Tag(s) hinzufÃ¼gen..."
+
+msgid "(No tags)"
+msgstr "(Keine Tags)"
+
+msgid "Logging in..."
+msgstr "Anmeldung..."
+
+msgid "Sign In"
+msgstr "Anmelden"
+
+msgid "Don't have an account?"
+msgstr "Haben Sie noch kein Konto erstellt?"
+
+msgid "Assembling %p1"
+msgstr "'%p1' wird zusammengestellt"
+
+msgid ""
+"Assembling a report can take up to a few minutes.  Please wait while the "
+"report is assembled."
+msgstr ""
+"Es kann ein paar Minuten dauern, um einen Bericht zu erstellen.   Bitte "
+"warten Sie einen Augenblick."
+
+msgid "Assembling report"
+msgstr "Bericht wird zusammengestellt"
+
+msgid "%p1 is ready for download"
+msgstr "'%p1' ist zum Download bereit"
+
+msgid ""
+"Your report has successfully been created and is ready for you to download."
+msgstr "Ihr Bereicht wurde erfolgreich erstellt und steht zum Download bereit."
+
+msgid "Download %p1"
+msgstr "%p1 herunterladen"
+
+msgid "Back to resource list"
+msgstr "ZurÃ¼ck zur Resssourcenliste"
+
+msgid "Edit Details"
+msgstr "Eigenschaften bearbeiten"
+
+msgid "Open this resource in a new tab"
+msgstr "Diese Ressource in einer neuen Registerkarte Ã¶ffnen"
+
+msgid "Open in browser"
+msgstr "Im Browser Ã¶ffnen"
+
+msgid "Open this resource in the Gold Prairie Workstation"
+msgstr "Im Gold Prairie Workstation Ã¶ffnen"
+
+msgid "Open in Workstation"
+msgstr "Im Workstation Ã¶ffnen"
+
+msgid "Structure"
+msgstr "Struktur"
+
+msgid "Source"
+msgstr "Quelldaten"
+
+msgid "Permissions"
+msgstr "Benutzerrechte"
+
+msgid "Comments"
+msgstr "Kommentare"
+
+msgid "History"
+msgstr "Verlauf"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Width"
+msgstr "Breite"
+
+msgid "Decimals"
+msgstr "Dezimaltrennzeichen"
+
+msgid "Formula"
+msgstr "Formel"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Public"
+msgstr "Ãffentlich"
+
+msgid ""
+"Display this resource in the 'All&nbsp;Resources' list for this user or group"
+msgstr ""
+"Ressource in der Ressourcenliste fÃ¼r diesen Benutzer/diese Gruppe anzeigen"
+
+msgid "Publish"
+msgstr "VerÃ¶ffentlichen"
+
+msgid "Allow this user or group to edit this resource"
+msgstr "Diesem Benutzer/Dieser Gruppe Zugriff auf diese Ressource erlauben"
+
+msgid "Read/Write"
+msgstr "Lesen/Schreiben"
+
+msgid "Allow this user or group to share this resource"
+msgstr "Diesem Benutzer/Dieser Gruppe erlauben, diese Ressource freizugeben"
+
+msgid "Share"
+msgstr "Freigeben"
+
+msgid "Add new resource"
+msgstr "Neue Ressource erstellen"
+
+msgid "Upload Resource File"
+msgstr "Ressource-Datei hochladen..."
+
+msgid "Edit Stack and Tags"
+msgstr "Stacks und Tags bearbeiten"
+
+msgid "Manage Permissions and Sharing"
+msgstr "Berechtigungen und Freigaben verwalten"
+
+msgid "Remove From My Collection"
+msgstr "Aus Sammlung entfernen"
+
+msgid "All %p1 resources on this page are selected."
+msgstr "Alle %p1 Ressourcen auf dieser Seite sind selektiert"
+
+msgid "Select all %p1 resources"
+msgstr "Alle %p1 Ressourcen selektieren"
+
+msgid "All %p1 resources are selected."
+msgstr "Alle %p1 Ressources sind selektiert."
+
+msgid "There are no resources to show"
+msgstr "Keine Ressourcen vorhanden"
+
+msgid "View/Edit Details"
+msgstr "Details ansehen/bearbeiten"
+
+msgid "Remove from My Collection"
+msgstr "Aus Sammlung entfernen"
+
+msgid "Add to My Collection"
+msgstr "Zur Sammlung hinzufÃ¼gen"
+
+msgid "Add Resource"
+msgstr "Ressource hinzufÃ¼gen"
+
+msgid "Choose the method in which you would like to add the resource."
+msgstr "WÃ¤hlen Sie die Art von Ressource, die Sie erstellen mÃ¶chten."
+
+msgid "Select method..."
+msgstr "WÃ¤hlen Sie bitte eine Methode..."
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Upload"
+msgstr "Datei hochladen"
+
+msgid "Server"
+msgstr "Server"
+
+msgid "Back to edit resource"
+msgstr "ZurÃ¼ck zur Ressourcesbearbeitung"
+
+msgid ""
+"Set public permissions and share with users/groups to manage individual "
+"permissions."
+msgstr "Ãffentlichen Zugriff und Freigaben fÃ¼r Benutzer/Gruppen managen"
+
+msgid "Add Users/Groups"
+msgstr "Benutzer/Gruppen erstellen"
+
+msgid "Enter name, email or group..."
+msgstr "Namen, E-Mail Adresse oder Gruppe eingeben..."
+
+msgid "Notify users via system notifications and email"
+msgstr "Benutzer Ã¼ber Systemmeldungen und E-Mails benachrichtigen"
+
+msgid "Include a message (optional)"
+msgstr "Nachricht hinzufÃ¼gen (optional)"
+
+msgid "Continue"
+msgstr "Weiter"
+
+msgid "Remove this user or group"
+msgstr "Diesen Benutzer/Diese Gruppe entfernen"
+
+msgid "Remove"
+msgstr "Entfernen"
+
+msgid "Site Settings"
+msgstr "Siteadministration"
+
+msgid "Overview"
+msgstr "Ãberblick"
+
+msgid "Instances"
+msgstr "Instanzen"
+
+msgid "Database Servers"
+msgstr "Datenbankserver"
+
+msgid "Administrators"
+msgstr "Administratoren"
+
+msgid "Download"
+msgstr "Herunterladen"
+
+msgid "Step 1 of 3: Upload Files"
+msgstr "Schritt 1 von 3: Datei(en) hochladen"
+
+msgid "Uploading Files..."
+msgstr "Dateien hochladen..."
+
+msgid "Upload Files"
+msgstr "Dateien hochladen..."
+
+msgid "Step 2 of 3: Select Fields"
+msgstr "Schritt 2 von 3: Felder auswÃ¤hlen"
+
+msgid "Step 3 of 3: Select Tests"
+msgstr "Schritt 3 von 3: Tests auswÃ¤hlen"
+
+msgid "Same invoice number, same date, same amount"
+msgstr "Gleiche Rechnungsnummer, gleiches Datum, gleicher Betrag"
+
+msgid "Same invoice number, different date, same amount"
+msgstr "Gleiche Rechnungsnr, Ungleiches Datum, Gleicher Betrag"
+
+msgid "Different invoice number, same date, same amount"
+msgstr "Ungleiche Recnungsnummer, gleiches Datum, gleicher Betrag"
+
+msgid "Same invoice number, same date, different amount"
+msgstr "Gleiche Rechnungsnummer, gleiches Datum, Ungleicher Betrag"
+
+msgid "Same invoice number, different date, different amount"
+msgstr "Gleiche Rechnungsnummer, ungleiches Datum, Ungleicher Betrag"
+
+msgid "Different invoice number, same date, different amount"
+msgstr "Ungleiche Rechnungsnummer, gleiches Datum, Ungleicher Betrag"
+
+msgid "Missed Discount Analysis"
+msgstr "Verpasste Skonto-Rabatten"
+
+msgid "Payment Made with Excessive Invoice Amount"
+msgstr "Zahlungsfehler (Ã¼bermÃ¤Ãiger Betrag)"
+
+msgid "Payment Made Prior to an Invoice"
+msgstr "Zahlungsfehler (Zahlung erfolgt vor Rechnungsdatum)"
+
+msgid "Payment Made on a Non-Work Day"
+msgstr "Zahlungsfehler (Zahlung an Nicht-Werktag)"
+
+msgid "Duplicate Tax ID"
+msgstr "Doppelte Steuernummer"
+
+msgid "Duplicate Name"
+msgstr "Doppelte Namen"
+
+msgid "Duplicate Address"
+msgstr "Doppelte Adressen"
+
+msgid "Finish"
+msgstr "Fertigstellen"
+
+msgid "Create a new data feed"
+msgstr "Einen neuen Daten-Feed erstellen"
+
+msgid "Data Feed Name"
+msgstr "Daten-Feed-Name"
+
+msgid "File"
+msgstr "Datei"
+
+msgid "Category"
+msgstr "Kategorie"
+
+msgid "Group"
+msgstr "Gruppe"
+
+msgid "Append data to an existing data feed"
+msgstr "Daten auf einen bereits bestehenden Daten-Feed hochladen:"
+
+msgid ""
+"To upload data to the specified data feed, choose a file using the file "
+"selector and fill out the required parameters."
+msgstr ""
+"Um Daten in den spezifizierten Daten-Feed einzuladen, wÃ¤hlen Sie eine Datei "
+"mit dem Dateiauswahldialog aus"
+
+msgid "OR"
+msgstr "oder"
+
+msgid ""
+"Would you like to run all analysis jobs in the current instance? If so, "
+"enter the current instance name '%p1' below to confirm and continue."
+msgstr ""
+"MÃ¶chten Sie alle PrÃ¼flÃ¤ufe in der aktiven Instanz laufen lassen?  Wenn ja, "
+"geben Sie den aktuellen Instanznamen '%p1' unten ein."
+
+msgid "Instance Name"
+msgstr "Instanzname"
+
+msgid "Running Analysis Jobs..."
+msgstr "PrÃ¼flÃ¤ufe werden ausgefÃ¼hrt"
+
+msgid "Yes, Run Analysis Jobs"
+msgstr "Ja, PrÃ¼flÃ¤ufe ausfÃ¼hren"
+
+msgid ""
+"Would you like to clear all data from the specified data feed in the current "
+"instance? If so, enter the current instance name '%p1' below to confirm and "
+"continue."
+msgstr ""
+"MÃ¶chten Sie alle Daten in der aktuellen Instanz lÃ¶schen?  Wenn ja, geben Sie "
+"bitte den aktuellen Instanznamen '%p1' ein."
+
+msgid "Clearing Data Feeds..."
+msgstr "Inhalt des Daten-Feeds wird gelÃ¶scht"
+
+msgid "Yes, Clear Data Feed"
+msgstr "Ja, Inhalt eines Daten-Feeds lÃ¶schen"
+
+msgid ""
+"Would you like to clear all data from the current instance? If so, enter the "
+"current instance name '%p1' below to confirm and continue."
+msgstr ""
+"MÃ¶chten Sie alle Daten in der aktuellen Instanz kÃ¤schen?  Wenn ja, geben Sie "
+"bitte den aktuellen Instanznamen '%p1' ein."
+
+msgid "Clearing All Content..."
+msgstr "Inhalte werden gelÃ¶scht..."
+
+msgid "Yes, Clear All Content"
+msgstr "Ja, Inhalt lÃ¶schen"
+
+msgid ""
+"Would you like to reset all items to 'New Analysis' in the existing data in "
+"the current instance? If so, enter the current instance name '%p1' below to "
+"confirm and continue."
+msgstr ""
+"MÃ¶chten Sie alle Issues in der aktuellen Instanz auf 'Neu' zurÃ¼cksetzen?  "
+"Wenn ja, geben Sie bitte den aktuellen Instanznamen '%p1' ein."
+
+msgid "Resetting Analysis Statuses..."
+msgstr "Status wird zurÃ¼ckgesetzt..."
+
+msgid "Yes, Reset Analysis Status"
+msgstr "Ja, Status zurÃ¼cksetzen"
+
+msgid "Would you like to delete temporary tables from the system?"
+msgstr "MÃ¶chten Sie alle temporÃ¤ren Tabellen im System lÃ¶schen?"
+
+msgid "Cleaning Database..."
+msgstr "Datenbank wird bereinigt..."
+
+msgid "Yes, Clean Database"
+msgstr "Ja, Datenbank bereinigen"
+
+msgid "Would you like to optimize the database?"
+msgstr "MÃ¶chten Sie die Datenbank optimieren?"
+
+msgid "Optimizing Database..."
+msgstr "Datenbank wird optimiert..."
+
+msgid "Yes, Optimize Database"
+msgstr "Ja, Datenbank optimieren"
+
+msgid ""
+"Would you like to update the document tags? If so, enter the current "
+"instance name '%p1' below to confirm and continue."
+msgstr ""
+"MÃ¶chten Sie alle SchlÃ¼sselwÃ¶rter aktualisieren?  Wenn ja, geben Sie bitte "
+"den aktuellen Instanznamen '%p1' ein."
+
+msgid "Updating Document Tags..."
+msgstr "DokumentschlÃ¼sselwÃ¶rter werden aktualisiert..."
+
+msgid "Yes, Update Document Tags"
+msgstr "Ja, DokumentschlÃ¼sselwÃ¶rter aktualisieren"
+
+msgid ""
+"Would you like to synchronize vendor references in the current instance? If "
+"so, enter the current instance name '%p1' below to confirm and continue."
+msgstr ""
+"MÃ¶chten Sie Lieferantenreferenzen in der aktuellen Instanz synchronisieren?  "
+"Wenn ja, geben Sie den aktuellen Instanznamen '%p1' ein."
+
+msgid "Synchronizing Vendors..."
+msgstr "Lieferanten werden synchronisiert..."
+
+msgid "Yes, Synchronize Vendors"
+msgstr "Ja, Lieferanten synchronisieren"
+
+msgid ""
+"Would you like to install demo data over the existing data in the current "
+"instance? If so, enter the current instance name '%p1' below to confirm and "
+"continue."
+msgstr "Ungleiche Rechnungsnummer, Gleiches Datum, Gleicher Betrag"
+
+msgid "Duplicate Analysis"
+msgstr "Doppelzahlungsanalyse"
+
+msgid "Discount Analysis"
+msgstr "Skonto-Analyse"
+
+msgid "Pricing Analysis"
+msgstr "Betrag-Analyse"
+
+msgid "Promotion Analysis"
+msgstr "VerkaufsfÃ¶rderung-Analyse"
+
+msgid "Fraud Analysis"
+msgstr "Betrugsanalyse"
+
+msgid "Vendor Change Analysis"
+msgstr "VerÃ¤nderungsanalyse fÃ¼r den Lieferantenstamm"
+
+msgid "Vendor Tax ID Analysis"
+msgstr "Lieferenten-Steuernummer-Analyse"
+
+msgid "Vendor/Employee Analysis"
+msgstr "Lieferanten-/Personalstamm-Analyse"
+
+msgid "Vendor Activity Analysis"
+msgstr "LieferantenaktivitÃ¤t-Analyse"
+
+msgid "Installing Demo Data..."
+msgstr "Demo-Daten werden geladen..."
+
+msgid "Yes, Install Demo Data"
+msgstr "Ja, Demo-Daten laden"
+
+msgid "Add Claim Type"
+msgstr "Claim-Code erstellen"
+
+msgid "There are no claim types in the system."
+msgstr "Es existieren keine Claim-Codes im System."
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Delete"
+msgstr "LÃ¶schen"
+
+msgid "Reasons"
+msgstr "Reasons"
+
+msgid "There are no reasons for this claim type."
+msgstr "Es gibt keine Reason-Codes fÃ¼r dieses Issue"
+
+msgid "Add Reason"
+msgstr "Reason-Code erstellen"
+
+msgid "Delete Claim Type"
+msgstr "Claim-Code lÃ¶schen"
+
+msgid "New Claim Type"
+msgstr "Claim-Code erstellen"
+
+msgid "Save Changes"
+msgstr "Speichern"
+
+msgid "Claim Type"
+msgstr "Claim-Code"
+
+msgid "Claim Description"
+msgstr "Beschreibung"
+
+msgid "Claim Cover"
+msgstr "Claim-Deckblatt"
+
+msgid "Claim Detail"
+msgstr "Claim-Detailvorlage"
+
+msgid "Adjustment Cover"
+msgstr "Berichtigung-Deckblatt"
+
+msgid "Adjustment Detail"
+msgstr "Berichtigung-Detailvorlage"
+
+msgid "New Reason"
+msgstr "Neuer Reason-Code"
+
+msgid "Reason Type"
+msgstr "Reason-Code"
+
+msgid "Add Preference"
+msgstr "Einstellung erstellen"
+
+msgid "Preference Name"
+msgstr "Einstellungsname"
+
+msgid "Value"
+msgstr "Wert"
+
+msgid "New Preference"
+msgstr "Neue Einstellung"
+
+msgid "Add Data Feed"
+msgstr "Daten-Feed erstellen"
+
+msgid "There are no data feeds in the system."
+msgstr "Es gibt keine Daten-Feeds im System"
+
+msgid "Delete Data Feed"
+msgstr "Daten-Feed lÃ¶schen"
+
+msgid "New Data Feed"
+msgstr "Daten-Feed erstellen"
+
+msgid "Data Feed Type"
+msgstr "Daten-Feed-Typ"
+
+msgid "Insert Type"
+msgstr "Insert-Typ"
+
+msgid "Record Key"
+msgstr "DatensatzschlÃ¼ssel"
+
+msgid "Grouping"
+msgstr "Gruppe"
+
+msgid "Group Template"
+msgstr "Gruppenvorlage"
+
+msgid "Report Template"
+msgstr "Berichtvorlage"
+
+msgid "New Folder"
+msgstr "Neuer Ordner"
+
+msgid "Rename"
+msgstr "Umbenennen"
+
+msgid "Preview"
+msgstr "Vorschau"
+
+msgid "Type:"
+msgstr "Typ:"
+
+msgid "Size:"
+msgstr "GrÃ¶Ãe:"
+
+msgid "%p1 bytes"
+msgstr "%p1 byte"
+
+msgid "Modified:"
+msgstr "GeÃ¤ndert:"
+
+msgid "Attributes"
+msgstr "Eigenschaften"
+
+msgid "Preview of '%p1'"
+msgstr "Vorschau von '%p1'"
+
+msgid "Timestamp"
+msgstr "Zeitstempel"
+
+msgid "Event"
+msgstr "Event-ID"
+
+msgid "Message"
+msgstr "Nachricht"
+
+msgid "Add Template"
+msgstr "Vorlage erstellen"
+
+msgid "There are no templates in the system."
+msgstr "Es gibt keine Vorlagen im System"
+
+msgid "Delete Template"
+msgstr "Vorlage lÃ¶schen"
+
+msgid "New Template"
+msgstr "Neue Vorlage"
+
+msgid "Template Name"
+msgstr "Vorlagenname"
+
+msgid "Discount Test Fields"
+msgstr "Skonto-Analyse PrÃ¼flauffelder"
+
+msgid "Vendor Number"
+msgstr "Lieferantennummer"
+
+msgid "Gross Amount"
+msgstr "Bruttobetrag"
+
+msgid "Discount Amount"
+msgstr "Skontobetrag"
+
+msgid "Matching Fields"
+msgstr "Abgleichfelder"
+
+msgid "Add Matching Field"
+msgstr "Abgleichfeld hinzufÃ¼gen"
+
+msgid "Different Fields"
+msgstr "Ungleiche Felder"
+
+msgid "Add Different Field"
+msgstr "Ungleiches Feld hinzufÃ¼gen"
+
+msgid "Processes"
+msgstr "Verfahren"
+
+msgid "Add Process"
+msgstr "Verfahren hinzufÃ¼gen"
+
+msgid "Fraud Test Parameters"
+msgstr "Betrugs-Analyse-Parameter"
+
+msgid "Fraud Type"
+msgstr "Betrugstyp"
+
+msgid "Invoice Date"
+msgstr "Rechnungsdatum"
+
+msgid "Payment Date"
+msgstr "Zahlungstermin"
+
+msgid "Payment Amount"
+msgstr "Zahlungsbetrag"
+
+msgid "Payment Fields"
+msgstr "AP-Datei-Felder"
+
+msgid "Check Date"
+msgstr "Zahlungstermin"
+
+msgid "Vendor Fields"
+msgstr "Lieferantenstammfelder"
+
+msgid "Vendor Change Parameters"
+msgstr "VerÃ¤nderungsanalyseparameter fÃ¼r Lieferantenstamm"
+
+msgid "Vendor Change Type"
+msgstr "VerÃ¤nderungsanalysetyp fÃ¼r den Lieferantanstamm"
+
+msgid "Vendor/Employee Match Parameters"
+msgstr "Vergleichsparameter Lieferanten-/Personalstamm"
+
+msgid "Match Type"
+msgstr "Vergleichstyp"
+
+msgid "Employee Fields"
+msgstr "Personalstammfelder"
+
+msgid "Employee Number"
+msgstr "Personalnummer"
+
+msgid "Middle Name"
+msgstr "Zweiter Vorname"
+
+msgid "Tax ID"
+msgstr "Steuernummer"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Address 2"
+msgstr "Adresse 2"
+
+msgid "City"
+msgstr "Stadt"
+
+msgid "State"
+msgstr "Staat"
+
+msgid "Postal Code"
+msgstr "PLZ"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Vendor Name"
+msgstr "Lieferantenname"
+
+msgid "Vendor Verification Parameters"
+msgstr "Parameter fÃ¼r Lieferantenverifizierung"
+
+msgid "Vendor Verification Type"
+msgstr "Lieferantenverifizierungsart"
+
+msgid "Tax ID/VAT"
+msgstr "Steuernummer"
+
+msgid "Add Test"
+msgstr "PrÃ¼flauf erstellen"
+
+msgid "There are no tests in the system."
+msgstr "Es gibt keine PrÃ¼flÃ¤ufe im System"
+
+msgid "Delete Test"
+msgstr "PrÃ¼flauf lÃ¶schen"
+
+msgid "New Test"
+msgstr "Neuer PrÃ¼flauf"
+
+msgid "Test Type"
+msgstr "PrÃ¼flauftyp"
+
+msgid "Test Name"
+msgstr "PrÃ¼flaufname"
+
+msgid "Source Table"
+msgstr "Eingangstabelle"
+
+msgid "Payment Master Source"
+msgstr "AP-Datei"
+
+msgid "Vendor Master Source"
+msgstr "Lieferantenstammdaten"
+
+msgid "Employee Master Source"
+msgstr "Personalstammdatei"
+
+msgid "Add User"
+msgstr "Benutzer erstellen"
+
+msgid "There are no users in the system."
+msgstr "Es gibt keine Benutzer im System"
+
+msgid "Delete User"
+msgstr "Benutzer lÃ¶schen"
+
+msgid "New User"
+msgstr "Benutzer erstellen"
+
+msgid "Role"
+msgstr "Rolle"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Add Adjustment"
+msgstr "Berichtigung hinzufÃ¼gen"
+
+msgid "[No User]"
+msgstr "[Kein Benutzer]"
+
+msgid "Adjustment comment..."
+msgstr "Kommentar zur Berichtigung"
+
+msgid "Add Payback"
+msgstr "RÃ¼ckzahlung hinzufÃ¼gen"
+
+msgid "Payback comment..."
+msgstr "Kommentar zur RÃ¼ckzahlung..."
+
+msgid "Uploading..."
+msgstr "Daten werden hochgeladen..."
+
+msgid "There are no attachments for this issue"
+msgstr "Es gibt keine AnhÃ¤nge fÃ¼r dieses Issue"
+
+msgid "View all %p1 comments"
+msgstr "Alle %p1 Kommentare anzeigen"
+
+msgid "Write a comment..."
+msgstr "Kommentar hinzufÃ¼gen..."
+
+msgid "Only %p1 file(s) may be uploaded at a time."
+msgstr "Nur %p1 Datei(en) kÃ¶nnen auf einmal hochgeladen werden."
+
+msgid "Add Administrator"
+msgstr "Administrator erstellen"
+
+msgid "There are no administrators in the system."
+msgstr "Es gibt keine Administratoren im System"
+
+msgid "Delete Administrator"
+msgstr "Administrator lÃ¶schen"
+
+msgid "New Administrator"
+msgstr "Neuer Administrator"
+
+msgid "Add Database Server"
+msgstr "Datenbankserver hinzufÃ¼gen"
+
+msgid "There are no database servers in the system."
+msgstr "Es gibt keine Datenbankserver im System"
+
+msgid "Delete Database Server"
+msgstr "Datenbankserver entfernen"
+
+msgid "New Database Server"
+msgstr "Datenbankserver hinzufÃ¼gen"
+
+msgid "Database Type"
+msgstr "Datenbanktyp"
+
+msgid "Add Instance"
+msgstr "Instanz erstellen"
+
+msgid "Attach Instance"
+msgstr "Instanz anschlieÃen"
+
+msgid "There are no instances in the system."
+msgstr "Es gibt keine Instanzen im System"
+
+msgid "Delete Instance"
+msgstr "Instanz lÃ¶schen"
+
+msgid "New Instance"
+msgstr "Instanz erstellen"
+
+msgid "Detach Instance"
+msgstr "Instanz abtrennen"
+
+msgid "Instance"
+msgstr "Instanz"
+
+msgid "Database Server"
+msgstr "Datenbankserver"
+
+msgid "Email Address"
+msgstr "E-Mail-Adresse"
+
+msgid "Phone Number"
+msgstr "Telefonnummer"
+
+msgid "Address 1"
+msgstr "Adresse 1"
+
+msgid "Address 3"
+msgstr "Adresse 3"
+
+msgid "Address 4"
+msgstr "Adresse 4"
+
+msgid "State/Province"
+msgstr "Staat/Provinz"
+
+msgid "Zip/Postal Code"
+msgstr "PLZ"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Statistics"
+msgstr "Statistiken"
+
+msgid "Totals"
+msgstr "Gesamtsumme"
+
+msgid "Last Update"
+msgstr "Letzte Aktualisierung "
+
+msgid "Update"
+msgstr "Letzte Aktualisierung "
+
+msgid "Last Login"
+msgstr "Letzte Anmeldung"
+
+msgid "[Admin]"
+msgstr "Admin"
+
+msgid "Recent Activity"
+msgstr "AktivitÃ¤t"
+
+msgid "Recent Logins"
+msgstr "Anmeldungen"
+
+msgid "Recent Uploads"
+msgstr "Uploads"
+
+msgid "%p1 Recent Analysis"
+msgstr "%p1 neue Issues"
+
+msgid "%p1 Recent Claims"
+msgstr "%p1 neue Claims"
+
+msgid "%p1 Recent Data"
+msgstr "%p1 neue DatensÃ¤tze"
+
+msgid "(None)"
+msgstr "(Keine)"
+
+msgid "(Select a value)"
+msgstr "(WÃ¤hlen)"
+
+msgid "There are no items to show"
+msgstr "FÃ¼r diese Ansicht sind keine Elemente verfÃ¼gbar"
+
+msgid "The submitted issues have been added as Batch %p1."
+msgstr "Die eingereichten Issues sind als Batch %p1 hinzugefÃ¼gt worden."
+
+msgid "(Approval needed)"
+msgstr "(Freigabe erforderlich)"
+
+msgid "Approved"
+msgstr "Freigegeben"
+
+msgid "No Status"
+msgstr "Kein Status"
+
+msgid "Alert"
+msgstr "Meldung"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Are you sure?"
+msgstr "Sind Sie sicher?"
+
+msgid "No"
+msgstr "Nein"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "Please enter a value"
+msgstr "Geben Sie einen Wert ein"
+
+msgid "All files have successfully been uploaded."
+msgstr "Alle Dateien wurden erfolgreich hochgeladen."
+
+msgid "Close"
+msgstr "SchlieÃen"
+
+msgid "Upload All Files"
+msgstr "Alle Dateien hochladen"
+
+msgid "Upload Resource"
+msgstr "Ressource hochladen"
+
+msgid "Browse for file"
+msgstr "Datei auswÃ¤hlen"
+
+msgid "Your upload will complete in the background"
+msgstr "Ihr Upload lÃ¤uft im Hintergrund"
+
+msgid "View Resource"
+msgstr "Ressource ansehen"
+
+msgid "New Password"
+msgstr "Neues Passwort"
+
+msgid "User Permissions"
+msgstr "Benutzerrechte"
+
+msgid "Allow all data feeds"
+msgstr "Zugriff auf alle Daten-Feeds erlauben:"
+
+msgid "Allow only the following data feeds:"
+msgstr "Zugriff nur auf folgende Daten-Feeds erlauben:"
+
+msgid "Updating Permissions..."
+msgstr "Benutzerrechte werden aktualisiert..."
+
+msgid "Switch Instance"
+msgstr "Instanz wechseln"
+
+msgid "You need to select an instance in order to proceed."
+msgstr "Sie mÃ¼ssen eine Instanz auswÃ¤hlen, um fortzufahren."
+
+msgid "Current Instance:"
+msgstr "Aktuelle Instanz"
+
+msgid "Switching Instances..."
+msgstr "Instanz wechseln..."
+
+msgid "You need to select a reason in order to proceed."
+msgstr "Sie mÃ¼ssen einen Reason-Code auswÃ¤hlen, um fortzufahren."
+
+msgid "Account Number"
+msgstr "Kontonummer"
+
+msgid "* This operation is not allowed for these items"
+msgstr "FÃ¼r diese Elemente ist die gewÃ¼nschte Operation nicht gestattet"
+
+msgid "Manage Attachments for Issue #"
+msgstr "AnhÃ¤nge verwalten fÃ¼r Issue #"
+
+msgid "Report Options"
+msgstr "Berichteinstellungen"
+
+msgid "Reports can only contain up to 1,000 items."
+msgstr "Ein Bericht kann maximal 1000 Gruppen enthalten."
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Report Title"
+msgstr "Berichttitel"
+
+msgid "Paper Size"
+msgstr "Papierformat"
+
+msgid "Margins"
+msgstr "SeitenrÃ¤nder"
+
+msgid "Left Margin"
+msgstr "Linker Rand"
+
+msgid "Top Margin"
+msgstr "Oberer Rand"
+
+msgid "Right Margin"
+msgstr "Rechter Rand"
+
+msgid "Bottom Margin"
+msgstr "Unterer Rand"
+
+msgid "Items"
+msgstr "Objekte"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "Current Page"
+msgstr "Aktuelle Seite"
+
+msgid "From %p1 to %p2 of %p3"
+msgstr "Von %p1 bis %p2 von %p3"
+
+msgid "Creating Report..."
+msgstr "Bericht wird erstellt..."
+
+msgid "Create Report"
+msgstr "Bericht erstellen"
+
+msgid "Stacks"
+msgstr "Stacks"
+
+msgid "Add tags..."
+msgstr "Tag(s) hinzufÃ¼gen..."
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Remove filter on vendor \"%p1\""
+msgstr "Filter nach Lieferanten \"%p1\" entfernen"
+
+msgid "Remove filter on user \"%p1\""
+msgstr "Filter nach Benutzer \"%p1\" entfernen"
+
+msgid "%p1 to %p2"
+msgstr "%p1 bis %p2"
+
+msgid "Remove filter on amounts from %p1 to %p2"
+msgstr "Filter nach BetrÃ¤gen grÃ¶Ãer als %p1 und weniger als %p2 entfernen"
+
+msgid "Greater than or equal to %p1"
+msgstr "GrÃ¶Ãer als oder gleich wie %p1"
+
+msgid "Remove filter on amounts greater than or equal to %p1"
+msgstr "Filter nach BetrÃ¤gen grÃ¶Ãer als oder gleich wie %p1 entfernen"
+
+msgid "Less than or equal to %p1"
+msgstr "Weniger als oder gleiche wie %p1"
+
+msgid "Remove filter on amounts less than or equal to %p1"
+msgstr "Filter nach BetrÃ¤gen weniger als oder gleich wie %p1 entfernen"
+
+msgid "Remove filter on tag \"%p1\""
+msgstr "Filter nach Stichwort \"%p1\" entfernen"
+
+msgid "Add a vendor..."
+msgstr "Lieferanten hinzufÃ¼gen..."
+
+msgid "User"
+msgstr "Benutzer"
+
+msgid "Add a user..."
+msgstr "Benutzer hinzufÃ¼gen..."
+
+msgid "Min"
+msgstr "Min"
+
+msgid "Max"
+msgstr "Max"
+
+msgid "Flag"
+msgstr "Markierung"
+
+msgid "Add a tag..."
+msgstr "Tag hinzufÃ¼gen..."
+
+msgid "Current Password"
+msgstr "Aktuelles Passwort"
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Thousands"
+msgstr "Tausendertrennzeichen"
+
+msgid "Decimal"
+msgstr "Dezimaltrennzeichen"
+
+msgid "Date Format"
+msgstr "Datumsformat"
+
+msgid "Time Zone"
+msgstr "Zeitzone"
+
+msgid "Response text could not be parsed."
+msgstr "Response konnte nicht geparst werden."
+
+msgid "Running Analysis Configuration"
+msgstr "PrÃ¼flÃ¤ufekonfiguration werden ausgefÃ¼hrt"
+
+msgid "Instance Name does not match the current instance name"
+msgstr ""
+"Eingegebener Instanzname stimmt mit aktuellem Instanznamen nicht Ã¼berein"
+
+msgid "Running Analysis Jobs"
+msgstr "PrÃ¼flÃ¤ufe werden ausgefÃ¼hrt"
+
+msgid "The data in the specified data feed was successfully cleared."
+msgstr "Die Daten im spezifizierten Daten-Feed wurden erfolgreich gelÃ¶scht."
+
+msgid "The data content was successfully cleared."
+msgstr "Der Dateninhalt wurde erfolgreich gelÃ¶scht"
+
+msgid "Items have been reset to new analysis."
+msgstr "Alles Issues sind auf 'Neu' zurÃ¼ckgesetzt worden."
+
+msgid "Temporary tables were successfully deleted."
+msgstr "TemporÃ¤re Tabellen sind erfolgreich entfernt worden."
+
+msgid "Optimizing Database"
+msgstr "Datenbank optimieren"
+
+msgid "Document tags have been updated."
+msgstr "Die SchÃ¼sselwÃ¶rter sind aktualisiert worden."
+
+msgid "Vendor references have been synced."
+msgstr "Lieferantenreferenzen sind synchronisiert worden"
+
+msgid "Installing Demo Data"
+msgstr "Demo-Daten laden"
+
+msgid "Are you sure you want to delete user '%p1'?"
+msgstr ""
+"Sind Sie sicher, dass Sie den selektierten Benutzer '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "The passwords do not match"
+msgstr "Die neuen PasswÃ¶rter stimmen nicht Ã¼berein"
+
+msgid "The permissions for '%p1' have been updated"
+msgstr "Die Berechtigungen fÃ¼r '%p1' wurden geÃ¤ndert"
+
+msgid "The password for '%p1' has been updated"
+msgstr "Das Passwort des Benutzers '%p1' wurde geÃ¤ndert"
+
+msgid "Are you sure you want to delete template '%p1'?"
+msgstr ""
+"Sind Sie sicher, dass Sie die selektierte Vorlage '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "Are you sure you want to delete data feed '%p1'?"
+msgstr ""
+"Sind Sie sicher, dass Sie den selektierten Daten-Feed '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "Are you sure you want to delete test '%p1'?"
+msgstr ""
+"Sind Sie sicher, dass Sie den selektierten PrÃ¼flauf '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "Are you sure you want to delete claim type '%p1'?"
+msgstr "Sind Sie sicher, dass Sie den selektierten Claim-Typ lÃ¶schen mÃ¶chten?"
+
+msgid "Are you sure you want to delete the selected reason '%p1'?"
+msgstr ""
+"Sind Sie sicher, dass Sie den selektierten Reason-Code '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "Are you sure you want to delete preference '%p1'?"
+msgstr "Sind Sie sicher, dass Sie die Einstellung '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "Please enter the name for the new folder."
+msgstr "Geben Sie einen Namen fÃ¼r den neuen Ordner ein"
+
+msgid "untitled folder"
+msgstr "Unbennanter Ordner"
+
+msgid "File and folder names cannot be empty"
+msgstr "Datei- und Ordnernamen sind erforderlich"
+
+msgid "Please enter the new name for the folder."
+msgstr "Geben Sie einen neuen Namen fÃ¼r den Ordner ein"
+
+msgid "Please enter the new name for the file."
+msgstr "Geben Sie einen neuen Namen fÃ¼r die Datei ein"
+
+msgid "Rename '%p1'?"
+msgstr "'%p1' umbenennen?"
+
+msgid "Delete folder '%p1'?"
+msgstr "Ordner '%p1' lÃ¶schen?"
+
+msgid ""
+"This will delete the selected folder and all of its contents.  Please enter "
+"the folder name '%p1' to continue."
+msgstr "Der selektierte Ordner wird zusammen mit seinem ganzen Inhalt gelÃ¶scht"
+
+msgid "Folder name does not match"
+msgstr "Ordnername stimmt nicht Ã¼berein."
+
+msgid "Delete file '%p1'?"
+msgstr "Datei '%p1' lÃ¶schen?"
+
+msgid "Are you sure you want to delete the selected file '%p1'?"
+msgstr "Sind Sie sicher, dass Sie die selektierte Datei '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "The user information for '%p1' has been updated"
+msgstr "Das Benutzerprofil '%p1' wurde erfolgreich aktualisiert"
+
+msgid "The new passwords do not match"
+msgstr "Die neuen PasswÃ¶rter stimmen nicht Ã¼berein"
+
+msgid "The thousands separator and decimal separator cannot be the same"
+msgstr ""
+"Der Tausendertrenner und der Dezimaltrenner dÃ¼rfen nicht das gleiche Zeichen "
+"sein"
+
+msgid ""
+"The regional settings for '%p1' have been updated. This page will reload "
+"shortly."
+msgstr ""
+"Die LÃ¤ndereinstellungen fÃ¼r Benutzer '%p1' wurden aktualisiert.  Die "
+"Webseite wird neu geladen."
+
+msgid "Jan"
+msgstr "Jan"
+
+msgid "Feb"
+msgstr "Feb"
+
+msgid "Mar"
+msgstr "MÃ¤r"
+
+msgid "Apr"
+msgstr "Apr"
+
+msgid "Jun"
+msgstr "Jun"
+
+msgid "Jul"
+msgstr "Jul"
+
+msgid "Aug"
+msgstr "Aug"
+
+msgid "Sep"
+msgstr "Sep"
+
+msgid "Oct"
+msgstr "Okt"
+
+msgid "Nov"
+msgstr "Nov"
+
+msgid "Dec"
+msgstr "Dez"
+
+msgid "Su"
+msgstr "So"
+
+msgid "Mo"
+msgstr "Mo"
+
+msgid "Tu"
+msgstr "Di"
+
+msgid "We"
+msgstr "Mi"
+
+msgid "Th"
+msgstr "Do"
+
+msgid "Fr"
+msgstr "Fr"
+
+msgid "Sa"
+msgstr "Sa"
+
+msgid "Sun"
+msgstr "So"
+
+msgid "Mon"
+msgstr "Mo"
+
+msgid "Tue"
+msgstr "Di"
+
+msgid "Wed"
+msgstr "Mi"
+
+msgid "Thu"
+msgstr "Do"
+
+msgid "Fri"
+msgstr "Fr"
+
+msgid "Sat"
+msgstr "Sa"
+
+msgid "Sunday"
+msgstr "Sonntag"
+
+msgid "Monday"
+msgstr "Montag"
+
+msgid "Tuesday"
+msgstr "Dienstag"
+
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+msgid "Thursday"
+msgstr "Donnerstag"
+
+msgid "Friday"
+msgstr "Freitag"
+
+msgid "Saturday"
+msgstr "Samstag"
+
+msgid "First"
+msgstr "Vorname"
+
+msgid "Last"
+msgstr "Name"
+
+msgid "[More]"
+msgstr "[Mehr]"
+
+msgid "%p1 is required"
+msgstr "%p1 ist erforderlich"
+
+msgid "%p1 must be at least %p2 characters"
+msgstr "%p1 muss aus mindestens %p2 Zeichen bestehen"
+
+msgid "Could not find script path!"
+msgstr "Konnte Skript-Datei nicht finden!"
+
+msgid "Script is being loaded more than once!"
+msgstr "Skript wird mehr als einmal geladen!"
+
+msgid "A document ID must be specified in order to add an adjustment"
+msgstr ""
+"Eine Dokument-ID muss angegeben werden, um eine Berichtigung hinzufÃ¼gen zu "
+"kÃ¶nnen"
+
+msgid "Add Attachments..."
+msgstr "Anhang hinzufÃ¼gen..."
+
+msgid "Add Comment"
+msgstr "Kommentar hinzufÃ¼gen"
+
+msgid "Last 90 Days"
+msgstr "Letzte 90 Tage"
+
+msgid "Choose Files..."
+msgstr "Dateien auswÃ¤hlen..."
+
+msgid "Choose File..."
+msgstr "Datei auswÃ¤hlen..."
+
+msgid "Issue amount: %p1"
+msgstr "Issue-Betrag: %p1"
+
+msgid "%p1 issue(s)"
+msgstr "%p1 Issue(s)"
+
+msgid "Are you sure you want to delete section '%p1'?"
+msgstr "Sind Sie sicher, dass Sie den Jobabschnitt '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "Are you sure you want to delete step '%p1'?"
+msgstr "Sind Sie sicher, dass Sie den Jobschritt '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "Add New Job Section"
+msgstr "Neuer Jobabschnitt"
+
+msgid "Add new job section."
+msgstr "Neuer Jobabschnitt"
+
+msgid "Job Section Name"
+msgstr "Jobabschnitt-Name"
+
+msgid "Job Section Description"
+msgstr "Jobabschnittbeschreibung"
+
+msgid "Add New Job Step"
+msgstr "Neuer Jobschritt"
+
+msgid "Add new job step."
+msgstr "Jobabschnitt hinzufÃ¼gen."
+
+msgid "Job Step Name"
+msgstr "Jobschrittname"
+
+msgid "Job Step Description"
+msgstr "Jobschrittbeschreibung"
+
+msgid "Are you sure you want to delete job '%p1'?"
+msgstr "Sind Sie sicher, dass Sie den selektierten Job '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "Add new job."
+msgstr "Job erstellen"
+
+msgid "Job Name"
+msgstr "Jobname"
+
+msgid "Job Description"
+msgstr "Jobbeschreibung"
+
+msgid "Edit job."
+msgstr "Job bearbeiten"
+
+msgid "Uploading '%p1'"
+msgstr "'%p1' wird hochgeladen"
+
+msgid "Are you sure you want to delete instance '%p1'?"
+msgstr ""
+"Sind Sie sicher, dass Sie die selektierte Instanz '%p1' lÃ¶schen mÃ¶chten?"
+
+msgid "Detach instance '%p1'?"
+msgstr "Instanz '%p1' abtrennen?"
+
+msgid ""
+"This will detach the instance from the system (NOTE: This will *NOT* delete "
+"any of the instance's data).  Please enter the instance name '%p1' to "
+"continue."
+msgstr ""
+"Die Instanz wird vom System abgetrennt (Hinweis: Die Daten in der Instanz "
+"werden nicht gelÃ¶scht).\n"
+"\n"
+"Geben Sie bitte den Instanzname '%p2' ein:"
+
+msgid "Instance name did not match"
+msgstr "Instanzname stimmt nicht Ã¼berein."
+
+msgid "Are you sure you want to delete administrator '%p1'?"
+msgstr ""
+"Sind Sie sicher, dass Sie den selektierten Administrator '%p1' lÃ¶schen "
+"mÃ¶chten?"
+
+msgid "Are you sure you want to delete database server '%p1'?"
+msgstr ""
+"Sind Sie sicher, dass Sie den selektierten Datenbankserver '%p1' entfernen "
+"mÃ¶chten?"
+
+#~ msgid "Assembling batch... %p1 complete"
+#~ msgstr "Batch wird zusammengestellt... %p1 abgeschlossen"
+
+#~ msgid "Confirmed:"
+#~ msgstr "BestÃ¤tigt:"
+
+#~ msgid "Unknown instance"
+#~ msgstr "Unbekannte Instanz"
+
+#~ msgid "Invalid backup type"
+#~ msgstr "UngÃ¼ltiger Backuptyp"
+
+#~ msgid "Missing job_id parameter"
+#~ msgstr "Parameter \"job_id\" fehlt"
+
+#~ msgid "Could not read data table file"
+#~ msgstr "Konnten Datentabelle nicht einlesen"
+
+#~ msgid "Missing or invalid handle"
+#~ msgstr "Fehlendes oder ungÃ¼ltiges Handle"
+
+#~ msgid "File type not set"
+#~ msgstr "Dateityp ist nicht spezifiziert"
+
+#~ msgid "Invalid file type"
+#~ msgstr "UngÃ¼ltiger Dateityp"
+
+#~ msgid "Invalid syntax in config object"
+#~ msgstr "UngÃ¼ltige Syntax im Konfigurationsobjekt"
+
+#~ msgid "Payment History Processing Source Data"
+#~ msgstr "AP-Datei Quelldaten"
+
+#~ msgid "Vendor Master Data"
+#~ msgstr "Lieferantenstammdaten"
+
+#~ msgid "Analysis Group"
+#~ msgstr "Analysegruppe"
+
+#~ msgid "Vendor Group"
+#~ msgstr "Lieferantengruppe"
+
+#~ msgid "Importing table(s)"
+#~ msgstr "Tabelle(n) wird/werden importiert"
+
+#~ msgid "Missing type parameter"
+#~ msgstr "Parameter \"type\" fehlt"
+
+#~ msgid "Invalid object"
+#~ msgstr "UngÃ¼ltiges Objekt"
+
+#~ msgid "File successfully uploaded"
+#~ msgstr "Datei erfolgreich hochgeladen"
+
+#~ msgid "System Administrator"
+#~ msgstr "Systemadministrator"
+
+#~ msgid "Show Totals By Test"
+#~ msgstr "Summen anzeigen (nach PrÃ¼flauf gruppiert)"
+
+#~ msgid "Show Totals By Reason"
+#~ msgstr "Summen anzeigen (nach Reason gruppiert)"
+
+#~ msgid "Show Totals By Vendor"
+#~ msgstr "Summen anzeigen (nach Lieferanten gruppiert)"
+
+#~ msgid "Show Totals By Date"
+#~ msgstr "Summen anzeigen (nach Datum gruppiert)"
+
+#~ msgid "Show Last 6 Months"
+#~ msgstr "Letzte 6 Monate anzeigen"
+
+#~ msgid "Show By Status"
+#~ msgstr "Issues anzeigen (nach Status gruppiert)"
+
+#~ msgid "Show Counts"
+#~ msgstr "Anzahl anzeigen"
+
+#~ msgid "Show Amounts"
+#~ msgstr "BetrÃ¤ge anzeigen"
+
+#~ msgid "Issues Activity"
+#~ msgstr "Issues-AktivitÃ¤t"
+
+#~ msgid "Total"
+#~ msgstr "Gesamtsumme"
+
+#~ msgid "SUMMARY"
+#~ msgstr "BERICHT"
+
+#~ msgid "Logout"
+#~ msgstr "Abmelden"
+
+#~ msgid "New Issues"
+#~ msgstr "Neue Issues"
+
+#~ msgid "Confirmed Issues"
+#~ msgstr "BestÃ¤tigte Issues"
+
+#~ msgid "Go back to the overview of issues"
+#~ msgstr "ZurÃ¼ck zur Issues-Ãbersicht"
+
+#~ msgid "Event Name"
+#~ msgstr "Eventname"
+
+#~ msgid "A document ID must be specified in order to add a comment"
+#~ msgstr ""
+#~ "Eine Dokument-ID muss angegeben werden, um ein Kommentar hinzufÃ¼gen zu "
+#~ "kÃ¶nnen"
+
+#~ msgid "Top Categories"
+#~ msgstr "Top-Kategorien"
+
+#~ msgid "Top Vendors"
+#~ msgstr "Top-Lieferanten"
+
+#~ msgid "item(s)"
+#~ msgstr "Element(e)"
+
+#~ msgid "This Month"
+#~ msgstr "Laufender Monat "
+
+#~ msgid "Last Month"
+#~ msgstr "Letzter Monat"
+
+#~ msgid "Yesterday"
+#~ msgstr "Gestern"
+
+#, fuzzy
+#~ msgid "Last 7 Day"
+#~ msgstr "Letzte 7 Tage"
+
+#~ msgid "Missing reason_code parameter"
+#~ msgstr "Parameter \"reason_code\" fehlt"
+
+#~ msgid "Are you sure you want to delete the selected test?"
+#~ msgstr ""
+#~ "Sind Sie sicher, dass Sie den selektierten PrÃ¼flauf lÃ¶schen mÃ¶chten?"
+
+#~ msgid "The test has been added to the system."
+#~ msgstr "Der PrÃ¼flauf ist erfolgreich erstellt worden."
+
+#~ msgid ""
+#~ "There are unsaved changes in the form. Are you sure you want to cancel?"
+#~ msgstr ""
+#~ "Es gibt ungespeicherte Ãnderungen im Formular.  Sind Sie sicher, dass Sie "
+#~ "abbrechen mÃ¶chten?"
+
+#~ msgid "Test Type is required"
+#~ msgstr "PrÃ¼flauftyp ist erforderlich"
+
+#~ msgid "Test Status is required"
+#~ msgstr "PrÃ¼flaufstatus st erforderlich"
+
+#~ msgid "Test Name is required"
+#~ msgstr "PrÃ¼flaufname ist erforderlich"
+
+#~ msgid "Source Table is required"
+#~ msgstr "Eingangstabelle ist erforderlich"
+
+#~ msgid "Payment Master Source is required"
+#~ msgstr "AP-Datei ist erforderlich"
+
+#~ msgid "Vendor Master Source is required"
+#~ msgstr "Lieferantenstammdatei ist erforderlich"
+
+#~ msgid "Employee Master Source is required"
+#~ msgstr "Personalstammdatei ist erforderlich"
+
+#~ msgid "Revert"
+#~ msgstr "ZurÃ¼cksetzen"
+
+#~ msgid "(Untitled)"
+#~ msgstr "(Unbenannt)"
+
+#~ msgid "New Analysis Test"
+#~ msgstr "Neuer PrÃ¼flauf"
+
+#~ msgid "Store backups in:"
+#~ msgstr "Backups werden im folgenden Ordner gespeichert:"
+
+#~ msgid "Keep %p1 backups"
+#~ msgstr "%p1 Backups behalten"
+
+#~ msgid "Backup Now"
+#~ msgstr "Jetzt sichern"
+
+#~ msgid "Filename"
+#~ msgstr "Dateiname"
+
+#~ msgid "Size"
+#~ msgstr "GrÃ¶Ãe"
+
+#~ msgid "Restore"
+#~ msgstr "Wiederherstellen"
+
+#~ msgid "The claim type has been added to the system."
+#~ msgstr "Der Claim-Typ ist erfolgreich erstellt worden."
+
+#~ msgid "Claim Type is required"
+#~ msgstr "Claim-Code ist erforderlich"
+
+#~ msgid "Claim Description is required"
+#~ msgstr "Claim-Beschreibung ist erforderlich"
+
+#~ msgid "Category is required"
+#~ msgstr "Kategorie ist erforderlich"
+
+#~ msgid "Claim Group"
+#~ msgstr "Claim-Gruppe"
+
+#~ msgid "Are you sure you want to delete the selected preference?"
+#~ msgstr "Sind Sie sicher, dass Sie diese Einstellung lÃ¶schen mÃ¶chten?"
+
+#~ msgid "Preference Name is required"
+#~ msgstr "Einstellungsname ist erforderlich"
+
+#~ msgid "Id"
+#~ msgstr "Id"
+
+#~ msgid "Couldn't parse command JSON."
+#~ msgstr "Der JSON-Befehl konnte nicht eingelesen werden."
+
+#~ msgid "Vendor Number is required"
+#~ msgstr "Lieferantennummer ist erforderlich"
+
+#~ msgid "Gross Amount is required"
+#~ msgstr "Bruttobetrag ist erforderlich"
+
+#~ msgid "Discount Amount is required"
+#~ msgstr "Skontobetrag ist erforderlich"
+
+#~ msgid "Add Field"
+#~ msgstr "Feld hinzufÃ¼gen"
+
+#~ msgid "Folder name did not match."
+#~ msgstr "Ordnername stimmt nicht Ã¼berein."
+
+#~ msgid "Upload All"
+#~ msgstr "Alle hochladen"
+
+#~ msgid "Name:"
+#~ msgstr "Name:"
+
+#~ msgid "Create"
+#~ msgstr "Erstellen"
+
+#~ msgid "Fraud Type is required"
+#~ msgstr "Betrugstyp ist erforderlich"
+
+#~ msgid "Invoice Date is required"
+#~ msgstr "Rechnungsdatum ist erforderlich"
+
+#~ msgid "Payment Date is required"
+#~ msgstr "Zahlungstermin ist erforderlich"
+
+#~ msgid "Payment Amount is required"
+#~ msgstr "Zahlungsbetrag ist erforderlich"
+
+#~ msgid "Analysis"
+#~ msgstr "Analyse"
+
+#~ msgid ""
+#~ "This will delete the instance from the system (NOTE: This *WILL* delete "
+#~ "all of the instance's data).\n"
+#~ "\n"
+#~ "Enter the selected instance name '%p1' to continue:"
+#~ msgstr ""
+#~ "Dieses Verfahren lÃ¶scht die Instanz (Hinweis: Alle Daten in der Instanz "
+#~ "wird gelÃ¶scht).\n"
+#~ "\n"
+#~ "Bitte geben Sie den Instanzname '%p1' ein, um weiterzumachen:"
+
+#~ msgid "The instance has been added to the system."
+#~ msgstr "Die Instanz wurde erfolgreich erstellt."
+
+#~ msgid "The instance has been connected to the system."
+#~ msgstr "Die Instanz ist an das System angeschlossen worden."
+
+#~ msgid "Database server is required"
+#~ msgstr "Datenbankserver ist erforderlich"
+
+#~ msgid "Status is required"
+#~ msgstr "Status ist erforderlich"
+
+#~ msgid "Company is required"
+#~ msgstr "Firma ist erforderlich"
+
+#~ msgid "Instance is required"
+#~ msgstr "Instanz ist erforderlich"
+
+#~ msgid "Database Name is required"
+#~ msgstr "Datenbankname ist erforderlich"
+
+#~ msgid "Are you sure you want to delete the selected job?"
+#~ msgstr "Sind Sie sicher, dass Sie den selektierten Job lÃ¶schen mÃ¶chten?"
+
+#~ msgid "The job has been added to the system."
+#~ msgstr "Der Job wurde erfolgreich erstellt."
+
+#~ msgid "Description is required"
+#~ msgstr "Bechreibung ist erforderlich"
+
+#~ msgid "Command"
+#~ msgstr "Befehl"
+
+#~ msgid "Frequency"
+#~ msgstr "HÃ¤ufigkeit"
+
+#~ msgid "Once"
+#~ msgstr "Einmal"
+
+#~ msgid "Hourly"
+#~ msgstr "StÃ¼ndlich"
+
+#~ msgid "Daily"
+#~ msgstr "TÃ¤glich"
+
+#~ msgid "Weekly"
+#~ msgstr "WÃ¶chentlich"
+
+#~ msgid "Monthly"
+#~ msgstr "Monatlich"
+
+#~ msgid "Yearly"
+#~ msgstr "JÃ¤hrlich"
+
+#~ msgid "Job Type is required"
+#~ msgstr "PrÃ¼flauftyp ist erforderlich"
+
+#~ msgid "There are no jobs in the system."
+#~ msgstr "Es gibt keine PrÃ¼flÃ¤ufe im System"
+
+#~ msgid ""
+#~ "Would you like to clear all data from the specified data feed in the "
+#~ "current instance? If so, select the data feed you would like to clear and "
+#~ "enter the current instance name '%p1' below to confirm and continue."
+#~ msgstr ""
+#~ "MÃ¶chten Sie alle Daten in dem spezifizierten Daten-Feed lÃ¶schen?  Wenn "
+#~ "ja, wÃ¤hlen Sie das Daten-Feed aus und geben Sie den aktuellen Instanzname "
+#~ "'%p1' unten ein."
+
+#~ msgid "Job is complete."
+#~ msgstr "Job ist fertig."
+
+#~ msgid "Yes, Upload Data"
+#~ msgstr "Ja, Daten hochladen"
+
+#~ msgid "Resets all items to \"New Analysis\"."
+#~ msgstr "Setzt alle Issues auf 'Neu' zurÃ¼ck."
+
+#~ msgid "Name is required"
+#~ msgstr "Name ist erforderlich"
+
+#~ msgid "Category Name is required"
+#~ msgstr "Kategoriename ist erforderlich"
+
+#~ msgid "Data feed name is required"
+#~ msgstr "Daten-Feed-Name ist erforderlich"
+
+#~ msgid "Create a new data feed:"
+#~ msgstr "Einen neuen Daten-Feed erstellen"
+
+#~ msgid "Append data to an existing data feed:"
+#~ msgstr "Daten in einen bereits bestehenden Daten-Feed hochladen:"
+
+#~ msgid "Not Available"
+#~ msgstr "Nicht verfÃ¼gbar"
+
+#~ msgid "Organization"
+#~ msgstr "Organisation"
+
+#~ msgid "Are you sure you want to delete the selected reason?"
+#~ msgstr ""
+#~ "Sind Sie sicher, dass Sie den selektierten Reason-Code lÃ¶schen mÃ¶chten?"
+
+#~ msgid "The reason has been added to this claim type."
+#~ msgstr "Der Reason-Code wurde erfolgreich erstellt."
+
+#~ msgid "Reason Type is required"
+#~ msgstr "Reason-Code ist erforderlich"
+
+#~ msgid "Reason Description is required"
+#~ msgstr "Bechreibung fÃ¼r Reason-Code ist erforderlich"
+
+#~ msgid "Delete Reason"
+#~ msgstr "Reason-Code lÃ¶schen"
+
+#~ msgid "Are you sure you want to delete the selected data feed?"
+#~ msgstr ""
+#~ "Sind Sie sicher, dass Sie den selektierten Daten-Feed lÃ¶schen mÃ¶chten?"
+
+#~ msgid "The data feed has been added to the system."
+#~ msgstr "Der Daten-Feed wurde erfolgreich erstellt."
+
+#~ msgid "Data Feed Type is required"
+#~ msgstr "Daten-Feed-Typ ist erforderlich"
+
+#~ msgid "Data Feed Name is required"
+#~ msgstr "Daten-Feed-Name ist erforderlich"
+
+#~ msgid "Insert Type is required"
+#~ msgstr "Insert-typ ist erforderlich"
+
+#~ msgid "Collapse"
+#~ msgstr "Einklappen"
+
+#~ msgid "Expand"
+#~ msgstr "Ausklappen"
+
+#~ msgid "Are you sure you want to delete the selected template?"
+#~ msgstr "Sind Sie sicher, dass Sie die selektierte Vorlage lÃ¶schen mÃ¶chten?"
+
+#~ msgid "The template has been added to the system."
+#~ msgstr "Die Vorlage wurde erfolgreich erstellt."
+
+#~ msgid "Upload Template File..."
+#~ msgstr "Vorlagedatei hochladen..."
+
+#~ msgid "Template Name is required"
+#~ msgstr "Vorlagenname ist erforderlich"
+
+#~ msgid "Mime Type"
+#~ msgstr "Mime-Typ"
+
+#~ msgid "Running tests..."
+#~ msgstr "PrÃ¼flÃ¤ufe werden ausgefÃ¼hrt"
+
+#~ msgid "Run Tests"
+#~ msgstr "PrÃ¼flÃ¤ufe ausfÃ¼hren"
+
+#~ msgid "Clear"
+#~ msgstr "ZurÃ¼cksetzen"
+
+#~ msgid "Are you sure you want to delete the selected user?"
+#~ msgstr ""
+#~ "Sind Sie sicher, dass Sie den selektierten Benutzer lÃ¶schen mÃ¶chten?"
+
+#~ msgid "The user has been added to the system."
+#~ msgstr "Der Benutzer wurde erfolgreich erstellt."
+
+#~ msgid "%p1's password has been changed."
+#~ msgstr "Das Passwort von Benutzer %p1 wurde geÃ¤ndert"
+
+#~ msgid "The user's password has been changed."
+#~ msgstr "Das Passwort des Benutzers wurde geÃ¤ndert"
+
+#~ msgid "First Name is required"
+#~ msgstr "Vorname ist erforderlich"
+
+#~ msgid "Last Name is required"
+#~ msgstr "Name ist erforderlich"
+
+#~ msgid "New password must be at least 6 characters"
+#~ msgstr "Ihr neues Passwort muss aus mindestens 6 Zeichen bestehen"
+
+#~ msgid "Old Password"
+#~ msgstr "Altes Passwort"
+
+#~ msgid "Old password must be at least 6 characters"
+#~ msgstr "Ihr altes Passwort muss aus mindestens 6 Zeichen bestehen"
+
+#~ msgid "New passwords do not match"
+#~ msgstr "Die neuen PasswÃ¶rter stimmen nicht Ã¼berein"
+
+#~ msgid "(Select a role)"
+#~ msgstr "(Rolle wÃ¤hlen)"
+
+#~ msgid "Role is required"
+#~ msgstr "Rolle ist erforderlich"
+
+#~ msgid "Passwords do not match"
+#~ msgstr "Die PasswÃ¶rter stimmen nicht Ã¼berein"
+
+#~ msgid "Account Info"
+#~ msgstr "Kontoeinstellungen"
+
+#~ msgid "Vendor Activity Parameters"
+#~ msgstr "Parameter fÃ¼r LieferantenaktivitÃ¤t"
+
+#~ msgid "Vendor Change Type is required"
+#~ msgstr "VerÃ¤nderungsanalysetyp fÃ¼r Lieferentenstamm"
+
+#~ msgid "Match Type is required"
+#~ msgstr "Vergleichstyp ist erforderlich"
+
+#~ msgid "Vendor Verification Type is required"
+#~ msgstr "Lieferantenverifizierungstyp"
+
+#~ msgid "Vendor Name is required"
+#~ msgstr "Lieferantenname ist erforderlich"
+
+#~ msgid "Tax ID/VAT is required"
+#~ msgstr "Steuernummer ist erforderlich"
+
+#~ msgid "Analysis configuration is complete."
+#~ msgstr "PrÃ¼flaufkonfiguration ist fertig"
+
+#~ msgid "Choose Payment History File..."
+#~ msgstr "AP-Datei auswÃ¤hlen..."
+
+#~ msgid "Choose Vendor Master File..."
+#~ msgstr "Lieferantenstammdatei auswÃ¤hlen..."
+
+#~ msgid "Payment History Fields"
+#~ msgstr "AP-Datei-Felder"
+
+#~ msgid "Invoice Number"
+#~ msgstr "Rechnungsnummer"
+
+#~ msgid "Invoice Amount"
+#~ msgstr "Rechnungsbetrag"
+
+#~ msgid "(Unspecified)"
+#~ msgstr "(Keine Angabe)"
+
+#~ msgid "Vendor Master Fields"
+#~ msgstr "Felder des Lieferantenstammes"
+
+#~ msgid "Duplicate Tests"
+#~ msgstr "DoppelzahlungsprÃ¼flÃ¤ufe"
+
+#~ msgid "Fraud Tests"
+#~ msgstr "Betrugs-Analyse PrÃ¼flÃ¤ufe"
+
+#~ msgid "Payment Tests"
+#~ msgstr "Zahlungsanalyse"
+
+#~ msgid "Vendor Cleanup"
+#~ msgstr "Lieferantenstammbereinigung"
+
+#~ msgid "Upload the files that are available to you."
+#~ msgstr "Laden Sie Ihre Dateien hoch."
+
+#~ msgid "Run Tests Now"
+#~ msgstr "PrÃ¼flÃ¤ufe starten"
+
+#~ msgid "Backups"
+#~ msgstr "Backups"
+
+#~ msgid "The new password must be at least 6 characters"
+#~ msgstr "Ihr neues Passwort muss aus mindestens 6 Zeichen bestehen"
+
+#~ msgid "Delete Reason?"
+#~ msgstr "Reason-Code lÃ¶schen?"
+
+#~ msgid "Delete Preference?"
+#~ msgstr "Einstellung lÃ¶schen?"
+
+#~ msgid "First name is required"
+#~ msgstr "Vorname ist erforderlich"
+
+#~ msgid "Last name is required"
+#~ msgstr "Name ist erforderlich"
+
+#~ msgid "The current password must be at least 6 characters"
+#~ msgstr "Ihr aktuelles Passwort muss aus mindestens 6 Zeichen bestehen"
+
+#~ msgid "Submit Values"
+#~ msgstr "Werte einreichen"
+
+#~ msgid "Upload File..."
+#~ msgstr "Datei hochladen..."
+
+#, fuzzy
+#~ msgid "Could not retrieve data feeds"
+#~ msgstr "Konnte Kategoriencodes nicht abrufen"
+
+#~ msgid "Could not retrieve user info"
+#~ msgstr "Konnte Benutzerinformationen nicht abrufen"
+
+#, fuzzy
+#~ msgid "Could not retrieve template content"
+#~ msgstr "Konnte Kategoriencodes nicht abrufen"
+
+#, fuzzy
+#~ msgid "Could not retrieve data feed content"
+#~ msgstr "Konnte Kategoriencodes nicht abrufen"
+
+#, fuzzy
+#~ msgid "Could not retrieve test content"
+#~ msgstr "Konnte Kategoriencodes nicht abrufen"
+
+#, fuzzy
+#~ msgid "Could not retrieve claim type content"
+#~ msgstr "Konnte Kategoriencodes nicht abrufen"
+
+#, fuzzy
+#~ msgid "Could not retrieve templates"
+#~ msgstr "Konnte Kategoriencodes nicht abrufen"
+
+#~ msgid "Could not retrieve category types"
+#~ msgstr "Konnte Kategoriencodes nicht abrufen"
+
+#~ msgid "Could not retrieve dashboard summary information"
+#~ msgstr "Konnte Dashboard-Daten nicht abrufen"
+
+#~ msgid "Could not retrieve dashboard section information"
+#~ msgstr "Konnte Daten fÃ¼r Dashboard nicht abrufen"
+
+#~ msgid "Could not retrieve instance list data"
+#~ msgstr "Konnte Liste der Instanzen nicht abrufen"
+
+#~ msgid "Could not retrieve issues overview data"
+#~ msgstr "Konnte Daten fÃ¼r die Issues-Ãbersicht nicht abrufen."
+
+#~ msgid "Could not retrieve issues list data"
+#~ msgstr "Konnte Daten fÃ¼r die Issues-Liste nicht abrufen."
+
+#~ msgid "Could not retrieve submit dialog data"
+#~ msgstr "Konnte Daten fÃ¼r den Submit-Dialog nicht abrufen"
+
+#~ msgid "Could not retrieve issue actions data"
+#~ msgstr "Konnte Daten fÃ¼r die Retrieve-Issue-Aktion nicht abrufen"
+
+#~ msgid "Could not retrieve document search results"
+#~ msgstr "Konnte Suchergebnisse fÃ¼r Dokumente nicht abrufen"
+
+#~ msgid "Could not retrieve vendor search results"
+#~ msgstr "Konnte Suchergebnisse fÃ¼r Lieferanten nicht abrufen"
+
+#~ msgid "Could not retrieve user search results"
+#~ msgstr "Konnte Suchergebnisse fÃ¼r Benutzer nicht abrufen"
+
+#~ msgid "Could not retrieve batch list data"
+#~ msgstr "Konnte Batch-Liste-Daten nicht abrufen"
+
+#~ msgid "Analysis Overview"
+#~ msgstr "Analyse-Ãberblick"
+
+#~ msgid "You need to select a reason in order to confirm this issue."
+#~ msgstr ""
+#~ "Sie mÃ¼ssen zuerst einen Reason-Code auswÃ¤hlen, um dieses Issue zu "
+#~ "bestÃ¤tigen."
+
+#~ msgid "Why did this happen?"
+#~ msgstr "Warum ist das passiert?"
+
+#~ msgid "Your first name is required"
+#~ msgstr "Ihr Vorname ist erforderlich"
+
+#~ msgid "Your last name is required"
+#~ msgstr "Ihr Name ist erforderlich"
+
+#~ msgid "Your new password must be at least 6 characters"
+#~ msgstr "Ihr neues Passwort muss aus mindestens 6 Zeichen bestehen"
+
+#~ msgid "Your password has been changed"
+#~ msgstr "Ihr Passwort wurde geÃ¤ndert"
+
+#~ msgid "Your regional settings have been updated"
+#~ msgstr "Ihre LÃ¤ndereinstellungen wurden erfolgreich aktualisiert"
+
+#~ msgid "Add"
+#~ msgstr "HinzufÃ¼gen"
+
+#, fuzzy
+#~ msgid "Source Type"
+#~ msgstr "Eingangstabelle"
+
+#~ msgid "Payment Source"
+#~ msgstr "AP-Datei"
+
+#, fuzzy
+#~ msgid "Generic Source"
+#~ msgstr "Tabellen"
+
+#, fuzzy
+#~ msgid "Source Type is required"
+#~ msgstr "Eingangstabelle ist erforderlich"
+
+#~ msgid "Recent Source"
+#~ msgstr "Neue Daten"
+
+#~ msgid "Yes, %p1"
+#~ msgstr "Ja, %p1"
+
+#, fuzzy
+#~ msgid "Source Name"
+#~ msgstr "Eingangstabelle"
+
+#, fuzzy
+#~ msgid "Source Name is required"
+#~ msgstr "Eingangstabelle ist erforderlich"
+
+#~ msgid "Uplaod Template File..."
+#~ msgstr "Vorlagedatei hochladen..."
+
+#, fuzzy
+#~ msgid "Are you sure you want to delete the selected source?"
+#~ msgstr "Sind Sie sicher, dass Sie den selektierten Job lÃ¶schen mÃ¶chten?"
+
+#~ msgid "Could not find adjustmentlist script path!"
+#~ msgstr "Konnte Pfad fÃ¼r Adjustmentlist-Script nicht finden!"
+
+#~ msgid "More than one adjustmentlist script is being loaded!"
+#~ msgstr "Mehr als ein Adjustmentlist-Script wird geladen!"
+
+#~ msgid "Could not find attachmentpanel script path!"
+#~ msgstr "Konnte Pfad fÃ¼r Attachmentpanel-Script nicht finden!"
+
+#~ msgid "Could not find commentlist script path!"
+#~ msgstr "Konnte Pfad fÃ¼r Kommentarliste-Script nicht finden!"
+
+#~ msgid "More than one commentlist script is being loaded!"
+#~ msgstr "Mehr als ein Kommentarliste-Script wird geladen!"
+
+#~ msgid "More than one attachmentpanel script is being loaded!"
+#~ msgstr "Mehr als ein Attachmentpanel-Script wird geladen!"
+
+#~ msgid "Could not find uploadbutton script path!"
+#~ msgstr "Konnte Pfad fÃ¼r Uploadbutton-Script nicht finden!"
+
+#~ msgid "More than one uploadbutton script is being loaded!"
+#~ msgstr "Mehr als ein Uploadbutton-Script wird geladen!"
+
+#~ msgid ""
+#~ "There are unsaved changes to the new claim type item.  Are you sure you "
+#~ "want to cancel adding the new claim type item?"
+#~ msgstr ""
+#~ "Es gibt ungespeicherte Ãnderungen im Formular.  Sind Sie sicher, dass Sie "
+#~ "abbrechen mÃ¶chten?"
+
+#~ msgid "default"
+#~ msgstr "standard"
+
+#~ msgid "You need to select an instance in order to switch instances."
+#~ msgstr "Sie mÃ¼ssen eine Instanz auswÃ¤hlen, um "
+
+#~ msgid "This is a test"
+#~ msgstr "Dies ist ein Test"

@@ -1,0 +1,239 @@
+
+<!-- templates: upload page -->
+
+    <form class="hidden" id="fx-form-extra-data">
+        <input type="hidden" name="output_mode" value="<?php echo $this->output_mode ?>">
+        <input type="hidden" name="output_workspace_eid" value="<?php echo $this->output_workspace_eid ?>">
+    </form>
+
+    <script type="text/template" id="tmpl-fx-upload-page">
+        <div class="container" id="fx-upload-page">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="h1 text-brand-green" style="margin-bottom: 20px">
+                        <span class="fa-stack fa-2x" style="vertical-align: center">
+                            <span class="fa fa-circle fa-stack-2x"></span>
+                            <span class="fa fa-cloud-upload fa-stack-1x fa-inverse"></span>
+                        </span>
+                        &nbsp;
+                        <span>
+                            <i18n>Please share some data...</i18n>
+                        </span>
+                    </div>
+                    <?php if (isset($this->form_title) && strlen($this->form_title) > 0) { ?>
+                        <h3><?php echo $this->form_title ?></h3>
+                    <?php } ?>
+                    <?php if (isset($this->form_message) && strlen($this->form_message) > 0) { ?>
+                        <p class="fx-text-lg"><?php echo $this->form_message ?></p>
+                    <?php } ?>
+                    <br>
+                    <div id="fx-public-upload-form">
+                        <div class="form-group">
+                            <label><i18n>Filename</i18n></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="filename" value="" readonly autocomplete=off>
+                                <span class="input-group-btn">
+                                    <div class="btn btn-default fx-btn-file" id="fx-btn-resource-upload">
+                                        <i18n>Choose File</i18n></span>
+                                        <input type="file" name="file" data-url="/api/v1/upload" title="">
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                        <?php if (isset_and_true($this->require_password)) { ?>
+                            <div class="form-group">
+                                <label><i18n>Password</i18n></label>
+                                <input type="password" class="form-control" name="password" value="" autocomplete=off>
+                            </div>
+                        <?php } ?>
+                        <button type="button" class="btn btn-primary" id="fx-btn-resource-start-upload">
+                            <i18n>Start Upload</i18n>
+                        </button>
+                    </div>
+                    <ul class="list-unstyled hidden" id="fx-resource-upload-list"></ul>
+                    <div class="hidden" id="fx-resource-upload-results"></div>
+                    <div class="text-center" style="margin: 80px 0">
+                        <p>
+                            <i18n p1="<span class=\"fx-img fx-img-logo-flexio-xs\" style=\"margin: 0 4px; vertical-align: baseline\"></span>">Powered by %p1</i18n>
+                        </p>
+                        <p>
+                            <a data-anchor="hard" href="/app/signup" target="_blank" rel="noopener noreferrer" class="text-brand-green"><i18n>Sign up for a free account</i18n></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+<!-- templates: upload progress item -->
+
+    <script type="text/template" id="tmpl-fx-resource-upload-item">
+        <li class="fx-resource-upload-item">
+            <h4>${name}</h4>
+            <div class="fx-progress-container fx-no-margin">
+                <div class="progress fx-progress-resource-upload">
+                    <div class="progress-bar" style="width: 0%;"></div>
+                </div>
+                <span class="fx-progress-text text-muted"></span>
+                <form class="hidden">
+                    <input type="hidden" name="handle" value="${handle}">
+                </form>
+            </div>
+        </li>
+    </script>
+
+    <script type="text/template" id="tmpl-fx-resource-initialize-failure">
+        <div>
+            <div class="alert alert-danger clearfix">
+                <span class="fa fa-fw fa-2x text-danger glyphicon glyphicon-remove pull-left"></span>
+                <div style="margin-left: 45px">
+                    <h4><i18n>Oops! Something went wrong.</i18n></h4>
+                    ${msg}
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="fx-btn-start-over">
+                <i18n>Try Again</i18n>
+            </button>
+        </div>
+    </script>
+
+    <script type="text/template" id="tmpl-fx-resource-upload-success">
+        <div>
+            <div class="alert alert-success clearfix">
+                <span class="fa fa-fw fa-2x text-success glyphicon glyphicon-ok pull-left"></span>
+                <div style="margin-left: 45px">
+                    <h4><i18n>Success!</i18n></h4>
+                    <i18n>Your file was uploaded successfully. Would you like to upload another file?</i18n>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="fx-btn-start-over">
+                <i18n>Upload Another File</i18n>
+            </button>
+        </div>
+    </script>
+
+    <script type="text/template" id="tmpl-fx-resource-upload-failure">
+        <div>
+            <div class="alert alert-danger clearfix">
+                <span class="fa fa-fw fa-2x text-danger glyphicon glyphicon-remove pull-left"></span>
+                <div style="margin-left: 45px">
+                    <h4><i18n>Oops! Something went wrong.</i18n></h4>
+                    <i18n>We were expecting some different field names or data structures. Below are the things we noticed, please update your file and try again.</i18n>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="fx-btn-start-over">
+                <i18n>Try Again</i18n>
+            </button>
+            <br>
+            <br>
+            <div class="fx-collapsible fx-collapsed">
+                <h4 class="clearfix">
+                    {{if mime_type.passed === true}}
+                        <span class="pull-right text-success"><i18n>PASSED</i18n></span>
+                    {{else}}
+                        <span class="pull-right text-danger"><i18n>FAILED</i18n></span>
+                    {{/if}}
+                    <a data-anchor="btn" href="#" class="fx-btn-toggle-collapse">
+                        <span class="fa fa-fw fa-chevron-down fx-icon-collapse">
+                        </span><span class="fa fa-fw fa-chevron-right fx-icon-expand"></span>
+                    </a>
+                    <i18n>File Type Validation</i18n>
+                </h4>
+                <hr>
+                <div class="collapse">
+                    {{if mime_type.passed === true}}
+                        <div class="alert fx-alert-md alert-success clearfix">
+                            <div class="pull-right"><i18n>PASSED</i18n></div>
+                            <span class="fa fa-fw fa-lg glyphicon glyphicon-ok"></span>&nbsp;
+                            ${text}
+                        </div>
+                    {{else}}
+                        <div class="alert fx-alert-md alert-danger clearfix">
+                            <div class="pull-right"><i18n>FAILED</i18n></div>
+                            <span class="fa fa-fw fa-lg glyphicon glyphicon-remove"></span>&nbsp;
+                            ${text}
+                        </div>
+                    {{/if}}
+                    <br>
+                </div>
+            </div>
+            <div class="fx-collapsible fx-collapsed">
+                <h4 class="clearfix">
+                    {{if structure.passed === true}}
+                        <span class="pull-right text-success"><i18n>PASSED</i18n></span>
+                    {{else}}
+                        <span class="pull-right text-danger"><i18n>FAILED</i18n></span>
+                    {{/if}}
+                    <a data-anchor="btn" href="#" class="fx-btn-toggle-collapse">
+                        <span class="fa fa-fw fa-chevron-down fx-icon-collapse">
+                        </span><span class="fa fa-fw fa-chevron-right fx-icon-expand"></span>
+                    </a>
+                    <i18n>Structure Validation</i18n>
+                </h4>
+                <hr>
+                <div class="collapse">
+                    {{each structure.fields}}
+                        {{if this.passed === true}}
+                            <div class="alert fx-alert-md alert-success clearfix">
+                                <div class="pull-right"><i18n>PASSED</i18n></div>
+                                <span class="fa fa-fw fa-lg glyphicon glyphicon-ok"></span>&nbsp;
+                                ${text}
+                            </div>
+                        {{else}}
+                            <div class="alert fx-alert-md alert-danger clearfix">
+                                <div class="pull-right"><i18n>FAILED</i18n></div>
+                                <span class="fa fa-fw fa-lg glyphicon glyphicon-remove"></span>&nbsp;
+                                ${text}
+                            </div>
+                        {{/if}}
+                    {{/each}}
+                    <br>
+                </div>
+            </div>
+        </div>
+    </script>
+
+<?php $this->headStyle()->appendStyle("
+    body {
+        margin: 80px 0;
+        overflow-y: auto;
+    }
+
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        background: #fff;
+        border-top: 1px solid #eee;
+        padding: 5px;
+    }
+
+    h1, .h1 {
+        font-size: 40px;
+    }
+
+    h3, .h3 {
+        font-size: 26px;
+    }
+
+    .fx-text-lg {
+        font-size: 120%;
+    }
+"); ?>
+
+<?php
+    if (IS_DEBUG())
+    {
+        $this->inlineScript()->appendFile('/src/app/js/pages/upload.js');
+    }
+     else
+    {
+        $this->inlineScript()->appendFile('/dist/app/js/pages/upload.min.js');
+    }
+?>
+
+<?php $this->inlineScript()->captureStart() ?>
+    $(function() { new FxUploadPage(); })
+<?php $this->inlineScript()->captureEnd() ?>

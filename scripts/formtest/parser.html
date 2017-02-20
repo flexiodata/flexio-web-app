@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+
+  <body>
+  <p>Here are some examples to try:</p>
+  <pre>
+input from: my-connection file: aphist,invhead
+input from: my-connection file: aphist => APHistory, invhead => "Invoice Header"
+input from: my-connection file: { "path": "aphist", "name": "AP History" }, { "path": "invhead", "name" : "Invoice Header" }
+input from: my-connection file: *.csv where: createdate > 1/1/2016
+input from: mysql://user:pass@host/database?charset=utf8 file: ap-hist, vendor-master
+input from: mysql://user:pass@host/database?charset=utf8 query: "select * from vend_mast" as: vendmast
+input type: mysql host: www.myserver.com port: 3306 database: sample user: myuser password: mypw table: abc,def
+input file: https://webapps.goldprairie.com/filetrans/?download=kfjgssycsm => contacts
+input file: https://webapps.goldprairie.com/filetrans/?download=kfjgssycsm => "Sample Contacts"
+input file: { "path": "https://webapps.goldprairie.com/filetrans/?download=kfjgssycsm", "name": "Sample Contacts"}
+calc value: curdate() as: myfld type: date decimals: 0
+convert from: delimited to: table delimiter: comma qualifier: double-quote header: true
+email to: ben@flex.io subject: Test Message body: This is a test message
+limit sample: top value: 50054
+sort col: [vendor name]
+sort col: vend_no, [gross amt] desc
+transform col: vend_no, [vendor name] delimiter: ',' case: lower trim: leading
+  </pre>
+
+
+    <script>
+    function log(str) {
+      document.getElementById('output').value = str;
+    }
+    </script>
+
+
+    <script src="../../public/src/utils/parser.js"></script>
+
+
+    <script>
+      function onInputChanged(input)
+      {
+        var expr = input.value;
+        var parser = CommandBarParser;
+        var json = parser.toJSON(expr);
+        var cmdbar = parser.toCmdbar(json);
+
+        var output = JSON.stringify(json, null, 2);
+        document.getElementById('output').value = output;
+        document.getElementById('output2').value = cmdbar;
+      }
+    </script>
+
+
+    <form>
+      <textarea id="input"   name="input"   type="text" rows= 1 cols=80 autofocus onkeyup="onInputChanged(this)">transform col: vend_no, [vendor name] case: lower</textarea><br/><br/>
+      <textarea id="output"  name="output"  type="text" rows=20 cols=80></textarea><br/><br/>
+      <textarea id="output2" name="output2" type="text" rows= 1 cols=80></textarea><br/><br/>
+    </form>
+
+
+
+
+  </body>
+</html>

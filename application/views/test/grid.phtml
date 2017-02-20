@@ -1,0 +1,413 @@
+
+<div class="fx-page">
+    <div class="invisible" id="grid-test"></div>
+    <div class="invisible" id="grid-options" style="padding: 10px 20px; overflow: auto">
+        <h4>Grid Options</h4>
+        <hr style="margin: 10px 0">
+        <ul class="list-unstyled">
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-toggle-model" data-model="test">Toggle Model</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-toggle-fullscreen">Toggle Fullscreen</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-get-columns">Echo All Columns</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-get-frozen-columns">Echo Frozen Columns</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-get-visible-columns">Echo Visible Columns</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-get-hidden-columns">Echo Hidden Columns</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-get-selected-columns">Echo Selected Columns</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-get-selected-rows">Echo Selected Rows</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-get-selected-cells">Echo Selected Cells</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-set-column-2-width">Set Column 2 Width (600px)</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-select-column-2">Select Column 2</button>
+            </li>
+            <li style="margin-bottom: 10px">
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-select-row-2">Select Row 2</button>
+            </li>
+            <li>
+                <button class="btn btn-sm btn-default btn-block" id="bg-btn-select-cells">Select 4 Cells</button>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-utility-bar"> Show Utility Bar
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-border" checked> Show Border
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-whitespace"> Show Whitespace
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-horizontal-grid-lines" checked> Show Horizontal Grid Lines
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-vertical-grid-lines" checked> Show Vertical Grid Lines
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-faux-rows" checked> Show Fuax Rows
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-striped-rows"> Show Striped Rows
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-fixed-columns" checked> Show Fixed Columns
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-bgg-row-handles" checked> Show Row Handles
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-show-row-numbers" checked> Show Row Numbers
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-allow-column-selection" checked> Allow Column Selection
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-allow-row-selection" checked> Allow Row Selection
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-allow-cell-selection" checked> Allow Cell Selection
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-lock-row-height-scrolling"> Lock scrolling to row height
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-live-scroll" checked> Live scrolling
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="bg-checkbox-use-custom-scrollbar"> Use Custom Scrollbars
+                    </label>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<?php $this->inlineScript()->captureStart() ?>
+$(function() {
+
+    $('#fx-app-statusbar').remove();
+
+    // render the grid
+    $('#grid-test')
+        .appendTo('#fx-app-content')
+        .drawers({
+            showRightDrawer: true,
+            rightDrawerEl: $('#grid-options')
+        })
+        .biggrid({
+            title: 'Test Grid',
+            showBorder: true,
+            plugins: ['columndragreorder', 'columndblclickrename']
+        });
+
+    var $grid = $('#grid-test'),
+        grid = $('#grid-test').data('biggrid'),
+        drawers = $('#grid-test').data('drawers');
+
+    drawers.getWrapperEl().css({
+        position: 'fixed',
+        top: 60,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 'auto'
+    });
+
+    $('#grid-test').removeClass('invisible');
+    $('#grid-options').removeClass('invisible');
+
+    // for console usage...
+    window.grid = grid;
+
+    $('#bg-btn-toggle-model').click(function() {
+        var $btn = $(this);
+        if ($btn.data('model') == 'test')
+        {
+            grid.setModel(array_model);
+            grid.setTitle('Array Grid');
+            grid.refreshAll();
+            $btn.data('model', 'array');
+        }
+         else
+        {
+            grid.setModel(test_model);
+            grid.setTitle('Test Grid');
+            grid.refreshAll();
+            $btn.data('model', 'test');
+        }
+    });
+
+    $('#bg-btn-toggle-fullscreen').click(function() {
+        grid.setFullscreen(true);
+    });
+
+    $('#bg-btn-get-columns').click(function() {
+        var cols = grid.getColumns(true),
+            cols_str = '';
+
+        cols_str = _.map(cols, 'name').join(', ');
+
+        if (cols_str.length == 0)
+            cols_str = 'There are no columns in the grid';
+             else
+            cols_str = 'All Columns:\n\n' + cols_str;
+
+        alert(cols_str);
+    });
+
+    $('#bg-btn-get-frozen-columns').click(function() {
+        var cols = grid.getFrozenColumns(true),
+            cols_str = '';
+
+        cols_str = _.map(cols, 'name').join(', ');
+
+        if (cols_str.length == 0)
+            cols_str = 'No columns are frozen';
+             else
+            cols_str = 'Frozen Columns:\n\n' + cols_str;
+
+        alert(cols_str);
+    });
+
+    $('#bg-btn-get-visible-columns').click(function() {
+        var cols = grid.getVisibleColumns(true),
+            cols_str = '';
+
+        cols_str = _.map(cols, 'name').join(', ');
+
+        if (cols_str.length == 0)
+            cols_str = 'No columns are visible';
+             else
+            cols_str = 'Visible Columns:\n\n' + cols_str;
+
+        alert(cols_str);
+    });
+
+    $('#bg-btn-get-hidden-columns').click(function() {
+        var cols = grid.getHiddenColumns(true),
+            cols_str = '';
+
+        cols_str = _.map(cols, 'name').join(', ');
+
+        if (cols_str.length == 0)
+            cols_str = 'No columns are hidden';
+             else
+            cols_str = 'Hidden Columns:\n\n' + cols_str;
+
+        alert(cols_str);
+    });
+
+    $('#bg-btn-get-selected-columns').click(function() {
+        var cols = grid.getSelectedColumns(true),
+            cols_str = '';
+
+        cols_str = _.map(cols, 'name').join(', ');
+
+        if (cols_str.length == 0)
+            cols_str = 'No columns are selected';
+             else
+            cols_str = 'Selected Columns:\n\n' + cols_str;
+
+        alert(cols_str);
+    });
+
+    $('#bg-btn-get-selected-rows').click(function() {
+        var rows = grid.getSelectedRows(),
+            rows_str = '';
+
+        rows_str = rows.join(', ');
+
+        if (rows_str.length == 0)
+            rows_str = 'No rows are selected';
+             else
+            rows_str = 'Selected Rows:\n\n' + rows_str;
+
+        alert(rows_str);
+    });
+
+    $('#bg-btn-get-selected-cells').click(function() {
+        var cells = grid.getSelectedCells(),
+            cells_str = '';
+
+        cells_str = cells.join(', ');
+
+        if (cells_str.length == 0)
+            cells_str = 'No cells are selected';
+             else
+            cells_str = 'Selected Cells:\n\n' + cells_str;
+
+        alert(cells_str);
+    });
+
+    $('#bg-btn-set-column-2-width').click(function() {
+        grid.resizeColumn('bgg-col-1', 600);
+    });
+
+    $('#bg-btn-select-column-2').click(function() {
+        grid.selectColumn('bgg-col-1');
+    });
+
+    $('#bg-btn-select-row-2').click(function() {
+        grid.selectRow('bgg-tr-1');
+    });
+
+    $('#bg-btn-select-cells').click(function() {
+        grid.selectCell('bgg-tr-3', 'bgg-col-3', true);
+        grid.selectCell('bgg-tr-3', 'bgg-col-4', true);
+        grid.selectCell('bgg-tr-4', 'bgg-col-3', true);
+        grid.selectCell('bgg-tr-4', 'bgg-col-4', true);
+    });
+
+    $('input[type=checkbox]').click(function() {
+        var $checkbox = $(this),
+            checkbox_id = $checkbox.attr('id'),
+            checked = this.checked;
+
+        switch (checkbox_id)
+        {
+            case 'bg-checkbox-show-border':
+                grid.setBorderVisible(checked);
+                break;
+
+            case 'bg-checkbox-show-faux-rows':
+                grid.setFauxRowsVisible(checked);
+                break;
+
+            case 'bg-checkbox-show-striped-rows':
+                grid.setStripedRowsVisible(checked);
+                break;
+
+            case 'bg-checkbox-show-whitespace':
+                grid.setWhitespaceVisible(checked);
+                grid.refreshRows();
+                break;
+
+            case 'bg-checkbox-show-horizontal-grid-lines':
+                grid.setHorizontalLinesVisible(checked);
+                break;
+
+            case 'bg-checkbox-show-vertical-grid-lines':
+                grid.setVerticalLinesVisible(checked);
+                break;
+
+            case 'bg-checkbox-show-utility-bar':
+                grid.setUtilityBarVisible(checked);
+                break;
+
+            case 'bg-checkbox-show-fixed-columns':
+                grid.setFixedColumnsVisible(checked);
+                break;
+
+            case 'bg-checkbox-show-bgg-row-handles':
+                grid.setRowHandlesVisible(checked);
+                break;
+
+            case 'bg-checkbox-show-row-numbers':
+                grid.setRowNumbersVisible(checked);
+                break;
+
+            case 'bg-checkbox-allow-column-selection':
+                grid.setColumnSelectionAllowed(checked);
+                break;
+
+            case 'bg-checkbox-allow-row-selection':
+                grid.setRowSelectionAllowed(checked);
+                break;
+
+            case 'bg-checkbox-allow-cell-selection':
+                grid.setCellSelectionAllowed(checked);
+                break;
+
+            case 'bg-checkbox-lock-row-height-scrolling':
+                grid.setLockScrollToRowHeight(checked);
+                break;
+
+            case 'bg-checkbox-live-scroll':
+                grid.setLiveScroll(checked);
+                break;
+
+            case 'bg-checkbox-use-custom-scrollbar':
+                grid.setCustomScrollbars(checked);
+                break;
+        }
+    });
+});
+<?php $this->inlineScript()->captureEnd() ?>

@@ -1,0 +1,50 @@
+
+<?php $this->headLink()->appendStylesheet('/src/css/public.css'); ?>
+
+<?php
+    $url = 'http';
+    if (IS_SECURE())
+        $url .= 's';
+    $url .= '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+?>
+
+<?php if (IS_DEBUG()) { ?>
+    <div id="fx-body" class="text-center">
+        <p><span class="fx-img fx-img-logo-flexio-sm"></span></p>
+        <div class="text-left">
+            <legend><i18n>An error occurred</i18n></legend>
+            <label>Address</label>
+            <pre><?php echo $url; ?></pre>
+            <label>Message</label>
+            <pre><?php echo $this->message; ?></pre>
+            <label>Stack Trace</label>
+            <pre><?php echo $this->exception->getTraceAsString(); ?></pre>
+        </div>
+    </div>
+    <footer id="fx-footer">
+        <br>
+        <span class="h6 fx-copyright">&copy;2016 Gold Prairie LLC</span>
+    </footer>
+<?php } else { ?>
+    <div id="fx-body" class="text-center">
+        <p><span class="fx-img fx-img-logo-flexio-sm"></span></p>
+        <div class="text-left">
+            <legend><i18n>We're Sorry</i18n></legend>
+            <p><i18n>The page you're looking for can't be found.  Please return to the Flex.io website.</i18n></p>
+            <br>
+            <p class="text-center">
+                <a data-anchor="hard" href="/" class="btn btn-primary fx-btn-widest"><i18n>Return to Flex.io</i18n></a>
+            </p>
+        </div>
+    </div>
+    <footer id="fx-footer">
+        <br>
+        <span class="h6 fx-copyright">&copy;2016 Gold Prairie LLC</span>
+    </footer>
+<?php } ?>
+
+<?php $this->headStyle()->appendStyle("
+    p {
+        margin-bottom: 10px;
+    }
+"); ?>

@@ -1,0 +1,111 @@
+<template>
+  <article class="pa3 mv2 mh3" :class="cls">
+    <div class="flex flex-row items-center">
+      <span class="mid-gray mr2" @click="toggleDetails">
+        <i
+          class="material-icons db v-mid b pointer"
+          :class="{ 'fa-rotate-90': !show_details }"
+          v-if="has_details"
+        >chevron_right</i>
+      </span>
+      <span class="f4 mr2">{{item.id}}</span>
+      <spinner size="tiny" inline v-if="item.is_running"></spinner>
+      <div class="flex-fill">&nbsp;</div>
+      <div class="tr pl3 f6 fw6">{{item.message}}</div>
+      <div class="f3 pl3 tr monospace ttu b dark-green" v-if="has_details && is_passed===true">Passed</div>
+      <div class="f3 pl3 tr monospace ttu b dark-red" v-if="has_details && !is_passed===true">Failed</div>
+      <div class="f3 pl3 tr monospace ttu b yellow" v-if="is_xhr_ok===false">&nbsp;Error</div>
+    </div>
+    <div class="pt3 pl3 f6" v-if="is_xhr_ok===false">
+      <pre class="ma0">{{item.error_text}}</pre>
+    </div>
+    <div class="pt3" v-if="item.details" v-show="!show_details">
+      <table class="w-100 css-test-table">
+        <tr :class="!detail.passed ? 'bg-black-10' : ''" v-for="(detail, index) in item.details">
+          <td class="v-top f6 b w3">{{detail.name}}</td>
+          <td class="v-top f6 min-w6 mw6">
+            <div>{{detail.description}}</div>
+            <div class="flex flex-row mv1 mr3 max-h4" v-if="!detail.passed && detail.message && detail.message.length > 0">
+              <div class="pa1 f6 monospace overflow-auto ba b--black-20 bg-white-60">
+                {{detail.message}}
+              </div>
+            </div>
+          </td>
+          <td class="v-top f6 tr">
+            <div class="dib">
+              <div class="flex flex-row items-center br1 nowrap ttu white bg-dark-green" style="padding: 1px 4px 1px 2px" v-if="detail.passed">
+                <i class="material-icons f6">check</i>
+                <span class="b f5 monospace">Passed</span>
+              </div>
+              <div class="flex flex-row items-center br1 nowrap ttu white bg-dark-red" style="padding: 1px 4px 1px 2px" v-if="!detail.passed">
+                <i class="material-icons f6">close</i>
+                <span class="b f5 monospace">Failed</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </article>
+</template>
+
+<script>
+  import Spinner from './Spinner.vue'
+
+  export default {
+    props: ['item'],
+    components: {
+      Spinner
+    },
+    data() {
+      return {
+        show_details: _.get(this.item, 'passed', false)
+      }
+    },
+    watch: {
+      is_passed: function(val, old_val) {
+        this.show_details = val ? true : false
+      }
+    },
+    computed: {
+      has_details() {
+        return this.item.details ? true : false
+      },
+      is_passed() {
+        return this.item.passed
+      },
+      is_xhr_ok() {
+        return _.get(this.item, 'xhr.ok', true)
+      },
+      cls() {
+        return {
+          'css-test-error': this.is_xhr_ok === false,
+          'css-test-success': this.is_passed === true,
+          'css-test-failure': this.is_passed === false
+        }
+      }
+    },
+    methods: {
+      toggleDetails() {
+        this.show_details = !this.show_details
+      }
+    }
+  }
+</script>
+
+<style lang="less">
+  .css-test-success {
+    background-color: rgba(0,255,0,0.1)
+  }
+  .css-test-failure {
+    background-color: rgba(255,0,0,0.1)
+  }
+  .css-test-error {
+    background-color: rgba(255,255,0,0.1)
+  }
+  .css-test-table {
+    td {
+      padding: 1px 4px;
+    }
+  }
+</style>

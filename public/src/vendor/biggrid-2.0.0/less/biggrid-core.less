@@ -1,0 +1,578 @@
+
+.bgg {
+  position: relative; // overridden by html.bgg-state-fullscreen
+  overflow: hidden;
+  width: auto; // overridden by html.bgg-state-fullscreen
+  //height: 400px; // overridden by html.bgg-state-fullscreen
+  font-family: @bgg-font-family;
+  color: @bgg-cell-color;
+  background: #fff;
+  border: 0 solid @bgg-border-color;
+  .user-select(none);
+
+  th,
+  td {
+    white-space: nowrap;
+  }
+
+  .bgg-table {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    max-width: auto; // undo Bootstrap's '.table' default
+    width: auto; // undo Bootstrap's '.table' default
+    .user-select(none);
+  }
+
+  .bgg-th,
+  .bgg-td {
+    background: transparent;
+    overflow: visible;
+    cursor: default;
+    padding: @bgg-cell-padding-vert @bgg-cell-padding-horz;
+    line-height: @bgg-cell-line-height;
+    font-size: @bgg-font-size-base;
+    border: @bgg-cell-border-size solid transparent;
+    color: @bgg-cell-color;
+    .user-select(none);
+
+    &.bgg-col-text-left   { text-align: left;   }
+    &.bgg-col-text-center { text-align: center; }
+    &.bgg-col-text-right  { text-align: right;  }
+
+    &.bgg-col-x {
+      background-color: transparent !important;
+      border-color: transparent !important;
+      padding: @bgg-cell-padding-vert 0;
+    }
+
+    &.bgg-tr-handle {
+      display: none; // hide row handle altogether unless we add the .bgg-state-show-bgg-tr-handles class
+      color: transparent; // hide text unless we add the .bgg-state-show-row-numbers class
+      background: @bgg-tr-handle-background-color;
+      min-width: @bgg-tr-handle-width;
+      max-width: @bgg-tr-handle-width;
+      width: @bgg-tr-handle-width;
+      text-align: right;
+      padding-left: @bgg-tr-handle-cell-padding-horz;
+      padding-right: @bgg-tr-handle-cell-padding-horz;
+      border-right-color: @bgg-cell-border-color;
+      border-top-color: @bgg-cell-border-color;
+      border-bottom-color: @bgg-cell-border-color;
+
+      // we want overflow: visible on the row handle cells so that
+      // row selection highlight elements visually connect to each other
+      overflow: visible;
+
+      &.bgg-tr-selected {
+        background: @bgg-tr-handle-selected-background-color;
+        border-color: @bgg-tr-handle-selected-border-color;
+        font-weight: bold;
+      }
+    }
+
+    .bgg-col-hidden {
+      display: none !important;
+      visibility: hidden !important;
+    }
+
+    .form-control {
+      background: inherit;
+      border: 0 none;
+      border-radius: 0;
+      .box-shadow(none);
+      text-align: inherit;
+      line-height: @bgg-cell-line-height;
+      height: @bgg-cell-line-height;
+      padding: 0 @bgg-cell-padding-horz;
+      font-size: @bgg-font-size-base;
+      color: @bgg-cell-color;
+    }
+  }
+
+  .bgg-th {
+    border-left-color: @bgg-cell-border-color;
+    border-right-color: @bgg-cell-border-color;
+    border-bottom: none;
+    color: transparent; // fixes visible column headers when scrolling up
+    text-align: center;
+    font-weight: normal;
+  }
+
+  .bgg-td {
+    .bgg-whitespace {
+      .opacity(0.3);
+      font-weight: bold;
+      margin: 0 1px;
+    }
+  }
+
+  .bgg-th:first-child,
+  .bgg-td:first-child {
+    border-left-width: 0 !important; // fixes double border when showing a border around the biggrid
+  }
+
+  .bgg-td {
+    // setting these styles to 0 here allows the <th> cell
+    // with the same column class to determine the column width
+    // (which allows us easy dynamic column resizing)
+    min-width: 0;
+    max-width: 0;
+  }
+}
+
+// we may want the grid to be invisible to the user while still being "visible"
+// so we can check this via jQuery.is(':visible')
+.bgg-invisible {
+  width: 1px !important;
+  height: 1px !important;
+  .opacity(0.01);
+}
+
+.bgg-fixed-header,
+.bgg-fixed-columns {
+  display: none; // setting .bgg-state-show-fixed-cols will show this
+  border-right: @bgg-cell-border-size solid @bgg-cell-border-color;
+
+  // add thicker border to differentiate the frozen columns from the data columns
+  .bgg-col-frozen:last-child {
+    border-right: 4px solid @bgg-cell-border-color;
+  }
+}
+
+.bgg-fixed-header {
+  .bgg-th {
+    color: @bgg-fixed-columns-color;
+  }
+}
+
+.bgg-data-header {
+  .bgg-th {
+    color: @bgg-cell-color;
+  }
+}
+
+.bgg-td-wrapper {
+  overflow: hidden;
+  margin: (-1 * @bgg-cell-padding-vert) (-1 * @bgg-cell-padding-horz);
+  height: @bgg-cell-line-height + (2 * @bgg-cell-padding-vert);
+}
+
+.bgg-cell-text {
+  overflow: hidden;
+  margin-left: -1 * @bgg-cell-padding-horz;
+  margin-right: -1 * @bgg-cell-padding-horz;
+
+  // compensate for negative margin above for left/right-aligned cells
+  .bgg-col-text-left &  { padding-left: @bgg-cell-padding-horz;  }
+  .bgg-col-text-right & { padding-right: @bgg-cell-padding-horz; }
+}
+
+.bgg-resize-full {
+  display: inline-block;
+}
+
+.bgg-resize-small {
+  display: none;
+}
+
+.bgg-dropdown-menu {
+  min-width: 200px;
+  font-size: @bgg-font-size-base;
+
+  > li > a {
+    padding: 3px 15px 3px 10px;
+  }
+
+  .divider {
+    margin: 6px 0;
+  }
+
+  .fa,
+  .el-icon,
+  .glyphicon {
+    margin-right: 2px;
+  }
+
+  .btn-text {
+    display: inline-block;
+    min-width: 10px;
+  }
+
+  &.open {
+    display: block;
+  }
+}
+
+.bgg-caret-dropdown-menu {
+  &:before {
+    content: '';
+    display: inline-block;
+    border: @bgg-dropdown-caret-size solid transparent;
+    border-top-width: 0;
+    border-bottom-color: @dropdown-fallback-border; // IE8 fallback
+    border-bottom-color: @dropdown-border;
+    position: absolute;
+    top: -1 * @bgg-dropdown-caret-size;
+    left: @bgg-dropdown-caret-offset-left;
+  }
+
+  &:after {
+    content: '';
+    display: inline-block;
+    border: (@bgg-dropdown-caret-size - 1) solid transparent;
+    border-top-width: 0;
+    border-bottom-color: @dropdown-bg;
+    position: absolute;
+    top: -1 * (@bgg-dropdown-caret-size - 1);
+    left: @bgg-dropdown-caret-offset-left + 1;
+  }
+
+  .pull-right > &,
+  .pull-right& {
+    &:before {
+      left: auto;
+      right: @bgg-dropdown-caret-offset-right;
+    }
+    &:after {
+      left: auto;
+      right: @bgg-dropdown-caret-offset-right + 1;
+    }
+  }
+}
+
+.bgg-cell-dropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  background: @bgg-header-background-color;
+  z-index: @zindex-bgg-header-cell;
+
+  &.open {
+    display: block;
+  }
+
+  .caret {
+    margin-left: 0;
+    margin-top: -3px;
+  }
+
+  .dropdown-toggle {
+    padding: 0 @bgg-dropdown-toggle-horz-padding;
+  }
+
+  // compensate for the very small dropdown caret size
+  .bgg-dropdown-menu {
+    margin-left: -12px;
+    margin-top: 1px;
+  }
+}
+
+.bgg-cell-inner,
+.bgg-td-wrapper {
+  position: relative;
+
+  &:hover .bgg-cell-dropdown {
+    display: block;
+  }
+}
+
+.bgg-cell-selection-overlay,
+.bgg-col-selection-overlay,
+.bgg-tr-selection-overlay {
+  position: absolute;
+  z-index: @zindex-bgg-selection;
+  outline: 2px solid @bgg-cell-selection-overlay-outline-color;
+  border: 1px solid @bgg-cell-selection-overlay-border-color;
+  background: @bgg-cell-selection-overlay-background-color;
+  pointer-events : none;
+}
+
+.bgg-col-frozen {
+  .bgg-data-header &,
+  .bgg-table-grid-faux &,
+  .bgg-table-grid-data & {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+.bgg-col-faded {
+  .opacity(0.3);
+}
+
+.bgg-drag-helper {
+  z-index: @zindex-bgg-drag-helper;
+}
+
+.bgg-col-drag-helper {
+  background: @bgg-drag-handle-background-color;
+  border: 0 none;
+  border-top: 2px solid @bgg-drag-handle-highlight-color;
+  font-size: @bgg-font-size-base;
+  padding: 4px 12px;
+  min-width: 80px;
+  max-width: 200px;
+  text-align: center;
+  z-index: @zindex-bgg-drag-helper;
+  .box-shadow(0 2px 6px rgba(0,0,0,0.4));
+}
+
+.bgg-col-freeze-drop-target {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  color: @bgg-tr-handle-color;
+  background: @bgg-utility-bar-background;
+  .box-shadow(0 10px 10px rgba(0,0,0,0.4));
+  z-index: @zindex-bgg-top + 2;
+}
+
+.bgg-col-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-right: @bgg-col-icon-horz-padding;
+  z-index: @zindex-bgg-header-cell;
+  background: @bgg-header-background-color;
+
+  span + span {
+    margin-left: 4px;
+  }
+}
+
+.bgg-col-resizer {
+  cursor: ew-resize;
+  position: absolute;
+  top: -1 * @bgg-cell-padding-vert;
+  right: -1 * @bgg-cell-padding-horz;
+  bottom: -1 * @bgg-cell-padding-vert;
+  z-index: @zindex-bgg-header-cell + 1;
+}
+
+.bgg-col-reorder-drop-target {
+  position: absolute;
+  top: -1 * @bgg-cell-padding-vert;
+  left: -1 * @bgg-cell-padding-horz;
+  right: -1 * @bgg-cell-padding-horz;
+  z-index: @zindex-bgg-header-cell;
+}
+
+.bgg-col-highlight {
+  position: absolute;
+  bottom: (-1 * @bgg-cell-padding-vert) - 1;
+  left: (-1 * @bgg-cell-padding-horz) - 1;
+  right: (-1 * @bgg-cell-padding-horz) - 1;
+  //height: 2px;
+  z-index: @zindex-bgg-header;
+
+  display: none;
+  background-color: @bgg-header-cell-highlight-background-color;
+
+  .bgg-col-selected & {
+    display: block;
+  }
+}
+
+.bgg-tr-highlight {
+  position: absolute;
+  top: (-1 * @bgg-cell-padding-vert) - 1;
+  bottom: (-1 * @bgg-cell-padding-vert) - 1;
+  right: -2 * @bgg-cell-padding-horz;
+  //width: 2px;
+  z-index: @zindex-bgg-fixed-columns + 1;
+
+  display: none;
+  background-color: @bgg-tr-handle-highlight-background-color;
+
+  .bgg-tr-selected & {
+    display: block;
+  }
+}
+
+.bgg-utility-bar,
+.bgg-overlay-wrapper,
+.bgg-fixed-header,
+.bgg-data-header,
+.bgg-body-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: visible;
+}
+
+.bgg-utility-bar {
+  display: none;
+  background: @bgg-utility-bar-background;
+  border-bottom: @bgg-header-border-size solid @bgg-border-color;
+  height: @bgg-utility-bar-height;
+  z-index: @zindex-bgg-utility-bar;
+}
+
+.bgg-fixed-header,
+.bgg-data-header {
+  background: @bgg-header-background-color;
+  border-bottom: @bgg-header-border-size solid @bgg-border-color;
+  height: @bgg-header-table-height + @bgg-header-border-size; // bottom border
+  z-index: @zindex-bgg-header;
+
+  // allow for the possibility of white area above the column header
+  .bgg-table {
+    position: absolute;
+    bottom: 0;
+    border-top: 1px solid @bgg-cell-border-color;
+  }
+
+  .bgg-th {
+    background: @bgg-header-background-color;
+
+    &.bgg-col-selected {
+      background: @bgg-header-cell-selected-background-color;
+      border-color: @bgg-header-cell-selected-border-color;
+      color: @bgg-header-cell-selected-color;
+      font-weight: bold;
+
+      & .bgg-col-icon,
+      & .bgg-cell-dropdown {
+        background: @bgg-header-cell-selected-background-color;
+      }
+    }
+  }
+}
+
+.bgg-overlay-wrapper {
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: @zindex-bgg-overlay-wrapper;
+}
+
+.bgg-body-wrapper {
+  top: @bgg-header-table-height - 1;
+  bottom: 0;
+  overflow: hidden;
+  z-index: @zindex-bgg-body-wrapper;
+}
+
+.bgg-body,
+.bgg-fixed-columns {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  .bgg-table {
+    position: absolute;
+    top: 0;
+    margin-top: -1 * @bgg-header-table-height;
+  }
+
+  .bgg-th,
+  .bgg-td {
+    overflow: hidden;
+  }
+}
+
+.bgg-body {
+  overflow: scroll;
+}
+
+.bgg-fixed-header,
+.bgg-fixed-columns {
+  // the width of the fixed header and columns is calculated by the plugin
+  right: auto;
+  z-index: @zindex-bgg-fixed-columns;
+
+  .bgg-cell-text {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.bgg-fixed-columns {
+  background: @bgg-fixed-columns-background-color;
+  overflow: hidden;
+
+  .bgg-td {
+    color: @bgg-fixed-columns-color;
+  }
+}
+
+.bgg-table-grid-faux {
+  display: none;
+  z-index: @zindex-bgg-body-grid-faux;
+}
+
+.bgg-table-grid-data,
+.bgg-table-grid-fixed {
+  z-index: @zindex-bgg-body-grid-data;
+}
+
+.bgg-yardstick {
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 10px;
+  height: 0;
+  z-index: @zindex-bgg-yardstick;
+}
+
+.bgg-message {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: @zindex-bgg-message;
+  padding: 10px 15px;
+  font-weight: bold;
+}
+
+.bgg-message-bottom {
+  font-size: @bgg-message-font-size;
+  line-height: @bgg-message-line-height;
+  padding: 0 8px 0 6px;
+  min-width: 100px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: @zindex-bgg-message;
+}
+
+// top margin is dynamically calculated based on message height
+.bgg-message-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: @zindex-bgg-message;
+  font-size: 36px;
+  line-height: 50px;
+  width: 600px;
+  margin-left: -300px;
+  text-align: center;
+}
+
+.bgg-message-overlay-fixed {
+  position: fixed;
+}
+
+.bgg-message-inner {
+  display: inline-block;
+  min-width: 80px;
+}
+
+// TODO: match this up with .modal-backdrop
+.bgg-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: @zindex-bgg-backdrop;
+}

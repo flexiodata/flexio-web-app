@@ -1,0 +1,11 @@
+export const PROCESS_MODE_BUILD = 'B'
+export const PROCESS_MODE_RUN   = 'R'
+
+export const PROCESS_STATUS_UNDEFINED = ''
+export const PROCESS_STATUS_PENDING   = 'S'
+export const PROCESS_STATUS_WAITING   = 'W'
+export const PROCESS_STATUS_RUNNING   = 'R'
+export const PROCESS_STATUS_CANCELLED = 'X'
+export const PROCESS_STATUS_PAUSED    = 'P'
+export const PROCESS_STATUS_FAILED    = 'F'
+export const PROCESS_STATUS_COMPLETED = 'C'

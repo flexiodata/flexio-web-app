@@ -1,0 +1,5 @@
+export const FIND_REPLACE_LOCATION_ANY              = 'any'
+export const FIND_REPLACE_LOCATION_LEADING          = 'leading'
+export const FIND_REPLACE_LOCATION_TRAILING         = 'trailing'
+export const FIND_REPLACE_LOCATION_LEADING_TRAILING = 'leading_trailing'
+export const FIND_REPLACE_LOCATION_WHOLE            = 'whole'

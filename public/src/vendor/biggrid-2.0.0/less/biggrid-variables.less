@@ -1,0 +1,87 @@
+
+// biggrid font
+@bgg-font-size-base: 13px;
+@bgg-font-family: Arial, sans-serif;
+
+// biggrid cell metrics
+@bgg-cell-line-height: 20px;
+@bgg-cell-padding-vert: 1px;
+@bgg-cell-padding-horz: 5px;
+@bgg-cell-border-size: 1px;
+
+// biggrid general metrics
+@bgg-message-font-size: 13px;
+@bgg-message-line-height: 22px;
+@bgg-border-width: 1px;
+@bgg-utility-bar-height: 32px;
+@bgg-header-border-size: 1px;
+@bgg-header-table-height: (@bgg-cell-padding-vert*2) + @bgg-cell-line-height;
+@bgg-header-height: @bgg-header-table-height + @bgg-utility-bar-height;
+@bgg-col-icon-horz-padding: 3px;
+@bgg-tr-handle-with-numbers-width: 80px;
+@bgg-tr-handle-width: 20px;
+@bgg-tr-handle-cell-padding-vert: @bgg-cell-padding-vert;
+@bgg-tr-handle-cell-padding-horz: 5px;
+
+// biggrid dropdown metrics
+@bgg-dropdown-caret-offset-left: 10px;
+@bgg-dropdown-caret-offset-right: 15px;
+@bgg-dropdown-caret-size: 8px;
+@bgg-dropdown-toggle-horz-padding: 3px;
+
+// biggrid cell colors
+@bgg-cell-color: @text-color;
+@bgg-cell-background-color: #fff;
+@bgg-cell-background-striped-row-color: #f5f5f5; //#f2f2f2
+@bgg-cell-border-color: #e2e2e2;
+
+// biggrid general colors
+@bgg-background-color: #fff;
+@bgg-border-color: #ddd;
+@bgg-utility-bar-background: #eee; //#eaeaea
+@bgg-header-background-color: #f5f5f5; //#f2f2f2
+@bgg-tr-handle-color: #999;
+@bgg-tr-handle-background-color: #f5f5f5; //#f2f2f2
+@bgg-fixed-columns-color: @bgg-cell-color;
+@bgg-fixed-columns-background-color: #fff;
+
+// biggrid cell selection colors
+@bgg-cell-selection-overlay-outline-color: @brand-primary; //darken(spin(@brand-primary, -10), 7.5%);
+@bgg-cell-selection-overlay-border-color: #fff;
+@bgg-cell-selection-overlay-background-color: rgba(0,0,0,0.225);
+
+// biggrid header cell selection colors
+@bgg-header-cell-selected-background-color: mix(@brand-primary, #fff, 20%);
+@bgg-header-cell-selected-border-color: darken(@bgg-cell-border-color, 12%);
+@bgg-header-cell-selected-color: darken(@brand-primary, 12%);
+@bgg-header-cell-highlight-background-color: @brand-primary;
+
+// biggrid row handle selection colors
+@bgg-tr-handle-selected-background-color: mix(@brand-primary, #fff, 20%);
+@bgg-tr-handle-selected-border-color: darken(@bgg-cell-border-color, 12%);
+@bgg-tr-handle-selected-color: darken(@brand-primary, 12%);
+@bgg-tr-handle-highlight-background-color: @brand-primary;
+
+// biggrid cell selection colors
+@bgg-drag-handle-highlight-color: @brand-primary;
+@bgg-drag-handle-background-color: @bgg-header-background-color;
+
+@zindex-increment: 1;
+
+// biggrid z-indexes
+@zindex-bgg-top: 50;
+@zindex-bgg-fullscreen: @zindex-bgg-top;
+@zindex-bgg-drag-helper: @zindex-modal + (1 * @zindex-increment); // must be greater than modal
+@zindex-bgg-message: @zindex-bgg-top;
+@zindex-bgg-backdrop: @zindex-bgg-top - (1 * @zindex-increment);
+@zindex-bgg-utility-bar: @zindex-bgg-top - (3 * @zindex-increment);
+@zindex-bgg-header-cell: @zindex-bgg-top - (4 * @zindex-increment);
+@zindex-bgg-selection: @zindex-bgg-top - (5 * @zindex-increment);
+@zindex-bgg-fixed-columns: @zindex-bgg-top - (6 * @zindex-increment);
+@zindex-bgg-header: @zindex-bgg-top - (7 * @zindex-increment);
+@zindex-bgg-scrollbar: @zindex-bgg-top - (8 * @zindex-increment);
+@zindex-bgg-body-grid-data: @zindex-bgg-top - (9 * @zindex-increment);
+@zindex-bgg-body-grid-faux: @zindex-bgg-top - (10 * @zindex-increment);
+@zindex-bgg-body-wrapper: @zindex-bgg-top - (11 * @zindex-increment);
+@zindex-bgg-yardstick: @zindex-bgg-top - (12 * @zindex-increment);
+@zindex-bgg-overlay-wrapper: auto;

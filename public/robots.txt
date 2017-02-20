@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /dev
+Disallow: /src
+Disallow: /node_modules
+Disallow .babelrc
+Disallow .gitignore
+Disallow README.md
+Disallow package.json
+Disallow webpack.config.js

@@ -1,0 +1,67 @@
+<template>
+  <div v-if="is_fetching">
+    <spinner size="medium" show-text loading-text="Loading members..."></spinner>
+  </div>
+  <empty-item v-else-if="members.length == 0 && filter.length > 0">
+    <i slot="icon" class="material-icons">person</i>
+    <span slot="text">No members match the filter criteria</span>
+  </empty-item>
+  <empty-item v-else-if="members.length == 0">
+    <i slot="icon" class="material-icons">person</i>
+    <span slot="text">No members to show</span>
+  </empty-item>
+  <div v-else>
+    <member-item
+      v-for="(member, index) in members"
+      :item="member"
+      :index="index"
+      @delete="onItemDelete"
+    >
+    </member-item>
+  </div>
+</template>
+
+<script>
+  import { mapGetters } from 'vuex'
+  import Spinner from './Spinner.vue'
+  import MemberItem from './MemberItem.vue'
+  import EmptyItem from './EmptyItem.vue'
+  import commonFilter from './mixins/common-filter'
+
+  export default {
+    props: ['filter', 'project-eid'],
+    mixins: [commonFilter],
+    components: {
+      Spinner,
+      MemberItem,
+      EmptyItem
+    },
+    computed: {
+      members() {
+        return this.commonFilter(this.getOurMembers(), this.filter, ['first_name', 'last_name', 'user_name'])
+      },
+      is_fetching() {
+        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'members_fetching', true)
+      }
+    },
+    methods: {
+      ...mapGetters([
+        'getAllUsers',
+        'getAllProjects'
+      ]),
+      getOurMembers() {
+        var project_eid = this.projectEid
+
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        return _
+          .chain(this.getAllUsers())
+          .filter(function(m) { return _.includes(_.get(m, 'following', []), project_eid ) })
+          .value()
+      },
+      onItemDelete(item) {
+        this.$emit('item-delete', item)
+      }
+    }
+  }
+</script>

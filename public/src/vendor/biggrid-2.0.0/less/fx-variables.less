@@ -1,0 +1,150 @@
+
+/* bootstrap variable overrides */
+
+  @brand-primary:    rgb(0, 120, 231); // Pure CSS brand color
+  @brand-success:    #00aa00;
+  @brand-warning:    #ff8800; // Bootswatch Cyborg orange color
+  @brand-danger:     #dd0000; // Bootswatch Cyborg red color (slightly tweaked)
+
+  @body-bg:          #fff;
+
+  @link-color:       @brand-primary;
+  @link-hover-color: @brand-primary;
+
+  //#3b5998
+  //@link-color:       darken(@brand-primary, 12.5%);
+  //@link-hover-color: darken(@brand-primary, 12.5%);
+
+  // remove responsiveness for small screens
+  @screen-xs-min:    1px;
+  @screen-sm-min:    1px;
+
+  // leave off Helvetica for now (it renders terribly in Chrome and IE on Windows 7) and leave off
+  // Helvetica Neue as it really only exists on MacOS and won't provide a unified typeface
+  @font-family-sans-serif:          "Roboto", sans-serif;
+
+  @font-size-base:                  13px; // changed from 14px with lighter Roboto font (looks better with 13px/regular)
+
+  //@font-size-h1:                    floor((@font-size-base * 2.5)); // 32px
+  //@font-size-h2:                    floor((@font-size-base * 2));   // 26px
+  //@font-size-h3:                    ceil((@font-size-base * 1.55)); // 21px
+  //@font-size-h4:                    ceil((@font-size-base * 1.25)); // 17px
+  //@font-size-h5:                    @font-size-base;                // 13px
+  //@font-size-h6:                    ceil((@font-size-base * 0.85)); // 12px
+
+  @font-size-h1:                    floor((@font-size-base * 2.85)); // 37px
+  @font-size-h2:                    floor((@font-size-base * 2));    // 26px
+  @font-size-h3:                    ceil((@font-size-base * 1.55));  // 21px
+  @font-size-h4:                    ceil((@font-size-base * 1.25));  // 17px
+  @font-size-h5:                    ceil((@font-size-base * 1.15));  // 15px
+  @font-size-h6:                    ceil((@font-size-base * 0.85));  // 12px
+
+  @line-height-base:                1.5385; // 20/13
+
+  @input-border-radius:             0;
+  @input-border-radius-large:       0;
+  @input-border-radius-small:       0;
+
+  @input-border:                    #ddd;
+
+  // make sure this is greater than fixed navbar's zindex
+  @zindex-dropdown:                 1035;
+
+  //@dropdown-border:                 rgba(0,0,0,.15);
+  @dropdown-border:                 #d9d9d9;
+  @dropdown-fallback-border:        #d9d9d9;
+
+  @dropdown-link-hover-color:       @component-active-color;
+  @dropdown-link-hover-bg:          @component-active-bg;
+
+  @navbar-height:                   50px;
+  @navbar-margin-bottom:            0;
+  @navbar-border-radius:            0;
+
+  @state-success-text:              darken(@brand-success, 5%);
+  @state-success-bg:                #dff0d8; // BS 3.x default
+  @state-success-border:            darken(spin(@state-success-bg, -10), 10%);
+
+  @state-info-text:                 darken(@brand-info, 15%);
+  @state-info-bg:                   #d9edf7; // BS 3.x default
+  @state-info-border:               darken(spin(@state-info-bg, -10), 10%);
+
+  @state-warning-text:              darken(@brand-warning, 5%);
+  @state-warning-bg:                #fcf8e3; // BS 3.x default
+  @state-warning-border:            darken(spin(@state-warning-bg, -10), 10%);
+
+  @state-danger-text:               @brand-danger;
+  @state-danger-bg:                 #f2dede; // BS 3.x default
+  @state-danger-border:             darken(spin(@state-danger-bg, -10), 10%);
+
+  @tooltip-max-width:               400px;
+  @tooltip-bg:                      @gray-dark;
+  @tooltip-opacity:                 1;
+  @tooltip-arrow-width:             5px;
+  @tooltip-arrow-color:             @tooltip-bg;
+
+  //@list-group-hover-bg:             rgba(0,0,0,0.05);
+
+  @table-bg:                        transparent;
+  @table-bg-accent:                 #f5f5f5;
+  //@table-bg-active:                 fadeout(@brand-primary, 87.5%);
+  //@table-bg-active:                 rgba(0,0,0,0.1);
+  @table-bg-active:                 #cce8ff; // Windows 10
+  @table-border-active:             #99d1ff; // Windows 10
+  @table-bg-hover:                  #e5f3ff; // Windows 10
+  @table-border-color:              @gray-lighter;
+
+  @hr-border-color:                 @gray-lighter;
+
+/* no longer (or never) included in bootstrap */
+
+  //@btn-border-radius-base:          0;
+  //@btn-border-radius-large:         0;
+  //@btn-border-radius-small:         0;
+  @btn-border-radius-base:          3px;
+  @btn-border-radius-large:         3px;
+  @btn-border-radius-small:         3px;
+
+  //@modal-border-radius:             0;
+  //@modal-border-radius:             3px;
+  //@modal-border-radius:             @border-radius-large;
+  @modal-border-radius:             5px;
+
+  @text-muted-light:                #aaa;
+  @text-muted-lighter:              #bbb;
+
+/* fx variables */
+
+  @fx-brand-green:                  #78bc20;
+  @fx-brand-green-darker:           darken(@fx-brand-green, 10%);
+  @fx-brand-gray:                   #bcbdbc;
+  @fx-brand-orange:                 #ffa02f;
+
+  @fx-border-color:                 @gray-lighter;
+
+  @fx-grid-columns:                 16;
+  @fx-grid-gutter-width:            30px;
+
+  //@fx-dropdown-menu-item-height:    26px;
+  @fx-dropdown-caret-offset-left:   10px;
+  @fx-dropdown-caret-offset-right:  16px;
+  @fx-dropdown-caret-size:          8px;
+
+  @fx-navbar-height:                @navbar-height + 1; // account for navbar bottom border
+  @fx-navbar-bg:                    #fff;
+  @fx-navbar-border-color:          #bbb;
+
+  @fx-toolbar-height:               43px;
+  @fx-toolbar-bg:                   #f5f5f5;
+  @fx-toolbar-border-color:         #bbb;
+
+  //@fx-statusbar-height:             24px;
+  @fx-statusbar-height:             0;
+  @fx-statusbar-bg:                 #eee;
+  @fx-statusbar-border-color:       #ddd;
+
+  // command colors
+  @fx-command-gray:                 #999999;
+  @fx-command-blue:                 #0ab5f3;
+  @fx-command-green:                #65c16f;
+  @fx-command-orange:               #f4823a;

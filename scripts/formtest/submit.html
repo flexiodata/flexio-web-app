@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script>
+      $(function () {
+
+        $('form').on('submit', function (e) {
+
+          e.preventDefault();
+
+          $.ajax({
+            type: 'post',
+            url: 'https://localhost/api/v1/pipes/kznhjlhv4cmr/run',
+            beforeSend: function(xhr) {
+              xhr.setRequestHeader('Authorization', 'Bearer jksysfsgqxcvjzptzxpx');
+            },
+            data: $('form').serialize(),
+            success: function (data) {
+              alert('form was submitted - returned:\n\n' + data);
+            },
+            error: function () {
+              alert('post failed');
+            }
+          });
+
+        });
+
+      });
+    </script>
+  </head>
+  <body>
+    <form>
+      <input name="email-to" value="aaron@flex.io"><br>
+      <input name="subject" value="Hello, there"><br>
+      <input name="body" value="This is a form body"><br>
+      <input name="submit" type="submit" value="Submit">
+    </form>
+  </body>
+</html>
+

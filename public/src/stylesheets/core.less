@@ -1,0 +1,69 @@
+
+::selection {
+  // same as Vue Material's theme
+  background: #2196f3;
+  color: rgba(255, 255, 255, .87);
+}
+
+/*
+::selection {
+  // same as Firefox's image ::selection background color
+  background: #99ccff;
+}
+*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 100%;
+}
+
+html {
+  // necessary for tether dropdown place
+  height:100%;
+}
+
+body {
+  // necessary for tether dropdown place
+  min-height: 100%;
+}
+
+input, textarea, keygen, select, button {
+  font-family: 'Open Sans', sans-serif;
+}
+
+input, button, submit {
+  border: none;
+  outline: none;
+
+  &.disabled,
+  &[disabled] {
+    pointer-events: none; // future-proof disabling of clicks
+    opacity: .65;
+  }
+}
+
+button {
+  background: none;
+  cursor: pointer;
+
+  &.disabled,
+  &[disabled] {
+    cursor: default;
+  }
+}
+
+table {
+  /* cellspacing */
+  border-spacing: 0;
+}
+
+th, td {
+  /* cellpadding */
+  padding: 0;
+}
