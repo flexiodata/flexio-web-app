@@ -146,9 +146,9 @@ class Project extends \Flexio\Object\Base
             return false;
 
         // populate the follower count
-        $follower_count = \System::getModel()->assoc_count($this->getEid(),
-                                                           \Model::EDGE_FOLLOWED_BY,
-                                                           \Model::STATUS_AVAILABLE) + 1; // plus 1 to include owner
+        $follower_count = $this->getModel()->assoc_count($this->getEid(),
+                                                         \Model::EDGE_FOLLOWED_BY,
+                                                         \Model::STATUS_AVAILABLE) + 1; // plus 1 to include owner
         $properties['follower_count'] = $follower_count;
 
         // populate the pipe count

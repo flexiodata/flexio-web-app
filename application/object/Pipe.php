@@ -161,8 +161,8 @@ class Pipe extends \Flexio\Object\Base
 
     public function addProcess($process)
     {
-        $result = \System::getModel()->assoc_add($this->getEid(), \Model::EDGE_HAS_PROCESS, $process->getEid());
-        \System::getModel()->assoc_add($process->getEid(), \Model::EDGE_PROCESS_OF, $this->getEid());
+        $result = $this->getModel()->assoc_add($this->getEid(), \Model::EDGE_HAS_PROCESS, $process->getEid());
+        $this->getModel()->assoc_add($process->getEid(), \Model::EDGE_PROCESS_OF, $this->getEid());
     }
 
     public function getProcesses()

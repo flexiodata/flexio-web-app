@@ -154,7 +154,7 @@ class User extends \Flexio\Object\Base
 
     public function checkPassword($password)
     {
-        return \System::getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
+        return $this->getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
     }
 
     public function isAdministrator()

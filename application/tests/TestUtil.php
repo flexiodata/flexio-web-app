@@ -133,6 +133,11 @@ class TestUtil
         return '';
     }
 
+    public static function getModel()
+    {
+        return System::getModel();
+    }
+
     public static function getDefaultTestUser()
     {
         // returns the eid of a default test user; creates the user if the
