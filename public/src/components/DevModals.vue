@@ -1,40 +1,49 @@
 <template>
   <div class="pa3">
-    <div class="flex flex-column w-25">
+    <div class="flex flex-column w-20">
       <div class="pa2">
-        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openConfirmModal">Open Confirm Modal</btn>
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openConfirmModal">Confirm Modal</btn>
       </div>
       <div class="pa2">
-        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openProjectPropsModal">Open Project Properties Modal</btn>
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openNewProjectPropsModal">New Project Modal</btn>
       </div>
       <div class="pa2">
-        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openConnectionPropsModal">Open Connection Properties Modal</btn>
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEditProjectPropsModal">Edit Project Modal</btn>
       </div>
       <div class="pa2">
-        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openNewPropsModal">Open New Pipe Modal</btn>
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openNewConnectionModal">New Connection Modal</btn>
       </div>
       <div class="pa2">
-        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEditPropsModal">Open Edit Pipe Modal</btn>
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEditConnectionModal">Edit Connection Modal</btn>
       </div>
       <div class="pa2">
-        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openPipeScheduleModal">Open Pipe Schedule Modal</btn>
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openNewPipePropsModal">New Pipe Modal</btn>
       </div>
       <div class="pa2">
-        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openPipeShareModal">Open Pipe Share Modal</btn>
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEditPipePropsModal">Edit Pipe Modal</btn>
       </div>
       <div class="pa2">
-        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEmailSupportModal">Open Email Support Modal</btn>
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openPipeScheduleModal">Pipe Schedule Modal</btn>
       </div>
       <div class="pa2">
-        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openMemberAddModal">Open Member Add Modal</btn>
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openPipeShareModal">Pipe Share Modal</btn>
+      </div>
+      <div class="pa2">
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEmailSupportModal">Email Support Modal</btn>
+      </div>
+      <div class="pa2">
+        <btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openMemberAddModal">Member Add Modal</btn>
       </div>
     </div>
 
     <confirm-modal
       ref="modal-confirm"
+      title="Confirm?"
       @hide="show_confirm_modal = false"
       v-if="show_confirm_modal"
-    ></confirm-modal>
+    >
+      <div>Doing this might be a bad idea. Are you sure you want to continue?</div>
+    </confirm-modal>
 
     <project-props-modal
       ref="modal-project-props"
@@ -81,6 +90,7 @@
 </template>
 
 <script>
+  import { CONNECTION_TYPE_MYSQL } from '../constants/connection-type'
   import Btn from './Btn.vue'
   import ConfirmModal from './ConfirmModal.vue'
   import ProjectPropsModal from './ProjectPropsModal.vue'
@@ -101,7 +111,8 @@
   var exampleConnection = () => {
     return {
       name: 'Test Connection',
-      eid: 'test-connection'
+      eid: 'test-connection',
+      connection_type: CONNECTION_TYPE_MYSQL
     }
   }
 
@@ -142,22 +153,32 @@
         this.$nextTick(() => { this.$refs['modal-confirm'].open() })
       },
 
-      openProjectPropsModal() {
+      openNewProjectPropsModal() {
+        this.show_project_props_modal = true
+        this.$nextTick(() => { this.$refs['modal-project-props'].open() })
+      },
+
+      openEditProjectPropsModal() {
         this.show_project_props_modal = true
         this.$nextTick(() => { this.$refs['modal-project-props'].open(exampleProject()) })
       },
 
-      openConnectionPropsModal() {
+      openNewConnectionModal() {
+        this.show_connection_props_modal = true
+        this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
+      },
+
+      openEditConnectionModal() {
         this.show_connection_props_modal = true
         this.$nextTick(() => { this.$refs['modal-connection-props'].open(exampleConnection()) })
       },
 
-      openNewPropsModal() {
+      openNewPipePropsModal() {
         this.show_pipe_props_modal = true
         this.$nextTick(() => { this.$refs['modal-pipe-props'].open() })
       },
 
-      openEditPropsModal() {
+      openEditPipePropsModal() {
         this.show_pipe_props_modal = true
         this.$nextTick(() => { this.$refs['modal-pipe-props'].open(examplePipe()) })
       },
