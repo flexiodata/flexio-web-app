@@ -16,15 +16,20 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: search tests when results for single eid
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $info = array(
         );
-        $eid = System::getModel()->create(Model::TYPE_OBJECT, $info);
+        $eid = $model->create(Model::TYPE_OBJECT, $info);
         $path = "$eid";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = array(
             $eid

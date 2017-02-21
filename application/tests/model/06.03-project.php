@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: Model::create(); multiple unique project creation
 
         // BEGIN TEST
@@ -27,7 +32,7 @@ class Test
             $handle = Util::generateHandle();
             $info = array(
             );
-            $eid = System::getModel()->create(Model::TYPE_PROJECT, $info);
+            $eid = $model->create(Model::TYPE_PROJECT, $info);
             $created_eids[$eid] = 1;
             if (!Eid::isValid($eid))
                 $failed_project_creation++;

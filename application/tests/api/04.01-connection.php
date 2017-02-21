@@ -27,7 +27,7 @@ class Test
             "description": "Test connection"
         }
         ',true);
-        $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
         $actual = \Flexio\Api\ConnectionApi::create($params, $request);
         $expected = '
         {

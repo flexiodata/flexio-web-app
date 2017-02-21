@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: Model::create(); multiple unique user creation
 
         // BEGIN TEST
@@ -30,7 +35,7 @@ class Test
                 'user_name' => $handle1,
                 'email' => $handle2
             );
-            $eid = System::getModel()->create(Model::TYPE_USER, $info);
+            $eid = $model->create(Model::TYPE_USER, $info);
             $created_eids[$eid] = 1;
             if (!Eid::isValid($eid))
                 $failed_user_creation++;

@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: multiple registry entry creation
 
         // BEGIN TEST
@@ -26,8 +31,8 @@ class Test
             $object_eid = '';
             $name = Util::generateHandle();
             $value = $i;
-            System::getModel()->registry->setNumber($object_eid, $name, $value); // expires in 4 seconds
-            if (System::getModel()->registry->entryExists($object_eid, $name))
+            $model->registry->setNumber($object_eid, $name, $value); // expires in 4 seconds
+            if ($model->registry->entryExists($object_eid, $name))
                 $entries[] = $name;
         }
         $read_successes = 0;
@@ -36,7 +41,7 @@ class Test
         {
             $object_eid = '';
             $name = $i;
-            $read_value = System::getModel()->registry->getNumber($object_eid, $name);
+            $read_value = $model->registry->getNumber($object_eid, $name);
             if ($read_value === $entry_idx)
                 $read_successes++;
             $entry_idx++;

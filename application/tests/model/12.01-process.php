@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TODO: need to add tests for process set(), get(), delete(), etc
 
         // TEST: task status constant tests

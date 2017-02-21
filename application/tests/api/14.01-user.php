@@ -31,7 +31,7 @@ class Test
             "create_sample_project": false
         }
         ',true);
-        $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
         $actual= \Flexio\Api\UserApi::create($params, $request);
         $expected = '
         {
