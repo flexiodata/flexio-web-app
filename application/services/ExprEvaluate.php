@@ -350,7 +350,7 @@ TODO: remove deprecated implementation; following was split into two functions,
          else if ($node_type == ExprParser::NODETYPE_OPERATOR)
         {
             $oper = $this->operators[$node->index];
-            return call_user_func([ $this, $oper['func'] ], $oper, $node->params, $retval);
+            return call_user_func_array([ $this, $oper['func'] ], [ $oper, $node->params, $retval ] );
         }
          else if ($node_type == ExprParser::NODETYPE_FUNCTION)
         {
@@ -359,7 +359,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                 return false; // function doesn't exist
 
             $func = $this->functions[$funcname];
-            return call_user_func([ $this, $func['func'] ], $funcname, $node->params, $retval);
+            return call_user_func_array([ $this, $func['func'] ], [ $funcname, $node->params, $retval ] );
         }
          else if ($node_type == ExprParser::NODETYPE_VARIABLE)
         {
