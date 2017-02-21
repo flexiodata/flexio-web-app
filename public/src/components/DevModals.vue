@@ -59,6 +59,7 @@
 
     <pipe-props-modal
       ref="modal-pipe-props"
+      project-eid="test-project"
       @hide="show_pipe_props_modal = false"
       v-if="show_pipe_props_modal"
     ></pipe-props-modal>
