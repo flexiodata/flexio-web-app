@@ -937,7 +937,7 @@ class ExprTranslatorPostgres
         return '(' . $this->printNode($params[0]) . ' IS NULL)';
     }
 
-    public function func_iskindof($func, $params, &$retval)
+    public function func_iskindof($func, $params)
     {
         // get the regex to use when checking for the kind
         $match_type = $this->printNode($params[1]);
