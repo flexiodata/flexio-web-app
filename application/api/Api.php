@@ -380,8 +380,8 @@ class Api
             case 'POS /help/conversation'              : return '\Flexio\Api\HelpApi::createConversation';
 
             // test suite
-            case 'GET /tests/configure'                : return '\TestBase::configure';
-            case 'GET /tests/run'                      : return '\TestBase::run';
+            case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
+            case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
 
             // DEBUG: endpoints for easy debugging using a URL in a browser
             case 'GET /processes/debug'                : return '\Flexio\Api\ProcessApi::debug';

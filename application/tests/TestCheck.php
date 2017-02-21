@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class TestCheck
 {
     public static function assertNull($name, $description, $actual, $expected, &$results)

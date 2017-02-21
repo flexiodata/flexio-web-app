@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class TestError
 {
     const ERROR_BAD_PARSE = 'ERROR_BAD_PARSE';

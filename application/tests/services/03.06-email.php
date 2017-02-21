@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 function getTestEmailContents($filename)
 {
     // loads a test email stream from the php parsing library;

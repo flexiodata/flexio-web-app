@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class TestSample
 {
     public static function createProjectSample($user_count = 4, $project_count = 2, $pipe_count = 2)

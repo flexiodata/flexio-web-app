@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 function getStreamFromFile($filename)
 {
     // loads a test file with multipart content

@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
