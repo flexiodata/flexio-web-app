@@ -30,7 +30,7 @@ class Test
             "comment": "Test comment"
         }
         ',true);
-        $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
         $actual = \Flexio\Api\CommentApi::create($params, $request);
 
         $expected = '

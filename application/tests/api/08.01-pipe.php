@@ -27,7 +27,7 @@ class Test
             "description": "Test pipe"
         }
         ',true);
-        $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
         $actual = \Flexio\Api\PipeApi::create($params, $request);
         $expected = '
         {

@@ -32,7 +32,7 @@ class Test
             "description": "Test project"
         }
         ',true);
-        $request = Request::create()->setRequestingUser($user_eid);
+        $request = \Flexio\Api\Request::create()->setRequestingUser($user_eid);
         $actual= \Flexio\Api\ProjectApi::create($params, $request);
         $expected = '
         {

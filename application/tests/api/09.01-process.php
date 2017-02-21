@@ -31,7 +31,7 @@ class Test
                 }
             }
         ]',true);
-        $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
         $process_info = \Flexio\Api\ProcessApi::create($params, $request);
         $actual = $process_info['task'][0]['type'];
         $expected = 'flexio.sleep';
@@ -52,7 +52,7 @@ class Test
                 }
             }
         ]',true);
-        $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
         $process_info1 = \Flexio\Api\ProcessApi::create($params, $request);
         sleep(2);
         $process_info2 = \Flexio\Api\ProcessApi::get($process_info1, $request);
