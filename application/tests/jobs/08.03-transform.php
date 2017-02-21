@@ -50,7 +50,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
 		TestCheck::assertString('A.1', 'Transform Job; if capitalization mode is set to bad parameter, job should fail',  $actual, $expected, $results);
 
 		// BEGIN TEST
@@ -277,7 +277,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
 		TestCheck::assertString('B.1', 'Transform Job; standardize text with pad; don\'t do anything if the location isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST
@@ -893,7 +893,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
 		TestCheck::assertString('C.1', 'Transform Job; standardize text with trim spaces; don\'t do anything if the type isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST

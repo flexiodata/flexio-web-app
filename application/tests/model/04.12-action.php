@@ -23,7 +23,7 @@ class Test
 
         // TODO: add more tests
 
-        // TEST: ActionModel::record(); basic action recording
+        // TEST: Action\Model::record(); basic action recording
 
         // BEGIN TEST
         $action_params = array(
@@ -34,6 +34,6 @@ class Test
         );
         $actual = $model->action->record($action_params);
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'ActionModel::record(); basic action recording', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', 'Action\Model::record(); basic action recording', $actual, $expected, $results);
     }
 }

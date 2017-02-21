@@ -24,22 +24,22 @@ class Test
         // TEST: model constant tests
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_STATUS_INVALID;
+        $actual = \Model::CONNECTION_STATUS_INVALID;
         $expected = 'I';
         TestCheck::assertString('A.1', 'ConnectionModel status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_STATUS_AVAILABLE;
+        $actual = \Model::CONNECTION_STATUS_AVAILABLE;
         $expected = 'A';
         TestCheck::assertString('A.2', 'ConnectionModel status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_STATUS_UNAVAILABLE;
+        $actual = \Model::CONNECTION_STATUS_UNAVAILABLE;
         $expected = 'U';
         TestCheck::assertString('A.3', 'ConnectionModel status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_STATUS_ERROR;
+        $actual = \Model::CONNECTION_STATUS_ERROR;
         $expected = 'E';
         TestCheck::assertString('A.4', 'ConnectionModel status constant',  $actual, $expected, $results);
 

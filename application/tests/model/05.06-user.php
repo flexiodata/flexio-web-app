@@ -27,20 +27,20 @@ class Test
         $model->clearErrors();
         $actual = $model->delete(null);
         $expected = false;
-        TestCheck::assertBoolean('A.1', 'Model::delete(); return false with invalid input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::delete(); return false with invalid input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $actual = $model->delete('');
         $expected = false;
-        TestCheck::assertBoolean('A.2', 'Model::delete(); return false with invalid input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::delete(); return false with invalid input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $result = $model->delete('');
         $actual = $model->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.3', 'Model::delete(); don\'t flag an error with invalid input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Model::delete(); don\'t flag an error with invalid input',  $actual, $expected, $results);
 
 
 
@@ -51,7 +51,7 @@ class Test
         $eid = Eid::generate();
         $actual = $model->delete($eid);
         $expected = false;
-        TestCheck::assertBoolean('B.1', 'Model::delete(); return false after trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Model::delete(); return false after trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -59,7 +59,7 @@ class Test
         $result = $model->delete($eid);
         $actual = $model->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('B.2', 'Model::delete(); don\'t flag an error when trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Model::delete(); don\'t flag an error when trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
 
 
 
@@ -73,10 +73,10 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $actual = $model->delete($eid);
         $expected = true;
-        TestCheck::assertBoolean('C.1', 'Model::delete(); return true when deleting an object that exists',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.1', '\Model::delete(); return true when deleting an object that exists',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -86,11 +86,11 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $result = $model->delete($eid);
         $actual = $model->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('C.2', 'Model::delete(); there shouldn\'t be any errors when deleting an object that exists',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.2', '\Model::delete(); there shouldn\'t be any errors when deleting an object that exists',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -100,13 +100,13 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $status_before_deletion = $model->getStatus($eid);
         $delete_result = $model->delete($eid);
         $status_after_deletion = $model->getStatus($eid);
-        $actual = $delete_result === true && $status_before_deletion !== Model::STATUS_DELETED  && $status_after_deletion === Model::STATUS_DELETED;
+        $actual = $delete_result === true && $status_before_deletion !== \Model::STATUS_DELETED  && $status_after_deletion === \Model::STATUS_DELETED;
         $expected = true;
-        TestCheck::assertBoolean('C.3', 'Model::delete(); when deleting, make sure object is deleted',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.3', '\Model::delete(); when deleting, make sure object is deleted',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -116,14 +116,14 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $status_before_deletion = $model->getStatus($eid);
         $first_deletion = $model->delete($eid);
         $second_deletion = $model->delete($eid);
         $status_after_deletion = $model->getStatus($eid);
         $has_errors = $model->hasErrors();
-        $actual = $status_before_deletion !== Model::STATUS_DELETED && $status_after_deletion === Model::STATUS_DELETED && $first_deletion === true && $second_deletion === false && $has_errors === false;
+        $actual = $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED && $first_deletion === true && $second_deletion === false && $has_errors === false;
         $expected = true;
-        TestCheck::assertBoolean('C.4', 'Model::delete(); multiple deletion should succeed',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.4', '\Model::delete(); multiple deletion should succeed',  $actual, $expected, $results);
     }
 }

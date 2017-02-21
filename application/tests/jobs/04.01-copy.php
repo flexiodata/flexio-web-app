@@ -77,7 +77,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.1', 'Width change on character data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 */
 
@@ -110,7 +110,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.1', 'Width change on character data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -139,7 +139,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.2', 'Width change on character data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -252,7 +252,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.1', 'Scale change on character data; scale changes aren\'t allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -281,7 +281,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.2', 'Scale change on character data; scale changes aren\'t allowed',  $actual, $expected, $results);
 
 
@@ -315,7 +315,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.1', 'Width change on numeric data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -345,7 +345,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.2', 'Width change on numeric data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -463,7 +463,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('D.1', 'Width change on numeric data; if the scale is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -493,7 +493,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('D.2', 'Width change on numeric data; if the scale is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -663,7 +663,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.1', 'Width change on date data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -691,7 +691,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.2', 'Width change on date data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -719,7 +719,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.3', 'Width change on date data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
 
@@ -751,7 +751,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('H.1', 'Width change on datetime data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -779,7 +779,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('H.2', 'Width change on datetime data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -807,7 +807,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('H.3', 'Width change on datetime data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
 
@@ -839,7 +839,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('I.1', 'Width change on date data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -867,7 +867,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('I.2', 'Width change on date data; if the width is invalid, the job should fail',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -895,7 +895,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('I.3', 'Width change on date data; if the width is invalid, the job should fail',  $actual, $expected, $results);
     }
 }

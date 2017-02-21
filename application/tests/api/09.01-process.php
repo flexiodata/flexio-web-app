@@ -60,7 +60,7 @@ class Test
         sleep(4);
         $process_info3 = \Flexio\Api\ProcessApi::get($process_info1, $request);
         $status3 = $process_info3['process_status'];
-        $actual = ($status2 === Model::PROCESS_STATUS_RUNNING && $status3 === Model::PROCESS_STATUS_COMPLETED);
+        $actual = ($status2 === \Model::PROCESS_STATUS_RUNNING && $status3 === \Model::PROCESS_STATUS_COMPLETED);
         $expected = true;
         TestCheck::assertBoolean('B.1', '\Flexio\Api\ProcessApi::create(); make sure a process runs in the background and the appropriate process status codes are set',  $actual, $expected, $results);
     }

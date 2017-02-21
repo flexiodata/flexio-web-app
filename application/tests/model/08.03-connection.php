@@ -21,7 +21,7 @@ class Test
 
 
 
-        // TEST: Model::create(); multiple unique connection creation
+        // TEST: \Model::create(); multiple unique connection creation
 
         // BEGIN TEST
         $total_count = 1000;
@@ -34,13 +34,13 @@ class Test
                 'name' => $handle,
                 'description' => "Test connection $i"
             );
-            $eid = $model->create(Model::TYPE_CONNECTION, $info);
+            $eid = $model->create(\Model::TYPE_CONNECTION, $info);
             $created_eids[$eid] = 1;
             if (!Eid::isValid($eid))
                 $failed_connection_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_connection_creation == 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model::create(); creating connections should succeed and produce a unique eid for each new connection',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); creating connections should succeed and produce a unique eid for each new connection',  $actual, $expected, $results);
     }
 }

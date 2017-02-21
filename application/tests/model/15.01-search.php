@@ -29,7 +29,7 @@ class Test
         $result = $model->search($path);
         $actual = $result;
         $expected = false;
-        TestCheck::assertBoolean('A.1', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -37,14 +37,14 @@ class Test
         $result = $model->search($path);
         $actual = $result;
         $expected = false;
-        TestCheck::assertBoolean('A.2', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         $model->clearErrors();
         $path = "";
         $result = $model->search($path);
         $actual = $result;
         $expected = false;
-        TestCheck::assertBoolean('A.3', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -52,7 +52,7 @@ class Test
         $result = $model->search($path);
         $actual = $result;
         $expected = false;
-        TestCheck::assertBoolean('A.4', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -61,7 +61,7 @@ class Test
         $result = $model->search($path);
         $actual = $result;
         $expected = false;
-        TestCheck::assertBoolean('A.5', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -70,7 +70,7 @@ class Test
         $result = $model->search($path);
         $actual = $result;
         $expected = false;
-        TestCheck::assertBoolean('A.6', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.6', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
 
 
@@ -83,26 +83,26 @@ class Test
         $actual = $result;
         $expected = array(
         );
-        TestCheck::assertArray('B.1', 'Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
+        TestCheck::assertArray('B.1', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $edge_owns = Model::EDGE_OWNS;
+        $edge_owns = \Model::EDGE_OWNS;
         $path = "$edge_owns";
         $result = $model->search($path);
         $actual = $result;
         $expected = array(
         );
-        TestCheck::assertArray('B.2', 'Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
+        TestCheck::assertArray('B.2', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $edge_owns = Model::EDGE_OWNS;
+        $edge_owns = \Model::EDGE_OWNS;
         $path = "($edge_owns)";
         $result = $model->search($path);
         $actual = $result;
         $expected = array(
         );
-        TestCheck::assertArray('B.3', 'Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
+        TestCheck::assertArray('B.3', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
     }
 }

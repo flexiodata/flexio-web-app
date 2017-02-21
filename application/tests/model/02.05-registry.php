@@ -30,7 +30,7 @@ class Test
         $creation = $model->registry->setString($object_eid, $name, $value);
         $actual = $model->registry->deleteEntryByName($object_eid, $name);
         $expected = false;
-        TestCheck::assertBoolean('A.1', 'RegistryModel::deleteEntryByName(); null or blank entries aren\'t allowed', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', 'Registry\Model::deleteEntryByName(); null or blank entries aren\'t allowed', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = null;
@@ -39,14 +39,14 @@ class Test
         $creation = $model->registry->setString($object_eid, $name, $value);
         $actual = $model->registry->deleteEntryByName($object_eid, $name);
         $expected = false;
-        TestCheck::assertBoolean('A.2', 'RegistryModel::deleteEntryByName(); null or blank entries aren\'t allowed', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', 'Registry\Model::deleteEntryByName(); null or blank entries aren\'t allowed', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = Eid::generate();
         $name = Util::generateHandle();
         $actual = $model->registry->deleteEntryByName($object_eid, $name);
         $expected = false;
-        TestCheck::assertBoolean('A.3', 'RegistryModel::deleteEntryByName(); return false when an entry can\'t be found', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', 'Registry\Model::deleteEntryByName(); return false when an entry can\'t be found', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
@@ -55,7 +55,7 @@ class Test
         $creation = $model->registry->setString($object_eid, $name, $value);
         $actual = $model->registry->deleteEntryByName($object_eid, $name);
         $expected = true;
-        TestCheck::assertBoolean('A.4', 'RegistryModel::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', 'Registry\Model::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = Eid::generate();
@@ -64,7 +64,7 @@ class Test
         $creation = $model->registry->setString($object_eid, $name, $value);
         $actual = $model->registry->deleteEntryByName($object_eid, $name);
         $expected = true;
-        TestCheck::assertBoolean('A.5', 'RegistryModel::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', 'Registry\Model::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = Eid::generate();
@@ -75,7 +75,7 @@ class Test
         $second_deletion = $model->registry->deleteEntryByName($object_eid, $name);
         $actual = $first_deletion === true && $second_deletion === false;
         $expected = true;
-        TestCheck::assertBoolean('A.6', 'RegistryModel::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.6', 'Registry\Model::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = Eid::generate();
@@ -87,7 +87,7 @@ class Test
         $second_exists = $model->registry->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === true && $second_exists === false;
         $expected = true;
-        TestCheck::assertBoolean('A.7', 'RegistryModel::deleteEntryByName(); make sure entry is deleted', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.7', 'Registry\Model::deleteEntryByName(); make sure entry is deleted', $actual, $expected, $results);
 
 
 
@@ -103,7 +103,7 @@ class Test
         $second_exists = $model->registry->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === false && $second_exists === true;
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'RegistryModel::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = Eid::generate();
@@ -115,7 +115,7 @@ class Test
         $second_exists = $model->registry->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === false && $second_exists === true;
         $expected = true;
-        TestCheck::assertBoolean('B.2', 'RegistryModel::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = Eid::generate();
@@ -127,7 +127,7 @@ class Test
         $second_exists = $model->registry->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === false && $second_exists === true;
         $expected = true;
-        TestCheck::assertBoolean('B.3', 'RegistryModel::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = Eid::generate();
@@ -139,6 +139,6 @@ class Test
         $second_exists = $model->registry->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === false && $second_exists === true;
         $expected = true;
-        TestCheck::assertBoolean('B.4', 'RegistryModel::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.4', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
     }
 }

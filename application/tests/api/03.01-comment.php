@@ -35,7 +35,7 @@ class Test
 
         $expected = '
         {
-            "eid_type": "'.Model::TYPE_COMMENT.'",
+            "eid_type": "'.\\Model::TYPE_COMMENT.'",
             "comment": "Test comment"
         }
         ';

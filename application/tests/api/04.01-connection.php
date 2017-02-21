@@ -31,7 +31,7 @@ class Test
         $actual = \Flexio\Api\ConnectionApi::create($params, $request);
         $expected = '
         {
-            "eid_type": "'.Model::TYPE_CONNECTION.'",
+            "eid_type": "'.\Model::TYPE_CONNECTION.'",
             "name": "Connection",
             "description": "Test connection"
         }

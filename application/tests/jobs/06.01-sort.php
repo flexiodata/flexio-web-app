@@ -51,7 +51,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.1', 'Sort Job; fail when a job definition is invalid',  $actual, $expected, $results);
 
 
@@ -64,7 +64,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.1', 'Sort Job; fail when there are no order columns',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -77,7 +77,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.2', 'Sort Job; fail when there\'s an invalid expression',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -90,7 +90,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.3', 'Sort Job; fail when there\'s an invalid expression',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -103,7 +103,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.4', 'Sort Job; fail when there\'s an invalid expression',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -117,7 +117,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.5', 'Sort Job; fail when there\'s an invalid direction',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -131,7 +131,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.6', 'Sort Job; fail when there\'s an invalid direction',  $actual, $expected, $results);
 
 

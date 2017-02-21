@@ -31,24 +31,24 @@ class Test
             'eid' => $input_eid,
             'comment' => $handle
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $actual = $eid !== $input_eid;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model::create(); in comment creation, don\'t allow the eid to be set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); in comment creation, don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid_type = Model::TYPE_USER;  // try something besides Model::TYPE_UNDEFINED
+        $eid_type = \Model::TYPE_USER;  // try something besides \Model::TYPE_UNDEFINED
         $handle = Util::generateHandle();
         $info = array(
             'eid_type' => $eid_type,
             'comment' => $handle
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $info = $model->get($eid);
-        $actual = isset($info['eid_type']) && $info['eid_type'] === Model::TYPE_COMMENT;
+        $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_COMMENT;
         $expected = true;
-        TestCheck::assertBoolean('A.2', 'Model::create(); in comment creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::create(); in comment creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -56,11 +56,11 @@ class Test
         $info = array(
             'name' => $handle
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $info = $model->get($eid);
         $actual = isset($info['name']);
         $expected = false;
-        TestCheck::assertBoolean('A.3', 'Model::create(); in comment creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Model::create(); in comment creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
 
@@ -72,26 +72,26 @@ class Test
         $handle = Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'Model::create(); in comment creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Model::create(); in comment creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $handle = Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $actual = $model->get($eid);
         $expected = array(
             'eid' => $eid,
-            'eid_type' => Model::TYPE_COMMENT,
+            'eid_type' => \Model::TYPE_COMMENT,
             'comment' => '',
-            'eid_status' => Model::STATUS_AVAILABLE
+            'eid_status' => \Model::STATUS_AVAILABLE
         );
-        TestCheck::assertInArray('B.2', 'Model::create(); in comment creation, make sure essential fields are created',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.2', '\Model::create(); in comment creation, make sure essential fields are created',  $actual, $expected, $results);
 
 
 
@@ -101,14 +101,14 @@ class Test
         $model->clearErrors();
         $handle = Util::generateHandle();
         $info = array(
-            'eid_status' => Model::STATUS_PENDING // currently, items are created in active state
+            'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'eid_status' => Model::STATUS_PENDING
+            'eid_status' => \Model::STATUS_PENDING
         );
-        TestCheck::assertInArray('C.1', 'Model::create(); in comment creation, allow eid_status to be set',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.1', '\Model::create(); in comment creation, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -116,11 +116,11 @@ class Test
         $info = array(
             'comment' => 'Test comment'
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $actual = $model->get($eid);
         $expected = array(
             'comment' => 'Test comment'
         );
-        TestCheck::assertInArray('C.2', 'Model::create(); in comment creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.2', '\Model::create(); in comment creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }

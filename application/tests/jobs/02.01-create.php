@@ -55,7 +55,7 @@ class Test
         ')->get();
         $process = \Flexio\Object\Process::create()->setTask($local_task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.1', 'Table Creation; fail when a job definition is invalid',  $actual, $expected, $results);
 
 
@@ -231,7 +231,7 @@ class Test
         ')->get();
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_COMPLETED;
+        $expected = \Model::PROCESS_STATUS_COMPLETED;
         TestCheck::assertString('I.1', 'Table Creation; succeed when job definition is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST

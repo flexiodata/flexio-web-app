@@ -168,7 +168,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.1', 'Conversion from Character to Numeric; fail if width is set to a value out-of-bounds',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -197,7 +197,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.2', 'Conversion from Character to Numeric; fail if width is set to a value out-of-bounds',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -226,7 +226,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.3', 'Conversion from Character to Numeric; fail if scale is set to a value out-of-bounds',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -255,7 +255,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.4', 'Conversion from Character to Numeric; fail if scale is set to a value out-of-bounds',  $actual, $expected, $results);
 
         // BEGIN TEST

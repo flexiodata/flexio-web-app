@@ -31,7 +31,7 @@ class Test
         $actual = \Flexio\Api\PipeApi::create($params, $request);
         $expected = '
         {
-            "eid_type": "'.Model::TYPE_PIPE.'",
+            "eid_type": "'.\Model::TYPE_PIPE.'",
             "name": "Pipe",
             "description": "Test pipe"
         }

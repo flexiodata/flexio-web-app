@@ -31,24 +31,24 @@ class Test
             'eid' => $input_eid,
             'name' => $handle
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $eid !== $input_eid;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model::create(); in container creation, don\'t allow the eid to be set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); in container creation, don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid_type = Model::TYPE_PROJECT;  // try something besides Model::TYPE_UNDEFINED
+        $eid_type = \Model::TYPE_PROJECT;  // try something besides \Model::TYPE_UNDEFINED
         $handle = Util::generateHandle();
         $info = array(
             'eid_type' => $eid_type,
             'name' => $handle
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $info = $model->get($eid);
-        $actual = isset($info['eid_type']) && $info['eid_type'] === Model::TYPE_PIPE;
+        $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_PIPE;
         $expected = true;
-        TestCheck::assertBoolean('A.2', 'Model::create(); in container creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::create(); in container creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -56,11 +56,11 @@ class Test
         $info = array(
             'xxx' => $handle
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $info = $model->get($eid);
         $actual = isset($info['xxx']);
         $expected = false;
-        TestCheck::assertBoolean('A.3', 'Model::create(); in container creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Model::create(); in container creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
 
@@ -72,22 +72,22 @@ class Test
         $handle = Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'Model::create(); in container creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Model::create(); in container creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $handle = Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
             'eid' => $eid,
-            'eid_type' => Model::TYPE_PIPE,
+            'eid_type' => \Model::TYPE_PIPE,
             'name' => '',
             'description'  => '',
             'display_icon' => '',
@@ -95,10 +95,10 @@ class Test
             'output' => '[]',
             'task' => '[]',
             'schedule' => '',
-            'schedule_status' => Model::PIPE_STATUS_INACTIVE,
-            'eid_status' => Model::STATUS_AVAILABLE
+            'schedule_status' => \Model::PIPE_STATUS_INACTIVE,
+            'eid_status' => \Model::STATUS_AVAILABLE
         );
-        TestCheck::assertInArray('B.2', 'Model::create(); in name creation, make sure essential fields are created',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.2', '\Model::create(); in name creation, make sure essential fields are created',  $actual, $expected, $results);
 
 
 
@@ -108,14 +108,14 @@ class Test
         $model->clearErrors();
         $handle = Util::generateHandle();
         $info = array(
-            'eid_status' => Model::STATUS_PENDING // currently, items are created in active state
+            'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'eid_status' => Model::STATUS_PENDING
+            'eid_status' => \Model::STATUS_PENDING
         );
-        TestCheck::assertInArray('C.1', 'Model::create(); in container creation, allow eid_status to be set',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.1', '\Model::create(); in container creation, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -123,12 +123,12 @@ class Test
         $info = array(
             'name' => 'Test container name'
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
             'name' => 'Test container name'
         );
-        TestCheck::assertInArray('C.2', 'Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.2', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -136,12 +136,12 @@ class Test
         $info = array(
             'description' => 'Test container description'
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
             'description' => 'Test container description'
         );
-        TestCheck::assertInArray('C.3', 'Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.3', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -149,12 +149,12 @@ class Test
         $info = array(
             'display_icon' => 'Test container display icon data'
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
             'display_icon' => 'Test container display icon data'
         );
-        TestCheck::assertInArray('C.4', 'Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.4', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -162,12 +162,12 @@ class Test
         $info = array(
             'input' => '{}'
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
             'input' => '{}'
         );
-        TestCheck::assertInArray('C.5', 'Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.5', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -175,12 +175,12 @@ class Test
         $info = array(
             'output' => '{}'
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
             'output' => '{}'
         );
-        TestCheck::assertInArray('C.6', 'Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.6', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -188,12 +188,12 @@ class Test
         $info = array(
             'task' => '{}'
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
             'task' => '{}'
         );
-        TestCheck::assertInArray('C.7', 'Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.7', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -202,12 +202,12 @@ class Test
         $info = array(
             'schedule' => '{}'
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
             'schedule' => '{}'
         );
-        TestCheck::assertInArray('C.8', 'Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.8', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -215,12 +215,12 @@ class Test
         $info = array(
             'schedule_status' => 'A'
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'schedule_status' => Model::PIPE_STATUS_ACTIVE
+            'schedule_status' => \Model::PIPE_STATUS_ACTIVE
         );
-        TestCheck::assertInArray('C.9', 'Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.9', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -228,11 +228,11 @@ class Test
         $info = array(
             'schedule_status' => 'D' // valid inputs are A and I
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'schedule_status' => Model::PIPE_STATUS_INACTIVE
+            'schedule_status' => \Model::PIPE_STATUS_INACTIVE
         );
-        TestCheck::assertInArray('C.10', 'Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.10', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }

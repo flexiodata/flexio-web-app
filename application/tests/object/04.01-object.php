@@ -32,7 +32,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
         $actual = $object->getType();
-        $expected = Model::TYPE_OBJECT;
+        $expected = \Model::TYPE_OBJECT;
         TestCheck::assertString('A.2', 'Object::create(); make sure the correct type is set',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -52,28 +52,28 @@ class Test
         TestCheck::assertBoolean('B.1', 'Object::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->create(Model::TYPE_COMMENT, null);
+        $eid = $model->create(\Model::TYPE_COMMENT, null);
         $object = \Flexio\Object\Object::load($eid);
         $actual = $object;
         $expected = false;
         TestCheck::assertBoolean('B.2', 'Object::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->create(Model::TYPE_OBJECT, null);
+        $eid = $model->create(\Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\Object::load($eid);
         $actual = 'Flexio\\Object\\Object';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Object::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->create(Model::TYPE_OBJECT, null);
+        $eid = $model->create(\Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\Object::load($eid);
         $actual = $object->getType();
-        $expected = Model::TYPE_OBJECT;
+        $expected = \Model::TYPE_OBJECT;
         TestCheck::assertString('B.4', 'Object::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->create(Model::TYPE_OBJECT, null);
+        $eid = $model->create(\Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\Object::load($eid);
         $actual = $eid;
         $expected = $object->getEid();
@@ -102,14 +102,14 @@ class Test
         $object = \Flexio\Object\Object::create();
         $object = $object->delete();
         $actual =  $object->getType();
-        $expected = Model::TYPE_OBJECT;
+        $expected = \Model::TYPE_OBJECT;
         TestCheck::assertString('C.3', 'Object::delete(); deleting an object shouldn\'t change its type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
         $status1 = $object->getStatus();
         $status2 = $object->delete()->getStatus();
-        $actual =  ($status1 !== Model::STATUS_DELETED && $status2 === Model::STATUS_DELETED);
+        $actual =  ($status1 !== \Model::STATUS_DELETED && $status2 === \Model::STATUS_DELETED);
         $expected = true;
         TestCheck::assertBoolean('C.4', 'Object::delete(); make sure the status is set to deleted',  $actual, $expected, $results);
 
@@ -144,14 +144,14 @@ class Test
         $object = \Flexio\Object\Object::create();
         $object = $object->set(null);
         $actual =  $object->getType();
-        $expected = Model::TYPE_OBJECT;
+        $expected = \Model::TYPE_OBJECT;
         TestCheck::assertString('D.4', 'Object::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
-        $object = $object->set(array('eid_type'=>Model::TYPE_COMMENT));
+        $object = $object->set(array('eid_type'=>\Model::TYPE_COMMENT));
         $actual =  $object->getType();
-        $expected = Model::TYPE_OBJECT;
+        $expected = \Model::TYPE_OBJECT;
         TestCheck::assertString('D.5', 'Object::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
 
 
@@ -171,7 +171,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
-        $object = $object->setStatus(Model::STATUS_TRASH);
+        $object = $object->setStatus(\Model::STATUS_TRASH);
         $actual =  'Flexio\\Object\\Object';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Object::setStatus(); return the object',  $actual, $expected, $results);
@@ -179,31 +179,31 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
         $eid1 = $object->getEid();
-        $eid2 = $object->setStatus(Model::STATUS_TRASH)->getEid();
+        $eid2 = $object->setStatus(\Model::STATUS_TRASH)->getEid();
         $actual =  Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('F.2', 'Object::setStatus(); setting status of an object shouldn\'t change its eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
-        $object = $object->setStatus(Model::STATUS_TRASH);
+        $object = $object->setStatus(\Model::STATUS_TRASH);
         $actual =  $object->getType();
-        $expected = Model::TYPE_OBJECT;
+        $expected = \Model::TYPE_OBJECT;
         TestCheck::assertString('F.3', 'Object::setStatus(); setting status of an object shouldn\'t change its type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
-        $status1 = $object->setStatus(Model::STATUS_TRASH)->getStatus();
+        $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
         $status2 = $object->setStatus('.')->getStatus();
-        $actual =  ($status1 === Model::STATUS_TRASH && $status2 === Model::STATUS_TRASH);
+        $actual =  ($status1 === \Model::STATUS_TRASH && $status2 === \Model::STATUS_TRASH);
         $expected = true;
         TestCheck::assertBoolean('F.4', 'Object::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
-        $status1 = $object->setStatus(Model::STATUS_PENDING)->getStatus();
-        $status2 = $object->setStatus(Model::STATUS_TRASH)->getStatus();
-        $actual =  ($status1 === Model::STATUS_PENDING && $status2 === Model::STATUS_TRASH);
+        $status1 = $object->setStatus(\Model::STATUS_PENDING)->getStatus();
+        $status2 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
+        $actual =  ($status1 === \Model::STATUS_PENDING && $status2 === \Model::STATUS_TRASH);
         $expected = true;
         TestCheck::assertBoolean('F.5', 'Object::setStatus(); make sure the status is set',  $actual, $expected, $results);
     }
