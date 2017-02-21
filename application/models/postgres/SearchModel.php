@@ -26,7 +26,7 @@ class SearchModel extends ModelBase
         // parse the search path; if the path doesn't parse correctly,
         // return false
         $search_terms = array();
-        if (SearchModel::parse($search_path, $search_terms) === false)
+        if (self::parse($search_path, $search_terms) === false)
             return false;
 
         // path parses correctly, but we don't have any search terms;
@@ -44,7 +44,7 @@ class SearchModel extends ModelBase
             $search_term_idx++;
             $is_last_term = ($search_term_idx === $search_term_count) ? true : false;
 
-            $search_results = SearchModel::evaluate($search_results, $term, $is_last_term);
+            $search_results = self::evaluate($search_results, $term, $is_last_term);
         }
 
         // just return the eids
@@ -88,7 +88,7 @@ class SearchModel extends ModelBase
         return $results;
     }
 
-    private static function evaluate($input_eids, $search_term, $is_last_term)
+    private function evaluate($input_eids, $search_term, $is_last_term)
     {
         // takes the list of input eids and finds the corresponding
         // output eids based on the search terms
@@ -115,7 +115,7 @@ class SearchModel extends ModelBase
 
             foreach ($initial_input_eids as $eid)
             {
-                $eid_info = System::getModel()->getInfo($eid);
+                $eid_info = $this->getModel()->getInfo($eid);
                 if ($eid_info['eid_type'] === Model::TYPE_UNDEFINED)
                     continue;
 
@@ -131,11 +131,11 @@ class SearchModel extends ModelBase
 
         // STEP 3: if a list of edge nodes is specified, filter the set
         // of input eids against the list of allowed edge nodes
-        SearchModel::filterInputEidsByListedEids($search_term, $input_eids);
+        self::filterInputEidsByListedEids($search_term, $input_eids);
 
         // STEP 4: if a list of edge types is specified, filter the set
         // of input eids against the list of allowed edge types
-        SearchModel::filterInputEidsByListedEidType($search_term, $input_eids);
+        self::filterInputEidsByListedEidType($search_term, $input_eids);
 
         // STEP 5: if we're on the last term and we don't have any edges,
         // return the filtered set of eids as the result set; otherwise
@@ -153,7 +153,7 @@ class SearchModel extends ModelBase
         {
             foreach ($search_edges as $search_edge)
             {
-                $found_eids = System::getModel()->assoc_range($input_eid['eid'], $search_edge);
+                $found_eids = $this->getModel()->assoc_range($input_eid['eid'], $search_edge);
                 $result_eids = array_unique(array_merge($result_eids, $found_eids), SORT_REGULAR);
             }
         }
@@ -182,7 +182,7 @@ class SearchModel extends ModelBase
             // require something between path separaters besides blank space;
             // so "->", "eid->", "->eid", "eid->->eid" are disallowed; however
             // "eid->()->" is allowed
-            if (strlen(SearchModel::trim_spaces($part)) === 0)
+            if (strlen(self::trim_spaces($part)) === 0)
                 return false;
 
             // every time we encounter an odd node, create a new search term;
@@ -197,11 +197,11 @@ class SearchModel extends ModelBase
             }
 
             // odd parts should be eids or node types
-            if ($even_term === false && !SearchModel::parse_nodepart($part, $search_term))
+            if ($even_term === false && !self::parse_nodepart($part, $search_term))
                 return false;
 
             // even parts should be edges
-            if ($even_term === true && !SearchModel::parse_edgepart($part, $search_term))
+            if ($even_term === true && !self::parse_edgepart($part, $search_term))
                 return false;
 
             $even_term = !$even_term;
@@ -214,14 +214,14 @@ class SearchModel extends ModelBase
     private static function parse_nodepart($part, &$search_term)
     {
         // trim away leading/trailing whitespace and parenthesis
-        $part = SearchModel::trim_spaces($part);
-        $part = SearchModel::trim_groupchars($part);
+        $part = self::trim_spaces($part);
+        $part = self::trim_groupchars($part);
         $items = explode(',', $part);
 
         foreach ($items as $i)
         {
             // trim away leading/trailing whitespace
-            $i = SearchModel::trim_spaces($i);
+            $i = self::trim_spaces($i);
 
             // if the item is an eid, add it to the list of eids
             if (Eid::isValid($i))
@@ -260,14 +260,14 @@ class SearchModel extends ModelBase
     private static function parse_edgepart($part, &$search_term)
     {
         // trim away leading/trailing whitespace and parenthesis
-        $part = SearchModel::trim_spaces($part);
-        $part = SearchModel::trim_groupchars($part);
+        $part = self::trim_spaces($part);
+        $part = self::trim_groupchars($part);
         $items = explode(',', $part);
 
         foreach ($items as $i)
         {
             // trim away leading/trailing whitespace
-            $i = SearchModel::trim_spaces($i);
+            $i = self::trim_spaces($i);
             if (Model::isValidEdge($i))
             {
                 if ($search_term->edge_types === false)
