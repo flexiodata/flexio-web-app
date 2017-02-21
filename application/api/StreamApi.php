@@ -159,84 +159,95 @@ class StreamApi
     }
 
 
+
     public static function handleStreamUpload($params, $stream)
     {
-        // STEP 1: get the stream and the service
+        // get the stream and the service
         $path = $stream->getPath();
         $service = $stream->getService();
         if ($service === false)
             return false;
 
-        // STEP 2: create the output
+        // create the output
         $streamwriter = \Flexio\Object\StreamWriter::create($stream);
         if ($streamwriter === false)
             return false;
 
-        // STEP 3: get the information the parser needs to parse the content
+        // get the information the parser needs to parse the content
         $post_content_type = isset_or($_SERVER['CONTENT_TYPE'], '');
-        $php_stream_handle = fopen('php://input', 'rb');
+        
 
-        // STEP 4: parse the content and set the stream info
-        $part_data_snippet = false;
-        $part_filename = false;
-        $part_mimetype = false;
-        $part_active = false;
-        $part_succeeded = false;
+        if (strpos($post_content_type, 'multipart/form-data') !== false)
+        {
+            // multipart form-data upload
+            $php_stream_handle = fopen('php://input', 'rb');
 
-        $parser = \Flexio\Services\MultipartParser::create();
+            // parse the content and set the stream info
+            $part_data_snippet = false;
+            $part_filename = false;
+            $part_mimetype = false;
+            $part_active = false;
+            $part_succeeded = false;
 
-        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$streamwriter, &$part_data_snippet, &$part_filename, &$part_mimetype, &$part_active, &$part_succeeded) {
-            if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_BEGIN)
-            {
-                if ($name == 'file') // we're looking for an element named 'file'
+            $parser = \Flexio\Services\MultipartParser::create();
+
+            $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$streamwriter, &$part_data_snippet, &$part_filename, &$part_mimetype, &$part_active, &$part_succeeded) {
+                if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_BEGIN)
                 {
-                    $part_active = true;
-                    $part_filename = $filename;
-                    $part_mimetype = $content_type;
-                    $part_succeeded = true;
+                    if ($name == 'media' || $name == 'file') // we're looking for an element named 'media'; 'file' for temporary backward-compatibility
+                    {
+                        $part_active = true;
+                        $part_filename = $filename;
+                        $part_mimetype = $content_type;
+                        $part_succeeded = true;
+                    }
                 }
-            }
-             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_DATA && $part_active)
-            {
-                // get a sample of the data for mime sensing
-                if ($part_data_snippet === false)
-                    $part_data_snippet = $data;
+                else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_DATA && $part_active)
+                {
+                    // get a sample of the data for mime sensing
+                    if ($part_data_snippet === false)
+                        $part_data_snippet = $data;
 
-                // write out the data
-                $streamwriter->write($data);
-            }
-             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_END)
-            {
-                $part_active = false;
-            }
-        });
-        fclose($php_stream_handle);
+                    // write out the data
+                    $streamwriter->write($data);
+                }
+                else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_END)
+                {
+                    $part_active = false;
+                }
+            });
+            fclose($php_stream_handle);
 
+            // make sure the parse was successful
+            if (!$part_succeeded)
+                return false;
 
-        // make sure the parse was successful
-        if (!$part_succeeded)
-            return false;
+            // determine the filename, stripping off the leading path info;
+            // use a default if one wasn't supplied
+            $default_name = \Util::generateHandle() . '.txt';
+            $filename = strlen($part_filename) > 0 ? $part_filename : $default_name;
+            $name = \Util::getFilename($filename);
+            $ext = \Util::getFileExtension($filename);
+            $filename = $name . (strlen($ext) > 0 ? ".$ext" : '');
 
-        // determine the filename, stripping off the leading path info;
-        // use a default if one wasn't supplied
-        $default_name = \Util::generateHandle() . '.txt';
-        $filename = strlen($part_filename) > 0 ? $part_filename : $default_name;
-        $name = \Util::getFilename($filename);
-        $ext = \Util::getFileExtension($filename);
-        $filename = $name . (strlen($ext) > 0 ? ".$ext" : '');
+            // sense the mime type, but go with what is declared if it's available
+            $mime_type = \ContentType::MIME_TYPE_STREAM;
+            $declared_mime_type = $part_mimetype;
 
-        // sense the mime type, but go with what is declared if it's available
-        $mime_type = \ContentType::MIME_TYPE_STREAM;
-        $declared_mime_type = $part_mimetype;
+            if ($part_data_snippet === false)
+                $part_data_snippet = '';
+            
+            if (strlen($declared_mime_type) > 0)
+                $mime_type = $declared_mime_type;
+                else
+                $mime_type = \ContentType::getMimeType($filename, $part_data_snippet);
+        }
+         else
+        {
+            $php_stream_handle = fopen('php://input', 'rb');
 
+        }
 
-        if ($part_data_snippet === false)
-            $part_data_snippet = '';
-
-        if (strlen($declared_mime_type) > 0)
-            $mime_type = $declared_mime_type;
-              else
-            $mime_type = \ContentType::getMimeType($filename, $part_data_snippet);
 
         // set the stream info
         $stream_info = array();
@@ -244,8 +255,6 @@ class StreamApi
         $stream_info['mime_type'] = $mime_type;
         $stream->set($stream_info);
     }
-
-
 
 
     public static function download($params, $request)
