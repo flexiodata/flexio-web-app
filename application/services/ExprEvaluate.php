@@ -12,6 +12,8 @@
  */
 
 
+namespace Flexio\Services;
+
 
 class ExprEvaluate
 {

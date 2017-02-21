@@ -49,6 +49,9 @@
 // replace the current implementation?
 
 
+namespace Flexio\Services;
+
+
 // library for parsing emails
 if (!isset($GLOBALS['phpmimemailparser_included']))
 {
@@ -61,7 +64,7 @@ require_once 'phpmimemailparser_init.php';
 if (!isset($GLOBALS['phpmailmime_included']))
 {
     $GLOBALS['phpmailmime_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (System::getBaseDirectory() . '/library/phpmailmime'));
+    set_include_path(get_include_path() . PATH_SEPARATOR . (\System::getBaseDirectory() . '/library/phpmailmime'));
 }
 
 
@@ -91,7 +94,7 @@ class Email
 
     public static function create($params = false)
     {
-        $email = new Email;
+        $email = new self;
         $email->initialize();
 
         if ($params === false)
@@ -132,11 +135,11 @@ class Email
             return false;
 
         // parse the content
-        $parser = new PhpMimeMailParser\Parser;
+        $parser = new \PhpMimeMailParser\Parser;
         $parser->setText($content);
 
         // create the email with the parsed values
-        $email = new Email;
+        $email = new self;
         $email->initializeFromParser($parser);
 
         return $email;
@@ -155,11 +158,11 @@ class Email
             return false;
 
         // parse the stream
-        $parser = new PhpMimeMailParser\Parser;
+        $parser = new \PhpMimeMailParser\Parser;
         $parser->setStream($stream_handle);
 
         // create the email with the parsed values
-        $email = new Email;
+        $email = new self;
         $email->initializeFromParser($parser);
 
         return $email;
@@ -330,7 +333,7 @@ class Email
         $a = array();
         $a['name'] = isset_or($attachment['name'],'');
         $a['file'] = isset_or($attachment['file'],'');
-        $a['mime_type'] = isset_or($attachment['mime_type'],ContentType::MIME_TYPE_NONE);
+        $a['mime_type'] = isset_or($attachment['mime_type'], \ContentType::MIME_TYPE_NONE);
         $a['content'] = isset_or($attachment['content'],'');
 
         $this->attachments[] = $a;
@@ -478,7 +481,7 @@ class Email
         {
             $response = $ses->sendEmail($mail);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -497,7 +500,7 @@ class Email
 
         include_once 'Mail/mime.php';
 
-        $mail_mime = new Mail_mime(array('eol' => "\n"));
+        $mail_mime = new \Mail_mime(array('eol' => "\n"));
         $mail_mime->setTxtBody($this->msg_text);
         $mail_mime->setHTMLBody($this->msg_html);
         foreach ($this->attachments as $attachment)
@@ -525,7 +528,7 @@ class Email
             $response = $ses->sendRawEmail($mail);
 
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }

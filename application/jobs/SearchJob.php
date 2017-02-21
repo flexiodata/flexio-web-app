@@ -164,7 +164,7 @@ class SearchJob extends \Flexio\Jobs\Base
                 $columns = [];
                 foreach ($exprs as $expr)
                 {
-                    $expr_translator = new \ExprTranslatorPostgres;
+                    $expr_translator = new \Flexio\Services\ExprTranslatorPostgres;
                     $expr_translator->setStructure($input_columns);
                     if ($expr_translator->parse($expr) === false)
                         return false;
@@ -236,7 +236,7 @@ class SearchJob extends \Flexio\Jobs\Base
             $columns .= $col['store_name'];
         }
 
-        $where = \ExprTranslatorPostgres::translate($where, $input_columns);
+        $where = \Flexio\Services\ExprTranslatorPostgres::translate($where, $input_columns);
         $sql = "INSERT INTO $output_path ($columns) SELECT $columns FROM $input_path WHERE " . $where;
         return $sql;
     }
@@ -264,16 +264,16 @@ class SearchJob extends \Flexio\Jobs\Base
                 if ($is_character)
                     $part .= $left;
                 else if ($is_date)
-                    $part .= "to_char($left, " . \ExprUtil::quote($date_format) . ")";
+                    $part .= "to_char($left, " . \Flexio\Services\ExprUtil::quote($date_format) . ")";
                 else if ($is_datetime)
-                    $part .= "to_char($left, " . \ExprUtil::quote($date_format) . ")";
+                    $part .= "to_char($left, " . \Flexio\Services\ExprUtil::quote($date_format) . ")";
                 else
                     $part .= "cast($left,text)";
 
                 /*
                 $value = str_replace('%',"\\%",$value);
                 $value = str_replace('_',"\\_",$value);
-                $qvalue = \ExprUtil::quote($value);
+                $qvalue = \Flexio\Services\ExprUtil::quote($value);
                 $qvalue = substr_replace($qvalue, '%', 1, 0);
                 $qvalue = substr_replace($qvalue, '%', -1, 0);
 
@@ -283,7 +283,7 @@ class SearchJob extends \Flexio\Jobs\Base
                     $part .= " like $qvalue";
                 */
 
-                $part .= ',' . \ExprUtil::quote($value) . ')';
+                $part .= ',' . \Flexio\Services\ExprUtil::quote($value) . ')';
 
                 break;
 
@@ -295,9 +295,9 @@ class SearchJob extends \Flexio\Jobs\Base
                 if ($is_character)
                     $part .= $left;
                 else if ($is_date)
-                    $part .= "to_char($left, " . \ExprUtil::quote($date_format) . ")";
+                    $part .= "to_char($left, " . \Flexio\Services\ExprUtil::quote($date_format) . ")";
                 else if ($is_datetime)
-                    $part .= "to_char($left, " . \ExprUtil::quote($date_format) . ")";
+                    $part .= "to_char($left, " . \Flexio\Services\ExprUtil::quote($date_format) . ")";
                 else
                     $part .= "cast($left,text)";
 
@@ -306,11 +306,11 @@ class SearchJob extends \Flexio\Jobs\Base
 
                 if ($operator == 'nicontainsword' || $operator == 'icontainsword')
                 {
-                    $part = "$part ~* " . \ExprUtil::quote($regex);
+                    $part = "$part ~* " . \Flexio\Services\ExprUtil::quote($regex);
                 }
                  else
                 {
-                    $part = "$part ~ " . \ExprUtil::quote($regex);
+                    $part = "$part ~ " . \Flexio\Services\ExprUtil::quote($regex);
                 }
 
 
@@ -336,7 +336,7 @@ class SearchJob extends \Flexio\Jobs\Base
 
                 if ($is_character)
                 {
-                    $qvalue = \ExprUtil::quote($value);
+                    $qvalue = \Flexio\Services\ExprUtil::quote($value);
                 }
                 else if ($is_numeric)
                 {
@@ -344,8 +344,8 @@ class SearchJob extends \Flexio\Jobs\Base
                 }
                 else if ($is_date)
                 {
-                    $qvalue = \ExprUtil::quote($value);
-                    $qfmt = \ExprUtil::quote($date_format);
+                    $qvalue = \Flexio\Services\ExprUtil::quote($value);
+                    $qfmt = \Flexio\Services\ExprUtil::quote($date_format);
                     $qvalue = "to_date($qvalue,$qfmt)";
                 }
 

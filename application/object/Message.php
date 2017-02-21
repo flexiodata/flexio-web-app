@@ -93,7 +93,7 @@ class Message
         $msg_html = self::getHtmlEmail('template-account-verify', [ 'activation_link' => $activation_link ]);
 
         // send an email that the user's account was created
-        $email = \Email::create(array(
+        $email = \Flexio\Services\Email::create(array(
             'from' => 'Flex.io <no-reply@flex.io>',
             'to' => $to,
             'subject' => 'Welcome to Flex.io',
@@ -122,7 +122,7 @@ class Message
         $msg_html = self::getHtmlEmail('template-forgot-password', [ 'reset_link' => $reset_link ]);
 
         // send an email that the user's account was created
-        $email = \Email::create(array(
+        $email = \Flexio\Services\Email::create(array(
             'from' => 'Flex.io <no-reply@flex.io>',
             'to' => $to,
             'subject' => 'Flex.io password reset',
@@ -168,7 +168,7 @@ class Message
             'share_link' => $share_link
         ]);
 
-        $email = \Email::create(array(
+        $email = \Flexio\Services\Email::create(array(
             'from' => "$from_name via Flex.io <no-reply@flex.io>",
             'to' => $to,
             'subject' => "${from_name} wants to share \"${object_name}\" with you",
@@ -212,7 +212,7 @@ class Message
             'share_link' => $share_link
         ]);
 
-        $email = \Email::create(array(
+        $email = \Flexio\Services\Email::create(array(
             'from' => "$from_name via Flex.io <no-reply@flex.io>",
             'to' => $to,
             'subject' => "${from_name} shared pipe \"${object_name}\" with you",

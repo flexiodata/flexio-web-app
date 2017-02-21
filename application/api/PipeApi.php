@@ -315,10 +315,10 @@ class PipeApi
         $streamwriter = false;
         $form_params = array();
 
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
 
         $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params) {
-            if ($type == \MultipartParser::TYPE_FILE_BEGIN)
+            if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_BEGIN)
             {
                 $stream = \Flexio\Object\Stream::create();
                 if ($stream)
@@ -331,7 +331,7 @@ class PipeApi
                         $stream = false;
                 }
             }
-             else if ($type == \MultipartParser::TYPE_FILE_DATA)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_DATA)
             {
                 if ($streamwriter !== false)
                 {
@@ -339,13 +339,13 @@ class PipeApi
                     $streamwriter->write($data);
                 }
             }
-             else if ($type == \MultipartParser::TYPE_FILE_END)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_END)
             {
                 $process->addInput($stream);
                 $streamwriter = false;
                 $stream = false;
             }
-             else if ($type == \MultipartParser::TYPE_KEY_VALUE)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_KEY_VALUE)
             {
                 $form_params[$name] = $data;
             }

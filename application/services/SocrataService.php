@@ -12,10 +12,12 @@
  */
 
 
+namespace Flexio\Services;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class SocrataService implements IConnection
+class SocrataService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -32,7 +34,7 @@ class SocrataService implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);
@@ -136,10 +138,10 @@ class SocrataService implements IConnection
 
         $items = [];
 
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML($html);
-        $xpath = new DOMXPath($doc);
+        $xpath = new \DOMXPath($doc);
         $nlist = $xpath->query("//a[@itemprop='url']");
 
         foreach ($nlist as $n)

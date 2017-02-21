@@ -51,7 +51,7 @@ class TestUtil
     public static function evalExpressionNative($expr)
     {
         $retval = null;
-        $success = \ExprEvaluate::evaluate($expr, [], [], $retval);
+        $success = \Flexio\Services\ExprEvaluate::evaluate($expr, [], [], $retval);
         if ($success === false)
             return TestError::ERROR_BAD_PARSE;
 
@@ -65,7 +65,7 @@ class TestUtil
         $dbconfig = \Model::getDatabaseConfig();
 
         // first, try to parse the expression
-        $p = new \ExprTranslatorPostgres;
+        $p = new \Flexio\Services\ExprTranslatorPostgres;
         $err = $p->parse($expr);
         if ($err === false)
             return TestError::ERROR_BAD_PARSE;
@@ -82,7 +82,7 @@ class TestUtil
 
         $datastore_id = $params['database'] . ';' . $params['host'];
         if (!isset($g_store->datastores[$datastore_id]))
-            $g_store->datastores[$datastore_id] = \PostgresService::create($params);
+            $g_store->datastores[$datastore_id] = \Flexio\Services\PostgresService::create($params);
 
         $datastore = $g_store->datastores[$datastore_id];
         $pdo = $datastore->getPDO();

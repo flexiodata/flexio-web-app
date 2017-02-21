@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 if (!isset($GLOBALS['oauth_included']))
 {
     $GLOBALS['oauth_included'] = true;
@@ -27,8 +30,7 @@ use OAuth\OAuth2\Token\StdOAuth2Token;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class GoogleService implements IConnection
+class GoogleService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -47,9 +49,9 @@ class GoogleService implements IConnection
     public static function create($params = null)
     {
         if (!isset($params))
-            return new static();
+            return new self;
 
-        return GoogleService::initialize($params);
+        return self::initialize($params);
     }
 
     public function connect($params)
@@ -346,7 +348,7 @@ class GoogleService implements IConnection
             if ($curtime < $expires)
             {
                 // access token is valid (not expired); use it
-                $object = new GoogleService;
+                $object = new self;
                 $object->access_token = $params['access_token'];
                 $object->refresh_token = isset_or($params['refresh_token'],'');
                 $object->expires = $expires;
@@ -365,7 +367,7 @@ class GoogleService implements IConnection
                     return null; // refresh token is missing
                 $refresh_token = $params['refresh_token'];
 
-                $token = new StdOAuth2Token($access_token, $refresh_token);
+                $token = new \StdOAuth2Token($access_token, $refresh_token);
                 if (isset($params['token_expires']) && !is_null($params['token_expires']) && $params['token_expires'] > 0)
                     $token->setEndOfLife($params['token_expires']);
 
@@ -373,7 +375,7 @@ class GoogleService implements IConnection
                 if (!$token)
                     return null;
 
-                $object = new GoogleService;
+                $object = new self;
                 $object->access_token = $token->getAccessToken();
                 $object->refresh_token = $refresh_token;
                 $object->expires = $token->getEndOfLife();
@@ -395,7 +397,7 @@ class GoogleService implements IConnection
             $token = $oauth->requestAccessToken($params['code']);
             if (!$token)
                 return null;
-            $object = new GoogleService;
+            $object = new self;
             $object->access_token = $token->getAccessToken();
             $object->refresh_token = $token->getRefreshToken();
             $object->expires = $token->getEndOfLife();
@@ -431,10 +433,10 @@ class GoogleService implements IConnection
             return null;
 
         $service_factory = new \OAuth\ServiceFactory();
-        $storage = new Memory();
+        $storage = new \Memory();
 
         // setup the credentials for the requests
-        $credentials = new Credentials(
+        $credentials = new \Credentials(
             $client_id,
             $client_secret,
             $oauth_callback

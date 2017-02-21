@@ -37,110 +37,110 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: \MultipartParser::create()
+        // TEST: \Flexio\Services\MultipartParser::create()
 
         // BEGIN TEST
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
         $actual = get_class($parser);
-        $expected = 'MultipartParser';
-        TestCheck::assertString('A.1', '\MultipartParser::create(); empty input', $actual, $expected, $results);
+        $expected = 'Flexio\Services\MultipartParser';
+        TestCheck::assertString('A.1', '\Flexio\Services\MultipartParser::create(); empty input', $actual, $expected, $results);
 
 
-        // TEST: \MultipartParser::parse()
+        // TEST: \Flexio\Services\MultipartParser::parse()
 
         // BEGIN TEST
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
         $content = '';
         $parser->parse(false, '', function ($type, $name, $data, $filename, $content_type) use (&$content) {
             $content .= $data;
         });
         $actual = $content;
         $expected = '';
-        TestCheck::assertString('B.1', '\MultipartParser::create(); make sure parse function checks for valid resource', $actual, $expected, $results);
+        TestCheck::assertString('B.1', '\Flexio\Services\MultipartParser::create(); make sure parse function checks for valid resource', $actual, $expected, $results);
 
         // BEGIN TEST
         $test_info = getEmptyUpload();
         $stream = getStreamFromString(base64_decode($test_info['content_base64']));
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
         $file_content = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$file_content) {
             $file_content .= $data;
         });
         $actual = substr($file_content, 0, 1);
         $expected = '';
-        TestCheck::assertString('B.2', 'MultipartParser: basic test', $actual, $expected, $results);
+        TestCheck::assertString('B.2', '\Flexio\Services\MultipartParser: basic test', $actual, $expected, $results);
 
         // BEGIN TEST
         $test_info = getSingleEmptyTextFileUpload();
         $stream = getStreamFromString(base64_decode($test_info['content_base64']));
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
         $file_content = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$file_content) {
             $file_content .= $data;
         });
         $actual = substr($file_content, 0, 1);
         $expected = '';
-        TestCheck::assertString('B.3', 'MultipartParser: basic test', $actual, $expected, $results);
+        TestCheck::assertString('B.3', '\Flexio\Services\MultipartParser: basic test', $actual, $expected, $results);
 
         // BEGIN TEST
         $test_info = getSinglePopulatedTextFileUpload();
         $stream = getStreamFromString(base64_decode($test_info['content_base64']));
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
         $file_content = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$file_content) {
             $file_content .= $data;
         });
         $actual = substr($file_content, 0, 4);
         $expected = 'This';
-        TestCheck::assertString('B.4', 'MultipartParser: simple file upload test', $actual, $expected, $results);
+        TestCheck::assertString('B.4', '\Flexio\Services\MultipartParser: simple file upload test', $actual, $expected, $results);
 
 
         // BEGIN TEST
         $test_info = getMultiplePopulatedTextFileUpload();
         $stream = getStreamFromString(base64_decode($test_info['content_base64']));
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
         $names = '';
         $filenames = '';
         $content = '';
         $values = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$names, &$filenames, &$content, &$values) {
-            if ($type == \MultipartParser::TYPE_FILE_BEGIN)
+            if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_BEGIN)
             {
                 $names .= (strlen($names)>0?',':'') . $name;
                 $filenames .= (strlen($filenames)>0?',':'') . $filename;
             }
-             else if ($type == \MultipartParser::TYPE_FILE_DATA)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_DATA)
             {
                 $content .= (strlen($content)>0?',':'') . $data;
             }
-             else if ($type == \MultipartParser::TYPE_FILE_END)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_END)
             {
                 $content .= (strlen($content)>0?',':'') . 'DONE';
             }
-             else if ($type == \MultipartParser::TYPE_KEY_VALUE)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_KEY_VALUE)
             {
                 $values .= "$name:$data";
             }
         });
         $actual = "$names;$filenames;$content;$values";
         $expected = "file1,file2,file3;basic-1.txt,basic-2.txt,basic-3.txt;This is test 1.,DONE,This is test 2.,DONE,This is test 4.,DONE;simplekeyvalue:This is test 3.";
-        TestCheck::assertString('B.5', 'MultipartParser: multiple-file upload', $actual, $expected, $results);
+        TestCheck::assertString('B.5', '\Flexio\Services\MultipartParser: multiple-file upload', $actual, $expected, $results);
 
         // BEGIN TEST
         $test_info = getFormUrlEncodedPost();
         $stream = getStreamFromString("first=value&second=test+space&third=%C3%9Cberm%C3%A4%C3%9Fig");
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
 
         $values = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$values) {
-            if ($type == \MultipartParser::TYPE_KEY_VALUE)
+            if ($type == \Flexio\Services\MultipartParser::TYPE_KEY_VALUE)
             {
                 $values .= (strlen($values)>0?',':'') . "$name:$data";
             }
         });
         $actual = $values;
         $expected = "first:value,second:test space,third:Übermäßig";
-        TestCheck::assertString('B.6', 'MultipartParser: should be able to handle normal form url encoded strings', $actual, $expected, $results);
+        TestCheck::assertString('B.6', '\Flexio\Services\MultipartParser: should be able to handle normal form url encoded strings', $actual, $expected, $results);
     }
 }
 

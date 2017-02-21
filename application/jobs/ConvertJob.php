@@ -665,8 +665,8 @@ class ConvertJob extends \Flexio\Jobs\Base
 
             if ($detected_type == 'D1' || $detected_type == 'D2' || $detected_type == 'D3')
             {
-                $cast = \ExprUtil::getCastExpression($name, $fld['type'], 'date');
-                $cast = \ExprTranslatorPostgres::translate($cast, $structure);
+                $cast = \Flexio\Services\ExprUtil::getCastExpression($name, $fld['type'], 'date');
+                $cast = \Flexio\Services\ExprTranslatorPostgres::translate($cast, $structure);
 
                 if ($cast !== false)
                 {
@@ -689,8 +689,8 @@ class ConvertJob extends \Flexio\Jobs\Base
                         $type .= ')';
                 }
 
-                $cast = \ExprUtil::getCastExpression($name, $fld['type'], 'numeric', $width, $scale);
-                $cast = \ExprTranslatorPostgres::translate($cast, $structure);
+                $cast = \Flexio\Services\ExprUtil::getCastExpression($name, $fld['type'], 'numeric', $width, $scale);
+                $cast = \Flexio\Services\ExprTranslatorPostgres::translate($cast, $structure);
 
                 if ($cast !== false)
                 {

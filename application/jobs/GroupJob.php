@@ -212,8 +212,8 @@ class GroupJob extends \Flexio\Jobs\Base
 
 
         // build the output statement
-        $where = \ExprTranslatorPostgres::translate($where, $input_columns);
-        $having = \ExprTranslatorPostgres::translate($having, $output_columns);
+        $where = \Flexio\Services\ExprTranslatorPostgres::translate($where, $input_columns);
+        $having = \Flexio\Services\ExprTranslatorPostgres::translate($having, $output_columns);
 
         $sql = "CREATE TABLE " . $outstream->getPath() . " AS SELECT ";
         $sql .= " $column_expr ";

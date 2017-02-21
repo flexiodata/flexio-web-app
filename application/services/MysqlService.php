@@ -12,10 +12,12 @@
  */
 
 
+namespace Flexio\Services;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class MysqlService implements IConnection
+class MysqlService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -39,7 +41,7 @@ class MysqlService implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);
@@ -183,7 +185,7 @@ class MysqlService implements IConnection
 
             return $mysqli;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
         }
 
@@ -192,9 +194,9 @@ class MysqlService implements IConnection
 
     public function queryAll($table)
     {
-        $sql = "select * from " . MysqlService::quoteIdentifier($table);
+        $sql = "select * from " . self::quoteIdentifier($table);
 
-        $iter = new MysqlIteratorAll;
+        $iter = new \Flexio\Services\MysqlIteratorAll;
         $iter->result = $this->db->query($sql);
 
         if (!$iter->result)
@@ -234,7 +236,7 @@ class MysqlService implements IConnection
             if (false === $this->db->query($sql))
                 return false;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
              return false;
         }
@@ -276,7 +278,7 @@ class MysqlService implements IConnection
                 $structure[] = $field;
             }
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -290,7 +292,7 @@ class MysqlService implements IConnection
         if (!$db)
             return -1;
 
-        $qtbl = MysqlService::quoteIdentifier($table);
+        $qtbl = self::quoteIdentifier($table);
 
         $res = $db->query("select count(*) as cnt from $qtbl");
         if (!$res)
@@ -585,7 +587,7 @@ class MysqlInserter
             if (strlen($this->fields) > 0)
                 $this->fields .= ',';
 
-            $this->fields .= MysqlService::quoteIdentifier($field);
+            $this->fields .= \Flexio\Services\MysqlService::quoteIdentifier($field);
         }
 
         return true;
@@ -667,7 +669,7 @@ class MysqlInserter
     {
         if (count($this->rows) > 0)
         {
-            $sql = "INSERT INTO " . MysqlService::quoteIdentifier($this->table) . " VALUES ";
+            $sql = "INSERT INTO " . \Flexio\Services\MysqlService::quoteIdentifier($this->table) . " VALUES ";
 
             $cnt = 0;
             foreach ($this->rows as $row)
@@ -759,12 +761,12 @@ class MySqlWriter
         // connect to the database
         try
         {
-            $dbtemp = ModelDb::factory('PDO_MYSQL', $this->dbconfig);
+            $dbtemp = \ModelDb::factory('PDO_MYSQL', $this->dbconfig);
             $conn = $dbtemp->getConnection();
             $this->db = $dbtemp;
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -778,7 +780,7 @@ class MySqlWriter
             $this->db->query("select 1 from $qdbtable limit 1");
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             // query failed; table doesn't exist
             return false;
@@ -813,7 +815,7 @@ class MySqlWriter
             $sql = "create table $qdbtable ($fieldsql) engine=InnoDB default charset=utf8";
             $this->db->exec($sql);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
              return false;
         }
@@ -829,7 +831,7 @@ class MySqlWriter
             if ($this->db->insert($this->dbtable, $row) === false)
                 return false;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -847,7 +849,7 @@ class MySqlWriter
                     return false;
             }
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }

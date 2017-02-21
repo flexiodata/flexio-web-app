@@ -142,15 +142,15 @@ class Connection extends \Flexio\Object\Base
                 return false;
 
             case 'dropbox':
-                $response = \DropboxService::create($auth_params);
+                $response = \Flexio\Services\DropboxService::create($auth_params);
                 break;
 
             case 'googledrive':
-                $response = \GoogleService::create($auth_params);
+                $response = \Flexio\Services\GoogleService::create($auth_params);
                 break;
 
             case 'googlesheets':
-                $response = \GoogleSheetsService::create($auth_params);
+                $response = \Flexio\Services\GoogleSheetsService::create($auth_params);
                 break;
         }
 
@@ -197,7 +197,7 @@ class Connection extends \Flexio\Object\Base
         // load the services from the services store: TODO: should introduce
         // namespaces for services and other classes so that the services
         // store can be more readily distinguished from the object store
-        $service = \Store::load($connection_info);
+        $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
             return false;
 
@@ -348,7 +348,7 @@ class Connection extends \Flexio\Object\Base
         $params['username'] = $username;
         $params['password'] = $password;
 
-        $db = \PostgresService::create($params);
+        $db = \Flexio\Services\PostgresService::create($params);
         if (!$db)
             return false;   // service not available
 

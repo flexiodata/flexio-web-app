@@ -106,7 +106,7 @@ class SystemApi
             $result['email']['message'] = '';
 
             // check if the email is invalid
-            if (!Email::isValid($email))
+            if (!\Flexio\Services\Email::isValid($email))
             {
                 $result['email']['valid'] = false;
                 $result['email']['message'] = _('This email address must be formatted correctly.');

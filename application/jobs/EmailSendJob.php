@@ -95,7 +95,7 @@ class EmailSendJob extends \Flexio\Jobs\Base
             // everything else; equivalent for now to nothing
         }
 
-        $email = \Email::create($email_params);
+        $email = \Flexio\Services\Email::create($email_params);
         $res = $email->send();
 
         // delete the temporary attachments

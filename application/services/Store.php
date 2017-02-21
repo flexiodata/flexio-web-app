@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 class Store
 {
     public static function load($connection_info)
@@ -44,14 +47,14 @@ class Store
                     $auth_params = array(
                         // TODO: add parameters for basic auth?
                     );
-                    $service = \HttpService::create($auth_params);
+                    $service = \Flexio\Services\HttpService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_RSS:
                     $auth_params = array(
                         // TODO: add parameters for basic auth?
                     );
-                    $service = \RssService::create($auth_params);
+                    $service = \Flexio\Services\RssService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_FTP:
@@ -61,7 +64,7 @@ class Store
                         'username' => isset_or($connection_info['username'],''),
                         'password' => isset_or($connection_info['password'],'')
                     );
-                    $service = \FtpService::create($auth_params);
+                    $service = \Flexio\Services\FtpService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_SFTP:
@@ -71,7 +74,7 @@ class Store
                         'username' => isset_or($connection_info['username'],''),
                         'password' => isset_or($connection_info['password'],'')
                     );
-                    $service = \SftpService::create($auth_params);
+                    $service = \Flexio\Services\SftpService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_MYSQL:
@@ -82,7 +85,7 @@ class Store
                         'password' => isset_or($connection_info['password'],''),
                         'database' => isset_or($connection_info['database'],'')
                     );
-                    $service = \MysqlService::create($auth_params);
+                    $service = \Flexio\Services\MysqlService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_POSTGRES:
@@ -93,14 +96,14 @@ class Store
                         'password' => isset_or($connection_info['password'],''),
                         'database' => isset_or($connection_info['database'],'')
                     );
-                    $service = \PostgresService::create($auth_params);
+                    $service = \Flexio\Services\PostgresService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_DROPBOX:
                     $auth_params = array(
                         'access_token' => isset_or($connection_info['token'],'')
                     );
-                    $service = \DropboxService::create($auth_params);
+                    $service = \Flexio\Services\DropboxService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
@@ -109,7 +112,7 @@ class Store
                         'refresh_token' => isset_or($connection_info['refresh_token'],''),
                         'expires' => isset_or($connection_info['token_expires'],0)
                     );
-                    $service = \GoogleService::create($auth_params);
+                    $service = \Flexio\Services\GoogleService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_GOOGLESHEETS:
@@ -118,7 +121,7 @@ class Store
                         'refresh_token' => isset_or($connection_info['refresh_token'],''),
                         'expires' => isset_or($connection_info['token_expires'],0)
                     );
-                    $service = \GoogleSheetsService::create($auth_params);
+                    $service = \Flexio\Services\GoogleSheetsService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_AMAZONS3:
@@ -128,7 +131,7 @@ class Store
                         'accesskey' => isset_or($connection_info['username'],''),
                         'secretkey' => isset_or($connection_info['password'],'')
                     );
-                    $service = \AmazonS3Service::create($auth_params);
+                    $service = \Flexio\Services\AmazonS3Service::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_SOCRATA:
@@ -138,14 +141,14 @@ class Store
                         'username' => isset_or($connection_info['username'],''),
                         'password' => isset_or($connection_info['password'],'')
                     );
-                    $service = \SocrataService::create($auth_params);
+                    $service = \Flexio\Services\SocrataService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_PIPELINEDEALS:
                    $auth_params = array(
                         'token' => isset_or($connection_info['token'],'')
                     );
-                    $service = \PipelineDealsService::create($auth_params);
+                    $service = \Flexio\Services\PipelineDealsService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_MAILJET:
@@ -153,7 +156,7 @@ class Store
                         'username' => isset_or($connection_info['username'],''),
                         'password' => isset_or($connection_info['password'],'')
                     );
-                    $service = \MailJetService::create($auth_params);
+                    $service = \Flexio\Services\MailJetService::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_TWILIO:
@@ -161,7 +164,7 @@ class Store
                         'key' => isset_or($connection_info['username'],''),
                         'token' => isset_or($connection_info['token'],'')
                     );
-                    $service = \TwilioService::create($auth_params);
+                    $service = \Flexio\Services\TwilioService::create($auth_params);
                 break;
         }
 

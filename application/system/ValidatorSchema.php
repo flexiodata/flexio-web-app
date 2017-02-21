@@ -345,8 +345,8 @@ class ValidatorSchema
         }
 
         // type has to be string or array; validated in schema test
-        
-        // TODO: fill out 
+
+        // TODO: fill out
         return;
     }
 
@@ -525,7 +525,7 @@ class ValidatorSchema
             // custom formats
             case 'fx.eid':        $result = \Eid::isValid($data);                      break;
             case 'fx.identifier': $result = \Identifier::isValid($data);               break;
-            case 'fx.fieldname':  $result = PostgresService::isValidFieldName($data); break;
+            case 'fx.fieldname':  $result = \Flexio\Services\PostgresService::isValidFieldName($data); break;
         }
 
         if ($result === false)
@@ -914,20 +914,20 @@ class ValidatorSchema
         $pair = array($key => $value);
         return json_encode($pair);
     }
-    
+
     private static function example_list($data)
     {
         $count = count($data);
-        
+
         if ($count === 0)
             return '';
-            
+
         if ($count === 1)
             return $data[0];
 
         if ($count === 2)
             return $data[0] . ' or ' . $data[1];
-            
+
         $result = '';
         $idx = 0;
         foreach ($data as $d)
@@ -936,11 +936,11 @@ class ValidatorSchema
                 $result .= ', ';
             if ($idx === ($count - 1))
                 $result .= 'or ';
-            
-            $result .= $d;    
+
+            $result .= $d;
             $idx++;
         }
-        
+
         return $result;
     }
 }

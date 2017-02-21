@@ -183,10 +183,10 @@ class StreamApi
         $part_active = false;
         $part_succeeded = false;
 
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
 
         $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$streamwriter, &$part_data_snippet, &$part_filename, &$part_mimetype, &$part_active, &$part_succeeded) {
-            if ($type == \MultipartParser::TYPE_FILE_BEGIN)
+            if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_BEGIN)
             {
                 if ($name == 'file') // we're looking for an element named 'file'
                 {
@@ -196,7 +196,7 @@ class StreamApi
                     $part_succeeded = true;
                 }
             }
-             else if ($type == \MultipartParser::TYPE_FILE_DATA && $part_active)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_DATA && $part_active)
             {
                 // get a sample of the data for mime sensing
                 if ($part_data_snippet === false)
@@ -205,7 +205,7 @@ class StreamApi
                 // write out the data
                 $streamwriter->write($data);
             }
-             else if ($type == \MultipartParser::TYPE_FILE_END)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_END)
             {
                 $part_active = false;
             }
@@ -232,7 +232,7 @@ class StreamApi
 
         if ($part_data_snippet === false)
             $part_data_snippet = '';
-        
+
         if (strlen($declared_mime_type) > 0)
             $mime_type = $declared_mime_type;
               else

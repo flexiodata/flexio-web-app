@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 if (!isset($GLOBALS['oauth_included']))
 {
     $GLOBALS['oauth_included'] = true;
@@ -27,7 +30,7 @@ use OAuth\OAuth2\Token\StdOAuth2Token;
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 
-class DropboxService implements IConnection
+class DropboxService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -44,7 +47,7 @@ class DropboxService implements IConnection
     public static function create($params = null)
     {
         if (!isset($params))
-            return new static();
+            return new self;
 
         return self::initialize($params);
     }
@@ -224,14 +227,14 @@ class DropboxService implements IConnection
 
         // STEP 2: instantiate the service
         $service_factory = new \OAuth\ServiceFactory();
-        $storage = new Memory();
+        $storage = new \Memory();
 
         // setup the credentials for the requests
         $oauth_callback = '';
         if (isset($params['redirect']))
             $oauth_callback = $params['redirect'];
 
-        $credentials = new Credentials(
+        $credentials = new \Credentials(
             $client_id,
             $client_secret,
             $oauth_callback

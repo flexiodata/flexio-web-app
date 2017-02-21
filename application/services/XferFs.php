@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 class XferFs
 {
     public static function __callStatic($name, $arguments)
@@ -20,7 +23,7 @@ class XferFs
 
         if (isset($g_config->s3fs_bucket) && strlen($g_config->s3fs_bucket) > 0)
         {
-            return call_user_func_array('XferFsS3::' . $name, $arguments);
+            return call_user_func_array('\Flexio\Services\XferFsS3::' . $name, $arguments);
         }
          else
         {
@@ -30,7 +33,7 @@ class XferFs
                 if (!is_dir($g_config->localfs_base_path))
                     @mkdir($g_config->localfs_base_path, 0700);
             }
-            return call_user_func_array('XferFsLocal::' . $name, $arguments);
+            return call_user_func_array('\Flexio\Services\XferFsLocal::' . $name, $arguments);
         }
     }
 }

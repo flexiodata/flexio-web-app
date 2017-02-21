@@ -211,7 +211,7 @@ class OutputJob extends \Flexio\Jobs\Base
 
         // load the service
         $connection_type = isset_or($connection_info['connection_type'], false);
-        $service = \Store::load($connection_info);
+        $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
             return $this->fail(\Model::ERROR_NO_SERVICE, _(''), __FILE__, __LINE__);
 

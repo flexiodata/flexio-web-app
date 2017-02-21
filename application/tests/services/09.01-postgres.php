@@ -24,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \PostgresService::create(null);
-        $actual = get_class($service) === 'PostgresService';
+        $service = \Flexio\Services\PostgresService::create(null);
+        $actual = get_class($service) === 'Flexio\Services\PostgresService';
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\PostgresService::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Services\PostgresService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

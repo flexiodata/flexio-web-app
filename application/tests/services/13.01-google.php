@@ -24,8 +24,8 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \GoogleService::create(null);
-        $actual = get_class($service) === 'GoogleService';
+        $service = \Flexio\Services\GoogleService::create(null);
+        $actual = get_class($service) === 'Flexio\Services\GoogleService';
         $expected = true;
         TestCheck::assertBoolean('A.1', '\GoogleService::create(); create an instance of the class',  $actual, $expected, $results);
     }

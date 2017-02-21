@@ -38,7 +38,7 @@ class Manager
         fclose($outstream);
 
         // STEP 2: parse the temporary file
-        $parser = \Email::parseStream($emailfile);
+        $parser = \Flexio\Services\Email::parseStream($emailfile);
 
         // STEP 3: determine where to route the email; the pipe to launch
         // is the first part of the email; e.g. <pipe_eid>@email.flex.io

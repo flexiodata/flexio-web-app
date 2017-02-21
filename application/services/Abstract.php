@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 interface IConnection
 {
     public static function create($params = null);

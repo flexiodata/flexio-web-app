@@ -12,10 +12,12 @@
  */
 
 
+namespace Flexio\Services;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class MailJetService implements IConnection
+class MailJetService implements \Flexio\Services\IConnection
 {
     private $is_ok = false;
     private $username = '';
@@ -30,7 +32,7 @@ class MailJetService implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);

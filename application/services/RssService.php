@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 // include for RSS library
 if (!isset($GLOBALS['simplepie_included']))
 {
@@ -22,8 +25,7 @@ if (!isset($GLOBALS['simplepie_included']))
 require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'idn' . DIRECTORY_SEPARATOR . 'idna_convert.class.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class RssService implements IConnection
+class RssService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -37,7 +39,7 @@ class RssService implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);
@@ -79,7 +81,7 @@ class RssService implements IConnection
 
     public function read($path, $callback)
     {
-        $feed = new SimplePie();
+        $feed = new \SimplePie();
         $feed->enable_cache(false);
         $feed->set_feed_url($path);
         $feed->init();

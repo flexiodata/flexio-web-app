@@ -24,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \DropboxService::create(null);
-        $actual = get_class($service) === 'DropboxService';
+        $service = \Flexio\Services\DropboxService::create(null);
+        $actual = get_class($service) === 'Flexio\Services\DropboxService';
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\DropboxService::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Services\DropboxService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

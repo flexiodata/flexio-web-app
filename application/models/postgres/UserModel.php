@@ -31,7 +31,7 @@ class UserModel extends ModelBase
 
         if (!\Identifier::isValid($params['user_name']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
-        if (!\Email::isValid($params['email']))
+        if (!\Flexio\Services\Email::isValid($params['email']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
 
         // encode the password
@@ -139,7 +139,7 @@ class UserModel extends ModelBase
         // if user_name or email is specified, make sure it's not set to null
         if (is_array($params) && array_key_exists('user_name', $params) && !\Identifier::isValid($params['user_name']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
-        if (is_array($params) && array_key_exists('email', $params) && !\Email::isValid($params['email']))
+        if (is_array($params) && array_key_exists('email', $params) && !\Flexio\Services\Email::isValid($params['email']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
 
         // make sure the properties that are being updated are the correct type

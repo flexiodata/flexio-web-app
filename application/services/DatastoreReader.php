@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 class DatastoreReader
 {
     private $postgres = null;
@@ -73,7 +76,7 @@ class DatastoreReader
                     return '';
 
                 $this->populateColumnNames();
-                $this->stream = new CsvStream($iter, $this->columns);
+                $this->stream = new \Flexio\Services\CsvStream($iter, $this->columns);
             }
              else if ($this->isStream())
             {

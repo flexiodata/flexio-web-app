@@ -116,7 +116,7 @@ class InputJob extends \Flexio\Jobs\Base
         }
 
         // load the service
-        $service = \Store::load($connection_info);
+        $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
             return $this->fail(\Model::ERROR_NO_SERVICE, _(''), __FILE__, __LINE__);
 
@@ -422,7 +422,7 @@ class InputJob extends \Flexio\Jobs\Base
         $pattern = basename($path);
 
         // get the service; TODO: error if we can't do it? similar to not getting the path?
-        $service = \Store::load($connection_info);
+        $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
             return array();
 

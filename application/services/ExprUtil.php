@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 class ExprUtil
 {
     public static function quote($value)

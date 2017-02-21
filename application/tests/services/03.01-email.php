@@ -22,28 +22,28 @@ class Test
         // TEST: non-string inputs
 
         // BEGIN TEST
-        $actual = \Email::isValid(null);
+        $actual = \Flexio\Services\Email::isValid(null);
         $expected = false;
-        TestCheck::assertBoolean('A.1', '\Email::isValid() null input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Services\Email::isValid() null input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Email::isValid(false);
+        $actual = \Flexio\Services\Email::isValid(false);
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Email::isValid() false input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\Services\Email::isValid() false input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Email::isValid(true);
+        $actual = \Flexio\Services\Email::isValid(true);
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Email::isValid() true input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Flexio\Services\Email::isValid() true input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Email::isValid(111111111111);
+        $actual = \Flexio\Services\Email::isValid(111111111111);
         $expected = false;
-        TestCheck::assertBoolean('A.4', '\Email::isValid() numeric input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', '\Flexio\Services\Email::isValid() numeric input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Email::isValid(array());
+        $actual = \Flexio\Services\Email::isValid(array());
         $expected = false;
-        TestCheck::assertBoolean('A.5', '\Email::isValid() array input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', '\Flexio\Services\Email::isValid() array input', $actual, $expected, $results);
     }
 }
