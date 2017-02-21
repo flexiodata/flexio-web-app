@@ -32,10 +32,10 @@ class Test
             }
         ]',true);
         $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
-        $process_info = ProcessApi::create($params, $request);
+        $process_info = \Flexio\Api\ProcessApi::create($params, $request);
         $actual = $process_info['task'][0]['type'];
         $expected = 'flexio.sleep';
-        TestCheck::assertString('A.1', 'ProcessApi::create(); return the object',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', '\Flexio\Api\ProcessApi::create(); return the object',  $actual, $expected, $results);
 
 
         // TEST: process background job processing and status
@@ -53,15 +53,15 @@ class Test
             }
         ]',true);
         $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
-        $process_info1 = ProcessApi::create($params, $request);
+        $process_info1 = \Flexio\Api\ProcessApi::create($params, $request);
         sleep(2);
-        $process_info2 = ProcessApi::get($process_info1, $request);
+        $process_info2 = \Flexio\Api\ProcessApi::get($process_info1, $request);
         $status2 = $process_info2['process_status'];
         sleep(4);
-        $process_info3 = ProcessApi::get($process_info1, $request);
+        $process_info3 = \Flexio\Api\ProcessApi::get($process_info1, $request);
         $status3 = $process_info3['process_status'];
         $actual = ($status2 === Model::PROCESS_STATUS_RUNNING && $status3 === Model::PROCESS_STATUS_COMPLETED);
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'ProcessApi::create(); make sure a process runs in the background and the appropriate process status codes are set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Flexio\Api\ProcessApi::create(); make sure a process runs in the background and the appropriate process status codes are set',  $actual, $expected, $results);
     }
 }

@@ -32,7 +32,7 @@ class Test
         }
         ',true);
         $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
-        $actual= UserApi::create($params, $request);
+        $actual= \Flexio\Api\UserApi::create($params, $request);
         $expected = '
         {
             "eid_type": "'.Model::TYPE_USER.'",
@@ -40,6 +40,6 @@ class Test
             "email": "'.$email.'"
         }
         ';
-        TestCheck::assertInArray('A.1', 'UserApi::create(); return the object',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', '\Flexio\Api\UserApi::create(); return the object',  $actual, $expected, $results);
     }
 }

@@ -99,7 +99,7 @@ class Connection extends \Flexio\Object\Base
 
     public function authenticate($params)
     {
-        // TODO: this was moved from ConnectionApi::authenticate() which functioned
+        // TODO: this was moved from \Flexio\Api\ConnectionApi::authenticate() which functioned
         // somewhat like a static method so that everything was passed to the function;
         // now that this has been moved to the object, is there anyway to save some of
         // these in the object so we can make successive calls without sending everything?

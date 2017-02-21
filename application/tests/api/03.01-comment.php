@@ -31,7 +31,7 @@ class Test
         }
         ',true);
         $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
-        $actual = CommentApi::create($params, $request);
+        $actual = \Flexio\Api\CommentApi::create($params, $request);
 
         $expected = '
         {
@@ -39,6 +39,6 @@ class Test
             "comment": "Test comment"
         }
         ';
-        TestCheck::assertInArray('A.1', 'CommentApi::create(); return the object',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', '\Flexio\Api\CommentApi::create(); return the object',  $actual, $expected, $results);
     }
 }

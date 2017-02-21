@@ -125,6 +125,6 @@ class ApiController extends FxControllerAction
         }
 
         // process the request
-        Api::request($request, $params);
+        \Flexio\Api\Api::request($request, $params);
     }
 }

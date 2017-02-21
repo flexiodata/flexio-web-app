@@ -11,6 +11,7 @@
  * @subpackage Api
  */
 
+namespace Flexio\Api;
 
 if (!isset($GLOBALS['humannameparser_included']))
 {
@@ -83,7 +84,7 @@ class UserApi
         $password = $params['password'];
 
         // make sure the user_name is valid syntactically; note: don't check for existence here
-        if (!Identifier::isValid($user_name))
+        if (!\Identifier::isValid($user_name))
             return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER, _('This username is invalid.  Please try another.'));
 
         $description = isset_or($params['description'], '');
@@ -105,7 +106,7 @@ class UserApi
 
         $verify_code = '';
         if ($require_verification === true)
-            $verify_code = isset($params['verify_code']) ? $params['verify_code'] : Util::generateHandle(); // code to verify user's email address
+            $verify_code = isset($params['verify_code']) ? $params['verify_code'] : \Util::generateHandle(); // code to verify user's email address
 
         // use email to check if account already exists; if it exists
         // based on the email, see if the user is pending (invitations
@@ -133,7 +134,7 @@ class UserApi
                             'password' => $password,
                             'verify_code' => $verify_code,
                             'config' => $config,
-                            'eid_status' => ($require_verification === true ? Model::STATUS_PENDING : Model::STATUS_AVAILABLE)
+                            'eid_status' => ($require_verification === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE)
                          );
 
         if ($require_verification === false)
@@ -148,7 +149,7 @@ class UserApi
             {
                 // user already exists; if we're trying to activate a user that's
                 // not in a pending state, flag an error
-                if ($user->getStatus() != Model::STATUS_PENDING)
+                if ($user->getStatus() != \Model::STATUS_PENDING)
                     return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED, _('This email address is already taken.  Please try another.'));
 
                 // check if the verification code is set and matches the verfication code we
@@ -167,7 +168,7 @@ class UserApi
                     // link was clicked in notification email and verify code checks out;
                     // so automatically promote user to verified/active status
                     $new_user_info['verify_code'] = '';
-                    $new_user_info['eid_status'] = Model::STATUS_AVAILABLE;
+                    $new_user_info['eid_status'] = \Model::STATUS_AVAILABLE;
 
                     $result = $user->set($new_user_info);
                     if ($result === false)
@@ -187,7 +188,7 @@ class UserApi
                     // in either case, we need to create a new verification code and let
                     // the user verify
 
-                    $new_verify_code = Util::generateHandle();
+                    $new_verify_code = \Util::generateHandle();
                     $new_user_info['verify_code'] = $new_verify_code;
 
                     $result = $user->set($new_user_info);
@@ -280,7 +281,7 @@ class UserApi
         // before the user is able to log in; probably best to pass the verification code
         // and use the UserApi::create() function to complete the process rather than
         // this, since this approach could be used to set info for unverified users
-        if ($user->getStatus() !== Model::STATUS_PENDING)
+        if ($user->getStatus() !== \Model::STATUS_PENDING)
         {
             if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
                 return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
@@ -351,7 +352,7 @@ class UserApi
         {
             $properties = array();
             $properties['eid'] = '';
-            $properties['eid_type'] = Model::TYPE_USER;
+            $properties['eid_type'] = \Model::TYPE_USER;
             return $properties;
         }
 
@@ -406,13 +407,13 @@ class UserApi
         if ($user === false)
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT, _('This user is unavailable'));
 
-        if ($user->getStatus() != Model::STATUS_PENDING)
+        if ($user->getStatus() != \Model::STATUS_PENDING)
             return $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('This user is already activated'));
 
         if ($this->getVerifyCode() != $code)
             return $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('The activation credentials do not match'));
 
-        if ($user->set(array('eid_status' => Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
+        if ($user->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
             return $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('Could not activate the user at this time'));
 
         return true;
@@ -454,7 +455,7 @@ class UserApi
             return $request->getValidator()->fail();
 
         $email = $params['email'];
-        $verify_code = Util::generateHandle();
+        $verify_code = \Util::generateHandle();
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)
@@ -491,7 +492,7 @@ class UserApi
         if ($user->getVerifyCode() !== $code)
             return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER, _('The credentials do not match'));
 
-        if ($user->set(array('password' => $password, 'eid_status' => Model::STATUS_AVAILABLE, 'verify_code' => '')))
+        if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')))
             return $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('Could not update user at this time'));
 
         return true;

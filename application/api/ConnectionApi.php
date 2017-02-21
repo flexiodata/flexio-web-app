@@ -11,6 +11,7 @@
  * @subpackage Api
  */
 
+namespace Flexio\Api;
 
 class ConnectionApi
 {

@@ -33,7 +33,7 @@ class Test
         }
         ',true);
         $request = Request::create()->setRequestingUser($user_eid);
-        $actual= ProjectApi::create($params, $request);
+        $actual= \Flexio\Api\ProjectApi::create($params, $request);
         $expected = '
         {
             "eid_type": "'.Model::TYPE_PROJECT.'",
@@ -41,6 +41,6 @@ class Test
             "description": "Test project"
         }
         ';
-        TestCheck::assertInArray('A.1', 'ProjectApi::create(); return the object',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', '\Flexio\Api\ProjectApi::create(); return the object',  $actual, $expected, $results);
     }
 }
