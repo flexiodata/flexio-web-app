@@ -52,13 +52,13 @@ class RenameFileJob extends Base
         if ($filename !== false && $append_timestamp === true)
         {
             // TODO: generalize wildcard replacement; for now, just add a datestamp
-            $timestamp = System::getTimestamp();
-            $file_timestamp = Util::formatDate($timestamp);
+            $timestamp = \System::getTimestamp();
+            $file_timestamp = \Util::formatDate($timestamp);
             $file_timestamp = preg_replace('/[^A-Za-z0-9]/', '', $file_timestamp);
 
             // rename the file if we can get the filename parts
-            $filename_base = Util::getFilename($filename);
-            $filename_ext = Util::getFileExtension($filename);
+            $filename_base = \Util::getFilename($filename);
+            $filename_ext = \Util::getFileExtension($filename);
 
             $new_filename = (strlen($filename_base) > 0 ? $filename_base . "_" : '') . $file_timestamp . (strlen($filename_ext) > 0 ? ".$filename_ext" : '');
             $outstream_info['name'] = $new_filename;

@@ -81,7 +81,7 @@ class User extends \Flexio\Object\Base
 
     public static function load($identifier)
     {
-        // note: User::load() differs from other load implementations
+        // note: \User::load() differs from other load implementations
         // in that a user can be loaded either by a unique eid, by
         // the user name, or the user email, all of which are unique
         // for a user
@@ -154,7 +154,7 @@ class User extends \Flexio\Object\Base
 
     public function checkPassword($password)
     {
-        return \System::getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
+        return $this->getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
     }
 
     public function isAdministrator()

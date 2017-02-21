@@ -12,7 +12,10 @@
  */
 
 
-class ApiController extends FxControllerAction
+namespace Flexio\Controllers;
+
+
+class ApiController extends \FxControllerAction
 {
     public function init()
     {
@@ -125,6 +128,6 @@ class ApiController extends FxControllerAction
         }
 
         // process the request
-        Api::request($request, $params);
+        \Flexio\Api\Api::request($request, $params);
     }
 }

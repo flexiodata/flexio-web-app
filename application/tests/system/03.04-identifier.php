@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -19,73 +22,73 @@ class Test
         // TEST: identifiers can't use a reserved or illegal words
 
         // BEGIN TEST
-        $actual = Identifier::isValid('flexio');
+        $actual = \Identifier::isValid('flexio');
         $expected = false;
-        TestCheck::assertBoolean('A.1', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('index');
+        $actual = \Identifier::isValid('index');
         $expected = false;
-        TestCheck::assertBoolean('A.2', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('home');
+        $actual = \Identifier::isValid('home');
         $expected = false;
-        TestCheck::assertBoolean('A.3', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('data');
+        $actual = \Identifier::isValid('data');
         $expected = false;
-        TestCheck::assertBoolean('A.4', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('api');
+        $actual = \Identifier::isValid('api');
         $expected = false;
-        TestCheck::assertBoolean('A.5', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('public');
+        $actual = \Identifier::isValid('public');
         $expected = false;
-        TestCheck::assertBoolean('A.6', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.6', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('private');
+        $actual = \Identifier::isValid('private');
         $expected = false;
-        TestCheck::assertBoolean('A.7', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.7', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('project');
+        $actual = \Identifier::isValid('project');
         $expected = false;
-        TestCheck::assertBoolean('A.8', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.8', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('workspace');
+        $actual = \Identifier::isValid('workspace');
         $expected = false;
-        TestCheck::assertBoolean('A.9', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.9', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('connection');
+        $actual = \Identifier::isValid('connection');
         $expected = false;
-        TestCheck::assertBoolean('A.10', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.10', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('account');
+        $actual = \Identifier::isValid('account');
         $expected = false;
-        TestCheck::assertBoolean('A.11', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.11', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('sex');
+        $actual = \Identifier::isValid('sex');
         $expected = false;
-        TestCheck::assertBoolean('A.12', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.12', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('shit');
+        $actual = \Identifier::isValid('shit');
         $expected = false;
-        TestCheck::assertBoolean('A.13', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.13', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Identifier::isValid('damn');
+        $actual = \Identifier::isValid('damn');
         $expected = false;
-        TestCheck::assertBoolean('A.14', 'Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.14', '\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
     }
 }

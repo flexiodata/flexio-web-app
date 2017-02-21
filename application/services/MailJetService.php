@@ -42,7 +42,7 @@ class MailJetService implements IConnection
     {
         $this->close();
 
-        $validator = Validator::getInstance();
+        $validator = \Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
@@ -269,7 +269,7 @@ class MailJetService implements IConnection
 
         foreach ($rows as $r)
         {
-            $r = Mapper::flatten($r);
+            $r = \Mapper::flatten($r);
             $r = $r[0];
 
             $output_row = array();

@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -24,8 +27,8 @@ class Test
 
         for ($i = 0; $i < $total_eid_count; ++$i)
         {
-            $eid = Eid::generate();
-            $valid = Eid::isValid($eid);
+            $eid = \Eid::generate();
+            $valid = \Eid::isValid($eid);
 
             if ($valid === true)
                 $valid_eid_count++;
@@ -33,6 +36,6 @@ class Test
 
         $actual = ($valid_eid_count === $total_eid_count); // all eids that were created should be valid
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Eid::generate() test for valid eid creation', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Eid::generate() test for valid eid creation', $actual, $expected, $results);
     }
 }

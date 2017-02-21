@@ -18,17 +18,17 @@ class ConnectionModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         // if the connection_status parameter is set, make sure the status is set
         // to a valid value
         if (isset($params['connection_status']))
         {
             $status = $params['connection_status'];
-            if ($status != Model::CONNECTION_STATUS_INVALID && $status != Model::CONNECTION_STATUS_UNAVAILABLE &&
-                $status != Model::CONNECTION_STATUS_AVAILABLE && $status != Model::CONNECTION_STATUS_ERROR)
+            if ($status != \Model::CONNECTION_STATUS_INVALID && $status != \Model::CONNECTION_STATUS_UNAVAILABLE &&
+                $status != \Model::CONNECTION_STATUS_AVAILABLE && $status != \Model::CONNECTION_STATUS_ERROR)
             {
-                $params['connection_status'] = Model::CONNECTION_STATUS_UNAVAILABLE;  // default status
+                $params['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;  // default status
             }
         }
 
@@ -36,7 +36,7 @@ class ConnectionModel extends ModelBase
         try
         {
             // create the object base
-            $eid = $this->getModel()->createObjectBase(Model::TYPE_CONNECTION, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_CONNECTION, $params);
             if ($eid === false)
                 throw new Exception();
 
@@ -44,7 +44,7 @@ class ConnectionModel extends ModelBase
             if ($default_database == '%eid%')
                 $default_database = $eid;
 
-            $timestamp = System::getTimestamp();
+            $timestamp = \System::getTimestamp();
             $process_arr = array(
                 'eid'               => $eid,
                 'name'              => isset_or($params['name'], ''),
@@ -59,15 +59,15 @@ class ConnectionModel extends ModelBase
                 'token_expires'     => isset_or($params['token_expires'], null),
                 'database'          => isset_or($params['database'], $default_database),
                 'connection_type'   => isset_or($params['connection_type'], ''),
-                'connection_status' => isset_or($params['connection_status'], Model::CONNECTION_STATUS_UNAVAILABLE),
+                'connection_status' => isset_or($params['connection_status'], \Model::CONNECTION_STATUS_UNAVAILABLE),
                 'created'           => $timestamp,
                 'updated'           => $timestamp
             );
 
-            $process_arr['username'] = Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
-            $process_arr['password'] = Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
-            $process_arr['token'] = Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
-            $process_arr['refresh_token'] = Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+            $process_arr['username'] = \Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
+            $process_arr['password'] = \Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
+            $process_arr['token'] = \Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
+            $process_arr['refresh_token'] = \Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
 
             // add the properties
             if ($db->insert('tbl_connection', $process_arr) === false)
@@ -97,10 +97,10 @@ class ConnectionModel extends ModelBase
             $db->commit();
             return $result;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete connection'));
+            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete connection'));
         }
     }
 
@@ -108,12 +108,12 @@ class ConnectionModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Eid::isValid($eid))
             return false;
 
-        if (($process_arr = Model::check($params, array(
+        if (($process_arr = \Model::check($params, array(
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
                 'display_icon'      => array('type' => 'string',  'required' => false),
@@ -128,24 +128,24 @@ class ConnectionModel extends ModelBase
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update connection'));
-        $process_arr['updated'] = System::getTimestamp();
+            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update connection'));
+        $process_arr['updated'] = \System::getTimestamp();
 
 
-        if (isset($process_arr['username'])) $process_arr['username'] = Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
-        if (isset($process_arr['password'])) $process_arr['password'] = Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
-        if (isset($process_arr['token'])) $process_arr['token'] = Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
-        if (isset($process_arr['refresh_token'])) $process_arr['refresh_token'] = Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+        if (isset($process_arr['username'])) $process_arr['username'] = \Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
+        if (isset($process_arr['password'])) $process_arr['password'] = \Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
+        if (isset($process_arr['token'])) $process_arr['token'] = \Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
+        if (isset($process_arr['refresh_token'])) $process_arr['refresh_token'] = \Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
 
         // if the connection_status parameter is set, make sure the status is set
         // to a valid value
         if (isset($process_arr['connection_status']))
         {
             $status = $process_arr['connection_status'];
-            if ($status != Model::CONNECTION_STATUS_INVALID && $status != Model::CONNECTION_STATUS_UNAVAILABLE &&
-                $status != Model::CONNECTION_STATUS_AVAILABLE && $status != Model::CONNECTION_STATUS_ERROR)
+            if ($status != \Model::CONNECTION_STATUS_INVALID && $status != \Model::CONNECTION_STATUS_UNAVAILABLE &&
+                $status != \Model::CONNECTION_STATUS_AVAILABLE && $status != \Model::CONNECTION_STATUS_ERROR)
             {
-                $process_arr['connection_status'] = Model::CONNECTION_STATUS_UNAVAILABLE;  // default status
+                $process_arr['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;  // default status
             }
         }
 
@@ -211,10 +211,10 @@ class ConnectionModel extends ModelBase
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row['username'] = Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
-        $row['password'] = Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
-        $row['token'] = Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
-        $row['refresh_token'] = Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+        $row['username'] = \Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
+        $row['password'] = \Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
+        $row['token'] = \Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
+        $row['refresh_token'] = \Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
 
 
         return array('eid'               => $row['eid'],
@@ -234,7 +234,7 @@ class ConnectionModel extends ModelBase
                      'connection_type'   => $row['connection_type'],
                      'connection_status' => $row['connection_status'],
                      'eid_status'        => $row['eid_status'],
-                     'created'           => Util::formatDate($row['created']),
-                     'updated'           => Util::formatDate($row['updated']));
+                     'created'           => \Util::formatDate($row['created']),
+                     'updated'           => \Util::formatDate($row['updated']));
     }
 }

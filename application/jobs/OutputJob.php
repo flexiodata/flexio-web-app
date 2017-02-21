@@ -137,7 +137,7 @@ class OutputJob extends Base
 
             // does the item's path contain a url?
             if (substr($path,0,7) == 'http://' || substr($path,0,8) == 'https://')
-                return array('connection_type' => Model::CONNECTION_TYPE_HTTP);
+                return array('connection_type' => \Model::CONNECTION_TYPE_HTTP);
         }
 
         if (isset($params['connection']))
@@ -237,26 +237,26 @@ class OutputJob extends Base
         // route the request based on the connection type
         switch ($connection_type)
         {
-            case Model::CONNECTION_TYPE_DOWNLOAD:
+            case \Model::CONNECTION_TYPE_DOWNLOAD:
                 return $this->runDownloadExport($instream, $service, $output_info);
 
-            case Model::CONNECTION_TYPE_MYSQL:
-            case Model::CONNECTION_TYPE_POSTGRES:
+            case \Model::CONNECTION_TYPE_MYSQL:
+            case \Model::CONNECTION_TYPE_POSTGRES:
                 $output_info['name'] = str_replace('/','_', $output_info['name']);
                 return $this->runDatabaseExport($instream, $service, $output_info);
 
-            case Model::CONNECTION_TYPE_FTP:
-            case Model::CONNECTION_TYPE_SFTP:
-            case Model::CONNECTION_TYPE_DROPBOX:
-            case Model::CONNECTION_TYPE_GOOGLEDRIVE:
-            case Model::CONNECTION_TYPE_AMAZONS3:
+            case \Model::CONNECTION_TYPE_FTP:
+            case \Model::CONNECTION_TYPE_SFTP:
+            case \Model::CONNECTION_TYPE_DROPBOX:
+            case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
+            case \Model::CONNECTION_TYPE_AMAZONS3:
                 return $this->runRemoteFileExport($instream, $service, $output_info);
 
-            case Model::CONNECTION_TYPE_GOOGLESHEETS:
+            case \Model::CONNECTION_TYPE_GOOGLESHEETS:
                 $output_info['name'] = str_replace('/','_', $output_info['name']);
                 return $this->runGoogleSheetsExport($instream, $service, $output_info);
 
-            case Model::CONNECTION_TYPE_MAILJET:
+            case \Model::CONNECTION_TYPE_MAILJET:
                 $output_info['name'] = str_replace('/','_', $output_info['name']);
                 return $this->runMailJetExport($instream, $service, $output_info);
         }
@@ -382,7 +382,7 @@ class OutputJob extends Base
         {
             // we're exporting a table, which is saved as a csv
             $extension_to_add = 'csv';
-            $filename = Util::getFilename($filename);
+            $filename = \Util::getFilename($filename);
             $filename = "$filename.$extension_to_add";
             $mime_type = ContentType::MIME_TYPE_CSV;
         }

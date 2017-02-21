@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class SearchApi
 {
     public static function search($params, $request)
@@ -28,10 +31,10 @@ class SearchApi
         // TODO: right now; pipes aren't public; so if we're looking for pipes other
         // than those owned by the requesting user, return an empty array
 
-        $search_path = "$requesting_user_eid->(".Model::EDGE_OWNS.",".Model::EDGE_FOLLOWING.")->("
-                                                .Model::TYPE_PROJECT.")->(".Model::EDGE_HAS_MEMBER.")->("
-                                                .Model::TYPE_PIPE.")";
-        $pipes = System::getModel()->search($search_path);
+        $search_path = "$requesting_user_eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->("
+                                                .\Model::TYPE_PROJECT.")->(".\Model::EDGE_HAS_MEMBER.")->("
+                                                .\Model::TYPE_PIPE.")";
+        $pipes = \System::getModel()->search($search_path);
 
         $res = array();
         foreach ($pipes as $p)
@@ -43,7 +46,7 @@ class SearchApi
             if ($pipe === false)
                 continue;
 
-            if ($pipe->getStatus() !== Model::STATUS_AVAILABLE)
+            if ($pipe->getStatus() !== \Model::STATUS_AVAILABLE)
                 continue;
 
             // check the rights on the pipe

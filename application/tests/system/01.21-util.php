@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -24,7 +27,7 @@ class Test
         $tmpfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'fxtestsuite_' . md5(microtime()) . '.tmp';
 
         // run a line of code that puts some data into a temporary file with a random name
-        Util::runInBackground("file_put_contents('$tmpfile', '$tmpfile');", false /* we want it to run in the background */);
+        \Util::runInBackground("file_put_contents('$tmpfile', '$tmpfile');", false /* we want it to run in the background */);
 
         // sleep 3 seconds while the job runs
         sleep(3);

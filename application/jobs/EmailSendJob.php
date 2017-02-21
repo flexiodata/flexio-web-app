@@ -92,7 +92,7 @@ class EmailSendJob extends Base
             // everything else; equivalent for now to nothing
         }
 
-        $email = Email::create($email_params);
+        $email = \Email::create($email_params);
         $res = $email->send();
 
         // delete the temporary attachments
@@ -117,18 +117,18 @@ class EmailSendJob extends Base
             if ($mime_type === ContentType::MIME_TYPE_FLEXIO_TABLE)
             {
                 $extension_to_add = 'csv';
-                $filename = Util::getFilename($name);
+                $filename = \Util::getFilename($name);
                 $name = "$filename.$extension_to_add";
 
-                $mime_type = ContentType::MIME_TYPE_CSV;
-                $attachment_file = Util::getTempFilename($extension_to_add);
+                $mime_type = \ContentType::MIME_TYPE_CSV;
+                $attachment_file = \Util::getTempFilename($extension_to_add);
                 if (!$this->saveDataToCsv($instream, $attachment_file, -1, 20000000))
                     continue; // TODO: fail?
             }
              else
             {
-                $extension = Util::getFileExtension($name);
-                $attachment_file = Util::getTempFilename($extension);
+                $extension = \Util::getFileExtension($name);
+                $attachment_file = \Util::getTempFilename($extension);
                 if (!$this->saveDataToFile($instream, $attachment_file))
                     continue; // TODO: fail?
             }

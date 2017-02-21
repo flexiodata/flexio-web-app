@@ -515,16 +515,16 @@ class ValidatorSchema
         switch ($schema->format)
         {
             // general formats
-            case 'date-time': $result = Util::isValidDateTime($data); break;
-            case 'email':     $result = Util::isValidEmail($data);    break;
-            case 'hostname':  $result = Util::isValidHostName($data); break;
-            case 'ipv4':      $result = Util::isValidIPV4($data);     break;
-            case 'ipv6':      $result = Util::isValidIPV6($data);     break;
-            case 'uri':       $result = Util::isValidUrl($data);      break; // TODO: expand to uri?
+            case 'date-time': $result = \Util::isValidDateTime($data); break;
+            case 'email':     $result = \Util::isValidEmail($data);    break;
+            case 'hostname':  $result = \Util::isValidHostName($data); break;
+            case 'ipv4':      $result = \Util::isValidIPV4($data);     break;
+            case 'ipv6':      $result = \Util::isValidIPV6($data);     break;
+            case 'uri':       $result = \Util::isValidUrl($data);      break; // TODO: expand to uri?
 
             // custom formats
-            case 'fx.eid':        $result = Eid::isValid($data);                      break;
-            case 'fx.identifier': $result = Identifier::isValid($data);               break;
+            case 'fx.eid':        $result = \Eid::isValid($data);                      break;
+            case 'fx.identifier': $result = \Identifier::isValid($data);               break;
             case 'fx.fieldname':  $result = PostgresService::isValidFieldName($data); break;
         }
 

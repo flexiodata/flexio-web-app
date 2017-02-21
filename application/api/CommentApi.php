@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class CommentApi
 {
     public static function create($params, $request)

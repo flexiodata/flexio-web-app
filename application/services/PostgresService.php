@@ -47,7 +47,7 @@ class PostgresService implements IConnection
         if (isset($params['port']))
             $params['port'] = (string)$params['port'];
 /*
-        $validator = Validator::getInstance();
+        $validator = \Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true),
@@ -864,7 +864,7 @@ class PostgresService implements IConnection
 
     private static function addToQueryLog($str)
     {
-        System::getModel()->getDatabase()->addToQueryLog($str);
+        \System::getModel()->getDatabase()->addToQueryLog($str);
     }
 }
 
@@ -971,7 +971,7 @@ class PostgresIterator
 
     private static function addToQueryLog($str)
     {
-        System::getModel()->getDatabase()->addToQueryLog($str);
+        \System::getModel()->getDatabase()->addToQueryLog($str);
     }
 }
 
@@ -1131,7 +1131,7 @@ class PostgresInserter
 
     private static function addToQueryLog($str)
     {
-        System::getModel()->getDatabase()->addToQueryLog($str);
+        \System::getModel()->getDatabase()->addToQueryLog($str);
     }
 }
 

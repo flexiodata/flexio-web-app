@@ -50,7 +50,7 @@ class SftpService implements IConnection
     public function connect($params)
     {
         $this->close();
-        if (($params = Validator::getInstance()->check($params, array(
+        if (($params = \Validator::getInstance()->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)

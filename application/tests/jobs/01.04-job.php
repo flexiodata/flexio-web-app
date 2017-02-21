@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -28,7 +31,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create(["task" => $task])->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.1', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -45,7 +48,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create(["task" => $task])->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.2', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -59,7 +62,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create(["task" => $task])->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_COMPLETED;
+        $expected = \Model::PROCESS_STATUS_COMPLETED;
         TestCheck::assertString('A.3', 'Basic Process; make sure the task status is properly set when a process succeeds',  $actual, $expected, $results);
     }
 }

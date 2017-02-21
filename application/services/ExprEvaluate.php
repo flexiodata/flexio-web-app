@@ -1008,7 +1008,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                 $retval = false;
 
             case 'email':
-                $retval = Util::isValidEmail($param0);
+                $retval = \Util::isValidEmail($param0);
                 break;
 
             case 'english':
@@ -1019,7 +1019,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                 break;
 
             case 'url':
-                $retval = Util::isValidUrl($param0);
+                $retval = \Util::isValidUrl($param0);
                 break;
         }
 

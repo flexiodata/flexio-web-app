@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -21,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = RssService::create(null);
+        $service = \RssService::create(null);
         $actual = get_class($service) === 'RssService';
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'RssService::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\RssService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

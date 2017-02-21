@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -19,13 +22,13 @@ class Test
         // TEST: test for type and length
 
         // BEGIN TEST
-        $str = Util::generateHandle();
+        $str = \Util::generateHandle();
         $actual = is_string($str);
         $expected = true;
         TestCheck::assertBoolean('A.1', 'Util::generateHandle() test for string return type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::generateHandle();
+        $str = \Util::generateHandle();
         $actual = strlen($str) === 20;
         $expected = true;
         TestCheck::assertBoolean('A.2', 'Util::generateHandle() test for length',  $actual, $expected, $results);
@@ -38,7 +41,7 @@ class Test
         $random_str = array();
         for ($i = 0; $i < 1000; $i++)
         {
-            $str = Util::generateHandle();
+            $str = \Util::generateHandle();
             $random_str[$str] = 1;
         }
         $random_str_count = count($random_str);

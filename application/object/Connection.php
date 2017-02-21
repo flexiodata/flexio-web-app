@@ -99,7 +99,7 @@ class Connection extends \Flexio\Object\Base
 
     public function authenticate($params)
     {
-        // TODO: this was moved from ConnectionApi::authenticate() which functioned
+        // TODO: this was moved from \Flexio\Api\ConnectionApi::authenticate() which functioned
         // somewhat like a static method so that everything was passed to the function;
         // now that this has been moved to the object, is there anyway to save some of
         // these in the object so we can make successive calls without sending everything?
@@ -314,20 +314,19 @@ class Connection extends \Flexio\Object\Base
 
     private static function createDatastoreConnection()
     {
-        // create a default connection for this project
-        global $g_config;
+        $dbconfig = \Model::getDatabaseConfig();
 
         // if we don't have a datastore configuration, we can't create a default connection;
         // TODO: we'll want to add some ability to pull from a pool of available datastore
         // so we can have multiple servers; but right now, we just have one
-        if (!isset($g_config->datastore_dbname) || strlen($g_config->datastore_dbname) === 0)
+        if (!isset($dbconfig['datastore_dbname']) || strlen($dbconfig['datastore_dbname']) === 0)
             return false;
 
-        $params = array('host'            => $g_config->datastore_host,
-                        'port'            => $g_config->datastore_port,
-                        'username'        => $g_config->datastore_username,
-                        'password'        => $g_config->datastore_password,
-                        'database'        => $g_config->datastore_dbname,
+        $params = array('host'            => $dbconfig['datastore_host'],
+                        'port'            => $dbconfig['datastore_port'],
+                        'database'        => $dbconfig['datastore_dbname'],
+                        'username'        => $dbconfig['datastore_username'],
+                        'password'        => $dbconfig['datastore_password'],
                         'connection_type' => \Model::CONNECTION_TYPE_POSTGRES
                         );
 
@@ -341,8 +340,6 @@ class Connection extends \Flexio\Object\Base
     private static function createDatastore($host, $port, $database, $username, $password)
     {
         // note: this function isn't used right now, but is here for reference
-
-        global $g_config;
 
         $params = array();
         $params['host'] = $host;

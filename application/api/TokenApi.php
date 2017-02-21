@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class TokenApi
 {
     public static function create($params, $request)
@@ -119,7 +122,7 @@ class TokenApi
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        $token_items = System::getModel()->token->getInfoFromUserEid($user->getEid());
+        $token_items = \System::getModel()->token->getInfoFromUserEid($user->getEid());
         if ($token_items === false)
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
@@ -129,7 +132,7 @@ class TokenApi
             // only show tokens that are available; note: token list will return
             // all tokens, including ones that have been deleted, so this check
             // is important
-            if (!$item || $item['eid_status'] != Model::STATUS_AVAILABLE)
+            if (!$item || $item['eid_status'] != \Model::STATUS_AVAILABLE)
                 continue;
 
             // double-check to make sure we're not returning the secret code

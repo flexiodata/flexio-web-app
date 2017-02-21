@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -20,7 +23,7 @@ class Test
 
         // BEGIN TEST
         $data = null;
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -28,11 +31,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.1', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = false;
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -40,11 +43,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.2', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.2', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = true;
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -52,11 +55,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.3', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.3', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = -1;
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -64,11 +67,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.4', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.4', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = -0.1;
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -76,11 +79,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.5', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.5', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 0;
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -88,11 +91,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.6', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.6', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 0.1;
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -100,11 +103,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.7', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.7', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 1;
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -112,11 +115,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.8', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.8', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '';
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -124,11 +127,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.9', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.9', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 'a';
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -136,11 +139,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.10', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.10', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 'A';
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -148,11 +151,11 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.11', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.11', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 'aB';
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
@@ -160,28 +163,28 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.12', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.12', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
 
         // BEGIN TEST
         $data = '[]';
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
         ]
         ';
-        TestCheck::assertArray('A.13', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.13', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '{}';
-        $actual = Mapper::flatten($data);
+        $actual = \Mapper::flatten($data);
         $expected = '
         [
             {
             }
         ]
         ';
-        TestCheck::assertArray('A.14', 'Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        TestCheck::assertArray('A.14', '\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -192,7 +195,7 @@ class Test
         ]
         ';
         $schema = null;
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -200,7 +203,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.15', 'Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        TestCheck::assertArray('A.15', '\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
 
 
@@ -215,7 +218,7 @@ class Test
         ]
         ';
         $schema = null;
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -223,7 +226,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.1', 'Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        TestCheck::assertArray('B.1', '\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -234,9 +237,9 @@ class Test
         ]
         ';
         $schema = false;
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.2', 'Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -247,9 +250,9 @@ class Test
         ]
         ';
         $schema = 1;
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.3', 'Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', '\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -260,9 +263,9 @@ class Test
         ]
         ';
         $schema = 'a';
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.4', 'Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.4', '\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -273,9 +276,9 @@ class Test
         ]
         ';
         $schema = '[]';
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.5', 'Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.5', '\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -286,7 +289,7 @@ class Test
         ]
         ';
         $schema = '{}';
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -294,7 +297,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.6', 'Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        TestCheck::assertArray('B.6', '\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -305,9 +308,9 @@ class Test
         ]
         ';
         $schema = array();
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.7', 'Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.7', '\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -317,8 +320,8 @@ class Test
             }
         ]
         ';
-        $schema = new stdClass();
-        $actual = Mapper::flatten($data, $schema);
+        $schema = new \stdClass();
+        $actual = \Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -326,6 +329,6 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.8', 'Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        TestCheck::assertArray('B.8', '\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
     }
 }

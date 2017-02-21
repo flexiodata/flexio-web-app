@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -22,20 +25,20 @@ class Test
         // TEST: email creation
 
         // BEGIN TEST
-        $email = Email::create();
+        $email = \Email::create();
         $actual = get_class($email);
         $expected = 'Email';
-        TestCheck::assertString('A.1', 'Email::create(); basic test', $actual, $expected, $results);  
+        TestCheck::assertString('A.1', '\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = Email::create(false);
+        $email = \Email::create(false);
         $actual = get_class($email);
         $expected = 'Email';
-        TestCheck::assertString('A.2', 'Email::create(); basic test', $actual, $expected, $results);  
+        TestCheck::assertString('A.2', '\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = Email::create(array(
-            'to' => "user@flex.io",            
+        $email = \Email::create(array(
+            'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
             'msg_text' => "Please join my project",
@@ -43,11 +46,11 @@ class Test
         ));
         $actual = $email->getTo();
         $expected = '["user@flex.io"]';
-        TestCheck::assertArray('A.3', 'Email::create(); basic test', $actual, $expected, $results);  
+        TestCheck::assertArray('A.3', '\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = Email::create(array(
-            'to' => "user@flex.io",            
+        $email = \Email::create(array(
+            'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
             'msg_text' => "Please join my project",
@@ -55,11 +58,11 @@ class Test
         ));
         $actual = $email->getFrom();
         $expected = '["User via Flex.io <no-reply@flex.io>"]';
-        TestCheck::assertArray('A.4', 'Email::create(); basic test', $actual, $expected, $results);        
+        TestCheck::assertArray('A.4', '\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = Email::create(array(
-            'to' => "user@flex.io",            
+        $email = \Email::create(array(
+            'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
             'msg_text' => "Please join my project",
@@ -67,11 +70,11 @@ class Test
         ));
         $actual = $email->getSubject();
         $expected = 'A user wants to share something with you';
-        TestCheck::assertString('A.5', 'Email::create(); basic test', $actual, $expected, $results);  
+        TestCheck::assertString('A.5', '\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = Email::create(array(
-            'to' => "user@flex.io",            
+        $email = \Email::create(array(
+            'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
             'msg_text' => "Please join my project",
@@ -79,11 +82,11 @@ class Test
         ));
         $actual = $email->getMessageText();
         $expected = 'Please join my project';
-        TestCheck::assertString('A.6', 'Email::create(); basic test', $actual, $expected, $results);  
+        TestCheck::assertString('A.6', '\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = Email::create(array(
-            'to' => "user@flex.io",            
+        $email = \Email::create(array(
+            'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
             'msg_text' => "Please join my project",
@@ -91,6 +94,6 @@ class Test
         ));
         $actual = $email->getMessageHtml();
         $expected = '<br>Please join my project<br>';
-        TestCheck::assertString('A.7', 'Email::create(); basic test', $actual, $expected, $results);   
+        TestCheck::assertString('A.7', '\Email::create(); basic test', $actual, $expected, $results);
     }
 }

@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -23,7 +26,7 @@ class Test
 
         // BEGIN TEST
         $schema = \Flexio\Object\Scheduler::SCHEMA;
-        $actual = ValidatorSchema::checkSchema($schema)->hasErrors();
+        $actual = \ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
         TestCheck::assertBoolean('A.1', 'Verify Scheduler schema format',  $actual, $expected, $results);
 
@@ -43,7 +46,7 @@ class Test
     ]
 }
 EOD;
-        $actual = ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
+        $actual = \ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
         $expected = true;
         TestCheck::assertBoolean('B.1', 'Scheduler: invalid schedule formats should fail validation',  $actual, $expected, $results);
 
@@ -59,7 +62,7 @@ EOD;
     ]
 }
 EOD;
-        $actual = ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
+        $actual = \ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
         $expected = true;
         TestCheck::assertBoolean('B.2', 'Scheduler: invalid schedule formats should fail validation',  $actual, $expected, $results);
 
@@ -79,7 +82,7 @@ EOD;
     ]
 }
 EOD;
-        $actual = ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
+        $actual = \ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
         $expected = true;
         TestCheck::assertBoolean('B.3', 'Scheduler: invalid schedule formats should fail validation',  $actual, $expected, $results);
 
@@ -95,7 +98,7 @@ EOD;
     ]
 }
 EOD;
-        $actual = ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
+        $actual = \ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
         $expected = false;
         TestCheck::assertBoolean('B.4', 'Scheduler: valid schedule formats should pass validation',  $actual, $expected, $results);
 
@@ -120,7 +123,7 @@ EOD;
     ]
 }
 EOD;
-        $actual = ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
+        $actual = \ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
         $expected = false;
         TestCheck::assertBoolean('B.5', 'Scheduler: valid schedule formats should pass validation',  $actual, $expected, $results);
     }

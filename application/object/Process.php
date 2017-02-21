@@ -144,7 +144,7 @@ class Process extends \Flexio\Object\Base
     public static function run_internal($eid)
     {
         // this is a non-blocking internal static run function called that's
-        // run in the background by Process::run($background) when $background
+        // run in the background by \Flexio\Objects\Process::run($background) when $background
         // is set to true
 
         // load the process and run in non-blocking mode
@@ -278,7 +278,7 @@ class Process extends \Flexio\Object\Base
 
         // add on the new input
         $input_params = json_encode($params);
-        \System::getModel()->process->set($this->getEid(), array('input_params' => $input_params));
+        $this->getModel()->process->set($this->getEid(), array('input_params' => $input_params));
 
         return $this;
     }
@@ -286,7 +286,7 @@ class Process extends \Flexio\Object\Base
     public function getParams()
     {
         // get whatever is in the input_params of the initial process step
-        $process_properties = \System::getModel()->process->get($this->getEid());
+        $process_properties = $this->getModel()->process->get($this->getEid());
         $input_params = $process_properties['input_params'];
         $input = @json_decode($input_params, true);
         return $input;
@@ -333,14 +333,14 @@ class Process extends \Flexio\Object\Base
             return $this;
 
         // get the current input
-        $process_properties = \System::getModel()->process->get($this->getEid());
+        $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
         $input_collection = self::unstringifyCollectionEids($input);
 
         // add on the new input
         $input_collection->push($stream);
         $input_updated = self::stringifyCollectionEids($input_collection);
-        \System::getModel()->process->set($this->getEid(), array('input' => $input_updated));
+        $this->getModel()->process->set($this->getEid(), array('input' => $input_updated));
 
         return $this;
     }
@@ -348,7 +348,7 @@ class Process extends \Flexio\Object\Base
     public function getInput()
     {
         // get whatever is in the input of the initial process step
-        $process_properties = \System::getModel()->process->get($this->getEid());
+        $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
         $input_collection = self::unstringifyCollectionEids($input);
 
@@ -663,7 +663,7 @@ class Process extends \Flexio\Object\Base
 
         // STEP 2: set any initial input in the input record; these may be set
         // by an experimental api endpoint
-        $current_process_properties = \System::getModel()->process->get($this->getEid());
+        $current_process_properties = $this->getModel()->process->get($this->getEid());
         $current_input = $current_process_properties['input'];
         $current_input_collection = self::unstringifyCollectionEids($current_input);
         $input->set($current_input_collection);

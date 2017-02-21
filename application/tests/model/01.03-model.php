@@ -12,17 +12,25 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: Model database connection
 
         // BEGIN TEST
-        $db = System::getModel()->getDatabase();
+        $db = $model->getDatabase();
         $actual = is_object($db);
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model::getDatabase(); basic connection with default credentials',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::getDatabase(); basic connection with default credentials',  $actual, $expected, $results);
 
 
 
@@ -36,7 +44,7 @@ class Test
         $actual = true;
         for ($i = 0; $i < 10000; $i++)
         {
-            $db = System::getModel()->getDatabase();
+            $db = $model->getDatabase();
             if (!$db)
             {
                 $actual = false;
@@ -44,6 +52,6 @@ class Test
             }
         }
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'Model::getDatabase(); connection caching',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Model::getDatabase(); connection caching',  $actual, $expected, $results);
     }
 }

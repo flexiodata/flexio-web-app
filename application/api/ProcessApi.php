@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class ProcessApi
 {
     public static function create($params, $request)
@@ -317,7 +320,11 @@ class ProcessApi
         //     return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
         $stream = \Flexio\Object\Stream::create();
-        $stream->writePostContent();
+
+
+        StreamApi::handleStreamUpload($params, $stream);
+
+
         return $process->addInput($stream)->get();
     }
 
@@ -450,7 +457,7 @@ class ProcessApi
         if ($user->isAdministrator() !== true)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        return System::getModel()->process->getProcessStatistics();
+        return \System::getModel()->process->getProcessStatistics();
     }
 
     private static function waitforchangewhilerunning($eid, $time_to_wait_for_change)
@@ -484,9 +491,9 @@ class ProcessApi
 
         // if the job is cancelled, failed, or completed, then it's in
         // the final state, so there's nothing to wait for
-        if ($status_initial === Model::PROCESS_STATUS_CANCELLED ||
-            $status_initial === Model::PROCESS_STATUS_FAILED ||
-            $status_initial === Model::PROCESS_STATUS_COMPLETED)
+        if ($status_initial === \Model::PROCESS_STATUS_CANCELLED ||
+            $status_initial === \Model::PROCESS_STATUS_FAILED ||
+            $status_initial === \Model::PROCESS_STATUS_COMPLETED)
             return;
 
         $time_waited = 0;
@@ -522,12 +529,12 @@ class ProcessApi
         {
             // use json if the format is something that isn't allowed
             default:
-                $mime_type = ContentType::MIME_TYPE_JSON;
+                $mime_type = \ContentType::MIME_TYPE_JSON;
                 break;
 
             // allowed formats
-            case ContentType::MIME_TYPE_TXT:
-            case ContentType::MIME_TYPE_JSON:
+            case \ContentType::MIME_TYPE_TXT:
+            case \ContentType::MIME_TYPE_JSON:
                 break;
         }
 
@@ -538,7 +545,7 @@ class ProcessApi
 
         header('Content-Type: ' . $mime_type);
 
-        if ($mime_type === ContentType::MIME_TYPE_JSON)
+        if ($mime_type === \ContentType::MIME_TYPE_JSON)
             echo('[');
 
         $first = true;
@@ -560,7 +567,7 @@ class ProcessApi
             $first = false;
         }
 
-        if ($mime_type === ContentType::MIME_TYPE_JSON)
+        if ($mime_type === \ContentType::MIME_TYPE_JSON)
             echo(']');
 
         exit(0);
@@ -580,7 +587,7 @@ class ProcessApi
         $include_content = false;
         if ($fields !== false)
         {
-            $stream_properties = Util::filterArray($stream_properties, $fields);
+            $stream_properties = \Util::filterArray($stream_properties, $fields);
 
             // see whether or not to include the content
             $include_content = array_search('content', $fields);
@@ -604,7 +611,7 @@ class ProcessApi
         $result = '';
         switch ($mime_type)
         {
-            case ContentType::MIME_TYPE_TXT:
+            case \ContentType::MIME_TYPE_TXT:
             {
                 if (count($stream_properties) > 0)
                     $result .= json_encode($stream_properties);
@@ -617,7 +624,7 @@ class ProcessApi
             }
             break;
 
-            case ContentType::MIME_TYPE_JSON:
+            case \ContentType::MIME_TYPE_JSON:
             {
                 if ($include_content === true)
                     $stream_properties['content'] = $content;

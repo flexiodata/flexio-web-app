@@ -128,7 +128,7 @@ class ContentType
     public static function getMimeTypeFromExtension($ext, $def_return = self::MIME_TYPE_STREAM)
     {
         if (strpos($ext, '.') !== false)
-            $ext = Util::getFileExtension($ext);
+            $ext = \Util::getFileExtension($ext);
 
         $ext = strtolower($ext);
 

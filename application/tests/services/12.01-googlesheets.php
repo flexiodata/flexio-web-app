@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -21,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = GoogleSheetsService::create(null);
+        $service = \GoogleSheetsService::create(null);
         $actual = get_class($service) === 'GoogleSheetsService';
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'GoogleSheetsService::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\GoogleSheetsService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

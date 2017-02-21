@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -19,9 +22,9 @@ class Test
         // TEST: platform check tests; see if we're on a standard platform
 
         // BEGIN TEST
-        $is_windows = Util::isPlatformWindows();
-        $is_mac = Util::isPlatformMac();
-        $is_linux = Util::isPlatformLinux();
+        $is_windows = \Util::isPlatformWindows();
+        $is_mac = \Util::isPlatformMac();
+        $is_linux = \Util::isPlatformLinux();
         $platform_check = $is_windows || $is_mac || $is_linux;
         $actual = $platform_check;
         $expected = true;

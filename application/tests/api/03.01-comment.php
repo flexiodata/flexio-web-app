@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -30,15 +33,15 @@ class Test
             "comment": "Test comment"
         }
         ',true);
-        $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
-        $actual = CommentApi::create($params, $request);
+        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $actual = \Flexio\Api\CommentApi::create($params, $request);
 
         $expected = '
         {
-            "eid_type": "'.Model::TYPE_COMMENT.'",
+            "eid_type": "'.\Model::TYPE_COMMENT.'",
             "comment": "Test comment"
         }
         ';
-        TestCheck::assertInArray('A.1', 'CommentApi::create(); return the object',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', '\Flexio\Api\CommentApi::create(); return the object',  $actual, $expected, $results);
     }
 }

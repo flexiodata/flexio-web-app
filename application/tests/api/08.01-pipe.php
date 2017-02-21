@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -27,15 +30,15 @@ class Test
             "description": "Test pipe"
         }
         ',true);
-        $request = Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
-        $actual= PipeApi::create($params, $request);
+        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $actual = \Flexio\Api\PipeApi::create($params, $request);
         $expected = '
         {
-            "eid_type": "'.Model::TYPE_PIPE.'",
+            "eid_type": "'.\Model::TYPE_PIPE.'",
             "name": "Pipe",
             "description": "Test pipe"
         }
         ';
-        TestCheck::assertInArray('A.1', 'PipeApi::create(); return the object',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', '\Flexio\Api\PipeApi::create(); return the object',  $actual, $expected, $results);
     }
 }

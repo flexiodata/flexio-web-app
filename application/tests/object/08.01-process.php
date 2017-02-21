@@ -12,10 +12,18 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: object creation
 
         // BEGIN TEST
@@ -27,12 +35,12 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
         $actual = $object->getType();
-        $expected = Model::TYPE_PROCESS;
+        $expected = \Model::TYPE_PROCESS;
         TestCheck::assertString('A.2', 'Process::create(); make sure the correct type is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $actual = Eid::isValid($object->getEid());
+        $actual = \Eid::isValid($object->getEid());
         $expected = true;
         TestCheck::assertBoolean('A.4', 'Process::create(); make sure a valid eid is set when an object is created',  $actual, $expected, $results);
 
@@ -47,28 +55,28 @@ class Test
         TestCheck::assertBoolean('B.1', 'Process::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_OBJECT, null);
+        $eid = $model->create(\Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\Process::load($eid);
         $actual = $object;
         $expected = false;
         TestCheck::assertBoolean('B.2', 'Process::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_PROCESS, null);
+        $eid = $model->create(\Model::TYPE_PROCESS, null);
         $object = \Flexio\Object\Process::load($eid);
         $actual = 'Flexio\\Object\\Process';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Process::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_PROCESS, null);
+        $eid = $model->create(\Model::TYPE_PROCESS, null);
         $object = \Flexio\Object\Process::load($eid);
         $actual = $object->getType();
-        $expected = Model::TYPE_PROCESS;
+        $expected = \Model::TYPE_PROCESS;
         TestCheck::assertString('B.4', 'Process::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_PROCESS, null);
+        $eid = $model->create(\Model::TYPE_PROCESS, null);
         $object = \Flexio\Object\Process::load($eid);
         $actual = $eid;
         $expected = $object->getEid();
@@ -89,7 +97,7 @@ class Test
         $object = \Flexio\Object\Process::create();
         $eid1 = $object->getEid();
         $eid2 = $object->delete()->getEid();
-        $actual =  Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('C.2', 'Process::delete(); deleting an object shouldn\'t change its eid',  $actual, $expected, $results);
 
@@ -97,14 +105,14 @@ class Test
         $object = \Flexio\Object\Process::create();
         $object = $object->delete();
         $actual =  $object->getType();
-        $expected = Model::TYPE_PROCESS;
+        $expected = \Model::TYPE_PROCESS;
         TestCheck::assertString('C.3', 'Process::delete(); deleting an object shouldn\'t change its type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
         $status1 = $object->getStatus();
         $status2 = $object->delete()->getStatus();
-        $actual =  ($status1 !== Model::STATUS_DELETED && $status2 === Model::STATUS_DELETED);
+        $actual =  ($status1 !== \Model::STATUS_DELETED && $status2 === \Model::STATUS_DELETED);
         $expected = true;
         TestCheck::assertBoolean('C.4', 'Process::delete(); make sure the status is set to deleted',  $actual, $expected, $results);
 
@@ -123,7 +131,7 @@ class Test
         $object = \Flexio\Object\Process::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(null)->getEid();
-        $actual =  Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.2', 'Process::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -131,7 +139,7 @@ class Test
         $object = \Flexio\Object\Process::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(array('eid'=>'xxxxxxxxxxxx'))->getEid();
-        $actual =  Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.3', 'Process::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -139,14 +147,14 @@ class Test
         $object = \Flexio\Object\Process::create();
         $object = $object->set(null);
         $actual =  $object->getType();
-        $expected = Model::TYPE_PROCESS;
+        $expected = \Model::TYPE_PROCESS;
         TestCheck::assertString('D.4', 'Process::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $object = $object->set(array('eid_type'=>Model::TYPE_OBJECT));
+        $object = $object->set(array('eid_type'=>\Model::TYPE_OBJECT));
         $actual =  $object->getType();
-        $expected = Model::TYPE_PROCESS;
+        $expected = \Model::TYPE_PROCESS;
         TestCheck::assertString('D.5', 'Process::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
 
 
@@ -166,7 +174,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $object = $object->setStatus(Model::STATUS_TRASH);
+        $object = $object->setStatus(\Model::STATUS_TRASH);
         $actual =  'Flexio\\Object\\Process';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Process::setStatus(); return the object',  $actual, $expected, $results);
@@ -174,31 +182,31 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
         $eid1 = $object->getEid();
-        $eid2 = $object->setStatus(Model::STATUS_TRASH)->getEid();
-        $actual =  Eid::isValid($eid1) && $eid1 === $eid2;
+        $eid2 = $object->setStatus(\Model::STATUS_TRASH)->getEid();
+        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('F.2', 'Process::setStatus(); setting status of an object shouldn\'t change its eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $object = $object->setStatus(Model::STATUS_TRASH);
+        $object = $object->setStatus(\Model::STATUS_TRASH);
         $actual =  $object->getType();
-        $expected = Model::TYPE_PROCESS;
+        $expected = \Model::TYPE_PROCESS;
         TestCheck::assertString('F.3', 'Process::setStatus(); setting status of an object shouldn\'t change its type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $status1 = $object->setStatus(Model::STATUS_TRASH)->getStatus();
+        $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
         $status2 = $object->setStatus('.')->getStatus();
-        $actual =  ($status1 === Model::STATUS_TRASH && $status2 === Model::STATUS_TRASH);
+        $actual =  ($status1 === \Model::STATUS_TRASH && $status2 === \Model::STATUS_TRASH);
         $expected = true;
         TestCheck::assertBoolean('F.4', 'Process::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $status1 = $object->setStatus(Model::STATUS_PENDING)->getStatus();
-        $status2 = $object->setStatus(Model::STATUS_TRASH)->getStatus();
-        $actual =  ($status1 === Model::STATUS_PENDING && $status2 === Model::STATUS_TRASH);
+        $status1 = $object->setStatus(\Model::STATUS_PENDING)->getStatus();
+        $status2 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
+        $actual =  ($status1 === \Model::STATUS_PENDING && $status2 === \Model::STATUS_TRASH);
         $expected = true;
         TestCheck::assertBoolean('F.5', 'Process::setStatus(); make sure the status is set',  $actual, $expected, $results);
     }

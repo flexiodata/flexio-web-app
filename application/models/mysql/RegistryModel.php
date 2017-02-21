@@ -332,7 +332,7 @@ class RegistryModel extends ModelBase
                 return null;
 
             // return the variable
-            if ($result['value_type'] == Model::REGISTRY_VALUE_BINARY)
+            if ($result['value_type'] == \Model::REGISTRY_VALUE_BINARY)
                 return base64_decode($result['value']);
                  else
                 return $result['value'];

@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -99,7 +102,7 @@ class Test
             array("name" => "f", "type" => "character")
         );
         $retval = null;
-        ExprEvaluate::evaluate($expr, $row, $structure, $retval);
+        \ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = null;
         TestCheck::assertNull('D.1', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
@@ -111,7 +114,7 @@ class Test
             array("name" => "f", "type" => "character")
         );
         $retval = null;
-        ExprEvaluate::evaluate($expr, $row, $structure, $retval);
+        \ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = null;
         TestCheck::assertNull('D.2', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);

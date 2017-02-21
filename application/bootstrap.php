@@ -242,9 +242,7 @@ function setupIncludeDirectories()
 {
     global $g_config, $g_store;
     $base = $g_store->dir_home . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR;
-    set_include_path($base . 'api'         . PATH_SEPARATOR
-                   . $base . 'controllers' . PATH_SEPARATOR
-                   . $base . 'jobs'        . PATH_SEPARATOR
+    set_include_path($base . 'jobs'        . PATH_SEPARATOR
                    . $base . 'services'    . PATH_SEPARATOR
                    . $base . 'system'      . PATH_SEPARATOR
                    . $base . 'tests'       . PATH_SEPARATOR
@@ -318,7 +316,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
 
     function open($path, $name)
     {
-        $this->registry_model = System::getModel()->registry;
+        $this->registry_model = \System::getModel()->registry;
         return true;
     }
 
@@ -452,9 +450,9 @@ class Flexio
 
 /*
         // check idle
-        if (!Flexio::checkIdle())
+        if (!\self::checkIdle())
         {
-            System::clearLoginIdentity();
+            \System::clearLoginIdentity();
             @session_destroy();
 
             if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')
@@ -491,7 +489,9 @@ class Flexio
             exit();
         }
 
-        $framework = Framework::getInstance();
+        $framework = \Framework::getInstance();
+        $framework->setControllerPrefix("\\Flexio\\Controllers\\");
+        $framework->setControllerSuffix('Controller');
         $framework->registerPlugin(new FlexioPlugin);
         $framework->dispatch();
     }
@@ -542,12 +542,12 @@ class Flexio
 
     public static function getInstance()
     {
-        if (null === Flexio::$_instance)
+        if (null === self::$_instance)
         {
-            Flexio::$_instance = new self();
-            Flexio::$_instance->_initialize();
+            self::$_instance = new self();
+            self::$_instance->_initialize();
         }
 
-        return Flexio::$_instance;
+        return self::$_instance;
     }
 }

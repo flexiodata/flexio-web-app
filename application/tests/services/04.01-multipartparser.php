@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 function getStreamFromFile($filename)
 {
     // loads a test file with multipart content
@@ -34,31 +37,31 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: MultipartParser::create()
+        // TEST: \MultipartParser::create()
 
         // BEGIN TEST
-        $parser = MultipartParser::create();
+        $parser = \MultipartParser::create();
         $actual = get_class($parser);
         $expected = 'MultipartParser';
-        TestCheck::assertString('A.1', 'MultipartParser::create(); empty input', $actual, $expected, $results);
+        TestCheck::assertString('A.1', '\MultipartParser::create(); empty input', $actual, $expected, $results);
 
 
-        // TEST: MultipartParser::parse()
+        // TEST: \MultipartParser::parse()
 
         // BEGIN TEST
-        $parser = MultipartParser::create();
+        $parser = \MultipartParser::create();
         $content = '';
         $parser->parse(false, '', function ($type, $name, $data, $filename, $content_type) use (&$content) {
             $content .= $data;
         });
         $actual = $content;
         $expected = '';
-        TestCheck::assertString('B.1', 'MultipartParser::create(); make sure parse function checks for valid resource', $actual, $expected, $results);
+        TestCheck::assertString('B.1', '\MultipartParser::create(); make sure parse function checks for valid resource', $actual, $expected, $results);
 
         // BEGIN TEST
         $test_info = getEmptyUpload();
         $stream = getStreamFromString(base64_decode($test_info['content_base64']));
-        $parser = MultipartParser::create();
+        $parser = \MultipartParser::create();
         $file_content = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$file_content) {
             $file_content .= $data;
@@ -70,7 +73,7 @@ class Test
         // BEGIN TEST
         $test_info = getSingleEmptyTextFileUpload();
         $stream = getStreamFromString(base64_decode($test_info['content_base64']));
-        $parser = MultipartParser::create();
+        $parser = \MultipartParser::create();
         $file_content = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$file_content) {
             $file_content .= $data;
@@ -82,7 +85,7 @@ class Test
         // BEGIN TEST
         $test_info = getSinglePopulatedTextFileUpload();
         $stream = getStreamFromString(base64_decode($test_info['content_base64']));
-        $parser = MultipartParser::create();
+        $parser = \MultipartParser::create();
         $file_content = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$file_content) {
             $file_content .= $data;
@@ -95,7 +98,7 @@ class Test
         // BEGIN TEST
         $test_info = getMultiplePopulatedTextFileUpload();
         $stream = getStreamFromString(base64_decode($test_info['content_base64']));
-        $parser = MultipartParser::create();
+        $parser = \MultipartParser::create();
         $names = '';
         $filenames = '';
         $content = '';
@@ -126,7 +129,7 @@ class Test
         // BEGIN TEST
         $test_info = getFormUrlEncodedPost();
         $stream = getStreamFromString("first=value&second=test+space&third=%C3%9Cberm%C3%A4%C3%9Fig");
-        $parser = MultipartParser::create();
+        $parser = \MultipartParser::create();
 
         $values = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$values) {

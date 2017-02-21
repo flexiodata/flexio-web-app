@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -79,7 +82,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.4', 'Group Job; aggregate function on non-existent field with no group parameters should fail',  $actual, $expected, $results);
 
 
@@ -109,7 +112,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.2', 'Group Job; sum() aggregate function not allowed on char fields',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -121,7 +124,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.3', 'Group Job; avg() aggregate function not allowed on char fields',  $actual, $expected, $results);
 
 
@@ -211,7 +214,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('F.2', 'Group Job; sum() aggregate function not allowed on date fields',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -223,7 +226,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('F.3', 'Group Job; avg() aggregate function not allowed on date fields',  $actual, $expected, $results);
 
 
@@ -253,7 +256,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.2', 'Group Job; sum() aggregate function not allowed on datetime fields',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -265,7 +268,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.3', 'Group Job; avg() aggregate function not allowed on datetime fields',  $actual, $expected, $results);
 
 
@@ -295,7 +298,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('H.2', 'Group Job; sum() aggregate function not allowed on boolean fields',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -307,7 +310,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('H.3', 'Group Job; avg() aggregate function not allowed on boolean fields',  $actual, $expected, $results);
     }
 }

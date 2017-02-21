@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class PipeApi
 {
     public static function create($params, $request)
@@ -296,8 +299,8 @@ class PipeApi
         $process->setOwner($requesting_user_eid);
         $process->setCreatedBy($requesting_user_eid);
 
-        $result = System::getModel()->assoc_add($pipe->getEid(), Model::EDGE_HAS_PROCESS, $process->getEid());
-        System::getModel()->assoc_add($process->getEid(), Model::EDGE_PROCESS_OF, $pipe->getEid());
+        $result = \System::getModel()->assoc_add($pipe->getEid(), \Model::EDGE_HAS_PROCESS, $process->getEid());
+        \System::getModel()->assoc_add($process->getEid(), \Model::EDGE_PROCESS_OF, $pipe->getEid());
 
         $pipe_properties = $pipe->get();
         $process_properties['task'] = $pipe_properties['task'];
@@ -378,7 +381,7 @@ class PipeApi
                     $handle = 'create';
                     $content = $stream->content($start, $limit, $columns, $metadata, $handle);
 
-                    if ($mime_type !== ContentType::MIME_TYPE_FLEXIO_TABLE)
+                    if ($mime_type !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
                     {
                         // return content as-is
                         header('Content-Type: ' . $mime_type);
@@ -386,7 +389,7 @@ class PipeApi
                     else
                     {
                         // flexio table; return application/json in place of internal mime
-                        header('Content-Type: ' . ContentType::MIME_TYPE_JSON);
+                        header('Content-Type: ' . \ContentType::MIME_TYPE_JSON);
                         $content = json_encode($content);
                     }
 

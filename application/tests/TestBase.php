@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class TestResult
 {
     public $name;

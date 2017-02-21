@@ -415,14 +415,26 @@ abstract class FrameworkPlugin
 class Framework
 {
     protected static $_instance = null;
+    protected $prefix = null;
+    protected $suffix = null;
     protected $plugins = array();
 
     public static function getInstance()
     {
-        if (null === Framework::$_instance)
-            Framework::$_instance = new self();
+        if (null === self::$_instance)
+            self::$_instance = new self();
 
-        return Framework::$_instance;
+        return self::$_instance;
+    }
+
+    public function setControllerPrefix($prefix)
+    {
+        $this->prefix = $prefix;
+    }
+
+    public function setControllerSuffix($suffix)
+    {
+        $this->suffix = $suffix;
     }
 
     public function registerPlugin($plugin)
@@ -465,7 +477,6 @@ class Framework
         $view = new FrameworkView;
         $view->request = $request;
 
-
         $obj = null;
 
         while (true)
@@ -479,12 +490,20 @@ class Framework
             }
 
             // create the controller class name
-            $classname = ucfirst($request->controller) . 'Controller';
+            $classname = ucfirst($request->controller);
+
+            if (isset($this->prefix))
+                $classname = $this->prefix . $classname;
+
+            if (isset($this->suffix))
+                $classname = $classname . $this->suffix;
+
             if (!class_exists($classname))
                 die("Invalid controller class $classname");
 
             if (!$obj)
                 $obj = new $classname;
+            
             $obj->initControllerAction($view, $request, $response);
             $obj->invokeAction($request->controller, $request->action);
 
@@ -509,17 +528,13 @@ class Framework
                     $obj = null; // force next loop iteration to create new controller object
                }
             }
-
         }
-
 
         foreach ($this->plugins as $plugin)
         {
             $plugin->dispatchLoopShutdown();
         }
 
-
         echo $obj->getResponse()->getBody();
-
     }
 }

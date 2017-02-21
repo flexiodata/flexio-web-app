@@ -18,17 +18,17 @@ class PipeModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         $db->beginTransaction();
         try
         {
             // create the object base
-            $eid = $this->getModel()->createObjectBase(Model::TYPE_PIPE, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PIPE, $params);
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
-            $timestamp = System::getTimestamp();
+            $timestamp = \System::getTimestamp();
             $process_arr = array(
                 'eid'             => $eid,
                 'name'            => isset_or($params['name'], ''),
@@ -38,27 +38,27 @@ class PipeModel extends ModelBase
                 'output'          => isset_or($params['output'], '[]'),
                 'task'            => isset_or($params['task'], '[]'),
                 'schedule'        => isset_or($params['schedule'], ''),
-                'schedule_status' => isset_or($params['schedule_status'], Model::PIPE_STATUS_INACTIVE),
+                'schedule_status' => isset_or($params['schedule_status'], \Model::PIPE_STATUS_INACTIVE),
                 'created'         => $timestamp,
                 'updated'         => $timestamp
             );
 
             // make sure the schedule status is an 'A' or an 'I';
             // if it isn't, set it to an 'I'
-            if ($process_arr['schedule_status'] != Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != Model::PIPE_STATUS_INACTIVE)
-                $process_arr['schedule_status'] = Model::PIPE_STATUS_INACTIVE;
+            if ($process_arr['schedule_status'] != \Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != \Model::PIPE_STATUS_INACTIVE)
+                $process_arr['schedule_status'] = \Model::PIPE_STATUS_INACTIVE;
 
             // add the properties
             if ($db->insert('tbl_pipe', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create pipe'));
+            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create pipe'));
         }
     }
 
@@ -79,7 +79,7 @@ class PipeModel extends ModelBase
         catch (Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete pipe'));
+            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete pipe'));
         }
     }
 
@@ -87,12 +87,12 @@ class PipeModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Eid::isValid($eid))
             return false;
 
-        if (($process_arr = Model::check($params, array(
+        if (($process_arr = \Model::check($params, array(
                 'name'            => array('type' => 'string',  'required' => false),
                 'description'     => array('type' => 'string',  'required' => false),
                 'display_icon'    => array('type' => 'string',  'required' => false),
@@ -102,8 +102,8 @@ class PipeModel extends ModelBase
                 'schedule'        => array('type' => 'string',  'required' => false),
                 'schedule_status' => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update pipe'));
-        $process_arr['updated'] = System::getTimestamp();
+            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update pipe'));
+        $process_arr['updated'] = \System::getTimestamp();
 
         $db->beginTransaction();
         try
@@ -121,8 +121,8 @@ class PipeModel extends ModelBase
             // if it isn't, set it to an 'I'
             if (isset($process_arr['schedule_status']))
             {
-                if ($process_arr['schedule_status'] != Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != Model::PIPE_STATUS_INACTIVE)
-                    $process_arr['schedule_status'] = Model::PIPE_STATUS_INACTIVE;
+                if ($process_arr['schedule_status'] != \Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != \Model::PIPE_STATUS_INACTIVE)
+                    $process_arr['schedule_status'] = \Model::PIPE_STATUS_INACTIVE;
             }
 
             // set the properties
@@ -181,15 +181,15 @@ class PipeModel extends ModelBase
                      'schedule'        => $row['schedule'],
                      'schedule_status' => $row['schedule_status'],
                      'eid_status'      => $row['eid_status'],
-                     'created'         => Util::formatDate($row['created']),
-                     'updated'         => Util::formatDate($row['updated']));
+                     'created'         => \Util::formatDate($row['created']),
+                     'updated'         => \Util::formatDate($row['updated']));
     }
 
     public function getScheduledPipes()
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         $sql = "select tpi.eid as eid, ".
                "       tpi.schedule as schedule ".

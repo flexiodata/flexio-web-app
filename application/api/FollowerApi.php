@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class FollowerApi
 {
     public static function create($params, $request)
@@ -45,7 +48,7 @@ class FollowerApi
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
         // make sure the object isn't a user
-        if ($object->getType() === Model::TYPE_USER)
+        if ($object->getType() === \Model::TYPE_USER)
             return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
 
         // check the rights on the object
@@ -57,7 +60,7 @@ class FollowerApi
 
         // the first parameter 'users' is an arrray of strings that are either eids
         // or email addresses; make sure these are strings
-        $user_model = System::getModel()->user;
+        $user_model = \System::getModel()->user;
         $user_eids = array();
         foreach ($users as $identifier)
         {
@@ -65,7 +68,7 @@ class FollowerApi
             $email = false;
 
             // if we already have a valid user eid; just add it
-            if (Eid::isValid($identifier))
+            if (\Eid::isValid($identifier))
             {
                 $user_eid = $identifier;
                 $email = $user_model->getEmailFromEid($identifier);
@@ -93,13 +96,13 @@ class FollowerApi
              else
             {
                 // user doesn't exist; create a user
-                $username = Util::generateHandle(); // default username
-                $password = Util::generateHandle();
-                $verify_code = Util::generateHandle(); // code to verify user's email address
+                $username = \Util::generateHandle(); // default username
+                $password = \Util::generateHandle();
+                $verify_code = \Util::generateHandle(); // code to verify user's email address
 
                 $new_user_info = array('user_name' => $username,
                                        'email' => $email,
-                                       'eid_status' => Model::STATUS_PENDING,
+                                       'eid_status' => \Model::STATUS_PENDING,
                                        'password' => $password,
                                        'verify_code' => $verify_code,
                                        'first_name' => '',
@@ -116,8 +119,8 @@ class FollowerApi
                 $user_eid = $user_info['eid'];
 
                 // add an invitation association
-                System::getModel()->assoc_add($requesting_user_eid, Model::EDGE_INVITED, $user_eid);
-                System::getModel()->assoc_add($user_eid, Model::EDGE_INVITED_BY, $requesting_user_eid);
+                \System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_INVITED, $user_eid);
+                \System::getModel()->assoc_add($user_eid, \Model::EDGE_INVITED_BY, $requesting_user_eid);
             }
 
             // send out the invite
@@ -125,12 +128,12 @@ class FollowerApi
 
             // if the user hasn't been verified yet (either just created or previously created
             // but not verified), then add the verification code
-            if ($user_info['eid_status'] == Model::STATUS_PENDING)
+            if ($user_info['eid_status'] == \Model::STATUS_PENDING)
                 $email_params['verify_code'] = $user_info['verify_code'];
 
             // get the full name of the sender
-            $sender_name = System::getCurrentUserFirstName();
-            $last_name = System::getCurrentUserLastName();
+            $sender_name = \System::getCurrentUserFirstName();
+            $last_name = \System::getCurrentUserLastName();
             if (strlen($last_name) > 0)
                 $sender_name = $sender_name . ' ' . $last_name;
 
@@ -146,8 +149,8 @@ class FollowerApi
             $message->send();
 
             // regardless of whether or not they're a new user, add a sharing association
-            System::getModel()->assoc_add($requesting_user_eid, Model::EDGE_SHARED_WITH, $user_eid);
-            System::getModel()->assoc_add($user_eid, Model::EDGE_SHARED_FROM, $requesting_user_eid);
+            \System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_SHARED_WITH, $user_eid);
+            \System::getModel()->assoc_add($user_eid, \Model::EDGE_SHARED_FROM, $requesting_user_eid);
 
             // add the users to the list to invite
             $user_eids[] = $user_eid;
@@ -163,8 +166,8 @@ class FollowerApi
 
             $user_info = $user->get();
 
-            System::getModel()->assoc_add($object->getEid(), Model::EDGE_FOLLOWED_BY, $user->getEid());
-            System::getModel()->assoc_add($user->getEid(), Model::EDGE_FOLLOWING, $object->getEid());
+            \System::getModel()->assoc_add($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
+            \System::getModel()->assoc_add($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
 
             // TODO: for now, use the same result structure as the followers
             // call; perhaps consider building this into the basic user info
@@ -217,8 +220,8 @@ class FollowerApi
         if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        System::getModel()->assoc_delete($object->getEid(), Model::EDGE_FOLLOWED_BY, $user->getEid());
-        System::getModel()->assoc_delete($user->getEid(), Model::EDGE_FOLLOWING, $object->getEid());
+        \System::getModel()->assoc_delete($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
+        \System::getModel()->assoc_delete($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
 
         return true;
     }
@@ -249,7 +252,7 @@ class FollowerApi
 
         // TODO: for now, use the same result structure as the share
         // call; perhaps consider building this into the basic user info
-        $owned_by = System::getModel()->assoc_range($object->getEid(), Model::EDGE_OWNED_BY, [Model::STATUS_AVAILABLE]);
+        $owned_by = \System::getModel()->assoc_range($object->getEid(), \Model::EDGE_OWNED_BY, [\Model::STATUS_AVAILABLE]);
         foreach ($owned_by as $item)
         {
             $user_eid = $item['eid'];
@@ -271,7 +274,7 @@ class FollowerApi
             $result[] = $info;
         }
 
-        $shared_with = System::getModel()->assoc_range($object->getEid(), Model::EDGE_FOLLOWED_BY, [Model::STATUS_AVAILABLE]);
+        $shared_with = \System::getModel()->assoc_range($object->getEid(), \Model::EDGE_FOLLOWED_BY, [\Model::STATUS_AVAILABLE]);
         foreach ($shared_with as $item)
         {
             $user_eid = $item['eid'];

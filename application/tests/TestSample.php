@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class TestSample
 {
     public static function createProjectSample($user_count = 4, $project_count = 2, $pipe_count = 2)
@@ -25,7 +28,7 @@ class TestSample
             $email = "user$user@flex.io";
             $password = 'test99';
 
-            if (Eid::isValid(System::getModel()->user->getEidFromIdentifier($user_name)))
+            if (\Eid::isValid(TestUtil::getModel()->user->getEidFromIdentifier($user_name)))
             {
                 // this user already exists
                 continue;

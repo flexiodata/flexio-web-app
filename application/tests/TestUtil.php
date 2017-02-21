@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class TestError
 {
     const ERROR_BAD_PARSE = 'ERROR_BAD_PARSE';
@@ -48,7 +51,7 @@ class TestUtil
     public static function evalExpressionNative($expr)
     {
         $retval = null;
-        $success = ExprEvaluate::evaluate($expr, [], [], $retval);
+        $success = \ExprEvaluate::evaluate($expr, [], [], $retval);
         if ($success === false)
             return TestError::ERROR_BAD_PARSE;
 
@@ -58,10 +61,11 @@ class TestUtil
     public static function evalExpressionPostgres($expr)
     {
         global $g_store;
-        global $g_config;
+
+        $dbconfig = \Model::getDatabaseConfig();
 
         // first, try to parse the expression
-        $p = new ExprTranslatorPostgres;
+        $p = new \ExprTranslatorPostgres;
         $err = $p->parse($expr);
         if ($err === false)
             return TestError::ERROR_BAD_PARSE;
@@ -70,15 +74,15 @@ class TestUtil
 
         // if the expression parses successfully, evaluate it
         $params = array();
-        $params['host'] = $g_config->datastore_host;
-        $params['port'] = $g_config->datastore_port;
-        $params['database'] = $g_config->datastore_dbname;
-        $params['username'] = $g_config->datastore_username;
-        $params['password'] = $g_config->datastore_password;
+        $params['host'] = $dbconfig['datastore_host'];
+        $params['port'] = $dbconfig['datastore_port'];
+        $params['database'] = $dbconfig['datastore_dbname'];
+        $params['username'] = $dbconfig['datastore_username'];
+        $params['password'] = $dbconfig['datastore_password'];
 
         $datastore_id = $params['database'] . ';' . $params['host'];
         if (!isset($g_store->datastores[$datastore_id]))
-            $g_store->datastores[$datastore_id] = PostgresService::create($params);
+            $g_store->datastores[$datastore_id] = \PostgresService::create($params);
 
         $datastore = $g_store->datastores[$datastore_id];
         $pdo = $datastore->getPDO();
@@ -87,7 +91,7 @@ class TestUtil
         {
             $stmt = $pdo->query("SELECT $postgres_expr AS testval");
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return 'Database Exception: ' . $e->getMessage();
         }
@@ -132,6 +136,11 @@ class TestUtil
         return '';
     }
 
+    public static function getModel()
+    {
+        return new \Model;
+    }
+
     public static function getDefaultTestUser()
     {
         // returns the eid of a default test user; creates the user if the
@@ -141,8 +150,8 @@ class TestUtil
         $password = 'test@flex.io';
 
         // see if the user already exists
-        $user_eid = System::getModel()->user->getEidFromIdentifier($user_name);
-        if (Eid::isValid($user_eid))
+        $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
+        if (\Eid::isValid($user_eid))
             return $user_eid;
 
         $user_eid = TestUtil::createTestUser($user_name, $email, $password);
@@ -159,14 +168,14 @@ class TestUtil
         // the default test user)
         $user_eid = self::getDefaultTestUser();
 
-        $search_path = "$user_eid->(".Model::EDGE_OWNS.")->(".Model::TYPE_PROJECT.")";
-        $projects = System::getModel()->search($search_path);
+        $search_path = "$user_eid->(".\Model::EDGE_OWNS.")->(".\Model::TYPE_PROJECT.")";
+        $projects = TestUtil::getModel()->search($search_path);
 
         if ($projects !== false)
         {
             foreach ($projects as $project_eid)
             {
-                $object = System::getModel()->get($project_eid);
+                $object = TestUtil::getModel()->get($project_eid);
                 if ($object['name'] === $project_name)
                     return $project_eid;
             }
@@ -180,11 +189,11 @@ class TestUtil
 
     public static function createTestUser($username, $email, $password)
     {
-        $verify_code = Util::generateHandle();
+        $verify_code = \Util::generateHandle();
         $new_user_info = array('user_name' => $username,
                                'email' => $email,
                                'full_name' => $username,
-                               'eid_status' => Model::STATUS_AVAILABLE,
+                               'eid_status' => \Model::STATUS_AVAILABLE,
                                'password' => $password,
                                'verify_code' => '');
 
@@ -330,8 +339,8 @@ class TestUtil
 
     public static function generateEmail()
     {
-        $handle1 = Util::generateHandle();
-        $handle2 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
+        $handle2 = \Util::generateHandle();
         return $handle1 . '@' . $handle2 . '.com';
     }
 

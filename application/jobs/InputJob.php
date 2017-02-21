@@ -126,33 +126,33 @@ class InputJob extends Base
                 return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
             // upload
-            case Model::CONNECTION_TYPE_UPLOAD:
+            case \Model::CONNECTION_TYPE_UPLOAD:
                 return $this->runUpload($service, $file_info);
 
             // database data
-            case Model::CONNECTION_TYPE_MYSQL:
-            case Model::CONNECTION_TYPE_POSTGRES:
+            case \Model::CONNECTION_TYPE_MYSQL:
+            case \Model::CONNECTION_TYPE_POSTGRES:
                 return $this->runDatabaseImport($service, $file_info);
 
             // api table type data
-            case Model::CONNECTION_TYPE_RSS:
-            case Model::CONNECTION_TYPE_MAILJET:
-            case Model::CONNECTION_TYPE_PIPELINEDEALS:
-            case Model::CONNECTION_TYPE_SOCRATA:
-            case Model::CONNECTION_TYPE_TWILIO:
+            case \Model::CONNECTION_TYPE_RSS:
+            case \Model::CONNECTION_TYPE_MAILJET:
+            case \Model::CONNECTION_TYPE_PIPELINEDEALS:
+            case \Model::CONNECTION_TYPE_SOCRATA:
+            case \Model::CONNECTION_TYPE_TWILIO:
                 return $this->runApiTableImport($service, $file_info);
 
             // remote file type data
-            case Model::CONNECTION_TYPE_HTTP:
-            case Model::CONNECTION_TYPE_FTP:
-            case Model::CONNECTION_TYPE_SFTP:
-            case Model::CONNECTION_TYPE_DROPBOX:
-            case Model::CONNECTION_TYPE_GOOGLEDRIVE:
-            case Model::CONNECTION_TYPE_AMAZONS3:
+            case \Model::CONNECTION_TYPE_HTTP:
+            case \Model::CONNECTION_TYPE_FTP:
+            case \Model::CONNECTION_TYPE_SFTP:
+            case \Model::CONNECTION_TYPE_DROPBOX:
+            case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
+            case \Model::CONNECTION_TYPE_AMAZONS3:
                 return $this->runRemoteFileImport($service, $file_info);
 
             // api-specific type data
-            case Model::CONNECTION_TYPE_GOOGLESHEETS:
+            case \Model::CONNECTION_TYPE_GOOGLESHEETS:
                 return $this->runGoogleSheetsImport($service, $file_info);
         }
     }
@@ -333,7 +333,7 @@ class InputJob extends Base
     {
         // get a default connection and path
         $properties['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
-        $properties['path'] = Util::generateHandle();
+        $properties['path'] = \Util::generateHandle();
 
         if (!Eid::isValid($properties['connection_eid']))
             return false;
@@ -350,7 +350,7 @@ class InputJob extends Base
 
         // does the item's path contain a url?
         if (substr($path,0,7) == 'http://' || substr($path,0,8) == 'https://')
-            return array('connection_type' => Model::CONNECTION_TYPE_HTTP);
+            return array('connection_type' => \Model::CONNECTION_TYPE_HTTP);
 
         if (isset($params['connection']))
         {
@@ -400,7 +400,7 @@ class InputJob extends Base
         // notion of directory lookup is included so we don't have to keep adding these
         // types for other connections that may not support wildcard lookup
         $connection_type = isset_or($connection_info['connection_type'], false);
-        if ($connection_type == Model::CONNECTION_TYPE_HTTP || $connection_type == Model::CONNECTION_TYPE_RSS)
+        if ($connection_type == \Model::CONNECTION_TYPE_HTTP || $connection_type == \Model::CONNECTION_TYPE_RSS)
         {
             $matching_paths[] = $file_info;
             return $matching_paths;

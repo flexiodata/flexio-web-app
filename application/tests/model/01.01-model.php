@@ -12,94 +12,102 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: model constant tests
 
         // BEGIN TEST
-        $actual = Model::ERROR_NONE;
+        $actual = \Model::ERROR_NONE;
         $expected = 'none';
         TestCheck::assertString('A.1', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_UNDEFINED;
+        $actual = \Model::ERROR_UNDEFINED;
         $expected = 'undefined';
         TestCheck::assertString('A.2', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_GENERAL;
+        $actual = \Model::ERROR_GENERAL;
         $expected = 'general';
         TestCheck::assertString('A.3', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_UNIMPLEMENTED;
+        $actual = \Model::ERROR_UNIMPLEMENTED;
         $expected = 'unimplemented';
         TestCheck::assertString('A.4', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_NO_DATABASE;
+        $actual = \Model::ERROR_NO_DATABASE;
         $expected = 'no_database';
         TestCheck::assertString('A.5', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_NO_MODEL;
+        $actual = \Model::ERROR_NO_MODEL;
         $expected = 'no_model';
         TestCheck::assertString('A.6', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_NO_SERVICE;
+        $actual = \Model::ERROR_NO_SERVICE;
         $expected = 'no_service';
         TestCheck::assertString('A.7', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_NO_OBJECT;
+        $actual = \Model::ERROR_NO_OBJECT;
         $expected = 'no_object';
         TestCheck::assertString('A.8', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_INVALID_SYNTAX;
+        $actual = \Model::ERROR_INVALID_SYNTAX;
         $expected = 'invalid_syntax';
         TestCheck::assertString('A.9', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_MISSING_PARAMETER;
+        $actual = \Model::ERROR_MISSING_PARAMETER;
         $expected = 'missing_parameter';
         TestCheck::assertString('A.10', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_INVALID_PARAMETER;
+        $actual = \Model::ERROR_INVALID_PARAMETER;
         $expected = 'invalid_parameter';
         TestCheck::assertString('A.11', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_CREATE_FAILED;
+        $actual = \Model::ERROR_CREATE_FAILED;
         $expected = 'create_failed';
         TestCheck::assertString('A.12', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_DELETE_FAILED;
+        $actual = \Model::ERROR_DELETE_FAILED;
         $expected = 'delete_failed';
         TestCheck::assertString('A.13', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_WRITE_FAILED;
+        $actual = \Model::ERROR_WRITE_FAILED;
         $expected = 'write_failed';
         TestCheck::assertString('A.14', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_READ_FAILED;
+        $actual = \Model::ERROR_READ_FAILED;
         $expected = 'read_failed';
         TestCheck::assertString('A.15', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_INSUFFICIENT_RIGHTS;
+        $actual = \Model::ERROR_INSUFFICIENT_RIGHTS;
         $expected = 'insufficient_rights';
         TestCheck::assertString('A.16', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::ERROR_SIZE_LIMIT_EXCEEDED;
+        $actual = \Model::ERROR_SIZE_LIMIT_EXCEEDED;
         $expected = 'size_limit_exceeded';
         TestCheck::assertString('A.17', 'Model error constant',  $actual, $expected, $results);
 
@@ -111,52 +119,52 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::TYPE_UNDEFINED;
+        $actual = \Model::TYPE_UNDEFINED;
         $expected = '';
         TestCheck::assertString('B.1', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::TYPE_OBJECT;
+        $actual = \Model::TYPE_OBJECT;
         $expected = 'OBJ';
         TestCheck::assertString('B.2', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::TYPE_USER;
+        $actual = \Model::TYPE_USER;
         $expected = 'USR';
         TestCheck::assertString('B.3', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::TYPE_PROJECT;
+        $actual = \Model::TYPE_PROJECT;
         $expected = 'PRJ';
         TestCheck::assertString('B.4', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::TYPE_PIPE;
+        $actual = \Model::TYPE_PIPE;
         $expected = 'PIP';
         TestCheck::assertString('B.5', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::TYPE_STREAM;
+        $actual = \Model::TYPE_STREAM;
         $expected = 'STR';
         TestCheck::assertString('B.6', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::TYPE_CONNECTION;
+        $actual = \Model::TYPE_CONNECTION;
         $expected = 'CTN';
         TestCheck::assertString('B.7', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::TYPE_COMMENT;
+        $actual = \Model::TYPE_COMMENT;
         $expected = 'CMT';
         TestCheck::assertString('B.8', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::TYPE_PROCESS;
+        $actual = \Model::TYPE_PROCESS;
         $expected = 'PRC';
         TestCheck::assertString('B.9', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::TYPE_TOKEN;
+        $actual = \Model::TYPE_TOKEN;
         $expected = 'ATH';
         TestCheck::assertString('B.10', 'Model type constant',  $actual, $expected, $results);
 
@@ -168,107 +176,107 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::EDGE_UNDEFINED;
+        $actual = \Model::EDGE_UNDEFINED;
         $expected = '';
         TestCheck::assertString('C.1', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_CREATED;
+        $actual = \Model::EDGE_CREATED;
         $expected = 'CRT';
         TestCheck::assertString('C.2', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_CREATED_BY;
+        $actual = \Model::EDGE_CREATED_BY;
         $expected = 'CRB';
         TestCheck::assertString('C.3', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_OWNS;
+        $actual = \Model::EDGE_OWNS;
         $expected = 'OWN';
         TestCheck::assertString('C.4', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_OWNED_BY;
+        $actual = \Model::EDGE_OWNED_BY;
         $expected = 'OWB';
         TestCheck::assertString('C.5', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_INVITED;
+        $actual = \Model::EDGE_INVITED;
         $expected = 'INV';
         TestCheck::assertString('C.6', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_INVITED_BY;
+        $actual = \Model::EDGE_INVITED_BY;
         $expected = 'INB';
         TestCheck::assertString('C.7', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_SHARED_WITH;
+        $actual = \Model::EDGE_SHARED_WITH;
         $expected = 'SHW';
         TestCheck::assertString('C.8', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_SHARED_FROM;
+        $actual = \Model::EDGE_SHARED_FROM;
         $expected = 'SHF';
         TestCheck::assertString('C.9', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_FOLLOWING;
+        $actual = \Model::EDGE_FOLLOWING;
         $expected = 'FLW';
         TestCheck::assertString('C.10', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_FOLLOWED_BY;
+        $actual = \Model::EDGE_FOLLOWED_BY;
         $expected = 'FLB';
         TestCheck::assertString('C.11', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_MEMBER_OF;
+        $actual = \Model::EDGE_MEMBER_OF;
         $expected = 'MBO';
         TestCheck::assertString('C.12', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_HAS_MEMBER;
+        $actual = \Model::EDGE_HAS_MEMBER;
         $expected = 'HMB';
         TestCheck::assertString('C.13', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_LINKED_TO;
+        $actual = \Model::EDGE_LINKED_TO;
         $expected = 'LKT';
         TestCheck::assertString('C.14', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_LINKED_FROM;
+        $actual = \Model::EDGE_LINKED_FROM;
         $expected = 'LKF';
         TestCheck::assertString('C.15', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_COPIED_TO;
+        $actual = \Model::EDGE_COPIED_TO;
         $expected = 'CPT';
         TestCheck::assertString('C.16', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_COPIED_FROM;
+        $actual = \Model::EDGE_COPIED_FROM;
         $expected = 'CPF';
         TestCheck::assertString('C.17', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_COMMENT_ON;
+        $actual = \Model::EDGE_COMMENT_ON;
         $expected = 'CMO';
         TestCheck::assertString('C.18', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_HAS_COMMENT;
+        $actual = \Model::EDGE_HAS_COMMENT;
         $expected = 'HCM';
         TestCheck::assertString('C.19', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_PROCESS_OF;
+        $actual = \Model::EDGE_PROCESS_OF;
         $expected = 'PRO';
         TestCheck::assertString('C.20', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::EDGE_HAS_PROCESS;
+        $actual = \Model::EDGE_HAS_PROCESS;
         $expected = 'HPR';
         TestCheck::assertString('C.21', 'Model edge constant',  $actual, $expected, $results);
 
@@ -280,27 +288,27 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::STATUS_UNDEFINED;
+        $actual = \Model::STATUS_UNDEFINED;
         $expected = '';
         TestCheck::assertString('D.1', 'Model status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::STATUS_PENDING;
+        $actual = \Model::STATUS_PENDING;
         $expected = 'P';
         TestCheck::assertString('D.2', 'Model status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::STATUS_AVAILABLE;
+        $actual = \Model::STATUS_AVAILABLE;
         $expected = 'A';
         TestCheck::assertString('D.3', 'Model status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::STATUS_TRASH;
+        $actual = \Model::STATUS_TRASH;
         $expected = 'T';
         TestCheck::assertString('D.4', 'Model status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::STATUS_DELETED;
+        $actual = \Model::STATUS_DELETED;
         $expected = 'D';
         TestCheck::assertString('D.5', 'Model status constant',  $actual, $expected, $results);
 
@@ -312,37 +320,37 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::REGISTRY_VALUE_UNDEFINED;
+        $actual = \Model::REGISTRY_VALUE_UNDEFINED;
         $expected = '';
         TestCheck::assertString('E.1', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::REGISTRY_VALUE_STRING;
+        $actual = \Model::REGISTRY_VALUE_STRING;
         $expected = 'S';
         TestCheck::assertString('E.2', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::REGISTRY_VALUE_NUMBER;
+        $actual = \Model::REGISTRY_VALUE_NUMBER;
         $expected = 'N';
         TestCheck::assertString('E.3', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::REGISTRY_VALUE_BOOLEAN;
+        $actual = \Model::REGISTRY_VALUE_BOOLEAN;
         $expected = 'B';
         TestCheck::assertString('E.4', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::REGISTRY_VALUE_DATE;
+        $actual = \Model::REGISTRY_VALUE_DATE;
         $expected = 'D';
         TestCheck::assertString('E.5', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::REGISTRY_VALUE_DATETIME;
+        $actual = \Model::REGISTRY_VALUE_DATETIME;
         $expected = 'T';
         TestCheck::assertString('E.6', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::REGISTRY_VALUE_BINARY;
+        $actual = \Model::REGISTRY_VALUE_BINARY;
         $expected = 'X';
         TestCheck::assertString('E.7', 'Pipe status constant',  $actual, $expected, $results);
 
@@ -354,22 +362,22 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_STATUS_INVALID;
+        $actual = \Model::CONNECTION_STATUS_INVALID;
         $expected = 'I';
         TestCheck::assertString('F.1', 'Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_STATUS_AVAILABLE;
+        $actual = \Model::CONNECTION_STATUS_AVAILABLE;
         $expected = 'A';
         TestCheck::assertString('F.2', 'Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_STATUS_UNAVAILABLE;
+        $actual = \Model::CONNECTION_STATUS_UNAVAILABLE;
         $expected = 'U';
         TestCheck::assertString('F.3', 'Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_STATUS_ERROR;
+        $actual = \Model::CONNECTION_STATUS_ERROR;
         $expected = 'E';
         TestCheck::assertString('F.4', 'Connection status constant',  $actual, $expected, $results);
 
@@ -381,12 +389,12 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_CONFIG_TYPE_DATABASE;
+        $actual = \Model::CONNECTION_CONFIG_TYPE_DATABASE;
         $expected = 'database';
         TestCheck::assertString('G.1', 'Connection configuration constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_CONFIG_TYPE_OAUTH2;
+        $actual = \Model::CONNECTION_CONFIG_TYPE_OAUTH2;
         $expected = 'oauth2';
         TestCheck::assertString('G.2', 'Connection configuration constant',  $actual, $expected, $results);
 
@@ -398,92 +406,92 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_FLEXIO;
+        $actual = \Model::CONNECTION_TYPE_FLEXIO;
         $expected = 'flexio.api';
         TestCheck::assertString('H.1', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_FLEXIO_LOCAL;
+        $actual = \Model::CONNECTION_TYPE_FLEXIO_LOCAL;
         $expected = 'flexio.local';
         TestCheck::assertString('H.2', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_FTP;
+        $actual = \Model::CONNECTION_TYPE_FTP;
         $expected = 'ftp.api';
         TestCheck::assertString('H.3', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_SFTP;
+        $actual = \Model::CONNECTION_TYPE_SFTP;
         $expected = 'sftp.api';
         TestCheck::assertString('H.4', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_MYSQL;
+        $actual = \Model::CONNECTION_TYPE_MYSQL;
         $expected = 'mysql.api';
         TestCheck::assertString('H.5', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_POSTGRES;
+        $actual = \Model::CONNECTION_TYPE_POSTGRES;
         $expected = 'postgres.api';
         TestCheck::assertString('H.6', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_DROPBOX;
+        $actual = \Model::CONNECTION_TYPE_DROPBOX;
         $expected = 'dropbox.oauth2';
         TestCheck::assertString('H.7', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_GOOGLEDRIVE;
+        $actual = \Model::CONNECTION_TYPE_GOOGLEDRIVE;
         $expected = 'googledrive.oauth2';
         TestCheck::assertString('H.8', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_GOOGLESHEETS;
+        $actual = \Model::CONNECTION_TYPE_GOOGLESHEETS;
         $expected = 'googlesheets.oauth2';
         TestCheck::assertString('H.9', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_AMAZONS3;
+        $actual = \Model::CONNECTION_TYPE_AMAZONS3;
         $expected = 'amazons3.api';
         TestCheck::assertString('H.10', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_UPLOAD;
+        $actual = \Model::CONNECTION_TYPE_UPLOAD;
         $expected = 'upload.api';
         TestCheck::assertString('H.11', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_DOWNLOAD;
+        $actual = \Model::CONNECTION_TYPE_DOWNLOAD;
         $expected = 'download.api';
         TestCheck::assertString('H.12', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_HTTP;
+        $actual = \Model::CONNECTION_TYPE_HTTP;
         $expected = 'http.api';
         TestCheck::assertString('H.13', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_RSS;
+        $actual = \Model::CONNECTION_TYPE_RSS;
         $expected = 'rss.api';
         TestCheck::assertString('H.14', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_SOCRATA;
+        $actual = \Model::CONNECTION_TYPE_SOCRATA;
         $expected = 'socrata.api';
         TestCheck::assertString('H.15', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_PIPELINEDEALS;
+        $actual = \Model::CONNECTION_TYPE_PIPELINEDEALS;
         $expected = 'pipelinedeals.api';
         TestCheck::assertString('H.16', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_MAILJET;
+        $actual = \Model::CONNECTION_TYPE_MAILJET;
         $expected = 'mailjet.api';
         TestCheck::assertString('H.17', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::CONNECTION_TYPE_TWILIO;
+        $actual = \Model::CONNECTION_TYPE_TWILIO;
         $expected = 'twilio.api';
         TestCheck::assertString('H.18', 'Connection type constant',  $actual, $expected, $results);
 
@@ -495,12 +503,12 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::PIPE_STATUS_ACTIVE;
+        $actual = \Model::PIPE_STATUS_ACTIVE;
         $expected = 'A';
         TestCheck::assertString('I.1', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PIPE_STATUS_INACTIVE;
+        $actual = \Model::PIPE_STATUS_INACTIVE;
         $expected = 'I';
         TestCheck::assertString('I.2', 'Pipe status constant',  $actual, $expected, $results);
 
@@ -512,12 +520,12 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::PROCESS_MODE_BUILD;
+        $actual = \Model::PROCESS_MODE_BUILD;
         $expected = 'B';
         TestCheck::assertString('J.1', 'Process mode constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PROCESS_MODE_RUN;
+        $actual = \Model::PROCESS_MODE_RUN;
         $expected = 'R';
         TestCheck::assertString('J.2', 'Process mode constant',  $actual, $expected, $results);
 
@@ -529,42 +537,42 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = Model::PROCESS_STATUS_UNDEFINED;
+        $actual = \Model::PROCESS_STATUS_UNDEFINED;
         $expected = '';
         TestCheck::assertString('K.1', 'Task status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PROCESS_STATUS_PENDING;
+        $actual = \Model::PROCESS_STATUS_PENDING;
         $expected = 'S';
         TestCheck::assertString('K.2', 'Task status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PROCESS_STATUS_WAITING;
+        $actual = \Model::PROCESS_STATUS_WAITING;
         $expected = 'W';
         TestCheck::assertString('K.3', 'Task status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PROCESS_STATUS_RUNNING;
+        $actual = \Model::PROCESS_STATUS_RUNNING;
         $expected = 'R';
         TestCheck::assertString('K.4', 'Task status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PROCESS_STATUS_CANCELLED;
+        $actual = \Model::PROCESS_STATUS_CANCELLED;
         $expected = 'X';
         TestCheck::assertString('K.5', 'Task status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PROCESS_STATUS_PAUSED;
+        $actual = \Model::PROCESS_STATUS_PAUSED;
         $expected = 'P';
         TestCheck::assertString('K.6', 'Task status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PROCESS_STATUS_FAILED;
+        $actual = \Model::PROCESS_STATUS_FAILED;
         $expected = 'F';
         TestCheck::assertString('K.7', 'Task status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PROCESS_STATUS_COMPLETED;
+        $actual = \Model::PROCESS_STATUS_COMPLETED;
         $expected = 'C';
         TestCheck::assertString('K.8', 'Task status constant',  $actual, $expected, $results);
     }

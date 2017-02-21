@@ -48,7 +48,7 @@ class AmazonS3Service implements IConnection
     {
         $this->close();
 
-        $validator = Validator::getInstance();
+        $validator = \Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'region' => array('type' => 'string', 'required' => true),
                 'bucket' => array('type' => 'string', 'required' => true),

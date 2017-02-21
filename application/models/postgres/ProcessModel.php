@@ -36,13 +36,13 @@ class ProcessModel extends ModelBase
             }
 
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             // make sure the process eid doesn't exist as a child process eid
             if ($this->processExists($eid))
-                throw new Exception();
+                throw new \Exception();
 
-            $timestamp = System::getTimestamp();
+            $timestamp = \System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
                 'parent_eid'     => isset_or($params['parent_eid'], ''),
@@ -61,22 +61,22 @@ class ProcessModel extends ModelBase
                 'started'        => isset_or($params['started'], null),
                 'finished'       => isset_or($params['finished'], null),
                 'process_info'   => isset_or($params['process_info'], '{}'),
-                'process_status' => isset_or($params['process_status'], Model::PROCESS_STATUS_PENDING),
+                'process_status' => isset_or($params['process_status'], \Model::PROCESS_STATUS_PENDING),
                 'cache_used'     => isset_or($params['cache_used'], ''),
                 'created'        => $timestamp,
                 'updated'        => $timestamp
             );
 
             if ($db->insert('tbl_process', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create process'));
+            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create process'));
         }
     }
 
@@ -84,7 +84,7 @@ class ProcessModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -97,10 +97,10 @@ class ProcessModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete process'));
+            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete process'));
         }
     }
 
@@ -108,12 +108,12 @@ class ProcessModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Eid::isValid($eid))
             return false;
 
-        if (($process_arr = Model::check($params, array(
+        if (($process_arr = \Model::check($params, array(
                 'parent_eid'     => array('type' => 'string',  'required' => false),
                 'process_eid'    => array('type' => 'string',  'required' => false),
                 'process_mode'   => array('type' => 'string',  'required' => false),
@@ -133,8 +133,8 @@ class ProcessModel extends ModelBase
                 'process_status' => array('type' => 'string',  'required' => false),
                 'cache_used'     => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update process'));
-        $process_arr['updated'] = System::getTimestamp();
+            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update process'));
+        $process_arr['updated'] = \System::getTimestamp();
 
         $db->beginTransaction();
         try
@@ -194,16 +194,16 @@ class ProcessModel extends ModelBase
                                   where tpr.eid = ?
                                  ", $eid);
          }
-         catch (Exception $e)
+         catch (\Exception $e)
          {
-             return $this->fail(Model::ERROR_READ_FAILED, _('Could not get the process'));
+             return $this->fail(\Model::ERROR_READ_FAILED, _('Could not get the process'));
          }
 
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         return array('eid'              => $row['eid'],
-                     'eid_status'       => isset_or($row['eid_status'], Model::STATUS_UNDEFINED),
+                     'eid_status'       => isset_or($row['eid_status'], \Model::STATUS_UNDEFINED),
                      'parent_eid'       => $row['parent_eid'],
                      'process_eid'      => $row['process_eid'],
                      'process_mode'     => $row['process_mode'],
@@ -216,12 +216,12 @@ class ProcessModel extends ModelBase
                      'started_by'       => $row['started_by'],
                      'started'          => $row['started'],
                      'finished'         => $row['finished'],
-                     'duration'         => Util::formateDateDiff($row['started'], $row['finished']),
+                     'duration'         => \Util::formateDateDiff($row['started'], $row['finished']),
                      'process_info'     => $row['process_info'],
                      'process_status'   => $row['process_status'],
                      'cache_used'       => $row['cache_used'],
-                     'created'          => Util::formatDate($row['created']),
-                     'updated'          => Util::formatDate($row['updated']));
+                     'created'          => \Util::formatDate($row['created']),
+                     'updated'          => \Util::formatDate($row['updated']));
     }
 
     public function getProcessTree($eid)
@@ -273,7 +273,7 @@ class ProcessModel extends ModelBase
          }
          catch (Exception $e)
          {
-             return $this->fail(Model::ERROR_READ_FAILED, _('Could not get the process'));
+             return $this->fail(\Model::ERROR_READ_FAILED, _('Could not get the process'));
          }
 
         if (!$rows)
@@ -283,7 +283,7 @@ class ProcessModel extends ModelBase
         foreach ($rows as $row)
         {
             $output[] = array('eid'              => $row['eid'],
-                              'eid_status'       => isset_or($row['eid_status'], Model::STATUS_UNDEFINED),
+                              'eid_status'       => isset_or($row['eid_status'], \Model::STATUS_UNDEFINED),
                               'parent_eid'       => $row['parent_eid'],
                               'process_eid'      => $row['process_eid'],
                               'process_mode'     => $row['process_mode'],
@@ -298,12 +298,12 @@ class ProcessModel extends ModelBase
                               'started_by'       => $row['started_by'],
                               'started'          => $row['started'],
                               'finished'         => $row['finished'],
-                              'duration'         => Util::formateDateDiff($row['started'], $row['finished']),
+                              'duration'         => \Util::formateDateDiff($row['started'], $row['finished']),
                               'process_info'     => $row['process_info'],
                               'process_status'   => $row['process_status'],
                               'cache_used'       => $row['cache_used'],
-                              'created'          => Util::formatDate($row['created']),
-                              'updated'          => Util::formatDate($row['updated']));
+                              'created'          => \Util::formatDate($row['created']),
+                              'updated'          => \Util::formatDate($row['updated']));
         }
 
         return $output;
@@ -371,7 +371,7 @@ class ProcessModel extends ModelBase
     {
         $process_info = $this->get($eid);
         if ($process_info === false)
-            return Model::PROCESS_STATUS_UNDEFINED;
+            return \Model::PROCESS_STATUS_UNDEFINED;
 
         return $process_info['process_status'];
     }
@@ -426,7 +426,7 @@ class ProcessModel extends ModelBase
     private function generateChildProcessEid()
     {
         // note: this function generates a unique child process eid; this
-        // function is nearly identical to Model::generateUniqueEid() except
+        // function is nearly identical to \Model::generateUniqueEid() except
         // that this function checks the tbl_process table for the eid instead
         // of the tbl_object table; a child process eid can coexist with the
         // object eids since child processes are only used as children of a parent
@@ -439,7 +439,7 @@ class ProcessModel extends ModelBase
         if ($db === false)
             return false; // internal function, so don't flag an error
 
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $result = $db->fetchOne("select eid from tbl_process where eid= ?", $eid);
 
         if ($result === false)

@@ -12,11 +12,14 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
     {
-        // TEST: Model::get(); object retrieval
+        // TEST: \Model::get(); object retrieval
 
         // TODO: fill out
     }

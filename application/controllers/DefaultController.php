@@ -12,7 +12,10 @@
  */
 
 
-class DefaultController extends FxControllerAction
+namespace Flexio\Controllers;
+
+
+class DefaultController extends \FxControllerAction
 {
     public function init()
     {

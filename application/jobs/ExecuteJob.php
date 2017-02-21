@@ -86,7 +86,7 @@ class ExecuteJob extends Base
         if ($program_type === false)
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
-        $program_path = Util::getBinaryPath($program_type);
+        $program_path = \Util::getBinaryPath($program_type);
         if (!isset($program_path))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
@@ -98,7 +98,7 @@ class ExecuteJob extends Base
         // the code is base64 encoded, so decode it and write it out
         // to a temporary file
         $code = base64_decode($code);
-        $filename = Util::createTempFile('fxscript', $program_extension);
+        $filename = \Util::createTempFile('fxscript', $program_extension);
         file_put_contents($filename, $code);
 
         // initiate the program process

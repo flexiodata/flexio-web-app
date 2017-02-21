@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -32,17 +35,17 @@ class Test
     "maxItems": null
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.1', 'ValidatorSchema::check(); return false if the maxItems value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', '\ValidatorSchema::check(); return false if the maxItems value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -58,17 +61,17 @@ EOD;
     "maxItems": true
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.2', 'ValidatorSchema::check(); return false if the maxItems value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('A.2', '\ValidatorSchema::check(); return false if the maxItems value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -84,17 +87,17 @@ EOD;
     "maxItems": -1
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.3', 'ValidatorSchema::check(); return false if the maxItems value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('A.3', '\ValidatorSchema::check(); return false if the maxItems value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -110,17 +113,17 @@ EOD;
     "maxItems": 0
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,false,false,false,false,true);
-        TestCheck::assertArray('A.4', 'ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('A.4', '\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -136,17 +139,17 @@ EOD;
     "maxItems": 1
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,false,false,false,true);
-        TestCheck::assertArray('A.5', 'ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('A.5', '\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -162,17 +165,17 @@ EOD;
     "maxItems": 2
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,true,false,false,true);
-        TestCheck::assertArray('A.6', 'ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('A.6', '\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -188,17 +191,17 @@ EOD;
     "maxItems": 3
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,true,true,false,true);
-        TestCheck::assertArray('A.7', 'ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('A.7', '\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
 
 
@@ -218,17 +221,17 @@ EOD;
     "minItems": null
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.1', 'ValidatorSchema::check(); return false if the minItems value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('B.1', '\ValidatorSchema::check(); return false if the minItems value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -244,17 +247,17 @@ EOD;
     "minItems": true
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.2', 'ValidatorSchema::check(); return false if the minItems value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('B.2', '\ValidatorSchema::check(); return false if the minItems value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -270,17 +273,17 @@ EOD;
     "minItems": -1
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.3', 'ValidatorSchema::check(); return false if the minItems value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('B.3', '\ValidatorSchema::check(); return false if the minItems value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -296,17 +299,17 @@ EOD;
     "minItems": 0
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,true,true,true,true);
-        TestCheck::assertArray('B.4', 'ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('B.4', '\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -322,17 +325,17 @@ EOD;
     "minItems": 1
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,false,true,true,true,true,true);
-        TestCheck::assertArray('B.5', 'ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('B.5', '\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -348,17 +351,17 @@ EOD;
     "minItems": 2
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,false,false,true,true,true,true);
-        TestCheck::assertArray('B.6', 'ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('B.6', '\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -374,16 +377,16 @@ EOD;
     "minItems": 3
 }
 EOD;
-        $r1 = ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,false,false,false,true,true,true);
-        TestCheck::assertArray('B.7', 'ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('B.7', '\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
     }
 }

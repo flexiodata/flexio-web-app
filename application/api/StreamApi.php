@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class StreamApi
 {
     public static function create($params, $request)
@@ -27,7 +30,7 @@ class StreamApi
             return $request->getValidator()->fail();
 
         // create the stream
-        $stream = \Flexio\Object\Stream::create($params); // the Stream::create() creates a default connection and path
+        $stream = \Flexio\Object\Stream::create($params); // the \Flexio\Object\Stream::create() creates a default connection and path
 
         // return the stream info
         return $stream->get();
@@ -114,7 +117,7 @@ class StreamApi
         $mime_type = $stream_info['mime_type'];
         $content = $stream->content($start, $limit, $columns, $metadata, $handle);
 
-        if ($mime_type !== ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // return content as-is
             header('Content-Type: ' . $mime_type);
@@ -122,7 +125,7 @@ class StreamApi
          else
         {
             // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . ContentType::MIME_TYPE_JSON);
+            header('Content-Type: ' . \ContentType::MIME_TYPE_JSON);
             $content = json_encode($content);
         }
 
@@ -149,12 +152,20 @@ class StreamApi
         if ($stream === false)
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
-        // write the post content
-        $stream->writePostContent();
+        self::handleStreamUpload($params, $stream);
 
         // return the stream info
         return $stream->get();
     }
+
+
+    public static function handleStreamUpload($params, $stream)
+    {
+        // write the post content
+        $stream->writePostContent();
+    }
+
+
 
     public static function download($params, $request)
     {
@@ -194,7 +205,7 @@ class StreamApi
             return $request->getValidator()->fail(Api::ERROR_READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
-        $http_header_mime_type = ($mime_type === ContentType::MIME_TYPE_FLEXIO_TABLE ? ContentType::MIME_TYPE_CSV : $mime_type);
+        $http_header_mime_type = ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE ? \ContentType::MIME_TYPE_CSV : $mime_type);
 
         // set the headers
         $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
@@ -204,7 +215,7 @@ class StreamApi
             $output_filename = $stream_info['name'];
         if (isset($params['name']))
             $output_filename = $params['name'];
-        if ($mime_type === ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // Flexio tables are exported as csv, so add an appropriate extension
             $filename_parts = pathinfo($output_filename);
@@ -227,7 +238,7 @@ class StreamApi
                 else
             header('Content-Disposition: attachment; filename="' . $output_filename . '"');
 
-        if ($mime_type !== ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // get the content in one chunk and return it as-is
             $content = $stream->content($start, $limit, $columns, $metadata, $handle);

@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class ProjectApi
 {
     public static function create($params, $request)
@@ -155,8 +158,8 @@ class ProjectApi
 
         // get the projects for the user based on what the requesting
         // user has permission for
-        $search_path = "$target_user_eid->(".Model::EDGE_OWNS.",".Model::EDGE_FOLLOWING.")->(".Model::TYPE_PROJECT.")";
-        $projects = System::getModel()->search($search_path);
+        $search_path = "$target_user_eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")";
+        $projects = \System::getModel()->search($search_path);
 
         $res = array();
         foreach ($projects as $p)
@@ -168,7 +171,7 @@ class ProjectApi
                 continue;
 
             // only show projects that are available
-            if ($project->getStatus() !== Model::STATUS_AVAILABLE)
+            if ($project->getStatus() !== \Model::STATUS_AVAILABLE)
                 continue;
 
             // check the rights on the object
@@ -204,7 +207,7 @@ class ProjectApi
         if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        return self::getMembersByType($project, Model::TYPE_PIPE, $filter_list);
+        return self::getMembersByType($project, \Model::TYPE_PIPE, $filter_list);
     }
 
     public static function connections($params, $request)
@@ -229,7 +232,7 @@ class ProjectApi
         if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        return self::getMembersByType($project, Model::TYPE_CONNECTION, $filter_list);
+        return self::getMembersByType($project, \Model::TYPE_CONNECTION, $filter_list);
     }
 
     public static function trashed($params, $request)
@@ -261,11 +264,11 @@ class ProjectApi
         {
             // only allow pipes in the list for now
             $object_type = $o->getType();
-            if ($object_type !== Model::TYPE_PIPE)
+            if ($object_type !== \Model::TYPE_PIPE)
                 continue;
 
             // only show items in the trash
-            if ($o->getStatus() !== Model::STATUS_TRASH)
+            if ($o->getStatus() !== \Model::STATUS_TRASH)
                 continue;
 
             $result[] = $o->get();
@@ -312,16 +315,16 @@ class ProjectApi
             if ($obj === false)
                 continue;
 
-            if ($obj->getStatus() !== Model::STATUS_AVAILABLE)
+            if ($obj->getStatus() !== \Model::STATUS_AVAILABLE)
                 continue;
 
             // if the item is a connection, delete it straight away;
             // if it's another object, send it to the trash so it can
             // can purged later or recovered
-            if ($obj->getType() === Model::TYPE_CONNECTION)
-                $obj->setStatus(Model::STATUS_DELETED);
+            if ($obj->getType() === \Model::TYPE_CONNECTION)
+                $obj->setStatus(\Model::STATUS_DELETED);
                  else
-                $obj->setStatus(Model::STATUS_TRASH);
+                $obj->setStatus(\Model::STATUS_TRASH);
         }
 
         return true;
@@ -367,14 +370,14 @@ class ProjectApi
 
         foreach ($project_members as $member)
         {
-            if ($member->getStatus() !== Model::STATUS_TRASH)
+            if ($member->getStatus() !== \Model::STATUS_TRASH)
                 continue;
 
             $member_eid = $member->getEid();
             if (!array_key_exists($member_eid, $object_eids))
                 continue;
 
-            $member->setStatus(Model::STATUS_AVAILABLE);
+            $member->setStatus(\Model::STATUS_AVAILABLE);
         }
 
         return true;
@@ -420,7 +423,7 @@ class ProjectApi
 
         foreach ($project_members as $member)
         {
-            if ($member->getStatus() !== Model::STATUS_TRASH)
+            if ($member->getStatus() !== \Model::STATUS_TRASH)
                 continue;
 
             $member_eid = $member->getEid();
@@ -454,7 +457,7 @@ class ProjectApi
             if ($o->getType() !== $type)
                 continue;
 
-            if ($o->getStatus() !== Model::STATUS_AVAILABLE)
+            if ($o->getStatus() !== \Model::STATUS_AVAILABLE)
                 continue;
 
             // if an object filter list is specified, check if the
@@ -489,7 +492,7 @@ class ProjectApi
                 return false;
 
             // if we have a string, but it isn't an eid, just ignore it
-            if (!Eid::isValid($i))
+            if (!\Eid::isValid($i))
                 continue;
 
             $filtered_items[] = $i;

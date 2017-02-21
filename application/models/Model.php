@@ -165,7 +165,7 @@ class Model
 
     public function create($type, $params)
     {
-        if ($type === Model::TYPE_OBJECT)
+        if ($type === \Model::TYPE_OBJECT)
             return $this->createObjectBase($type, $params);
 
         $model = $this->loadModel($type);
@@ -182,7 +182,7 @@ class Model
         // the object return false
 
         $type = $this->getType($eid);
-        if ($type === Model::TYPE_OBJECT)
+        if ($type === \Model::TYPE_OBJECT)
             return $this->deleteObjectBase($eid);
 
         $model = $this->loadModel($type);
@@ -201,7 +201,7 @@ class Model
         // as the eid exists)
 
         $type = $this->getType($eid);
-        if ($type === Model::TYPE_OBJECT)
+        if ($type === \Model::TYPE_OBJECT)
             return $this->setObjectBase($eid, $params);
 
         $model = $this->loadModel($type);
@@ -211,16 +211,16 @@ class Model
         return $model->set($eid, $params);
     }
 
-    public function get($eid, $type = Model::TYPE_UNDEFINED)
+    public function get($eid, $type = \Model::TYPE_UNDEFINED)
     {
         // behavior for get is to return false for eids that
         // don't exist; so don't do any error reporting if
         // we can't get the model
 
-        if ($type === Model::TYPE_UNDEFINED)
+        if ($type === \Model::TYPE_UNDEFINED)
             $type = $this->getType($eid);
 
-        if ($type === Model::TYPE_OBJECT)
+        if ($type === \Model::TYPE_OBJECT)
             return $this->getObjectBase($eid);
 
         $model = $this->loadModel($type);
@@ -234,14 +234,14 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
-            return Model::TYPE_UNDEFINED;
+        if (!\Eid::isValid($eid))
+            return \Model::TYPE_UNDEFINED;
 
         $result = $db->fetchOne("select eid_type from tbl_object where eid = ?", $eid);
         if ($result === false)
-            return Model::TYPE_UNDEFINED;
+            return \Model::TYPE_UNDEFINED;
 
         return $result;
     }
@@ -250,15 +250,15 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($identifier) && !Identifier::isValid($identifier))
-            return Model::TYPE_UNDEFINED;
+        if (!\Eid::isValid($identifier) && !Identifier::isValid($identifier))
+            return \Model::TYPE_UNDEFINED;
 
         $qidentifier = $db->quote($identifier);
         $result = $db->fetchOne("select eid_type from tbl_object where eid = $qidentifier or ename = $qidentifier");
         if ($result === false)
-            return Model::TYPE_UNDEFINED;
+            return \Model::TYPE_UNDEFINED;
 
         return $result;
     }
@@ -271,29 +271,29 @@ class Model
 
     public function setStatus($eid, $status)
     {
-        // note: it's possible to set the status through the Model::set()
+        // note: it's possible to set the status through the \Model::set()
         // function on the model, but this provides a lightweight alternative
-        // that isn't restricted (right now, changes through Model::set() are
+        // that isn't restricted (right now, changes through \Model::set() are
         // only applied for items that aren't deleted)
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Eid::isValid($eid))
             return false;
 
         // make sure the status is set to a valid value
-        if (!Model::isValidStatus($status))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+        if (!\Model::isValidStatus($status))
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
 
         // make sure the object exists
-        if ($this->getType($eid) === Model::TYPE_UNDEFINED)
+        if ($this->getType($eid) === \Model::TYPE_UNDEFINED)
             return false;
 
         // set the updated timestamp so it'll stay in sync with whatever
         // object is being edited
-        $timestamp = System::getTimestamp();
+        $timestamp = \System::getTimestamp();
         $process_arr = array(
             'eid_status'    => $status,
             'updated'       => $timestamp
@@ -307,14 +307,14 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
-            return Model::STATUS_UNDEFINED;
+        if (!\Eid::isValid($eid))
+            return \Model::STATUS_UNDEFINED;
 
         $result = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
         if ($result === false)
-            return Model::STATUS_UNDEFINED;
+            return \Model::STATUS_UNDEFINED;
 
         return $result;
     }
@@ -343,7 +343,7 @@ class Model
 
         try
         {
-            $timestamp = System::getTimestamp();
+            $timestamp = \System::getTimestamp();
             $process_arr = array(
                 'source_eid'       => $source_eid,
                 'target_eid'       => $target_eid,
@@ -688,11 +688,11 @@ class Model
 
         // if the status parameter is set, make sure the status is set
         // to a valid value
-        $status = Model::STATUS_AVAILABLE;  // default status of available
+        $status = \Model::STATUS_AVAILABLE;  // default status of available
         if (isset($params['eid_status']))
         {
             $status = $params['eid_status'];
-            if (!Model::isValidStatus($status))
+            if (!\Model::isValidStatus($status))
                 return $this->fail(Model::ERROR_INVALID_PARAMETER);
         }
 
@@ -719,7 +719,7 @@ class Model
                 return $this->fail(Model::ERROR_CREATE_FAILED);
         }
 
-        $timestamp = System::getTimestamp();
+        $timestamp = \System::getTimestamp();
         $process_arr = array(
             'eid'           => $eid,
             'eid_type'      => $type,
@@ -757,12 +757,12 @@ class Model
         // as if it's already been deleted and therefore can't be found;
         // preserve the old updated date as well)
         $existing_status = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
-        if ($existing_status === false || $existing_status == Model::STATUS_DELETED)
+        if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
             return false;
 
-        $timestamp = System::getTimestamp();
+        $timestamp = \System::getTimestamp();
         $process_arr = array(
-            'eid_status'    => Model::STATUS_DELETED,
+            'eid_status'    => \Model::STATUS_DELETED,
             'updated'       => $timestamp
         );
 
@@ -791,12 +791,12 @@ class Model
 
         // if an item is deleted, don't allow it to be edited
         $existing_status = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
-        if ($existing_status === false || $existing_status == Model::STATUS_DELETED)
+        if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
             return false;
 
         // set the updated timestamp so it'll stay in sync with whatever
         // object is being edited
-        $timestamp = System::getTimestamp();
+        $timestamp = \System::getTimestamp();
         $process_arr = array(
             'updated'       => $timestamp
         );
@@ -822,16 +822,16 @@ class Model
         if (isset($params['ename']))
         {
             $ename = $params['ename'];
-            if ($ename !== '' && Identifier::isValid($ename) === false)
+            if ($ename !== '' && \Identifier::isValid($ename) === false)
                 return $this->fail(Model::ERROR_CREATE_FAILED);
-            if (Eid::isValid($ename) === true)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+            if (\Eid::isValid($ename) === true)
+                return $this->fail(\Model::ERROR_CREATE_FAILED);
 
             // make sure that the ename is unique
             $qename = $db->quote($ename);
             $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
             if ($existing_ename !== false)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+                return $this->fail(\Model::ERROR_CREATE_FAILED);
 
             $process_arr['ename'] = $ename;
         }
@@ -873,8 +873,8 @@ class Model
                      'eid_type'        => $row['eid_type'],
                      'ename'           => $row['ename'],
                      'eid_status'      => $row['eid_status'],
-                     'created'         => Util::formatDate($row['created']),
-                     'updated'         => Util::formatDate($row['updated']));
+                     'created'         => \Util::formatDate($row['created']),
+                     'updated'         => \Util::formatDate($row['updated']));
     }
 
     public function setDbVersionNumber($version)
@@ -957,12 +957,7 @@ class Model
         if (!is_null($this->database))
             return $this->database;
 
-        global $g_config;
-        $dbconfig = array('host' => $g_config->directory_database_host,
-                          'port' => $g_config->directory_database_port,
-                          'username' => $g_config->directory_database_username,
-                          'password' => $g_config->directory_database_password,
-                          'dbname' => $g_config->directory_database_dbname);
+        $dbconfig = self::getDatabaseConfig();
 
         try
         {
@@ -973,7 +968,14 @@ class Model
             else
                 return null; // unsupported database
 
-            $db = ModelDb::factory($pdo_database_type, $dbconfig);
+            $params = array();
+            $params['host'] = $dbconfig['directory_host'];
+            $params['port'] = $dbconfig['directory_port'];
+            $params['dbname'] = $dbconfig['directory_dbname'];
+            $params['username'] = $dbconfig['directory_username'];
+            $params['password'] = $dbconfig['directory_password'];
+
+            $db = ModelDb::factory($pdo_database_type, $params);
             $conn = $db->getConnection();
             $this->database = $db;
             return $db;
@@ -988,6 +990,25 @@ class Model
 
             return false; // can't connect
         }
+    }
+
+    public static function getDatabaseConfig()
+    {
+        global $g_config;
+
+        $dbconfig = array('directory_host'     => $g_config->directory_database_host,
+                          'directory_port'     => $g_config->directory_database_port,
+                          'directory_username' => $g_config->directory_database_username,
+                          'directory_password' => $g_config->directory_database_password,
+                          'directory_dbname'   => $g_config->directory_database_dbname,
+                          'datastore_host'     => $g_config->datastore_host,
+                          'datastore_port'     => $g_config->datastore_port,
+                          'datastore_username' => $g_config->datastore_username,
+                          'datastore_password' => $g_config->datastore_password,
+                          'datastore_dbname'   => $g_config->datastore_dbname
+                          );
+
+        return $dbconfig;
     }
 
     public function setTimezone($tz)
@@ -1024,22 +1045,22 @@ class Model
             switch ($code)
             {
                 default:                                  $message = _('Operation failed');            break;
-                case Model::ERROR_UNDEFINED:              $message = _('Operation failed');            break;
-                case Model::ERROR_GENERAL:                $message = _('General error');               break;
-                case Model::ERROR_UNIMPLEMENTED:          $message = _('Unimplemented');               break;
-                case Model::ERROR_NO_DATABASE:            $message = _('Database not available');      break;
-                case Model::ERROR_NO_MODEL:               $message = _('Model not available');         break;
-                case Model::ERROR_NO_SERVICE:             $message = _('Service not available');       break;
-                case Model::ERROR_NO_OBJECT:              $message = _('Object not available');        break;
-                case Model::ERROR_MISSING_PARAMETER:      $message = _('Missing parameter');           break;
-                case Model::ERROR_INVALID_PARAMETER:      $message = _('Invalid parameter');           break;
-                case Model::ERROR_INVALID_SYNTAX:         $message = _('Invalid syntax');              break;
-                case Model::ERROR_CREATE_FAILED:          $message = _('Could not create object');     break;
-                case Model::ERROR_DELETE_FAILED:          $message = _('Could not delete object');     break;
-                case Model::ERROR_WRITE_FAILED:           $message = _('Could not write to object');   break;
-                case Model::ERROR_READ_FAILED:            $message = _('Could not read from object');  break;
-                case Model::ERROR_INSUFFICIENT_RIGHTS:    $message = _('Insufficient rights');         break;
-                case Model::ERROR_SIZE_LIMIT_EXCEEDED:    $message = _('Size limit exceeded');         break;
+                case \Model::ERROR_UNDEFINED:              $message = _('Operation failed');            break;
+                case \Model::ERROR_GENERAL:                $message = _('General error');               break;
+                case \Model::ERROR_UNIMPLEMENTED:          $message = _('Unimplemented');               break;
+                case \Model::ERROR_NO_DATABASE:            $message = _('Database not available');      break;
+                case \Model::ERROR_NO_MODEL:               $message = _('Model not available');         break;
+                case \Model::ERROR_NO_SERVICE:             $message = _('Service not available');       break;
+                case \Model::ERROR_NO_OBJECT:              $message = _('Object not available');        break;
+                case \Model::ERROR_MISSING_PARAMETER:      $message = _('Missing parameter');           break;
+                case \Model::ERROR_INVALID_PARAMETER:      $message = _('Invalid parameter');           break;
+                case \Model::ERROR_INVALID_SYNTAX:         $message = _('Invalid syntax');              break;
+                case \Model::ERROR_CREATE_FAILED:          $message = _('Could not create object');     break;
+                case \Model::ERROR_DELETE_FAILED:          $message = _('Could not delete object');     break;
+                case \Model::ERROR_WRITE_FAILED:           $message = _('Could not write to object');   break;
+                case \Model::ERROR_READ_FAILED:            $message = _('Could not read from object');  break;
+                case \Model::ERROR_INSUFFICIENT_RIGHTS:    $message = _('Insufficient rights');         break;
+                case \Model::ERROR_SIZE_LIMIT_EXCEEDED:    $message = _('Size limit exceeded');         break;
             }
         }
 
@@ -1091,14 +1112,14 @@ class Model
                 return false;
 
             // note: undefined type isn't a valid model, so it's not included
-            case Model::TYPE_USER           : return $this->user;
-            case Model::TYPE_PROJECT        : return $this->project;
-            case Model::TYPE_PIPE           : return $this->pipe;
-            case Model::TYPE_STREAM         : return $this->stream;
-            case Model::TYPE_CONNECTION     : return $this->connection;
-            case Model::TYPE_COMMENT        : return $this->comment;
-            case Model::TYPE_PROCESS        : return $this->process;
-            case Model::TYPE_TOKEN          : return $this->token;
+            case \Model::TYPE_USER           : return $this->user;
+            case \Model::TYPE_PROJECT        : return $this->project;
+            case \Model::TYPE_PIPE           : return $this->pipe;
+            case \Model::TYPE_STREAM         : return $this->stream;
+            case \Model::TYPE_CONNECTION     : return $this->connection;
+            case \Model::TYPE_COMMENT        : return $this->comment;
+            case \Model::TYPE_PROCESS        : return $this->process;
+            case \Model::TYPE_TOKEN          : return $this->token;
         }
     }
 
@@ -1109,7 +1130,7 @@ class Model
         if ($db === false)
             return false; // internal function, so don't flag an error
 
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $qeid = $db->quote($eid);
 
         $result = $db->fetchOne("select eid from tbl_object where eid = $qeid");
@@ -1124,7 +1145,7 @@ class Model
     {
         // validate the parameters; if they check out, then return
         // the cleaned parameters
-        if (($params = Validator::getInstance()->check($params, $checks)) !== false)
+        if (($params = \Validator::getInstance()->check($params, $checks)) !== false)
             return $params;
 
         // if the parameters don't check out, return false
@@ -1141,18 +1162,18 @@ class Model
             default:
                 return false;
 
-            case Model::TYPE_UNDEFINED:
+            case \Model::TYPE_UNDEFINED:
                 return false;
 
-            case Model::TYPE_OBJECT:
-            case Model::TYPE_USER:
-            case Model::TYPE_PROJECT:
-            case Model::TYPE_PIPE:
-            case Model::TYPE_STREAM:
-            case Model::TYPE_CONNECTION:
-            case Model::TYPE_COMMENT:
-            case Model::TYPE_PROCESS:
-            case Model::TYPE_TOKEN:
+            case \Model::TYPE_OBJECT:
+            case \Model::TYPE_USER:
+            case \Model::TYPE_PROJECT:
+            case \Model::TYPE_PIPE:
+            case \Model::TYPE_STREAM:
+            case \Model::TYPE_CONNECTION:
+            case \Model::TYPE_COMMENT:
+            case \Model::TYPE_PROCESS:
+            case \Model::TYPE_TOKEN:
                 return true;
         }
     }
@@ -1167,29 +1188,29 @@ class Model
             default:
                 return false;
 
-            case Model::EDGE_UNDEFINED:
+            case \Model::EDGE_UNDEFINED:
                 return false;
 
-            case Model::EDGE_CREATED:
-            case Model::EDGE_CREATED_BY:
-            case Model::EDGE_OWNS:
-            case Model::EDGE_OWNED_BY:
-            case Model::EDGE_INVITED:
-            case Model::EDGE_INVITED_BY:
-            case Model::EDGE_SHARED_WITH:
-            case Model::EDGE_SHARED_FROM:
-            case Model::EDGE_FOLLOWING:
-            case Model::EDGE_FOLLOWED_BY:
-            case Model::EDGE_MEMBER_OF:
-            case Model::EDGE_HAS_MEMBER:
-            case Model::EDGE_LINKED_TO:
-            case Model::EDGE_LINKED_FROM:
-            case Model::EDGE_COPIED_TO:
-            case Model::EDGE_COPIED_FROM:
-            case Model::EDGE_COMMENT_ON:
-            case Model::EDGE_HAS_COMMENT:
-            case Model::EDGE_PROCESS_OF:
-            case Model::EDGE_HAS_PROCESS:
+            case \Model::EDGE_CREATED:
+            case \Model::EDGE_CREATED_BY:
+            case \Model::EDGE_OWNS:
+            case \Model::EDGE_OWNED_BY:
+            case \Model::EDGE_INVITED:
+            case \Model::EDGE_INVITED_BY:
+            case \Model::EDGE_SHARED_WITH:
+            case \Model::EDGE_SHARED_FROM:
+            case \Model::EDGE_FOLLOWING:
+            case \Model::EDGE_FOLLOWED_BY:
+            case \Model::EDGE_MEMBER_OF:
+            case \Model::EDGE_HAS_MEMBER:
+            case \Model::EDGE_LINKED_TO:
+            case \Model::EDGE_LINKED_FROM:
+            case \Model::EDGE_COPIED_TO:
+            case \Model::EDGE_COPIED_FROM:
+            case \Model::EDGE_COMMENT_ON:
+            case \Model::EDGE_HAS_COMMENT:
+            case \Model::EDGE_PROCESS_OF:
+            case \Model::EDGE_HAS_PROCESS:
                 return true;
         }
     }
@@ -1204,13 +1225,13 @@ class Model
             default:
                 return false;
 
-            case Model::STATUS_UNDEFINED:
+            case \Model::STATUS_UNDEFINED:
                 return false;
 
-            case Model::STATUS_PENDING:
-            case Model::STATUS_AVAILABLE:
-            case Model::STATUS_TRASH:
-            case Model::STATUS_DELETED:
+            case \Model::STATUS_PENDING:
+            case \Model::STATUS_AVAILABLE:
+            case \Model::STATUS_TRASH:
+            case \Model::STATUS_DELETED:
                 return true;
         }
     }

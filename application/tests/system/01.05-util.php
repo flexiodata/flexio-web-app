@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -21,7 +24,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV1KcusVh1gSlH3FlRIf052sQ==';
-        $str = Util::oldEncrypt($unencrypted_str, 'abcdefg');
+        $str = \Util::oldEncrypt($unencrypted_str, 'abcdefg');
         $actual = ($str === $encrypted_str_key);
         $expected = true;
         TestCheck::assertBoolean('A.1', 'Util::encrypt() test for string encryption',  $actual, $expected, $results);
@@ -29,7 +32,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV1XXyq+LSvbPvbTkMQ4h1BcQ==';
-        $str = Util::oldEncrypt($unencrypted_str, 'hijklmn');
+        $str = \Util::oldEncrypt($unencrypted_str, 'hijklmn');
         $actual = ($str === $encrypted_str_key);
         $expected = true;
         TestCheck::assertBoolean('A.2', 'Util::encrypt() test for string encryption',  $actual, $expected, $results);
@@ -37,7 +40,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV2/RGvUbYrs9C+KR98EAOufKZT6UuK45HYzLqLjYprI1w==';
-        $str = Util::encrypt($unencrypted_str, 'abcdefg');
+        $str = \Util::encrypt($unencrypted_str, 'abcdefg');
         $actual = ($str === $encrypted_str_key);
         $expected = true;
         TestCheck::assertBoolean('A.3', 'Util::encrypt() test for string encryption',  $actual, $expected, $results);
@@ -45,7 +48,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV2/NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw==';
-        $str = Util::encrypt($unencrypted_str, 'hijklmn');
+        $str = \Util::encrypt($unencrypted_str, 'hijklmn');
         $actual = ($str === $encrypted_str_key);
         $expected = true;
         TestCheck::assertBoolean('A.4', 'Util::encrypt() test for string encryption',  $actual, $expected, $results);
@@ -57,7 +60,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV1KcusVh1gSlH3FlRIf052sQ==';
-        $str = Util::decrypt($encrypted_str_key, ''); // encrypted with key 'abcdefg' using mycrypt implementation
+        $str = \Util::decrypt($encrypted_str_key, ''); // encrypted with key 'abcdefg' using mycrypt implementation
         $actual = ($str === $unencrypted_str);
         $expected = false;
         TestCheck::assertBoolean('B.1', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -65,7 +68,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV1KcusVh1gSlH3FlRIf052sQ==';
-        $str = Util::decrypt($encrypted_str_key, 'a'); // encrypted with key 'abcdefg' using mycrypt implementation
+        $str = \Util::decrypt($encrypted_str_key, 'a'); // encrypted with key 'abcdefg' using mycrypt implementation
         $actual = ($str === $unencrypted_str);
         $expected = false;
         TestCheck::assertBoolean('B.2', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -73,7 +76,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV1KcusVh1gSlH3FlRIf052sQ==';
-        $str = Util::decrypt($encrypted_str_key, 'abcdefg'); // encrypted with key 'abcdefg' using mycrypt implementation
+        $str = \Util::decrypt($encrypted_str_key, 'abcdefg'); // encrypted with key 'abcdefg' using mycrypt implementation
         $actual = ($str === $unencrypted_str);
         $expected = true;
         TestCheck::assertBoolean('B.3', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -81,7 +84,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV1XXyq+LSvbPvbTkMQ4h1BcQ==';
-        $str = Util::decrypt($encrypted_str_key, ''); // encrypted with key 'hijklmn' using mycrypt implementation
+        $str = \Util::decrypt($encrypted_str_key, ''); // encrypted with key 'hijklmn' using mycrypt implementation
         $actual = ($str === $unencrypted_str);
         $expected = false;
         TestCheck::assertBoolean('B.4', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -89,7 +92,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV1XXyq+LSvbPvbTkMQ4h1BcQ=='; // encrypted with key 'hijklmn' using mycrypt implementation
-        $str = Util::decrypt($encrypted_str_key, 'h');
+        $str = \Util::decrypt($encrypted_str_key, 'h');
         $actual = ($str === $unencrypted_str);
         $expected = false;
         TestCheck::assertBoolean('B.5', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -97,7 +100,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV1XXyq+LSvbPvbTkMQ4h1BcQ=='; // encrypted with key 'hijklmn' using mycrypt implementation
-        $str = Util::decrypt($encrypted_str_key, 'hijklmn');
+        $str = \Util::decrypt($encrypted_str_key, 'hijklmn');
         $actual = ($str === $unencrypted_str);
         $expected = true;
         TestCheck::assertBoolean('B.6', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -109,7 +112,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV2/RGvUbYrs9C+KR98EAOufKZT6UuK45HYzLqLjYprI1w==';
-        $str = Util::decrypt($encrypted_str_key, ''); // encrypted with key 'abcdefg' using sodium implementation
+        $str = \Util::decrypt($encrypted_str_key, ''); // encrypted with key 'abcdefg' using sodium implementation
         $actual = ($str === $unencrypted_str);
         $expected = false;
         TestCheck::assertBoolean('C.1', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -117,7 +120,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV2/RGvUbYrs9C+KR98EAOufKZT6UuK45HYzLqLjYprI1w==';
-        $str = Util::decrypt($encrypted_str_key, 'a'); // encrypted with key 'abcdefg' using sodium implementation
+        $str = \Util::decrypt($encrypted_str_key, 'a'); // encrypted with key 'abcdefg' using sodium implementation
         $actual = ($str === $unencrypted_str);
         $expected = false;
         TestCheck::assertBoolean('C.2', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -125,7 +128,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV2/RGvUbYrs9C+KR98EAOufKZT6UuK45HYzLqLjYprI1w==';
-        $str = Util::decrypt($encrypted_str_key, 'abcdefg'); // encrypted with key 'abcdefg' using sodium implementation
+        $str = \Util::decrypt($encrypted_str_key, 'abcdefg'); // encrypted with key 'abcdefg' using sodium implementation
         $actual = ($str === $unencrypted_str);
         $expected = true;
         TestCheck::assertBoolean('C.3', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -133,7 +136,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV2/NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw==';
-        $str = Util::decrypt($encrypted_str_key, ''); // encrypted with key 'hijklmn' using sodium implementation
+        $str = \Util::decrypt($encrypted_str_key, ''); // encrypted with key 'hijklmn' using sodium implementation
         $actual = ($str === $unencrypted_str);
         $expected = false;
         TestCheck::assertBoolean('C.4', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -141,7 +144,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV2/NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw=='; // encrypted with key 'hijklmn' using sodium implementation
-        $str = Util::decrypt($encrypted_str_key, 'h');
+        $str = \Util::decrypt($encrypted_str_key, 'h');
         $actual = ($str === $unencrypted_str);
         $expected = false;
         TestCheck::assertBoolean('C.5', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);
@@ -149,7 +152,7 @@ class Test
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
         $encrypted_str_key = 'ZZXV2/NRVm93HeCeUxYV8UI7qx4k1jEWyZUr5ZezMHrDvtmw=='; // encrypted with key 'hijklmn' using sodium implementation
-        $str = Util::decrypt($encrypted_str_key, 'hijklmn');
+        $str = \Util::decrypt($encrypted_str_key, 'hijklmn');
         $actual = ($str === $unencrypted_str);
         $expected = true;
         TestCheck::assertBoolean('C.6', 'Util::decrypt() test for string decryption',  $actual, $expected, $results);

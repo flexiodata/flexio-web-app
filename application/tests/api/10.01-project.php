@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -21,10 +24,10 @@ class Test
         // TEST: object creation
 
         // BEGIN TEST
-        $username = Util::generateHandle();
+        $username = \Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $user_eid = System::getModel()->create(Model::TYPE_USER, $properties);
+        $user = \Flexio\Object\User::create($properties);
 
         $params = json_decode('
         {
@@ -32,15 +35,15 @@ class Test
             "description": "Test project"
         }
         ',true);
-        $request = Request::create()->setRequestingUser($user_eid);
-        $actual= ProjectApi::create($params, $request);
+        $request = \Flexio\Api\Request::create()->setRequestingUser($user->getEid());
+        $actual = \Flexio\Api\ProjectApi::create($params, $request);
         $expected = '
         {
-            "eid_type": "'.Model::TYPE_PROJECT.'",
+            "eid_type": "'.\Model::TYPE_PROJECT.'",
             "name": "Project",
             "description": "Test project"
         }
         ';
-        TestCheck::assertInArray('A.1', 'ProjectApi::create(); return the object',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', '\Flexio\Api\ProjectApi::create(); return the object',  $actual, $expected, $results);
     }
 }

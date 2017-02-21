@@ -12,19 +12,27 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: model constant tests
 
         // BEGIN TEST
-        $actual = Model::PIPE_STATUS_ACTIVE;
+        $actual = \Model::PIPE_STATUS_ACTIVE;
         $expected = 'A';
         TestCheck::assertString('A.1', 'PipeModel status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Model::PIPE_STATUS_INACTIVE;
+        $actual = \Model::PIPE_STATUS_INACTIVE;
         $expected = 'I';
         TestCheck::assertString('A.2', 'Pipe status constant',  $actual, $expected, $results);
     }

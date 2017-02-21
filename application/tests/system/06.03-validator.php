@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -19,66 +22,66 @@ class Test
         // TEST: make sure the values parameter is specified and is an array
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = null;
         $checks = array();
         $result = $validator->check($values, $checks);
         $has_errors = $validator->hasErrors();
         $actual = $result === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Validator::check(); should return false and flag an error if values param isn\'t an array',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Validator::check(); should return false and flag an error if values param isn\'t an array',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = true;
         $checks = array();
         $result = $validator->check($values, $checks);
         $has_errors = $validator->hasErrors();
         $actual = $result === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.2', 'Validator::check(); should return false and flag an error if values param isn\'t an array',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Validator::check(); should return false and flag an error if values param isn\'t an array',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array();
         $checks = array();
         $result = $validator->check($values, $checks);
         $actual = $validator->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.3', 'Validator::check(); don\'t flag an error if the input values is an array',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Validator::check(); don\'t flag an error if the input values is an array',  $actual, $expected, $results);
 
 
 
         // TEST: make sure the checks parameter is specified and is an array with appropriate validation fields
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = null;
         $checks = array();
         $result = $validator->check($values, $checks);
         $has_errors = $validator->hasErrors();
         $actual = $result === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'Validator::check(); should return false and flag an error if the checks param isn\'t an array',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Validator::check(); should return false and flag an error if the checks param isn\'t an array',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = true;
         $checks = array();
         $result = $validator->check($values, $checks);
         $has_errors = $validator->hasErrors();
         $actual = $result === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('B.2', 'Validator::check(); should return false and flag an error if the checks param isn\'t an array',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Validator::check(); should return false and flag an error if the checks param isn\'t an array',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array();
         $checks = array();
         $result = $validator->check($values, $checks);
         $actual = $validator->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('B.3', 'Validator::check(); don\'t flag an error if the checks param is an array',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', '\Validator::check(); don\'t flag an error if the checks param is an array',  $actual, $expected, $results);
 
         // BEGIN TEST
         // TODO: check format of validation parameter
@@ -88,17 +91,17 @@ class Test
         // TEST: return parameters should be limited to those specified by the check
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array();
         $checks = array();
         $actual = $validator->check($values, $checks);
         $expected = array(
         );
-        TestCheck::assertArray('C.1', 'Validator::check(); return parameter should be an empty array when values param is empty',  $actual, $expected, $results);
+        TestCheck::assertArray('C.1', '\Validator::check(); return parameter should be an empty array when values param is empty',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'eid' => $eid
         );
@@ -106,11 +109,11 @@ class Test
         $actual = $validator->check($values, $checks);
         $expected = array(
         );
-        TestCheck::assertArray('C.2', 'Validator::check(); return parameter should be an empty array when checks param is empty',  $actual, $expected, $results);
+        TestCheck::assertArray('C.2', '\Validator::check(); return parameter should be an empty array when checks param is empty',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'eid' => $eid,
             'name' => 'Object name',
@@ -125,11 +128,11 @@ class Test
             'eid' => $eid,
             'description' => 'Object description'
         );
-        TestCheck::assertArray('C.3', 'Validator::check(); return parameter should be filtered values param based on keys existing in the checks param',  $actual, $expected, $results);
+        TestCheck::assertArray('C.3', '\Validator::check(); return parameter should be filtered values param based on keys existing in the checks param',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -141,24 +144,24 @@ class Test
             'eid' => $eid,
             'description' => 'Object description'
         );
-        TestCheck::assertArray('C.4', 'Validator::check(); return parameters should add in default values that aren\'t specified in the input',  $actual, $expected, $results);
+        TestCheck::assertArray('C.4', '\Validator::check(); return parameters should add in default values that aren\'t specified in the input',  $actual, $expected, $results);
 
 
 
         // TEST: check basic validation
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array();
         $checks = array(
             'eid' => array('type' => 'eid', 'required' => true)
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('D.1', 'Validator::check(); should return false when required parameter isn\'t present',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.1', '\Validator::check(); should return false when required parameter isn\'t present',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'eid' => $eid,
             'name' => -1
@@ -172,19 +175,19 @@ class Test
         $actual = $validator->getErrors();
         $expected = array(
             array(
-                'code' => Validator::ERROR_MISSING_PARAMETER, // missing parameters get reported first
+                'code' => \Validator::ERROR_MISSING_PARAMETER, // missing parameters get reported first
                 'message' => 'Missing parameter(s): description'
             ),
             array(
-                'code' => Validator::ERROR_INVALID_PARAMETER,
+                'code' => \Validator::ERROR_INVALID_PARAMETER,
                 'message' => 'Invalid parameter(s): name:-1'
             )
         );
-        TestCheck::assertArray('D.2', 'Validator::check(); flag an error when the input values don\t pass the checks',  $actual, $expected, $results);
+        TestCheck::assertArray('D.2', '\Validator::check(); flag an error when the input values don\t pass the checks',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'eid' => $eid,
             'name' => 'Object name'
@@ -195,15 +198,15 @@ class Test
         $result = $validator->check($values, $checks);
         $actual = $validator->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('D.3', 'Validator::check(); make sure an error isn\'t flagged when the input values pass the checks',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.3', '\Validator::check(); make sure an error isn\'t flagged when the input values pass the checks',  $actual, $expected, $results);
 
 
 
         // TEST: check eid validation
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'eid' => $eid
         );
@@ -214,11 +217,11 @@ class Test
         $expected = array(
             'eid' => $eid
         );
-        TestCheck::assertInArray('E.1', 'Validator::check(); return parameter if it passes an eid check',  $actual, $expected, $results);
+        TestCheck::assertInArray('E.1', '\Validator::check(); return parameter if it passes an eid check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'eid' => 'abc'
         );
@@ -227,11 +230,11 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('E.2', 'Validator::check(); fail if parameter doesn\'t pass an eid check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('E.2', '\Validator::check(); fail if parameter doesn\'t pass an eid check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'eid' => 123
         );
@@ -240,15 +243,15 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('E.3', 'Validator::check(); fail if parameter doesn\'t pass an eid check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('E.3', '\Validator::check(); fail if parameter doesn\'t pass an eid check',  $actual, $expected, $results);
 
 
 
         // TEST: check identifier validation
 
         // BEGIN TEST
-        $validator = new Validator;
-        $handle = Util::generateHandle();
+        $validator = new \Validator;
+        $handle = \Util::generateHandle();
         $values = array(
             'id' => $handle
         );
@@ -259,10 +262,10 @@ class Test
         $expected = array(
             'id' => $handle
         );
-        TestCheck::assertInArray('F.1', 'Validator::check(); return parameter if it passes an identifier check',  $actual, $expected, $results);
+        TestCheck::assertInArray('F.1', '\Validator::check(); return parameter if it passes an identifier check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'id' => 'X'
         );
@@ -271,10 +274,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('F.2', 'Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('F.2', '\Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'id' => 123
         );
@@ -283,10 +286,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('F.3', 'Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('F.3', '\Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'id' => true
         );
@@ -295,14 +298,14 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('F.4', 'Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('F.4', '\Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
 
 
 
         // TEST: check json validation
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => '{"name" : "value", "properties" : [1,2,3]}'
         );
@@ -313,10 +316,10 @@ class Test
         $expected = array(
             'definition' => '{"name" : "value", "properties" : [1,2,3]}'
         );
-        TestCheck::assertInArray('G.1', 'Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        TestCheck::assertInArray('G.1', '\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => '{}'
         );
@@ -327,10 +330,10 @@ class Test
         $expected = array(
             'definition' => '{}'
         );
-        TestCheck::assertInArray('G.2', 'Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        TestCheck::assertInArray('G.2', '\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => '[]'
         );
@@ -341,10 +344,10 @@ class Test
         $expected = array(
             'definition' => '[]'
         );
-        TestCheck::assertInArray('G.3', 'Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        TestCheck::assertInArray('G.3', '\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => true
         );
@@ -353,10 +356,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('G.4', 'Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('G.4', '\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => false
         );
@@ -365,10 +368,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('G.5', 'Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('G.5', '\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => null
         );
@@ -377,10 +380,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('G.6', 'Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('G.6', '\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => 123
         );
@@ -389,10 +392,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('G.7', 'Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('G.7', '\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => '"abc"'
         );
@@ -401,10 +404,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('G.8', 'Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('G.8', '\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => '{'
         );
@@ -413,10 +416,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('G.9', 'Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('G.9', '\Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => ''
         );
@@ -425,10 +428,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('G.10', 'Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('G.10', '\Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'definition' => '{"name" : value"}'
         );
@@ -437,14 +440,14 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('G.11', 'Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('G.11', '\Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
 
 
 
         // TEST: check string validation
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'name' => 'John Williams'
         );
@@ -455,10 +458,10 @@ class Test
         $expected = array(
             'name' => 'John Williams'
         );
-        TestCheck::assertInArray('H.1', 'Validator::check(); return parameter if it passes a string check',  $actual, $expected, $results);
+        TestCheck::assertInArray('H.1', '\Validator::check(); return parameter if it passes a string check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'name' => 1
         );
@@ -467,10 +470,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('H.2', 'Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('H.2', '\Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'name' => true
         );
@@ -479,10 +482,10 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('H.3', 'Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('H.3', '\Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'name' => null
         );
@@ -491,14 +494,14 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('H.4', 'Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('H.4', '\Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
 
 
 
         // TEST: check integer validation
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'value' => 2
         );
@@ -509,11 +512,11 @@ class Test
         $expected = array(
             'value' => 2
         );
-        TestCheck::assertInArray('I.1', 'Validator::check(); return parameter if it passes an integer check',  $actual, $expected, $results);
+        TestCheck::assertInArray('I.1', '\Validator::check(); return parameter if it passes an integer check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'name' => 3.2
         );
@@ -522,11 +525,11 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('I.2', 'Validator::check(); fail if parameter doesn\'t pass an integer check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('I.2', '\Validator::check(); fail if parameter doesn\'t pass an integer check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'name' => 'John Williams'
         );
@@ -535,14 +538,14 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('I.3', 'Validator::check(); fail if parameter doesn\'t pass an integer check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('I.3', '\Validator::check(); fail if parameter doesn\'t pass an integer check',  $actual, $expected, $results);
 
 
 
         // TEST: check number validation
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'value' => 2.1
         );
@@ -553,11 +556,11 @@ class Test
         $expected = array(
             'value' => 2.1
         );
-        TestCheck::assertInArray('J.1', 'Validator::check(); return parameter if it passes a number check',  $actual, $expected, $results);
+        TestCheck::assertInArray('J.1', '\Validator::check(); return parameter if it passes a number check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'name' => true
         );
@@ -566,11 +569,11 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('J.2', 'Validator::check(); fail if parameter doesn\'t pass a number check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('J.2', '\Validator::check(); fail if parameter doesn\'t pass a number check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'name' => 'John Williams'
         );
@@ -579,14 +582,14 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('J.3', 'Validator::check(); fail if parameter doesn\'t pass a number check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('J.3', '\Validator::check(); fail if parameter doesn\'t pass a number check',  $actual, $expected, $results);
 
 
 
         // TEST: check boolean validation
 
         // BEGIN TEST
-        $validator = new Validator;
+        $validator = new \Validator;
         $values = array(
             'value' => true
         );
@@ -597,11 +600,11 @@ class Test
         $expected = array(
             'value' => true
         );
-        TestCheck::assertInArray('K.1', 'Validator::check(); return parameter if it passes a boolean check',  $actual, $expected, $results);
+        TestCheck::assertInArray('K.1', '\Validator::check(); return parameter if it passes a boolean check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'value' => false
         );
@@ -612,11 +615,11 @@ class Test
         $expected = array(
             'value' => false
         );
-        TestCheck::assertInArray('K.2', 'Validator::check(); return parameter if it passes a boolean check',  $actual, $expected, $results);
+        TestCheck::assertInArray('K.2', '\Validator::check(); return parameter if it passes a boolean check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'value' => 'true'
         );
@@ -627,11 +630,11 @@ class Test
         $expected = array(
             'value' => true
         );
-        TestCheck::assertInArray('K.3', 'Validator::check(); allow boolean parameters to be specified as true/false string',  $actual, $expected, $results);
+        TestCheck::assertInArray('K.3', '\Validator::check(); allow boolean parameters to be specified as true/false string',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'value' => 1
         );
@@ -640,11 +643,11 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('K.4', 'Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('K.4', '\Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'value' => null
         );
@@ -653,11 +656,11 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('K.5', 'Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('K.5', '\Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'value' => null
         );
@@ -666,15 +669,15 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('K.6', 'Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
+        TestCheck::assertBoolean('K.6', '\Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
 
 
 
         // TEST: check any validation
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'id' => 1,
             'name' => 'John Williams',
@@ -694,15 +697,15 @@ class Test
             'address' => null,
             'active' => true
         );
-        TestCheck::assertArray('L.1', 'Validator::check(); return parameter if it passes an "any type" check',  $actual, $expected, $results);
+        TestCheck::assertArray('L.1', '\Validator::check(); return parameter if it passes an "any type" check',  $actual, $expected, $results);
 
 
 
         // TEST: non-required parameters
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'eid' => ''
         );
@@ -712,11 +715,11 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('M.1', 'Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
+        TestCheck::assertBoolean('M.1', '\Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'name' => null
         );
@@ -725,11 +728,11 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('M.2', 'Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
+        TestCheck::assertBoolean('M.2', '\Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'eid' => $eid
         );
@@ -741,11 +744,11 @@ class Test
         $expected = array(
             'eid' => $eid
         );
-        TestCheck::assertInArray('M.3', 'Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('M.3', '\Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -759,11 +762,11 @@ class Test
         $actual = $validator->check($values, $checks);
         $expected = array(
         );
-        TestCheck::assertInArray('M.4', 'Validator::check(); make sure non-required parameters aren\'t enforced if they\'re not present in input values',  $actual, $expected, $results);
+        TestCheck::assertInArray('M.4', '\Validator::check(); make sure non-required parameters aren\'t enforced if they\'re not present in input values',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -783,11 +786,11 @@ class Test
             'f5' => true,
             'f6' => 'def'
         );
-        TestCheck::assertInArray('M.5', 'Validator::check(); make sure defaults are supplied for non-required parameters that aren\'t in input values',  $actual, $expected, $results);
+        TestCheck::assertInArray('M.5', '\Validator::check(); make sure defaults are supplied for non-required parameters that aren\'t in input values',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -795,11 +798,11 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('M.6', 'Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
+        TestCheck::assertBoolean('M.6', '\Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -807,11 +810,11 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('M.7', 'Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
+        TestCheck::assertBoolean('M.7', '\Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -819,16 +822,16 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('M.8', 'Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
+        TestCheck::assertBoolean('M.8', '\Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
 
 
 
         // TEST: for array parameter, allow delimited lists
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid1 = Eid::generate();
-        $eid2 = Eid::generate();
+        $validator = new \Validator;
+        $eid1 = \Eid::generate();
+        $eid2 = \Eid::generate();
         $values = array(
             'eid' => "$eid1,$eid2"
         );
@@ -842,11 +845,11 @@ class Test
                 $eid2
             )
         );
-        TestCheck::assertInArray('N.1', 'Validator::check(); if array parameter is specified, allow a comma-delimited list, but make sure each value conforms to validation type',  $actual, $expected, $results);
+        TestCheck::assertInArray('N.1', '\Validator::check(); if array parameter is specified, allow a comma-delimited list, but make sure each value conforms to validation type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'eid' => "$eid1,x"
         );
@@ -855,16 +858,16 @@ class Test
         );
         $actual = $validator->check($values, $checks);
         $expected = false;
-        TestCheck::assertBoolean('N.2', 'Validator::check(); if array parameter is specified, allow a comma-delimited list, but make sure each value conforms to validation type',  $actual, $expected, $results);
+        TestCheck::assertBoolean('N.2', '\Validator::check(); if array parameter is specified, allow a comma-delimited list, but make sure each value conforms to validation type',  $actual, $expected, $results);
 
 
 
         // TEST: allow parameters to be decoded
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid1 = Eid::generate();
-        $eid2 = Eid::generate();
+        $validator = new \Validator;
+        $eid1 = \Eid::generate();
+        $eid2 = \Eid::generate();
         $values = array(
             'info' => '['
         );
@@ -875,12 +878,12 @@ class Test
         $expected = array(
             'info' => false
         );
-        TestCheck::assertInArray('M.1', 'Validator::check(); if decode is specified, then try to decode the parameter as json; return false if json is invalid',  $actual, $expected, $results);
+        TestCheck::assertInArray('M.1', '\Validator::check(); if decode is specified, then try to decode the parameter as json; return false if json is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid1 = Eid::generate();
-        $eid2 = Eid::generate();
+        $validator = new \Validator;
+        $eid1 = \Eid::generate();
+        $eid2 = \Eid::generate();
         $values = array(
             'info' => '[1,2,3]'
         );
@@ -895,11 +898,11 @@ class Test
                 3
             )
         );
-        TestCheck::assertInArray('M.2', 'Validator::check(); if decode is specified, then try to decode the parameter',  $actual, $expected, $results);
+        TestCheck::assertInArray('M.2', '\Validator::check(); if decode is specified, then try to decode the parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = new Validator;
-        $eid = Eid::generate();
+        $validator = new \Validator;
+        $eid = \Eid::generate();
         $values = array(
             'info' => '{"a":"b"}'
         );
@@ -912,6 +915,6 @@ class Test
                 "a"=>"b"
             )
         );
-        TestCheck::assertInArray('M.3', 'Validator::check(); if decode is specified, then try to decode the parameter',  $actual, $expected, $results);
+        TestCheck::assertInArray('M.3', '\Validator::check(); if decode is specified, then try to decode the parameter',  $actual, $expected, $results);
     }
 }

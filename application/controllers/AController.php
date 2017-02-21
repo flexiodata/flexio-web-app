@@ -12,7 +12,10 @@
  */
 
 
-class AController extends FxControllerAction
+namespace Flexio\Controllers;
+
+
+class AController extends \FxControllerAction
 {
     /*
         NOTE: DO NOT REMOVE THESE -- THEY ARE HERE FOR TRANSLATION PURPOSES
@@ -147,7 +150,7 @@ class AController extends FxControllerAction
             if ($connection !== false)
             {
                 $properties = array();
-                $properties['connection_status'] = Model::CONNECTION_STATUS_ERROR;
+                $properties['connection_status'] = \Model::CONNECTION_STATUS_ERROR;
                 if ($connection !== false)
                     $connection->set($properties);
             }
@@ -191,7 +194,7 @@ class AController extends FxControllerAction
 
         $project_url = '/app/project' . (isset($project_eid) ? "?eid=$project_eid" : '');
 
-        if (System::isLoggedIn() && isset($email) && $email === System::getCurrentUserName())
+        if (\System::isLoggedIn() && isset($email) && $email === \System::getCurrentUserName())
         {
             // CASE 1: user is logged in, and user is the same as the one
             // with the link; try to access the shared project (TODO:
@@ -232,7 +235,7 @@ class AController extends FxControllerAction
              else
             {
                 $target_user_eid_status = $target_user_info['eid_status'];
-                if ($target_user_eid_status !== Model::STATUS_AVAILABLE)
+                if ($target_user_eid_status !== \Model::STATUS_AVAILABLE)
                 {
                     // CASE 3: user isn't logged in and they have an account, but
                     // it's not verified; TODO: verify the account

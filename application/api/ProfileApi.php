@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class ProfileApi
 {
     public static function getprofilepicture($params, $request)
@@ -22,7 +25,7 @@ class ProfileApi
             return $request->getValidator()->fail();
 
         $eid = $params['eid'];
-        $updated = System::getModel()->registry->getUpdateTime($eid, 'profile.picture');
+        $updated = \System::getModel()->registry->getUpdateTime($eid, 'profile.picture');
         $etag = is_null($updated) ? null : md5("$eid;profile.picture;$updated");
 
         if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
@@ -32,7 +35,7 @@ class ProfileApi
         }
 
         $mime_type = 'text/plain';
-        $data = System::getModel()->registry->getBinary($eid, 'profile.picture', $mime_type);
+        $data = \System::getModel()->registry->getBinary($eid, 'profile.picture', $mime_type);
         if (is_null($data))
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
@@ -58,8 +61,8 @@ class ProfileApi
 
         $contents = file_get_contents($_FILES['file']['tmp_name']);
 
-        $user_eid = System::getCurrentUserEid();
-        $result = System::getModel()->registry->setBinary($user_eid, 'profile.picture', $contents, null, $mime_type);
+        $user_eid = \System::getCurrentUserEid();
+        $result = \System::getModel()->registry->setBinary($user_eid, 'profile.picture', $contents, null, $mime_type);
         if ($result === false)
             return false;
 
@@ -77,7 +80,7 @@ class ProfileApi
             return $request->getValidator()->fail();
 
         $eid = $params['eid'];
-        $updated = System::getModel()->registry->getUpdateTime($eid, 'profile.background');
+        $updated = \System::getModel()->registry->getUpdateTime($eid, 'profile.background');
         $etag = is_null($updated) ? null : md5("$eid;profile.background;$updated");
 
         if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
@@ -87,7 +90,7 @@ class ProfileApi
         }
 
         $mime_type = 'text/plain';
-        $data = System::getModel()->registry->getBinary($eid, 'profile.background', $mime_type);
+        $data = \System::getModel()->registry->getBinary($eid, 'profile.background', $mime_type);
         if (is_null($data))
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
@@ -113,8 +116,8 @@ class ProfileApi
 
         $contents = file_get_contents($_FILES['file']['tmp_name']);
 
-        $user_eid = System::getCurrentUserEid();
-        $result = System::getModel()->registry->setBinary($user_eid, 'profile.background', $contents, null, $mime_type);
+        $user_eid = \System::getCurrentUserEid();
+        $result = \System::getModel()->registry->setBinary($user_eid, 'profile.background', $contents, null, $mime_type);
         if ($result === false)
             return false;
 
@@ -157,7 +160,7 @@ class ProfileApi
             return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
         }
 
-        $data = System::getModel()->registry->getBinary($eid, $type, $mime_type);
+        $data = \System::getModel()->registry->getBinary($eid, $type, $mime_type);
         if (is_null($data))
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
@@ -192,15 +195,15 @@ class ProfileApi
         // free up memory
         imagedestroy($dest_img);
 
-        //System::getModel()->registry->setBinary($eid, $type, $data, null, 'image/png');
-        System::getModel()->registry->setBinary($eid, $type, $data, null, 'image/jpeg');
+        //\System::getModel()->registry->setBinary($eid, $type, $data, null, 'image/png');
+        \System::getModel()->registry->setBinary($eid, $type, $data, null, 'image/jpeg');
 
         return true;
     }
 
     public static function getProfilePictureUrl($user_eid)
     {
-        if (!System::getModel()->registry->entryExists($user_eid, 'profile.picture'))
+        if (!\System::getModel()->registry->entryExists($user_eid, 'profile.picture'))
             return false;
 
         return '/api/v1/users/' . $user_eid . '/profilepicture';
@@ -208,7 +211,7 @@ class ProfileApi
 
     public static function getProfileBackgroundUrl($user_eid)
     {
-        if (!System::getModel()->registry->entryExists($user_eid, 'profile.background'))
+        if (!\System::getModel()->registry->entryExists($user_eid, 'profile.background'))
             return false;
 
         return '/api/v1/users/' . $user_eid . '/profilebackground';

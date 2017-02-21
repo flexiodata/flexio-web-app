@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Api;
+
+
 class HelpApi
 {
     public static function createConversation($params, $request)
@@ -47,7 +50,7 @@ class HelpApi
         $subject = $params['subject'];
         $mailbox = '64691';  // mailbox desintation set up in Help Scout
         $message = $params['message'];
-        $timestamp = Util::formatDate(System::getTimestamp());
+        $timestamp = \Util::formatDate(\System::getTimestamp());
 
         // help request conversation package
         $conversation = "
@@ -84,7 +87,7 @@ class HelpApi
 
         $api_endpoint = "https://api.helpscout.net/v1/conversations.json";
         $basic_auth = "$api_key:X";
-        $result = HttpRequest::exec('POST', $api_endpoint, $basic_auth, $conversation);
+        $result = \HttpRequest::exec('POST', $api_endpoint, $basic_auth, $conversation);
 
         // TODO: build up api result
         return true;

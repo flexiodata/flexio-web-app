@@ -42,7 +42,7 @@ class SocrataService implements IConnection
 
     public function connect($params)
     {
-        $validator = Validator::getInstance();
+        $validator = \Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true)
@@ -230,7 +230,7 @@ class SocrataService implements IConnection
             $rows = [];
             while (true)
             {
-                $comma_pos = Util::json_strpos($buf, ',', $start);
+                $comma_pos = \Util::json_strpos($buf, ',', $start);
                 if ($comma_pos === false)
                 {
                     $buf = substr($buf, $start);

@@ -18,25 +18,25 @@ class UserModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         if (!isset($params['user_name']))
-            return $this->fail(Model::ERROR_MISSING_PARAMETER, _('Missing user_name parameter'));
+            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _('Missing user_name parameter'));
         if (!isset($params['email']))
-            return $this->fail(Model::ERROR_MISSING_PARAMETER, _('Missing email parameter'));
+            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _('Missing email parameter'));
 
         // convert username and email to lowercase
         $params['user_name'] = strtolower($params['user_name']);
         $params['email'] = strtolower($params['email']);
 
-        if (!Identifier::isValid($params['user_name']))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
-        if (!Email::isValid($params['email']))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
+        if (!\Identifier::isValid($params['user_name']))
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
+        if (!\Email::isValid($params['email']))
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
 
         // encode the password
         if (isset($params['password']) && strlen($params['password']) > 0)
-            $params['password'] = Model::encodePassword($params['password']);
+            $params['password'] = \Model::encodePassword($params['password']);
 
         $db->beginTransaction();
         try
@@ -51,11 +51,11 @@ class UserModel extends ModelBase
                 throw new Exception();
 
             // create the object base
-            $eid = $this->getModel()->createObjectBase(Model::TYPE_USER, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $params);
             if ($eid === false)
                 throw new Exception();
 
-            $timestamp = System::getTimestamp();
+            $timestamp = \System::getTimestamp();
             $process_arr = array(
                 'eid'                    => $eid,
                 'user_name'              => isset_or($params['user_name'], ''),
@@ -110,10 +110,10 @@ class UserModel extends ModelBase
             $db->commit();
             return $result;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete user'));
+            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete user'));
         }
     }
 
@@ -121,14 +121,14 @@ class UserModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Eid::isValid($eid))
             return false;
 
         // encode the password
         if (isset($params['password']) && strlen($params['password']) > 0)
-            $params['password'] = Model::encodePassword($params['password']);
+            $params['password'] = \Model::encodePassword($params['password']);
 
         // convert username and email to lowercase
         if (isset($params['user_name']))
@@ -137,13 +137,13 @@ class UserModel extends ModelBase
             $params['email'] = strtolower($params['email']);
 
         // if user_name or email is specified, make sure it's not set to null
-        if (is_array($params) && array_key_exists('user_name', $params) && !Identifier::isValid($params['user_name']))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
-        if (is_array($params) && array_key_exists('email', $params) && !Email::isValid($params['email']))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
+        if (is_array($params) && array_key_exists('user_name', $params) && !\Identifier::isValid($params['user_name']))
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
+        if (is_array($params) && array_key_exists('email', $params) && !\Email::isValid($params['email']))
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
 
         // make sure the properties that are being updated are the correct type
-        if (($process_arr = Model::check($params, array(
+        if (($process_arr = \Model::check($params, array(
                 'user_name'              => array('type' => 'string',  'required' => false),
                 'description'            => array('type' => 'string',  'required' => false),
                 'full_name'              => array('type' => 'string',  'required' => false),
@@ -165,8 +165,8 @@ class UserModel extends ModelBase
                 'verify_code'            => array('type' => 'string',  'required' => false),
                 'config'                 => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
-        $process_arr['updated'] = System::getTimestamp();
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
+        $process_arr['updated'] = \System::getTimestamp();
 
 
         $db->beginTransaction();
@@ -263,8 +263,8 @@ class UserModel extends ModelBase
                      'verify_code'            => $row['verify_code'],
                      'config'                 => $row['config'],
                      'eid_status'             => $row['eid_status'],
-                     'created'                => Util::formatDate($row['created']),
-                     'updated'                => Util::formatDate($row['updated']));
+                     'created'                => \Util::formatDate($row['created']),
+                     'updated'                => \Util::formatDate($row['updated']));
     }
 
     public function getUsernameFromEid($eid)
@@ -386,7 +386,7 @@ class UserModel extends ModelBase
             return false;
 
         $hashpw = $user_info['password'];
-        return Model::checkPasswordHash($hashpw, $password);
+        return \Model::checkPasswordHash($hashpw, $password);
     }
 
     public function checkUserPasswordByEid($eid, $password)
@@ -400,6 +400,6 @@ class UserModel extends ModelBase
             return false;
 
         $hashpw = $user_info['password'];
-        return Model::checkPasswordHash($hashpw, $password);
+        return \Model::checkPasswordHash($hashpw, $password);
     }
 }

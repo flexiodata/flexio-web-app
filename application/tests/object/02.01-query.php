@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Tests;
+
+
 class Test
 {
     public function run(&$results)
@@ -29,7 +32,7 @@ class Test
         // TEST: Query::exec(); invalid query
 
         // BEGIN TEST
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $query = null;
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = null;
@@ -47,14 +50,14 @@ class Test
         TestCheck::assertNull('A.2', 'Query::exec(); invalid eid value should return null',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $query = null;
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = null;
         TestCheck::assertNull('A.3', 'Query::exec(); invalid query should return null',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $query = 1;
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = null;
@@ -65,7 +68,7 @@ class Test
         // TEST: Query::exec(); non-existent eid
 
         // BEGIN TEST
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $query = json_decode('
         {
         }
@@ -76,7 +79,7 @@ class Test
         TestCheck::assertArray('B.1', 'Query::exec(); empty query should return an empty object',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $query = json_decode('
         {
            "eid" : null
@@ -89,7 +92,7 @@ class Test
         TestCheck::assertArray('B.2', 'Query::exec(); query with top-level properties that don\'t match anything should return object with same properties',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $query = json_decode('
         {
            "property1" : "value1",

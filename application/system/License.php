@@ -16,7 +16,7 @@ class License
 {
     public static function checkLicense(&$err = null)
     {
-        $license_fname = System::getConfigDirectory() . DIRECTORY_SEPARATOR . 'license.dat';
+        $license_fname = \System::getConfigDirectory() . DIRECTORY_SEPARATOR . 'license.dat';
         if (!file_exists($license_fname))
         {
             if (isset($err)) $err = 'missing_license_file';
@@ -31,17 +31,17 @@ class License
             return false;
         }
 
-        return License::isLicenseAuthentic($license, $err);
+        return self::isLicenseAuthentic($license, $err);
     }
 
     public static function decodeLicense($license, &$err = null)
     {
         $license = preg_replace('/-{5}(BEGIN|END) LICENSE-{5}/', '', $license);
         $license = str_replace(array("\n", "\r", "\t", ' '), '', $license);
-        $license = License::unjumbleBase64($license);
+        $license = self::unjumbleBase64($license);
 
         // make sure the license is signed
-        $sigv1 = License::getBlock($license, "SIGNATUREV1");
+        $sigv1 = self::getBlock($license, "SIGNATUREV1");
         if ($sigv1 === false)
         {
             if (isset($err)) $err = 'missing_signature';
@@ -49,7 +49,7 @@ class License
         }
 
         // make sure the license block itself exists
-        $license_json = License::getBlock($license, "LICENSEINFO");
+        $license_json = self::getBlock($license, "LICENSEINFO");
         if ($license_json === false)
         {
             if (isset($err)) $err = 'missing_license';
@@ -80,13 +80,13 @@ class License
 
     public static function isLicenseAuthentic($license, &$err = null)
     {
-        $license = License::decodeLicense($license, $err);
+        $license = self::decodeLicense($license, $err);
         if ($license === false)
             return false;
 
 
         // make sure the computer's serverid matches the license
-        $server_id = License::getServerId();
+        $server_id = self::getServerId();
         $found = false;
 
         if (isset($license->serverid))

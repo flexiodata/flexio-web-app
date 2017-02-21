@@ -12,10 +12,13 @@
  */
 
 
+namespace Flexio\Controllers;
+
+
 // calls to the TestController are only allowed on localhost for
 // now, and calls cut off when not running in debug model
 
-class TestController extends FxControllerAction
+class TestController extends \FxControllerAction
 {
     public function init()
     {
@@ -243,10 +246,10 @@ EOD;
         $this->renderRaw();
 
 
-        $service = AmazonS3Service::create(array('accesskey' => 'AKIAIZG3NCNHLQMCDOVQ',
-                                                 'secretkey' => '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',
-                                                 'bucket' => 'flexio-wp',
-                                                 'region' => 'us-east-1'));
+        $service = \AmazonS3Service::create(array('accesskey' => 'AKIAIZG3NCNHLQMCDOVQ',
+                                                  'secretkey' => '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',
+                                                  'bucket' => 'flexio-wp',
+                                                  'region' => 'us-east-1'));
 
 
      //  $objects = $service->read('output.csv', function ($data) { echo $data; });
@@ -269,18 +272,18 @@ EOD;
 
 
         //$retval = null;
-        //$res = ExprEvaluate::evaluate("abs(null)", [], [], $retval);
+        //$res = \ExprEvaluate::evaluate("abs(null)", [], [], $retval);
         //var_dump($retval);
 
         //$retval = null;
-        //$res = ExprEvaluate::evaluate("trim(a)", [ 'a' => 'abc' ], null, $retval);
+        //$res = \ExprEvaluate::evaluate("trim(a)", [ 'a' => 'abc' ], null, $retval);
         //var_dump($retval);
 
 /*
         $retval = null;
-        $res = ExprEvaluate::evaluate("to_char(to_timestamp('1950-11-30 15:23:59'), 'YYYY-MON-DD HH:MM:SS P.M.')", [ 'a' => 'abc' ], null, $retval);
-        //$res = ExprEvaluate::evaluate("to_timestamp('1950-11-30 15:23:59')", [ 'a' => 'abc' ], null, $retval);
-        $res = ExprEvaluate::evaluate("to_char(to_timestamp(''), 'YYYY')", [ 'a' => 'abc' ], null, $retval);
+        $res = \ExprEvaluate::evaluate("to_char(to_timestamp('1950-11-30 15:23:59'), 'YYYY-MON-DD HH:MM:SS P.M.')", [ 'a' => 'abc' ], null, $retval);
+        //$res = \ExprEvaluate::evaluate("to_timestamp('1950-11-30 15:23:59')", [ 'a' => 'abc' ], null, $retval);
+        $res = \ExprEvaluate::evaluate("to_char(to_timestamp(''), 'YYYY')", [ 'a' => 'abc' ], null, $retval);
 
         var_dump($retval);
         */
@@ -291,7 +294,7 @@ EOD;
         $p = new ExprTranslatorPostgres;
         $err = $p->parse("to_timestamp('')");
         if ($err === false)
-            return TestError::ERROR_BAD_PARSE;
+            return \TestError::ERROR_BAD_PARSE;
 
         $postgres_expr = $p->getResult();
         var_dump($postgres_expr);
