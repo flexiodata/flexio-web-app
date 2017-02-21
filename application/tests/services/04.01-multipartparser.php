@@ -101,20 +101,20 @@ class Test
         $content = '';
         $values = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$names, &$filenames, &$content, &$values) {
-            if ($type == \\MultipartParser::TYPE_FILE_BEGIN)
+            if ($type == \MultipartParser::TYPE_FILE_BEGIN)
             {
                 $names .= (strlen($names)>0?',':'') . $name;
                 $filenames .= (strlen($filenames)>0?',':'') . $filename;
             }
-             else if ($type == \\MultipartParser::TYPE_FILE_DATA)
+             else if ($type == \MultipartParser::TYPE_FILE_DATA)
             {
                 $content .= (strlen($content)>0?',':'') . $data;
             }
-             else if ($type == \\MultipartParser::TYPE_FILE_END)
+             else if ($type == \MultipartParser::TYPE_FILE_END)
             {
                 $content .= (strlen($content)>0?',':'') . 'DONE';
             }
-             else if ($type == \\MultipartParser::TYPE_KEY_VALUE)
+             else if ($type == \MultipartParser::TYPE_KEY_VALUE)
             {
                 $values .= "$name:$data";
             }
@@ -130,7 +130,7 @@ class Test
 
         $values = '';
         $parser->parse($stream, $test_info['content_type'], function ($type, $name, $data, $filename, $content_type) use (&$values) {
-            if ($type == \\MultipartParser::TYPE_KEY_VALUE)
+            if ($type == \MultipartParser::TYPE_KEY_VALUE)
             {
                 $values .= (strlen($values)>0?',':'') . "$name:$data";
             }
