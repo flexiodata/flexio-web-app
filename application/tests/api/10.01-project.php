@@ -24,7 +24,7 @@ class Test
         $username = Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $user_eid = System::getModel()->create(Model::TYPE_USER, $properties);
+        $user_eid = \Flexio\Object\User::create(Model::TYPE_USER, $properties);
 
         $params = json_decode('
         {
