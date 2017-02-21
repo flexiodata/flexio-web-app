@@ -28,7 +28,7 @@ class StreamApi
             return $request->getValidator()->fail();
 
         // create the stream
-        $stream = \Flexio\Object\Stream::create($params); // the Stream::create() creates a default connection and path
+        $stream = \Flexio\Object\Stream::create($params); // the \Flexio\Object\Stream::create() creates a default connection and path
 
         // return the stream info
         return $stream->get();

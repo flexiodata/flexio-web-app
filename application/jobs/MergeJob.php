@@ -102,7 +102,7 @@ class MergeJob extends Base
         foreach ($input as $instream)
         {
             $instream->read(function ($data) use (&$streamwriter, $row_template) {
-                $row = Util::mapArray($row_template, $data);
+                $row = \Util::mapArray($row_template, $data);
                 $streamwriter->write($row);
             });
         }

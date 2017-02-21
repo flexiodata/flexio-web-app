@@ -421,10 +421,10 @@ class Framework
 
     public static function getInstance()
     {
-        if (null === Framework::$_instance)
-            Framework::$_instance = new self();
+        if (null === self::$_instance)
+            self::$_instance = new self();
 
-        return Framework::$_instance;
+        return self::$_instance;
     }
 
     public function setControllerPrefix($prefix)

@@ -18,15 +18,15 @@ class StreamModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         $db->beginTransaction();
         try
         {
             // create the stream object base
-            $stream_eid = $this->getModel()->createObjectBase(Model::TYPE_STREAM, $params);
+            $stream_eid = $this->getModel()->createObjectBase(\Model::TYPE_STREAM, $params);
             if ($stream_eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             // make sure the size is an integer or null
             $size = null;
@@ -34,7 +34,7 @@ class StreamModel extends ModelBase
                 $size = $params['size'];
 
             // add the stream properties
-            $timestamp = System::getTimestamp();
+            $timestamp = \System::getTimestamp();
             $process_arr = array(
                 'eid'                   => $stream_eid,
                 'name'                  => isset_or($params['name'], ''),
@@ -53,15 +53,15 @@ class StreamModel extends ModelBase
             );
 
             if ($db->insert('tbl_stream', $process_arr) === false) // insert stream info
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $stream_eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create stream'));
+            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create stream'));
         }
     }
 

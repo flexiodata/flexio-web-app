@@ -144,7 +144,7 @@ class Process extends \Flexio\Object\Base
     public static function run_internal($eid)
     {
         // this is a non-blocking internal static run function called that's
-        // run in the background by Process::run($background) when $background
+        // run in the background by \Flexio\Objects\Process::run($background) when $background
         // is set to true
 
         // load the process and run in non-blocking mode

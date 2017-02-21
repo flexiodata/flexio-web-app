@@ -18,17 +18,17 @@ class TokenModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         $db->beginTransaction();
         try
         {
             // create the object base
-            $eid = $this->getModel()->createObjectBase(Model::TYPE_TOKEN, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_TOKEN, $params);
             if ($eid === false)
                 throw new Exception();
 
-            $timestamp = System::getTimestamp();
+            $timestamp = \System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
                 'user_eid'      => isset_or($params['user_eid'], ''),
@@ -104,8 +104,8 @@ class TokenModel extends ModelBase
                      'access_code' => $row['access_code'],
                      'secret_code' => $row['secret_code'],
                      'eid_status'  => $row['eid_status'],
-                     'created'     => Util::formatDate($row['created']),
-                     'updated'     => Util::formatDate($row['updated']));
+                     'created'     => \Util::formatDate($row['created']),
+                     'updated'     => \Util::formatDate($row['updated']));
     }
 
     public function getInfoFromAccessCode($code)
@@ -138,8 +138,8 @@ class TokenModel extends ModelBase
                      'access_code' => $row['access_code'],
                      'secret_code' => $row['secret_code'],
                      'eid_status'  => $row['eid_status'],
-                     'created'     => Util::formatDate($row['created']),
-                     'updated'     => Util::formatDate($row['updated']));
+                     'created'     => \Util::formatDate($row['created']),
+                     'updated'     => \Util::formatDate($row['updated']));
     }
 
     public function getInfoFromUserEid($user_eid)
@@ -176,8 +176,8 @@ class TokenModel extends ModelBase
                               'access_code' => $row['access_code'],
                               'secret_code' => $row['secret_code'],
                               'eid_status'  => $row['eid_status'],
-                              'created'     => Util::formatDate($row['created']),
-                              'updated'     => Util::formatDate($row['updated']));
+                              'created'     => \Util::formatDate($row['created']),
+                              'updated'     => \Util::formatDate($row['updated']));
         }
 
         return $output;

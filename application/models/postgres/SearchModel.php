@@ -116,7 +116,7 @@ class SearchModel extends ModelBase
             foreach ($initial_input_eids as $eid)
             {
                 $eid_info = $this->getModel()->getInfo($eid);
-                if ($eid_info['eid_type'] === Model::TYPE_UNDEFINED)
+                if ($eid_info['eid_type'] === \Model::TYPE_UNDEFINED)
                     continue;
 
                 $input_item = array(

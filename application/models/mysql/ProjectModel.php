@@ -28,7 +28,7 @@ class ProjectModel extends ModelBase
             if ($eid === false)
                 throw new Exception();
 
-            $timestamp = System::getTimestamp();
+            $timestamp = \System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
                 'name'           => isset_or($params['name'], ''),
@@ -82,13 +82,13 @@ class ProjectModel extends ModelBase
         if (!Eid::isValid($eid))
             return false;
 
-        if (($process_arr = Model::check($params, array(
+        if (($process_arr = \Model::check($params, array(
                 'name'          => array('type' => 'string', 'required' => false),
                 'description'   => array('type' => 'string', 'required' => false),
                 'display_icon'  => array('type' => 'string', 'required' => false)
             ))) === false)
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update project'));
-        $process_arr['updated'] = System::getTimestamp();
+        $process_arr['updated'] = \System::getTimestamp();
 
         $db->beginTransaction();
         try
@@ -148,7 +148,7 @@ class ProjectModel extends ModelBase
                      'description'  => $row['description'],
                      'display_icon' => $row['display_icon'],
                      'eid_status'   => $row['eid_status'],
-                     'created'      => Util::formatDate($row['created']),
-                     'updated'      => Util::formatDate($row['updated']));
+                     'created'      => \Util::formatDate($row['created']),
+                     'updated'      => \Util::formatDate($row['updated']));
     }
 }

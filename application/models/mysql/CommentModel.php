@@ -28,7 +28,7 @@ class CommentModel extends ModelBase
             if ($eid === false)
                 throw new Exception();
 
-            $timestamp = System::getTimestamp();
+            $timestamp = \System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
                 'comment'       => isset_or($params['comment'], ''),
@@ -67,7 +67,7 @@ class CommentModel extends ModelBase
         catch (Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete comment'));
+            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete comment'));
         }
     }
 
@@ -75,16 +75,16 @@ class CommentModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Eid::isValid($eid))
             return false;
 
-        if (($process_arr = Model::check($params, array(
+        if (($process_arr = \Model::check($params, array(
                 'comment' => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update comment'));
-        $process_arr['updated'] = System::getTimestamp();
+            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update comment'));
+        $process_arr['updated'] = \System::getTimestamp();
 
         $db->beginTransaction();
         try
@@ -138,7 +138,7 @@ class CommentModel extends ModelBase
                      'eid_type'   => $row['eid_type'],
                      'comment'    => $row['comment'],
                      'eid_status' => $row['eid_status'],
-                     'created'    => Util::formatDate($row['created']),
-                     'updated'    => Util::formatDate($row['updated']));
+                     'created'    => \Util::formatDate($row['created']),
+                     'updated'    => \Util::formatDate($row['updated']));
     }
 }

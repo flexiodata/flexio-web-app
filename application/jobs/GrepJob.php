@@ -49,7 +49,7 @@ class GrepJob extends Base
 
 
         // build command line
-        $cmd = Util::getBinaryPath('grep') . ' ' . $grepexpr;
+        $cmd = \Util::getBinaryPath('grep') . ' ' . $grepexpr;
         //$cmd = "\"C:\Program Files\Git\usr\bin\cat.exe\"";
 
         // run the process
