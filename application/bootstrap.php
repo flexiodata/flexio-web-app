@@ -242,8 +242,7 @@ function setupIncludeDirectories()
 {
     global $g_config, $g_store;
     $base = $g_store->dir_home . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR;
-    set_include_path($base . 'services'    . PATH_SEPARATOR
-                   . $base . 'system'      . PATH_SEPARATOR
+    set_include_path($base . 'system'      . PATH_SEPARATOR
                    . get_include_path());
 }
 setupIncludeDirectories();
