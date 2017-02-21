@@ -319,14 +319,14 @@ class Connection extends \Flexio\Object\Base
         // if we don't have a datastore configuration, we can't create a default connection;
         // TODO: we'll want to add some ability to pull from a pool of available datastore
         // so we can have multiple servers; but right now, we just have one
-        if (!isset($dbconfig->datastore_dbname) || strlen($dbconfig->datastore_dbname) === 0)
+        if (!isset($dbconfig['datastore_dbname']) || strlen($dbconfig['datastore_dbname']) === 0)
             return false;
 
-        $params = array('host'            => $dbconfig->datastore_host,
-                        'port'            => $dbconfig->datastore_port,
-                        'username'        => $dbconfig->datastore_username,
-                        'password'        => $dbconfig->datastore_password,
-                        'database'        => $dbconfig->datastore_dbname,
+        $params = array('host'            => $dbconfig['datastore_host'],
+                        'port'            => $dbconfig['datastore_port'],
+                        'database'        => $dbconfig['datastore_dbname'],
+                        'username'        => $dbconfig['datastore_username'],
+                        'password'        => $dbconfig['datastore_password'],
                         'connection_type' => \Model::CONNECTION_TYPE_POSTGRES
                         );
 

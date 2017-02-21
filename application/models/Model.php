@@ -968,7 +968,14 @@ class Model
             else
                 return null; // unsupported database
 
-            $db = ModelDb::factory($pdo_database_type, $dbconfig);
+            $params = array();
+            $params['host'] = $dbconfig['directory_host'];
+            $params['port'] = $dbconfig['directory_port'];
+            $params['dbname'] = $dbconfig['directory_dbname'];
+            $params['username'] = $dbconfig['directory_username'];
+            $params['password'] = $dbconfig['directory_password'];
+
+            $db = ModelDb::factory($pdo_database_type, $params);
             $conn = $db->getConnection();
             $this->database = $db;
             return $db;
@@ -989,11 +996,17 @@ class Model
     {
         global $g_config;
 
-        $dbconfig = array('host' => $g_config->directory_database_host,
-                          'port' => $g_config->directory_database_port,
-                          'username' => $g_config->directory_database_username,
-                          'password' => $g_config->directory_database_password,
-                          'dbname' => $g_config->directory_database_dbname);
+        $dbconfig = array('directory_host'     => $g_config->directory_database_host,
+                          'directory_port'     => $g_config->directory_database_port,
+                          'directory_username' => $g_config->directory_database_username,
+                          'directory_password' => $g_config->directory_database_password,
+                          'directory_dbname'   => $g_config->directory_database_dbname,
+                          'datastore_host'     => $g_config->datastore_host,
+                          'datastore_port'     => $g_config->datastore_port,
+                          'datastore_username' => $g_config->datastore_username,
+                          'datastore_password' => $g_config->datastore_password,
+                          'datastore_dbname'   => $g_config->datastore_dbname
+                          );
 
         return $dbconfig;
     }
