@@ -38,7 +38,7 @@ class Test
         $expected = TestError::ERROR_BAD_PARSE;
         TestCheck::assertString('A.4', 'Expression; non-string input',  $actual, $expected, $results);
 
-        $actual = TestUtil::evalExpression(new stdClass());
+        $actual = TestUtil::evalExpression(new \stdClass());
         $expected = TestError::ERROR_BAD_PARSE;
         TestCheck::assertString('A.5', 'Expression; non-string input',  $actual, $expected, $results);
 

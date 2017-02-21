@@ -152,7 +152,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = strtoupper(Util::generateHandle());
+        $handle1 = strtoupper(\Util::generateHandle());
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -241,7 +241,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = strtoupper(Util::generateHandle());
+        $handle1 = strtoupper(\Util::generateHandle());
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -254,7 +254,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = strtolower(Util::generateHandle());
+        $handle1 = strtolower(\Util::generateHandle());
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -325,7 +325,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = strtoupper(Util::generateHandle());
+        $username = strtoupper(\Util::generateHandle());
         $email = TestUtil::generateEmail();
         $password = 'xxxxxxxx';
         $info = array(
@@ -340,7 +340,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = strtolower(Util::generateHandle());
+        $username = strtolower(\Util::generateHandle());
         $email = TestUtil::generateEmail();
         $password = 'xxxxxxxx';
         $info = array(

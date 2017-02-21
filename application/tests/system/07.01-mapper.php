@@ -320,7 +320,7 @@ class Test
             }
         ]
         ';
-        $schema = new stdClass();
+        $schema = new \stdClass();
         $actual = \Mapper::flatten($data, $schema);
         $expected = '
         [

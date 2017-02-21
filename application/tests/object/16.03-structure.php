@@ -63,7 +63,7 @@ class Test
         TestCheck::assertBoolean('B.5', 'Structure::union(); if a non-array input is specified, return false',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::union(new stdClass());
+        $actual = \Flexio\Object\Structure::union(new \stdClass());
         $expected = false;
         TestCheck::assertBoolean('B.6', 'Structure::union(); if a non-array input is specified, return false',  $actual, $expected, $results);
 

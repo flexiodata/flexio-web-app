@@ -62,7 +62,7 @@ class Test
         TestCheck::assertBoolean('B.5', 'Structure::create(); if a non-array input is specified, return false',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::create(new stdClass());
+        $actual = \Flexio\Object\Structure::create(new \stdClass());
         $expected = false;
         TestCheck::assertBoolean('B.6', 'Structure::create(); if a non-array input is specified, return false',  $actual, $expected, $results);
 

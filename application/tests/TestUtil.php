@@ -51,7 +51,7 @@ class TestUtil
     public static function evalExpressionNative($expr)
     {
         $retval = null;
-        $success = ExprEvaluate::evaluate($expr, [], [], $retval);
+        $success = \ExprEvaluate::evaluate($expr, [], [], $retval);
         if ($success === false)
             return TestError::ERROR_BAD_PARSE;
 
@@ -62,10 +62,10 @@ class TestUtil
     {
         global $g_store;
 
-        $dbconfig = Model::getDatabaseConfig();
+        $dbconfig = \Model::getDatabaseConfig();
 
         // first, try to parse the expression
-        $p = new ExprTranslatorPostgres;
+        $p = new \ExprTranslatorPostgres;
         $err = $p->parse($expr);
         if ($err === false)
             return TestError::ERROR_BAD_PARSE;
@@ -91,7 +91,7 @@ class TestUtil
         {
             $stmt = $pdo->query("SELECT $postgres_expr AS testval");
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return 'Database Exception: ' . $e->getMessage();
         }
@@ -138,7 +138,7 @@ class TestUtil
 
     public static function getModel()
     {
-        return new Model;
+        return new \Model;
     }
 
     public static function getDefaultTestUser()
@@ -168,7 +168,7 @@ class TestUtil
         // the default test user)
         $user_eid = self::getDefaultTestUser();
 
-        $search_path = "$user_eid->(".Model::EDGE_OWNS.")->(".Model::TYPE_PROJECT.")";
+        $search_path = "$user_eid->(".\Model::EDGE_OWNS.")->(".\Model::TYPE_PROJECT.")";
         $projects = TestUtil::getModel()->search($search_path);
 
         if ($projects !== false)
@@ -193,7 +193,7 @@ class TestUtil
         $new_user_info = array('user_name' => $username,
                                'email' => $email,
                                'full_name' => $username,
-                               'eid_status' => Model::STATUS_AVAILABLE,
+                               'eid_status' => \Model::STATUS_AVAILABLE,
                                'password' => $password,
                                'verify_code' => '');
 
