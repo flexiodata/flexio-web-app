@@ -8,7 +8,6 @@
     </div>
     <div class="flex-fill mr3">
       <value-select
-        allow-numbers
         :options="minute_options"
         v-model="minute"
       ></value-select>
@@ -58,7 +57,20 @@
           { label: '11', val: 11 },
           { label: '12', val: 0  }
         ],
-        minute_options: [0,5,10,15,20,25,30,35,40,45,50,55],
+        minute_options: [
+          { label: '00', val: 0  },
+          { label: '05', val: 5  },
+          { label: '10', val: 10 },
+          { label: '15', val: 15 },
+          { label: '20', val: 20 },
+          { label: '25', val: 25 },
+          { label: '30', val: 30 },
+          { label: '35', val: 35 },
+          { label: '40', val: 40 },
+          { label: '45', val: 45 },
+          { label: '50', val: 50 },
+          { label: '55', val: 55 }
+        ],
         period_options: ['AM', 'PM']
       }
     },
