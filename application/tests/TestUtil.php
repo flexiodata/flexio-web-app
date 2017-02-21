@@ -147,7 +147,7 @@ class TestUtil
         $password = 'test@flex.io';
 
         // see if the user already exists
-        $user_eid = System::getModel()->user->getEidFromIdentifier($user_name);
+        $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
         if (Eid::isValid($user_eid))
             return $user_eid;
 
@@ -166,13 +166,13 @@ class TestUtil
         $user_eid = self::getDefaultTestUser();
 
         $search_path = "$user_eid->(".Model::EDGE_OWNS.")->(".Model::TYPE_PROJECT.")";
-        $projects = System::getModel()->search($search_path);
+        $projects = TestUtil::getModel()->search($search_path);
 
         if ($projects !== false)
         {
             foreach ($projects as $project_eid)
             {
-                $object = System::getModel()->get($project_eid);
+                $object = TestUtil::getModel()->get($project_eid);
                 if ($object['name'] === $project_name)
                     return $project_eid;
             }
