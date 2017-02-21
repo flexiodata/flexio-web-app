@@ -1131,7 +1131,7 @@ EOT;
 
     public static function getGitRevision()
     {
-        $path = dirname(dirname(__DIR__)) . '/.git/refs/heads/develop';
+        $path = dirname(dirname(__DIR__)) . '/.git/refs/heads/master';
         $str = @file_get_contents($path);
         if (!$str)
             $str = '';
