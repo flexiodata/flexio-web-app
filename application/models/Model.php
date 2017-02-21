@@ -957,12 +957,7 @@ class Model
         if (!is_null($this->database))
             return $this->database;
 
-        global $g_config;
-        $dbconfig = array('host' => $g_config->directory_database_host,
-                          'port' => $g_config->directory_database_port,
-                          'username' => $g_config->directory_database_username,
-                          'password' => $g_config->directory_database_password,
-                          'dbname' => $g_config->directory_database_dbname);
+        $dbconfig = self::getDatabaseConfig();
 
         try
         {
@@ -988,6 +983,19 @@ class Model
 
             return false; // can't connect
         }
+    }
+
+    public static function getDatabaseConfig()
+    {
+        global $g_config;
+
+        $dbconfig = array('host' => $g_config->directory_database_host,
+                          'port' => $g_config->directory_database_port,
+                          'username' => $g_config->directory_database_username,
+                          'password' => $g_config->directory_database_password,
+                          'dbname' => $g_config->directory_database_dbname);
+
+        return $dbconfig;
     }
 
     public function setTimezone($tz)

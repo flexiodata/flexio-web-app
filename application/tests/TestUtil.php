@@ -58,7 +58,8 @@ class TestUtil
     public static function evalExpressionPostgres($expr)
     {
         global $g_store;
-        global $g_config;
+
+        $dbconfig = Model::getDatabaseConfig();
 
         // first, try to parse the expression
         $p = new ExprTranslatorPostgres;
@@ -70,11 +71,11 @@ class TestUtil
 
         // if the expression parses successfully, evaluate it
         $params = array();
-        $params['host'] = $g_config->datastore_host;
-        $params['port'] = $g_config->datastore_port;
-        $params['database'] = $g_config->datastore_dbname;
-        $params['username'] = $g_config->datastore_username;
-        $params['password'] = $g_config->datastore_password;
+        $params['host'] = $dbconfig->datastore_host;
+        $params['port'] = $dbconfig->datastore_port;
+        $params['database'] = $dbconfig->datastore_dbname;
+        $params['username'] = $dbconfig->datastore_username;
+        $params['password'] = $dbconfig->datastore_password;
 
         $datastore_id = $params['database'] . ';' . $params['host'];
         if (!isset($g_store->datastores[$datastore_id]))
