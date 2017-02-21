@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class OutputJob extends Base
+class OutputJob extends \Flexio\Jobs\Base
 {
     // job-global connection properties
     private $cached_connection_properties = null;
@@ -171,7 +174,7 @@ class OutputJob extends Base
 
         if (isset($item['stream_idx']))
             return [ $item ]; // already know the stream idx, return the input
-            
+
         // clean the item info from any connection info that may be specified
         if (!isset($item['name']))
             return $expanded_items;
@@ -182,7 +185,7 @@ class OutputJob extends Base
         $stream_idx = 0;
         foreach ($this->streams as $stream)
         {
-            if (Util::matchPath($stream->getName(), $pattern, false) !== false)
+            if (\Util::matchPath($stream->getName(), $pattern, false) !== false)
             {
                 $expanded_items[] = array("name" => $stream->getName(),
                                           "path" => isset($path) ? $path : $stream->getName(),
@@ -223,7 +226,7 @@ class OutputJob extends Base
         $full_path = isset_or($params['location'], '');
         if (strlen($full_path) > 0)
             $full_path .= '/';
-        
+
         $full_path .= $output_filename;
         while (strpos($full_path, '//') !== false)
             $full_path = str_replace('//','/', $full_path);
@@ -338,7 +341,7 @@ class OutputJob extends Base
         }
 
         $streamwriter->close();
-        $outstream->setMimeType(ContentType::MIME_TYPE_NONE); // external table
+        $outstream->setMimeType(\ContentType::MIME_TYPE_NONE); // external table
         */
     }
 
@@ -378,13 +381,13 @@ class OutputJob extends Base
         $foldername = $outstream->getPath();
         $filename = $outstream->getName();
 
-        if ($mime_type === ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // we're exporting a table, which is saved as a csv
             $extension_to_add = 'csv';
             $filename = \Util::getFilename($filename);
             $filename = "$filename.$extension_to_add";
-            $mime_type = ContentType::MIME_TYPE_CSV;
+            $mime_type = \ContentType::MIME_TYPE_CSV;
         }
 
         $filename = $foldername . "/" . $filename;
@@ -447,7 +450,7 @@ class OutputJob extends Base
         }
 
         $inserter->finishInsert();
-        $outstream->setMimeType(ContentType::MIME_TYPE_NONE); // external table
+        $outstream->setMimeType(\ContentType::MIME_TYPE_NONE); // external table
     }
 
     private function runMailJetExport($instream, $service, $output_info)

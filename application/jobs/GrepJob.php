@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class GrepJob extends Base
+class GrepJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -35,7 +38,7 @@ class GrepJob extends Base
     private function createOutputFromInput($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Util::generateHandle());
         $this->getOutput()->push($outstream);
         $streamreader = \Flexio\Object\StreamReader($instream);
         $streamwriter = \Flexio\Object\StreamWriter($outstream);
@@ -80,7 +83,7 @@ class GrepJob extends Base
         }
 
         $mime_type = $instream->getMimeType();
-        if ($mime_type === ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // write header row
             $row = $instream->getStructure()->getNames();

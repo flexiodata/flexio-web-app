@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class RenameFileJob extends Base
+class RenameFileJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -35,7 +38,7 @@ class RenameFileJob extends Base
     public function createOutputFromInput($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // properties

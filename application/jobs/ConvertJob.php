@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class ConvertJob extends Base
+class ConvertJob extends \Flexio\Jobs\Base
 {
     // token delimiters; other types of delimiters are allowed as well
     const DELIMITER_NONE              = '{none}';

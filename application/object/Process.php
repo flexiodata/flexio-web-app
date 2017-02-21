@@ -1113,33 +1113,37 @@ class Process extends \Flexio\Object\Base
         // make sure the job is registered; note: this isn't strictly necessary,
         // but gives us a convenient way of limiting what jobs are available for
         // processing
-        $class_name = false;
+        $full_class_name = false;
         $manifest = \Flexio\Object\Task::manifest();
         foreach ($manifest as $m)
         {
             if ($m['type'] !== $job_type)
                 continue;
 
-            $class_name = $m['class'];
+            $full_class_name = $m['class'];
             break;
         }
 
-        if ($class_name === false)
+        if ($full_class_name === false)
             return false;
 
         // try to find the job file
-        $class_file = \System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name . '.php';
+        $class_name_parts = explode("\\", $full_class_name);
+        if (!isset($class_name_parts[3]))
+            return false;
+
+        $class_file = \System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name_parts[3] . '.php';
         if (!@file_exists($class_file))
             return false;
 
         // load the job's php file and instantiate the job object
         include_once $class_file;
-        $job = $class_name::create($process, $task);
+        $job = $full_class_name::create($process, $task);
 
         if ($job === false)
             return false;
 
-        if (!($job instanceof \IJob))
+        if (!($job instanceof \Flexio\Jobs\IJob))
             return false;
 
         return $job;

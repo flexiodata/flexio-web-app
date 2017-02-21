@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Base implements IJob
+class Base implements \Flexio\Jobs\IJob
 {
     // basic job template
     const MIME_TYPE = 'flexio';

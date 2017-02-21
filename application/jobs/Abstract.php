@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 interface IJob
 {
     public static function create($process = null, $properties = null);

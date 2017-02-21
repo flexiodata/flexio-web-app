@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class EmailSendJob extends Base
+class EmailSendJob extends \Flexio\Jobs\Base
 {
     const DATA_MODE_NONE       = 'none';
     const DATA_MODE_BODY       = 'body';
@@ -114,7 +117,7 @@ class EmailSendJob extends Base
             $mime_type = $instream->getMimeType();
             $name = $instream->getName();
 
-            if ($mime_type === ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE)
             {
                 $extension_to_add = 'csv';
                 $filename = \Util::getFilename($name);

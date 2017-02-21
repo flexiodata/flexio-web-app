@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class CalcFieldJob extends Base
+class CalcFieldJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -53,7 +56,7 @@ class CalcFieldJob extends Base
             $scale = (int)$scale;
 
         // make sure we have a valid expression
-        $expreval = new ExprEvaluate;
+        $expreval = new \ExprEvaluate;
         $input_structure = $instream->getStructure()->enum();
         $success = $expreval->prepare($expression, $input_structure);
 

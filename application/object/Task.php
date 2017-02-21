@@ -33,152 +33,152 @@ class Task
         //    description: a description of the command
         $manifest = array(
             array(
-                'type' => \CalcFieldJob::MIME_TYPE,
-                'class' => 'CalcFieldJob',
+                'type' => \Flexio\Jobs\CalcFieldJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\CalcFieldJob',
                 'name' => 'Add Calculation',
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \ConvertJob::MIME_TYPE,
-                'class' => 'ConvertJob',
+                'type' => \Flexio\Jobs\ConvertJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\ConvertJob',
                 'name' => 'Convert File',
                 'verb' => 'Converting'
             ),
             array(
-                'type' => \CopyJob::MIME_TYPE,
-                'class' => 'CopyJob',
+                'type' => \Flexio\Jobs\CopyJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\CopyJob',
                 'name' => '',
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \CreateJob::MIME_TYPE,
-                'class' => 'CreateJob',
+                'type' => \Flexio\Jobs\CreateJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\CreateJob',
                 'name' => '',
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \DistinctJob::MIME_TYPE,
-                'class' => 'DistinctJob',
+                'type' => \Flexio\Jobs\DistinctJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\DistinctJob',
                 'name' => 'Remove Duplicates',
                 'verb' => 'Removing duplicates from'
             ),
             array(
-                'type' => \DuplicateJob::MIME_TYPE,
-                'class' => 'DuplicateJob',
+                'type' => \Flexio\Jobs\DuplicateJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\DuplicateJob',
                 'name' => 'Identify Duplicates',
                 'verb' => 'Identifying duplicates in'
             ),
             array(
-                'type' => \EmailSendJob::MIME_TYPE,
-                'class' => 'EmailSendJob',
+                'type' => \Flexio\Jobs\EmailSendJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\EmailSendJob',
                 'name' => 'Email',
                 'verb' => 'Sending email'
             ),
             array(
-                'type' => \OutputJob::MIME_TYPE,
-                'class' => 'OutputJob',
+                'type' => \Flexio\Jobs\OutputJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\OutputJob',
                 'name' => 'Output',
                 'verb' => 'Outputting'
             ),
             array(
-                'type' => \FilterJob::MIME_TYPE,
-                'class' => 'FilterJob',
+                'type' => \Flexio\Jobs\FilterJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\FilterJob',
                 'name' => 'Filter',
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \FindReplaceJob::MIME_TYPE,
-                'class' => 'FindReplaceJob',
+                'type' => \Flexio\Jobs\FindReplaceJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\FindReplaceJob',
                 'name' => 'Find and Replace',
                 'verb' => 'Replacing values in'
             ),
             array(
-                'type' => \GrepJob::MIME_TYPE,
-                'class' => 'GrepJob',
+                'type' => \Flexio\Jobs\GrepJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\GrepJob',
                 'name' => '',
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \GroupJob::MIME_TYPE,
-                'class' => 'GroupJob',
+                'type' => \Flexio\Jobs\GroupJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\GroupJob',
                 'name' => 'Summarize',
                 'verb' => 'Summarizing'
             ),
             array(
-                'type' => \InputJob::MIME_TYPE,
-                'class' => 'InputJob',
+                'type' => \Flexio\Jobs\InputJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\InputJob',
                 'name' => 'Input',
                 'verb' => 'Inputting'
             ),
             array(
-                'type' => \LimitJob::MIME_TYPE,
-                'class' => 'LimitJob',
+                'type' => \Flexio\Jobs\LimitJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\LimitJob',
                 'name' => 'Limit',
                 'verb' => 'Limiting'
             ),
             array(
-                'type' => \MergeJob::MIME_TYPE,
-                'class' => 'MergeJob',
+                'type' => \Flexio\Jobs\MergeJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\MergeJob',
                 'name' => 'Merge',
                 'verb' => 'Merging'
             ),
             array(
-                'type' => \NopJob::MIME_TYPE,
-                'class' => 'NopJob',
+                'type' => \Flexio\Jobs\NopJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\NopJob',
                 'name' => '',
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \PromptJob::MIME_TYPE,
-                'class' => 'PromptJob',
+                'type' => \Flexio\Jobs\PromptJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\PromptJob',
                 'name' => 'Ask For Information',
                 'verb' => 'Waiting for information'
             ),
             array(
-                'type' => \ExecuteJob::MIME_TYPE,
-                'class' => 'ExecuteJob',
+                'type' => \Flexio\Jobs\ExecuteJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\ExecuteJob',
                 'name' => '',
                 'verb' => 'Running a program on'
             ),
             array(
-                'type' => \RenameColumnJob::MIME_TYPE,
-                'class' => 'RenameColumnJob',
+                'type' => \Flexio\Jobs\RenameColumnJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\RenameColumnJob',
                 'name' => 'Rename Columns',
                 'verb' => 'Renaming columns in'
             ),
             array(
-                'type' => \RenameFileJob::MIME_TYPE,
-                'class' => 'RenameFileJob',
+                'type' => \Flexio\Jobs\RenameFileJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\RenameFileJob',
                 'name' => 'Rename Files',
                 'verb' => 'Renaming file'
             ),
             array(
-                'type' => \SearchJob::MIME_TYPE,
-                'class' => 'SearchJob',
+                'type' => \Flexio\Jobs\SearchJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\SearchJob',
                 'name' => 'Search',
                 'verb' => 'Searching'
             ),
             array(
-                'type' => \SelectColumnJob::MIME_TYPE,
-                'class' => 'SelectColumnJob',
+                'type' => \Flexio\Jobs\SelectColumnJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\SelectColumnJob',
                 'name' => 'Select Columns',
                 'verb' => 'Selecting columns in'
             ),
             array(
-                'type' => \SleepJob::MIME_TYPE,
-                'class' => 'SleepJob',
+                'type' => \Flexio\Jobs\SleepJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\SleepJob',
                 'name' => 'Sleep',
                 'verb' => 'Sleeping'
             ),
             array(
-                'type' => \SortJob::MIME_TYPE,
-                'class' => 'SortJob',
+                'type' => \Flexio\Jobs\SortJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\SortJob',
                 'name' => 'Sort',
                 'verb' => 'Sorting'
             ),
             array(
-                'type' => \TransformJob::MIME_TYPE,
-                'class' => 'TransformJob',
+                'type' => \Flexio\Jobs\TransformJob::MIME_TYPE,
+                'class' => '\Flexio\Jobs\TransformJob',
                 'name' => 'Transform',
                 'verb' => 'Transforming'
             )
@@ -509,7 +509,7 @@ class Task
     {
         $task_step = false;
 
-        if ($command instanceof \IJob)
+        if ($command instanceof \Flexio\Jobs\IJob)
             $task_step = $command->getProperties();
 
         if (is_array($command))

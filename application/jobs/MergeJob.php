@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class MergeJob extends Base
+class MergeJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -30,7 +33,7 @@ class MergeJob extends Base
 
         foreach ($input as $instream)
         {
-            if ($instream->getMimeType() === ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($instream->getMimeType() === \ContentType::MIME_TYPE_FLEXIO_TABLE)
                 continue;
 
             $table_merge_mode = false;
@@ -52,7 +55,7 @@ class MergeJob extends Base
         // based on content
         $outstream_properties = array(
             'name' => 'merged',
-            'mime_type' => ContentType::MIME_TYPE_TXT
+            'mime_type' => \ContentType::MIME_TYPE_TXT
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
         $this->getOutput()->push($outstream);
@@ -82,7 +85,7 @@ class MergeJob extends Base
         $outstream_structure = $this->determineStructure();
         $outstream_properties = array(
             'name' => 'merged',
-            'mime_type' => ContentType::MIME_TYPE_FLEXIO_TABLE,
+            'mime_type' => \ContentType::MIME_TYPE_FLEXIO_TABLE,
             'structure' => $outstream_structure
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
