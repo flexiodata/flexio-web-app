@@ -19,28 +19,28 @@ class Test
         // TEST: Validator error constants
 
         // BEGIN TEST
-        $actual = Validator::ERROR_NONE;
+        $actual = \Validator::ERROR_NONE;
         $expected = 'none';
-        TestCheck::assertString('A.1', 'Validator::ERROR_NONE; check for existence of constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', '\Validator::ERROR_NONE; check for existence of constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Validator::ERROR_UNDEFINED;
+        $actual = \Validator::ERROR_UNDEFINED;
         $expected = 'undefined';
-        TestCheck::assertString('A.2', 'Validator::ERROR_UNDEFINED; check for existence of constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.2', '\Validator::ERROR_UNDEFINED; check for existence of constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Validator::ERROR_GENERAL;
+        $actual = \Validator::ERROR_GENERAL;
         $expected = 'general';
-        TestCheck::assertString('A.3', 'Validator::ERROR_GENERAL; check for existence of constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.3', '\Validator::ERROR_GENERAL; check for existence of constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Validator::ERROR_MISSING_PARAMETER;
+        $actual = \Validator::ERROR_MISSING_PARAMETER;
         $expected = 'missing_parameter';
-        TestCheck::assertString('A.4', 'Validator::ERROR_MISSING_PARAMETER; check for existence of constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.4', '\Validator::ERROR_MISSING_PARAMETER; check for existence of constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = Validator::ERROR_INVALID_PARAMETER;
+        $actual = \Validator::ERROR_INVALID_PARAMETER;
         $expected = 'invalid_parameter';
-        TestCheck::assertString('A.5', 'Validator::ERROR_INVALID_PARAMETER; check for existence of constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.5', '\Validator::ERROR_INVALID_PARAMETER; check for existence of constant',  $actual, $expected, $results);
     }
 }

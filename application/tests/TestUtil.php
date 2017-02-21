@@ -79,7 +79,7 @@ class TestUtil
 
         $datastore_id = $params['database'] . ';' . $params['host'];
         if (!isset($g_store->datastores[$datastore_id]))
-            $g_store->datastores[$datastore_id] = PostgresService::create($params);
+            $g_store->datastores[$datastore_id] = \PostgresService::create($params);
 
         $datastore = $g_store->datastores[$datastore_id];
         $pdo = $datastore->getPDO();

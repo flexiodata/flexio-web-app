@@ -21,9 +21,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = GoogleService::create(null);
+        $service = \GoogleService::create(null);
         $actual = get_class($service) === 'GoogleService';
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'GoogleService::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\GoogleService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

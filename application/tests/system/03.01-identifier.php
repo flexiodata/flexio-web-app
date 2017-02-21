@@ -19,7 +19,7 @@ class Test
         // TEST: non-string inputs
 
         // BEGIN TEST
-        $actual = \\Identifier::isValid(null);
+        $actual = \Identifier::isValid(null);
         $expected = false;
         TestCheck::assertBoolean('A.1', '\Identifier::isValid() null input', $actual, $expected, $results);
 

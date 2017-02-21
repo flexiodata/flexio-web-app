@@ -21,9 +21,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = MailJetService::create(null);
+        $service = \MailJetService::create(null);
         $actual = get_class($service) === 'MailJetService';
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'MailJetService::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\MailJetService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

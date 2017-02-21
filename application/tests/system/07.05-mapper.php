@@ -104,7 +104,7 @@ class Test
         ]
         ';
         $schema = null;
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -226,7 +226,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.1', 'Mapper::flatten(); subset of PipelineDeals "People" API call result',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', '\Mapper::flatten(); subset of PipelineDeals "People" API call result',  $actual, $expected, $results);
 
 
         // BEGIN TEST; See here for example documentation: https://app.pipelinedeals.com/api/docs/resources/documents
@@ -259,7 +259,7 @@ class Test
         ]
         ';
         $schema = null;
-        $actual = Mapper::flatten($data, $schema);
+        $actual = \Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -284,6 +284,6 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.2', 'Mapper::flatten(); subset of PipelineDeals "Documents" API call result',  $actual, $expected, $results);
+        TestCheck::assertArray('A.2', '\Mapper::flatten(); subset of PipelineDeals "Documents" API call result',  $actual, $expected, $results);
     }
 }

@@ -21,9 +21,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = DropboxService::create(null);
+        $service = \DropboxService::create(null);
         $actual = get_class($service) === 'DropboxService';
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'DropboxService::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\DropboxService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

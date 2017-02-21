@@ -21,9 +21,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = SocrataService::create(null);
+        $service = \SocrataService::create(null);
         $actual = get_class($service) === 'SocrataService';
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'SocrataService::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\SocrataService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }
