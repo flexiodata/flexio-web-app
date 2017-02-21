@@ -11,7 +11,9 @@
  * @subpackage Controller
  */
 
+
 namespace Flexio\Controllers;
+
 
 class AController extends \FxControllerAction
 {
