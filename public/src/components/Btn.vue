@@ -11,6 +11,7 @@
       'btn-sm': {},
       'btn-md': {},
       'btn-lg': {},
+      'btn-block': {},
       'btn-square': {},
       'btn-cta': {},
       'btn-default': {},
@@ -36,6 +37,9 @@
           cls = cls.concat(['f6','ph3','pv2'])
          else if (this.btnLg !== undefined)
           cls = cls.concat(['ph4','pv2a','lh-title'])
+
+        if (this.btnBlock !== undefined)
+          cls = cls.concat(['db w-100'])
 
         if (outline)
         {
