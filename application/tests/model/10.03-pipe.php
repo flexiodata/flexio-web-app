@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: Model::create(); multiple unique pipe creation
 
         // BEGIN TEST
@@ -29,7 +34,7 @@ class Test
                 'name' => "Test $i",
                 'description' => "Test $i description"
             );
-            $eid = System::getModel()->create(Model::TYPE_PIPE, $info);
+            $eid = $model->create(Model::TYPE_PIPE, $info);
             $created_eids[$eid] = 1;
             if (!Eid::isValid($eid))
                 $failed_pipe_creation++;

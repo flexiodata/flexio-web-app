@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: Model::create(); multiple unique connection creation
 
         // BEGIN TEST
@@ -29,7 +34,7 @@ class Test
                 'name' => $handle,
                 'description' => "Test connection $i"
             );
-            $eid = System::getModel()->create(Model::TYPE_CONNECTION, $info);
+            $eid = $model->create(Model::TYPE_CONNECTION, $info);
             $created_eids[$eid] = 1;
             if (!Eid::isValid($eid))
                 $failed_connection_creation++;

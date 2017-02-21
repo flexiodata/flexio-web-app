@@ -16,39 +16,44 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: search tests when results can't be found
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $eid = Eid::generate();
         $path = "$eid";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = array(
         );
         TestCheck::assertArray('A.1', 'Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $eid = Eid::generate();
         $edge_owns = Model::EDGE_OWNS;
         $edge_following = Model::EDGE_FOLLOWING;
         $type_project = Model::TYPE_PROJECT;
         $path = "$eid->($edge_owns,$edge_following)->($type_project)";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = array(
         );
         TestCheck::assertArray('A.2', 'Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $info = array(
         );
-        $eid1 = System::getModel()->create(Model::TYPE_OBJECT, $info);
+        $eid1 = $model->create(Model::TYPE_OBJECT, $info);
         $eid2 = Eid::generate();
         $path = "$eid2";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = array(
         );

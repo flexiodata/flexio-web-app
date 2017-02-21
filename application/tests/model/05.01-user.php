@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: Model::checkPasswordHash(); tests for empty string input
 
         // BEGIN TEST

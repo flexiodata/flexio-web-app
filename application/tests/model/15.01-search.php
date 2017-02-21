@@ -16,53 +16,58 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: search tests with invalid search path
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $path = null;
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = false;
         TestCheck::assertBoolean('A.1', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $path = true;
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = false;
         TestCheck::assertBoolean('A.2', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $path = "";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = false;
         TestCheck::assertBoolean('A.3', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $path = "->";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = false;
         TestCheck::assertBoolean('A.4', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $eid = Eid::generate();
         $path = "$eid->";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = false;
         TestCheck::assertBoolean('A.5', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $eid = Eid::generate();
         $path = "->$eid";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = false;
         TestCheck::assertBoolean('A.6', 'Model::search(); return false with invalid search path',  $actual, $expected, $results);
@@ -72,29 +77,29 @@ class Test
         // TEST: search tests with text parameters that aren't valid eids or edges in appropriate places
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $path = "abc";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = array(
         );
         TestCheck::assertArray('B.1', 'Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $edge_owns = Model::EDGE_OWNS;
         $path = "$edge_owns";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = array(
         );
         TestCheck::assertArray('B.2', 'Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $edge_owns = Model::EDGE_OWNS;
         $path = "($edge_owns)";
-        $result = System::getModel()->search($path);
+        $result = $model->search($path);
         $actual = $result;
         $expected = array(
         );

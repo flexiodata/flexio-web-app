@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: misc project functions
 
         // BEGIN TEST

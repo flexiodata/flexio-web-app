@@ -16,23 +16,28 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: Model::create(); container creation with no parameters
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $info = array(
         );
-        $eid = System::getModel()->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(Model::TYPE_PIPE, $info);
         $actual = Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('A.1', 'Model::create(); for container creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
         // BEGIN TEST
-        System::getModel()->clearErrors();
+        $model->clearErrors();
         $info = array(
         );
-        $eid = System::getModel()->create(Model::TYPE_PIPE, $info);
-        $has_errors = System::getModel()->hasErrors();
+        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $has_errors = $model->hasErrors();
         $actual = $has_errors;
         $expected = false;
         TestCheck::assertBoolean('A.2', 'Model::create(); for container creation, don\'t require input parameters; don\'t flag any errors',  $actual, $expected, $results);

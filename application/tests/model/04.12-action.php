@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TODO: add more tests
 
         // TEST: ActionModel::record(); basic action recording
@@ -27,7 +32,7 @@ class Test
             'url_params' => json_encode(array('eid' => Eid::generate())),
             'query_params' => json_encode(array())
         );
-        $actual = System::getModel()->action->record($action_params);
+        $actual = $model->action->record($action_params);
         $expected = true;
         TestCheck::assertBoolean('A.1', 'ActionModel::record(); basic action recording', $actual, $expected, $results);
     }
