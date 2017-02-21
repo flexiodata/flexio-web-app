@@ -24,7 +24,7 @@ class Test
         // TEST: number entry creation tests
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
+        $object_eid = \Eid::generate();
         $name = null;
         $value = null;
         $actual = $model->registry->setNumber($object_eid, $name, $value);
@@ -32,7 +32,7 @@ class Test
         TestCheck::assertBoolean('A.1', 'Registry\Model::setNumber(); return false when no name is specified', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
+        $object_eid = \Eid::generate();
         $name = '';
         $value = '';
         $actual = $model->registry->setNumber($object_eid, $name, $value);
@@ -41,7 +41,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = null;
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $actual = $model->registry->setNumber($object_eid, $name, $value);
         $expected = false;
@@ -49,7 +49,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = true;
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $actual = $model->registry->setNumber($object_eid, $name, $value);
         $expected = false;
@@ -57,7 +57,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $actual = $model->registry->setNumber($object_eid, $name, $value);
         $expected = true;
@@ -65,7 +65,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $expires = false;
         $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
@@ -74,7 +74,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $expires = 0;
         $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
@@ -83,7 +83,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $expires = null;
         $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
@@ -92,7 +92,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $expires = 3600;
         $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
@@ -111,15 +111,15 @@ class Test
         TestCheck::assertBoolean('B.1', 'Registry\Model::entryExists(); handle null input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $actual = $model->registry->entryExists($object_eid, $name);
         $expected = false;
         TestCheck::assertBoolean('B.2', 'Registry\Model::entryExists(); with no entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->entryExists($object_eid, $name);
@@ -127,8 +127,8 @@ class Test
         TestCheck::assertBoolean('B.3', 'Registry\Model::entryExists(); with existing entry', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = '';
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->entryExists($object_eid, 'a');
@@ -136,8 +136,8 @@ class Test
         TestCheck::assertBoolean('B.4', 'Registry\Model::entryExists(); should be sensitive to the name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = '';
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->entryExists('', $name);
@@ -157,15 +157,15 @@ class Test
         TestCheck::assertBoolean('C.1', 'Registry\Model::getNumber(); handle null input; default output is null', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $actual = $model->registry->getNumber($object_eid, $name, 0);
         $expected = 0;
         TestCheck::assertNumber('C.2', 'Registry\Model::getNumber(); with no entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = 3.14;
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->getNumber($object_eid, $name, 1);
@@ -173,18 +173,18 @@ class Test
         TestCheck::assertNumber('C.3', 'Registry\Model::getNumber(); with existing entry', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
-        $value = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
+        $value = \Util::generateHandle();
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->getNumber($object_eid, 'a', -1);
         $expected = -1;
         TestCheck::assertNumber('C.4', 'Registry\Model::getNumber(); should be sensitive to the name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
-        $value = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
+        $value = \Util::generateHandle();
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->getNumber('', $name, 2.71);
         $expected = 2.71;

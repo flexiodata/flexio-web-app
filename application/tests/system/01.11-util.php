@@ -16,128 +16,128 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: Util::filterAlphaNumeric() non-string input
+        // TEST: \Util::filterAlphaNumeric() non-string input
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric(null);
+        $str = \Util::filterAlphaNumeric(null);
         $actual = ($str == '' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('A.1', 'Util::filterAlphaNumeric() non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric(false);
+        $str = \Util::filterAlphaNumeric(false);
         $actual = ($str == '' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('A.2', 'Util::filterAlphaNumeric() non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric(1);
+        $str = \Util::filterAlphaNumeric(1);
         $actual = ($str == '' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('A.3', 'Util::filterAlphaNumeric() non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('a',null);
+        $str = \Util::filterAlphaNumeric('a',null);
         $actual = ($str == '' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('A.4', 'Util::filterAlphaNumeric() non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('a',true);
+        $str = \Util::filterAlphaNumeric('a',true);
         $actual = ($str == '' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('A.5', 'Util::filterAlphaNumeric() non-string input',  $actual, $expected, $results);
 
 
 
-        // TEST: Util::filterAlphaNumeric() string input
+        // TEST: \Util::filterAlphaNumeric() string input
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('');
+        $str = \Util::filterAlphaNumeric('');
         $actual = ($str == '' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.1', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('a');
+        $str = \Util::filterAlphaNumeric('a');
         $actual = ($str == 'a' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.2', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('aa');
+        $str = \Util::filterAlphaNumeric('aa');
         $actual = ($str == 'aa' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.3', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('0');
+        $str = \Util::filterAlphaNumeric('0');
         $actual = ($str == '0' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.4', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('12');
+        $str = \Util::filterAlphaNumeric('12');
         $actual = ($str == '12' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.5', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('a1');
+        $str = \Util::filterAlphaNumeric('a1');
         $actual = ($str == 'a1' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.6', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('1a');
+        $str = \Util::filterAlphaNumeric('1a');
         $actual = ($str == '1a' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.7', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('-0.123');
+        $str = \Util::filterAlphaNumeric('-0.123');
         $actual = ($str == '123' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.8', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('"45%"');
+        $str = \Util::filterAlphaNumeric('"45%"');
         $actual = ($str == '45' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.9', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('X != Y');
+        $str = \Util::filterAlphaNumeric('X != Y');
         $actual = ($str == 'XY' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.10', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('X != Y','');
+        $str = \Util::filterAlphaNumeric('X != Y','');
         $actual = ($str == 'XY' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.11', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('X != Y','!=');
+        $str = \Util::filterAlphaNumeric('X != Y','!=');
         $actual = ($str == 'X!=Y' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.12', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric('X != Y','!= ');
+        $str = \Util::filterAlphaNumeric('X != Y','!= ');
         $actual = ($str == 'X != Y' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.13', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric(' X != Y ','= ');
+        $str = \Util::filterAlphaNumeric(' X != Y ','= ');
         $actual = ($str == ' X = Y ' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.14', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::filterAlphaNumeric(' X != Y ',' =');
+        $str = \Util::filterAlphaNumeric(' X != Y ',' =');
         $actual = ($str == ' X = Y ' ? true : false);
         $expected = true;
         TestCheck::assertBoolean('B.15', 'Util::filterAlphaNumeric() string input',  $actual, $expected, $results);

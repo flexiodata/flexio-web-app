@@ -43,7 +43,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $delete_result = $model->delete($eid);
         $actual = $delete_result;
         $expected = false;
@@ -51,7 +51,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $delete_result = $model->delete($eid);
         $actual = $model->hasErrors();
         $expected = false;
@@ -67,7 +67,7 @@ class Test
         );
         $eid = $model->create(\Model::TYPE_OBJECT, $info);
         $delete_result = $model->delete($eid);
-        $actual = Eid::isValid($eid) === true && $delete_result === true;
+        $actual = \Eid::isValid($eid) === true && $delete_result === true;
         $expected = true;
         TestCheck::assertBoolean('C.1', '\Model::delete(); for object deletion, return true when object is deleted',  $actual, $expected, $results);
 
@@ -78,7 +78,7 @@ class Test
         $eid = $model->create(\Model::TYPE_OBJECT, $info);
         $delete_result = $model->delete($eid);
         $has_errors = $model->hasErrors();
-        $actual = Eid::isValid($eid) === true && $has_errors === false;
+        $actual = \Eid::isValid($eid) === true && $has_errors === false;
         $expected = true;
         TestCheck::assertBoolean('C.2', '\Model::delete(); for object deletion, don\'t flag an error when an object is correctly deleted',  $actual, $expected, $results);
 
@@ -90,7 +90,7 @@ class Test
         $status_after_add = $model->getStatus($eid);
         $delete_result = $model->delete($eid);
         $status_after_delete = $model->getStatus($eid);
-        $actual = Eid::isValid($eid) === true && $status_after_add !== \Model::STATUS_DELETED && $status_after_delete === \Model::STATUS_DELETED;
+        $actual = \Eid::isValid($eid) === true && $status_after_add !== \Model::STATUS_DELETED && $status_after_delete === \Model::STATUS_DELETED;
         $expected = true;
         TestCheck::assertBoolean('C.3', '\Model::delete(); for object deletion, make sure an object is actually deleted',  $actual, $expected, $results);
     }

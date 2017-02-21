@@ -40,7 +40,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $type = $model->getType($eid);
         $actual = $type;
         $expected = \Model::TYPE_UNDEFINED;
@@ -92,7 +92,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $status = $model->getStatus($eid);
         $actual = $status;
         $expected = \Model::STATUS_UNDEFINED;
@@ -168,7 +168,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $result = $model->setStatus($eid, \Model::STATUS_AVAILABLE);
         $actual = $result;
         $expected = false;

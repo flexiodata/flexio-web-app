@@ -26,7 +26,7 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $input_eid = 'xxxxxxxxxxxx';
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'eid' => $input_eid,
             'name' => $handle
@@ -39,7 +39,7 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $eid_type = \Model::TYPE_COMMENT;  // try something besides \Model::TYPE_UNDEFINED
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'eid_type' => $eid_type,
             'name' => $handle
@@ -52,7 +52,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -69,7 +69,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_CONNECTION, $info);
@@ -80,7 +80,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_CONNECTION, $info);
@@ -104,12 +104,12 @@ class Test
 BIW: Jan, 2016: this test is no longer valid because connection model now does straight value storage
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_CONNECTION, $info);
         $object = $model->get($eid);
-        $actual = isset($object['database']) && Eid::isValid($object['database']);
+        $actual = isset($object['database']) && \Eid::isValid($object['database']);
         $expected = true;
         TestCheck::assertBoolean('B.3', '\Model::create(); in connection creation, make sure essential fields are created',  $actual, $expected, $results);
 */
@@ -120,7 +120,7 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
         );
@@ -133,7 +133,7 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => 'Test Connection'
         );
@@ -146,7 +146,7 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'description' => 'Test connection description'
         );
@@ -159,7 +159,7 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'display_icon' => '<blank>'
         );
@@ -172,7 +172,7 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'connection_status' => \Model::CONNECTION_STATUS_AVAILABLE
         );
@@ -185,7 +185,7 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'port' => 3025
         );
@@ -198,7 +198,7 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'database' => 'db'
         );
@@ -211,7 +211,7 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'connection_type' => 'ct'
         );

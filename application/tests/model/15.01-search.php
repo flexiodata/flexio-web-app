@@ -56,7 +56,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $path = "$eid->";
         $result = $model->search($path);
         $actual = $result;
@@ -65,7 +65,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $path = "->$eid";
         $result = $model->search($path);
         $actual = $result;

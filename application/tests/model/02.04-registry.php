@@ -24,7 +24,7 @@ class Test
         // TEST: binary entry creation tests
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
+        $object_eid = \Eid::generate();
         $name = null;
         $value = null;
         $actual = $model->registry->setBinary($object_eid, $name, $value);
@@ -32,7 +32,7 @@ class Test
         TestCheck::assertBoolean('A.1', 'Registry\Model::setBinary(); return false when no name is specified', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
+        $object_eid = \Eid::generate();
         $name = '';
         $value = '';
         $actual = $model->registry->setBinary($object_eid, $name, $value);
@@ -41,7 +41,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = null;
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $actual = $model->registry->setBinary($object_eid, $name, $value);
         $expected = false;
@@ -49,7 +49,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $actual = $model->registry->setBinary($object_eid, $name, $value);
         $expected = true;
@@ -57,7 +57,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = 1;
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $actual = $model->registry->setBinary($object_eid, $name, $value);
         $expected = false;
@@ -65,7 +65,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $expires = false;
         $actual = $model->registry->setBinary($object_eid, $name, $value, $expires);
@@ -74,7 +74,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $expires = 1.1;
         $actual = $model->registry->setBinary($object_eid, $name, $value, $expires);
@@ -83,7 +83,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $expires = null;
         $actual = $model->registry->setBinary($object_eid, $name, $value, $expires);
@@ -92,7 +92,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $expires = 3600;
         $actual = $model->registry->setBinary($object_eid, $name, $value, $expires);
@@ -111,15 +111,15 @@ class Test
         TestCheck::assertBoolean('B.1', 'Registry\Model::entryExists(); handle null input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $actual = $model->registry->entryExists($object_eid, $name);
         $expected = false;
         TestCheck::assertBoolean('B.2', 'Registry\Model::entryExists(); with no entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = '';
         $result = $model->registry->setBinary($object_eid, $name, $value, null);
         $actual = $model->registry->entryExists($object_eid, $name);
@@ -127,8 +127,8 @@ class Test
         TestCheck::assertBoolean('B.3', 'Registry\Model::entryExists(); with existing entry', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = '';
         $result = $model->registry->setBinary($object_eid, $name, $value, null);
         $actual = $model->registry->entryExists($object_eid, 'a');
@@ -136,8 +136,8 @@ class Test
         TestCheck::assertBoolean('B.4', 'Registry\Model::entryExists(); should be sensitive to the name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = '';
         $result = $model->registry->setBinary($object_eid, $name, $value, null);
         $actual = $model->registry->entryExists('', $name);
@@ -158,8 +158,8 @@ class Test
         TestCheck::assertBoolean('C.1', 'Registry\Model::getBinary(); handle null input; default output is null', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $mime_type = '';
         $entry = $model->registry->getBinary($object_eid, $name, $mime_type);
         $actual = !isset($entry);
@@ -168,7 +168,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = "\e\f\n"; // various escape sequences
         $mime_type = '';
         $result = $model->registry->setBinary($object_eid, $name, $value, null, $mime_type);
@@ -178,7 +178,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = Util::generateHandle();
+        $name = \Util::generateHandle();
         $value = chr(7);
         $mime_type = '';
         $result = $model->registry->setBinary($object_eid, $name, $value, null, $mime_type);
@@ -187,8 +187,8 @@ class Test
         TestCheck::assertString('C.4', 'Registry\Model::getBinary(); with existing entry', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = chr(9);
         $mime_type = '';
         $result = $model->registry->setBinary($object_eid, $name, $value, null, $mime_type);
@@ -198,8 +198,8 @@ class Test
         TestCheck::assertBoolean('C.5', 'Registry\Model::getBinary(); should be sensitive to the name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = false;
         $mime_type = '';
         $result = $model->registry->setBinary($object_eid, $name, $value, null, $mime_type);
@@ -213,8 +213,8 @@ class Test
         // TEST: test for readability of created entries
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $mime_type = 'a';
         $entry = $model->registry->getBinary($object_eid, $name, $mime_type);
         $actual = $mime_type;
@@ -222,8 +222,8 @@ class Test
         TestCheck::assertString('D.1', 'Registry\Model::getBinary(); test default mime type', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = 1.23;
         $mime_type = 'a';
         $result = $model->registry->setBinary($object_eid, $name, $value, null, $mime_type);
@@ -233,8 +233,8 @@ class Test
         TestCheck::assertString('D.2', 'Registry\Model::getBinary(); test mime type with a value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = "a,b,c\n1,2,3";
         $mime_type = 'text/csv';
         $result = $model->registry->setBinary($object_eid, $name, $value, null, $mime_type);

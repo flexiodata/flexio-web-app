@@ -25,7 +25,7 @@ class TestSample
             $email = "user$user@flex.io";
             $password = 'test99';
 
-            if (Eid::isValid(TestUtil::getModel()->user->getEidFromIdentifier($user_name)))
+            if (\Eid::isValid(TestUtil::getModel()->user->getEidFromIdentifier($user_name)))
             {
                 // this user already exists
                 continue;

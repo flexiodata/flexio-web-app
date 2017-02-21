@@ -57,7 +57,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'user_name' => $handle
         );
@@ -69,20 +69,20 @@ class Test
 
         // TEST: \Model::create(); user creation with basic user_name input
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = Eid::isValid($eid);
+        $actual = \Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('B.1', '\Model::create(); make sure valid eid is returned when user is created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info1 = array(
             'user_name' => $handle1,
@@ -94,13 +94,13 @@ class Test
         );
         $eid_first_time_creation = $model->create(\Model::TYPE_USER, $info1);
         $eid_second_time_creation = $model->create(\Model::TYPE_USER, $info2);
-        $actual = (Eid::isValid($eid_first_time_creation) && $eid_second_time_creation === false);
+        $actual = (\Eid::isValid($eid_first_time_creation) && $eid_second_time_creation === false);
         $expected = true;
         TestCheck::assertBoolean('B.2', '\Model::create(); do not allow multiple users with the same username',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info1 = array(
             'user_name' => $handle1 . 'a',
@@ -112,7 +112,7 @@ class Test
         );
         $eid_first_time_creation = $model->create(\Model::TYPE_USER, $info1);
         $eid_second_time_creation = $model->create(\Model::TYPE_USER, $info2);
-        $actual = (Eid::isValid($eid_first_time_creation) && $eid_second_time_creation === false);
+        $actual = (\Eid::isValid($eid_first_time_creation) && $eid_second_time_creation === false);
         $expected = true;
         TestCheck::assertBoolean('B.3', '\Model::create(); do not allow multiple users with the same email',  $actual, $expected, $results);
 
@@ -136,7 +136,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -180,7 +180,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -193,7 +193,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = strtoupper(TestUtil::generateEmail());
         $info = array(
             'user_name' => $handle1,
@@ -217,7 +217,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $eid = $model->user->getEidFromIdentifier($handle);
         $actual = $eid === false && $model->hasErrors() === false; // shouldn't set an error
         $expected = true;
@@ -225,7 +225,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -274,14 +274,14 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $actual = $model->user->checkUserPassword($handle,'');
         $expected = false;
         TestCheck::assertBoolean('F.2', 'User\Model::checkUserPassword(); return false if user cannot be found',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = Util::generateHandle();
+        $username = \Util::generateHandle();
         $password = 'xxxxxxxx';
         $info = array(
             'user_name' => $username,
@@ -294,7 +294,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = Util::generateHandle();
+        $username = \Util::generateHandle();
         $password = 'xxxxxxxx';
         $info = array(
             'user_name' => $username,
@@ -307,7 +307,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = Util::generateHandle();
+        $username = \Util::generateHandle();
         $email = TestUtil::generateEmail();
         $password = 'xxxxxxxx';
         $info = array(

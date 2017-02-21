@@ -148,7 +148,7 @@ class TestUtil
 
         // see if the user already exists
         $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
-        if (Eid::isValid($user_eid))
+        if (\Eid::isValid($user_eid))
             return $user_eid;
 
         $user_eid = TestUtil::createTestUser($user_name, $email, $password);
@@ -186,7 +186,7 @@ class TestUtil
 
     public static function createTestUser($username, $email, $password)
     {
-        $verify_code = Util::generateHandle();
+        $verify_code = \Util::generateHandle();
         $new_user_info = array('user_name' => $username,
                                'email' => $email,
                                'full_name' => $username,
@@ -336,8 +336,8 @@ class TestUtil
 
     public static function generateEmail()
     {
-        $handle1 = Util::generateHandle();
-        $handle2 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
+        $handle2 = \Util::generateHandle();
         return $handle1 . '@' . $handle2 . '.com';
     }
 

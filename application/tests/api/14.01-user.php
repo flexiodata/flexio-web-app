@@ -19,9 +19,9 @@ class Test
         // TEST: object creation
 
         // BEGIN TEST
-        $username = Util::generateHandle();
+        $username = \Util::generateHandle();
         $email = TestUtil::generateEmail();
-        $password = Util::generateHandle();
+        $password = \Util::generateHandle();
         $params = json_decode('
         {
             "user_name": "'.$username.'",

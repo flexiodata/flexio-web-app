@@ -64,7 +64,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
@@ -74,7 +74,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
@@ -84,7 +84,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
@@ -99,22 +99,22 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $actual = $model->set($eid, $info);
         $expected = false;
         TestCheck::assertBoolean('B.1', '\Model::set(); return false after trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $result = $model->set($eid, $info);
         $actual = $model->hasErrors();
         $expected = false;
@@ -122,7 +122,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
@@ -130,7 +130,7 @@ class Test
         $delete_result = $model->delete($eid);
         $set_result = $model->set($eid, $info);
         $has_errors = $model->hasErrors();
-        $actual = Eid::isValid($eid) && $delete_result === true && $set_result === false && $has_errors === false;
+        $actual = \Eid::isValid($eid) && $delete_result === true && $set_result === false && $has_errors === false;
         $expected = true;
         TestCheck::assertBoolean('B.3', '\Model::set(); return false and don\'t flag an error when trying to set parameters on an object that\'s been deleted',  $actual, $expected, $results);
 
@@ -140,7 +140,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $info = array(
         );
@@ -150,7 +150,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
@@ -164,7 +164,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
@@ -178,7 +178,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
@@ -192,7 +192,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );

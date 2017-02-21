@@ -26,7 +26,7 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $input_eid = 'xxxxxxxxxxxx';
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'eid' => $input_eid,
@@ -41,7 +41,7 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $eid_type = \Model::TYPE_UNDEFINED;
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'eid_type' => $eid_type,
@@ -56,7 +56,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -76,7 +76,7 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $eid_type = \Model::TYPE_UNDEFINED;
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -95,7 +95,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -109,7 +109,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -142,7 +142,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -158,7 +158,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -174,7 +174,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -190,7 +190,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -206,7 +206,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -224,7 +224,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -244,7 +244,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -259,7 +259,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -275,7 +275,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -291,7 +291,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -307,7 +307,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -323,7 +323,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -339,7 +339,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = Util::generateHandle();
+        $handle1 = \Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,

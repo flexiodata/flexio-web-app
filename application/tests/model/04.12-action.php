@@ -27,9 +27,9 @@ class Test
 
         // BEGIN TEST
         $action_params = array(
-            'user_eid' => Eid::generate(),
+            'user_eid' => \Eid::generate(),
             'request_method' => 'GET',
-            'url_params' => json_encode(array('eid' => Eid::generate())),
+            'url_params' => json_encode(array('eid' => \Eid::generate())),
             'query_params' => json_encode(array())
         );
         $actual = $model->action->record($action_params);

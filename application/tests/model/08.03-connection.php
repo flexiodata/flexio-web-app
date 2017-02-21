@@ -29,14 +29,14 @@ class Test
         $failed_connection_creation = 0;
         for ($i = 0; $i < $total_count; $i++)
         {
-            $handle = Util::generateHandle();
+            $handle = \Util::generateHandle();
             $info = array(
                 'name' => $handle,
                 'description' => "Test connection $i"
             );
             $eid = $model->create(\Model::TYPE_CONNECTION, $info);
             $created_eids[$eid] = 1;
-            if (!Eid::isValid($eid))
+            if (!\Eid::isValid($eid))
                 $failed_connection_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_connection_creation == 0;

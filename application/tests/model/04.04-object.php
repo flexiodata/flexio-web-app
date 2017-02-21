@@ -47,7 +47,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $params = array(
         );
         $set_result = $model->set($eid, $params);
@@ -57,7 +57,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $params = array(
         );
         $set_result = $model->set($eid, $params);
@@ -77,7 +77,7 @@ class Test
         $params = array(
         );
         $set_result = $model->set($eid, $params);
-        $actual = Eid::isValid($eid) === true && $set_result === true;
+        $actual = \Eid::isValid($eid) === true && $set_result === true;
         $expected = true;
         TestCheck::assertBoolean('C.1', '\Model::set(); for object update, return true when set operation is performed on a valid eid, even if no values change',  $actual, $expected, $results);
 
@@ -90,7 +90,7 @@ class Test
         );
         $set_result = $model->set($eid, $params);
         $has_errors = $model->hasErrors();
-        $actual = Eid::isValid($eid) === true && $has_errors === false;
+        $actual = \Eid::isValid($eid) === true && $has_errors === false;
         $expected = true;
         TestCheck::assertBoolean('C.2', '\Model::set(); for object update, don\'t flag an error when an object is updated',  $actual, $expected, $results);
 
@@ -103,13 +103,13 @@ class Test
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid_new = Eid::generate();
+        $eid_new = \Eid::generate();
         $params = array(
             'eid' => $eid_new,
             'eid_type' => \Model::TYPE_COMMENT
         );
         $set_result = $model->set($eid, $params);
-        $actual = Eid::isValid($eid) === true && $set_result === true;
+        $actual = \Eid::isValid($eid) === true && $set_result === true;
         $expected = true;
         TestCheck::assertBoolean('D.1', '\Model::set(); for object update, simply filter parameters that can\'t be set; don\'t return false',  $actual, $expected, $results);
 
@@ -118,14 +118,14 @@ class Test
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid_new = Eid::generate();
+        $eid_new = \Eid::generate();
         $params = array(
             'eid' => $eid_new,
             'eid_type' => \Model::TYPE_COMMENT
         );
         $set_result = $model->set($eid, $params);
         $has_errors = $model->hasErrors();
-        $actual = Eid::isValid($eid) === true && $has_errors === false;
+        $actual = \Eid::isValid($eid) === true && $has_errors === false;
         $expected = true;
         TestCheck::assertBoolean('D.2', '\Model::set(); for object update, simply filter parameters that can\'t be set; don\'t flag an error',  $actual, $expected, $results);
 
@@ -134,7 +134,7 @@ class Test
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid_new = Eid::generate();
+        $eid_new = \Eid::generate();
         $params = array(
             'eid' => $eid_new,
             'eid_type' => \Model::TYPE_COMMENT

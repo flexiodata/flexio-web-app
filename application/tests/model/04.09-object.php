@@ -241,7 +241,7 @@ class Test
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = Eid::generate();
+        $eid3 = \Eid::generate();
         $add_operation = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $count_after_addition = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $change_operation = $model->assoc_change_type($eid3, \Model::EDGE_LINKED_TO, $eid2, \Model::EDGE_LINKED_FROM);
@@ -257,7 +257,7 @@ class Test
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = Eid::generate();
+        $eid3 = \Eid::generate();
         $add_operation = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $count_after_addition = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $change_operation = $model->assoc_change_type($eid1, \Model::EDGE_LINKED_TO, $eid3, \Model::EDGE_LINKED_FROM);

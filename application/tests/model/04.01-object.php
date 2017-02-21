@@ -74,7 +74,7 @@ class Test
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $actual = Eid::isValid($eid);
+        $actual = \Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('B.1', '\Model::create(); for object creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 

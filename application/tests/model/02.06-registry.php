@@ -24,8 +24,8 @@ class Test
         // TEST: basic expired entry cleanup
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 4); // expires in 4 seconds
         $first_exists = $model->registry->entryExists($object_eid, $name);
@@ -36,8 +36,8 @@ class Test
         TestCheck::assertBoolean('A.1', 'Registry\Model::cleanupExpiredEntries(); clean up entries that have expired', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 4); // expires in 4 seconds
         $first_exists = $model->registry->entryExists($object_eid, $name);
@@ -53,8 +53,8 @@ class Test
         // TEST: entry expiration update
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         $model->registry->expireKey($object_eid, $name, -1); // try to set expiration to one second ago
@@ -67,8 +67,8 @@ class Test
         TestCheck::assertBoolean('B.1', 'Registry\Model::expireKey(); make sure key expiration value is valid', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         sleep(1);
@@ -82,8 +82,8 @@ class Test
         TestCheck::assertBoolean('B.2', 'Registry\Model::expireKey(); make sure keys can be expired immediately', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         $model->registry->expireKey($object_eid, $name, 4); // expire in 4 seconds
@@ -96,8 +96,8 @@ class Test
         TestCheck::assertBoolean('B.3', 'Registry\Model::expireKey(); make sure keys expire for time that\'s set', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         $model->registry->expireKey($object_eid, $name.'a', 0); // expire now
@@ -109,8 +109,8 @@ class Test
         TestCheck::assertBoolean('B.4', 'Registry\Model::expireKey(); make sure expiration is sensitive to name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = Eid::generate();
-        $name = Util::generateHandle();
+        $object_eid = \Eid::generate();
+        $name = \Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         $model->registry->expireKey($object_eid.'a', $name, 0); // expire now

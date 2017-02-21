@@ -16,7 +16,7 @@ class Test
 {
     public function run(&$results)
     {
-        // note: more extensive tests for email are included in tests of Util::isValidEmail()
+        // note: more extensive tests for email are included in tests of \Util::isValidEmail()
 
         // TEST: email should be a string
 

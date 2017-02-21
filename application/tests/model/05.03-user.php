@@ -29,7 +29,7 @@ class Test
         $failed_user_creation = 0;
         for ($i = 0; $i < $total_count; $i++)
         {
-            $handle1 = Util::generateHandle();
+            $handle1 = \Util::generateHandle();
             $handle2 = TestUtil::generateEmail();
             $info = array(
                 'user_name' => $handle1,
@@ -37,7 +37,7 @@ class Test
             );
             $eid = $model->create(\Model::TYPE_USER, $info);
             $created_eids[$eid] = 1;
-            if (!Eid::isValid($eid))
+            if (!\Eid::isValid($eid))
                 $failed_user_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_user_creation == 0;

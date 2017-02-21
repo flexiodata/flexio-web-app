@@ -19,13 +19,13 @@ class Test
         // TEST: test for non-numeric input
 
         // BEGIN TEST
-        $str = Util::generateRandomString(null);
+        $str = \Util::generateRandomString(null);
         $actual = strlen($str) === 0;
         $expected = true;
         TestCheck::assertBoolean('A.1', 'Util::generateRandomString() test for non-numeric input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::generateRandomString('1');
+        $str = \Util::generateRandomString('1');
         $actual = strlen($str) === 1;
         $expected = true;
         TestCheck::assertBoolean('A.2', 'Util::generateRandomString() test for non-numeric input',  $actual, $expected, $results);
@@ -35,13 +35,13 @@ class Test
         // TEST: test for numeric input
 
         // BEGIN TEST
-        $str = Util::generateRandomString(1);
+        $str = \Util::generateRandomString(1);
         $actual = strlen($str) === 1;
         $expected = true;
         TestCheck::assertBoolean('B.1', 'Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = Util::generateRandomString(8);
+        $str = \Util::generateRandomString(8);
         $actual = strlen($str) === 8;
         $expected = true;
         TestCheck::assertBoolean('B.2', 'Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
@@ -54,7 +54,7 @@ class Test
         $random_str = array();
         for ($i = 0; $i < 1000; $i++)
         {
-            $str = Util::generateRandomString(20);
+            $str = \Util::generateRandomString(20);
             $random_str[$str] = 1;
         }
         $random_str_count = count($random_str);

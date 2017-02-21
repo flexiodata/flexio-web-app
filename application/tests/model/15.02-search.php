@@ -25,7 +25,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $path = "$eid";
         $result = $model->search($path);
         $actual = $result;
@@ -35,7 +35,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = Eid::generate();
+        $eid = \Eid::generate();
         $edge_owns = \Model::EDGE_OWNS;
         $edge_following = \Model::EDGE_FOLLOWING;
         $type_project = \Model::TYPE_PROJECT;
@@ -51,7 +51,7 @@ class Test
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = Eid::generate();
+        $eid2 = \Eid::generate();
         $path = "$eid2";
         $result = $model->search($path);
         $actual = $result;

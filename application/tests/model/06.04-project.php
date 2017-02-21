@@ -28,7 +28,7 @@ class Test
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $actual = Eid::isValid($eid);
+        $actual = \Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('A.1', '\Model::create(); for project creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 

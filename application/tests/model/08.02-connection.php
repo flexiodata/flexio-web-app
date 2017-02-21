@@ -28,7 +28,7 @@ class Test
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_CONNECTION, $info);
-        $actual = Eid::isValid($eid);
+        $actual = \Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('A.1', '\Model::create(); for connection creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
@@ -48,24 +48,24 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
         $eid = $model->create(\Model::TYPE_CONNECTION, $info);
-        $actual = Eid::isValid($eid);
+        $actual = \Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('B.1', '\Model::create(); make sure valid eid is returned when connection is created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = Util::generateHandle();
+        $handle = \Util::generateHandle();
         $info = array(
             'name' => $handle
         );
         $eid_first_time_creation = $model->create(\Model::TYPE_CONNECTION, $info);
         $eid_second_time_creation = $model->create(\Model::TYPE_CONNECTION, $info);
-        $actual = (Eid::isValid($eid_first_time_creation) && Eid::isValid($eid_second_time_creation));
+        $actual = (\Eid::isValid($eid_first_time_creation) && \Eid::isValid($eid_second_time_creation));
         $expected = true;
         TestCheck::assertBoolean('B.2', '\Model::create(); allow multiple connections with the same value',  $actual, $expected, $results);
     }

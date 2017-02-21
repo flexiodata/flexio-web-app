@@ -29,7 +29,7 @@ class Test
         for ($i = 0; $i < $entry_count; $i++)
         {
             $object_eid = '';
-            $name = Util::generateHandle();
+            $name = \Util::generateHandle();
             $value = $i;
             $model->registry->setNumber($object_eid, $name, $value); // expires in 4 seconds
             if ($model->registry->entryExists($object_eid, $name))
