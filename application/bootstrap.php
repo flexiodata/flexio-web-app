@@ -245,7 +245,6 @@ function setupIncludeDirectories()
     set_include_path($base . 'jobs'        . PATH_SEPARATOR
                    . $base . 'services'    . PATH_SEPARATOR
                    . $base . 'system'      . PATH_SEPARATOR
-                   . $base . 'tests'       . PATH_SEPARATOR
                    . get_include_path());
 }
 setupIncludeDirectories();
