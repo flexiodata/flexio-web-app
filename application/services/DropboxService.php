@@ -227,14 +227,14 @@ class DropboxService implements \Flexio\Services\IConnection
 
         // STEP 2: instantiate the service
         $service_factory = new \OAuth\ServiceFactory();
-        $storage = new \Memory();
+        $storage = new \OAuth\Common\Storage\Memory();
 
         // setup the credentials for the requests
         $oauth_callback = '';
         if (isset($params['redirect']))
             $oauth_callback = $params['redirect'];
 
-        $credentials = new \Credentials(
+        $credentials = new \OAuth\Common\Consumer\Credentials(
             $client_id,
             $client_secret,
             $oauth_callback

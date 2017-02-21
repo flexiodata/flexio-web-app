@@ -658,9 +658,9 @@ class GoogleSheetsService implements \Flexio\Services\IConnection
             return null;
 
         $service_factory = new \OAuth\ServiceFactory();
-        $storage = new \Memory();
+        $storage = new \OAuth\Common\Storage\Memory();
 
-        $credentials = new \Credentials(
+        $credentials = new \OAuth\Common\Consumer\Credentials(
             $client_id,
             $client_secret,
             $oauth_callback
