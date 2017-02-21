@@ -30,7 +30,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -54,7 +54,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -78,7 +78,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -98,7 +98,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -120,7 +120,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -149,7 +149,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "description" : "Sample Description",
@@ -169,7 +169,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "property2" : null,
@@ -197,7 +197,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "object_eid=eid" : null,
@@ -217,7 +217,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "object_name=name" : null,
@@ -237,7 +237,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "object_eid=eid" : null,

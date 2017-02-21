@@ -36,7 +36,7 @@ class Test
         $actual = \Flexio\Api\ProjectApi::create($params, $request);
         $expected = '
         {
-            "eid_type": "'.Model::TYPE_PROJECT.'",
+            "eid_type": "'.\Model::TYPE_PROJECT.'",
             "name": "Project",
             "description": "Test project"
         }

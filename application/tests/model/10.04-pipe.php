@@ -21,25 +21,25 @@ class Test
 
 
 
-        // TEST: Model::create(); container creation with no parameters
+        // TEST: \Model::create(); container creation with no parameters
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = Eid::isValid($eid);
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model::create(); for container creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); for container creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_PIPE, $info);
+        $eid = $model->create(\Model::TYPE_PIPE, $info);
         $has_errors = $model->hasErrors();
         $actual = $has_errors;
         $expected = false;
-        TestCheck::assertBoolean('A.2', 'Model::create(); for container creation, don\'t require input parameters; don\'t flag any errors',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::create(); for container creation, don\'t require input parameters; don\'t flag any errors',  $actual, $expected, $results);
     }
 }

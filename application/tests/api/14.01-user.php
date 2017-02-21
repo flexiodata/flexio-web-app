@@ -35,7 +35,7 @@ class Test
         $actual= \Flexio\Api\UserApi::create($params, $request);
         $expected = '
         {
-            "eid_type": "'.Model::TYPE_USER.'",
+            "eid_type": "'.\Model::TYPE_USER.'",
             "user_name": "'.$username.'",
             "email": "'.$email.'"
         }

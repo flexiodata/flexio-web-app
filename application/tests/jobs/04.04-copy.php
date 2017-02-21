@@ -44,7 +44,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_COMPLETED;
+        $expected = \Model::PROCESS_STATUS_COMPLETED;
         TestCheck::assertString('A.1', 'Conversion from Numeric to Character; allow width change; fail if scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -73,7 +73,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.2', 'Conversion from Numeric to Character; allow width change; fail if scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -102,7 +102,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.3', 'Conversion from Numeric to Character; allow width change; fail if scale is specified',  $actual, $expected, $results);
 
 
@@ -222,7 +222,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.1', 'Conversion from Numeric to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -250,7 +250,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.2', 'Conversion from Numeric to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -278,7 +278,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.3', 'Conversion from Numeric to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -306,7 +306,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.4', 'Conversion from Numeric to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -334,7 +334,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.5', 'Conversion from Numeric to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -362,7 +362,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.6', 'Conversion from Numeric to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -390,7 +390,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.7', 'Conversion from Numeric to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -418,7 +418,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.8', 'Conversion from Numeric to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
 
@@ -517,7 +517,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('E.1', 'Conversion from Numeric to Date; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -544,7 +544,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('E.2', 'Conversion from Numeric to Date; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -571,7 +571,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('E.3', 'Conversion from Numeric to Date; fail if width or scale is specified',  $actual, $expected, $results);
 
 
@@ -666,7 +666,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.1', 'Conversion from Numeric to DateTime; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -693,7 +693,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.2', 'Conversion from Numeric to DateTime; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -720,7 +720,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.3', 'Conversion from Numeric to DateTime; fail if width or scale is specified',  $actual, $expected, $results);
 
 
@@ -815,7 +815,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('I.1', 'Conversion from Numeric to Boolean; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -842,7 +842,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('I.2', 'Conversion from Numeric to Boolean; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -869,7 +869,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('I.3', 'Conversion from Numeric to Boolean; fail if width or scale is specified',  $actual, $expected, $results);
 
 
@@ -952,7 +952,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('K.1', 'Conversion from Date to Character; allow width change; fail if width is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -979,7 +979,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_COMPLETED;
+        $expected = \Model::PROCESS_STATUS_COMPLETED;
         TestCheck::assertString('K.2', 'Conversion from Date to Character; allow width change; fail if scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1006,7 +1006,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('K.3', 'Conversion from Date to Character; allow width change; fail if scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1033,7 +1033,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('K.4', 'Conversion from Date to Character; allow width change; fail if scale is specified',  $actual, $expected, $results);
 
 
@@ -1152,7 +1152,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('M.1', 'Conversion from Date to DateTime; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1179,7 +1179,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('M.2', 'Conversion from Date to DateTime; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1206,7 +1206,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('M.3', 'Conversion from Date to DateTime; fail if width or scale is specified',  $actual, $expected, $results);
 
 

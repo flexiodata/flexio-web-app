@@ -27,13 +27,13 @@ class Test
         $model->clearErrors();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_OBJECT, $info);
+        $eid = $model->create(\Model::TYPE_OBJECT, $info);
         $path = "$eid";
         $result = $model->search($path);
         $actual = $result;
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.1', 'Model::search(); search for single eid that exists',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', '\Model::search(); search for single eid that exists',  $actual, $expected, $results);
     }
 }

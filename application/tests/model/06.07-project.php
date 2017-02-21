@@ -21,14 +21,14 @@ class Test
 
 
 
-        // TEST: Model::set(); make sure that non-specified properties aren't changed
+        // TEST: \Model::set(); make sure that non-specified properties aren't changed
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
             'name' => 'Test project'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $info = array(
             'description' => 'This is a test'
         );
@@ -38,14 +38,14 @@ class Test
             'name' => 'Test project',
             'description' => 'This is a test'
         );
-        TestCheck::assertInArray('D.1', 'Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
+        TestCheck::assertInArray('D.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
             'name' => 'Test project'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $info = array(
             'description' => 'This is a test'
         );
@@ -55,7 +55,7 @@ class Test
             'name' => 'Test project',
             'description' => 'This is a test'
         );
-        TestCheck::assertInArray('D.1', 'Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
+        TestCheck::assertInArray('D.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
 
 
 
@@ -70,7 +70,7 @@ class Test
         );
         $actual = $model->set(null, $info);
         $expected = false;
-        TestCheck::assertBoolean('A.1', 'Model::set(); return false with invalid input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::set(); return false with invalid input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -80,7 +80,7 @@ class Test
         );
         $actual = $model->set('', $info);
         $expected = false;
-        TestCheck::assertBoolean('A.2', 'Model::set(); return false with invalid input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::set(); return false with invalid input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -91,7 +91,7 @@ class Test
         $result = $model->set('', $info);
         $actual = $model->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.3', 'Model::set(); don\'t flag an error with invalid input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Model::set(); don\'t flag an error with invalid input',  $actual, $expected, $results);
 
 
 
@@ -106,7 +106,7 @@ class Test
         $eid = Eid::generate();
         $actual = $model->set($eid, $info);
         $expected = false;
-        TestCheck::assertBoolean('B.1', 'Model::set(); return false after trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Model::set(); return false after trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -118,7 +118,7 @@ class Test
         $result = $model->set($eid, $info);
         $actual = $model->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('B.2', 'Model::set(); don\'t flag an error when trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Model::set(); don\'t flag an error when trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -126,13 +126,13 @@ class Test
         $info = array(
             'name' => $handle
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $delete_result = $model->delete($eid);
         $set_result = $model->set($eid, $info);
         $has_errors = $model->hasErrors();
         $actual = Eid::isValid($eid) && $delete_result === true && $set_result === false && $has_errors === false;
         $expected = true;
-        TestCheck::assertBoolean('B.3', 'Model::set(); return false and don\'t flag an error when trying to set parameters on an object that\'s been deleted',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', '\Model::set(); return false and don\'t flag an error when trying to set parameters on an object that\'s been deleted',  $actual, $expected, $results);
 
 
 
@@ -141,12 +141,12 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $handle = Util::generateHandle();
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $info = array(
         );
         $actual = $model->set($eid, $info);
         $expected = true;
-        TestCheck::assertBoolean('C.1', 'Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.1', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -154,13 +154,13 @@ class Test
         $info = array(
             'name' => $handle
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $info = array(
             'name' => $handle
         );
         $actual = $model->set($eid, $info);
         $expected = true;
-        TestCheck::assertBoolean('C.2', 'Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.2', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -168,13 +168,13 @@ class Test
         $info = array(
             'name' => $handle
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $info = array(
             'xxx' => $handle
         );
         $actual = $model->set($eid, $info);
         $expected = true;
-        TestCheck::assertBoolean('C.3', 'Model::set(); return true when trying to set parameters that don\'t exist',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.3', '\Model::set(); return true when trying to set parameters that don\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -182,13 +182,13 @@ class Test
         $info = array(
             'name' => $handle
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $info = array(
             'description' => 'This is a test'
         );
         $actual = $model->set($eid, $info);
         $expected = true;
-        TestCheck::assertBoolean('C.4', 'Model::set(); return true when parameters are set successfully',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.4', '\Model::set(); return true when parameters are set successfully',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -196,7 +196,7 @@ class Test
         $info = array(
             'name' => $handle
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $info = array(
             'description' => null
         );
@@ -204,18 +204,18 @@ class Test
         $has_errors = $model->hasErrors();
         $actual = $result === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('C.5', 'Model::set(); return false and flag an error when a parameter is set to a bad value',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.5', '\Model::set(); return false and flag an error when a parameter is set to a bad value',  $actual, $expected, $results);
 
 
 
-        // TEST: Model::set(); make sure that non-specified properties aren't changed
+        // TEST: \Model::set(); make sure that non-specified properties aren't changed
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
             'name' => 'Test project'
         );
-        $eid = $model->create(Model::TYPE_PROJECT, $info);
+        $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $info = array(
             'description' => 'This is a test'
         );
@@ -225,6 +225,6 @@ class Test
             'name' => 'Test project',
             'description' => 'This is a test'
         );
-        TestCheck::assertInArray('D.1', 'Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
+        TestCheck::assertInArray('D.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
     }
 }

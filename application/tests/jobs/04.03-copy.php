@@ -177,7 +177,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.1', 'Conversion from Character to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -205,7 +205,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.2', 'Conversion from Character to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -233,7 +233,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.3', 'Conversion from Character to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -261,7 +261,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.4', 'Conversion from Character to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -289,7 +289,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.5', 'Conversion from Character to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -317,7 +317,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.6', 'Conversion from Character to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -345,7 +345,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.7', 'Conversion from Character to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -373,7 +373,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.8', 'Conversion from Character to Integer; fail if width or scale is specified',  $actual, $expected, $results);
 
 
@@ -735,7 +735,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('D.1', 'Conversion from Character to Date; fail if width is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -762,7 +762,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('D.2', 'Conversion from Character to Date; fail if scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -789,7 +789,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('D.3', 'Conversion from Character to Date; fail if scale is specified',  $actual, $expected, $results);
 
 
@@ -1252,7 +1252,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.1', 'Conversion from Character to DateTime; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1279,7 +1279,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.2', 'Conversion from Character to DateTime; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1306,7 +1306,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('G.3', 'Conversion from Character to DateTime; fail if width or scale is specified',  $actual, $expected, $results);
 
 
@@ -1768,7 +1768,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('J.1', 'Conversion from Character to Boolean; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1796,7 +1796,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('J.2', 'Conversion from Character to Boolean; fail if width or scale is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1824,7 +1824,7 @@ class Test
         ';
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = Model::PROCESS_STATUS_FAILED;
+        $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('J.3', 'Conversion from Character to Boolean; fail if width or scale is specified',  $actual, $expected, $results);
     }
 }

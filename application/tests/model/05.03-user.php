@@ -21,7 +21,7 @@ class Test
 
 
 
-        // TEST: Model::create(); multiple unique user creation
+        // TEST: \Model::create(); multiple unique user creation
 
         // BEGIN TEST
         $total_count = 1000;
@@ -35,13 +35,13 @@ class Test
                 'user_name' => $handle1,
                 'email' => $handle2
             );
-            $eid = $model->create(Model::TYPE_USER, $info);
+            $eid = $model->create(\Model::TYPE_USER, $info);
             $created_eids[$eid] = 1;
             if (!Eid::isValid($eid))
                 $failed_user_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_user_creation == 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model::create(); creating users should succeed and produce a unique eid for each new user',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); creating users should succeed and produce a unique eid for each new user',  $actual, $expected, $results);
     }
 }

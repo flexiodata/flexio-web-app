@@ -21,30 +21,30 @@ class Test
 
 
 
-        // TEST: Model::create(); comment creation with no parameters
+        // TEST: \Model::create(); comment creation with no parameters
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $actual = Eid::isValid($eid);
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model::create(); for comment creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); for comment creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $has_errors = $model->hasErrors();
         $actual = $has_errors;
         $expected = false;
-        TestCheck::assertBoolean('A.2', 'Model::create(); for comment creation, don\'t require input parameters; don\'t flag any errors',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::create(); for comment creation, don\'t require input parameters; don\'t flag any errors',  $actual, $expected, $results);
 
 
 
-        // TEST: Model::create(); comment creation with basic parameter input
+        // TEST: \Model::create(); comment creation with basic parameter input
 
         // BEGIN TEST
         $model->clearErrors();
@@ -52,10 +52,10 @@ class Test
         $info = array(
             'comment' => 'This is a test comment'
         );
-        $eid = $model->create(Model::TYPE_COMMENT, $info);
+        $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $actual = Eid::isValid($eid);
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'Model::create(); make sure valid eid is returned when comment is created',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Model::create(); make sure valid eid is returned when comment is created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -63,10 +63,10 @@ class Test
         $info = array(
             'comment' => $handle
         );
-        $eid_first_time_creation = $model->create(Model::TYPE_COMMENT, $info);
-        $eid_second_time_creation = $model->create(Model::TYPE_COMMENT, $info);
+        $eid_first_time_creation = $model->create(\Model::TYPE_COMMENT, $info);
+        $eid_second_time_creation = $model->create(\Model::TYPE_COMMENT, $info);
         $actual = (Eid::isValid($eid_first_time_creation) && Eid::isValid($eid_second_time_creation));
         $expected = true;
-        TestCheck::assertBoolean('B.2', 'Model::create(); allow multiple comments with the same value',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Model::create(); allow multiple comments with the same value',  $actual, $expected, $results);
     }
 }

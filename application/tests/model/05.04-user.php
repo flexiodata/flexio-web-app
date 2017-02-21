@@ -21,18 +21,18 @@ class Test
 
 
 
-        // TEST: Model::create(); when creating a user, make sure the required parameters are set
+        // TEST: \Model::create(); when creating a user, make sure the required parameters are set
 
         // BEGIN TEST
         $model->clearErrors();
         $handle = Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $has_errors = $model->hasErrors();
         $actual = $eid === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model::create(); return false when user_name is not specified; flag an error',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); return false when user_name is not specified; flag an error',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -40,11 +40,11 @@ class Test
         $info = array(
             'password' => $handle
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $has_errors = $model->hasErrors();
         $actual = $eid === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.2', 'Model::create(); return false when user_name is not specified; flag an error',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::create(); return false when user_name is not specified; flag an error',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -55,11 +55,11 @@ class Test
             'email' => $handle2,
             'password' => $handle1
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $has_errors = $model->hasErrors();
         $actual = $eid === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.3', 'Model::create(); return false when user_name is invalid; flag an error',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Model::create(); return false when user_name is invalid; flag an error',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -70,11 +70,11 @@ class Test
             'email' => null,
             'password' => $handle1
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $has_errors = $model->hasErrors();
         $actual = $eid === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.4', 'Model::create(); return false when user_name is invalid; flag an error',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', '\Model::create(); return false when user_name is invalid; flag an error',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -85,11 +85,11 @@ class Test
             'email' => $handle2,
             'password' => $handle1
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $has_errors = $model->hasErrors();
         $actual = $eid === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.5', 'Model::create(); return false when user_name is invalid; flag an error',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', '\Model::create(); return false when user_name is invalid; flag an error',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -100,11 +100,11 @@ class Test
             'email' => '',
             'password' => $handle1
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $has_errors = $model->hasErrors();
         $actual = $eid === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.6', 'Model::create(); return false when user_name is invalid; flag an error',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.6', '\Model::create(); return false when user_name is invalid; flag an error',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -114,10 +114,10 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $actual = Eid::isValid($eid);
         $expected = true;
-        TestCheck::assertBoolean('A.7', 'Model::create(); make sure that a valid eid is returned on success',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.7', '\Model::create(); make sure that a valid eid is returned on success',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -127,13 +127,13 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(Model::TYPE_USER, $info);
+        $eid = $model->create(\Model::TYPE_USER, $info);
         $actual = $model->get($eid);
         $expected = array(
             'eid' => $eid,
             'user_name' => $handle1,
             'email' => $handle2
         );
-        TestCheck::assertInArray('A.8', 'Model::create(); make sure that eid and user_name are set when a user is created',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.8', '\Model::create(); make sure that eid and user_name are set when a user is created',  $actual, $expected, $results);
     }
 }

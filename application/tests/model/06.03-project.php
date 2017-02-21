@@ -21,7 +21,7 @@ class Test
 
 
 
-        // TEST: Model::create(); multiple unique project creation
+        // TEST: \Model::create(); multiple unique project creation
 
         // BEGIN TEST
         $total_count = 1000;
@@ -32,13 +32,13 @@ class Test
             $handle = Util::generateHandle();
             $info = array(
             );
-            $eid = $model->create(Model::TYPE_PROJECT, $info);
+            $eid = $model->create(\Model::TYPE_PROJECT, $info);
             $created_eids[$eid] = 1;
             if (!Eid::isValid($eid))
                 $failed_project_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_project_creation == 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model::create(); creating projects should succeed and produce a unique eid for each new project',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); creating projects should succeed and produce a unique eid for each new project',  $actual, $expected, $results);
     }
 }

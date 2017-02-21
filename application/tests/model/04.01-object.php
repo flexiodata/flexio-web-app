@@ -21,7 +21,7 @@ class Test
 
 
 
-        // TEST: Model::create(); invalid type
+        // TEST: \Model::create(); invalid type
 
         // BEGIN TEST
         $model->clearErrors();
@@ -30,7 +30,7 @@ class Test
         $eid = $model->create('', $info);
         $actual = $eid;
         $expected = false;
-        TestCheck::assertBoolean('A.1', 'Model::create(); invalid type should return false',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); invalid type should return false',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
@@ -39,53 +39,53 @@ class Test
         $eid = $model->create('', $info);
         $actual = $model->getErrors();
         $expected = array(array(
-            'code' => Model::ERROR_INVALID_PARAMETER,
+            'code' => \Model::ERROR_INVALID_PARAMETER,
             'message' => 'Invalid parameter'
         ));
-        TestCheck::assertInArray('A.2', 'Model::create(); invalid type should set an error',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.2', '\Model::create(); invalid type should set an error',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_UNDEFINED, $info);
+        $eid = $model->create(\Model::TYPE_UNDEFINED, $info);
         $actual = $eid;
         $expected = false;
-        TestCheck::assertBoolean('A.3', 'Model::create(); undefined type should return false',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Model::create(); undefined type should return false',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_UNDEFINED, $info);
+        $eid = $model->create(\Model::TYPE_UNDEFINED, $info);
         $actual = $model->getErrors();
         $expected = array(array(
-            'code' => Model::ERROR_INVALID_PARAMETER,
+            'code' => \Model::ERROR_INVALID_PARAMETER,
             'message' => 'Invalid parameter'
         ));
-        TestCheck::assertInArray('A.4', 'Model::create(); undefined type should set an error',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.4', '\Model::create(); undefined type should set an error',  $actual, $expected, $results);
 
 
 
-        // TEST: Model::create(); valid type
+        // TEST: \Model::create(); valid type
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_OBJECT, $info);
+        $eid = $model->create(\Model::TYPE_OBJECT, $info);
         $actual = Eid::isValid($eid);
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'Model::create(); for object creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Model::create(); for object creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
         $info = array(
         );
-        $eid = $model->create(Model::TYPE_OBJECT, $info);
+        $eid = $model->create(\Model::TYPE_OBJECT, $info);
         $has_errors = $model->hasErrors();
         $actual = $has_errors;
         $expected = false;
-        TestCheck::assertBoolean('B.2', 'Model::create(); for object creation, don\'t require input parameters; don\'t flag any errors',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Model::create(); for object creation, don\'t require input parameters; don\'t flag any errors',  $actual, $expected, $results);
     }
 }
