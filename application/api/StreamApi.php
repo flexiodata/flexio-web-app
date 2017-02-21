@@ -149,12 +149,20 @@ class StreamApi
         if ($stream === false)
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
-        // write the post content
-        $stream->writePostContent();
+        self::handleStreamUpload($params, $stream);
 
         // return the stream info
         return $stream->get();
     }
+
+
+    public static function handleStreamUpload($params, $stream)
+    {
+        // write the post content
+        $stream->writePostContent();
+    }
+
+
 
     public static function download($params, $request)
     {

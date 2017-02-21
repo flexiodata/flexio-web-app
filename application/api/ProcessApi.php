@@ -317,7 +317,11 @@ class ProcessApi
         //     return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
         $stream = \Flexio\Object\Stream::create();
-        $stream->writePostContent();
+
+
+        StreamApi::handleStreamUpload($params, $stream);
+
+
         return $process->addInput($stream)->get();
     }
 
