@@ -135,7 +135,7 @@ class TestUtil
 
     public static function getModel()
     {
-        return System::getModel();
+        return new Model;
     }
 
     public static function getDefaultTestUser()
