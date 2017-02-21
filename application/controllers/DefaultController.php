@@ -11,8 +11,9 @@
  * @subpackage Controller
  */
 
+namespace Flexio\Controllers;
 
-class DefaultController extends FxControllerAction
+class DefaultController extends \FxControllerAction
 {
     public function init()
     {

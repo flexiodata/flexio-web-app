@@ -242,8 +242,7 @@ function setupIncludeDirectories()
 {
     global $g_config, $g_store;
     $base = $g_store->dir_home . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR;
-    set_include_path($base . 'controllers' . PATH_SEPARATOR
-                   . $base . 'jobs'        . PATH_SEPARATOR
+    set_include_path($base . 'jobs'        . PATH_SEPARATOR
                    . $base . 'services'    . PATH_SEPARATOR
                    . $base . 'system'      . PATH_SEPARATOR
                    . $base . 'tests'       . PATH_SEPARATOR
@@ -491,6 +490,8 @@ class Flexio
         }
 
         $framework = Framework::getInstance();
+        $framework->setControllerPrefix("\\Flexio\\Controllers\\");
+        $framework->setControllerSuffix('Controller');
         $framework->registerPlugin(new FlexioPlugin);
         $framework->dispatch();
     }

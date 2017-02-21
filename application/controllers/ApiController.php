@@ -11,8 +11,9 @@
  * @subpackage Controller
  */
 
+namespace Flexio\Controllers;
 
-class ApiController extends FxControllerAction
+class ApiController extends \FxControllerAction
 {
     public function init()
     {
