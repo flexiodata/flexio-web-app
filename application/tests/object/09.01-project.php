@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: object creation
 
         // BEGIN TEST
@@ -47,28 +52,28 @@ class Test
         TestCheck::assertBoolean('B.1', 'Project::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_OBJECT, null);
+        $eid = $model->create(Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\Project::load($eid);
         $actual = $object;
         $expected = false;
         TestCheck::assertBoolean('B.2', 'Project::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_PROJECT, null);
+        $eid = $model->create(Model::TYPE_PROJECT, null);
         $object = \Flexio\Object\Project::load($eid);
         $actual = 'Flexio\\Object\\Project';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Project::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_PROJECT, null);
+        $eid = $model->create(Model::TYPE_PROJECT, null);
         $object = \Flexio\Object\Project::load($eid);
         $actual = $object->getType();
         $expected = Model::TYPE_PROJECT;
         TestCheck::assertString('B.4', 'Project::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_PROJECT, null);
+        $eid = $model->create(Model::TYPE_PROJECT, null);
         $object = \Flexio\Object\Project::load($eid);
         $actual = $eid;
         $expected = $object->getEid();

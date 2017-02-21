@@ -16,6 +16,11 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
+
         // TEST: object creation
 
         // BEGIN TEST
@@ -47,28 +52,28 @@ class Test
         TestCheck::assertBoolean('B.1', 'Connection::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_OBJECT, null);
+        $eid = $model->create(Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\Connection::load($eid);
         $actual = $object;
         $expected = false;
         TestCheck::assertBoolean('B.2', 'Connection::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_CONNECTION, null);
+        $eid = $model->create(Model::TYPE_CONNECTION, null);
         $object = \Flexio\Object\Connection::load($eid);
         $actual = 'Flexio\\Object\\Connection';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Connection::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_CONNECTION, null);
+        $eid = $model->create(Model::TYPE_CONNECTION, null);
         $object = \Flexio\Object\Connection::load($eid);
         $actual = $object->getType();
         $expected = Model::TYPE_CONNECTION;
         TestCheck::assertString('B.4', 'Connection::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = System::getModel()->create(Model::TYPE_CONNECTION, null);
+        $eid = $model->create(Model::TYPE_CONNECTION, null);
         $object = \Flexio\Object\Connection::load($eid);
         $actual = $eid;
         $expected = $object->getEid();
