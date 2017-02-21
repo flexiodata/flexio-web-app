@@ -24,7 +24,7 @@ class Test
         $username = Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $user_eid = \Flexio\Object\User::create(Model::TYPE_USER, $properties);
+        $user = \Flexio\Object\User::create($properties);
 
         $params = json_decode('
         {
@@ -32,8 +32,8 @@ class Test
             "description": "Test project"
         }
         ',true);
-        $request = \Flexio\Api\Request::create()->setRequestingUser($user_eid);
-        $actual= \Flexio\Api\ProjectApi::create($params, $request);
+        $request = \Flexio\Api\Request::create()->setRequestingUser($user->getEid());
+        $actual = \Flexio\Api\ProjectApi::create($params, $request);
         $expected = '
         {
             "eid_type": "'.Model::TYPE_PROJECT.'",
