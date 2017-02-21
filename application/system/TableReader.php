@@ -16,7 +16,7 @@ class TableReader
 {
     public static function open($filename)
     {
-        $extension = Util::getFileExtension($filename);
+        $extension = \Util::getFileExtension($filename);
 
         if (0 == strcasecmp($extension, 'csv') ||
             0 == strcasecmp($extension, 'icsv') ||

@@ -19,7 +19,7 @@ class Query
 {
     public static function exec($eid, $query)
     {
-        // alias for Query::get()
+        // \Query::exec() is an alias for \Query::get()
         return self::get($eid, $query);
     }
 

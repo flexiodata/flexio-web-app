@@ -348,7 +348,7 @@ class UserModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         // make sure we have a string
         if (!is_string($identifier) || strlen($identifier) <= 0)
@@ -387,20 +387,20 @@ class UserModel extends ModelBase
             return false;
 
         $hashpw = $user_info['password'];
-        return Model::checkPasswordHash($hashpw, $password);
+        return \Model::checkPasswordHash($hashpw, $password);
     }
 
     public function checkUserPasswordByEid($eid, $password)
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         $user_info = $db->fetchRow("select password from tbl_user where eid = ?", $eid);
         if ($user_info === false)
             return false;
 
         $hashpw = $user_info['password'];
-        return Model::checkPasswordHash($hashpw, $password);
+        return \Model::checkPasswordHash($hashpw, $password);
     }
 }

@@ -43,7 +43,7 @@ class Serial
         for ($i = 0; $i < strlen($str); ++$i)
             $arr[] = (int)substr($str, $i, 1);
 
-        Serial::jumble($arr, $check2, -1);
+        \Serial::jumble($arr, $check2, -1);
         $num = (int)implode('', $arr);
 
         $calc_check1 = (($arr[1]*2) + ($arr[2]*7) + ($arr[3]*6) + ($arr[4]*5) + ($arr[5]*4) + ($arr[6]*3) + ($arr[7]*2) + $arr[8]) % 7;

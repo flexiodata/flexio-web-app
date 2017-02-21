@@ -86,7 +86,7 @@ class Email
     public static function isValid($email)
     {
         // checks if an email address is valid
-        return Util::isValidEmail($email);
+        return \Util::isValidEmail($email);
     }
 
     public static function create($params = false)

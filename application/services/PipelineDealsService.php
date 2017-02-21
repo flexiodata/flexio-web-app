@@ -209,7 +209,7 @@ class PipelineDealsService implements IConnection
 
         foreach ($rows as $r)
         {
-            $r = Mapper::flatten($r);
+            $r = \Mapper::flatten($r);
             $r = $r[0];
 
             $output_row = array();

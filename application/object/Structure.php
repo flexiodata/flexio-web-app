@@ -49,8 +49,8 @@ class Structure
 
     public static function create($columns = array())
     {
-        // TODO: Structure::union() allows Structure type input; allow
-        // Structure::create() to take structure input; in general, we may
+        // TODO: \Structure::union() allows Structure type input; allow
+        // \Structure::create() to take structure input; in general, we may
         // want the create() classes of various objects to also allow a copy
         // constructor type syntax where the input can also be a class object
 
@@ -502,7 +502,7 @@ class Structure
         }
 
         // get the diff between the two name arrays; produces an output as follows:
-        //     Util::diff(array('b','c','d'),array('a','b','c','e'))
+        //     \Util::diff(array('b','c','d'),array('a','b','c','e'))
         //     [{"+":"a"},{"=":"b"},{"=":"c"},{"-":"d"},{"+":"e"}]
         $diff = \Util::diff($structure1_names, $structure2_names);
 

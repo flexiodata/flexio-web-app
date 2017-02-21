@@ -52,13 +52,13 @@ class Util
 
     public static function runInBackground($code, $wait = false)
     {
-        $phpbin = Util::getBinaryPath('php');
+        $phpbin = \Util::getBinaryPath('php');
 
-        $stubphp = System::getBaseDirectory();
+        $stubphp = \System::getBaseDirectory();
         $stubphp = str_replace("\\", "/", $stubphp);
         $stubphp .= '/scripts/stub.php';
 
-        $curidentity = System::serializeGlobalVars();
+        $curidentity = \System::serializeGlobalVars();
         $curlang = $GLOBALS['g_store']->lang;
         $cursessid = session_id();
         $curservername = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
@@ -80,8 +80,8 @@ class Util
             session_id('$cursessid');
             if (strlen('$curservername') > 0)
                 \$_SERVER['SERVER_NAME'] = '$curservername';
-            System::unserializeGlobalVars('$curidentity');
-            System::setCurrentLanguage('$curlang');
+            \\System::unserializeGlobalVars('$curidentity');
+            \\System::setCurrentLanguage('$curlang');
             \$GLOBALS['g_store']->http_host = $httphost;
             $code;
 EOT;
@@ -117,7 +117,7 @@ EOT;
         if (!(class_exists($action, false) || interface_exists($action, false)))
         {
             //if (file_exists(System::getApplicationDirectory() . DIRECTORY_SEPARATOR . "custom" . DIRECTORY_SEPARATOR . "$action.php"))
-            //    Framework::loadClass($action);
+            //    \Framework::loadClass($action);
         }
 
         if (class_exists($action, false) || interface_exists($action, false))
@@ -136,9 +136,9 @@ EOT;
     public static function messageBox($msg, $caption = 'Message')
     {
         // to show object data, use var_export (similar to var_dump):
-        // Util::messageBox(var_export($validation_info,true));
+        // \Util::messageBox(var_export($validation_info,true));
 
-        if (Util::isPlatformWindows())
+        if (\Util::isPlatformWindows())
         {
             $wsh_shell = new COM('WScript.Shell');
             $wsh_shell->Popup($msg, 0, $caption, 0x1040);
@@ -147,7 +147,7 @@ EOT;
 
     public static function notepad($msg)
     {
-        $filename = Util::createTempFile('', 'txt');
+        $filename = \Util::createTempFile('', 'txt');
         file_put_contents($filename, $msg);
 
         $wsh_shell = new COM("WScript.Shell");
@@ -189,7 +189,7 @@ EOT;
         foreach ($files as $file)
         {
             if (is_dir($dir . DIRECTORY_SEPARATOR . $file))
-                Util::rmtree($dir . DIRECTORY_SEPARATOR . $file);
+                \Util::rmtree($dir . DIRECTORY_SEPARATOR . $file);
                  else
                 unlink($dir . DIRECTORY_SEPARATOR . $file);
         }
@@ -400,7 +400,7 @@ EOT;
         // between them and reports the results similarly to how a text
         // diff program would, with + and - for the insertions/deletions;
         // for example, if we have the following:
-        //     Util::diff(array('b','c','d'),array('a','b','c','e'))
+        //     \Util::diff(array('b','c','d'),array('a','b','c','e'))
         // we get:
         //     [{"+":"a"},{"=":"b"},{"=":"c"},{"-":"d"},{"+":"e"}]
 
@@ -475,9 +475,9 @@ EOT;
         // we found a sequence; return the sequence plus the sequences
         // for the parts that have smaller lengths
         return array_merge(
-            Util::diff(array_slice($array1, 0, $offset1), array_slice($array2, 0, $offset2)),
+            \Util::diff(array_slice($array1, 0, $offset1), array_slice($array2, 0, $offset2)),
             $result_array,
-            Util::diff(array_slice($array1, $offset1 + $max_length), array_slice($array2, $offset2 + $max_length))
+            \Util::diff(array_slice($array1, $offset1 + $max_length), array_slice($array2, $offset2 + $max_length))
         );
     }
 
@@ -887,12 +887,12 @@ EOT;
 
     public static function generateHandle()
     {
-        return Util::generateRandomString(20);
+        return \Util::generateRandomString(20);
     }
 
     public static function generatePassword()
     {
-        $pw = Util::generateRandomString(10);
+        $pw = \Util::generateRandomString(10);
         $pw[2] = ''.random_int(0, 9);
         $pw[6] = ''.random_int(0, 9);
         $i = random_int(0, 9);
@@ -1015,7 +1015,7 @@ EOT;
 
     public static function getBinaryPath($bin)
     {
-        $fxhome = System::getBaseDirectory();
+        $fxhome = \System::getBaseDirectory();
         $base_path = dirname($fxhome);
 
         // on some newer windows setups, we've been installing the server software
@@ -1048,11 +1048,11 @@ EOT;
          else
         {
             $xtra_bin_dir = '';
-            if (Util::isXampp() && Util::isPlatformMac())
+            if (\Util::isXampp() && \Util::isPlatformMac())
                 $xtra_bin_dir = PHP_BINDIR.'/';
 
             $phantom_js_platform_folder = 'linux64';
-            if (Util::isPlatformMac())
+            if (\Util::isPlatformMac())
                 $phantom_js_platform_folder = 'macosx';
 
             // running on linux, no need to fully qualify exe path
@@ -1274,7 +1274,7 @@ EOT;
 
     public static function zipFile($target_zip, $file)
     {
-        $exe = Util::getBinaryPath('zip');
+        $exe = \Util::getBinaryPath('zip');
 
         if (is_array($file))
             $arr = $file;
@@ -1290,7 +1290,7 @@ EOT;
 
         foreach ($arr as $f)
         {
-            Util::exec("$exe -j $target_zip \"$f\"", true);
+            \Util::exec("$exe -j $target_zip \"$f\"", true);
         }
 
         return true;
