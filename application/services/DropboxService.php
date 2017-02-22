@@ -14,13 +14,7 @@
 
 namespace Flexio\Services;
 
-
-if (!isset($GLOBALS['oauth_included']))
-{
-    $GLOBALS['oauth_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'phpoauthlib' . DIRECTORY_SEPARATOR . 'src'));
-}
-
+require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 
 use OAuth\OAuth2\Service\Dropbox;
 use OAuth\Common\Storage\Memory;
