@@ -154,10 +154,10 @@ class Flexio_View_Filter_Translate
         while (($start_pos = strpos($value, Flexio_View_Filter_Translate::I18N_DELIMITER_START, $offset)) !== false)
         {
             if (($close_tag = \Util::zlstrpos($value, '>', $start_pos)) === false)
-                throw new Exception("Open tag was not terminated after position [$offset]!");
+                throw new \Exception("Open tag was not terminated after position [$offset]!");
 
             if (($end_pos = strpos($value, Flexio_View_Filter_Translate::I18N_DELIMITER_END, $close_tag)) === false)
-                throw new Exception("No ending tag after position [$offset] found!");
+                throw new \Exception("No ending tag after position [$offset] found!");
 
 
             $offset = $close_tag + 1;

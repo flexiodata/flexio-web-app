@@ -356,11 +356,11 @@ class Model
             // association already exists, the query succeeds so that the
             // end result is the same: the association is established
             if ($db->insert('tbl_association', $process_arr, true /*ignore duplicate key*/) === false)
-                throw new Exception();
+                throw new \Exception();
 
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not associate objects'));
         }
@@ -396,7 +396,7 @@ class Model
 
             return ($rows_affected > 0 ? true : false);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete association'));
         }
@@ -459,7 +459,7 @@ class Model
 
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not change association type'));
@@ -544,7 +544,7 @@ class Model
 
             return $objects;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return $this->fail(Model::ERROR_READ_FAILED, _('Could not get associations'));
         }
@@ -597,7 +597,7 @@ class Model
 
             return $objects;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return $this->fail(Model::ERROR_READ_FAILED, _('Could not get associations'));
         }
@@ -638,7 +638,7 @@ class Model
 
             return (int)$result;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return $this->fail(Model::ERROR_READ_FAILED, _('Could not get association count'));
         }
@@ -898,7 +898,7 @@ class Model
                    "    ('version', $qversion, now(), now()) ";
             $db->exec($sql);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             syslog(LOG_ERR, 'Exception in setDbVersionNumber(): ' . $e->getMessage());
             return false;
@@ -920,7 +920,7 @@ class Model
 
             $db->exec($sql);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -946,7 +946,7 @@ class Model
 
             return $row['value'];
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -980,7 +980,7 @@ class Model
             $this->database = $db;
             return $db;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             if (isset($GLOBALS['g_config']->debug_error_log))
             {
@@ -1032,7 +1032,7 @@ class Model
             $this->database->exec($sql);
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return $this->fail(Model::ERROR_READ_FAILED, 'Unable to update database settings');
         }

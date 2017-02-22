@@ -37,11 +37,11 @@ class ActionModel extends ModelBase
 
             // add the properties
             if ($db->insert('tbl_action', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }

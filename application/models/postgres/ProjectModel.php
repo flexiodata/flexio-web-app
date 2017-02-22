@@ -26,7 +26,7 @@ class ProjectModel extends ModelBase
             // create the object base
             $eid = $this->getModel()->createObjectBase(Model::TYPE_PROJECT, $params);
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             $timestamp = \System::getTimestamp();
             $process_arr = array(
@@ -108,7 +108,7 @@ class ProjectModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update project'));

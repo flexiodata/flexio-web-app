@@ -72,7 +72,7 @@ class UserApi
                 $first_name_parsed = $parser->getFirst();
                 $last_name_parsed = $parser->getLast();
             }
-             catch (Exception $e)
+             catch (\Exception $e)
             {
                 // unable to parse the name; treat the set the first name as whatever was entered
                 $first_name_parsed = $params['full_name'];
@@ -305,7 +305,7 @@ class UserApi
                 if (!isset($params['last_name']))
                     $params['last_name'] = $last_name_parsed;
             }
-             catch (Exception $e)
+             catch (\Exception $e)
             {
                 // unable to parse the name; treat the set the first name as whatever was entered
                 $first_name_parsed = $params['full_name'];

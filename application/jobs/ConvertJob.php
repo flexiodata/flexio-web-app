@@ -180,7 +180,7 @@ class ConvertJob extends \Flexio\Jobs\Base
                 $streamwriter->write($text);
             }
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
         }

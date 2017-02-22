@@ -26,7 +26,7 @@ class TokenModel extends ModelBase
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_TOKEN, $params);
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             $timestamp = \System::getTimestamp();
             $process_arr = array(
@@ -40,12 +40,12 @@ class TokenModel extends ModelBase
 
             // add the properties
             if ($db->insert('tbl_token', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not add authentication codes'));
@@ -66,7 +66,7 @@ class TokenModel extends ModelBase
             $db->commit();
             return $result;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete authentication code'));

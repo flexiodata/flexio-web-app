@@ -76,7 +76,7 @@ class PipeModel extends ModelBase
             $db->commit();
             return $result;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete pipe'));
@@ -131,7 +131,7 @@ class PipeModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update pipe'));

@@ -77,7 +77,7 @@ class RegistryModel extends ModelBase
                 return base64_decode($result['value']);
             }
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
         }
 
@@ -100,7 +100,7 @@ class RegistryModel extends ModelBase
             if (isset($result['updated']))
                 return $result['updated'];
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
         }
 
@@ -289,7 +289,7 @@ class RegistryModel extends ModelBase
                             $expiresset, $qtimestamp, $qtimestamp)
                       ");
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -337,7 +337,7 @@ class RegistryModel extends ModelBase
                  else
                 return $result['value'];
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return null;
         }

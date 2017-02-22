@@ -333,7 +333,7 @@ class FxControllerAction
      */
     public function __call($name, $args)
     {
-        throw new Exception('Sorry, the requested action is unavailable');
+        throw new \Exception('Sorry, the requested action is unavailable');
     }
 
     protected function renderRaw()
@@ -503,7 +503,7 @@ class Framework
 
             if (!$obj)
                 $obj = new $classname;
-            
+
             $obj->initControllerAction($view, $request, $response);
             $obj->invokeAction($request->controller, $request->action);
 

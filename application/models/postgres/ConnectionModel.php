@@ -38,7 +38,7 @@ class ConnectionModel extends ModelBase
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_CONNECTION, $params);
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             $default_database = '';
             if ($default_database == '%eid%')
@@ -71,12 +71,12 @@ class ConnectionModel extends ModelBase
 
             // add the properties
             if ($db->insert('tbl_connection', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create connection'));
@@ -168,7 +168,7 @@ class ConnectionModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update connection'));

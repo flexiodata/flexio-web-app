@@ -26,7 +26,7 @@ class CommentModel extends ModelBase
             // create the object base
             $eid = $this->getModel()->createObjectBase(Model::TYPE_COMMENT, $params);
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             $timestamp = \System::getTimestamp();
             $process_arr = array(
@@ -38,12 +38,12 @@ class CommentModel extends ModelBase
 
             // add the properties
             if ($db->insert('tbl_comment', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create comment'));
@@ -64,7 +64,7 @@ class CommentModel extends ModelBase
             $db->commit();
             return $result;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete comment'));
@@ -104,7 +104,7 @@ class CommentModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update comment'));

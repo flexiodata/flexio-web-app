@@ -92,7 +92,7 @@ class ProcessModel extends ModelBase
             // delete the object
             $result = $this->getModel()->deleteObjectBase($eid);
             if ($result === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return true;
@@ -149,7 +149,7 @@ class ProcessModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update process'));
@@ -271,7 +271,7 @@ class ProcessModel extends ModelBase
                                    order by tpr.id
                                   ", $eid);
          }
-         catch (Exception $e)
+         catch (\Exception $e)
          {
              return $this->fail(\Model::ERROR_READ_FAILED, _('Could not get the process'));
          }
@@ -336,7 +336,7 @@ class ProcessModel extends ModelBase
                                    order by total_count desc, task_type
                                  ");
          }
-         catch (Exception $e)
+         catch (\Exception $e)
          {
              return $this->fail(Model::ERROR_READ_FAILED, _('Could not get the process'));
          }
@@ -404,7 +404,7 @@ class ProcessModel extends ModelBase
             $output = $rows[0]['output'];
             return $output;
          }
-         catch (Exception $e)
+         catch (\Exception $e)
          {
              return false;
          }

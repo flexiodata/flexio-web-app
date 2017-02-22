@@ -62,7 +62,7 @@ class ModelDb extends ModelDbBase
     {
         // note: for now, we only support PDO_MYSQL
         if ($type != 'PDO_MYSQL' && $type != 'PDO_POSTGRES')
-            throw new Exception;
+            throw new \Exception;
 
         $modeldb = new ModelDb;
 
@@ -129,7 +129,7 @@ class ModelDb extends ModelDbBase
     {
         if (!isset($GLOBALS['g_config']->query_log))
             return;
-            
+
         $query_log = $GLOBALS['g_config']->query_log;
         $str = str_replace("\n", "\r\n", $str);
 
@@ -293,7 +293,7 @@ class ModelDb extends ModelDbBase
                     $update = "insert into $qtable ($fields) values ($values)";
                     $result = $this->exec($update);
                 }
-                catch (Exception $e)
+                catch (\Exception $e)
                 {
                 }
             }

@@ -26,7 +26,7 @@ class PipeModel extends ModelBase
             // create the object base
             $eid = $this->getModel()->createObjectBase(Model::TYPE_PIPE, $params);
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             $timestamp = \System::getTimestamp();
             $process_arr = array(
@@ -50,12 +50,12 @@ class PipeModel extends ModelBase
 
             // add the properties
             if ($db->insert('tbl_pipe', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create pipe'));
@@ -131,7 +131,7 @@ class PipeModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update pipe'));

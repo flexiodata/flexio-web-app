@@ -26,7 +26,7 @@ class StreamModel extends ModelBase
             // create the stream object base
             $stream_eid = $this->getModel()->createObjectBase(Model::TYPE_STREAM, $params);
             if ($stream_eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             // add the stream properties
             $timestamp = \System::getTimestamp();
@@ -48,12 +48,12 @@ class StreamModel extends ModelBase
             );
 
             if ($db->insert('tbl_stream', $process_arr) === false) // insert stream info
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $stream_eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create stream'));
@@ -74,7 +74,7 @@ class StreamModel extends ModelBase
             $db->commit();
             return $result;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete stream'));
@@ -124,7 +124,7 @@ class StreamModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update stream'));

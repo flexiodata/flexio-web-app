@@ -259,7 +259,7 @@ class License
 
                 $comp_id = md5($str);
             }
-            catch(Exception $e)
+            catch(\Exception $e)
             {
                 // exception occured, return stock static id
                 $comp_id = 'a49540e2117f9c1569dcbbbbbd6c34dc';

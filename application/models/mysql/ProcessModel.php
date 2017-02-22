@@ -36,11 +36,11 @@ class ProcessModel extends ModelBase
             }
 
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             // make sure the process eid doesn't exist as a child process eid
             if ($this->processExists($eid))
-                throw new Exception();
+                throw new \Exception();
 
             $timestamp = \System::getTimestamp();
             $process_arr = array(
@@ -68,12 +68,12 @@ class ProcessModel extends ModelBase
             );
 
             if ($db->insert('tbl_process', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create process'));
@@ -92,7 +92,7 @@ class ProcessModel extends ModelBase
             // delete the object
             $result = $this->getModel()->deleteObjectBase($eid);
             if ($result === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return true;
@@ -149,7 +149,7 @@ class ProcessModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update process'));
@@ -196,7 +196,7 @@ class ProcessModel extends ModelBase
                                   where tpr.eid = ?
                                  ", $eid);
          }
-         catch (Exception $e)
+         catch (\Exception $e)
          {
              return $this->fail(\Model::ERROR_READ_FAILED, _('Could not get the process'));
          }
@@ -352,7 +352,7 @@ class ProcessModel extends ModelBase
             $output = $rows[0]['output'];
             return true;
          }
-         catch (Exception $e)
+         catch (\Exception $e)
          {
              return false;
          }

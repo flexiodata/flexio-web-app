@@ -48,12 +48,12 @@ class UserModel extends ModelBase
 
             $eid = $db->fetchOne("select eid from tbl_user where user_name = $qusername or email = $qemail");
             if ($eid !== false)
-                throw new Exception();
+                throw new \Exception();
 
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $params);
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
             $timestamp = \System::getTimestamp();
             $process_arr = array(
@@ -84,12 +84,12 @@ class UserModel extends ModelBase
 
             // add the properties
             if ($db->insert('tbl_user', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create user'));
@@ -190,7 +190,7 @@ class UserModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update user'));
