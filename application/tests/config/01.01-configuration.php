@@ -22,7 +22,7 @@ class Test
         // TEST: library installations
 
         // BEGIN TEST
-        $actual = file_exists(\Util::getBinaryPath('php'));
+        $actual = file_exists(\Flexio\System\Util::getBinaryPath('php'));
         $expected = true;
         TestCheck::assertBoolean('A.1', 'Configuration; php command line must be installed; please install php7.0-cli', $actual, $expected, $results);
 

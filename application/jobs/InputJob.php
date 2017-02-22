@@ -177,7 +177,7 @@ class InputJob extends \Flexio\Jobs\Base
 
         // create the output
         $stream_properties = $file_info;
-        $stream_properties['mime_type'] = \ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_properties['mime_type'] = \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
@@ -219,7 +219,7 @@ class InputJob extends \Flexio\Jobs\Base
 
         // create the output
         $stream_properties = $file_info;
-        $stream_properties['mime_type'] = \ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_properties['mime_type'] = \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
@@ -268,7 +268,7 @@ class InputJob extends \Flexio\Jobs\Base
         $streamwriter->close();
 
         // set the mime type
-        $mime_type = \ContentType::getMimeType($path, $mime_data_sample);
+        $mime_type = \Flexio\System\ContentType::getMimeType($path, $mime_data_sample);
         $outstream->setMimeType($mime_type);
         $outstream->setSize($streamwriter->getBytesWritten());
     }
@@ -280,7 +280,7 @@ class InputJob extends \Flexio\Jobs\Base
 
         // create the output
         $stream_properties = $file_info;
-        $stream_properties['mime_type'] = \ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_properties['mime_type'] = \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
             return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
@@ -334,9 +334,9 @@ class InputJob extends \Flexio\Jobs\Base
     {
         // get a default connection and path
         $properties['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
-        $properties['path'] = \Util::generateHandle();
+        $properties['path'] = \Flexio\System\Util::generateHandle();
 
-        if (!\Eid::isValid($properties['connection_eid']))
+        if (!\Flexio\System\Eid::isValid($properties['connection_eid']))
             return false;
 
         $stream = \Flexio\Object\Stream::create($properties);
@@ -455,7 +455,7 @@ class InputJob extends \Flexio\Jobs\Base
                 continue;
 
             // look for the item -- pattern can be a filename or a wildcard
-            if (\Util::matchPath($filename, $pattern, true) === false)
+            if (\Flexio\System\Util::matchPath($filename, $pattern, true) === false)
                 continue;
 
             // we found the item

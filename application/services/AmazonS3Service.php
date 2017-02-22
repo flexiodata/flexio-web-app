@@ -50,7 +50,7 @@ class AmazonS3Service implements \Flexio\Services\IConnection
     {
         $this->close();
 
-        $validator = \Validator::getInstance();
+        $validator = \Flexio\System\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'region' => array('type' => 'string', 'required' => true),
                 'bucket' => array('type' => 'string', 'required' => true),

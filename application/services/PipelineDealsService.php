@@ -211,7 +211,7 @@ class PipelineDealsService implements \Flexio\Services\IConnection
 
         foreach ($rows as $r)
         {
-            $r = \Mapper::flatten($r);
+            $r = \Flexio\System\Mapper::flatten($r);
             $r = $r[0];
 
             $output_row = array();

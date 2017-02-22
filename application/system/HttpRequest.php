@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class HttpRequest
 {
     public static function exec($method, $url, $basicauth, $params = array(), $ssl_version = false)

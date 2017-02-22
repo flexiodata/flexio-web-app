@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class System
 {
     const SESSION_VERSION = 5;
@@ -26,7 +29,7 @@ class System
         global $g_store, $g_config;
 
         // clear any existing identity
-        \System::clearLoginIdentity();
+        \Flexio\System\System::clearLoginIdentity();
 
         // if we haven't already started a session, start a new one
         fxStartSession();
@@ -45,14 +48,14 @@ class System
         if (substr($username, 0, 7) == '@autht:')
         {
             // authentication via temporary login token -- check if valid
-            $result = \System::verifyTemporaryLoginCredentials($username, $password);
+            $result = \Flexio\System\System::verifyTemporaryLoginCredentials($username, $password);
             if ($result === false)
                 return false;
 
             // clear any existing identity
-            \System::clearLoginIdentity();
+            \Flexio\System\System::clearLoginIdentity();
 
-            $_SESSION['env']['session_version'] = \System::SESSION_VERSION;
+            $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
             $_SESSION['env']['user_first_name'] = '';
             $_SESSION['env']['user_last_name'] = '';
             $_SESSION['env']['user_name'] = 'nobody';
@@ -68,7 +71,7 @@ class System
         }
 
         // check if password is correct and get info about the user
-        $user_model = \System::getModel()->user;
+        $user_model = \Flexio\System\System::getModel()->user;
         if (!$user_model)
             return false;
 
@@ -100,7 +103,7 @@ class System
         }
 
         // set new identity
-        $_SESSION['env']['session_version'] = \System::SESSION_VERSION;
+        $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
         $_SESSION['env']['user_first_name'] = $user_info['first_name'];
         $_SESSION['env']['user_last_name'] = $user_info['last_name'];
         $_SESSION['env']['user_name'] = $user_info['user_name'];
@@ -116,7 +119,7 @@ class System
         if (isset($_SESSION['last_activity']))
             unset($_SESSION['last_activity']);
 
-        \System::setupSessionAuth();
+        \Flexio\System\System::setupSessionAuth();
 
         //session_write_close();
 
@@ -160,11 +163,11 @@ class System
 
                 $access_code = trim($params_raw);
 
-                $token_info = \System::getModel()->token->getInfoFromAccessCode($access_code);
+                $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
                 if (!$token_info)
                 {
                     // unknown user
-                    \Util::header_error(401);
+                    \Flexio\System\Util::header_error(401);
                     exit(0);
                 }
 
@@ -172,7 +175,7 @@ class System
                 if ($user === false)
                 {
                     // deleted user
-                    \Util::header_error(401);
+                    \Flexio\System\Util::header_error(401);
                     exit(0);
                 }
 
@@ -210,14 +213,14 @@ class System
              else
             {
                 // unknown algorith/auth type
-                \Util::header_error(404);
+                \Flexio\System\Util::header_error(404);
                 exit(0);
             }
 
             if (!$user_info)
             {
                 // unknown algorith/auth type
-                \Util::header_error(404);
+                \Flexio\System\Util::header_error(404);
                 exit(0);
             }
 
@@ -237,7 +240,7 @@ class System
         {
             if (!isset($_SESSION['env']['user_name']) || strlen($_SESSION['env']['user_name']) == 0)
                 return false;
-            if ($_SESSION['env']['session_version'] < \System::SESSION_VERSION)
+            if ($_SESSION['env']['session_version'] < \Flexio\System\System::SESSION_VERSION)
                 return false;
 
             // set user info
@@ -267,7 +270,7 @@ class System
 */
         // set the language to use
         if (strlen($g_store->lang) > 0)
-            \System::setCurrentLanguage($g_store->lang);
+            \Flexio\System\System::setCurrentLanguage($g_store->lang);
 
         return true;
     }
@@ -275,7 +278,7 @@ class System
     public static function setCurrentLanguage($lang)
     {
         $GLOBALS['g_store']->lang = $lang;
-        \Translate::setLocale($lang);
+        \Flexio\System\Translate::setLocale($lang);
     }
 
     public static function clearLoginIdentity()
@@ -393,7 +396,7 @@ class System
 
         require_once dirname(__DIR__) . '/models/Model.php';
 
-        $model = new Model;
+        $model = new \Model;
         $model->setTimezone('UTC');
         $g_store->model = $model;
 
@@ -465,7 +468,7 @@ class System
             case 'es':  $res = "%e %B %Y"; break;
         }
 
-        if (Util::isPlatformWindows())
+        if (\Flexio\System\Util::isPlatformWindows())
             $res = str_replace('%e', '%#d', $res);
 
         return $res;
@@ -485,7 +488,7 @@ class System
             case 'es':  $res = "%e %B %Y a %H:%M";        break;
         }
 
-        if (Util::isPlatformWindows())
+        if (\Flexio\System\Util::isPlatformWindows())
             $res = str_replace('%e', '%#d', $res);
 
         return $res;
@@ -513,9 +516,9 @@ class System
 
     public static function getCurrentTimezoneOffsetInMinutes()
     {
-        $tz_utc = new DateTimeZone('UTC');
-        $tz_local = new DateTimeZone($GLOBALS['g_store']->timezone);
-        $dt_local = new DateTime('now', $tz_utc);
+        $tz_utc = new \DateTimeZone('UTC');
+        $tz_local = new \DateTimeZone($GLOBALS['g_store']->timezone);
+        $dt_local = new \DateTime('now', $tz_utc);
         return ($tz_local->getOffset($dt_local) / 60);
     }
 
@@ -535,7 +538,7 @@ class System
 
     public static function isLoggedIn()
     {
-        return (System::getCurrentUserName() != '') ? true : false;
+        return (\Flexio\System\System::getCurrentUserName() != '') ? true : false;
     }
 
     public static function getBaseDirectory()
@@ -549,27 +552,27 @@ class System
 
     public static function getPublicDirectory()
     {
-        return \System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'public';
+        return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'public';
     }
 
     public static function getApplicationDirectory()
     {
-        return \System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'application';
+        return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'application';
     }
 
     public static function getConfigDirectory()
     {
-        return \System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'config';
+        return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'config';
     }
 
     public static function getResDirectory()
     {
-        return \System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'res';
+        return \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'res';
     }
 
     public static function getUpdateDirectory()
     {
-        return (\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'update');
+        return (\Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'update');
     }
 
     public static function getUpdateVersionFromFilename($filename)
@@ -589,7 +592,7 @@ class System
         // in the list of updates)
 
         // get the update directory
-        $update_dir = \System::getUpdateDirectory();
+        $update_dir = \Flexio\System\System::getUpdateDirectory();
 
         // find the latest system version from the update directory
         $version = 0;
@@ -601,7 +604,7 @@ class System
                 if ($file == "." || $file == "..")
                     continue;
 
-                $version_int = \System::getUpdateVersionFromFilename($file);
+                $version_int = \Flexio\System\System::getUpdateVersionFromFilename($file);
                 if ($version_int > $version)
                     $version = $version_int;
             }
@@ -639,7 +642,7 @@ class System
 
     public static function isNewInstallation()
     {
-        $f1 = file_exists(System::getConfigDirectory() . DIRECTORY_SEPARATOR . 'config.json');
+        $f1 = file_exists(\Flexio\System\System::getConfigDirectory() . DIRECTORY_SEPARATOR . 'config.json');
         return $f1 ? false : true;
     }
 

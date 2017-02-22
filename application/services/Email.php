@@ -64,7 +64,7 @@ require_once 'phpmimemailparser_init.php';
 if (!isset($GLOBALS['phpmailmime_included']))
 {
     $GLOBALS['phpmailmime_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (\System::getBaseDirectory() . '/library/phpmailmime'));
+    set_include_path(get_include_path() . PATH_SEPARATOR . (\Flexio\System\System::getBaseDirectory() . '/library/phpmailmime'));
 }
 
 
@@ -89,7 +89,7 @@ class Email
     public static function isValid($email)
     {
         // checks if an email address is valid
-        return \Util::isValidEmail($email);
+        return \Flexio\System\Util::isValidEmail($email);
     }
 
     public static function create($params = false)
@@ -333,7 +333,7 @@ class Email
         $a = array();
         $a['name'] = isset_or($attachment['name'],'');
         $a['file'] = isset_or($attachment['file'],'');
-        $a['mime_type'] = isset_or($attachment['mime_type'], \ContentType::MIME_TYPE_NONE);
+        $a['mime_type'] = isset_or($attachment['mime_type'], \Flexio\System\ContentType::MIME_TYPE_NONE);
         $a['content'] = isset_or($attachment['content'],'');
 
         $this->attachments[] = $a;

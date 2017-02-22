@@ -100,7 +100,7 @@ class DatastoreWriter
             return false;
 
         $this->structure = $this->describeTable($this->path);
-        $this->mime_type = \ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $this->mime_type = \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $this->type = 'table';
 
         return true;

@@ -111,7 +111,7 @@ class TransformJob extends \Flexio\Jobs\Base
                     break;
 
                 // table input
-                case \ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     //$this->createOutputFromTableNative($instream); // TODO: new implementation
                     $this->createOutputFromTableSql($instream); // TODO: old implementation
                     break;
@@ -134,7 +134,7 @@ class TransformJob extends \Flexio\Jobs\Base
         }
 
         // create the output with the replaced values
-        $outstream = $instream->copy()->setPath(\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -191,7 +191,7 @@ class TransformJob extends \Flexio\Jobs\Base
 
         foreach ($input_columns as $column)
         {
-            $qname = \DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $width = isset_or($column['width'], -1);
             if ($width == 1024) $width = -1; // PostgresService is returning us huge columns of indeterminate width
             $scale = $column['scale'];
@@ -535,7 +535,7 @@ class TransformJob extends \Flexio\Jobs\Base
         $column_expression_map = array();
         foreach ($columns as $column)
         {
-            $qname = \DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $width = isset_or($column['width'], -1);
             if ($width == 1024) $width = -1; // PostgresService is returning us huge columns of indeterminate width
             $scale = $column['scale'];

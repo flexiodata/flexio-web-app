@@ -325,16 +325,16 @@ class Test
         $task = \Flexio\Object\Task::create();
         $task->addTaskStep('{"type": "flexio.create", "params": {}}');
         $result = $task->get();
-        $actual = count($result) === 1 && isset($result[0]['eid']) && \Eid::isValid($result[0]['eid']);
+        $actual = count($result) === 1 && isset($result[0]['eid']) && \Flexio\System\Eid::isValid($result[0]['eid']);
         $expected = true;
         TestCheck::assertBoolean('D.7', 'Task::addTaskStep(); when a step is added, make sure the eid is set', $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid1 = \Eid::generate();
+        $eid1 = \Flexio\System\Eid::generate();
         $task = \Flexio\Object\Task::create();
         $task->addTaskStep(["eid" => $eid1, "type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]);
         $result = $task->get();
-        $actual = count($result) === 1 && isset($result[0]['eid']) && \Eid::isValid($result[0]['eid']) && $result[0]['eid'] === $eid1;
+        $actual = count($result) === 1 && isset($result[0]['eid']) && \Flexio\System\Eid::isValid($result[0]['eid']) && $result[0]['eid'] === $eid1;
         $expected = true;
         TestCheck::assertBoolean('D.8', 'Task::addTaskStep(); add steps that are in the correct format; valid eids that aren\'t objects in the application are allowed to be set', $actual, $expected, $results);
 
@@ -343,7 +343,7 @@ class Test
         $task = \Flexio\Object\Task::create();
         $task->addTaskStep(["eid" => $eid1, "type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]);
         $result = $task->get();
-        $actual = count($result) === 1 && isset($result[0]['eid']) && \Eid::isValid($result[0]['eid']) && $result[0]['eid'] !== $eid1;
+        $actual = count($result) === 1 && isset($result[0]['eid']) && \Flexio\System\Eid::isValid($result[0]['eid']) && $result[0]['eid'] !== $eid1;
         $expected = true;
         TestCheck::assertBoolean('D.9', 'Task::addTaskStep(); add steps that are in the correct format; if an eid is supplied, make sure it\'s valid and isn\'t an object in the application, or else generate a new one', $actual, $expected, $results);
 
@@ -352,7 +352,7 @@ class Test
         $task = \Flexio\Object\Task::create();
         $task->addTaskStep(["eid" => $eid1, "type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]);
         $result = $task->get();
-        $actual = count($result) === 1 && isset($result[0]['eid']) && \Eid::isValid($eid1) && \Eid::isValid($result[0]['eid']) && $result[0]['eid'] !== $eid1;
+        $actual = count($result) === 1 && isset($result[0]['eid']) && \Flexio\System\Eid::isValid($eid1) && \Flexio\System\Eid::isValid($result[0]['eid']) && $result[0]['eid'] !== $eid1;
         $expected = true;
         TestCheck::assertBoolean('D.10', 'Task::addTaskStep(); add steps that are in the correct format; if an eid is supplied, make sure it\'s valid and isn\'t an object in the application, or else generate a new one', $actual, $expected, $results);
 
@@ -642,7 +642,7 @@ class Test
                 ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
-        $task->deleteTaskStep(\Eid::generate());
+        $task->deleteTaskStep(\Flexio\System\Eid::generate());
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
@@ -774,7 +774,7 @@ class Test
                 ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
-        $task->setTaskStep(\Eid::generate(), ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]);
+        $task->setTaskStep(\Flexio\System\Eid::generate(), ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
@@ -783,7 +783,7 @@ class Test
         TestCheck::assertInArray('F.9', 'Task::setTaskStep(); set the specified task if it exists', $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid1 = \Eid::generate();
+        $eid1 = \Flexio\System\Eid::generate();
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
@@ -859,7 +859,7 @@ class Test
                 ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
-        $actual = $task->getTaskStep(\Eid::generate());
+        $actual = $task->getTaskStep(\Flexio\System\Eid::generate());
         $expected = false;
         TestCheck::assertBoolean('G.6', 'Task::getTaskStep(); don\'t get the step if the specified eid doesn\'t match any of the task step eids', $actual, $expected, $results);
     }

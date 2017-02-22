@@ -266,7 +266,7 @@ class Task
         if (isset($task_step['eid']))
         {
             $object = \Flexio\Object\Store::load($task_step['eid']);
-            if ($object !== false || !\Eid::isValid($task_step['eid']))
+            if ($object !== false || !\Flexio\System\Eid::isValid($task_step['eid']))
                 unset($task_step['eid']);
         }
 
@@ -313,7 +313,7 @@ class Task
 
     public function deleteTaskStep($task_eid)
     {
-        if (!\Eid::isValid($task_eid))
+        if (!\Flexio\System\Eid::isValid($task_eid))
             return $this;
 
         // iterate through the tasks; if the eid of the task step
@@ -335,7 +335,7 @@ class Task
 
     public function setTaskStep($task_eid, $command)
     {
-        if (!\Eid::isValid($task_eid))
+        if (!\Flexio\System\Eid::isValid($task_eid))
             return $this;
 
         $task_step = self::convertCommand($command);
@@ -498,7 +498,7 @@ class Task
         // since we have a unique pipe eid
         if (!isset($step['eid']))
         {
-            $item['eid'] = \Eid::generate();
+            $item['eid'] = \Flexio\System\Eid::generate();
             $step = array_merge($item, $step);
         }
 

@@ -56,7 +56,7 @@ class MysqlService implements \Flexio\Services\IConnection
         if (isset($params['port']))
             $params['port'] = (string)$params['port'];
 
-        $validator = \Validator::getInstance();
+        $validator = \Flexio\System\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true),
@@ -712,7 +712,7 @@ class MySqlWriter
 
     public static function create($params, $structure = null)
     {
-        $validator = \Validator::getInstance();
+        $validator = \Flexio\System\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'any', 'required' => true),
@@ -761,7 +761,7 @@ class MySqlWriter
         // connect to the database
         try
         {
-            $dbtemp = \ModelDb::factory('PDO_MYSQL', $this->dbconfig);
+            $dbtemp = \Flexio\System\ModelDb::factory('PDO_MYSQL', $this->dbconfig);
             $conn = $dbtemp->getConnection();
             $this->db = $dbtemp;
             return true;

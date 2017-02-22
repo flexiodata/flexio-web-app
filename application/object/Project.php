@@ -44,7 +44,7 @@ class Project extends \Flexio\Object\Base
 
     public function addMember($object_eid)
     {
-        if (!\Eid::isValid($object_eid))
+        if (!\Flexio\System\Eid::isValid($object_eid))
             return false;
 
         $this->clearCache();

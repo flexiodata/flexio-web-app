@@ -30,10 +30,10 @@ $params = array('host' => $argv[1],
 
 try
 {
-    $db = ModelDb::factory('PDO_POSTGRES', $params);
+    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $params);
     $conn = $db->getConnection();
 }
-catch (Exception $e)
+catch (\Exception $e)
 {
     echo($e->getMessage());
     $db = null;
@@ -84,7 +84,7 @@ try
         removeResourceAssociations($db, $pipe_eid);
     }
 }
-catch(Exception $e)
+catch(\Exception $e)
 {
     echo '{ "success": false, "msg":' . json_encode($e->getMessage()) . '}';
     exit(0);
@@ -92,8 +92,8 @@ catch(Exception $e)
 
 
 // update the version number
-$current_version = System::getUpdateVersionFromFilename(__FILE__);
-System::getModel()->setDbVersionNumber($current_version);
+$current_version = \Flexio\System\System::getUpdateVersionFromFilename(__FILE__);
+\Flexio\System\System::getModel()->setDbVersionNumber($current_version);
 
 echo '{ "success": true, "msg": "Operation completed successfully." }';
 
@@ -113,10 +113,10 @@ function getResourceList($object_eid)
     // object in the task field
 
     $search_path = "$object_eid->(".Model::EDGE_LINKED_FROM.")->(".Model::TYPE_RESOURCE.")";
-    $resources = System::getModel()->search->recursive_search($search_path);
+    $resources = \Flexio\System\System::getModel()->search->recursive_search($search_path);
     $resources = array_reverse($resources);
 
-    if (System::getModel()->getType($object_eid) === Model::TYPE_RESOURCE)
+    if (\Flexio\System\System::getModel()->getType($object_eid) === Model::TYPE_RESOURCE)
         $resources[] = $object_eid;
 
     return $resources;
@@ -203,13 +203,13 @@ function convertToTask($resources)
 
 function removeResourceAssociations($db, $pipe_eid)
 {
-    $resources = System::getModel()->assoc_range($pipe_eid, Model::EDGE_LINKED_FROM);
+    $resources = \Flexio\System\System::getModel()->assoc_range($pipe_eid, Model::EDGE_LINKED_FROM);
     foreach ($resources as $resource_eid)
     {
-        System::getModel()->assoc_delete($pipe_eid, Model::EDGE_HAS_MEMBER, $resource_eid);
-        System::getModel()->assoc_delete($resource_eid, Model::EDGE_MEMBER_OF, $pipe_eid);
+        \Flexio\System\System::getModel()->assoc_delete($pipe_eid, Model::EDGE_HAS_MEMBER, $resource_eid);
+        \Flexio\System\System::getModel()->assoc_delete($resource_eid, Model::EDGE_MEMBER_OF, $pipe_eid);
 
-        System::getModel()->assoc_delete($pipe_eid, Model::EDGE_LINKED_FROM, $resource_eid);
-        System::getModel()->assoc_delete($resource_eid, Model::EDGE_LINKED_TO, $pipe_eid);
+        \Flexio\System\System::getModel()->assoc_delete($pipe_eid, Model::EDGE_LINKED_FROM, $resource_eid);
+        \Flexio\System\System::getModel()->assoc_delete($resource_eid, Model::EDGE_LINKED_TO, $pipe_eid);
     }
 }

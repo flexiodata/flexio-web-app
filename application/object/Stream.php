@@ -50,10 +50,10 @@ class Stream extends \Flexio\Object\Base
         {
             // default path
             if (!isset($properties['path']))
-                $properties['path'] = \Util::generateHandle();
+                $properties['path'] = \Flexio\System\Util::generateHandle();
 
             $default_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();
-            if (\Eid::isValid($default_connection_eid))
+            if (\Flexio\System\Eid::isValid($default_connection_eid))
                 $properties['connection_eid'] = $default_connection_eid;
         }
 
@@ -243,7 +243,7 @@ class Stream extends \Flexio\Object\Base
             return;
 
         $is_internal_table = false;
-        if ($this->getMimeType() === \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($this->getMimeType() === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
             $is_internal_table = true;
         $structure = $this->getStructure()->enum();
 
@@ -279,7 +279,7 @@ class Stream extends \Flexio\Object\Base
         $structure = $this->getStructure()->enum();
         $data_to_write = false;
 
-        if ($this->getMimeType() !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($this->getMimeType() !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             $data_to_write = $data;
         }
@@ -350,7 +350,7 @@ class Stream extends \Flexio\Object\Base
             $output_structure[] = $col;
         }
 
-        if ($mime_type !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             $handle = $service->openFile($path);
 

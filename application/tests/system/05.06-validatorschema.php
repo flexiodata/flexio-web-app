@@ -45,34 +45,34 @@ class Test
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": null
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.1', '\ValidatorSchema::check(); return false if the format parameter isn\'t valid',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', '\Flexio\System\ValidatorSchema::check(); return false if the format parameter isn\'t valid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -91,34 +91,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": false
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.2', '\ValidatorSchema::check(); return false if the format parameter isn\'t valid',  $actual, $expected, $results);
+        TestCheck::assertArray('A.2', '\Flexio\System\ValidatorSchema::check(); return false if the format parameter isn\'t valid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -137,34 +137,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": ""
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);
-        TestCheck::assertArray('A.3', '\ValidatorSchema::check(); return true if the format parameter is a string that isn\'t recognized',  $actual, $expected, $results);
+        TestCheck::assertArray('A.3', '\Flexio\System\ValidatorSchema::check(); return true if the format parameter is a string that isn\'t recognized',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -183,34 +183,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": "bad"
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);
-        TestCheck::assertArray('A.4', '\ValidatorSchema::check(); return true if the format parameter is a string that isn\'t recognized',  $actual, $expected, $results);
+        TestCheck::assertArray('A.4', '\Flexio\System\ValidatorSchema::check(); return true if the format parameter is a string that isn\'t recognized',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -229,34 +229,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": "hostname"
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,false,true,true,true,true,false,false,false,false,true,true);
-        TestCheck::assertArray('A.5', '\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
+        TestCheck::assertArray('A.5', '\Flexio\System\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -275,34 +275,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": "ipv4"
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,false,false,false,false,true,false,false,false,false,false,false);
-        TestCheck::assertArray('A.6', '\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
+        TestCheck::assertArray('A.6', '\Flexio\System\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -321,34 +321,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": "ipv6"
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,false,false,false,false,false,true,true,false,false,false,false);
-        TestCheck::assertArray('A.7', '\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
+        TestCheck::assertArray('A.7', '\Flexio\System\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -367,34 +367,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": "email"
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,false,false,false,false,false,false,false,true,false,false,false);
-        TestCheck::assertArray('A.8', '\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
+        TestCheck::assertArray('A.8', '\Flexio\System\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -413,34 +413,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": "date-time"
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,false,false,false,false,false,false,false,false,true,false,false);
-        TestCheck::assertArray('A.9', '\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
+        TestCheck::assertArray('A.9', '\Flexio\System\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -459,34 +459,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": "fx.eid"
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,false,false,false,false,false,false,false,false,false,true,false);
-        TestCheck::assertArray('A.10', '\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
+        TestCheck::assertArray('A.10', '\Flexio\System\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -505,34 +505,34 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": "fx.identifier"
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,false,false,true,false,false,false,false,false,false,true,true);
-        TestCheck::assertArray('A.11', '\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
+        TestCheck::assertArray('A.11', '\Flexio\System\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -551,33 +551,33 @@ EOD;
         $v14 = 'FFFF::0A';
         $v15 = 'firstname.lastname@email.com';
         $v16 = '1999-12-31T23:59:59+0000';
-        $v17 = \Eid::generate();
+        $v17 = \Flexio\System\Eid::generate();
         $v18 = 'identifier1';
         $template = <<<EOD
 {
     "format": "fx.fieldname"
 }
 EOD;
-        $r1 = \ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \ValidatorSchema::check($v8, $template)->hasErrors() === false;
-        $r9 = \ValidatorSchema::check($v9, $template)->hasErrors() === false;
-        $r10 = \ValidatorSchema::check($v10, $template)->hasErrors() === false;
-        $r11 = \ValidatorSchema::check($v11, $template)->hasErrors() === false;
-        $r12 = \ValidatorSchema::check($v12, $template)->hasErrors() === false;
-        $r13 = \ValidatorSchema::check($v13, $template)->hasErrors() === false;
-        $r14 = \ValidatorSchema::check($v14, $template)->hasErrors() === false;
-        $r15 = \ValidatorSchema::check($v15, $template)->hasErrors() === false;
-        $r16 = \ValidatorSchema::check($v16, $template)->hasErrors() === false;
-        $r17 = \ValidatorSchema::check($v17, $template)->hasErrors() === false;
-        $r18 = \ValidatorSchema::check($v18, $template)->hasErrors() === false;
+        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r9 = \Flexio\System\ValidatorSchema::check($v9, $template)->hasErrors() === false;
+        $r10 = \Flexio\System\ValidatorSchema::check($v10, $template)->hasErrors() === false;
+        $r11 = \Flexio\System\ValidatorSchema::check($v11, $template)->hasErrors() === false;
+        $r12 = \Flexio\System\ValidatorSchema::check($v12, $template)->hasErrors() === false;
+        $r13 = \Flexio\System\ValidatorSchema::check($v13, $template)->hasErrors() === false;
+        $r14 = \Flexio\System\ValidatorSchema::check($v14, $template)->hasErrors() === false;
+        $r15 = \Flexio\System\ValidatorSchema::check($v15, $template)->hasErrors() === false;
+        $r16 = \Flexio\System\ValidatorSchema::check($v16, $template)->hasErrors() === false;
+        $r17 = \Flexio\System\ValidatorSchema::check($v17, $template)->hasErrors() === false;
+        $r18 = \Flexio\System\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
         $expected = array(true,true,true,true,true,true,true,false,true,true,false,false,false,false,false,false,true,true);
-        TestCheck::assertArray('A.12', '\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
+        TestCheck::assertArray('A.12', '\Flexio\System\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
     }
 }

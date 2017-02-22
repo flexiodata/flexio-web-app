@@ -84,7 +84,7 @@ class StreamWriter
         // (e.g. table or not table)
 
         $mime_type = $this->getMimeType();
-        if ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
             return $this->createTable();
              else
             return $this->createFile();
@@ -111,7 +111,7 @@ class StreamWriter
 
         // write the data
         $mime_type = $this->getMimeType();
-        if ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
             return $this->writeToTable($data);
              else
             return $this->writeToFile($data);
@@ -196,7 +196,7 @@ class StreamWriter
 
         $mime_type = $this->getMimeType();
         if ($mime_type === false)
-            $mime_type = ContentType::MIME_TYPE_NONE;
+            $mime_type = \Flexio\System\ContentType::MIME_TYPE_NONE;
 
         if (!$this->service->createFile($path, $mime_type))
             return false;

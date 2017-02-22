@@ -43,7 +43,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = \Eid::generate();
+        $eid = \Flexio\System\Eid::generate();
         $type = $model->getType($eid);
         $actual = $type;
         $expected = \Model::TYPE_UNDEFINED;
@@ -95,7 +95,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = \Eid::generate();
+        $eid = \Flexio\System\Eid::generate();
         $status = $model->getStatus($eid);
         $actual = $status;
         $expected = \Model::STATUS_UNDEFINED;
@@ -171,7 +171,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = \Eid::generate();
+        $eid = \Flexio\System\Eid::generate();
         $result = $model->setStatus($eid, \Model::STATUS_AVAILABLE);
         $actual = $result;
         $expected = false;

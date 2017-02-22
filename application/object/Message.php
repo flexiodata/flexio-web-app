@@ -77,7 +77,7 @@ class Message
 
     private static function createWelcomeEmail($params)
     {
-        if (($params = \Validator::getInstance()->check($params, array(
+        if (($params = \Flexio\System\Validator::getInstance()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => true)
             ))) === false)
@@ -105,7 +105,7 @@ class Message
 
     private static function createResetPasswordEmail($params)
     {
-        if (($params = \Validator::getInstance()->check($params, array(
+        if (($params = \Flexio\System\Validator::getInstance()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => true)
             ))) === false)
@@ -134,7 +134,7 @@ class Message
 
     private static function createShareProjectEmail($params)
     {
-        if (($params = \Validator::getInstance()->check($params, array(
+        if (($params = \Flexio\System\Validator::getInstance()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
@@ -180,7 +180,7 @@ class Message
 
     private static function createSharePipeEmail($params)
     {
-        if (($params = \Validator::getInstance()->check($params, array(
+        if (($params = \Flexio\System\Validator::getInstance()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
@@ -224,7 +224,7 @@ class Message
 
     private static function getHtmlEmail($template_file, $replacement_strs)
     {
-        $res_dir = \System::getResDirectory();
+        $res_dir = \Flexio\System\System::getResDirectory();
 
         $btn_primary_style = file_get_contents($res_dir . DIRECTORY_SEPARATOR . 'template-btn-primary.html');
         $msg_template = file_get_contents($res_dir . DIRECTORY_SEPARATOR . 'template-html-email.html');
@@ -247,7 +247,7 @@ class Message
 
     private static function getTextEmail($template_file, $replacement_strs)
     {
-        $res_dir = \System::getResDirectory();
+        $res_dir = \Flexio\System\System::getResDirectory();
 
         // load template file contents
         $msg = file_get_contents($res_dir . DIRECTORY_SEPARATOR . "$template_file.txt");

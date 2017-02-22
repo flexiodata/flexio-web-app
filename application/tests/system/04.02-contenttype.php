@@ -22,172 +22,172 @@ class Test
         // TEST: mime type detection; different input paths
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('','mime');
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('','mime');
         $expected = 'mime';
-        TestCheck::assertString('A.1', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('');
-        $expected = \ContentType::MIME_TYPE_STREAM;
-        TestCheck::assertString('A.2', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_STREAM;
+        TestCheck::assertString('A.2', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.xxx');
-        $expected = \ContentType::MIME_TYPE_STREAM;
-        TestCheck::assertString('A.3', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.xxx');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_STREAM;
+        TestCheck::assertString('A.3', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.csv');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('A.4', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.csv');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('A.4', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.CSV');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('A.5', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.CSV');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('A.5', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('/test.csv');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('A.6', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('/test.csv');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('A.6', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('path/test.csv');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('A.7', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('path/test.csv');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('A.7', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('/path/test.csv');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('A.8', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('/path/test.csv');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('A.8', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('\path\test.csv');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('A.9', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('\path\test.csv');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('A.9', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('http://www.url.com/test.csv');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('A.10', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('http://www.url.com/test.csv');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('A.10', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('csv');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('A.11', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('csv');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('A.11', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('.csv');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('A.12', '\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('.csv');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('A.12', '\Flexio\System\ContentType::getMimeTypeFromExtension() different input paths',  $actual, $expected, $results);
 
 
 
         // TEST: mime type detection; different mime types
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.bmp');
-        $expected = \ContentType::MIME_TYPE_BMP;
-        TestCheck::assertString('B.1', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.bmp');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_BMP;
+        TestCheck::assertString('B.1', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.css');
-        $expected = \ContentType::MIME_TYPE_CSS;
-        TestCheck::assertString('B.2', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.css');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSS;
+        TestCheck::assertString('B.2', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.csv');
-        $expected = \ContentType::MIME_TYPE_CSV;
-        TestCheck::assertString('B.3', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.csv');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_CSV;
+        TestCheck::assertString('B.3', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.gif');
-        $expected = \ContentType::MIME_TYPE_GIF;
-        TestCheck::assertString('B.4', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.gif');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_GIF;
+        TestCheck::assertString('B.4', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.gz');
-        $expected = \ContentType::MIME_TYPE_GZ;
-        TestCheck::assertString('B.5', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.gz');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_GZ;
+        TestCheck::assertString('B.5', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.html');
-        $expected = \ContentType::MIME_TYPE_HTML;
-        TestCheck::assertString('B.6', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.html');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_HTML;
+        TestCheck::assertString('B.6', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.htm');
-        $expected = \ContentType::MIME_TYPE_HTML;
-        TestCheck::assertString('B.7', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.htm');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_HTML;
+        TestCheck::assertString('B.7', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.jpeg');
-        $expected = \ContentType::MIME_TYPE_JPG;
-        TestCheck::assertString('B.8', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.jpeg');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_JPG;
+        TestCheck::assertString('B.8', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.jpg');
-        $expected = \ContentType::MIME_TYPE_JPG;
-        TestCheck::assertString('B.9', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.jpg');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_JPG;
+        TestCheck::assertString('B.9', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.js');
-        $expected = \ContentType::MIME_TYPE_JS;
-        TestCheck::assertString('B.10', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.js');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_JS;
+        TestCheck::assertString('B.10', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.json');
-        $expected = \ContentType::MIME_TYPE_JSON;
-        TestCheck::assertString('B.11', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.json');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_JSON;
+        TestCheck::assertString('B.11', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.pdf');
-        $expected = \ContentType::MIME_TYPE_PDF;
-        TestCheck::assertString('B.12', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.pdf');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_PDF;
+        TestCheck::assertString('B.12', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.png');
-        $expected = \ContentType::MIME_TYPE_PNG;
-        TestCheck::assertString('B.13', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.png');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_PNG;
+        TestCheck::assertString('B.13', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.svg');
-        $expected = \ContentType::MIME_TYPE_SVG;
-        TestCheck::assertString('B.14', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.svg');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_SVG;
+        TestCheck::assertString('B.14', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.tiff');
-        $expected = \ContentType::MIME_TYPE_TIFF;
-        TestCheck::assertString('B.15', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.tiff');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_TIFF;
+        TestCheck::assertString('B.15', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.tif');
-        $expected = \ContentType::MIME_TYPE_TIFF;
-        TestCheck::assertString('B.16', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.tif');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_TIFF;
+        TestCheck::assertString('B.16', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.txt');
-        $expected = \ContentType::MIME_TYPE_TXT;
-        TestCheck::assertString('B.17', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.txt');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_TXT;
+        TestCheck::assertString('B.17', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.xls');
-        $expected = \ContentType::MIME_TYPE_XLS;
-        TestCheck::assertString('B.18', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.xls');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_XLS;
+        TestCheck::assertString('B.18', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.xlsx');
-        $expected = \ContentType::MIME_TYPE_XLSX;
-        TestCheck::assertString('B.19', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.xlsx');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_XLSX;
+        TestCheck::assertString('B.19', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.xml');
-        $expected = \ContentType::MIME_TYPE_XML;
-        TestCheck::assertString('B.20', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.xml');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_XML;
+        TestCheck::assertString('B.20', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \ContentType::getMimeTypeFromExtension('test.zip');
-        $expected = \ContentType::MIME_TYPE_ZIP;
-        TestCheck::assertString('B.21', '\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
+        $actual = \Flexio\System\ContentType::getMimeTypeFromExtension('test.zip');
+        $expected = \Flexio\System\ContentType::MIME_TYPE_ZIP;
+        TestCheck::assertString('B.21', '\Flexio\System\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
     }
 }

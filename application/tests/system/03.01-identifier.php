@@ -22,28 +22,28 @@ class Test
         // TEST: non-string inputs
 
         // BEGIN TEST
-        $actual = \Identifier::isValid(null);
+        $actual = \Flexio\System\Identifier::isValid(null);
         $expected = false;
-        TestCheck::assertBoolean('A.1', '\Identifier::isValid() null input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\System\Identifier::isValid() null input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Identifier::isValid(false);
+        $actual = \Flexio\System\Identifier::isValid(false);
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Identifier::isValid() false input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\System\Identifier::isValid() false input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Identifier::isValid(true);
+        $actual = \Flexio\System\Identifier::isValid(true);
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Identifier::isValid() true input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Flexio\System\Identifier::isValid() true input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Identifier::isValid(111111111111);
+        $actual = \Flexio\System\Identifier::isValid(111111111111);
         $expected = false;
-        TestCheck::assertBoolean('A.4', '\Identifier::isValid() numeric input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', '\Flexio\System\Identifier::isValid() numeric input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Identifier::isValid(array());
+        $actual = \Flexio\System\Identifier::isValid(array());
         $expected = false;
-        TestCheck::assertBoolean('A.5', '\Identifier::isValid() array input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', '\Flexio\System\Identifier::isValid() array input', $actual, $expected, $results);
     }
 }

@@ -226,7 +226,7 @@ class GoogleSheetsService implements \Flexio\Services\IConnection
                     continue;
                 $id = $ids[0]->nodeValue;
 
-                $id = \Util::afterLast($id, '/');
+                $id = \Flexio\System\Util::afterLast($id, '/');
 
 
                 $updateds = $entry->getElementsByTagName("updated");
@@ -762,7 +762,7 @@ class GoogleSpreadsheet
                 $col_count = (int)$e[0]->textContent;
 
 
-                $worksheet_id = \Util::afterLast($id, '/');
+                $worksheet_id = \Flexio\System\Util::afterLast($id, '/');
 
                 $worksheet = new \GoogleWorksheet;
                 $worksheet->access_token = $this->access_token;

@@ -28,7 +28,7 @@ class TokenModel extends ModelBase
             if ($eid === false)
                 throw new \Exception();
 
-            $timestamp = \System::getTimestamp();
+            $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
                 'user_eid'      => isset_or($params['user_eid'], ''),
@@ -79,7 +79,7 @@ class TokenModel extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Flexio\System\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         $row = $db->fetchRow("select tob.eid as eid,
@@ -104,8 +104,8 @@ class TokenModel extends ModelBase
                      'access_code' => $row['access_code'],
                      'secret_code' => $row['secret_code'],
                      'eid_status'  => $row['eid_status'],
-                     'created'     => \Util::formatDate($row['created']),
-                     'updated'     => \Util::formatDate($row['updated']));
+                     'created'     => \Flexio\System\Util::formatDate($row['created']),
+                     'updated'     => \Flexio\System\Util::formatDate($row['updated']));
     }
 
     public function getInfoFromAccessCode($code)
@@ -138,8 +138,8 @@ class TokenModel extends ModelBase
                      'access_code' => $row['access_code'],
                      'secret_code' => $row['secret_code'],
                      'eid_status'  => $row['eid_status'],
-                     'created'     => \Util::formatDate($row['created']),
-                     'updated'     => \Util::formatDate($row['updated']));
+                     'created'     => \Flexio\System\Util::formatDate($row['created']),
+                     'updated'     => \Flexio\System\Util::formatDate($row['updated']));
     }
 
     public function getInfoFromUserEid($user_eid)
@@ -176,8 +176,8 @@ class TokenModel extends ModelBase
                               'access_code' => $row['access_code'],
                               'secret_code' => $row['secret_code'],
                               'eid_status'  => $row['eid_status'],
-                              'created'     => \Util::formatDate($row['created']),
-                              'updated'     => \Util::formatDate($row['updated']));
+                              'created'     => \Flexio\System\Util::formatDate($row['created']),
+                              'updated'     => \Flexio\System\Util::formatDate($row['updated']));
         }
 
         return $output;

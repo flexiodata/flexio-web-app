@@ -324,8 +324,8 @@ class TestCheck
         $array2 = (array)$item2;
 
         // check if the input arrays are sequential or associative
-        $is_associative_array1 = \Util::isAssociativeArray($array1);
-        $is_associative_array2 = \Util::isAssociativeArray($array2);
+        $is_associative_array1 = \Flexio\System\Util::isAssociativeArray($array1);
+        $is_associative_array2 = \Flexio\System\Util::isAssociativeArray($array2);
 
         // if the two arrays are not of the same type, then array2 is
         // not contained in array1

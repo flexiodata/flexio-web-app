@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class FrameworkRequest
 {
     public $controller = '';

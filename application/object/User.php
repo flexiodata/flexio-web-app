@@ -32,7 +32,7 @@ class User extends \Flexio\Object\Base
 
         // a unique username is required for users; if a username
         // isn't specified, then supply a default
-        $username = \Util::generateHandle();
+        $username = \Flexio\System\Util::generateHandle();
         $email= $username.'@flex.io';
         if (!isset($properties))
         {
@@ -51,7 +51,7 @@ class User extends \Flexio\Object\Base
 
         // a unique username is required for users; if a username
         // isn't specified, then supply a default
-        $username = \Util::generateHandle();
+        $username = \Flexio\System\Util::generateHandle();
         $email= $username.'@flex.io';
         if (!isset($properties))
         {

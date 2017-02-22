@@ -38,12 +38,12 @@ EOD;
 EOD;
         $object = json_decode($object);
         $template = json_decode($template);
-        $validschema = \ValidatorSchema::checkSchema($template)->hasErrors() === false;
-        $validobject = \ValidatorSchema::checkObject($object, $template)->hasErrors() === false;
-        $validschemaobject = \ValidatorSchema::check($object, $template)->hasErrors() === false;
+        $validschema = \Flexio\System\ValidatorSchema::checkSchema($template)->hasErrors() === false;
+        $validobject = \Flexio\System\ValidatorSchema::checkObject($object, $template)->hasErrors() === false;
+        $validschemaobject = \Flexio\System\ValidatorSchema::check($object, $template)->hasErrors() === false;
         $actual = $validschema === true && $validobject === true && $validschemaobject === true;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\System\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = <<<EOD
@@ -71,12 +71,12 @@ EOD;
 EOD;
         $object = json_decode($object);
         $template = json_decode($template);
-        $validschema = \ValidatorSchema::checkSchema($template)->hasErrors() === false;
-        $validobject = \ValidatorSchema::checkObject($object, $template)->hasErrors() === false;
-        $validschemaobject = \ValidatorSchema::check($object, $template)->hasErrors() === false;
+        $validschema = \Flexio\System\ValidatorSchema::checkSchema($template)->hasErrors() === false;
+        $validobject = \Flexio\System\ValidatorSchema::checkObject($object, $template)->hasErrors() === false;
+        $validschemaobject = \Flexio\System\ValidatorSchema::check($object, $template)->hasErrors() === false;
         $actual = $validschema === true && $validobject === true && $validschemaobject === true;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\System\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = <<<EOD
@@ -136,12 +136,12 @@ EOD;
 EOD;
         $object = json_decode($object);
         $template = json_decode($template);
-        $validschema = \ValidatorSchema::checkSchema($template)->hasErrors() === false;
-        $validobject = \ValidatorSchema::checkObject($object, $template)->hasErrors() === false;
-        $validschemaobject = \ValidatorSchema::check($object, $template)->hasErrors() === false;
+        $validschema = \Flexio\System\ValidatorSchema::checkSchema($template)->hasErrors() === false;
+        $validobject = \Flexio\System\ValidatorSchema::checkObject($object, $template)->hasErrors() === false;
+        $validschemaobject = \Flexio\System\ValidatorSchema::check($object, $template)->hasErrors() === false;
         $actual = $validschema === true && $validobject === true && $validschemaobject === true;
         $expected = true;
-        TestCheck::assertBoolean('A.3', '\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Flexio\System\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = array(
@@ -197,11 +197,11 @@ EOD;
     }
 }
 EOD;
-        $validschema = \ValidatorSchema::checkSchema($template)->hasErrors() === false;
-        $validobject = \ValidatorSchema::checkObject($object, $template)->hasErrors() === false;
-        $validschemaobject = \ValidatorSchema::check($object, $template)->hasErrors() === false;
+        $validschema = \Flexio\System\ValidatorSchema::checkSchema($template)->hasErrors() === false;
+        $validobject = \Flexio\System\ValidatorSchema::checkObject($object, $template)->hasErrors() === false;
+        $validschemaobject = \Flexio\System\ValidatorSchema::check($object, $template)->hasErrors() === false;
         $actual = $validschema === true && $validobject === true && $validschemaobject === true;
         $expected = true;
-        TestCheck::assertBoolean('A.4', '\ValidatorSchema::check(); basic object validation test using array object definition',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', '\Flexio\System\ValidatorSchema::check(); basic object validation test using array object definition',  $actual, $expected, $results);
     }
 }

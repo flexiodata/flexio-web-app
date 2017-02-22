@@ -27,7 +27,7 @@ class Test
         $tmpfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'fxtestsuite_' . md5(microtime()) . '.tmp';
 
         // run a line of code that puts some data into a temporary file with a random name
-        \Util::runInBackground("file_put_contents('$tmpfile', '$tmpfile');", false /* we want it to run in the background */);
+        \Flexio\System\Util::runInBackground("file_put_contents('$tmpfile', '$tmpfile');", false /* we want it to run in the background */);
 
         // sleep 3 seconds while the job runs
         sleep(3);
@@ -39,6 +39,6 @@ class Test
 
         $actual = ($str == $tmpfile ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Util::runInBackground(); $wait = false',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\System\Util::runInBackground(); $wait = false',  $actual, $expected, $results);
     }
 }

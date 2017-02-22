@@ -107,7 +107,7 @@ class DatastoreReader
         if (!$row)
             return null;
 
-        $row = \Util::mapArray($this->columns, $row);
+        $row = \Flexio\System\Util::mapArray($this->columns, $row);
         return $row;
     }
 
@@ -226,7 +226,7 @@ class CsvStream
                 break;
             }
 
-            $row = \Util::mapArray($this->columns, $row);
+            $row = \Flexio\System\Util::mapArray($this->columns, $row);
             $this->buf .= (self::arrayToCsv(array_values($row)) . "\r\n");
         }
 

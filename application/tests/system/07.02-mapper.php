@@ -31,7 +31,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -39,7 +39,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.1', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -51,7 +51,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -59,7 +59,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.2', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.2', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -71,7 +71,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -79,7 +79,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.3', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.3', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -91,7 +91,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -99,7 +99,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.4', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.4', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -111,7 +111,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -119,7 +119,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.5', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.5', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -131,7 +131,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -139,7 +139,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.6', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.6', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -151,7 +151,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -159,7 +159,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.7', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.7', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -171,7 +171,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -179,7 +179,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.8', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.8', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -191,7 +191,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -199,7 +199,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.9', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.9', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -211,7 +211,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -219,7 +219,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.10', '\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
+        TestCheck::assertArray('A.10', '\Flexio\System\Mapper::flatten(); a top-level object with single key maps to an array with a single row with one field',  $actual, $expected, $results);
 
 
 
@@ -236,7 +236,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -245,7 +245,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.1', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.1', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -258,7 +258,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -267,7 +267,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.2', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.2', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -280,7 +280,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -289,7 +289,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.3', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.3', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -302,7 +302,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -311,7 +311,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.4', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.4', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -324,7 +324,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -333,7 +333,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.5', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.5', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -346,7 +346,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -355,7 +355,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.6', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.6', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -368,7 +368,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -377,7 +377,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.7', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.7', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -390,7 +390,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -399,7 +399,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.8', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.8', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -412,7 +412,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -421,7 +421,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.9', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.9', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -442,7 +442,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -459,7 +459,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.10', '\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
+        TestCheck::assertArray('B.10', '\Flexio\System\Mapper::flatten(); a top-level object with multiple keys maps to an array with a single row and multiple fields',  $actual, $expected, $results);
 
 
 
@@ -478,7 +478,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -489,7 +489,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.1', '\Mapper::flatten(); make sure that objects with keys that are strings having numbers are mapped correctly',  $actual, $expected, $results);
+        TestCheck::assertArray('C.1', '\Flexio\System\Mapper::flatten(); make sure that objects with keys that are strings having numbers are mapped correctly',  $actual, $expected, $results);
 
 
 
@@ -508,7 +508,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -519,7 +519,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.1', '\Mapper::flatten(); make sure case is preserved when mapping objects',  $actual, $expected, $results);
+        TestCheck::assertArray('D.1', '\Flexio\System\Mapper::flatten(); make sure case is preserved when mapping objects',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -534,7 +534,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -545,7 +545,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.2', '\Mapper::flatten(); make sure case is preserved when mapping objects',  $actual, $expected, $results);
+        TestCheck::assertArray('D.2', '\Flexio\System\Mapper::flatten(); make sure case is preserved when mapping objects',  $actual, $expected, $results);
 
 
 
@@ -562,7 +562,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -570,7 +570,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('E.1', '\Mapper::flatten(); keys are merged using the last value for a duplicated key',  $actual, $expected, $results);
+        TestCheck::assertArray('E.1', '\Flexio\System\Mapper::flatten(); keys are merged using the last value for a duplicated key',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -583,7 +583,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
 	        {
@@ -591,6 +591,6 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('E.2', '\Mapper::flatten(); keys are merged using the last value for a duplicated key',  $actual, $expected, $results);
+        TestCheck::assertArray('E.2', '\Flexio\System\Mapper::flatten(); keys are merged using the last value for a duplicated key',  $actual, $expected, $results);
     }
 }

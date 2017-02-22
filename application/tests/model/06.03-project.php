@@ -32,12 +32,12 @@ class Test
         $failed_project_creation = 0;
         for ($i = 0; $i < $total_count; $i++)
         {
-            $handle = \Util::generateHandle();
+            $handle = \Flexio\System\Util::generateHandle();
             $info = array(
             );
             $eid = $model->create(\Model::TYPE_PROJECT, $info);
             $created_eids[$eid] = 1;
-            if (!\Eid::isValid($eid))
+            if (!\Flexio\System\Eid::isValid($eid))
                 $failed_project_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_project_creation == 0;

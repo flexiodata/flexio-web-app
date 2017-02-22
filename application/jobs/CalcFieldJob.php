@@ -33,7 +33,7 @@ class CalcFieldJob extends \Flexio\Jobs\Base
                     break;
 
                 // table input
-                case \ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutput($instream);
                     break;
             }
@@ -64,7 +64,7 @@ class CalcFieldJob extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // create the output
-        $outstream = $instream->copy()->setPath(\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         $output_structure = $outstream->getStructure();

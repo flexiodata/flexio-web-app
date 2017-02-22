@@ -30,10 +30,10 @@ $params = array('host' => $argv[1],
 
 try
 {
-    $db = ModelDb::factory('PDO_POSTGRES', $params);
+    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $params);
     $conn = $db->getConnection();
 }
-catch (Exception $e)
+catch (\Exception $e)
 {
     echo($e->getMessage());
     $db = null;
@@ -72,7 +72,7 @@ foreach ($files as $f)
 
 ksort($updates);
 
-$current_version = System::getModel()->getDbVersionNumber($db);
+$current_version = \Flexio\System\System::getModel()->getDbVersionNumber($db);
 if ($current_version === false)
     $current_version = 0;
 
@@ -90,7 +90,7 @@ if ($max_ver <= $current_version)
 // TODO: log message
 // logMessage("Starting");
 
-$php = Util::getBinaryPath('php');
+$php = \Flexio\System\Util::getBinaryPath('php');
 $prog_args = $argv;
 array_shift($prog_args);
 
@@ -109,7 +109,7 @@ foreach ($updates as $uv => $uf)
     }
 }
 
-$current_version = System::getModel()->getDbVersionNumber($db);
+$current_version = \Flexio\System\System::getModel()->getDbVersionNumber($db);
 
 // TODO: log message
 logMessage("Update complete.");

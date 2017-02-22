@@ -50,7 +50,7 @@ class CreateJob extends \Flexio\Jobs\Base
         // get the content and decode it
         $content = $job_definition['params']['content'];
         $content = base64_decode($content);
-        $mime_type = \ContentType::getMimeType($name, $content);
+        $mime_type = \Flexio\System\ContentType::getMimeType($name, $content);
 
         // create the output stream
         $outstream_properties = array(
@@ -77,7 +77,7 @@ class CreateJob extends \Flexio\Jobs\Base
         $structure = isset_or($job_definition['params']['columns'], '[]');
         $outstream_properties = array(
             'name' => $name,
-            'mime_type' => \ContentType::MIME_TYPE_FLEXIO_TABLE,
+            'mime_type' => \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE,
             'structure' => $structure
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
@@ -93,7 +93,7 @@ class CreateJob extends \Flexio\Jobs\Base
             {
                 // if the row array is non-associative, then insert them
                 // based on the index of the field compared to the structure
-                if (\Util::isAssociativeArray($row) === false)
+                if (\Flexio\System\Util::isAssociativeArray($row) === false)
                 {
                     $idx = 0;
                     $row_with_keys = array();

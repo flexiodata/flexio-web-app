@@ -48,7 +48,7 @@ class TwilioService implements \Flexio\Services\IConnection
     {
         $this->close();
 
-        $validator = \Validator::getInstance();
+        $validator = \Flexio\System\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'key'   => array('type' => 'string', 'required' => true),
                 'token' => array('type' => 'string', 'required' => true)
@@ -223,7 +223,7 @@ class TwilioService implements \Flexio\Services\IConnection
 
         foreach ($rows as $r)
         {
-            $r = \Mapper::flatten($r);
+            $r = \Flexio\System\Mapper::flatten($r);
             $r = $r[0];
 
             $output_row = array();

@@ -34,7 +34,7 @@ class StreamModel extends ModelBase
                 $size = $params['size'];
 
             // add the stream properties
-            $timestamp = \System::getTimestamp();
+            $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'                   => $stream_eid,
                 'name'                  => isset_or($params['name'], ''),
@@ -92,7 +92,7 @@ class StreamModel extends ModelBase
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Flexio\System\Eid::isValid($eid))
             return false;
 
         if (($process_arr = \Model::check($params, array(
@@ -109,7 +109,7 @@ class StreamModel extends ModelBase
                 'cache_connection_eid' => array('type' => 'eid',     'required' => false)
             ))) === false)
             return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update stream'));
-        $process_arr['updated'] = \System::getTimestamp();
+        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         $db->beginTransaction();
         try
@@ -142,7 +142,7 @@ class StreamModel extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Flexio\System\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         $row = $db->fetchRow("select tob.eid as eid,
@@ -183,7 +183,7 @@ class StreamModel extends ModelBase
                      'cache_path'           => $row['cache_path'],
                      'cache_connection_eid' => $row['cache_connection_eid'],
                      'eid_status'           => $row['eid_status'],
-                     'created'              => \Util::formatDate($row['created']),
-                     'updated'              => \Util::formatDate($row['updated']));
+                     'created'              => \Flexio\System\Util::formatDate($row['created']),
+                     'updated'              => \Flexio\System\Util::formatDate($row['updated']));
     }
 }

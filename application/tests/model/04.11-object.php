@@ -99,7 +99,7 @@ class Test
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = \Eid::generate();
+        $eid3 = \Flexio\System\Eid::generate();
         $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $range_result = $model->assoc_range($eid3, \Model::EDGE_LINKED_TO);
         $actual = $add_result === true && $range_result === array();
@@ -112,7 +112,7 @@ class Test
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = \Eid::generate();
+        $eid3 = \Flexio\System\Eid::generate();
         $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $range_result = $model->assoc_range($eid3, \Model::EDGE_LINKED_TO);
         $has_errors = $model->hasErrors();
@@ -223,8 +223,8 @@ class Test
             array('eid' => $eid2, 'eid_type' => 'OBJ', 'eid_status' => \Model::STATUS_AVAILABLE),
             array('eid' => $eid3, 'eid_type' => 'OBJ', 'eid_status' => \Model::STATUS_DELETED)
         );
-        \Util::sortByFieldAsc($actual, 'eid');
-        \Util::sortByFieldAsc($expected, 'eid');
+        \Flexio\System\Util::sortByFieldAsc($actual, 'eid');
+        \Flexio\System\Util::sortByFieldAsc($expected, 'eid');
         TestCheck::assertArray('D.2', '\Model::assoc_range(); return array() of eids that have the specified association; deleted objects are included in associations',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -243,8 +243,8 @@ class Test
             array('eid' => $eid2, 'eid_type' => 'OBJ', 'eid_status' => \Model::STATUS_AVAILABLE),
             array('eid' => $eid3, 'eid_type' => 'OBJ', 'eid_status' => \Model::STATUS_AVAILABLE)
         );
-        \Util::sortByFieldAsc($actual, 'eid');
-        \Util::sortByFieldAsc($expected, 'eid');
+        \Flexio\System\Util::sortByFieldAsc($actual, 'eid');
+        \Flexio\System\Util::sortByFieldAsc($expected, 'eid');
         TestCheck::assertArray('D.3', '\Model::assoc_range(); return array() of eids that have the specified association; deleted objects are included in associations',  $actual, $expected, $results);
 
         // BEGIN TEST

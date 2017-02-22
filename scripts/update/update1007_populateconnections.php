@@ -30,10 +30,10 @@ $params = array('host' => $argv[1],
 
 try
 {
-    $db = ModelDb::factory('PDO_POSTGRES', $params);
+    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $params);
     $conn = $db->getConnection();
 }
-catch (Exception $e)
+catch (\Exception $e)
 {
     echo($e->getMessage());
     $db = null;
@@ -74,9 +74,9 @@ try
         $update['server_password'] = $row['server_password'];
 		$update['token']           = $row['token'];
 
-		if (substr($update['server_username'], 0, 4) == 'ZZXV') $update['server_username'] = Util::decrypt($update['server_username'], $g_store->connection_enckey);
-		if (substr($update['server_password'], 0, 4) == 'ZZXV') $update['server_password'] = Util::decrypt($update['server_password'], $g_store->connection_enckey);
-		if (substr($update['token'], 0, 4) == 'ZZXV')           $update['token'] = Util::decrypt($update['token'], $g_store->connection_enckey);
+		if (substr($update['server_username'], 0, 4) == 'ZZXV') $update['server_username'] = \Flexio\System\Util::decrypt($update['server_username'], $g_store->connection_enckey);
+		if (substr($update['server_password'], 0, 4) == 'ZZXV') $update['server_password'] = \Flexio\System\Util::decrypt($update['server_password'], $g_store->connection_enckey);
+		if (substr($update['token'], 0, 4) == 'ZZXV')           $update['token'] = \Flexio\System\Util::decrypt($update['token'], $g_store->connection_enckey);
 
         if (isset_and_populated($config['server']))          $update['server'] =           $config['server'];
         if (isset_and_populated($config['port']))            $update['server_port'] =      $config['port'];
@@ -88,14 +88,14 @@ try
         if (isset_and_populated($config['expires']))         $update['token_expires'] =    $config['expires'];
 
 
-		$update['server_username'] = Util::encrypt($update['server_username'], $g_store->connection_enckey);
-		$update['server_password'] = Util::encrypt($update['server_password'], $g_store->connection_enckey);
-		$update['token'] = Util::encrypt($update['token'], $g_store->connection_enckey);
+		$update['server_username'] = \Flexio\System\Util::encrypt($update['server_username'], $g_store->connection_enckey);
+		$update['server_password'] = \Flexio\System\Util::encrypt($update['server_password'], $g_store->connection_enckey);
+		$update['token'] = \Flexio\System\Util::encrypt($update['token'], $g_store->connection_enckey);
 
         $db->update('tbl_connection', $update, 'eid = ' . $db->quote($eid));
     }
 }
-catch(Exception $e)
+catch(\Exception $e)
 {
     echo '{ "success": false, "msg":' . json_encode($e->getMessage()) . '}';
     exit(0);
@@ -103,7 +103,7 @@ catch(Exception $e)
 
 
 // update the version number
-$current_version = System::getUpdateVersionFromFilename(__FILE__);
-System::getModel()->setDbVersionNumber($current_version);
+$current_version = \Flexio\System\System::getUpdateVersionFromFilename(__FILE__);
+\Flexio\System\System::getModel()->setDbVersionNumber($current_version);
 
 echo '{ "success": true, "msg": "Operation completed successfully." }';

@@ -96,6 +96,6 @@ class Store
 
     public static function getModel()
     {
-        return \System::getModel();
+        return \Flexio\System\System::getModel();
     }
 }

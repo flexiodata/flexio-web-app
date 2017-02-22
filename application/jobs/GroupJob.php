@@ -33,7 +33,7 @@ class GroupJob extends \Flexio\Jobs\Base
                     break;
 
                 // table input
-                case \ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTable($instream);
                     break;
             }
@@ -43,7 +43,7 @@ class GroupJob extends \Flexio\Jobs\Base
     public function createOutputFromTable($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // create the output
@@ -206,7 +206,7 @@ class GroupJob extends \Flexio\Jobs\Base
                     return false;
             }
 
-            $qstore_name = \DbUtil::quoteIdentifierIfNecessary($store_name);
+            $qstore_name = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($store_name);
             $column_expr .= "($expr) AS $qstore_name";
         }
 

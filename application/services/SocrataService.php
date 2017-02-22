@@ -44,7 +44,7 @@ class SocrataService implements \Flexio\Services\IConnection
 
     public function connect($params)
     {
-        $validator = \Validator::getInstance();
+        $validator = \Flexio\System\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true)
@@ -232,7 +232,7 @@ class SocrataService implements \Flexio\Services\IConnection
             $rows = [];
             while (true)
             {
-                $comma_pos = \Util::json_strpos($buf, ',', $start);
+                $comma_pos = \Flexio\System\Util::json_strpos($buf, ',', $start);
                 if ($comma_pos === false)
                 {
                     $buf = substr($buf, $start);

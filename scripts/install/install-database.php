@@ -36,7 +36,7 @@ try
     switch ($params['db_type'])
     {
         default:
-            throw new Exception('Invalid database type');
+            throw new \Exception('Invalid database type');
 
         case 'postgres':
             $result = createPostgresDatabase($params);
@@ -48,9 +48,9 @@ try
     }
 
     if ($result === false)
-        throw new Exception('Unable to create database');
+        throw new \Exception('Unable to create database');
 }
-catch(Exception $e)
+catch(\Exception $e)
 {
     echo '{ "success": false, "msg":' . json_encode($e->getMessage()) . '}';
     exit(0);
@@ -97,7 +97,7 @@ function createPostgresDatabase($params)
     $connect_params['password'] = $params['db_admin_password'];
 
     // create the application database
-    $db = ModelDb::factory('PDO_POSTGRES', $connect_params);
+    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $connect_params);
     $qdb = $db->quoteIdentifier($params['directory_dbname']);
     $db->exec("create database $qdb");
 
@@ -115,10 +115,10 @@ function createPostgresDatabase($params)
     $connect_params['password'] = $params['directory_password'];
 
     // create the application database
-    $db = ModelDb::factory('PDO_POSTGRES', $connect_params);
+    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $connect_params);
 
     $script_filename = System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'models'  . DIRECTORY_SEPARATOR . 'postgres'  . DIRECTORY_SEPARATOR . 'createdb.sql';
-    $commands = DbUtil::parseSqlScript($script_filename);
+    $commands = \Flexio\System\DbUtil::parseSqlScript($script_filename);
     if (!$commands)
         return false;
 
@@ -245,7 +245,7 @@ function createMySqlDatabase($params)
 
 
     $script_filename = System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'models'  . DIRECTORY_SEPARATOR . 'postgres'  . DIRECTORY_SEPARATOR . 'createdb.sql';
-    $commands = DbUtil::parseSqlScript($script_filename);
+    $commands = \Flexio\System\DbUtil::parseSqlScript($script_filename);
     if (!$commands)
         return false;
 
@@ -312,13 +312,13 @@ function checkPostgresDatabase($params)
 
     try
     {
-        $db = ModelDb::factory('PDO_POSTGRES', $connect_params);
+        $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $connect_params);
 
         $conn = $db->getConnection();
 
         return isset($conn);
     }
-    catch (Exception $e)
+    catch (\Exception $e)
     {
         return false;
     }

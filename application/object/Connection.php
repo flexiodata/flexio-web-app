@@ -90,7 +90,7 @@ class Connection extends \Flexio\Object\Base
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
         $properties['password'] = '';
         $properties['token'] = '';
-        $properties['token_expires'] = \System::getTimestamp(); // set the expiration to the current time
+        $properties['token_expires'] = \Flexio\System\System::getTimestamp(); // set the expiration to the current time
 
         $connection_model = $this->getModel()->connection;
         $connection_model->set($this->getEid(), $properties);
@@ -354,7 +354,7 @@ class Connection extends \Flexio\Object\Base
 
         try
         {
-            $qdb = \DbUtil::quoteIdentifierIfNecessary($database);
+            $qdb = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($database);
             $db->execute("CREATE DATABASE $qdb ENCODING 'UTF8'");
         }
         catch (\Exception $e)

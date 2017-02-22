@@ -15,7 +15,7 @@
 namespace Flexio\Controllers;
 
 
-class UtilController extends \FxControllerAction
+class UtilController extends \Flexio\System\FxControllerAction
 {
     public function init()
     {
@@ -64,7 +64,7 @@ class UtilController extends \FxControllerAction
         // calculate opacity (hex value) for IE8
         $sprite_ie_o = dechex((1-$sprite_o) * 255);
 
-        $base_dir = \System::getBaseDirectory();
+        $base_dir = \Flexio\System\System::getBaseDirectory();
         $full_srcdir = $base_dir.DIRECTORY_SEPARATOR.'public'.$srcdir;
 
         // get all files in the following folders
@@ -261,7 +261,7 @@ EOT;
         if (isset($_GET['srcdir']) && strlen($_GET['srcdir']) > 0)
             $srcdir = $_GET['srcdir'];
 
-        $base_dir = \System::getBaseDirectory();
+        $base_dir = \Flexio\System\System::getBaseDirectory();
         $full_srcdir = $base_dir.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.$srcdir;
 
         // get all files in the following folders
@@ -298,7 +298,7 @@ EOT;
         // render the page
         $this->renderRaw();
 
-        $app_dir = \System::getApplicationDirectory();
+        $app_dir = \Flexio\System\System::getApplicationDirectory();
         //$include_dir = $app_dir . DIRECTORY_SEPARATOR . 'include';
         $views_dir = $app_dir . DIRECTORY_SEPARATOR . 'views';
 

@@ -12,10 +12,13 @@
  */
 
 
+namespace Flexio\System;
+
+
 class ContentType
 {
     const TEST_BUFFER_LENGTH = 2048;
-    
+
     // standard content mime types
     const MIME_TYPE_BMP     = 'image/x-ms-bmp';
     const MIME_TYPE_CSS     = 'text/css';
@@ -50,7 +53,7 @@ class ContentType
         // takes a filename/extension, a buffer, and an option length of content;
         // if a specific mime type is available from the buffer (e.g. from using)
         // magic numbers), then return the mime type from the buffer; however if
-        // a buffer isn't available or a general mime type is returned from the 
+        // a buffer isn't available or a general mime type is returned from the
         // buffer (e.g. text/plain), but the filename indicates a specific content
         // type, then the mime is based off the filename
 
@@ -89,7 +92,7 @@ class ContentType
             case self::MIME_TYPE_STREAM:
             case self::MIME_TYPE_TXT:    // buffer for csv may look like text
                 return $file_mime_type;
-            
+
             // buffer for xlsx, docx looks like a zip; if we have all of the
             // buffer and we still have a zip, it's not xlsx or docx; however,
             // if we only have part of the buffer and it looks like a zip, trust
@@ -128,7 +131,7 @@ class ContentType
     public static function getMimeTypeFromExtension($ext, $def_return = self::MIME_TYPE_STREAM)
     {
         if (strpos($ext, '.') !== false)
-            $ext = \Util::getFileExtension($ext);
+            $ext = \Flexio\System\Util::getFileExtension($ext);
 
         $ext = strtolower($ext);
 
@@ -171,7 +174,7 @@ class ContentType
         $mime_type = '';
         $content_type = '';
 
-        $finfo = new finfo(FILEINFO_MIME);
+        $finfo = new \finfo(FILEINFO_MIME);
         $result = $finfo->buffer($buffer);
         if ($result === false)
             return false;

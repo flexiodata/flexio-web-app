@@ -159,7 +159,7 @@ class ProjectApi
         // get the projects for the user based on what the requesting
         // user has permission for
         $search_path = "$target_user_eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")";
-        $projects = \System::getModel()->search($search_path);
+        $projects = \Flexio\System\System::getModel()->search($search_path);
 
         $res = array();
         foreach ($projects as $p)
@@ -492,7 +492,7 @@ class ProjectApi
                 return false;
 
             // if we have a string, but it isn't an eid, just ignore it
-            if (!\Eid::isValid($i))
+            if (!\Flexio\System\Eid::isValid($i))
                 continue;
 
             $filtered_items[] = $i;

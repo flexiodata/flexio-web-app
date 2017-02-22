@@ -33,7 +33,7 @@ class MergeJob extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            if ($instream->getMimeType() === \ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($instream->getMimeType() === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
                 continue;
 
             $table_merge_mode = false;
@@ -55,7 +55,7 @@ class MergeJob extends \Flexio\Jobs\Base
         // based on content
         $outstream_properties = array(
             'name' => 'merged',
-            'mime_type' => \ContentType::MIME_TYPE_TXT
+            'mime_type' => \Flexio\System\ContentType::MIME_TYPE_TXT
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
         $this->getOutput()->push($outstream);
@@ -85,7 +85,7 @@ class MergeJob extends \Flexio\Jobs\Base
         $outstream_structure = $this->determineStructure();
         $outstream_properties = array(
             'name' => 'merged',
-            'mime_type' => \ContentType::MIME_TYPE_FLEXIO_TABLE,
+            'mime_type' => \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE,
             'structure' => $outstream_structure
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
@@ -105,7 +105,7 @@ class MergeJob extends \Flexio\Jobs\Base
         foreach ($input as $instream)
         {
             $instream->read(function ($data) use (&$streamwriter, $row_template) {
-                $row = \Util::mapArray($row_template, $data);
+                $row = \Flexio\System\Util::mapArray($row_template, $data);
                 $streamwriter->write($row);
             });
         }

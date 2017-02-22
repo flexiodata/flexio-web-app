@@ -12,11 +12,14 @@
  */
 
 
+namespace Flexio\System;
+
+
 class License
 {
     public static function checkLicense(&$err = null)
     {
-        $license_fname = \System::getConfigDirectory() . DIRECTORY_SEPARATOR . 'license.dat';
+        $license_fname = \Flexio\System\System::getConfigDirectory() . DIRECTORY_SEPARATOR . 'license.dat';
         if (!file_exists($license_fname))
         {
             if (isset($err)) $err = 'missing_license_file';
@@ -65,7 +68,7 @@ class License
         }
 
         // make sure the signature included in the license matches
-        $smd5 = md5(License::getSalt() . $license_json);
+        $smd5 = md5(self::getSalt() . $license_json);
 
         if (trim($smd5) != trim($sigv1))
         {
@@ -93,7 +96,7 @@ class License
         {
             foreach ($license->serverid as $s)
             {
-                if ($s == '*' || (trim(strtolower($s)) == trim(strtolower(License::getServerId()))))
+                if ($s == '*' || (trim(strtolower($s)) == trim(strtolower(self::getServerId()))))
                 {
                     $found = true;
                     break;
@@ -150,7 +153,7 @@ class License
 
 
         // verify local clock has not been manipulated
-        if (!License::checkClock())
+        if (!self::checkClock())
         {
             if (isset($err)) $err = 'local_time_setback';
             return false;
@@ -238,7 +241,7 @@ class License
         {
             try
             {
-                $obj = new COM('winmgmts://./root/CIMV2' );
+                $obj = new \COM('winmgmts://./root/CIMV2' );
                 $bios = $obj->ExecQuery("Select * from Win32_BIOS");
                 $processor = $obj->ExecQuery("Select * from Win32_Processor");
 

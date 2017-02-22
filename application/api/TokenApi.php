@@ -122,7 +122,7 @@ class TokenApi
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        $token_items = \System::getModel()->token->getInfoFromUserEid($user->getEid());
+        $token_items = \Flexio\System\System::getModel()->token->getInfoFromUserEid($user->getEid());
         if ($token_items === false)
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 

@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class ModelDbExpr
 {
     protected $expr = null;
@@ -103,12 +106,12 @@ class ModelDb extends ModelDbBase
         }
 
 
-        $this->db = new PDO($dsn, $this->db_username, $this->db_password);
+        $this->db = new \PDO($dsn, $this->db_username, $this->db_password);
 
         // use default database case handling; require exceptions
-        $this->db->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
-        $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $this->db->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_NATURAL);
+        $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
         return $this->db;
     }
@@ -555,7 +558,7 @@ class ModelResultDb extends ModelResultBase
 
     public function showDebugInfo()
     {
-        return DbUtil::formatSQL($this->select->assemble());
+        return \Flexio\System\DbUtil::formatSQL($this->select->assemble());
     }
 
     function __destruct()

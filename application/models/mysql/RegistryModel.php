@@ -180,7 +180,7 @@ class RegistryModel extends ModelBase
 
         $qobject_eid = $db->quote($object_eid);
         $qname = $db->quote($name);
-        $qtimestamp = $db->quote(System::getTimestamp());
+        $qtimestamp = $db->quote(\Flexio\System\System::getTimestamp());
         $qseconds = $db->quote((int)$seconds_from_now);
 
         $db->exec("update tbl_registry set updated=$qtimestamp,expires=date_add(now(), interval $qseconds second) where object_eid=$qobject_eid and name=$qname");
@@ -272,7 +272,7 @@ class RegistryModel extends ModelBase
         }
 
 
-        $qtimestamp = $db->quote(System::getTimestamp());
+        $qtimestamp = $db->quote(\Flexio\System\System::getTimestamp());
 
         try
         {
@@ -355,7 +355,7 @@ class RegistryModel extends ModelBase
         if (!is_string($object_eid))
             return false;
 
-        if (strlen($object_eid) > 0 && !Eid::isValid($object_eid))
+        if (strlen($object_eid) > 0 && !\Flexio\System\Eid::isValid($object_eid))
             return false;
 
         return true;

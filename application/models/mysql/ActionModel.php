@@ -25,7 +25,7 @@ class ActionModel extends ModelBase
 
         try
         {
-            $timestamp = \System::getTimestamp();
+            $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'user_eid'       => isset_or($params['user_eid'], ''),
                 'request_method' => isset_or($params['request_method'], ''),

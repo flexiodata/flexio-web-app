@@ -18,7 +18,7 @@ namespace Flexio\Controllers;
 // calls to the TestController are only allowed on localhost for
 // now, and calls cut off when not running in debug model
 
-class TestController extends \FxControllerAction
+class TestController extends \Flexio\System\FxControllerAction
 {
     public function init()
     {

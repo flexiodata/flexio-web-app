@@ -72,13 +72,13 @@ class Api
         // have an invalid eid), set the user to the public user, which is
         // an internal constant that isn't a valid eid so we can distinguish
         // between it and properly authenticated users)
-        $requesting_user_eid = \System::getCurrentUserEid();
-        if (!\Eid::isValid($requesting_user_eid))
+        $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
+        if (!\Flexio\System\Eid::isValid($requesting_user_eid))
             $requesting_user_eid = \Flexio\Object\User::USER_PUBLIC;
 
         // create the request object
         $request = Request::create();
-        $request->setValidator(\Validator::getInstance());
+        $request->setValidator(\Flexio\System\Validator::getInstance());
         $request->setRequestingUser($requesting_user_eid);
 
 
@@ -182,7 +182,7 @@ class Api
             'url_params' => json_encode($url_params),
             'query_params' => json_encode($query_params)
         );
-        \System::getModel()->action->record($action_params_to_save);
+        \Flexio\System\System::getModel()->action->record($action_params_to_save);
 
         // ROUTE 1: try to route the request "as is" before looking for any
         // eids or identifiers in the path; if we can route the request,
@@ -200,9 +200,9 @@ class Api
         // second and forth api parameters
         $api_params = self::mapUrlParamsToApiParams($url_params);
 
-        if (\Eid::isValid($api_params['apiparam2']) || \Identifier::isValid($api_params['apiparam2']))
+        if (\Flexio\System\Eid::isValid($api_params['apiparam2']) || \Flexio\System\Identifier::isValid($api_params['apiparam2']))
             $api_params['apiparam2'] = ':eid';
-        if (\Eid::isValid($api_params['apiparam4']) || \Identifier::isValid($api_params['apiparam4']))
+        if (\Flexio\System\Eid::isValid($api_params['apiparam4']) || \Flexio\System\Identifier::isValid($api_params['apiparam4']))
             $api_params['apiparam4'] = ':eid';
 
         $api_path = self::createApiPath($request_method, $api_params);
@@ -454,18 +454,18 @@ class Api
                 // assign ERROR_GENERAL to other categories when appropriate
                 default:
                 case Api::ERROR_GENERAL:
-                    \Util::header_error(400);
+                    \Flexio\System\Util::header_error(400);
                     break;
 
                 // "UNAUTHORIZED" type errors; the user might have access to the object
                 // if they were logged in, but the session is invalid
                 case Api::ERROR_UNAUTHORIZED:
-                    \Util::header_error(401);
+                    \Flexio\System\Util::header_error(401);
                     break;
 
                 // "FORBIDDEN" type errors; access not allowed
                 case Api::ERROR_INSUFFICIENT_RIGHTS:
-                    \Util::header_error(403);
+                    \Flexio\System\Util::header_error(403);
                     break;
 
                 // "NOT FOUND" type errors; invalid requests, invalid
@@ -480,7 +480,7 @@ class Api
                 case Api::ERROR_NO_MODEL:
                 case Api::ERROR_NO_SERVICE:
                 case Api::ERROR_NO_OBJECT:
-                    \Util::header_error(404);
+                    \Flexio\System\Util::header_error(404);
                     break;
 
                 // "UNPROCESSABLE ENTITY"; request can't be processed
@@ -490,7 +490,7 @@ class Api
                 case Api::ERROR_WRITE_FAILED:
                 case Api::ERROR_READ_FAILED:
                 case Api::ERROR_SIZE_LIMIT_EXCEEDED:
-                    \Util::header_error(422);
+                    \Flexio\System\Util::header_error(422);
                     break;
 
                 // "INTERNAL SERVER ERROR"; something is wrong internally
@@ -499,7 +499,7 @@ class Api
                 case Api::ERROR_NO_DATABASE:
                 case Api::ERROR_NO_MODEL:
                 case Api::ERROR_NO_SERVICE:
-                    \Util::header_error(500);
+                    \Flexio\System\Util::header_error(500);
                     break;
             }
         }
@@ -556,12 +556,12 @@ class Api
         // an api code
         switch ($code)
         {
-            case \Validator::ERROR_NONE:              $code = Api::ERROR_NONE;              break;
-            case \Validator::ERROR_UNDEFINED:         $code = Api::ERROR_UNDEFINED;         break;
-            case \Validator::ERROR_GENERAL:           $code = Api::ERROR_GENERAL;           break;
-            case \Validator::ERROR_INVALID_SYNTAX:    $code = Api::ERROR_INVALID_SYNTAX;    break;
-            case \Validator::ERROR_MISSING_PARAMETER: $code = Api::ERROR_MISSING_PARAMETER; break;
-            case \Validator::ERROR_INVALID_PARAMETER: $code = Api::ERROR_INVALID_PARAMETER; break;
+            case \Flexio\System\Validator::ERROR_NONE:              $code = Api::ERROR_NONE;              break;
+            case \Flexio\System\Validator::ERROR_UNDEFINED:         $code = Api::ERROR_UNDEFINED;         break;
+            case \Flexio\System\Validator::ERROR_GENERAL:           $code = Api::ERROR_GENERAL;           break;
+            case \Flexio\System\Validator::ERROR_INVALID_SYNTAX:    $code = Api::ERROR_INVALID_SYNTAX;    break;
+            case \Flexio\System\Validator::ERROR_MISSING_PARAMETER: $code = Api::ERROR_MISSING_PARAMETER; break;
+            case \Flexio\System\Validator::ERROR_INVALID_PARAMETER: $code = Api::ERROR_INVALID_PARAMETER; break;
         }
 
         // if a message isn't specified, supply a default message

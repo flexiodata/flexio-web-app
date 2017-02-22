@@ -22,27 +22,27 @@ class Test
         // TEST: eids should be 12 characters; test for invalid lengths
 
         // BEGIN TEST
-        $actual = \Eid::isValid('');
+        $actual = \Flexio\System\Eid::isValid('');
         $expected = false;
-        TestCheck::assertBoolean('A.1', '\Eid::isValid() invalid length', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\System\Eid::isValid() invalid length', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Eid::isValid() invalid length', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\System\Eid::isValid() invalid length', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Eid::isValid() invalid length', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Flexio\System\Eid::isValid() invalid length', $actual, $expected, $results);
 
 
 
         // TEST: eids should be 12 characters; test for valid lengths
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxxxxxxx');
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Eid::isValid() valid length', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Flexio\System\Eid::isValid() valid length', $actual, $expected, $results);
     }
 }

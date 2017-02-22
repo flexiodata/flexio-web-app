@@ -15,7 +15,7 @@
 namespace Flexio\Controllers;
 
 
-class ApiController extends \FxControllerAction
+class ApiController extends \Flexio\System\FxControllerAction
 {
     public function init()
     {

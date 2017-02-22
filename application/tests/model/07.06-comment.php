@@ -51,14 +51,14 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = \Eid::generate();
+        $eid = \Flexio\System\Eid::generate();
         $actual = $model->delete($eid);
         $expected = false;
         TestCheck::assertBoolean('B.1', '\Model::delete(); return false after trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = \Eid::generate();
+        $eid = \Flexio\System\Eid::generate();
         $result = $model->delete($eid);
         $actual = $model->hasErrors();
         $expected = false;
@@ -70,7 +70,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Util::generateHandle();
+        $handle = \Flexio\System\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -81,7 +81,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Util::generateHandle();
+        $handle = \Flexio\System\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -93,7 +93,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Util::generateHandle();
+        $handle = \Flexio\System\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -107,7 +107,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Util::generateHandle();
+        $handle = \Flexio\System\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
