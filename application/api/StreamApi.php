@@ -224,7 +224,11 @@ class StreamApi
 
             // determine the filename, stripping off the leading path info;
             // use a default if one wasn't supplied
+<<<<<<< HEAD
             $default_name = \Flexio\System\Util::generateHandle() . '.txt';
+=======
+            $default_name = \Util::generateHandle() . '.dat';
+>>>>>>> 7cb33c8fa8c338637e039cfca2f9cf372ca85699
             $filename = strlen($part_filename) > 0 ? $part_filename : $default_name;
             $name = \Flexio\System\Util::getFilename($filename);
             $ext = \Flexio\System\Util::getFileExtension($filename);
@@ -244,8 +248,32 @@ class StreamApi
         }
          else
         {
-            $php_stream_handle = fopen('php://input', 'rb');
+            $declared_mime_type = isset_or($_SERVER["CONTENT_TYPE"], '');
 
+            $php_stream_handle = fopen('php://input', 'rb');
+            $part_data_snippet = false;
+
+            while (true)
+            {
+                $data = fread($php_stream_handle, 32768);
+                if ($data === false || strlen($data) == 0)
+                    break;
+                if ($part_data_snippet === false)
+                    $part_data_snippet = $data;
+                $streamwriter->write($data);
+            }
+
+            fclose($php_stream_handle);
+
+            if ($part_data_snippet === false)
+                $part_data_snippet = '';
+            
+            $filename = isset_or($_GET['name'], \Util::generateHandle() . '.dat');
+            
+            if (strlen($declared_mime_type) > 0)
+                $mime_type = $declared_mime_type;
+                else
+                $mime_type = \ContentType::getMimeType($filename, $part_data_snippet);
         }
 
 

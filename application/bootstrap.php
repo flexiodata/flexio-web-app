@@ -238,17 +238,6 @@ if (!isset($g_config->directory_database_type) || strlen($g_config->directory_da
 }
 
 
-function setupIncludeDirectories()
-{
-    global $g_config, $g_store;
-    $base = $g_store->dir_home . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR;
-    set_include_path($base . 'system'      . PATH_SEPARATOR
-                   . get_include_path());
-}
-setupIncludeDirectories();
-
-
-
 function homeProxy()
 {
     if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
