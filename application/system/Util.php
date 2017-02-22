@@ -927,7 +927,7 @@ EOT;
         {
             $enc = sodium_crypto_secretbox($plaintext, $nonce, $key);
         }
-        catch (Error $e)
+        catch (\Error $e)
         {
             return null;
         }
@@ -968,7 +968,7 @@ EOT;
             $nonce = str_repeat("\x0", SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
             return sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
         }
-        catch (Error $e)
+        catch (\Error $e)
         {
             return null;
         }
