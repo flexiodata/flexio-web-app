@@ -186,7 +186,15 @@ spl_autoload_register(function ($class_name) {
             // sodium_compat
             return false;
         }
+
+        if (file_exists($class_name))
+        {
+            require_once $class_name;
+            return true;
+        }
+        return false;
     }
+    /*
     if ($GLOBALS['g_autoloader_ignore_errors'])
     {
         if (false === (@include_once $class_name))
@@ -197,6 +205,7 @@ spl_autoload_register(function ($class_name) {
         require_once $class_name;
         return true;
     }
+    */
 });
 
 function setAutoloaderIgnoreErrors($value)
