@@ -168,28 +168,18 @@ function fxStartSession()
 }
 
 $g_autoloader_ignore_errors = false;
-spl_autoload_register(function ($class_name) {
-    $class_name = str_replace(['.','/'], '', $class_name);
-    $class_name = str_replace(['_',"\\"], '/', $class_name) . '.php';
-    if (strpos($class_name, '/') !== false)
+spl_autoload_register(function ($class) {
+    $class = ltrim($class, '\\');
+    if (strpos($class, 'Flexio\\') === 0)
     {
-        $parts = explode('/',$class_name);
-        if ($parts[0] == 'Flexio')
+        $parts = explode('\\',$class);
+        for ($i = 0; $i < count($parts)-1; ++$i)
+            $parts[$i] = lcfirst($parts[$i]);
+        unset($parts[0]);
+        $class = __DIR__ . '/' . implode('/',$parts) . '.php';
+        if (file_exists($class))
         {
-            for ($i = 0; $i < count($parts)-1; ++$i)
-                $parts[$i] = lcfirst($parts[$i]);
-            unset($parts[0]);
-            $class_name = __DIR__ . '/' . implode('/',$parts);
-        }
-        else if ($parts[0] == 'ParagonIE')
-        {
-            // sodium_compat
-            return false;
-        }
-
-        if (file_exists($class_name))
-        {
-            require_once $class_name;
+            require_once $class;
             return true;
         }
         return false;
