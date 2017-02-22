@@ -264,12 +264,12 @@ class StreamApi
             if ($part_data_snippet === false)
                 $part_data_snippet = '';
 
-            $filename = isset_or($_GET['name'], \Util::generateHandle() . '.dat');
+            $filename = isset_or($_GET['name'], \Flexio\System\Util::generateHandle() . '.dat');
 
             if (strlen($declared_mime_type) > 0)
                 $mime_type = $declared_mime_type;
                 else
-                $mime_type = \ContentType::getMimeType($filename, $part_data_snippet);
+                $mime_type = \Flexio\System\ContentType::getMimeType($filename, $part_data_snippet);
         }
 
 
