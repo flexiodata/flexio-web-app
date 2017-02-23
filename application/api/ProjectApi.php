@@ -127,62 +127,30 @@ class ProjectApi
 
     public static function listall($params, $request)
     {
-        // TODO: add rights
-
-        if (($params = $request->getValidator()->check($params, array(
-                'user_eid' => array('type' => 'identifier', 'required' => false)
-            ))) === false)
-            return $request->getValidator()->fail();
-
+        // get the projects for the requesting user
         $requesting_user_eid = $request->getRequestingUser();
-        $target_user_eid = $requesting_user_eid; // if an eid isn't specified, use the eid of the requesting user
 
-        // find all projects for the specified user; if the user isn't
-        // specified, default to the target user
-        if (isset($params['user_eid']))
-        {
-            $user_identifier = $params['user_eid'];
-            $user = \Flexio\Object\Users::load($user_identifier);
-            if ($user === false)
-                return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+        // load the object
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
-            $target_user_eid = $user->getEid();
-        }
+        // check the rights on the object
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        // note: in this case, the user_eid may be empty since it's possible
-        // to call this call without any user_eid and since the call may be
-        // called without a user logged in; to avoid a search() parsing error,
-        // create enclose the blank in quotes
-        if (!is_string($target_user_eid) || strlen($target_user_eid) === 0)
-            $target_user_eid = '""';
-
-        // get the projects for the user based on what the requesting
-        // user has permission for
-        $search_path = "$target_user_eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")";
-        $projects = \Flexio\System\System::getModel()->search($search_path);
-
-        $res = array();
+        // get the projects
+        $result = array();
+        $projects = $user->getProjects();
         foreach ($projects as $p)
         {
-
-            // load the object
-            $project = \Flexio\Object\Project::load($p);
-            if ($project === false)
+            if ($p->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
                 continue;
 
-            // only show projects that are available
-            if ($project->getStatus() !== \Model::STATUS_AVAILABLE)
-                continue;
-
-            // check the rights on the object
-            if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-                continue;
-
-            // add the project info onto the list
-            $res[] = $project->get();
+            $result[] = $p->get();
         }
 
-        return $res;
+        return $result;
     }
 
     public static function pipes($params, $request)

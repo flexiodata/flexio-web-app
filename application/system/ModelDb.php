@@ -101,10 +101,7 @@ class ModelDb extends ModelDbBase
             $dsn = 'pgsql:host=' . $this->db_host . ';port=' . $this->db_port . ';dbname=' . $this->db_dbname;
 
         if (isset($GLOBALS['g_config']->query_log))
-        {
-            $this->addToQueryLog("CONNECTING TO: $dsn\n\n");
-        }
-
+            \Flexio\System\System::log("CONNECTING TO: $dsn\n\n");
 
         $this->db = new \PDO($dsn, $this->db_username, $this->db_password);
 
@@ -127,46 +124,6 @@ class ModelDb extends ModelDbBase
         return $this->getConnection()->prepare($sql);
     }
 
-
-    public function addToQueryLog($str)
-    {
-        if (!isset($GLOBALS['g_config']->query_log))
-            return;
-
-        $query_log = $GLOBALS['g_config']->query_log;
-        $str = str_replace("\n", "\r\n", $str);
-
-        if (strlen($query_log) == 0)
-            return;
-
-        if (!isset($GLOBALS['query_log_first_write']))
-        {
-            $GLOBALS['query_log_first_write'] = true;
-            $GLOBALS['query_log_count'] = 0;
-            $GLOBALS['query_log_lines'] = [];
-            $GLOBALS['query_log_lines'][] = "\r\n--------------------------------------------\r\n".isset_or($_SERVER['REQUEST_URI'],'(no request)')."\r\n\r\n";
-
-            register_shutdown_function(function () {
-                $lines = join('', $GLOBALS['query_log_lines']);
-                file_put_contents($GLOBALS['g_config']->query_log, $lines, FILE_APPEND);
-            });
-        }
-
-        $count = ++$GLOBALS['query_log_count'];
-        $GLOBALS['query_log_lines'][] = sprintf("#%04d: ", $count) . $str;
-
-        if ($count > 10000)
-        {
-            // flush the query log, because it's getting too big
-            $lines = join('', $GLOBALS['query_log_lines']);
-            file_put_contents($GLOBALS['g_config']->query_log, $lines, FILE_APPEND);
-
-            $GLOBALS['query_log_count'] = 0;
-            $GLOBALS['query_log_lines'] = [];
-        }
-    }
-
-
     public function query($sql, $params = array())
     {
         if ($sql instanceof Select)
@@ -186,7 +143,7 @@ class ModelDb extends ModelDbBase
             $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
-            $this->addToQueryLog("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::query()", ($t2-$t1)) . "\n$sql\n\n");
+            \Flexio\System\System::log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::query()", ($t2-$t1)) . "\n$sql\n\n");
 
             return $result;
         }
@@ -213,7 +170,7 @@ class ModelDb extends ModelDbBase
             $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
-            $this->addToQueryLog("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::exec()", ($t2-$t1)) . "\n$sql\n\n");
+            \Flexio\System\System::log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::exec()", ($t2-$t1)) . "\n$sql\n\n");
 
             return $result;
         }

@@ -298,14 +298,11 @@ class PipeApi
 
         $process->setOwner($requesting_user_eid);
         $process->setCreatedBy($requesting_user_eid);
-
-        $result = \Flexio\System\System::getModel()->assoc_add($pipe->getEid(), \Model::EDGE_HAS_PROCESS, $process->getEid());
-        \Flexio\System\System::getModel()->assoc_add($process->getEid(), \Model::EDGE_PROCESS_OF, $pipe->getEid());
+        $pipe->addProcess($process);
 
         $pipe_properties = $pipe->get();
         $process_properties['task'] = $pipe_properties['task'];
         $process->set($process_properties);
-
 
         // STEP 2: parse the content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');

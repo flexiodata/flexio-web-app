@@ -669,4 +669,42 @@ class System
     {
         return $GLOBALS['g_config'];
     }
+
+    public static function log($str)
+    {
+        if (!isset($GLOBALS['g_config']->query_log))
+            return;
+
+        $query_log = $GLOBALS['g_config']->query_log;
+        $str = str_replace("\n", "\r\n", $str);
+
+        if (strlen($query_log) == 0)
+            return;
+
+        if (!isset($GLOBALS['query_log_first_write']))
+        {
+            $GLOBALS['query_log_first_write'] = true;
+            $GLOBALS['query_log_count'] = 0;
+            $GLOBALS['query_log_lines'] = [];
+            $GLOBALS['query_log_lines'][] = "\r\n--------------------------------------------\r\n".isset_or($_SERVER['REQUEST_URI'],'(no request)')."\r\n\r\n";
+
+            register_shutdown_function(function () {
+                $lines = join('', $GLOBALS['query_log_lines']);
+                file_put_contents($GLOBALS['g_config']->query_log, $lines, FILE_APPEND);
+            });
+        }
+
+        $count = ++$GLOBALS['query_log_count'];
+        $GLOBALS['query_log_lines'][] = sprintf("#%04d: ", $count) . $str;
+
+        if ($count > 10000)
+        {
+            // flush the query log, because it's getting too big
+            $lines = join('', $GLOBALS['query_log_lines']);
+            file_put_contents($GLOBALS['g_config']->query_log, $lines, FILE_APPEND);
+
+            $GLOBALS['query_log_count'] = 0;
+            $GLOBALS['query_log_lines'] = [];
+        }
+    }
 }

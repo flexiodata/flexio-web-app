@@ -146,6 +146,32 @@ class User extends \Flexio\Object\Base
         return false;
     }
 
+    public function getProjects()
+    {
+        $eid = $this->getEid();
+
+        // get the projects for the user based on projects the user owns or is following
+        $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")";
+        $projects = $this->getModel()->search($search_path);
+
+        $res = array();
+        foreach ($projects as $p)
+        {
+            // load the object
+            $project = \Flexio\Object\Project::load($p);
+            if ($project === false)
+                continue;
+
+            // only show projects that are available
+            if ($project->getStatus() !== \Model::STATUS_AVAILABLE)
+                continue;
+
+            $res[] = $project;
+        }
+
+        return $res;
+    }
+
     public function getVerifyCode()
     {
         $properties = $this->get();
@@ -169,7 +195,7 @@ class User extends \Flexio\Object\Base
         return false;
     }
 
-    public function getprofilepicture()
+    public function getProfilePicture()
     {
         $eid = $this->getEid();
         $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.picture');
@@ -192,7 +218,7 @@ class User extends \Flexio\Object\Base
         echo $data;
     }
 
-    public function changeprofilepicture($filename, $mime_type)
+    public function changeProfilePicture($filename, $mime_type)
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -207,7 +233,7 @@ class User extends \Flexio\Object\Base
         return $result;
     }
 
-    public function getprofilebackground()
+    public function getProfileBackground()
     {
         $eid = $this->getEid();
         $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.background');
@@ -230,7 +256,7 @@ class User extends \Flexio\Object\Base
         echo $data;
     }
 
-    public function changeprofilebackground($filename, $mime_type)
+    public function changeProfileBackground($filename, $mime_type)
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -245,7 +271,7 @@ class User extends \Flexio\Object\Base
         return $result;
     }
 
-    public function croppicture($type, $src_x, $src_y, $src_w, $src_h)
+    public function cropPicture($type, $src_x, $src_y, $src_w, $src_h)
     {
         $eid = $this->getEid();
         $mime_type = 'text/plain';
