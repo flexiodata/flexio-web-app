@@ -172,6 +172,29 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
+    public function getTokens()
+    {
+        $res = array();
+        $token_items = \Flexio\System\System::getModel()->token->getInfoFromUserEid($this->getEid());
+        if ($token_items === false)
+            return $res;
+
+        foreach ($token_items as $item)
+        {
+            // only show tokens that are available; note: token list will return
+            // all tokens, including ones that have been deleted, so this check
+            // is important
+            if (!$item || $item['eid_status'] != \Model::STATUS_AVAILABLE)
+                continue;
+
+            // double-check to make sure we're not returning the secret code
+            unset($item['secret_code']);
+            $res[] = $item;
+        }
+
+        return $res;
+    }
+
     public function getVerifyCode()
     {
         $properties = $this->get();
