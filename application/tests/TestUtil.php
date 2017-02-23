@@ -187,6 +187,68 @@ class TestUtil
         return $project_eid;
     }
 
+
+    // $method = GET, POST, PUT, DELETE
+    // $path = /api/v1/... + GET parameters
+    // $token = authentication token
+    // $params = php array for normal post (files prefixed with @), or a string for a post buffer
+    // $content_type = in the case the $params is a string, specify its content type here
+    // returns an array [ "code" => http code, "response" => response body ];
+
+    public static function callApi($method, $path, $token, $params, $content_type = null)
+    {
+        if (strlen($path) == 0)
+        {
+            throw new \Error("Invalid method specified in call to TestUtil::callApi");
+        }
+        if ($path[0] != '/')
+            $path = '/' . $path;
+        
+        foreach ($params as $key => &$value)
+        {
+            if (substr($value, 0, 1) == '@')
+            {
+                $value = curl_file_create(substr($value, 1));
+            }
+        }
+        unset($value);
+
+        $ch = curl_init();
+
+        switch ($method)
+        {
+            case 'GET':
+                curl_setopt($ch, CURLOPT_HTTPGET, true);
+                break;
+            case 'POST':
+                curl_setopt($ch, CURLOPT_POST, TRUE);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+                if (isset($content_type))
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [ 'Content-Type: '. $content_type ]); 
+                break;
+            case 'PUT':     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');    break;
+            case 'DELETE':  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); break;
+            default:
+                throw new \Error("Invalid method specified in call to TestUtil::callApi");
+                break;
+        }
+
+
+        curl_setopt($ch, CURLOPT_URL, "https://localhost" . $path);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$token]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // because using localhost
+        $result = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return [ 'code' => $http_code, 'response' => $result ];
+    }
+
+
     public static function createTestUser($username, $email, $password)
     {
         $verify_code = \Flexio\System\Util::generateHandle();

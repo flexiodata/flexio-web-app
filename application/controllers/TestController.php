@@ -111,6 +111,19 @@ class TestController extends \Flexio\System\FxControllerAction
         echo '{}';
     }
 
+    public function benAction()
+    {
+        // PHP CONFIG INFO
+        if (!IS_TESTING())
+            return;
+
+        $this->renderRaw();
+        
+        $s = \Flexio\Tests\TestUtil::callApi('GET', '/api/v1/projects', 'wtxvdvwcwynhyjykvvjv', []);
+        var_dump($s); 
+    }
+
+
     public function uploadAction()
     {
         // note: following is a simple form to echo raw multipart data
