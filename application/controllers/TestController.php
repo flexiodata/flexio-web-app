@@ -111,6 +111,17 @@ class TestController extends \Flexio\System\FxControllerAction
         echo '{}';
     }
 
+    public function benAction()
+    {
+        if (!IS_TESTING())
+            return;
+
+        // keep this function empty
+        $this->renderRaw();
+                $actual = \Flexio\Tests\TestUtil::evalExpressionNative('to_char(0,"9.9$")');
+                var_dump($actual);
+    }
+
     public function uploadAction()
     {
         // note: following is a simple form to echo raw multipart data
