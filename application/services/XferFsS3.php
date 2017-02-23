@@ -447,7 +447,7 @@ class XferFsS3
 
     private static function getAWS()
     {
-        setAutoloaderIgnoreErrors(true);
+        //setAutoloaderIgnoreErrors(true);
 
         require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
 

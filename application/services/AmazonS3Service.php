@@ -317,7 +317,7 @@ class AmazonS3Service implements \Flexio\Services\IConnection
 
         require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
 
-        setAutoloaderIgnoreErrors(true);
+        //setAutoloaderIgnoreErrors(true);
         $credentials = new Aws\Credentials\Credentials($this->accesskey, $this->secretkey);
 
         $this->s3 = new Aws\S3\S3Client([
