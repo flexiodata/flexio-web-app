@@ -1958,10 +1958,6 @@ TODO: remove deprecated implementation; following was split into two functions,
                     else
                     $right_format_digits++;
             }
-            if ($ch == '$' || $ch == 8364 /* euro symbol */)
-            {
-                $currency_sign = $ch;
-            }
             if ($ch == 'S' || $ch == 's')
             {
                 $sign_always = true;
@@ -2075,6 +2071,11 @@ TODO: remove deprecated implementation; following was split into two functions,
                         $result .= ','; // getThousandsSeparatorChar() from locale
                 }
             }
+            else if ($ch == '$' || $ch == 8364 /* euro symbol */)
+            {
+                //$currency_sign = $ch;
+                $result .= $ch;
+            }
             else if ($ch == '9' || $ch == '0')
             {
                 if ($left)
@@ -2101,9 +2102,6 @@ TODO: remove deprecated implementation; following was split into two functions,
                                     $result .= ' ';
                             }
                         }
-
-                        if ($currency_sign)
-                            $result .= $currency_sign;
                     }
 
 
@@ -2185,6 +2183,12 @@ TODO: remove deprecated implementation; following was split into two functions,
     {
         if (!$this->doEval($params[0], $param0)) return false;
         if (!$this->doEval($params[1], $param1)) return false;
+
+        if (is_null($param0))
+        {
+            $retval = null;
+            return true;
+        }
 
         // TODO: make database-conformant implementation, nail down with test suite
         $type0 = $this->getType($params[0]);
