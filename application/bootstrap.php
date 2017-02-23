@@ -167,7 +167,6 @@ function fxStartSession()
     }
 }
 
-$g_autoloader_ignore_errors = false;
 spl_autoload_register(function ($class) {
     $class = ltrim($class, '\\');
     if (strpos($class, 'Flexio\\') === 0)
@@ -184,24 +183,7 @@ spl_autoload_register(function ($class) {
         }
         return false;
     }
-    /*
-    if ($GLOBALS['g_autoloader_ignore_errors'])
-    {
-        if (false === (@include_once $class_name))
-            return false;
-    }
-     else
-    {
-        require_once $class_name;
-        return true;
-    }
-    */
 });
-
-function setAutoloaderIgnoreErrors($value)
-{
-    $GLOBALS['g_autoloader_ignore_errors'] = $value;
-}
 
 
 // php debug settings for debug mode
