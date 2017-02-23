@@ -146,6 +146,32 @@ class User extends \Flexio\Object\Base
         return false;
     }
 
+    public function getProjects()
+    {
+        $eid = $this->getEid();
+
+        // get the projects for the user based on projects the user owns or is following
+        $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")";
+        $projects = \Flexio\System\System::getModel()->search($search_path);
+
+        $res = array();
+        foreach ($projects as $p)
+        {
+            // load the object
+            $project = \Flexio\Object\Project::load($p);
+            if ($project === false)
+                continue;
+
+            // only show projects that are available
+            if ($project->getStatus() !== \Model::STATUS_AVAILABLE)
+                continue;
+
+            $res[] = $project;
+        }
+
+        return $res;
+    }
+
     public function getVerifyCode()
     {
         $properties = $this->get();
