@@ -1262,6 +1262,9 @@ class ExprTranslatorPostgres
 
     public function func_to_char($func, $params)
     {
+        if ($this->getType($params[0]) == ExprParser::TYPE_NULL)
+            return "null::text";
+        
         if (count($params) == 1)
         {
             $param0 = $this->printNode($params[0]);
