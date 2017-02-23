@@ -172,7 +172,7 @@ class User extends \Flexio\Object\Base
     public function getprofilepicture()
     {
         $eid = $this->getEid();
-        $updated = \Flexio\System\System::getModel()->registry->getUpdateTime($eid, 'profile.picture');
+        $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.picture');
         $etag = is_null($updated) ? null : md5("$eid;profile.picture;$updated");
 
         if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
@@ -182,7 +182,7 @@ class User extends \Flexio\Object\Base
         }
 
         $mime_type = 'text/plain';
-        $data = \Flexio\System\System::getModel()->registry->getBinary($eid, 'profile.picture', $mime_type);
+        $data = $this->getModel()->registry->getBinary($eid, 'profile.picture', $mime_type);
         if (is_null($data))
             return $this->fail(\Model::ERROR_NO_OBJECT);
 
@@ -203,14 +203,14 @@ class User extends \Flexio\Object\Base
             return $this->fail(\Model::ERROR_SIZE_LIMIT_EXCEEDED);
 
         $contents = file_get_contents($filename);
-        $result = \Flexio\System\System::getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
+        $result = $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
         return $result;
     }
 
     public function getprofilebackground()
     {
         $eid = $this->getEid();
-        $updated = \Flexio\System\System::getModel()->registry->getUpdateTime($eid, 'profile.background');
+        $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.background');
         $etag = is_null($updated) ? null : md5("$eid;profile.background;$updated");
 
         if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
@@ -220,7 +220,7 @@ class User extends \Flexio\Object\Base
         }
 
         $mime_type = 'text/plain';
-        $data = \Flexio\System\System::getModel()->registry->getBinary($eid, 'profile.background', $mime_type);
+        $data = $this->getModel()->registry->getBinary($eid, 'profile.background', $mime_type);
         if (is_null($data))
             return $this->fail(\Model::ERROR_NO_OBJECT);
 
@@ -241,7 +241,7 @@ class User extends \Flexio\Object\Base
             return $this->fail(\Model::ERROR_SIZE_LIMIT_EXCEEDED);
 
         $contents = file_get_contents($filename);
-        $result = \Flexio\System\System::getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
+        $result = $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
         return $result;
     }
 
@@ -267,7 +267,7 @@ class User extends \Flexio\Object\Base
             return $this->fail(\Model::ERROR_INVALID_PARAMETER);
         }
 
-        $data = \Flexio\System\System::getModel()->registry->getBinary($eid, $type, $mime_type);
+        $data = $this->getModel()->registry->getBinary($eid, $type, $mime_type);
         if (is_null($data))
             return $this->fail(\Model::ERROR_NO_OBJECT);
 
@@ -297,8 +297,8 @@ class User extends \Flexio\Object\Base
         // free up memory
         imagedestroy($dest_img);
 
-        //\Flexio\System\System::getModel()->registry->setBinary($eid, $type, $data, null, 'image/png');
-        \Flexio\System\System::getModel()->registry->setBinary($eid, $type, $data, null, 'image/jpeg');
+        //$this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/png');
+        $this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/jpeg');
 
         return true;
     }
