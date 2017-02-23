@@ -142,7 +142,7 @@ class Rights
 
         // see if the object is owned by the user directly
         $search_path = "$object_eid->(".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $owners = \Flexio\Object\Store::getModel()->search($search_path);
+        $owners = \Flexio\Object\Search::exec($search_path);
         if (count($owners) > 0)
             return true;
 
@@ -168,14 +168,14 @@ class Rights
 
         // see if the object is followed or owned by the user directly
         $search_path = "$object_eid->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $followers = \Flexio\Object\Store::getModel()->search($search_path);
+        $followers = \Flexio\Object\Search::exec($search_path);
         if (count($followers) > 0)
             return true;
 
         // see if the object is a member of a project followed or owned by the user
         $search_path = "$object_eid->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
                                   "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $followers = \Flexio\Object\Store::getModel()->search($search_path);
+        $followers = \Flexio\Object\Search::exec($search_path);
         if (count($followers) > 0)
             return true;
 
@@ -184,7 +184,7 @@ class Rights
         $search_path = "$object_eid->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PIPE.",".\Model::TYPE_CONNECTION.")".
                                   "->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
                                   "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $followers = \Flexio\Object\Store::getModel()->search($search_path);
+        $followers = \Flexio\Object\Search::exec($search_path);
         if (count($followers) > 0)
             return true;
 
@@ -193,7 +193,7 @@ class Rights
         $search_path = "$object_eid->(".\Model::EDGE_COMMENT_ON.")->(".\Model::TYPE_PIPE.",".\Model::TYPE_CONNECTION.")".
                                   "->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
                                   "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $followers = \Flexio\Object\Store::getModel()->search($search_path);
+        $followers = \Flexio\Object\Search::exec($search_path);
         if (count($followers) > 0)
             return true;
 

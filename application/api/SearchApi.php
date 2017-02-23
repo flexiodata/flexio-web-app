@@ -34,7 +34,7 @@ class SearchApi
         $search_path = "$requesting_user_eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->("
                                                 .\Model::TYPE_PROJECT.")->(".\Model::EDGE_HAS_MEMBER.")->("
                                                 .\Model::TYPE_PIPE.")";
-        $pipes = \Flexio\System\System::getModel()->search($search_path);
+        $pipes = \Flexio\Object\Search::exec($search_path);
 
         $res = array();
         foreach ($pipes as $p)

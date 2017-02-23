@@ -152,7 +152,7 @@ class User extends \Flexio\Object\Base
 
         // get the projects for the user based on projects the user owns or is following
         $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")";
-        $projects = $this->getModel()->search($search_path);
+        $projects = \Flexio\Object\Search::exec($search_path);
 
         $res = array();
         foreach ($projects as $p)
