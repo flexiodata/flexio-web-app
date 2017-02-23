@@ -175,7 +175,7 @@ class User extends \Flexio\Object\Base
     public function getTokens()
     {
         $res = array();
-        $token_items = \Flexio\System\System::getModel()->token->getInfoFromUserEid($this->getEid());
+        $token_items = $this->getModel()->token->getInfoFromUserEid($this->getEid());
         if ($token_items === false)
             return $res;
 
