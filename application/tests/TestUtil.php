@@ -44,7 +44,15 @@ class TestUtil
         if ($result1 === $result2)
             return $result1;
 
+
+
         $error = TestError::ERROR_EVAL_MISMATCH . ": PHP evaluation returned (" . gettype($result1) . ") $result1; Postgres evaluation returned (" . gettype($result2) . ") $result2";
+
+        if (is_string($result1) && is_string($result2))
+        {
+            $error .= "; hex: " . bin2hex($result1) . " vs " . bin2hex($result2);
+        }
+
         return $error;
     }
 
