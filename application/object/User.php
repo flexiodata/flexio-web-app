@@ -152,7 +152,7 @@ class User extends \Flexio\Object\Base
 
         // get the projects for the user based on projects the user owns or is following
         $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")";
-        $projects = $this->getModel()->search($search_path);
+        $projects = \Flexio\Object\Search::exec($search_path);
 
         $res = array();
         foreach ($projects as $p)
@@ -167,6 +167,29 @@ class User extends \Flexio\Object\Base
                 continue;
 
             $res[] = $project;
+        }
+
+        return $res;
+    }
+
+    public function getTokens()
+    {
+        $res = array();
+        $token_items = $this->getModel()->token->getInfoFromUserEid($this->getEid());
+        if ($token_items === false)
+            return $res;
+
+        foreach ($token_items as $item)
+        {
+            // only show tokens that are available; note: token list will return
+            // all tokens, including ones that have been deleted, so this check
+            // is important
+            if (!$item || $item['eid_status'] != \Model::STATUS_AVAILABLE)
+                continue;
+
+            // double-check to make sure we're not returning the secret code
+            unset($item['secret_code']);
+            $res[] = $item;
         }
 
         return $res;

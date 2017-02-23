@@ -60,38 +60,22 @@ class FollowerApi
 
         // the first parameter 'users' is an arrray of strings that are either eids
         // or email addresses; make sure these are strings
-        $user_model = \Flexio\System\System::getModel()->user;
         $user_eids = array();
         foreach ($users as $identifier)
         {
             $user_eid = false;
-            $email = false;
+            $user_email = false;
 
-            // if we already have a valid user eid; just add it
-            if (\Flexio\System\Eid::isValid($identifier))
+            // try to the load the user
+            $user = \Flexio\Object\User::load($identifier);
+            if ($user !== false)
             {
-                $user_eid = $identifier;
-                $email = $user_model->getEmailFromEid($identifier);
-            }
-             else
-            {
-                $user_eid = $user_model->getEidFromIdentifier($identifier);
-                $email = $identifier;
-            }
-
-            // if we have a valid eid, add it; no need to add the user
-            // if it's the owner, since they already have access
-            if ($user_eid == $requesting_user_eid)
-                continue;
-
-            $user_info = array();
-            if ($user_eid !== false)
-            {
-                $user = \Flexio\Object\User::load($user_eid);
-                if ($user === false)
+                $user_eid = $user->getEid();
+                if ($user_eid === $requesting_user_eid) // requesting user should already be a member
                     continue;
 
                 $user_info = $user->get();
+                $user_email = $user_info['email'];
             }
              else
             {
@@ -101,7 +85,7 @@ class FollowerApi
                 $verify_code = \Flexio\System\Util::generateHandle(); // code to verify user's email address
 
                 $new_user_info = array('user_name' => $username,
-                                       'email' => $email,
+                                       'email' => $user_email,
                                        'eid_status' => \Model::STATUS_PENDING,
                                        'password' => $password,
                                        'verify_code' => $verify_code,
@@ -140,7 +124,7 @@ class FollowerApi
             $message_type = \Flexio\Object\Message::TYPE_EMAIL_SHARE;
             $from_name = $sender_name;
             $object_name = $object_properties['name'];
-            $email_params['email'] = $email;
+            $email_params['email'] = $user_email;
             $email_params['from_name'] = $from_name;
             $email_params['object_name'] = $object_name;
             $email_params['object_eid'] = $object->getEid();

@@ -122,25 +122,6 @@ class TokenApi
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        $token_items = \Flexio\System\System::getModel()->token->getInfoFromUserEid($user->getEid());
-        if ($token_items === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
-
-        $res = array();
-        foreach ($token_items as $item)
-        {
-            // only show tokens that are available; note: token list will return
-            // all tokens, including ones that have been deleted, so this check
-            // is important
-            if (!$item || $item['eid_status'] != \Model::STATUS_AVAILABLE)
-                continue;
-
-            // double-check to make sure we're not returning the secret code
-            unset($item['secret_code']);
-
-            $res[] = $item;
-        }
-
-        return $res;
+        return $user->getTokens();
     }
 }
