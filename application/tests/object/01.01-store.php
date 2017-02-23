@@ -34,7 +34,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Store::create(\Model::TYPE_OBJECT, null);
-        $actual = 'Flexio\\Object\\Object';
+        $actual = 'Flexio\Object\Object';
         $expected = get_class($object);
         TestCheck::assertString('A.2', 'Store::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -63,7 +63,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\Store::load($eid);
-        $actual = 'Flexio\\Object\\Object';
+        $actual = 'Flexio\Object\Object';
         $expected = get_class($object);
         TestCheck::assertString('B.2', 'Store::load(); return the an object if it\'s successfully loaded',  $actual, $expected, $results);
 

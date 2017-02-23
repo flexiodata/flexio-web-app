@@ -25,8 +25,8 @@ class Test
 
         // BEGIN TEST
         $service = \Flexio\Services\SocrataService::create(null);
-        $actual = get_class($service) === 'Flexio\Services\SocrataService';
-        $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Services\SocrataService::create(); create an instance of the class',  $actual, $expected, $results);
+        $actual = get_class($service);
+        $expected = 'Flexio\Services\SocrataService';
+        TestCheck::assertString('A.1', '\Flexio\Services\SocrataService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }
