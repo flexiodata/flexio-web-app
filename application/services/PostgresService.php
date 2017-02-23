@@ -180,7 +180,7 @@ class PostgresService implements \Flexio\Services\IConnection
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
             $log = "Timestamp: $timestamp\nDATA PROVIDER CONNECTING TO: $dsn\n\n";
-            self::addToQueryLog($log);
+            \Flexio\System\System::log($log);
         }
 
         try
@@ -194,8 +194,7 @@ class PostgresService implements \Flexio\Services\IConnection
         }
         catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                self::addToQueryLog('Could not connect to Postgres server. Exception message: ' . $e->getMessage());
+            \Flexio\System\System::log('Could not connect to Postgres server. Exception message: ' . $e->getMessage());
         }
 
         return null;
@@ -224,9 +223,7 @@ class PostgresService implements \Flexio\Services\IConnection
         }
         catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                self::addToQueryLog('Could not execute statement. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not execute statement. Exception message: ' . $e->getMessage());
             return false;
         }
     }
@@ -300,7 +297,7 @@ class PostgresService implements \Flexio\Services\IConnection
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
             $log = ("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec", ($t2-$t1)) . "\nDATA: $sql\n\n");
-            self::addToQueryLog($log);
+            \Flexio\System\System::log($log);
         }
 
         if ($result)
@@ -359,9 +356,7 @@ class PostgresService implements \Flexio\Services\IConnection
         }
         catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                self::addToQueryLog('Could not create table. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not create table. Exception message: ' . $e->getMessage());
             return false;
         }
 
@@ -429,9 +424,7 @@ class PostgresService implements \Flexio\Services\IConnection
         }
         catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                self::addToQueryLog('Could not open file. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not open file. Exception message: ' . $e->getMessage());
             return null;
         }
 
@@ -495,7 +488,7 @@ class PostgresService implements \Flexio\Services\IConnection
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
             $log = ("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec", ($t2-$t1)) . "\nDATA: $sql\n\n");
-            self::addToQueryLog($log);
+            \Flexio\System\System::log($log);
         }
 
         $structure = [];
@@ -863,11 +856,6 @@ class PostgresService implements \Flexio\Services\IConnection
                 return "$qname bigserial";
         }
     }
-
-    private static function addToQueryLog($str)
-    {
-        \Flexio\System\System::getModel()->getDatabase()->addToQueryLog($str);
-    }
 }
 
 
@@ -933,7 +921,7 @@ class PostgresIterator
                 $timestamp = $date->format("Y-m-d H:i:s.u");
 
                 $log = ("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec", ($t2-$t1)) . "\nDATA: $sql\n\n");
-                self::addToQueryLog($log);
+                \Flexio\System\System::log($log);
             }
 
             return $stmt;
@@ -969,11 +957,6 @@ class PostgresIterator
 
         $this->row_pos++;
         return $this->rows[$this->row_pos - 1];
-    }
-
-    private static function addToQueryLog($str)
-    {
-        \Flexio\System\System::getModel()->getDatabase()->addToQueryLog($str);
     }
 }
 
@@ -1118,9 +1101,7 @@ class PostgresInserter
         }
         catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                \Flexio\Services\PostgresInserter::addToQueryLog('Could not flush rows. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not flush rows. Exception message: ' . $e->getMessage());
             $this->rows = [];
             return false;
         }
@@ -1129,11 +1110,6 @@ class PostgresInserter
     public function finishInsert()
     {
         return $this->flush();
-    }
-
-    private static function addToQueryLog($str)
-    {
-        \Flexio\System\System::getModel()->getDatabase()->addToQueryLog($str);
     }
 }
 
@@ -1267,9 +1243,7 @@ class PostgresInserterMultiRow
         }
         catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                \Flexio\Services\PostgresInserter::addToQueryLog('Could not flush rows. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not flush rows. Exception message: ' . $e->getMessage());
             $this->rows = [];
             return false;
         }
