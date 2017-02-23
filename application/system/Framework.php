@@ -263,7 +263,11 @@ class FxControllerAction
     public function invokeAction($controller, $action)
     {
         if (!method_exists($this, $action . 'Action'))
-            die("Invalid action");
+        {
+            http_response_code(404);
+            echo "Invalid action";
+            exit();
+        }
 
         $this->controller = $controller;
         $this->action = $action;
