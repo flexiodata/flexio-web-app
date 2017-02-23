@@ -10,24 +10,21 @@
  */
 
 
-
 if (file_exists(__DIR__ . '/../config/config.json'))
 {
     $configjson = file_get_contents(__DIR__ . '/../config/config.json');
     $g_config = json_decode($configjson);
     unset($configjson);
+    if (is_null($g_config))
+    {
+        die("Invalid configuration file format");
+    }
 }
  else
 {
-    if (file_exists(__DIR__ . '/../config/config-defaults.json'))
-    {
-        $configjson = file_get_contents(__DIR__ . '/../config/config-defaults.json');
-        $g_config = json_decode($configjson);
-        unset($configjson);
-    }
+    die("Missing configuration file");
 }
 
-if (is_null($g_config)) die("Invalid configuration file format");
 
 // g_store stores global variables, such as database pointers
 $g_store = new stdClass();
