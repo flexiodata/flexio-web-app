@@ -19,6 +19,6 @@ class Search
 {
     public static function exec($query)
     {
-        Store::getModel()->search($search_path);
+        return Store::getModel()->search($query);
     }
 }
