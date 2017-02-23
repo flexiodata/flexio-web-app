@@ -1922,6 +1922,7 @@ TODO: remove deprecated implementation; following was split into two functions,
     private static function tochar_number($number, $format)
     {
         $is_negative = false;
+        $format_has_decimal = false;
         $left_format_digits = 0;  // number of left digits in the format string
         $right_format_digits = 0; // number of right digits in the format string
         $total_left_digits = 0;   // number of left digits in the number
@@ -1934,6 +1935,8 @@ TODO: remove deprecated implementation; following was split into two functions,
         $padding = true;          // true if padding is active
         $digit_encountered = false;
         $digit_printed = false;
+        $padlen = 1;              // reserve one char for sign +/-
+        $overflow = false;
 
         // count the number of positions to the left
         // of the decimal in the format string
@@ -1949,7 +1952,19 @@ TODO: remove deprecated implementation; following was split into two functions,
                 $ch_next = null;
 
             if ($ch == '.' || $ch == 'D' || $ch == 'd')
+            {
                 $left = false;
+                $format_has_decimal = true;
+                $padlen++;
+            }
+            if ($ch == ',' || $ch == 'G' || $ch == 'g')
+            {
+                $padlen++;
+            }
+            if ($ch == '$' || $ch == 8364 /* euro symbol */)
+            {
+                $padlen++;
+            }
             if ($ch == '9' || $ch == '0')
             {
                 $digit_encountered = true;
@@ -1957,6 +1972,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                     $left_format_digits++;
                     else
                     $right_format_digits++;
+                $padlen++;
             }
             if ($ch == 'S' || $ch == 's')
             {
@@ -1989,7 +2005,11 @@ TODO: remove deprecated implementation; following was split into two functions,
             }
         }
 
-
+        if ($right_format_digits == 0 && $format_has_decimal)
+        {
+            // no digits in format to the right of decimal, ignore decimal in fmt
+            $padlen--;
+        }
 
         // find decimal point in the input number
         $strnum = (string)round($number, $right_format_digits);
@@ -2020,7 +2040,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         // spaces in the number format, return an overflow string
         if ($total_left_digits > $left_format_digits)
         {
-            return "######";
+            $overflow = true;
         }
 
 
@@ -2080,10 +2100,52 @@ TODO: remove deprecated implementation; following was split into two functions,
             {
                 if ($left)
                 {
-                    $digit = self::getLeftDigit($strnum, $dec, $l);
+                    $digit = $overflow ? '#' : self::getLeftDigit($strnum, $dec, $l);
 
 
 
+
+                    if ($ch == '0' || $digit != '0' || $digit_printed || ($l == 1 && (!$format_has_decimal || !$padding)))
+                    {
+                        if ($sign_left && !$digit_printed)
+                        {
+                            if ($is_negative)
+                            {
+                                $result .= '-';
+                            }
+                            else
+                            {
+                                if ($sign_always)
+                                {
+                                    $result .= '+';
+                                }
+                            }
+                        }
+
+
+                        $result .= $digit;
+                        $digit_printed = true;
+                    }
+
+
+/*
+                    if ($l > $zero_left_digits && $format_has_decimal)
+                    {
+                        if ($digit != '0' || $digit_printed)
+                        {
+                            $result .= $digit;
+                            $digit_printed = true;
+                        }
+                    }
+                    else
+                    {
+                        
+                        $result .= $digit;
+                        $digit_printed = true;
+                    }
+                    */
+
+/*
                     if ($sign_left && !$digit_printed && ($l <= $zero_left_digits || $digit != '0'))
                     {
                         if ($is_negative)
@@ -2103,9 +2165,9 @@ TODO: remove deprecated implementation; following was split into two functions,
                             }
                         }
                     }
+*/
 
-
-
+/*
                     if ($l > $zero_left_digits)
                     {
                         if ($digit != '0' || $digit_printed)
@@ -2124,13 +2186,14 @@ TODO: remove deprecated implementation; following was split into two functions,
                         $result .= $digit;
                         $digit_printed = true;
                     }
+                    */
 
                     --$l;
                 }
                 else
                 {
                     ++$r;
-                    $digit = self::getRightDigit($strnum, $dec, $r);
+                    $digit = $overflow ? '#' : self::getRightDigit($strnum, $dec, $r);
 
                     if ($r > $zero_right_digits)
                     {
@@ -2175,6 +2238,11 @@ TODO: remove deprecated implementation; following was split into two functions,
             }
         }
 
+        if ($padding)
+        {
+            //echo $padlen;
+            $result = str_pad($result, $padlen, ' ', STR_PAD_LEFT);
+        }
 
         return $result;
     }
