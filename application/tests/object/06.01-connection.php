@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
-        $actual = 'Flexio\\Object\\Connection';
+        $actual = 'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'Connection::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -64,7 +64,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_CONNECTION, null);
         $object = \Flexio\Object\Connection::load($eid);
-        $actual = 'Flexio\\Object\\Connection';
+        $actual = 'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Connection::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -89,7 +89,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
         $object = $object->delete();
-        $actual =  'Flexio\\Object\\Connection';
+        $actual =  'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'Connection::delete(); return the object',  $actual, $expected, $results);
 
@@ -123,7 +123,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
         $object = $object->set(null);
-        $actual =  'Flexio\\Object\\Connection';
+        $actual =  'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Connection::set(); return the object',  $actual, $expected, $results);
 
@@ -175,7 +175,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
-        $actual =  'Flexio\\Object\\Connection';
+        $actual =  'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Connection::setStatus(); return the object',  $actual, $expected, $results);
 

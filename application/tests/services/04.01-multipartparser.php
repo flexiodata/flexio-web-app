@@ -42,7 +42,7 @@ class Test
         // BEGIN TEST
         $parser = \Flexio\Services\MultipartParser::create();
         $actual = get_class($parser);
-        $expected = 'Flexio\\Services\\MultipartParser';
+        $expected = 'Flexio\Services\MultipartParser';
         TestCheck::assertString('A.1', '\Flexio\Services\MultipartParser::create(); empty input', $actual, $expected, $results);
 
 

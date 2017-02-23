@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
-        $actual = 'Flexio\\Object\\User';
+        $actual = 'Flexio\Object\User';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'User::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -67,7 +67,7 @@ class Test
         $properties = array('user_name' => $username, 'email' => $email);
         $eid = $model->create(\Model::TYPE_USER, $properties);
         $object = \Flexio\Object\User::load($eid);
-        $actual = 'Flexio\\Object\\User';
+        $actual = 'Flexio\Object\User';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'User::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -98,7 +98,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $object = $object->delete();
-        $actual =  'Flexio\\Object\\User';
+        $actual =  'Flexio\Object\User';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'User::delete(); return the object',  $actual, $expected, $results);
 
@@ -132,7 +132,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $object = $object->set(null);
-        $actual =  'Flexio\\Object\\User';
+        $actual =  'Flexio\Object\User';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'User::set(); return the object',  $actual, $expected, $results);
 
@@ -184,7 +184,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
-        $actual =  'Flexio\\Object\\User';
+        $actual =  'Flexio\Object\User';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'User::setStatus(); return the object',  $actual, $expected, $results);
 

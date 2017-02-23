@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Stream::create();
-        $actual = 'Flexio\\Object\\Stream';
+        $actual = 'Flexio\Object\Stream';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'Stream::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -64,7 +64,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_STREAM, null);
         $object = \Flexio\Object\Stream::load($eid);
-        $actual = 'Flexio\\Object\\Stream';
+        $actual = 'Flexio\Object\Stream';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Stream::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -89,7 +89,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Stream::create();
         $object = $object->delete();
-        $actual =  'Flexio\\Object\\Stream';
+        $actual =  'Flexio\Object\Stream';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'Stream::delete(); return the object',  $actual, $expected, $results);
 
@@ -123,7 +123,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Stream::create();
         $object = $object->set(null);
-        $actual =  'Flexio\\Object\\Stream';
+        $actual =  'Flexio\Object\Stream';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Stream::set(); return the object',  $actual, $expected, $results);
 
@@ -175,7 +175,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Stream::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
-        $actual =  'Flexio\\Object\\Stream';
+        $actual =  'Flexio\Object\Stream';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Stream::setStatus(); return the object',  $actual, $expected, $results);
 

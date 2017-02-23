@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();
-        $actual = 'Flexio\\Object\\Comment';
+        $actual = 'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'Comment::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -64,7 +64,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_COMMENT, null);
         $object = \Flexio\Object\Comment::load($eid);
-        $actual = 'Flexio\\Object\\Comment';
+        $actual = 'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Comment::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -89,7 +89,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();
         $object = $object->delete();
-        $actual =  'Flexio\\Object\\Comment';
+        $actual =  'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'Comment::delete(); return the object',  $actual, $expected, $results);
 
@@ -123,7 +123,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();
         $object = $object->set(null);
-        $actual =  'Flexio\\Object\\Comment';
+        $actual =  'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Comment::set(); return the object',  $actual, $expected, $results);
 
@@ -175,7 +175,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
-        $actual =  'Flexio\\Object\\Comment';
+        $actual =  'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Comment::setStatus(); return the object',  $actual, $expected, $results);
 

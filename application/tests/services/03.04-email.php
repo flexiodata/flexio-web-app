@@ -27,13 +27,13 @@ class Test
         // BEGIN TEST
         $email = \Flexio\Services\Email::create();
         $actual = get_class($email);
-        $expected = 'Flexio\\Services\\Email';
+        $expected = 'Flexio\Services\Email';
         TestCheck::assertString('A.1', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
         $email = \Flexio\Services\Email::create(false);
         $actual = get_class($email);
-        $expected = 'Flexio\\Services\\Email';
+        $expected = 'Flexio\Services\Email';
         TestCheck::assertString('A.2', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST

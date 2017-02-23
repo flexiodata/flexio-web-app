@@ -44,7 +44,7 @@ class Test
         // BEGIN TEST
         $email = \Flexio\Services\Email::parseText('');
         $actual = get_class($email);
-        $expected = 'Flexio\\Services\\Email';
+        $expected = 'Flexio\Services\Email';
         TestCheck::assertString('A.1', '\Flexio\Services\Email::parseText(); empty input', $actual, $expected, $results);
 
 

@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $actual = 'Flexio\\Object\\Process';
+        $actual = 'Flexio\Object\Process';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'Process::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -64,7 +64,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_PROCESS, null);
         $object = \Flexio\Object\Process::load($eid);
-        $actual = 'Flexio\\Object\\Process';
+        $actual = 'Flexio\Object\Process';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Process::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -89,7 +89,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
         $object = $object->delete();
-        $actual =  'Flexio\\Object\\Process';
+        $actual =  'Flexio\Object\Process';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'Process::delete(); return the object',  $actual, $expected, $results);
 
@@ -123,7 +123,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
         $object = $object->set(null);
-        $actual =  'Flexio\\Object\\Process';
+        $actual =  'Flexio\Object\Process';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Process::set(); return the object',  $actual, $expected, $results);
 
@@ -175,7 +175,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
-        $actual =  'Flexio\\Object\\Process';
+        $actual =  'Flexio\Object\Process';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Process::setStatus(); return the object',  $actual, $expected, $results);
 

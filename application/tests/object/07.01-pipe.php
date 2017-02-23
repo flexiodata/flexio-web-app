@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
-        $actual = 'Flexio\\Object\\Pipe';
+        $actual = 'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'Pipe::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -64,7 +64,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_PIPE, null);
         $object = \Flexio\Object\Pipe::load($eid);
-        $actual = 'Flexio\\Object\\Pipe';
+        $actual = 'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Pipe::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -89,7 +89,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
         $object = $object->delete();
-        $actual =  'Flexio\\Object\\Pipe';
+        $actual =  'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'Pipe::delete(); return the object',  $actual, $expected, $results);
 
@@ -123,7 +123,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
         $object = $object->set(null);
-        $actual =  'Flexio\\Object\\Pipe';
+        $actual =  'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Pipe::set(); return the object',  $actual, $expected, $results);
 
@@ -175,7 +175,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
-        $actual =  'Flexio\\Object\\Pipe';
+        $actual =  'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Pipe::setStatus(); return the object',  $actual, $expected, $results);
 
