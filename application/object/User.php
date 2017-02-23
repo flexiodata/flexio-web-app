@@ -195,7 +195,7 @@ class User extends \Flexio\Object\Base
         return false;
     }
 
-    public function getprofilepicture()
+    public function getProfilePicture()
     {
         $eid = $this->getEid();
         $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.picture');
@@ -218,7 +218,7 @@ class User extends \Flexio\Object\Base
         echo $data;
     }
 
-    public function changeprofilepicture($filename, $mime_type)
+    public function changeProfilePicture($filename, $mime_type)
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -233,7 +233,7 @@ class User extends \Flexio\Object\Base
         return $result;
     }
 
-    public function getprofilebackground()
+    public function getProfileBackground()
     {
         $eid = $this->getEid();
         $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.background');
@@ -256,7 +256,7 @@ class User extends \Flexio\Object\Base
         echo $data;
     }
 
-    public function changeprofilebackground($filename, $mime_type)
+    public function changeProfileBackground($filename, $mime_type)
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -271,7 +271,7 @@ class User extends \Flexio\Object\Base
         return $result;
     }
 
-    public function croppicture($type, $src_x, $src_y, $src_w, $src_h)
+    public function cropPicture($type, $src_x, $src_y, $src_w, $src_h)
     {
         $eid = $this->getEid();
         $mime_type = 'text/plain';
