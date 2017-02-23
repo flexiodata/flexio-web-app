@@ -169,6 +169,140 @@ class User extends \Flexio\Object\Base
         return false;
     }
 
+    public function getprofilepicture()
+    {
+        $eid = $this->getEid();
+        $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.picture');
+        $etag = is_null($updated) ? null : md5("$eid;profile.picture;$updated");
+
+        if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
+        {
+            header("HTTP/1.1 304 Not Modified");
+            exit(0);
+        }
+
+        $mime_type = 'text/plain';
+        $data = $this->getModel()->registry->getBinary($eid, 'profile.picture', $mime_type);
+        if (is_null($data))
+            return $this->fail(\Model::ERROR_NO_OBJECT);
+
+        header('Content-Type: ' . $mime_type);
+        if (!is_null($etag))
+            header("Etag: $etag");
+        echo $data;
+    }
+
+    public function changeprofilepicture($filename, $mime_type)
+    {
+        $eid = $this->getEid();
+        $size = @filesize($filename);
+        if ($size === false)
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
+
+        if ($size > 2097152) // 2MB
+            return $this->fail(\Model::ERROR_SIZE_LIMIT_EXCEEDED);
+
+        $contents = file_get_contents($filename);
+        $result = $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
+        return $result;
+    }
+
+    public function getprofilebackground()
+    {
+        $eid = $this->getEid();
+        $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.background');
+        $etag = is_null($updated) ? null : md5("$eid;profile.background;$updated");
+
+        if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
+        {
+            header("HTTP/1.1 304 Not Modified");
+            exit(0);
+        }
+
+        $mime_type = 'text/plain';
+        $data = $this->getModel()->registry->getBinary($eid, 'profile.background', $mime_type);
+        if (is_null($data))
+            return $this->fail(\Model::ERROR_NO_OBJECT);
+
+        header('Content-Type: ' . $mime_type);
+        if (!is_null($etag))
+            header("Etag: $etag");
+        echo $data;
+    }
+
+    public function changeprofilebackground($filename, $mime_type)
+    {
+        $eid = $this->getEid();
+        $size = @filesize($filename);
+        if ($size === false)
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
+
+        if ($size > 2097152) // 2MB
+            return $this->fail(\Model::ERROR_SIZE_LIMIT_EXCEEDED);
+
+        $contents = file_get_contents($filename);
+        $result = $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
+        return $result;
+    }
+
+    public function croppicture($type, $src_x, $src_y, $src_w, $src_h)
+    {
+        $eid = $this->getEid();
+        $mime_type = 'text/plain';
+
+        if ($type == 'profile')
+        {
+            $type = 'profile.picture';
+            $dest_w = 200;
+            $dest_h = 200;
+        }
+         else if ($type == 'profilebackground')
+        {
+            $type = 'profile.background';
+            $dest_w = 1170;
+            $dest_h = 351;
+        }
+         else
+        {
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
+        }
+
+        $data = $this->getModel()->registry->getBinary($eid, $type, $mime_type);
+        if (is_null($data))
+            return $this->fail(\Model::ERROR_NO_OBJECT);
+
+        $src_img = @imagecreatefromstring($data);
+        if ($src_img === false)
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
+
+        // create a 24-bit PNG
+        $dest_img = imagecreatetruecolor($dest_w, $dest_h);
+
+        // make sure the background is transparent
+        imagesavealpha($dest_img, true);
+        //$trans_color = imagecolorallocatealpha($dest_img, 255, 0, 255, 127);
+        //imagefill($dest_img, 0, 0, $trans_color);
+        $white_color = imagecolorallocate($dest_img, 255, 255, 255);
+        imagefill($dest_img, 0, 0, $white_color);
+
+        // copy the source image to the destination image
+        imagecopyresampled($dest_img, $src_img, $src_x * -1, $src_y * -1, 0, 0, $src_w, $src_h, $src_w, $src_h);
+        imagedestroy($src_img);
+
+        ob_start();
+        //imagepng($dest_img);
+        imagejpeg($dest_img, null, 75);
+        $data = ob_get_clean();
+
+        // free up memory
+        imagedestroy($dest_img);
+
+        //$this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/png');
+        $this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/jpeg');
+
+        return true;
+    }
+
     private function isCached()
     {
         if ($this->properties === false)
