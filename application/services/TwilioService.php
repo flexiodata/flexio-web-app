@@ -12,10 +12,12 @@
  */
 
 
+namespace Flexio\Services;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class TwilioService implements IConnection
+class TwilioService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -34,7 +36,7 @@ class TwilioService implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);
@@ -46,7 +48,7 @@ class TwilioService implements IConnection
     {
         $this->close();
 
-        $validator = \Validator::getInstance();
+        $validator = \Flexio\System\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'key'   => array('type' => 'string', 'required' => true),
                 'token' => array('type' => 'string', 'required' => true)
@@ -221,7 +223,7 @@ class TwilioService implements IConnection
 
         foreach ($rows as $r)
         {
-            $r = \Mapper::flatten($r);
+            $r = \Flexio\System\Mapper::flatten($r);
             $r = $r[0];
 
             $output_row = array();

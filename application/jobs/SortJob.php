@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class SortJob extends Base
+class SortJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -30,7 +33,7 @@ class SortJob extends Base
                     break;
 
                 // table input
-                case ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTable($instream);
                     break;
             }
@@ -40,7 +43,7 @@ class SortJob extends Base
     private function createOutputFromTable($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // create the output
@@ -70,7 +73,7 @@ class SortJob extends Base
         {
             if (isset($part['expression']))
             {
-                $s = ExprTranslatorPostgres::translate($part['expression'], $input_columns);
+                $s = \Flexio\Services\ExprTranslatorPostgres::translate($part['expression'], $input_columns);
                 if ($s === false)
                     return false;
 

@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class Mapper
 {
     // class for converting between hierarchical objects and flat objects,
@@ -85,7 +88,7 @@ class Mapper
             return array();
 
         // if the object is empty, return a single row with an empty object
-        if ($data == new stdClass())
+        if ($data == new \stdClass())
             return array($data);
 
         // iterate over the keys
@@ -119,7 +122,7 @@ class Mapper
 
         // we have a single value; we need to convert it into an object
         // with a default key
-        $flattened_object = new stdClass();
+        $flattened_object = new \stdClass();
         $flattened_object->$key = $data;
 
         $result = array();
@@ -158,7 +161,7 @@ class Mapper
 
     private static function object_merge($object1, $object2)
     {
-        $merged_object = new stdClass;
+        $merged_object = new \stdClass;
 
         foreach ($object1 as $key => $value)
         {

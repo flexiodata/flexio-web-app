@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 class XferFsLocal
 {
     public static function isReady()
@@ -22,21 +25,21 @@ class XferFsLocal
 
     public static function createDirectory($path)
     {
-        $full = XferFsLocal::makePath($path);
+        $full = self::makePath($path);
 
         return @mkdir($full, 0750, true) ? true : false;
     }
 
     public static function createFile($path, $import_file)
     {
-        $full = XferFsLocal::makePath($path);
+        $full = self::makePath($path);
 
         return copy($import_file, $full);
     }
 
     public static function deleteFile($path)
     {
-        $full = XferFsLocal::makePath($path);
+        $full = self::makePath($path);
 
         // TODO: implement
         return false;
@@ -44,7 +47,7 @@ class XferFsLocal
 
     public static function getDirectories($path)
     {
-        $full = XferFsLocal::makePath($path);
+        $full = self::makePath($path);
 
         $arr = array();
         if ($handle = opendir($full))
@@ -61,7 +64,7 @@ class XferFsLocal
 
     public static function getObjects($path)
     {
-        $full = XferFsLocal::makePath($path);
+        $full = self::makePath($path);
 
         $arr = array();
         if ($handle = opendir($full))
@@ -83,7 +86,7 @@ class XferFsLocal
 
     public static function fileExists($path)
     {
-        $full = XferFsLocal::makePath($path);
+        $full = self::makePath($path);
 
         if (@file_exists($full))
             return true;
@@ -94,7 +97,7 @@ class XferFsLocal
 
     public static function exportFile($path, $local_path)
     {
-        $full = XferFsLocal::makePath($path);
+        $full = self::makePath($path);
         return @copy($full, $local_path);
     }
 

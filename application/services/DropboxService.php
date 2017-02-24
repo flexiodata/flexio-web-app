@@ -12,12 +12,9 @@
  */
 
 
-if (!isset($GLOBALS['oauth_included']))
-{
-    $GLOBALS['oauth_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'phpoauthlib' . DIRECTORY_SEPARATOR . 'src'));
-}
+namespace Flexio\Services;
 
+require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 
 use OAuth\OAuth2\Service\Dropbox;
 use OAuth\Common\Storage\Memory;
@@ -27,7 +24,7 @@ use OAuth\OAuth2\Token\StdOAuth2Token;
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 
-class DropboxService implements IConnection
+class DropboxService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -44,7 +41,7 @@ class DropboxService implements IConnection
     public static function create($params = null)
     {
         if (!isset($params))
-            return new static();
+            return new self;
 
         return self::initialize($params);
     }
@@ -224,14 +221,14 @@ class DropboxService implements IConnection
 
         // STEP 2: instantiate the service
         $service_factory = new \OAuth\ServiceFactory();
-        $storage = new Memory();
+        $storage = new \OAuth\Common\Storage\Memory();
 
         // setup the credentials for the requests
         $oauth_callback = '';
         if (isset($params['redirect']))
             $oauth_callback = $params['redirect'];
 
-        $credentials = new Credentials(
+        $credentials = new \OAuth\Common\Consumer\Credentials(
             $client_id,
             $client_secret,
             $oauth_callback

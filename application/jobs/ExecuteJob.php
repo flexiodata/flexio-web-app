@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class ExecuteJob extends Base
+class ExecuteJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -32,10 +35,10 @@ class ExecuteJob extends Base
                     break;
 
                 // stream/text/csv input
-                case ContentType::MIME_TYPE_STREAM:
-                case ContentType::MIME_TYPE_TXT:
-                case ContentType::MIME_TYPE_CSV:
-                case ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\System\ContentType::MIME_TYPE_STREAM:
+                case \Flexio\System\ContentType::MIME_TYPE_TXT:
+                case \Flexio\System\ContentType::MIME_TYPE_CSV:
+                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutput($instream);
                     break;
             }
@@ -46,12 +49,12 @@ class ExecuteJob extends Base
     private function createOutput($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // if the input mime type is a table, set the output type to text
-        if ($instream->getMimeType() === ContentType::MIME_TYPE_FLEXIO_TABLE)
-            $outstream->setMimeType(ContentType::MIME_TYPE_TXT);
+        if ($instream->getMimeType() === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            $outstream->setMimeType(\Flexio\System\ContentType::MIME_TYPE_TXT);
 
         // properties
         $job_definition = $this->getProperties();
@@ -86,7 +89,7 @@ class ExecuteJob extends Base
         if ($program_type === false)
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
-        $program_path = \Util::getBinaryPath($program_type);
+        $program_path = \Flexio\System\Util::getBinaryPath($program_type);
         if (!isset($program_path))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
@@ -98,7 +101,7 @@ class ExecuteJob extends Base
         // the code is base64 encoded, so decode it and write it out
         // to a temporary file
         $code = base64_decode($code);
-        $filename = \Util::createTempFile('fxscript', $program_extension);
+        $filename = \Flexio\System\Util::createTempFile('fxscript', $program_extension);
         file_put_contents($filename, $code);
 
         // initiate the program process
@@ -120,7 +123,7 @@ class ExecuteJob extends Base
             return $this->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
         }
 
-        if ($instream->getMimeType() !== ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($instream->getMimeType() !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             $instream->read(function ($data) use (&$pipes) {
                 fputs($pipes[0], $data);

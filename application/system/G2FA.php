@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class G2FA
 {
     public static function isValidCode($secret, $code)
@@ -19,14 +22,14 @@ class G2FA
         $time = intval(time() / 30);
         $time = pack('N*', 0) . pack('N*', $time);
 
-        return (($code == G2FA::getCode($secret, $time - 1) ||
-                 $code == G2FA::getCode($secret, $time) ||
-                 $code == G2FA::getCode($secret, $time + 1)) ? true : false);
+        return (($code == self::getCode($secret, $time - 1) ||
+                 $code == self::getCode($secret, $time) ||
+                 $code == self::getCode($secret, $time + 1)) ? true : false);
     }
 
     public static function getCode($secret, $time = 0)
     {
-        $key = G2FA::base32_decode($secret);
+        $key = self::base32_decode($secret);
 
         if ($time == 0)
         {
@@ -85,7 +88,7 @@ class G2FA
 
             // put the bits in our character
             $outch <<= 5;
-            $outch |= G2FA::$decode[$code[$i]];
+            $outch |= self::$decode[$code[$i]];
             $bits += 5;
 
             if ($bits >= 8)

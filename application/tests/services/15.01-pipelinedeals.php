@@ -24,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \PipelineDealsService::create(null);
-        $actual = get_class($service) === 'PipelineDealsService';
-        $expected = true;
-        TestCheck::assertBoolean('A.1', '\PipelineDealsService::create(); create an instance of the class',  $actual, $expected, $results);
+        $service = \Flexio\Services\PipelineDealsService::create(null);
+        $actual = get_class($service);
+        $expected = 'Flexio\Services\PipelineDealsService';
+        TestCheck::assertString('A.1', '\Flexio\Services\PipelineDealsService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

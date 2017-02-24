@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class CalcFieldJob extends Base
+class CalcFieldJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -30,7 +33,7 @@ class CalcFieldJob extends Base
                     break;
 
                 // table input
-                case \ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutput($instream);
                     break;
             }
@@ -53,7 +56,7 @@ class CalcFieldJob extends Base
             $scale = (int)$scale;
 
         // make sure we have a valid expression
-        $expreval = new ExprEvaluate;
+        $expreval = new \Flexio\Services\ExprEvaluate;
         $input_structure = $instream->getStructure()->enum();
         $success = $expreval->prepare($expression, $input_structure);
 
@@ -61,7 +64,7 @@ class CalcFieldJob extends Base
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // create the output
-        $outstream = $instream->copy()->setPath(\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         $output_structure = $outstream->getStructure();

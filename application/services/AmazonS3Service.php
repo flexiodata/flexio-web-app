@@ -12,10 +12,12 @@
  */
 
 
+namespace Flexio\Services;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class AmazonS3Service implements IConnection
+class AmazonS3Service implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -36,7 +38,7 @@ class AmazonS3Service implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);
@@ -48,7 +50,7 @@ class AmazonS3Service implements IConnection
     {
         $this->close();
 
-        $validator = \Validator::getInstance();
+        $validator = \Flexio\System\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'region' => array('type' => 'string', 'required' => true),
                 'bucket' => array('type' => 'string', 'required' => true),
@@ -192,7 +194,7 @@ class AmazonS3Service implements IConnection
             $s3 = self::getS3();
             return $s3->doesObjectExist($this->bucket, $path);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -229,7 +231,7 @@ class AmazonS3Service implements IConnection
                 $callback($data);
             }
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -244,7 +246,7 @@ class AmazonS3Service implements IConnection
 
         if (substr($path,0,1) == '/')
             $path = substr($path,1);
-		
+
         //try
         {
             $response = $this->s3->createMultipartUpload(array(
@@ -288,7 +290,7 @@ class AmazonS3Service implements IConnection
             ));
         }
         /*
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -312,10 +314,10 @@ class AmazonS3Service implements IConnection
 
         if (strlen($this->region) == 0)
             $this->region = 'us-east-1';
-        
+
         require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
 
-        setAutoloaderIgnoreErrors(true);
+        //setAutoloaderIgnoreErrors(true);
         $credentials = new Aws\Credentials\Credentials($this->accesskey, $this->secretkey);
 
         $this->s3 = new Aws\S3\S3Client([

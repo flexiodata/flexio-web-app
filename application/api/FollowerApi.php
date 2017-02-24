@@ -60,48 +60,32 @@ class FollowerApi
 
         // the first parameter 'users' is an arrray of strings that are either eids
         // or email addresses; make sure these are strings
-        $user_model = \System::getModel()->user;
         $user_eids = array();
         foreach ($users as $identifier)
         {
             $user_eid = false;
-            $email = false;
+            $user_email = false;
 
-            // if we already have a valid user eid; just add it
-            if (\Eid::isValid($identifier))
+            // try to the load the user
+            $user = \Flexio\Object\User::load($identifier);
+            if ($user !== false)
             {
-                $user_eid = $identifier;
-                $email = $user_model->getEmailFromEid($identifier);
-            }
-             else
-            {
-                $user_eid = $user_model->getEidFromIdentifier($identifier);
-                $email = $identifier;
-            }
-
-            // if we have a valid eid, add it; no need to add the user
-            // if it's the owner, since they already have access
-            if ($user_eid == $requesting_user_eid)
-                continue;
-
-            $user_info = array();
-            if ($user_eid !== false)
-            {
-                $user = \Flexio\Object\User::load($user_eid);
-                if ($user === false)
+                $user_eid = $user->getEid();
+                if ($user_eid === $requesting_user_eid) // requesting user should already be a member
                     continue;
 
                 $user_info = $user->get();
+                $user_email = $user_info['email'];
             }
              else
             {
                 // user doesn't exist; create a user
-                $username = \Util::generateHandle(); // default username
-                $password = \Util::generateHandle();
-                $verify_code = \Util::generateHandle(); // code to verify user's email address
+                $username = \Flexio\System\Util::generateHandle(); // default username
+                $password = \Flexio\System\Util::generateHandle();
+                $verify_code = \Flexio\System\Util::generateHandle(); // code to verify user's email address
 
                 $new_user_info = array('user_name' => $username,
-                                       'email' => $email,
+                                       'email' => $user_email,
                                        'eid_status' => \Model::STATUS_PENDING,
                                        'password' => $password,
                                        'verify_code' => $verify_code,
@@ -119,8 +103,8 @@ class FollowerApi
                 $user_eid = $user_info['eid'];
 
                 // add an invitation association
-                \System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_INVITED, $user_eid);
-                \System::getModel()->assoc_add($user_eid, \Model::EDGE_INVITED_BY, $requesting_user_eid);
+                \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_INVITED, $user_eid);
+                \Flexio\System\System::getModel()->assoc_add($user_eid, \Model::EDGE_INVITED_BY, $requesting_user_eid);
             }
 
             // send out the invite
@@ -132,15 +116,15 @@ class FollowerApi
                 $email_params['verify_code'] = $user_info['verify_code'];
 
             // get the full name of the sender
-            $sender_name = \System::getCurrentUserFirstName();
-            $last_name = \System::getCurrentUserLastName();
+            $sender_name = \Flexio\System\System::getCurrentUserFirstName();
+            $last_name = \Flexio\System\System::getCurrentUserLastName();
             if (strlen($last_name) > 0)
                 $sender_name = $sender_name . ' ' . $last_name;
 
             $message_type = \Flexio\Object\Message::TYPE_EMAIL_SHARE;
             $from_name = $sender_name;
             $object_name = $object_properties['name'];
-            $email_params['email'] = $email;
+            $email_params['email'] = $user_email;
             $email_params['from_name'] = $from_name;
             $email_params['object_name'] = $object_name;
             $email_params['object_eid'] = $object->getEid();
@@ -149,8 +133,8 @@ class FollowerApi
             $message->send();
 
             // regardless of whether or not they're a new user, add a sharing association
-            \System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_SHARED_WITH, $user_eid);
-            \System::getModel()->assoc_add($user_eid, \Model::EDGE_SHARED_FROM, $requesting_user_eid);
+            \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_SHARED_WITH, $user_eid);
+            \Flexio\System\System::getModel()->assoc_add($user_eid, \Model::EDGE_SHARED_FROM, $requesting_user_eid);
 
             // add the users to the list to invite
             $user_eids[] = $user_eid;
@@ -166,8 +150,8 @@ class FollowerApi
 
             $user_info = $user->get();
 
-            \System::getModel()->assoc_add($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
-            \System::getModel()->assoc_add($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
+            \Flexio\System\System::getModel()->assoc_add($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
+            \Flexio\System\System::getModel()->assoc_add($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
 
             // TODO: for now, use the same result structure as the followers
             // call; perhaps consider building this into the basic user info
@@ -220,8 +204,8 @@ class FollowerApi
         if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        \System::getModel()->assoc_delete($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
-        \System::getModel()->assoc_delete($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
+        \Flexio\System\System::getModel()->assoc_delete($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
+        \Flexio\System\System::getModel()->assoc_delete($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
 
         return true;
     }
@@ -252,7 +236,7 @@ class FollowerApi
 
         // TODO: for now, use the same result structure as the share
         // call; perhaps consider building this into the basic user info
-        $owned_by = \System::getModel()->assoc_range($object->getEid(), \Model::EDGE_OWNED_BY, [\Model::STATUS_AVAILABLE]);
+        $owned_by = \Flexio\System\System::getModel()->assoc_range($object->getEid(), \Model::EDGE_OWNED_BY, [\Model::STATUS_AVAILABLE]);
         foreach ($owned_by as $item)
         {
             $user_eid = $item['eid'];
@@ -274,7 +258,7 @@ class FollowerApi
             $result[] = $info;
         }
 
-        $shared_with = \System::getModel()->assoc_range($object->getEid(), \Model::EDGE_FOLLOWED_BY, [\Model::STATUS_AVAILABLE]);
+        $shared_with = \Flexio\System\System::getModel()->assoc_range($object->getEid(), \Model::EDGE_FOLLOWED_BY, [\Model::STATUS_AVAILABLE]);
         foreach ($shared_with as $item)
         {
             $user_eid = $item['eid'];

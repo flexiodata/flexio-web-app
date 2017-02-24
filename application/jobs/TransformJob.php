@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class TransformJob extends Base
+class TransformJob extends \Flexio\Jobs\Base
 {
     // transform options
     const OPERATION_NONE        = '';
@@ -108,7 +111,7 @@ class TransformJob extends Base
                     break;
 
                 // table input
-                case ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     //$this->createOutputFromTableNative($instream); // TODO: new implementation
                     $this->createOutputFromTableSql($instream); // TODO: old implementation
                     break;
@@ -131,7 +134,7 @@ class TransformJob extends Base
         }
 
         // create the output with the replaced values
-        $outstream = $instream->copy()->setPath(Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -188,7 +191,7 @@ class TransformJob extends Base
 
         foreach ($input_columns as $column)
         {
-            $qname = DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $width = isset_or($column['width'], -1);
             if ($width == 1024) $width = -1; // PostgresService is returning us huge columns of indeterminate width
             $scale = $column['scale'];
@@ -278,7 +281,7 @@ class TransformJob extends Base
                         }
                     }
 
-                    $expr = ExprUtil::getCastExpression($column['name'], $old_type, $new_type, $width, $scale);
+                    $expr = \Flexio\Services\ExprUtil::getCastExpression($column['name'], $old_type, $new_type, $width, $scale);
                 }
 
                 if ($operation_type == self::OPERATION_CHANGE_CASE && $is_character)
@@ -333,7 +336,7 @@ class TransformJob extends Base
                             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
                         $field = (int)$params['substring']['field'];
-                        $delimiter = ExprUtil::quote(''.$params['substring']['delimiter']);
+                        $delimiter = \Flexio\Services\ExprUtil::quote(''.$params['substring']['delimiter']);
 
                         $expr = "strpart(($expr),$delimiter,$field)";
                     }
@@ -406,7 +409,7 @@ class TransformJob extends Base
                         else if ($location == self::REMOVE_LOCATION_LEADING_TRAILING)
                             $regex = "(^[$value]+)|([$value]+$)";
 
-                        $qregex = ExprUtil::quote($regex);
+                        $qregex = \Flexio\Services\ExprUtil::quote($regex);
                         $expr = "regexp_replace(($expr),$qregex,'','$flags')";
                     }
                     else if (isset($operation['value']))
@@ -430,12 +433,12 @@ class TransformJob extends Base
                         else
                             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
-                        $qregex = ExprUtil::quote($regex);
+                        $qregex = \Flexio\Services\ExprUtil::quote($regex);
                         $expr = "regexp_replace(($expr),$qregex,'','$flags')";
                     }
                     else if (isset($operation['regex']))
                     {
-                        $qregex = ExprUtil::quote($operation['regex']);
+                        $qregex = \Flexio\Services\ExprUtil::quote($operation['regex']);
                         $expr = "regexp_replace(($expr),$qregex,'','g')";
                     }
                     else
@@ -469,7 +472,7 @@ class TransformJob extends Base
 
                     if ($length >= 0 && $value != '')
                     {
-                        $value = ExprUtil::quote($value);
+                        $value = \Flexio\Services\ExprUtil::quote($value);
 
                         if ($location == self::PAD_LOCATION_LEFT)
                             $expr = "lpad(($expr),$length,$value)";
@@ -504,7 +507,7 @@ class TransformJob extends Base
         $job_definition['type'] = 'flexio.copy';
         $job_definition['params'] = $copy_params;
 
-        $job = CopyJob::create($this->getProcess(), $job_definition);
+        $job = \Flexio\Jobs\CopyJob::create($this->getProcess(), $job_definition);
         $job->getInput()->push($instream);
         $job->run();
         $this->getOutput()->merge($job->getOutput());
@@ -532,7 +535,7 @@ class TransformJob extends Base
         $column_expression_map = array();
         foreach ($columns as $column)
         {
-            $qname = DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $width = isset_or($column['width'], -1);
             if ($width == 1024) $width = -1; // PostgresService is returning us huge columns of indeterminate width
             $scale = $column['scale'];
@@ -622,7 +625,7 @@ class TransformJob extends Base
                         }
                     }
 
-                    $expr = ExprUtil::getCastExpression($column['name'], $old_type, $new_type, $width, $scale);
+                    $expr = \Flexio\Services\ExprUtil::getCastExpression($column['name'], $old_type, $new_type, $width, $scale);
                 }
 
                 if ($operation_type == self::OPERATION_CHANGE_CASE && $is_character)
@@ -676,7 +679,7 @@ class TransformJob extends Base
                         if (!isset($operation['delimiter']))
                             return false;
                         $field = (int)$params['substring']['field'];
-                        $delimiter = ExprUtil::quote(''.$params['substring']['delimiter']);
+                        $delimiter = \Flexio\Services\ExprUtil::quote(''.$params['substring']['delimiter']);
 
                         $expr = "strpart(($expr),$delimiter,$field)";
                     }
@@ -749,7 +752,7 @@ class TransformJob extends Base
                         else if ($location == self::REMOVE_LOCATION_LEADING_TRAILING)
                             $regex = "(^[$value]+)|([$value]+$)";
 
-                        $qregex = ExprUtil::quote($regex);
+                        $qregex = \Flexio\Services\ExprUtil::quote($regex);
                         $expr = "regexp_replace(($expr),$qregex,'','$flags')";
                     }
                     else if (isset($operation['value']))
@@ -773,12 +776,12 @@ class TransformJob extends Base
                         else
                             return false;
 
-                        $qregex = ExprUtil::quote($regex);
+                        $qregex = \Flexio\Services\ExprUtil::quote($regex);
                         $expr = "regexp_replace(($expr),$qregex,'','$flags')";
                     }
                     else if (isset($operation['regex']))
                     {
-                        $qregex = ExprUtil::quote($operation['regex']);
+                        $qregex = \Flexio\Services\ExprUtil::quote($operation['regex']);
                         $expr = "regexp_replace(($expr),$qregex,'','g')";
                     }
                     else
@@ -813,7 +816,7 @@ class TransformJob extends Base
                     if ($length >= 0 && $value != '')
                     {
                         if (is_string($value))
-                            $value = ExprUtil::quote($value); // if we have a string, make sure to do quote replacement
+                            $value = \Flexio\Services\ExprUtil::quote($value); // if we have a string, make sure to do quote replacement
                              else
                             $value = "'".$value."'";
 
@@ -832,7 +835,7 @@ class TransformJob extends Base
 
             // map the column to the expression
             $exprtext = $expr;
-            $expreval = new ExprEvaluate;
+            $expreval = new \Flexio\Services\ExprEvaluate;
             $parse_result = $expreval->prepare($exprtext, $instream->getStructure()->enum());
             if ($parse_result === false)
                 return false; // trouble building the expression

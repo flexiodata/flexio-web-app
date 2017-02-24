@@ -135,14 +135,14 @@ class Rights
     {
         // invalid objects can't owned; object can't be owned
         // by an invalid user
-        if (!\Eid::isValid($object_eid))
+        if (!\Flexio\System\Eid::isValid($object_eid))
             return false;
-        if (!\Eid::isValid($user_eid))
+        if (!\Flexio\System\Eid::isValid($user_eid))
             return false;
 
         // see if the object is owned by the user directly
         $search_path = "$object_eid->(".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $owners = \Flexio\Object\Store::getModel()->search($search_path);
+        $owners = \Flexio\Object\Search::exec($search_path);
         if (count($owners) > 0)
             return true;
 
@@ -152,9 +152,9 @@ class Rights
     public static function ismember($object_eid, $user_eid)
     {
         // invalid objects or users can't be followed or follow
-        if (!\Eid::isValid($object_eid))
+        if (!\Flexio\System\Eid::isValid($object_eid))
             return false;
-        if (!\Eid::isValid($user_eid))
+        if (!\Flexio\System\Eid::isValid($user_eid))
             return false;
 
         // note: in the following, we want to check if an object can be accessed by
@@ -168,14 +168,14 @@ class Rights
 
         // see if the object is followed or owned by the user directly
         $search_path = "$object_eid->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $followers = \Flexio\Object\Store::getModel()->search($search_path);
+        $followers = \Flexio\Object\Search::exec($search_path);
         if (count($followers) > 0)
             return true;
 
         // see if the object is a member of a project followed or owned by the user
         $search_path = "$object_eid->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
                                   "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $followers = \Flexio\Object\Store::getModel()->search($search_path);
+        $followers = \Flexio\Object\Search::exec($search_path);
         if (count($followers) > 0)
             return true;
 
@@ -184,7 +184,7 @@ class Rights
         $search_path = "$object_eid->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PIPE.",".\Model::TYPE_CONNECTION.")".
                                   "->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
                                   "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $followers = \Flexio\Object\Store::getModel()->search($search_path);
+        $followers = \Flexio\Object\Search::exec($search_path);
         if (count($followers) > 0)
             return true;
 
@@ -193,7 +193,7 @@ class Rights
         $search_path = "$object_eid->(".\Model::EDGE_COMMENT_ON.")->(".\Model::TYPE_PIPE.",".\Model::TYPE_CONNECTION.")".
                                   "->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
                                   "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
-        $followers = \Flexio\Object\Store::getModel()->search($search_path);
+        $followers = \Flexio\Object\Search::exec($search_path);
         if (count($followers) > 0)
             return true;
 

@@ -2,7 +2,7 @@
 
 // this logs all classes loaded using the autoloader
 $autoloader_log = '/tmp/autoloader.txt';
-$autoloader_log = 'c:\fxsite\flexio\autoloader.txt';
+//$autoloader_log = 'c:\fxsite\flexio\autoloader.txt';
 $fp = fopen($autoloader_log, 'a+');
 fwrite($fp, "\n-------".$_SERVER['REQUEST_URI']."------------\n");
 fclose($fp);

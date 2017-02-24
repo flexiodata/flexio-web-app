@@ -137,7 +137,7 @@ class Process extends \Flexio\Object\Base
         }
 
         $process_eid = $this->getEid();
-        \Util::runInBackground("\Flexio\Object\Process::run_internal('$process_eid')");
+        \Flexio\System\Util::runInBackground("\Flexio\Object\Process::run_internal('$process_eid')");
         return $this;
     }
 
@@ -273,7 +273,7 @@ class Process extends \Flexio\Object\Base
             return $this;
 
         // make sure the params are key/value pairs
-        if (\Util::isAssociativeArray($params) === false)
+        if (\Flexio\System\Util::isAssociativeArray($params) === false)
             return $this;
 
         // add on the new input
@@ -301,10 +301,10 @@ class Process extends \Flexio\Object\Base
         // "flexio.user_firstname", "flexio.user_lastname", etc
         $environment_params = array();
 
-        $environment_params['flexio_user_firstname'] = \System::getCurrentUserFirstName();
-        $environment_params['flexio_user_lastname'] = \System::getCurrentUserLastName();
-        $environment_params['flexio_user_email'] = \System::getCurrentUserEmail();
-        $environment_params['flexio_timestamp'] = \System::getTimestamp();
+        $environment_params['flexio_user_firstname'] = \Flexio\System\System::getCurrentUserFirstName();
+        $environment_params['flexio_user_lastname'] = \Flexio\System\System::getCurrentUserLastName();
+        $environment_params['flexio_user_email'] = \Flexio\System\System::getCurrentUserEmail();
+        $environment_params['flexio_timestamp'] = \Flexio\System\System::getTimestamp();
 
         return $environment_params;
     }
@@ -641,7 +641,7 @@ class Process extends \Flexio\Object\Base
         // track what version of the task implementation we're using
         // (more granular than task version, which may or may not be updated
         // with small logic changes)
-        $implementation_revision = \Util::getGitRevision();
+        $implementation_revision = \Flexio\System\Util::getGitRevision();
 
         // set initial job status
         $process_params = array();
@@ -680,7 +680,7 @@ class Process extends \Flexio\Object\Base
             // be that it should be processed as it occurs in the pipe
             foreach ($user_variables as $name => $value)
             {
-                if (\Eid::isValid($value))
+                if (\Flexio\System\Eid::isValid($value))
                 {
                     $stream = \Flexio\Object\Stream::load($value);
                     if ($stream !== false)
@@ -732,7 +732,7 @@ class Process extends \Flexio\Object\Base
 
             // if the implementation has changed during the task, the result is
             // unreliable; set an error so that the process fails
-            $implementation_revision_update = \Util::getGitRevision();
+            $implementation_revision_update = \Flexio\System\Util::getGitRevision();
             if ($implementation_revision !== $implementation_revision_update)
                 $this->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
 
@@ -1113,33 +1113,37 @@ class Process extends \Flexio\Object\Base
         // make sure the job is registered; note: this isn't strictly necessary,
         // but gives us a convenient way of limiting what jobs are available for
         // processing
-        $class_name = false;
+        $full_class_name = false;
         $manifest = \Flexio\Object\Task::manifest();
         foreach ($manifest as $m)
         {
             if ($m['type'] !== $job_type)
                 continue;
 
-            $class_name = $m['class'];
+            $full_class_name = $m['class'];
             break;
         }
 
-        if ($class_name === false)
+        if ($full_class_name === false)
             return false;
 
         // try to find the job file
-        $class_file = \System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name . '.php';
+        $class_name_parts = explode("\\", $full_class_name);
+        if (!isset($class_name_parts[3]))
+            return false;
+
+        $class_file = \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name_parts[3] . '.php';
         if (!@file_exists($class_file))
             return false;
 
         // load the job's php file and instantiate the job object
         include_once $class_file;
-        $job = $class_name::create($process, $task);
+        $job = $full_class_name::create($process, $task);
 
         if ($job === false)
             return false;
 
-        if (!($job instanceof \IJob))
+        if (!($job instanceof \Flexio\Jobs\IJob))
             return false;
 
         return $job;

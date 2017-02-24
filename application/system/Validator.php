@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class Validator
 {
     const ERROR_NONE               =  'none';
@@ -25,7 +28,7 @@ class Validator
 
     public static function getInstance()
     {
-        return (new Validator);
+        return (new self);
     }
 
     public function check($params, $checks)
@@ -51,7 +54,7 @@ class Validator
 
         // example of how this function might be used
 
-        // if (($params = \Validator::getInstance()->check($params, array(
+        // if (($params = self::getInstance()->check($params, array(
         //         'eid'   => array('type' => 'eid',    'required' => true),
         //         'name'  => array('type' => 'string', 'required' => false, 'default' => 'sample')
         //     ))) === false)
@@ -64,7 +67,7 @@ class Validator
         // require input params
         if (!is_array($params))
         {
-            $error_code = \Validator::ERROR_GENERAL;
+            $error_code = self::ERROR_GENERAL;
             $error_message = _('No parameters to validate or parameters are in the wrong format');
             $this->setError($error_code, $error_message);
             return false;
@@ -73,7 +76,7 @@ class Validator
         // require input checks
         if (!is_array($checks))
         {
-            $error_code = \Validator::ERROR_GENERAL;
+            $error_code = self::ERROR_GENERAL;
             $error_message = _('Parameter checks are in the wrong format');
             $this->setError($error_code, $error_message);
             return false;
@@ -137,9 +140,9 @@ class Validator
                     continue;
 
                 // the field exists; make sure the field conforms to the type specified
-                if ($value['type'] == 'eid' && !Eid::isValid($p))
+                if ($value['type'] == 'eid' && !\Flexio\System\Eid::isValid($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
-                if ($value['type'] == 'identifier' && !Eid::isValid($p) && (strlen($p) > 0 && !Identifier::isValid($p))) // allow identifiers to be zero length so they can be set to ''
+                if ($value['type'] == 'identifier' && !\Flexio\System\Eid::isValid($p) && (strlen($p) > 0 && !\Flexio\System\Identifier::isValid($p))) // allow identifiers to be zero length so they can be set to ''
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'json' && !$this->check_json($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
@@ -174,14 +177,14 @@ class Validator
         // if there are any problems, flag an error
         if (count($missing_fields) > 0)
         {
-            $error_code = \Validator::ERROR_MISSING_PARAMETER;
+            $error_code = self::ERROR_MISSING_PARAMETER;
             $error_message = _('Missing parameter(s): ') . join(',', $missing_fields);
             $this->setError($error_code, $error_message);
         }
 
         if (count($invalid_values) > 0)
         {
-            $error_code = \Validator::ERROR_INVALID_PARAMETER;
+            $error_code = self::ERROR_INVALID_PARAMETER;
             $error_message = _('Invalid parameter(s): ') . join(',', $invalid_values);
             $this->setError($error_code, $error_message);
         }
@@ -204,7 +207,7 @@ class Validator
             // and we want to give an indication of failure in
             // the output without setting a new code
             if (!$this->hasErrors())
-                $this->setError(Validator::ERROR_GENERAL);
+                $this->setError(self::ERROR_GENERAL);
 
             return false;
         }

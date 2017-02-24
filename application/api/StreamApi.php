@@ -117,7 +117,7 @@ class StreamApi
         $mime_type = $stream_info['mime_type'];
         $content = $stream->content($start, $limit, $columns, $metadata, $handle);
 
-        if ($mime_type !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // return content as-is
             header('Content-Type: ' . $mime_type);
@@ -125,7 +125,7 @@ class StreamApi
          else
         {
             // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \ContentType::MIME_TYPE_JSON);
+            header('Content-Type: ' . \Flexio\System\ContentType::MIME_TYPE_JSON);
             $content = json_encode($content);
         }
 
@@ -159,12 +159,126 @@ class StreamApi
     }
 
 
+
     public static function handleStreamUpload($params, $stream)
     {
-        // write the post content
-        $stream->writePostContent();
-    }
+        // get the stream and the service
+        $path = $stream->getPath();
+        $service = $stream->getService();
+        if ($service === false)
+            return false;
 
+        // create the output
+        $streamwriter = \Flexio\Object\StreamWriter::create($stream);
+        if ($streamwriter === false)
+            return false;
+
+        // get the information the parser needs to parse the content
+        $post_content_type = isset_or($_SERVER['CONTENT_TYPE'], '');
+
+
+        if (strpos($post_content_type, 'multipart/form-data') !== false)
+        {
+            // multipart form-data upload
+            $php_stream_handle = fopen('php://input', 'rb');
+
+            // parse the content and set the stream info
+            $part_data_snippet = false;
+            $part_filename = false;
+            $part_mimetype = false;
+            $part_active = false;
+            $part_succeeded = false;
+
+            $parser = \Flexio\Services\MultipartParser::create();
+
+            $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$streamwriter, &$part_data_snippet, &$part_filename, &$part_mimetype, &$part_active, &$part_succeeded) {
+                if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_BEGIN)
+                {
+                    if ($name == 'media' || $name == 'file') // we're looking for an element named 'media'; 'file' for temporary backward-compatibility
+                    {
+                        $part_active = true;
+                        $part_filename = $filename;
+                        $part_mimetype = $content_type;
+                        $part_succeeded = true;
+                    }
+                }
+                else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_DATA && $part_active)
+                {
+                    // get a sample of the data for mime sensing
+                    if ($part_data_snippet === false)
+                        $part_data_snippet = $data;
+
+                    // write out the data
+                    $streamwriter->write($data);
+                }
+                else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_END)
+                {
+                    $part_active = false;
+                }
+            });
+            fclose($php_stream_handle);
+
+            // make sure the parse was successful
+            if (!$part_succeeded)
+                return false;
+
+            // determine the filename, stripping off the leading path info;
+            // use a default if one wasn't supplied
+            $default_name = \Flexio\System\Util::generateHandle() . '.dat';
+            $filename = strlen($part_filename) > 0 ? $part_filename : $default_name;
+            $name = \Flexio\System\Util::getFilename($filename);
+            $ext = \Flexio\System\Util::getFileExtension($filename);
+            $filename = $name . (strlen($ext) > 0 ? ".$ext" : '');
+
+            // sense the mime type, but go with what is declared if it's available
+            $mime_type = \Flexio\System\ContentType::MIME_TYPE_STREAM;
+            $declared_mime_type = $part_mimetype;
+
+            if ($part_data_snippet === false)
+                $part_data_snippet = '';
+
+            if (strlen($declared_mime_type) > 0)
+                $mime_type = $declared_mime_type;
+                else
+                $mime_type = \Flexio\System\ContentType::getMimeType($filename, $part_data_snippet);
+        }
+         else
+        {
+            $declared_mime_type = isset_or($_SERVER["CONTENT_TYPE"], '');
+
+            $php_stream_handle = fopen('php://input', 'rb');
+            $part_data_snippet = false;
+
+            while (true)
+            {
+                $data = fread($php_stream_handle, 32768);
+                if ($data === false || strlen($data) == 0)
+                    break;
+                if ($part_data_snippet === false)
+                    $part_data_snippet = $data;
+                $streamwriter->write($data);
+            }
+
+            fclose($php_stream_handle);
+
+            if ($part_data_snippet === false)
+                $part_data_snippet = '';
+
+            $filename = isset_or($_GET['name'], \Flexio\System\Util::generateHandle() . '.dat');
+
+            if (strlen($declared_mime_type) > 0)
+                $mime_type = $declared_mime_type;
+                else
+                $mime_type = \Flexio\System\ContentType::getMimeType($filename, $part_data_snippet);
+        }
+
+
+        // set the stream info
+        $stream_info = array();
+        $stream_info['name'] = $filename;
+        $stream_info['mime_type'] = $mime_type;
+        $stream->set($stream_info);
+    }
 
 
     public static function download($params, $request)
@@ -205,7 +319,7 @@ class StreamApi
             return $request->getValidator()->fail(Api::ERROR_READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
-        $http_header_mime_type = ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE ? \ContentType::MIME_TYPE_CSV : $mime_type);
+        $http_header_mime_type = ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE ? \Flexio\System\ContentType::MIME_TYPE_CSV : $mime_type);
 
         // set the headers
         $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
@@ -215,7 +329,7 @@ class StreamApi
             $output_filename = $stream_info['name'];
         if (isset($params['name']))
             $output_filename = $params['name'];
-        if ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // Flexio tables are exported as csv, so add an appropriate extension
             $filename_parts = pathinfo($output_filename);
@@ -238,7 +352,7 @@ class StreamApi
                 else
             header('Content-Disposition: attachment; filename="' . $output_filename . '"');
 
-        if ($mime_type !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // get the content in one chunk and return it as-is
             $content = $stream->content($start, $limit, $columns, $metadata, $handle);

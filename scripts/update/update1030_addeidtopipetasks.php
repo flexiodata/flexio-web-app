@@ -30,10 +30,10 @@ $params = array('host' => $argv[1],
 
 try
 {
-    $db = ModelDb::factory('PDO_POSTGRES', $params);
+    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $params);
     $conn = $db->getConnection();
 }
-catch (Exception $e)
+catch (\Exception $e)
 {
     echo($e->getMessage());
     $db = null;
@@ -78,7 +78,7 @@ try
         writeTask($db, $pipe_eid, $updated_pipe_task);
     }
 }
-catch(Exception $e)
+catch(\Exception $e)
 {
     echo '{ "success": false, "msg":' . json_encode($e->getMessage()) . '}';
     exit(0);
@@ -86,8 +86,8 @@ catch(Exception $e)
 
 
 // update the version number
-$current_version = System::getUpdateVersionFromFilename(__FILE__);
-System::getModel()->setDbVersionNumber($current_version);
+$current_version = \Flexio\System\System::getUpdateVersionFromFilename(__FILE__);
+\Flexio\System\System::getModel()->setDbVersionNumber($current_version);
 
 echo '{ "success": true, "msg": "Operation completed successfully." }';
 

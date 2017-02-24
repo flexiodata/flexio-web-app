@@ -12,13 +12,16 @@
  */
 
 
+namespace Flexio\System;
+
+
 class Eid
 {
     public static function generate()
     {
         // note: valid eids are 12 character alphanumeric strings
         // without vowels; if this definition changes, make sure
-        // to update \Eid::isValid()
+        // to update \Flexio\System\Eid::isValid()
 
         list($usec, $sec) = explode(' ', microtime());
         $full = sprintf("%06d",random_int(0,999999)) . $sec . substr($usec, 2, 6);
@@ -54,12 +57,12 @@ class Eid
 
         // make sure the first digit is not a number; this guarantees that
         // the eid can be used for identifiers in database and other systems
-        if ($value[0] >= '0' && $value[0] <= '9') 
+        if ($value[0] >= '0' && $value[0] <= '9')
         {
             $str = 'bcdfghjklmnpqrstvwxyz';
             $value[0] = $str[$value[0]];
         }
-        
+
         return $value;
     }
 
@@ -74,7 +77,7 @@ class Eid
 
         // note: valid eids are 12 character alphanumeric strings
         // without vowels; this definition is based on the logic
-        // in \Eid::generate(); if the logic changes in this
+        // in \Flexio\System\Eid::generate(); if the logic changes in this
         // generation function, it will need to be changed here
         // as well
         if (!preg_match('/^[bcdfghjklmnpqrstvwxyz0123456789]{'.$eid_length.'}$/', $eid))

@@ -30,10 +30,10 @@ $params = array('host' => $argv[1],
 
 try
 {
-    $db = ModelDb::factory('PDO_POSTGRES', $params);
+    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $params);
     $conn = $db->getConnection();
 }
-catch (Exception $e)
+catch (\Exception $e)
 {
     echo($e->getMessage());
     $db = null;
@@ -62,7 +62,7 @@ EOT;
     // STEP 2: convert encrypted credentials in the old format to the new format
     updateConnectionTableCredentialInfo($db);
 }
-catch(Exception $e)
+catch(\Exception $e)
 {
     echo '{ "success": false, "msg":' . json_encode($e->getMessage()) . '}';
     exit(0);
@@ -70,8 +70,8 @@ catch(Exception $e)
 
 
 // update the version number
-$current_version = System::getUpdateVersionFromFilename(__FILE__);
-System::getModel()->setDbVersionNumber($current_version);
+$current_version = \Flexio\System\System::getUpdateVersionFromFilename(__FILE__);
+\Flexio\System\System::getModel()->setDbVersionNumber($current_version);
 
 echo '{ "success": true, "msg": "Operation completed successfully." }';
 
@@ -90,16 +90,16 @@ function updateConnectionTableCredentialInfo($db)
         $connection_eid = $row['eid'];
 
         // decrypt the credentials
-        $username = Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
-        $password = Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
-        $token = Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
-        $refresh_token = Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+        $username = \Flexio\System\Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
+        $password = \Flexio\System\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
+        $token = \Flexio\System\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
+        $refresh_token = \Flexio\System\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
 
         // encrypt the credentials
-        $username_encrypted = Util::encrypt($username, $GLOBALS['g_store']->connection_enckey);
-        $password_encrypted = Util::encrypt($password, $GLOBALS['g_store']->connection_enckey);
-        $token_encrypted = Util::encrypt($token, $GLOBALS['g_store']->connection_enckey);
-        $refresh_token_encrypted = Util::encrypt($refresh_token, $GLOBALS['g_store']->connection_enckey);
+        $username_encrypted = \Flexio\System\Util::encrypt($username, $GLOBALS['g_store']->connection_enckey);
+        $password_encrypted = \Flexio\System\Util::encrypt($password, $GLOBALS['g_store']->connection_enckey);
+        $token_encrypted = \Flexio\System\Util::encrypt($token, $GLOBALS['g_store']->connection_enckey);
+        $refresh_token_encrypted = \Flexio\System\Util::encrypt($refresh_token, $GLOBALS['g_store']->connection_enckey);
 
         // write out the encrypted credentials
         writeConnectionInfo($db, $connection_eid, $username_encrypted, $password_encrypted, $token_encrypted, $refresh_token_encrypted);

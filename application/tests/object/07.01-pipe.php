@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
-        $actual = 'Flexio\\Object\\Pipe';
+        $actual = 'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'Pipe::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -40,7 +40,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
-        $actual = \Eid::isValid($object->getEid());
+        $actual = \Flexio\System\Eid::isValid($object->getEid());
         $expected = true;
         TestCheck::assertBoolean('A.4', 'Pipe::create(); make sure a valid eid is set when an object is created',  $actual, $expected, $results);
 
@@ -64,7 +64,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_PIPE, null);
         $object = \Flexio\Object\Pipe::load($eid);
-        $actual = 'Flexio\\Object\\Pipe';
+        $actual = 'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Pipe::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -89,7 +89,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
         $object = $object->delete();
-        $actual =  'Flexio\\Object\\Pipe';
+        $actual =  'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'Pipe::delete(); return the object',  $actual, $expected, $results);
 
@@ -97,7 +97,7 @@ class Test
         $object = \Flexio\Object\Pipe::create();
         $eid1 = $object->getEid();
         $eid2 = $object->delete()->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('C.2', 'Pipe::delete(); deleting an object shouldn\'t change its eid',  $actual, $expected, $results);
 
@@ -123,7 +123,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
         $object = $object->set(null);
-        $actual =  'Flexio\\Object\\Pipe';
+        $actual =  'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Pipe::set(); return the object',  $actual, $expected, $results);
 
@@ -131,7 +131,7 @@ class Test
         $object = \Flexio\Object\Pipe::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(null)->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.2', 'Pipe::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -139,7 +139,7 @@ class Test
         $object = \Flexio\Object\Pipe::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(array('eid'=>'xxxxxxxxxxxx'))->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.3', 'Pipe::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -175,7 +175,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
-        $actual =  'Flexio\\Object\\Pipe';
+        $actual =  'Flexio\Object\Pipe';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Pipe::setStatus(); return the object',  $actual, $expected, $results);
 
@@ -183,7 +183,7 @@ class Test
         $object = \Flexio\Object\Pipe::create();
         $eid1 = $object->getEid();
         $eid2 = $object->setStatus(\Model::STATUS_TRASH)->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('F.2', 'Pipe::setStatus(); setting status of an object shouldn\'t change its eid',  $actual, $expected, $results);
 
@@ -221,23 +221,23 @@ class Test
         TestCheck::assertNumber('G.1', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(['type'=>\CreateJob::MIME_TYPE, 'params' => []]);
+        $task = \Flexio\Object\Task::create()->push(['type'=>\Flexio\Jobs\CreateJob::MIME_TYPE, 'params' => []]);
         $object = \Flexio\Object\Pipe::create()->setTask($task->get());
         $actual = count($object->getTask());
         $expected = 1;
         TestCheck::assertNumber('G.2', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(\CreateJob::create())->push(\ConvertJob::create());
+        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\CreateJob::create())->push(\Flexio\Jobs\ConvertJob::create());
         $object = \Flexio\Object\Pipe::create()->setTask($task->get());
         $actual = count($object->getTask());
         $expected = 2;
         TestCheck::assertNumber('G.3', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(\CreateJob::create())->push(\ConvertJob::create());
+        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\CreateJob::create())->push(\Flexio\Jobs\ConvertJob::create());
         $object = \Flexio\Object\Pipe::create()->setTask($task->get());
-        $actual = ($object->getTask()[0]['type'] === \CreateJob::MIME_TYPE) && ($object->getTask()[1]['type'] === \ConvertJob::MIME_TYPE);
+        $actual = ($object->getTask()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE) && ($object->getTask()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE);
         $expected = true;
         TestCheck::assertBoolean('G.4', 'Pipe::setTask(); make sure tasks are set correctly',  $actual, $expected, $results);
     }

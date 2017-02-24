@@ -24,7 +24,7 @@ class Manager
         // be used
 
         // STEP 1: save the email to a temporary file
-        $emailfile = \Util::getTempFilename('txt');
+        $emailfile = \Flexio\System\Util::getTempFilename('txt');
 
         $instream = fopen($stream, 'rb');
         $outstream = fopen($emailfile, 'w');
@@ -38,7 +38,7 @@ class Manager
         fclose($outstream);
 
         // STEP 2: parse the temporary file
-        $parser = \Email::parseStream($emailfile);
+        $parser = \Flexio\Services\Email::parseStream($emailfile);
 
         // STEP 3: determine where to route the email; the pipe to launch
         // is the first part of the email; e.g. <pipe_eid>@email.flex.io
@@ -97,7 +97,7 @@ class Manager
 
             $name = $attachment['name'];
             $content = $attachment['content'];
-            $mime_type = \ContentType::getMimeType($name, $content);
+            $mime_type = \Flexio\System\ContentType::getMimeType($name, $content);
 
             // create the stream
             $outstream_properties = array(

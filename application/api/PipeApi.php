@@ -298,14 +298,11 @@ class PipeApi
 
         $process->setOwner($requesting_user_eid);
         $process->setCreatedBy($requesting_user_eid);
-
-        $result = \System::getModel()->assoc_add($pipe->getEid(), \Model::EDGE_HAS_PROCESS, $process->getEid());
-        \System::getModel()->assoc_add($process->getEid(), \Model::EDGE_PROCESS_OF, $pipe->getEid());
+        $pipe->addProcess($process);
 
         $pipe_properties = $pipe->get();
         $process_properties['task'] = $pipe_properties['task'];
         $process->set($process_properties);
-
 
         // STEP 2: parse the content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');
@@ -315,10 +312,10 @@ class PipeApi
         $streamwriter = false;
         $form_params = array();
 
-        $parser = \MultipartParser::create();
+        $parser = \Flexio\Services\MultipartParser::create();
 
         $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params) {
-            if ($type == \MultipartParser::TYPE_FILE_BEGIN)
+            if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_BEGIN)
             {
                 $stream = \Flexio\Object\Stream::create();
                 if ($stream)
@@ -331,7 +328,7 @@ class PipeApi
                         $stream = false;
                 }
             }
-             else if ($type == \MultipartParser::TYPE_FILE_DATA)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_DATA)
             {
                 if ($streamwriter !== false)
                 {
@@ -339,13 +336,13 @@ class PipeApi
                     $streamwriter->write($data);
                 }
             }
-             else if ($type == \MultipartParser::TYPE_FILE_END)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_END)
             {
                 $process->addInput($stream);
                 $streamwriter = false;
                 $stream = false;
             }
-             else if ($type == \MultipartParser::TYPE_KEY_VALUE)
+             else if ($type == \Flexio\Services\MultipartParser::TYPE_KEY_VALUE)
             {
                 $form_params[$name] = $data;
             }
@@ -381,7 +378,7 @@ class PipeApi
                     $handle = 'create';
                     $content = $stream->content($start, $limit, $columns, $metadata, $handle);
 
-                    if ($mime_type !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
+                    if ($mime_type !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
                     {
                         // return content as-is
                         header('Content-Type: ' . $mime_type);
@@ -389,7 +386,7 @@ class PipeApi
                     else
                     {
                         // flexio table; return application/json in place of internal mime
-                        header('Content-Type: ' . \ContentType::MIME_TYPE_JSON);
+                        header('Content-Type: ' . \Flexio\System\ContentType::MIME_TYPE_JSON);
                         $content = json_encode($content);
                     }
 

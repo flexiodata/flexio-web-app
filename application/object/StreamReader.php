@@ -83,7 +83,7 @@ class StreamReader
             return false;
 
         $mime_type = $this->getMimeType();
-        if ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
             return $this->readFromTable($length);
              else
             return $this->readFromFile($length);
@@ -95,7 +95,7 @@ class StreamReader
             return false;
 
         $mime_type = $this->getMimeType();
-        if ($mime_type === \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
             return $this->readRowFromTable();
              else
             return $this->readRowFromFile();
@@ -312,7 +312,7 @@ class StreamReader
         // a \r\n is split up between two buffer reads; that will effectively
         // insert a blank line into the data
         // datadatadata\r<buffer-end>\ndatadatadatadata
-        // 
+        //
         // solution: go with a simpler variant that only handles \r\n and \n
         // old-style mac formats no longer supported
 

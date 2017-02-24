@@ -10,24 +10,21 @@
  */
 
 
-
 if (file_exists(__DIR__ . '/../config/config.json'))
 {
     $configjson = file_get_contents(__DIR__ . '/../config/config.json');
     $g_config = json_decode($configjson);
     unset($configjson);
+    if (is_null($g_config))
+    {
+        die("Invalid configuration file format");
+    }
 }
  else
 {
-    if (file_exists(__DIR__ . '/../config/config-defaults.json'))
-    {
-        $configjson = file_get_contents(__DIR__ . '/../config/config-defaults.json');
-        $g_config = json_decode($configjson);
-        unset($configjson);
-    }
+    die("Missing configuration file");
 }
 
-if (is_null($g_config)) die("Invalid configuration file format");
 
 // g_store stores global variables, such as database pointers
 $g_store = new stdClass();
@@ -52,25 +49,7 @@ $g_store->connection_enckey = '9i$8iw]aKmZzq12r8';
 if (isset($g_config->dir_home))
     $g_store->dir_home = $g_config->dir_home;
 
-
-function shutdown_profiler()
-{
-    $xhprof_data = xhprof_disable();
-
-    //$str = var_export($xhprof_data,true);
-    //file_put_contents('/tmp/xhprof.txt', $str);
-
-    include_once "/usr/share/php/xhprof_lib/utils/xhprof_lib.php";
-    include_once "/usr/share/php/xhprof_lib/utils/xhprof_runs.php";
-    $xhprof_runs = new XHProfRuns_Default();
-    $xhprof_runs->save_run($xhprof_data, "fx");
-}
-
-if (isset($g_config->profiling) && $g_config->profiling && function_exists('xhprof_enable'))
-{
-    xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
-    register_shutdown_function('shutdown_profiler');
-}
+//require_once __DIR__ . '/profiler.php'; // uncomment this line to enabled profiling
 
 function GET_HTTP_HOST()
 {
@@ -167,42 +146,23 @@ function fxStartSession()
     }
 }
 
-$g_autoloader_ignore_errors = false;
-spl_autoload_register(function ($class_name) {
-    $class_name = str_replace(['.','/'], '', $class_name);
-    $class_name = str_replace(['_',"\\"], '/', $class_name) . '.php';
-    if (strpos($class_name, '/') !== false)
+spl_autoload_register(function ($class) {
+    $class = ltrim($class, '\\');
+    if (strpos($class, 'Flexio\\') === 0)
     {
-        $parts = explode('/',$class_name);
-        if ($parts[0] == 'Flexio')
+        $parts = explode('\\',$class);
+        for ($i = 0; $i < count($parts)-1; ++$i)
+            $parts[$i] = lcfirst($parts[$i]);
+        unset($parts[0]);
+        $class = __DIR__ . '/' . implode('/',$parts) . '.php';
+        if (file_exists($class))
         {
-            for ($i = 0; $i < count($parts)-1; ++$i)
-                $parts[$i] = lcfirst($parts[$i]);
-            unset($parts[0]);
-            $class_name = __DIR__ . '/' . implode('/',$parts);
+            require_once $class;
+            return true;
         }
-        else if ($parts[0] == 'ParagonIE')
-        {
-            // sodium_compat
-            return false;
-        }
-    }
-    if ($GLOBALS['g_autoloader_ignore_errors'])
-    {
-        if (false === (@include_once $class_name))
-            return false;
-    }
-     else
-    {
-        require_once $class_name;
-        return true;
+        return false;
     }
 });
-
-function setAutoloaderIgnoreErrors($value)
-{
-    $GLOBALS['g_autoloader_ignore_errors'] = $value;
-}
 
 
 // php debug settings for debug mode
@@ -236,19 +196,6 @@ if (!isset($g_config->directory_database_type) || strlen($g_config->directory_da
 {
     die("Please set directory_database_type in your config.json; for example 'mysql'");
 }
-
-
-function setupIncludeDirectories()
-{
-    global $g_config, $g_store;
-    $base = $g_store->dir_home . DIRECTORY_SEPARATOR . 'application' . DIRECTORY_SEPARATOR;
-    set_include_path($base . 'jobs'        . PATH_SEPARATOR
-                   . $base . 'services'    . PATH_SEPARATOR
-                   . $base . 'system'      . PATH_SEPARATOR
-                   . get_include_path());
-}
-setupIncludeDirectories();
-
 
 
 function homeProxy()
@@ -315,7 +262,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
 
     function open($path, $name)
     {
-        $this->registry_model = \System::getModel()->registry;
+        $this->registry_model = \Flexio\System\System::getModel()->registry;
         return true;
     }
 
@@ -451,7 +398,7 @@ class Flexio
         // check idle
         if (!\self::checkIdle())
         {
-            \System::clearLoginIdentity();
+            \Flexio\System\System::clearLoginIdentity();
             @session_destroy();
 
             if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')
@@ -488,10 +435,10 @@ class Flexio
             exit();
         }
 
-        $framework = \Framework::getInstance();
+        $framework = \Flexio\System\Framework::getInstance();
         $framework->setControllerPrefix("\\Flexio\\Controllers\\");
         $framework->setControllerSuffix('Controller');
-        $framework->registerPlugin(new FlexioPlugin);
+        $framework->registerPlugin(new \Flexio\System\FlexioPlugin);
         $framework->dispatch();
     }
 /*

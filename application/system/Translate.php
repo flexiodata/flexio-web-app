@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class Translate
 {
     // use this instead of calling setlocale() by yourself

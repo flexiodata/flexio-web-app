@@ -12,6 +12,8 @@
  */
 
 
+namespace Flexio\Services;
+
 
 class ExprTranslatorPostgres
 {
@@ -22,7 +24,7 @@ class ExprTranslatorPostgres
 
     public static function translate($expr, $structure = null)
     {
-        $obj = new ExprTranslatorPostgres;
+        $obj = new self;
         $obj->setStructure($structure);
         if (!$obj->parse($expr))
             return false;
@@ -151,11 +153,11 @@ class ExprTranslatorPostgres
 
             return $this->getReturnTypeFromSpec($spec, $param_types);
         }
-         else if ($node_type == \ExprParser::NODETYPE_FUNCTION)
+         else if ($node_type == ExprParser::NODETYPE_FUNCTION)
         {
             $funcname = strtolower($node->name);
             if (!isset($this->functions[$funcname]))
-                return \ExprParser::TYPE_INVALID;
+                return ExprParser::TYPE_INVALID;
 
             $func = $this->functions[$funcname];
 
@@ -164,14 +166,14 @@ class ExprTranslatorPostgres
             for ($i = 0; $i < count($node->params); ++$i)
             {
                 $type = $this->getType($node->params[$i]);
-                if ($type === \ExprParser::TYPE_INVALID)
+                if ($type === ExprParser::TYPE_INVALID)
                     return $type;
                 $param_types[] = $type;
             }
 
             return $this->getReturnTypeFromSpec($func['types'], $param_types);
         }
-         else if ($node_type == \ExprParser::NODETYPE_VARIABLE)
+         else if ($node_type == ExprParser::NODETYPE_VARIABLE)
         {
             $key = strtolower($node->name);
             $type = null;
@@ -180,12 +182,12 @@ class ExprTranslatorPostgres
             {
                 switch ($this->values[$key]['type'])
                 {
-                    case 's': return \ExprParser::TYPE_STRING;
-                    case 'n': return \ExprParser::TYPE_FLOAT;
-                    case 'd': return \ExprParser::TYPE_DATE;
-                    case 't': return \ExprParser::TYPE_DATETIME;
-                    case 'b': return \ExprParser::TYPE_BOOLEAN;
-                    case 'i': return \ExprParser::TYPE_INTEGER;
+                    case 's': return ExprParser::TYPE_STRING;
+                    case 'n': return ExprParser::TYPE_FLOAT;
+                    case 'd': return ExprParser::TYPE_DATE;
+                    case 't': return ExprParser::TYPE_DATETIME;
+                    case 'b': return ExprParser::TYPE_BOOLEAN;
+                    case 'i': return ExprParser::TYPE_INTEGER;
                     default:
                 };
             }
@@ -196,26 +198,26 @@ class ExprTranslatorPostgres
                     case 'text':
                     case 'character':
                     case 'widecharacter':
-                        return \ExprParser::TYPE_STRING;
+                        return ExprParser::TYPE_STRING;
                     case 'integer':
-                        return \ExprParser::TYPE_INTEGER;
+                        return ExprParser::TYPE_INTEGER;
                     case 'numeric':
                     case 'double':
                     case 'float':
-                        return \ExprParser::TYPE_FLOAT;
+                        return ExprParser::TYPE_FLOAT;
                     case 'date':
-                        return \ExprParser::TYPE_DATE;
+                        return ExprParser::TYPE_DATE;
                     case 'datetime':
-                        return \ExprParser::TYPE_DATETIME;
+                        return ExprParser::TYPE_DATETIME;
                     case 'boolean':
-                        return \ExprParser::TYPE_BOOLEAN;
+                        return ExprParser::TYPE_BOOLEAN;
                     default:
-                        return \ExprParser::TYPE_INVALID;
+                        return ExprParser::TYPE_INVALID;
                 }
             }
              else
             {
-                return \ExprParser::TYPE_INVALID;
+                return ExprParser::TYPE_INVALID;
             }
         }
          else
@@ -228,12 +230,12 @@ class ExprTranslatorPostgres
     {
         $node_type = $node->getNodeType();
 
-        if ($node_type == \ExprParser::NODETYPE_VALUE)
+        if ($node_type == ExprParser::NODETYPE_VALUE)
         {
             if (is_string($node->val))
             {
                 // TODO: we should use the specific datastore connection, instead of getModel()
-                return \System::getModel()->getDatabase()->quote($node->val);
+                return \Flexio\System\System::getModel()->getDatabase()->quote($node->val);
             }
              else if (is_bool($node->val))
             {
@@ -966,7 +968,7 @@ class ExprTranslatorPostgres
              else
             $res .= $this->printNode($params[0]);
 
-        $res .= ' ~* ' . ExprUtil::quote($match_regex);
+        $res .= ' ~* ' . \Flexio\Services\ExprUtil::quote($match_regex);
         return $res . ')';
     }
 
@@ -1260,6 +1262,9 @@ class ExprTranslatorPostgres
 
     public function func_to_char($func, $params)
     {
+        if ($this->getType($params[0]) == ExprParser::TYPE_NULL)
+            return "null::text";
+        
         if (count($params) == 1)
         {
             $param0 = $this->printNode($params[0]);

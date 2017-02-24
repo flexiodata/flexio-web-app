@@ -72,7 +72,7 @@ class UserApi
                 $first_name_parsed = $parser->getFirst();
                 $last_name_parsed = $parser->getLast();
             }
-             catch (Exception $e)
+             catch (\Exception $e)
             {
                 // unable to parse the name; treat the set the first name as whatever was entered
                 $first_name_parsed = $params['full_name'];
@@ -86,7 +86,7 @@ class UserApi
         $password = $params['password'];
 
         // make sure the user_name is valid syntactically; note: don't check for existence here
-        if (!\Identifier::isValid($user_name))
+        if (!\Flexio\System\Identifier::isValid($user_name))
             return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER, _('This username is invalid.  Please try another.'));
 
         $description = isset_or($params['description'], '');
@@ -108,7 +108,7 @@ class UserApi
 
         $verify_code = '';
         if ($require_verification === true)
-            $verify_code = isset($params['verify_code']) ? $params['verify_code'] : \Util::generateHandle(); // code to verify user's email address
+            $verify_code = isset($params['verify_code']) ? $params['verify_code'] : \Flexio\System\Util::generateHandle(); // code to verify user's email address
 
         // use email to check if account already exists; if it exists
         // based on the email, see if the user is pending (invitations
@@ -190,7 +190,7 @@ class UserApi
                     // in either case, we need to create a new verification code and let
                     // the user verify
 
-                    $new_verify_code = \Util::generateHandle();
+                    $new_verify_code = \Flexio\System\Util::generateHandle();
                     $new_user_info['verify_code'] = $new_verify_code;
 
                     $result = $user->set($new_user_info);
@@ -305,7 +305,7 @@ class UserApi
                 if (!isset($params['last_name']))
                     $params['last_name'] = $last_name_parsed;
             }
-             catch (Exception $e)
+             catch (\Exception $e)
             {
                 // unable to parse the name; treat the set the first name as whatever was entered
                 $first_name_parsed = $params['full_name'];
@@ -457,7 +457,7 @@ class UserApi
             return $request->getValidator()->fail();
 
         $email = $params['email'];
-        $verify_code = \Util::generateHandle();
+        $verify_code = \Flexio\System\Util::generateHandle();
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)

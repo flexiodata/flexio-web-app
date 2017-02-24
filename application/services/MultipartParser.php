@@ -12,11 +12,14 @@
  */
 
 
+namespace Flexio\Services;
+
+
 class MultipartParser
 {
     public static function create($params = false)
     {
-        $parser = new static();
+        $parser = new self;
         return $parser;
     }
 
@@ -24,7 +27,7 @@ class MultipartParser
     const TYPE_FILE_DATA = 2;
     const TYPE_FILE_END = 3;
     const TYPE_KEY_VALUE = 4;
- 
+
     // callback should be a function like this
     // function callback($type, $name, $data, $filename, $content_type)
     // when type equals TYPE_FILE_BEGIN - file starting
@@ -175,7 +178,7 @@ class MultipartParser
             $current_mimetype = $mimetype;
 
            // echo "name:$name filename:$filename mime_type:$mimetype<br>";
-            
+
             if (strlen($filename) > 0)
             {
                 $callback(self::TYPE_FILE_BEGIN, $name, '', $filename, $mimetype);

@@ -25,37 +25,37 @@ class Test
         $buffer = '';
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'application/x-empty';
-        TestCheck::assertString('A.1', '\ContentType::getMimeAndContentType(); input serialization',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', '\Flexio\System\ContentType::getMimeAndContentType(); input serialization',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = '';
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'application/x-empty';
-        TestCheck::assertString('A.2', '\ContentType::getMimeAndContentType(); mime type for empty string',  $actual, $expected, $results);
+        TestCheck::assertString('A.2', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for empty string',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = 'a';
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'application/octet-stream';
-        TestCheck::assertString('A.3', '\ContentType::getMimeAndContentType(); mime type for stream',  $actual, $expected, $results);
+        TestCheck::assertString('A.3', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for stream',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = 'aa';
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'text/plain';
-        TestCheck::assertString('A.4', '\ContentType::getMimeAndContentType(); mime type for plain text',  $actual, $expected, $results);
+        TestCheck::assertString('A.4', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for plain text',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = <<<EOD
@@ -67,10 +67,10 @@ class Test
 EOD;
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'text/html';
-        TestCheck::assertString('A.5', '\ContentType::getMimeAndContentType(); mime type for html',  $actual, $expected, $results);
+        TestCheck::assertString('A.5', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for html',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = <<<EOD
@@ -79,136 +79,136 @@ EOD;
 EOD;
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'text/html';
-        TestCheck::assertString('A.6', '\ContentType::getMimeAndContentType(); mime type for html',  $actual, $expected, $results);
+        TestCheck::assertString('A.6', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for html',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = base64_decode(getGifExample());
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'image/gif';
-        TestCheck::assertString('A.7', '\ContentType::getMimeAndContentType(); mime type for a gif',  $actual, $expected, $results);
+        TestCheck::assertString('A.7', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for a gif',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getGifExample()),0,\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getGifExample()),0,\Flexio\System\ContentType::TEST_BUFFER_LENGTH);
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'image/gif';
-        TestCheck::assertString('A.8', '\ContentType::getMimeAndContentType(); mime type for part of a gif',  $actual, $expected, $results);
+        TestCheck::assertString('A.8', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for part of a gif',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = base64_decode(getPngExample());
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'image/png';
-        TestCheck::assertString('A.9', '\ContentType::getMimeAndContentType(); mime type for a png',  $actual, $expected, $results);
+        TestCheck::assertString('A.9', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for a png',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getPngExample()),0,\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getPngExample()),0,\Flexio\System\ContentType::TEST_BUFFER_LENGTH);
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'image/png';
-        TestCheck::assertString('A.10', '\ContentType::getMimeAndContentType(); mime type for part of a png',  $actual, $expected, $results);
+        TestCheck::assertString('A.10', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for part of a png',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = base64_decode(getJpgExample());
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'image/jpeg';
-        TestCheck::assertString('A.11', '\ContentType::getMimeAndContentType(); mime type for a jpg',  $actual, $expected, $results);
+        TestCheck::assertString('A.11', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for a jpg',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getJpgExample()),0,\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getJpgExample()),0,\Flexio\System\ContentType::TEST_BUFFER_LENGTH);
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'image/jpeg';
-        TestCheck::assertString('A.12', '\ContentType::getMimeAndContentType(); mime type for part of a jpg',  $actual, $expected, $results);
+        TestCheck::assertString('A.12', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for part of a jpg',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = base64_decode(getBmpExample());
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'image/x-ms-bmp';
-        TestCheck::assertString('A.13', '\ContentType::getMimeAndContentType(); mime type for a bmp',  $actual, $expected, $results);
+        TestCheck::assertString('A.13', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for a bmp',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getBmpExample()),0,\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getBmpExample()),0,\Flexio\System\ContentType::TEST_BUFFER_LENGTH);
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'image/x-ms-bmp';
-        TestCheck::assertString('A.14', '\ContentType::getMimeAndContentType(); mime type for part of a bmp',  $actual, $expected, $results);
+        TestCheck::assertString('A.14', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for part of a bmp',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = base64_decode(getPdfExample());
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'application/pdf';
-        TestCheck::assertString('A.15', '\ContentType::getMimeAndContentType(); mime type for a pdf',  $actual, $expected, $results);
+        TestCheck::assertString('A.15', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for a pdf',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getPdfExample()),0,\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getPdfExample()),0,\Flexio\System\ContentType::TEST_BUFFER_LENGTH);
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'application/pdf';
-        TestCheck::assertString('A.16', '\ContentType::getMimeAndContentType(); mime type for part of a pdf',  $actual, $expected, $results);
+        TestCheck::assertString('A.16', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for part of a pdf',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = base64_decode(getExcelExample());
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('A.17', '\ContentType::getMimeAndContentType(); mime type for an xlsx',  $actual, $expected, $results);
+        TestCheck::assertString('A.17', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for an xlsx',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getExcelExample()),0,\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\System\ContentType::TEST_BUFFER_LENGTH);
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('A.18', '\ContentType::getMimeAndContentType(); mime type for part of an xlsx',  $actual, $expected, $results);
+        TestCheck::assertString('A.18', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for part of an xlsx',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = base64_decode(getZipExample());
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'application/zip';
-        TestCheck::assertString('A.19', '\ContentType::getMimeAndContentType(); mime type for a zip',  $actual, $expected, $results);
+        TestCheck::assertString('A.19', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for a zip',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getZipExample()),0,\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getZipExample()),0,\Flexio\System\ContentType::TEST_BUFFER_LENGTH);
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $mime_type;
         $expected = 'application/zip';
-        TestCheck::assertString('A.20', '\ContentType::getMimeAndContentType(); mime type for part of a zip',  $actual, $expected, $results);
+        TestCheck::assertString('A.20', '\Flexio\System\ContentType::getMimeAndContentType(); mime type for part of a zip',  $actual, $expected, $results);
 
 
 
@@ -218,37 +218,37 @@ EOD;
         $buffer = '';
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $content_type;
         $expected = 'charset=binary';
-        TestCheck::assertString('B.1', '\ContentType::getMimeAndContentType(); input serialization',  $actual, $expected, $results);
+        TestCheck::assertString('B.1', '\Flexio\System\ContentType::getMimeAndContentType(); input serialization',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = '';
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $content_type;
         $expected = 'charset=binary';
-        TestCheck::assertString('B.2', '\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
+        TestCheck::assertString('B.2', '\Flexio\System\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = 'a';
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $content_type;
         $expected = 'charset=binary';
-        TestCheck::assertString('B.3', '\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
+        TestCheck::assertString('B.3', '\Flexio\System\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = 'aa';
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $content_type;
         $expected = 'charset=us-ascii';
-        TestCheck::assertString('B.4', '\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
+        TestCheck::assertString('B.4', '\Flexio\System\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = <<<EOD
@@ -260,10 +260,10 @@ EOD;
 EOD;
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $content_type;
         $expected = 'charset=us-ascii';
-        TestCheck::assertString('B.5', '\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
+        TestCheck::assertString('B.5', '\Flexio\System\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = <<<EOD
@@ -272,19 +272,19 @@ EOD;
 EOD;
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $content_type;
         $expected = 'charset=us-ascii';
-        TestCheck::assertString('B.5', '\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
+        TestCheck::assertString('B.5', '\Flexio\System\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $buffer = base64_decode(getZipExample());
         $mime_type = null;
         $content_type = null;
-        $result = \ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
+        $result = \Flexio\System\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
         $actual = $content_type;
         $expected = 'charset=binary';
-        TestCheck::assertString('B.6', '\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
+        TestCheck::assertString('B.6', '\Flexio\System\ContentType::getMimeAndContentType(); test mime and content type',  $actual, $expected, $results);
     }
 }
 

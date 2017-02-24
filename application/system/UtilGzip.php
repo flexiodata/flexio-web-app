@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class UtilGzip
 {
     public static function gzip($in, $out = false)

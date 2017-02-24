@@ -50,10 +50,10 @@ class Stream extends \Flexio\Object\Base
         {
             // default path
             if (!isset($properties['path']))
-                $properties['path'] = \Util::generateHandle();
+                $properties['path'] = \Flexio\System\Util::generateHandle();
 
             $default_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();
-            if (\Eid::isValid($default_connection_eid))
+            if (\Flexio\System\Eid::isValid($default_connection_eid))
                 $properties['connection_eid'] = $default_connection_eid;
         }
 
@@ -243,7 +243,7 @@ class Stream extends \Flexio\Object\Base
             return;
 
         $is_internal_table = false;
-        if ($this->getMimeType() === \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($this->getMimeType() === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
             $is_internal_table = true;
         $structure = $this->getStructure()->enum();
 
@@ -279,7 +279,7 @@ class Stream extends \Flexio\Object\Base
         $structure = $this->getStructure()->enum();
         $data_to_write = false;
 
-        if ($this->getMimeType() !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($this->getMimeType() !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             $data_to_write = $data;
         }
@@ -295,88 +295,6 @@ class Stream extends \Flexio\Object\Base
 
     public function writePostContent()
     {
-        // STEP 1: get the stream and the service
-        $path = $this->getPath();
-        $service = $this->getService();
-        if ($service === false)
-            return false;
-
-        // STEP 2: create the output
-        $streamwriter = \Flexio\Object\StreamWriter::create($this);
-        if ($streamwriter === false)
-            return false;
-
-        // STEP 3: get the information the parser needs to parse the content
-        $post_content_type = isset_or($_SERVER['CONTENT_TYPE'], '');
-        $php_stream_handle = fopen('php://input', 'rb');
-
-        // STEP 4: parse the content and set the stream info
-        $part_data_snippet = false;
-        $part_filename = false;
-        $part_mimetype = false;
-        $part_active = false;
-        $part_succeeded = false;
-
-        $parser = \MultipartParser::create();
-
-        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$streamwriter, &$part_data_snippet, &$part_filename, &$part_mimetype, &$part_active, &$part_succeeded) {
-            if ($type == \MultipartParser::TYPE_FILE_BEGIN)
-            {
-                if ($name == 'file') // we're looking for an element named 'file'
-                {
-                    $part_active = true;
-                    $part_filename = $filename;
-                    $part_mimetype = $content_type;
-                    $part_succeeded = true;
-                }
-            }
-             else if ($type == \MultipartParser::TYPE_FILE_DATA && $part_active)
-            {
-                // get a sample of the data for mime sensing
-                if ($part_data_snippet === false)
-                    $part_data_snippet = $data;
-
-                // write out the data
-                $streamwriter->write($data);
-            }
-             else if ($type == \MultipartParser::TYPE_FILE_END)
-            {
-                $part_active = false;
-            }
-        });
-        fclose($php_stream_handle);
-
-
-        // make sure the parse was successful
-        if (!$part_succeeded)
-            return false;
-
-        // determine the filename, stripping off the leading path info;
-        // use a default if one wasn't supplied
-        $default_name = \Util::generateHandle() . '.txt';
-        $filename = strlen($part_filename) > 0 ? $part_filename : $default_name;
-        $name = \Util::getFilename($filename);
-        $ext = \Util::getFileExtension($filename);
-        $filename = $name . (strlen($ext) > 0 ? ".$ext" : '');
-
-        // sense the mime type, but go with what is declared if it's available
-        $mime_type = \ContentType::MIME_TYPE_STREAM;
-        $declared_mime_type = $part_mimetype;
-
-
-        if ($part_data_snippet === false)
-            $part_data_snippet = '';
-        
-        if (strlen($declared_mime_type) > 0)
-            $mime_type = $declared_mime_type;
-              else
-            $mime_type = \ContentType::getMimeType($filename, $part_data_snippet);
-
-        // set the stream info
-        $stream_info = array();
-        $stream_info['name'] = $filename;
-        $stream_info['mime_type'] = $mime_type;
-        $this->set($stream_info);
     }
 
     public function content($start, $limit, $columns = true, $metadata = false, $handle = 'create')
@@ -432,7 +350,7 @@ class Stream extends \Flexio\Object\Base
             $output_structure[] = $col;
         }
 
-        if ($mime_type !== \ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             $handle = $service->openFile($path);
 

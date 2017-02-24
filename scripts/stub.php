@@ -47,13 +47,13 @@ if (isset($argv))
 
             if (isset($g_context['identity']) && strlen($g_context['identity']) > 0)
             {
-                System::unserializeIdentity($g_context['identity']);
+                \Flexio\System\System::unserializeIdentity($g_context['identity']);
             }
 
             if (isset($g_context['lang']))
             {
                 $params = array('locale_language' => $g_context['lang']);
-                System::setLocaleSettings($params);
+                \Flexio\System\System::setLocaleSettings($params);
             }
         }
 

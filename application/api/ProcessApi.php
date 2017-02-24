@@ -457,7 +457,7 @@ class ProcessApi
         if ($user->isAdministrator() !== true)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        return \System::getModel()->process->getProcessStatistics();
+        return \Flexio\System\System::getModel()->process->getProcessStatistics();
     }
 
     private static function waitforchangewhilerunning($eid, $time_to_wait_for_change)
@@ -529,12 +529,12 @@ class ProcessApi
         {
             // use json if the format is something that isn't allowed
             default:
-                $mime_type = \ContentType::MIME_TYPE_JSON;
+                $mime_type = \Flexio\System\ContentType::MIME_TYPE_JSON;
                 break;
 
             // allowed formats
-            case \ContentType::MIME_TYPE_TXT:
-            case \ContentType::MIME_TYPE_JSON:
+            case \Flexio\System\ContentType::MIME_TYPE_TXT:
+            case \Flexio\System\ContentType::MIME_TYPE_JSON:
                 break;
         }
 
@@ -545,7 +545,7 @@ class ProcessApi
 
         header('Content-Type: ' . $mime_type);
 
-        if ($mime_type === \ContentType::MIME_TYPE_JSON)
+        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_JSON)
             echo('[');
 
         $first = true;
@@ -567,7 +567,7 @@ class ProcessApi
             $first = false;
         }
 
-        if ($mime_type === \ContentType::MIME_TYPE_JSON)
+        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_JSON)
             echo(']');
 
         exit(0);
@@ -587,7 +587,7 @@ class ProcessApi
         $include_content = false;
         if ($fields !== false)
         {
-            $stream_properties = \Util::filterArray($stream_properties, $fields);
+            $stream_properties = \Flexio\System\Util::filterArray($stream_properties, $fields);
 
             // see whether or not to include the content
             $include_content = array_search('content', $fields);
@@ -611,7 +611,7 @@ class ProcessApi
         $result = '';
         switch ($mime_type)
         {
-            case \ContentType::MIME_TYPE_TXT:
+            case \Flexio\System\ContentType::MIME_TYPE_TXT:
             {
                 if (count($stream_properties) > 0)
                     $result .= json_encode($stream_properties);
@@ -624,7 +624,7 @@ class ProcessApi
             }
             break;
 
-            case \ContentType::MIME_TYPE_JSON:
+            case \Flexio\System\ContentType::MIME_TYPE_JSON:
             {
                 if ($include_content === true)
                     $stream_properties['content'] = $content;

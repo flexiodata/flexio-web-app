@@ -23,89 +23,89 @@ class Test
         // consonant, alphanumeric characters
 
         // BEGIN TEST
-        $actual = \Eid::isValid(' xxxxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid(' xxxxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.1', '\Eid::isValid() leading space', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\System\Eid::isValid() leading space', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxx xxxxx');
+        $actual = \Flexio\System\Eid::isValid('xxxxxx xxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Eid::isValid() embedded space', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\System\Eid::isValid() embedded space', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxxxxxx ');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxxxxxx ');
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Eid::isValid() trailing space', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Flexio\System\Eid::isValid() trailing space', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxx xxxxx');
+        $actual = \Flexio\System\Eid::isValid('xxxxxx xxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.4', '\Eid::isValid() embedded space', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', '\Flexio\System\Eid::isValid() embedded space', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('axxxxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('axxxxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.5', '\Eid::isValid() leading vowel', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', '\Flexio\System\Eid::isValid() leading vowel', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xexxxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('xexxxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.6', '\Eid::isValid() embedded vowel', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.6', '\Flexio\System\Eid::isValid() embedded vowel', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxixxxxxx');
+        $actual = \Flexio\System\Eid::isValid('xxxxxixxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.7', '\Eid::isValid() embedded vowel', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.7', '\Flexio\System\Eid::isValid() embedded vowel', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxxxxxox');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxxxxxox');
         $expected = false;
-        TestCheck::assertBoolean('A.8', '\Eid::isValid() embedded vowel', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.8', '\Flexio\System\Eid::isValid() embedded vowel', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxxxxxxu');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxxxxxxu');
         $expected = false;
-        TestCheck::assertBoolean('A.9', '\Eid::isValid() trailing vowel', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.9', '\Flexio\System\Eid::isValid() trailing vowel', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxXxxxxx');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxXxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.10', '\Eid::isValid() embedded uppercase consonant', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.10', '\Flexio\System\Eid::isValid() embedded uppercase consonant', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxXxxxxx');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxXxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.11', '\Eid::isValid() embedded uppercase consonant', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.11', '\Flexio\System\Eid::isValid() embedded uppercase consonant', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxxxx.xx');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxxxx.xx');
         $expected = false;
-        TestCheck::assertBoolean('A.12', '\Eid::isValid() embedded punctuation', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.12', '\Flexio\System\Eid::isValid() embedded punctuation', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xx-xxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('xx-xxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.13', '\Eid::isValid() embedded punctuation', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.13', '\Flexio\System\Eid::isValid() embedded punctuation', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('/xxxxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('/xxxxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.14', '\Eid::isValid() leading punctuation', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.14', '\Flexio\System\Eid::isValid() leading punctuation', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('\nxxxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('\nxxxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.15', '\Eid::isValid() leading punctuation', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.15', '\Flexio\System\Eid::isValid() leading punctuation', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('%20xxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('%20xxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.16', '\Eid::isValid() leading punctuation', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.16', '\Flexio\System\Eid::isValid() leading punctuation', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxxxxxx/');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxxxxxx/');
         $expected = false;
-        TestCheck::assertBoolean('A.17', '\Eid::isValid() trailing punctuation', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.17', '\Flexio\System\Eid::isValid() trailing punctuation', $actual, $expected, $results);
 
 
 
@@ -113,43 +113,43 @@ class Test
         // consonant, alphanumeric characters
 
         // BEGIN TEST
-        $actual = \Eid::isValid('0xxxxxxxxxxx');
+        $actual = \Flexio\System\Eid::isValid('0xxxxxxxxxxx');
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Eid::isValid() leading zero', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Flexio\System\Eid::isValid() leading zero', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxx0xxxxxx');
+        $actual = \Flexio\System\Eid::isValid('xxxxx0xxxxxx');
         $expected = true;
-        TestCheck::assertBoolean('B.2', '\Eid::isValid() embedded zero', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Flexio\System\Eid::isValid() embedded zero', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('xxxxxxxxxxx0');
+        $actual = \Flexio\System\Eid::isValid('xxxxxxxxxxx0');
         $expected = true;
-        TestCheck::assertBoolean('B.3', '\Eid::isValid() trailing zero', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', '\Flexio\System\Eid::isValid() trailing zero', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('000000000000');
+        $actual = \Flexio\System\Eid::isValid('000000000000');
         $expected = true;
-        TestCheck::assertBoolean('B.4', '\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.4', '\Flexio\System\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('1l1l1l1l1l1l');
+        $actual = \Flexio\System\Eid::isValid('1l1l1l1l1l1l');
         $expected = true;
-        TestCheck::assertBoolean('B.5', '\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.5', '\Flexio\System\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('0mz1b2qy9cl3');
+        $actual = \Flexio\System\Eid::isValid('0mz1b2qy9cl3');
         $expected = true;
-        TestCheck::assertBoolean('B.6', '\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.6', '\Flexio\System\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('ywqlmsxklsck');
+        $actual = \Flexio\System\Eid::isValid('ywqlmsxklsck');
         $expected = true;
-        TestCheck::assertBoolean('B.7', '\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.7', '\Flexio\System\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Eid::isValid('1skvnlkd92bh');
+        $actual = \Flexio\System\Eid::isValid('1skvnlkd92bh');
         $expected = true;
-        TestCheck::assertBoolean('B.8', '\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.8', '\Flexio\System\Eid::isValid() valid alphanumeric', $actual, $expected, $results);
     }
 }

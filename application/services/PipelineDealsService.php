@@ -12,10 +12,12 @@
  */
 
 
+namespace Flexio\Services;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class PipelineDealsService implements IConnection
+class PipelineDealsService implements \Flexio\Services\IConnection
 {
     private $is_ok = false;
     private $apikey = '';
@@ -29,7 +31,7 @@ class PipelineDealsService implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);
@@ -209,7 +211,7 @@ class PipelineDealsService implements IConnection
 
         foreach ($rows as $r)
         {
-            $r = \Mapper::flatten($r);
+            $r = \Flexio\System\Mapper::flatten($r);
             $r = $r[0];
 
             $output_row = array();

@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Base implements IJob
+class Base implements \Flexio\Jobs\IJob
 {
     // basic job template
     const MIME_TYPE = 'flexio';
@@ -76,7 +79,7 @@ EOD;
             // TODO: temporarily disable
 
             // make sure the properties are valid
-            //$validator = ValidatorSchema::check($object->properties, $object::SCHEMA);
+            //$validator = \Flexio\System\ValidatorSchema::check($object->properties, $object::SCHEMA);
             //if ($validator->hasErrors())
             //    return false;
 

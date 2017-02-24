@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 class XferFsS3
 {
     public static function isReady()
@@ -20,10 +23,10 @@ class XferFsS3
 
         try
         {
-            $s3 = XferFsS3::getS3();
+            $s3 = self::getS3();
             return $s3->doesBucketExist($g_config->s3fs_bucket, false);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -35,14 +38,14 @@ class XferFsS3
     {
         global $g_config;
 
-        $full = XferFsS3::makePath($path);
+        $full = self::makePath($path);
         $full .= '/';  // s3 uses a trailing slash to indicate a folder
         while (strpos($full, '//') !== false)
             $full = str_replace('//','/', $full);
 
         try
         {
-            $s3 = XferFsS3::getS3();
+            $s3 = self::getS3();
             $request = array(
                 'Bucket'=> $g_config->s3fs_bucket,
                 'Key' => $full,
@@ -51,7 +54,7 @@ class XferFsS3
 
             $result = $s3->putObject($request);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -63,7 +66,7 @@ class XferFsS3
     {
         global $g_config;
 
-        $full = XferFsS3::makePath($path);
+        $full = self::makePath($path);
 
         $f = fopen($import_file, 'rb');
         if (!$f)
@@ -71,7 +74,7 @@ class XferFsS3
 
         try
         {
-            $s3 = XferFsS3::getS3();
+            $s3 = self::getS3();
             $request = array(
                 'Bucket' => $g_config->s3fs_bucket,
                 'Key' => $path,
@@ -80,7 +83,7 @@ class XferFsS3
 
             $result = $s3->putObject($request);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -104,14 +107,14 @@ class XferFsS3
 
         try
         {
-            $s3 = XferFsS3::getS3();
+            $s3 = self::getS3();
             $s3->getObject(array(
                 'Bucket' => $g_config->s3fs_bucket,
                 'Key'    => $path,
                 'SaveAs' => $f
             ));
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             @fclose($f);
             @unlink($local_path);
@@ -131,14 +134,14 @@ class XferFsS3
 
         try
         {
-            $s3 = XferFsS3::getS3();
+            $s3 = self::getS3();
             $s3->getObject(array(
                 'Bucket' => $g_config->s3fs_bucket,
                 'Key'    => $path,
                 'SaveAs' => $f
             ));
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             @fclose($f);
             return false;
@@ -153,13 +156,13 @@ class XferFsS3
 
         try
         {
-            $s3 = XferFsS3::getS3();
+            $s3 = self::getS3();
 
-            $full = XferFsS3::makePath($path);
+            $full = self::makePath($path);
 
             return filesize("s3://{$g_config->s3fs_bucket}/{$full}");
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -167,19 +170,18 @@ class XferFsS3
         return false;
     }
 
-
     public static function fileExists($path)
     {
         global $g_config;
 
-        $full = XferFsS3::makePath($path);
+        $full = self::makePath($path);
 
         try
         {
-            $s3 = XferFsS3::getS3();
+            $s3 = self::getS3();
             return $s3->doesObjectExist($g_config->s3fs_bucket, $full);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             return false;
         }
@@ -203,7 +205,7 @@ class XferFsS3
         if (strlen($path) > 0 && substr($path, -1) != '/')
             $path .= '/';
 
-        $s3 = XferFsS3::getS3();
+        $s3 = self::getS3();
 
         $arr = array();
 
@@ -271,7 +273,7 @@ class XferFsS3
         if (strlen($path) > 0 && substr($path, -1) != '/')
             $path .= '/';
 
-        $s3 = XferFsS3::getS3();
+        $s3 = self::getS3();
 
         $arr = array();
 
@@ -339,7 +341,7 @@ class XferFsS3
         if (strlen($path) > 0 && substr($path, -1) != '/')
             $path .= '/';
 
-        $s3 = XferFsS3::getS3();
+        $s3 = self::getS3();
 
         $arr = array();
         $maxkey = '';
@@ -429,36 +431,36 @@ class XferFsS3
     protected static $_s3 = null;
     private static function getS3()
     {
-        $aws = XferFsS3::getAWS();
+        $aws = self::getAWS();
         if (!$aws)
             return null;
 
-        if (null === XferFsS3::$_s3)
+        if (null === self::$_s3)
         {
-            XferFsS3::$_s3 = $aws->get('s3');
-            XferFsS3::$_s3->setSslVerification(false,false);
-            XferFsS3::$_s3->registerStreamWrapper();
+            self::$_s3 = $aws->get('s3');
+            self::$_s3->setSslVerification(false,false);
+            self::$_s3->registerStreamWrapper();
         }
 
-        return XferFsS3::$_s3;
+        return self::$_s3;
     }
 
     private static function getAWS()
     {
-        setAutoloaderIgnoreErrors(true);
+        //setAutoloaderIgnoreErrors(true);
 
         require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
 
         global $g_config;
 
-        if (null === XferFsS3::$_aws)
+        if (null === self::$_aws)
         {
-            XferFsS3::$_aws = Aws\Common\Aws::factory(array(
+            self::$_aws = Aws\Common\Aws::factory(array(
                'key' => $g_config->s3fs_access_key,
                'secret' => $g_config->s3fs_secret_key
             ));
         }
 
-        return XferFsS3::$_aws;
+        return self::$_aws;
     }
 }

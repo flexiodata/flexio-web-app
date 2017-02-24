@@ -15,7 +15,7 @@
 namespace Flexio\Controllers;
 
 
-class AController extends \FxControllerAction
+class AController extends \Flexio\System\FxControllerAction
 {
     /*
         NOTE: DO NOT REMOVE THESE -- THEY ARE HERE FOR TRANSLATION PURPOSES
@@ -194,7 +194,7 @@ class AController extends \FxControllerAction
 
         $project_url = '/app/project' . (isset($project_eid) ? "?eid=$project_eid" : '');
 
-        if (\System::isLoggedIn() && isset($email) && $email === \System::getCurrentUserName())
+        if (\Flexio\System\System::isLoggedIn() && isset($email) && $email === \Flexio\System\System::getCurrentUserName())
         {
             // CASE 1: user is logged in, and user is the same as the one
             // with the link; try to access the shared project (TODO:

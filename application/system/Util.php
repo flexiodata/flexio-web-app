@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class Util
 {
     public static function isPlatformWindows()
@@ -36,9 +39,9 @@ class Util
 
     public static function exec($cmdline, $wait = false)
     {
-        if (Util::isPlatformWindows())
+        if (\Flexio\System\Util::isPlatformWindows())
         {
-            $wsh_shell = new COM("WScript.Shell");
+            $wsh_shell = new \COM("WScript.Shell");
             $exec = $wsh_shell->Run("$cmdline", 0, $wait);
         }
          else
@@ -52,13 +55,13 @@ class Util
 
     public static function runInBackground($code, $wait = false)
     {
-        $phpbin = \Util::getBinaryPath('php');
+        $phpbin = \Flexio\System\Util::getBinaryPath('php');
 
-        $stubphp = \System::getBaseDirectory();
+        $stubphp = \Flexio\System\System::getBaseDirectory();
         $stubphp = str_replace("\\", "/", $stubphp);
         $stubphp .= '/scripts/stub.php';
 
-        $curidentity = \System::serializeGlobalVars();
+        $curidentity = \Flexio\System\System::serializeGlobalVars();
         $curlang = $GLOBALS['g_store']->lang;
         $cursessid = session_id();
         $curservername = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
@@ -76,12 +79,12 @@ class Util
                     unlink(__FILE__);
                 }
             }
-            \$g_delete_on_exit = new DeleteOnExit();
+            \$g_delete_on_exit = new \\DeleteOnExit();
             session_id('$cursessid');
             if (strlen('$curservername') > 0)
                 \$_SERVER['SERVER_NAME'] = '$curservername';
-            \\System::unserializeGlobalVars('$curidentity');
-            \\System::setCurrentLanguage('$curlang');
+            \\Flexio\\System\\System::unserializeGlobalVars('$curidentity');
+            \\Flexio\\System\\System::setCurrentLanguage('$curlang');
             \$GLOBALS['g_store']->http_host = $httphost;
             $code;
 EOT;
@@ -98,7 +101,7 @@ EOT;
         $command = "$phpbin -f \"$tmpfname\"";
         if (strtoupper(substr(PHP_OS, 0, 3)) == "WIN")
         {
-            $wsh_shell = new COM("WScript.Shell");
+            $wsh_shell = new \COM("WScript.Shell");
             $exec = $wsh_shell->Run($command, 0, $wait);
         }
          else
@@ -116,8 +119,8 @@ EOT;
     {
         if (!(class_exists($action, false) || interface_exists($action, false)))
         {
-            //if (file_exists(System::getApplicationDirectory() . DIRECTORY_SEPARATOR . "custom" . DIRECTORY_SEPARATOR . "$action.php"))
-            //    \Framework::loadClass($action);
+            //if (file_exists(\Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . "custom" . DIRECTORY_SEPARATOR . "$action.php"))
+            //    \Flexio\System\Framework::loadClass($action);
         }
 
         if (class_exists($action, false) || interface_exists($action, false))
@@ -136,21 +139,21 @@ EOT;
     public static function messageBox($msg, $caption = 'Message')
     {
         // to show object data, use var_export (similar to var_dump):
-        // \Util::messageBox(var_export($validation_info,true));
+        // \Flexio\System\Util::messageBox(var_export($validation_info,true));
 
-        if (\Util::isPlatformWindows())
+        if (\Flexio\System\Util::isPlatformWindows())
         {
-            $wsh_shell = new COM('WScript.Shell');
+            $wsh_shell = new \COM('WScript.Shell');
             $wsh_shell->Popup($msg, 0, $caption, 0x1040);
         }
     }
 
     public static function notepad($msg)
     {
-        $filename = \Util::createTempFile('', 'txt');
+        $filename = \Flexio\System\Util::createTempFile('', 'txt');
         file_put_contents($filename, $msg);
 
-        $wsh_shell = new COM("WScript.Shell");
+        $wsh_shell = new \COM("WScript.Shell");
         $exec = $wsh_shell->Run("notepad $filename", 1, true);
 
         unlink($filename);
@@ -161,7 +164,7 @@ EOT;
         // pathinfo will parse paths differently, depending on the
         // platform being run on
 
-        if (!Util::isPlatformWindows())
+        if (!\Flexio\System\Util::isPlatformWindows())
             $filename = str_replace("\\", "/", $filename); // parse using linux-style paths
              else
             $filename = str_replace("/", "\\", $filename); // parse using windows-style paths
@@ -174,7 +177,7 @@ EOT;
         // pathinfo will parse paths differently, depending on the
         // platform being run on
 
-        if (!Util::isPlatformWindows())
+        if (!\Flexio\System\Util::isPlatformWindows())
             $filename = str_replace("\\", "/", $filename); // parse using linux-style paths
              else
             $filename = str_replace("/", "\\", $filename); // parse using windows-style paths
@@ -189,7 +192,7 @@ EOT;
         foreach ($files as $file)
         {
             if (is_dir($dir . DIRECTORY_SEPARATOR . $file))
-                \Util::rmtree($dir . DIRECTORY_SEPARATOR . $file);
+                \Flexio\System\Util::rmtree($dir . DIRECTORY_SEPARATOR . $file);
                  else
                 unlink($dir . DIRECTORY_SEPARATOR . $file);
         }
@@ -400,7 +403,7 @@ EOT;
         // between them and reports the results similarly to how a text
         // diff program would, with + and - for the insertions/deletions;
         // for example, if we have the following:
-        //     \Util::diff(array('b','c','d'),array('a','b','c','e'))
+        //     \Flexio\System\Util::diff(array('b','c','d'),array('a','b','c','e'))
         // we get:
         //     [{"+":"a"},{"=":"b"},{"=":"c"},{"-":"d"},{"+":"e"}]
 
@@ -475,9 +478,9 @@ EOT;
         // we found a sequence; return the sequence plus the sequences
         // for the parts that have smaller lengths
         return array_merge(
-            \Util::diff(array_slice($array1, 0, $offset1), array_slice($array2, 0, $offset2)),
+            \Flexio\System\Util::diff(array_slice($array1, 0, $offset1), array_slice($array2, 0, $offset2)),
             $result_array,
-            \Util::diff(array_slice($array1, $offset1 + $max_length), array_slice($array2, $offset2 + $max_length))
+            \Flexio\System\Util::diff(array_slice($array1, $offset1 + $max_length), array_slice($array2, $offset2 + $max_length))
         );
     }
 
@@ -583,8 +586,8 @@ EOT;
 
     public static function formatDate($date)
     {
-        $datetime = new DateTime($date);
-        return $datetime->format(DateTime::ISO8601);
+        $datetime = new \DateTime($date);
+        return $datetime->format(\DateTime::ISO8601);
     }
 
     public static function formateDateDiff($date1, $date2)
@@ -596,8 +599,8 @@ EOT;
             return null;
 
         // get the difference between two dates, excluding the microtime portion
-        $d1 = DateTime::createFromFormat("Y-m-d H:i:s.u", $date1);
-        $d2 = DateTime::createFromFormat("Y-m-d H:i:s.u", $date2);
+        $d1 = \DateTime::createFromFormat("Y-m-d H:i:s.u", $date1);
+        $d2 = \DateTime::createFromFormat("Y-m-d H:i:s.u", $date2);
 
         if ($d1 === false || $d2 === false)
             return null;
@@ -735,8 +738,8 @@ EOT;
     /* // works, but currently not in use
     public static function getCurrentTimezoneOffset()
     {
-        $tz1 = new DateTimeZone($GLOBALS['g_store']->timezone);
-        $dt = new DateTime('now');
+        $tz1 = new \DateTimeZone($GLOBALS['g_store']->timezone);
+        $dt = new \DateTime('now');
         $off = $tz1->getOffset($dt);
         $sign = ($off < 0 ? '-' : '+');
         $off = abs($off);
@@ -763,10 +766,10 @@ EOT;
         if (!is_string($value))
             return false;
 
-        // TODO: the DateTime::createFromFormat() can't handle certain
+        // TODO: the \DateTime::createFromFormat() can't handle certain
         // types of date time formats allowed by the standard (i.e, partial
         // times given by ".ttt" in the following: YYYY-MM-DDThh:mm:ss.tttZ)
-        $dt = DateTime::createFromFormat(DateTime::ISO8601, $value);
+        $dt = \DateTime::createFromFormat(\DateTime::ISO8601, $value);
         if ($dt !== false)
             return true;
 
@@ -887,12 +890,12 @@ EOT;
 
     public static function generateHandle()
     {
-        return \Util::generateRandomString(20);
+        return \Flexio\System\Util::generateRandomString(20);
     }
 
     public static function generatePassword()
     {
-        $pw = \Util::generateRandomString(10);
+        $pw = \Flexio\System\Util::generateRandomString(10);
         $pw[2] = ''.random_int(0, 9);
         $pw[6] = ''.random_int(0, 9);
         $i = random_int(0, 9);
@@ -924,7 +927,7 @@ EOT;
         {
             $enc = sodium_crypto_secretbox($plaintext, $nonce, $key);
         }
-        catch (Error $e)
+        catch (\Error $e)
         {
             return null;
         }
@@ -965,7 +968,7 @@ EOT;
             $nonce = str_repeat("\x0", SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
             return sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
         }
-        catch (Error $e)
+        catch (\Error $e)
         {
             return null;
         }
@@ -1015,7 +1018,7 @@ EOT;
 
     public static function getBinaryPath($bin)
     {
-        $fxhome = \System::getBaseDirectory();
+        $fxhome = \Flexio\System\System::getBaseDirectory();
         $base_path = dirname($fxhome);
 
         // on some newer windows setups, we've been installing the server software
@@ -1026,7 +1029,7 @@ EOT;
         if (is_dir($base_path . DIRECTORY_SEPARATOR . 'server'))
             $base_path .= (DIRECTORY_SEPARATOR . 'server');
 
-        if (Util::isPlatformWindows())
+        if (\Flexio\System\Util::isPlatformWindows())
         {
             // running on windows -- we need to fully qualify the exe path
             switch ($bin)
@@ -1048,11 +1051,11 @@ EOT;
          else
         {
             $xtra_bin_dir = '';
-            if (\Util::isXampp() && \Util::isPlatformMac())
+            if (\Flexio\System\Util::isXampp() && \Flexio\System\Util::isPlatformMac())
                 $xtra_bin_dir = PHP_BINDIR.'/';
 
             $phantom_js_platform_folder = 'linux64';
-            if (\Util::isPlatformMac())
+            if (\Flexio\System\Util::isPlatformMac())
                 $phantom_js_platform_folder = 'macosx';
 
             // running on linux, no need to fully qualify exe path
@@ -1274,7 +1277,7 @@ EOT;
 
     public static function zipFile($target_zip, $file)
     {
-        $exe = \Util::getBinaryPath('zip');
+        $exe = \Flexio\System\Util::getBinaryPath('zip');
 
         if (is_array($file))
             $arr = $file;
@@ -1290,7 +1293,7 @@ EOT;
 
         foreach ($arr as $f)
         {
-            \Util::exec("$exe -j $target_zip \"$f\"", true);
+            \Flexio\System\Util::exec("$exe -j $target_zip \"$f\"", true);
         }
 
         return true;

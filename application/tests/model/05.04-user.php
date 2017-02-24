@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Util::generateHandle();
+        $handle = \Flexio\System\Util::generateHandle();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_USER, $info);
@@ -39,7 +39,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Util::generateHandle();
+        $handle = \Flexio\System\Util::generateHandle();
         $info = array(
             'password' => $handle
         );
@@ -51,7 +51,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Util::generateHandle();
+        $handle1 = \Flexio\System\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => null,
@@ -66,7 +66,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Util::generateHandle();
+        $handle1 = \Flexio\System\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -81,7 +81,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Util::generateHandle();
+        $handle1 = \Flexio\System\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => '',
@@ -96,7 +96,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Util::generateHandle();
+        $handle1 = \Flexio\System\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -111,20 +111,20 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Util::generateHandle();
+        $handle1 = \Flexio\System\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = \Eid::isValid($eid);
+        $actual = \Flexio\System\Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('A.7', '\Model::create(); make sure that a valid eid is returned on success',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Util::generateHandle();
+        $handle1 = \Flexio\System\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,

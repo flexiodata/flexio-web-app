@@ -224,7 +224,7 @@ class SearchModel extends ModelBase
             $i = self::trim_spaces($i);
 
             // if the item is an eid, add it to the list of eids
-            if (Eid::isValid($i))
+            if (\Flexio\System\Eid::isValid($i))
             {
                 if ($search_term->node_eids === false)
                     $search_term->node_eids = array();

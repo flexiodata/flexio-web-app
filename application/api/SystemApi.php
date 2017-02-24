@@ -27,7 +27,7 @@ class SystemApi
 
         // try to log in to the system
         $error_message = _('Authentication failed'); // default error message
-        $result = \System::login($params['username'], $params['password'], $error_message);
+        $result = \Flexio\System\System::login($params['username'], $params['password'], $error_message);
 
         if (!$result)
         {
@@ -45,7 +45,7 @@ class SystemApi
             ))) === false)
             return $request->getValidator()->fail();
 
-        \System::clearLoginIdentity();
+        \Flexio\System\System::clearLoginIdentity();
         @session_destroy();
         @setcookie('FXSESSID', '', time()-86400, '/');
         return true;
@@ -82,7 +82,7 @@ class SystemApi
             $result['user_name']['message'] = '';
 
             // check if the username isn't a valid identifier
-            if (!\Identifier::isValid($username))
+            if (!\Flexio\System\Identifier::isValid($username))
             {
                 $result['user_name']['valid'] = false;
                 $result['user_name']['message'] = _('A username must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
@@ -106,7 +106,7 @@ class SystemApi
             $result['email']['message'] = '';
 
             // check if the email is invalid
-            if (!Email::isValid($email))
+            if (!\Flexio\Services\Email::isValid($email))
             {
                 $result['email']['valid'] = false;
                 $result['email']['message'] = _('This email address must be formatted correctly.');
@@ -130,7 +130,7 @@ class SystemApi
             $result['password']['message'] = '';
 
             // check the password
-            if (!\Util::isValidPassword($password))
+            if (!\Flexio\System\Util::isValidPassword($password))
             {
                 $result['password']['valid'] = false;
                 $result['password']['message'] = _('A password must have at least 8 characters');
@@ -189,17 +189,17 @@ class SystemApi
             $messages[] = 'php sqlite library not installed; please install php5-sqlite';
 
         //$val = class_exists("Imagick", false);
-        //if (\Util::isPlatformLinux() && !$val)
+        //if (\Flexio\System\Util::isPlatformLinux() && !$val)
         //    $messages[] = 'php imagick library not installed; please install php5-imagick';
 
-        $val = file_exists(\Util::getBinaryPath('php'));
+        $val = file_exists(\Flexio\System\Util::getBinaryPath('php'));
         if (!$val)
             $messages[] = 'cannot find php command line executable. On Linux, install php5-cli. On Windows, make sure $g_config->dir_home is set.';
 
-        if (\Util::isPlatformWindows() && !class_exists("COM", false))
+        if (\Flexio\System\Util::isPlatformWindows() && !class_exists("COM", false))
             $messages[] = 'please enable extension=php_com_dotnet.dll in php.ini';
 
-        if (\Util::isPlatformLinux())
+        if (\Flexio\System\Util::isPlatformLinux())
         {
             // make sure certain debian/ubuntu packages are installed
         }

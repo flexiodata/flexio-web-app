@@ -12,10 +12,12 @@
  */
 
 
+namespace Flexio\Services;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class PostgresService implements IConnection
+class PostgresService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -32,7 +34,7 @@ class PostgresService implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);
@@ -47,7 +49,7 @@ class PostgresService implements IConnection
         if (isset($params['port']))
             $params['port'] = (string)$params['port'];
 /*
-        $validator = \Validator::getInstance();
+        $validator = \Flexio\System\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true),
@@ -178,22 +180,21 @@ class PostgresService implements IConnection
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
             $log = "Timestamp: $timestamp\nDATA PROVIDER CONNECTING TO: $dsn\n\n";
-            PostgresService::addToQueryLog($log);
+            \Flexio\System\System::log($log);
         }
 
         try
         {
-            $db = new PDO($dsn, $this->username, $this->password);
-            $db->setAttribute(PDO::ATTR_CASE, PDO::CASE_NATURAL);
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $db = new \PDO($dsn, $this->username, $this->password);
+            $db->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_NATURAL);
+            $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
             return $db;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                PostgresService::addToQueryLog('Could not connect to Postgres server. Exception message: ' . $e->getMessage());
+            \Flexio\System\System::log('Could not connect to Postgres server. Exception message: ' . $e->getMessage());
         }
 
         return null;
@@ -220,11 +221,9 @@ class PostgresService implements IConnection
             $this->db->exec($sql);
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                PostgresService::addToQueryLog('Could not execute statement. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not execute statement. Exception message: ' . $e->getMessage());
             return false;
         }
     }
@@ -298,7 +297,7 @@ class PostgresService implements IConnection
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
             $log = ("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec", ($t2-$t1)) . "\nDATA: $sql\n\n");
-            PostgresService::addToQueryLog($log);
+            \Flexio\System\System::log($log);
         }
 
         if ($result)
@@ -319,7 +318,7 @@ class PostgresService implements IConnection
 
     public function queryAll($table)
     {
-        $sql = "select * from " . PostgresService::quoteIdentifierIfNecessary($table);
+        $sql = "select * from " . self::quoteIdentifierIfNecessary($table);
 
         $iter = new PostgresIteratorAll;
         $iter->result = $this->db->query($sql);
@@ -347,7 +346,7 @@ class PostgresService implements IConnection
             }
 
             // create the table
-            $qdbtable = PostgresService::quoteIdentifierIfNecessary($table);
+            $qdbtable = self::quoteIdentifierIfNecessary($table);
 
             $sql = "drop table if exists $qdbtable";
             $this->db->exec($sql);
@@ -355,11 +354,9 @@ class PostgresService implements IConnection
             $sql = "create table $qdbtable ($fieldsql)";
             $this->db->exec($sql);
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                PostgresService::addToQueryLog('Could not create table. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not create table. Exception message: ' . $e->getMessage());
             return false;
         }
 
@@ -370,7 +367,7 @@ class PostgresService implements IConnection
     {
         $this->deleteFile($path);
 
-        $qtbl = PostgresService::quoteIdentifierIfNecessary($path);
+        $qtbl = self::quoteIdentifierIfNecessary($path);
         $qmimetype = $this->db->quote($mime_type);
         $qencoding = $this->db->quote($encoding);
 
@@ -416,7 +413,7 @@ class PostgresService implements IConnection
     public function openFile($path)
     {
         $db = $this->newConnection();
-        $qtbl = PostgresService::quoteIdentifierIfNecessary($path);
+        $qtbl = self::quoteIdentifierIfNecessary($path);
 
         try
         {
@@ -425,11 +422,9 @@ class PostgresService implements IConnection
                 return false;
             $oid = $row['blob_id'];
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                PostgresService::addToQueryLog('Could not open file. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not open file. Exception message: ' . $e->getMessage());
             return null;
         }
 
@@ -459,7 +454,7 @@ class PostgresService implements IConnection
 
     public function deleteFile($path)
     {
-        $qdbtable = PostgresService::quoteIdentifierIfNecessary($path);
+        $qdbtable = self::quoteIdentifierIfNecessary($path);
 
         $sql = "drop table if exists $qdbtable";
         $this->db->exec($sql);
@@ -493,7 +488,7 @@ class PostgresService implements IConnection
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
             $log = ("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec", ($t2-$t1)) . "\nDATA: $sql\n\n");
-            PostgresService::addToQueryLog($log);
+            \Flexio\System\System::log($log);
         }
 
         $structure = [];
@@ -508,7 +503,7 @@ class PostgresService implements IConnection
             $pgtype = $row['atttypid'];
             $pgtypemod = $row['atttypmod'];
 
-            $type = PostgresService::pgtypeToDbtype($pgtype);
+            $type = self::pgtypeToDbtype($pgtype);
             $width = 0;
             $scale = 0;
 
@@ -606,7 +601,7 @@ class PostgresService implements IConnection
 
     public function getTableRowCount($table)
     {
-        $qtbl = PostgresService::quoteIdentifierIfNecessary($table);
+        $qtbl = self::quoteIdentifierIfNecessary($table);
 
         $res = $this->db->query("select count(*) as cnt from $qtbl");
         if (!$res)
@@ -652,7 +647,7 @@ class PostgresService implements IConnection
             if (isset($f['name']))
                 $f = $f['name'];
 
-            $result .= PostgresService::quoteIdentifierIfNecessary($f);
+            $result .= self::quoteIdentifierIfNecessary($f);
             $first = false;
         }
 
@@ -812,7 +807,7 @@ class PostgresService implements IConnection
         $width = isset($field['width']) ? $field['width'] : null;
         $scale = isset($field['scale']) ? $field['scale'] : null;
 
-        $qname = PostgresService::quoteIdentifierIfNecessary($name);
+        $qname = self::quoteIdentifierIfNecessary($name);
 
         switch ($type)
         {
@@ -861,11 +856,6 @@ class PostgresService implements IConnection
                 return "$qname bigserial";
         }
     }
-
-    private static function addToQueryLog($str)
-    {
-        \System::getModel()->getDatabase()->addToQueryLog($str);
-    }
 }
 
 
@@ -889,7 +879,7 @@ class PostgresIterator
 
         if ($this->cursor_type == 'xh1')
         {
-            $decoded = PostgresService::base64url_decode(substr($handle,3));
+            $decoded = \Flexio\Services\PostgresService::base64url_decode(substr($handle,3));
             $arr = explode("\t", $decoded);
             if (count($arr) != 3)
                 return false;
@@ -903,7 +893,7 @@ class PostgresIterator
 
     public function getHandle()
     {
-        return $this->cursor_type . PostgresService::base64url_encode($this->table . "\t" . $this->row_count . "\t" . $this->primary_key);
+        return $this->cursor_type . \Flexio\Services\PostgresService::base64url_encode($this->table . "\t" . $this->row_count . "\t" . $this->primary_key);
     }
 
     public function getRows($offset, $limit)
@@ -931,7 +921,7 @@ class PostgresIterator
                 $timestamp = $date->format("Y-m-d H:i:s.u");
 
                 $log = ("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec", ($t2-$t1)) . "\nDATA: $sql\n\n");
-                PostgresIterator::addToQueryLog($log);
+                \Flexio\System\System::log($log);
             }
 
             return $stmt;
@@ -968,11 +958,6 @@ class PostgresIterator
         $this->row_pos++;
         return $this->rows[$this->row_pos - 1];
     }
-
-    private static function addToQueryLog($str)
-    {
-        \System::getModel()->getDatabase()->addToQueryLog($str);
-    }
 }
 
 
@@ -982,7 +967,7 @@ class PostgresIteratorAll
 
     public function fetchRow()
     {
-        $row = $this->result->fetch(PDO::FETCH_ASSOC);
+        $row = $this->result->fetch(\PDO::FETCH_ASSOC);
         unset($row['xdrowid']);
         return $row;
     }
@@ -1001,7 +986,7 @@ class PostgresInserter
     private $columns = null;
 
     public function init($service, $db, $table)
-    {        
+    {
         $this->db = $db;
         $this->table = $table;
         $this->structure = $service->describeTable($table);
@@ -1029,7 +1014,7 @@ class PostgresInserter
             $this->columns[] = $structure_indexed[strtolower($field)];
         }
 
-        $this->fields = PostgresService::createDelimitedFieldList($fields);
+        $this->fields = \Flexio\Services\PostgresService::createDelimitedFieldList($fields);
         return true;
     }
 
@@ -1110,15 +1095,13 @@ class PostgresInserter
                 $res = $this->db->pgsqlCopyFromArray($this->table, $this->rows, "\t", "\\\\N", $this->fields);
 
             $this->rows = [];
-            
+
             file_put_contents('/tmp/abc', $this->table);
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                PostgresInserter::addToQueryLog('Could not flush rows. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not flush rows. Exception message: ' . $e->getMessage());
             $this->rows = [];
             return false;
         }
@@ -1127,11 +1110,6 @@ class PostgresInserter
     public function finishInsert()
     {
         return $this->flush();
-    }
-
-    private static function addToQueryLog($str)
-    {
-        \System::getModel()->getDatabase()->addToQueryLog($str);
     }
 }
 
@@ -1175,7 +1153,7 @@ class PostgresInserterMultiRow
             $this->columns[] = $structure_indexed[$cleaned_fieldname];
         }
 
-        $this->fields = PostgresService::createDelimitedFieldList($fields);
+        $this->fields = \Flexio\Services\PostgresService::createDelimitedFieldList($fields);
         return true;
     }
 
@@ -1263,11 +1241,9 @@ class PostgresInserterMultiRow
             $this->rows = [];
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->query_log))
-                PostgresInserter::addToQueryLog('Could not flush rows. Exception message: ' . $e->getMessage());
-
+            \Flexio\System\System::log('Could not flush rows. Exception message: ' . $e->getMessage());
             $this->rows = [];
             return false;
         }
@@ -1324,8 +1300,8 @@ class PostgresInserterSimple
 
     public function startInsert($fields)
     {
-        $sql =  'insert into '. PostgresService::quoteIdentifierIfNecessary($this->table) . ' (';
-        $sql .= PostgresService::createDelimitedFieldList($fields);
+        $sql =  'insert into '. \Flexio\Services\PostgresService::quoteIdentifierIfNecessary($this->table) . ' (';
+        $sql .= \Flexio\Services\PostgresService::createDelimitedFieldList($fields);
         $sql .= ') VALUES ( ' . trim(str_repeat('?,',count($fields)),',') . ')';
 
         $this->stmt = $this->db->prepare($sql);

@@ -35,7 +35,7 @@ class Pipe extends \Flexio\Object\Base
         if (isset($properties) && isset($properties['schedule']))
         {
             $schedule = $properties['schedule'];
-            if (\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
+            if (\Flexio\System\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
                 return false;
 
             $properties['schedule'] = json_encode($schedule);
@@ -68,7 +68,7 @@ class Pipe extends \Flexio\Object\Base
         if (isset($properties) && isset($properties['schedule']))
         {
             $schedule = $properties['schedule'];
-            if (\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
+            if (\Flexio\System\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
                 return false;
 
             $properties['schedule'] = json_encode($schedule);
@@ -140,7 +140,7 @@ class Pipe extends \Flexio\Object\Base
     public function setSchedule($schedule)
     {
         // make sure the schedule format is valid
-        if (\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
+        if (\Flexio\System\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
             return $this;
 
         // shorthand for setting schedule info

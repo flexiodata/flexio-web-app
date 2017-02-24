@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class ValidatorSchema
 {
     // this class is a partial implementation of the draft 4 JSON schema
@@ -56,7 +59,7 @@ class ValidatorSchema
         if (is_string($schema))
             $schema = json_decode($schema);
 
-        $validator = new ValidatorSchema;
+        $validator = new self;
 
         // check the schema; if we have a bad schema, we're done
         $validator->testSchema($schema);
@@ -78,7 +81,7 @@ class ValidatorSchema
             $schema = json_decode($schema);
 
         // check the node and return the results
-        $validator = new ValidatorSchema;
+        $validator = new self;
         $validator->testObject(null, $data, $schema);
         return $validator;
     }
@@ -93,7 +96,7 @@ class ValidatorSchema
             $schema = json_decode($schema);
 
         // check the schema
-        $validator = new ValidatorSchema;
+        $validator = new self;
         $validator->testSchema($schema);
         return $validator;
     }
@@ -126,7 +129,7 @@ class ValidatorSchema
         // make sure schema is an object
         if (!is_object($schema))
         {
-            $error_code = ValidatorSchema::ERROR_INVALID_SYNTAX;
+            $error_code = self::ERROR_INVALID_SYNTAX;
             $error_message = _('Validator schema is not an object type');
             $this->setError($error_code, $error_message);
             return false;
@@ -136,61 +139,61 @@ class ValidatorSchema
         foreach ($schema as $key => $value)
         {
             if ($key === 'title' && !is_string($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'title\' parameter is not a string'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'title\' parameter is not a string'));
 
             if ($key === 'description' && !is_string($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'description\' parameter is not a string'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'description\' parameter is not a string'));
 
             if ($key === 'type' && !is_string($value) && !is_array($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'type\' parameter is not a string or array'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'type\' parameter is not a string or array'));
 
             if ($key === 'enum' && !is_array($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'enum\' parameter is not an array'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'enum\' parameter is not an array'));
 
             if ($key === 'minimum' && !is_numeric($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'minimum\' parameter is not a number'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'minimum\' parameter is not a number'));
 
             if ($key === 'maximum' && !is_numeric($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'maximum\' parameter is not a number'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'maximum\' parameter is not a number'));
 
             if ($key === 'multipleOf' && !is_numeric($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'multipleOf\' parameter is not a number'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'multipleOf\' parameter is not a number'));
 
             if ($key === 'multipleOf' && is_numeric($value) && $value <= 0)
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'multipleOf\' parameter must not be less than or equal to zero'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'multipleOf\' parameter must not be less than or equal to zero'));
 
             if ($key === 'exclusiveMinimum' && !is_bool($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'exclusiveMinimum\' parameter is not boolean'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'exclusiveMinimum\' parameter is not boolean'));
 
             if ($key === 'exclusiveMaximum' && !is_bool($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'exclusiveMaximum\' parameter is not boolean'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'exclusiveMaximum\' parameter is not boolean'));
 
             if ($key === 'minLength' && !is_integer($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'minLength\' parameter is not an integer'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'minLength\' parameter is not an integer'));
 
             if ($key === 'maxLength' && !is_integer($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'maxLength\' parameter is not an integer'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'maxLength\' parameter is not an integer'));
 
             if ($key === 'pattern' && !is_string($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'pattern\' parameter is not a string'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'pattern\' parameter is not a string'));
 
             if ($key === 'format' && !is_string($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'format\' parameter is not a string'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'format\' parameter is not a string'));
 
             if ($key === 'minItems' && !is_integer($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'minItems\' parameter is not an integer'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'minItems\' parameter is not an integer'));
 
             if ($key === 'minItems' && is_integer($value) && $value < 0)
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'minItems\' parameter must not be less than zero'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'minItems\' parameter must not be less than zero'));
 
             if ($key === 'maxItems' && !is_integer($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'maxItems\' parameter is not an integer'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'maxItems\' parameter is not an integer'));
 
             if ($key === 'maxItems' && is_integer($value) && $value < 0)
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'maxItems\' parameter must not be less than zero'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'maxItems\' parameter must not be less than zero'));
 
             if ($key === 'items' && !is_object($value) && !is_array($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'items\' parameter must be an object or an array'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'items\' parameter must be an object or an array'));
 
             if ($key === 'items' && is_object($value))
                 $this->testSchema($value); // if items value is an object, it must be a valid schema
@@ -202,22 +205,22 @@ class ValidatorSchema
             }
 
             if ($key === 'minProperties' && !is_integer($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'minProperties\' parameter is not an integer'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'minProperties\' parameter is not an integer'));
 
             if ($key === 'minProperties' && is_integer($value) && $value < 0)
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'minProperties\' parameter must not be less than zero'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'minProperties\' parameter must not be less than zero'));
 
             if ($key === 'maxProperties' && !is_integer($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'maxProperties\' parameter is not an integer'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'maxProperties\' parameter is not an integer'));
 
             if ($key === 'maxProperties' && is_integer($value) && $value < 0)
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'maxProperties\' parameter must not be less than zero'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'maxProperties\' parameter must not be less than zero'));
 
             if ($key === 'required' && !is_array($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'required\' parameter is not an array'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'required\' parameter is not an array'));
 
             if ($key === 'required' && is_array($value) && count($value) < 1)
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'required\' parameter must contain at least one element'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'required\' parameter must contain at least one element'));
 
             if ($key === 'required' && is_array($value))
             {
@@ -228,7 +231,7 @@ class ValidatorSchema
                     // required parameter needs to be a string
                     if (!is_string($v))
                     {
-                        $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'required\' parameter must only contain string values'));
+                        $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'required\' parameter must only contain string values'));
                         continue;
                     }
 
@@ -236,7 +239,7 @@ class ValidatorSchema
                     // of required parameters
                     if (isset($arr_keys[$v]))
                     {
-                        $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'required\' parameter must contain unique values'));
+                        $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'required\' parameter must contain unique values'));
                         continue;
                     }
 
@@ -245,7 +248,7 @@ class ValidatorSchema
             }
 
             if ($key === 'properties' && !is_object($value))
-                $this->setError(ValidatorSchema::ERROR_INVALID_SYNTAX, _('Schema \'properties\' parameter must be an object'));
+                $this->setError(self::ERROR_INVALID_SYNTAX, _('Schema \'properties\' parameter must be an object'));
 
             if ($key === 'properties' && is_object($value))
             {
@@ -280,7 +283,7 @@ class ValidatorSchema
         $this->testObjectMaximumPropertyCount($property, $value, $schema);
         $this->testObjectRequiredProperties($property, $value, $schema);
 
-        // contain recursive calls to ValidatorSchema::testObject():
+        // contain recursive calls to self::testObject():
         $this->testArrayItems($property, $value, $schema);
         $this->testObjectProperties($property, $value, $schema);
 
@@ -324,7 +327,7 @@ class ValidatorSchema
             if ($type_match === false)
             {
                 $type = self::getType($data);
-                $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid type of value ($type); should be a $schema->type"));
+                $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid type of value ($type); should be a $schema->type"));
             }
 
             return;
@@ -340,13 +343,13 @@ class ValidatorSchema
             }
 
             // value didn't match any of the types
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid type of value") . self::example_list($child_nodes));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid type of value") . self::example_list($child_nodes));
             return;
         }
 
         // type has to be string or array; validated in schema test
-        
-        // TODO: fill out 
+
+        // TODO: fill out
         return;
     }
 
@@ -364,7 +367,7 @@ class ValidatorSchema
         }
 
         // none of the objects match
-        $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that isn't allowed"));
+        $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that isn't allowed"));
         return;
     }
 
@@ -383,10 +386,10 @@ class ValidatorSchema
             $exclusive = $schema->exclusiveMinimum;
 
         if ($exclusive === true && $data <= $minimum)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that's too small; should be greater than $minimum"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that's too small; should be greater than $minimum"));
 
         if ($exclusive !== true && $data < $minimum)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that's too small; should be greater than or equal to $minimum"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that's too small; should be greater than or equal to $minimum"));
 
         return;
     }
@@ -406,10 +409,10 @@ class ValidatorSchema
             $exclusive = $schema->exclusiveMaximum;
 
         if ($exclusive === true && $data >= $maximum)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that's too large; should be less than $maximum"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that's too large; should be less than $maximum"));
 
         if ($exclusive !== true && $data > $maximum)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that's too large; should be less than or equal to $maximum"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a value that's too large; should be less than or equal to $maximum"));
 
         return;
     }
@@ -432,7 +435,7 @@ class ValidatorSchema
         if (is_integer($data) && is_integer($multipleof))
         {
             if ($data % $multipleof != 0)
-                $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid value; should be a multiple of $multipleof"));
+                $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid value; should be a multiple of $multipleof"));
 
             return;
         }
@@ -444,10 +447,10 @@ class ValidatorSchema
         $data = abs($data);
 
         if ($data < $multipleof)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid value; should be a multiple of $multipleof"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid value; should be a multiple of $multipleof"));
 
         if ($data >= $multipleof && abs($data/$multipleof-round($data/$multipleof)) > 2e-15)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid value; should be a multiple of $multipleof"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid value; should be a multiple of $multipleof"));
 
         return;
     }
@@ -461,7 +464,7 @@ class ValidatorSchema
             return;
 
         if (strlen($data) < $schema->minLength)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a length that's too small; should have at least $schema->minLength characters"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a length that's too small; should have at least $schema->minLength characters"));
 
         return;
     }
@@ -475,7 +478,7 @@ class ValidatorSchema
             return;
 
         if (strlen($data) > $schema->maxLength)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a length that's too large; should have at most $schema->maxLength characters"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has a length that's too large; should have at most $schema->maxLength characters"));
 
         return;
     }
@@ -493,10 +496,10 @@ class ValidatorSchema
         $match_result = @preg_match($regex,$data); // suppress errors
 
         if ($match_result === false) // error trying to match
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid format"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid format"));
 
         if ($match_result === 0) // no match
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid format"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid format"));
 
         return;
     }
@@ -515,21 +518,21 @@ class ValidatorSchema
         switch ($schema->format)
         {
             // general formats
-            case 'date-time': $result = \Util::isValidDateTime($data); break;
-            case 'email':     $result = \Util::isValidEmail($data);    break;
-            case 'hostname':  $result = \Util::isValidHostName($data); break;
-            case 'ipv4':      $result = \Util::isValidIPV4($data);     break;
-            case 'ipv6':      $result = \Util::isValidIPV6($data);     break;
-            case 'uri':       $result = \Util::isValidUrl($data);      break; // TODO: expand to uri?
+            case 'date-time': $result = \Flexio\System\Util::isValidDateTime($data); break;
+            case 'email':     $result = \Flexio\System\Util::isValidEmail($data);    break;
+            case 'hostname':  $result = \Flexio\System\Util::isValidHostName($data); break;
+            case 'ipv4':      $result = \Flexio\System\Util::isValidIPV4($data);     break;
+            case 'ipv6':      $result = \Flexio\System\Util::isValidIPV6($data);     break;
+            case 'uri':       $result = \Flexio\System\Util::isValidUrl($data);      break; // TODO: expand to uri?
 
             // custom formats
-            case 'fx.eid':        $result = \Eid::isValid($data);                      break;
-            case 'fx.identifier': $result = \Identifier::isValid($data);               break;
-            case 'fx.fieldname':  $result = PostgresService::isValidFieldName($data); break;
+            case 'fx.eid':        $result = \Flexio\System\Eid::isValid($data);                      break;
+            case 'fx.identifier': $result = \Flexio\System\Identifier::isValid($data);               break;
+            case 'fx.fieldname':  $result = \Flexio\Services\PostgresService::isValidFieldName($data); break;
         }
 
         if ($result === false)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid format"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has an invalid format"));
 
         // the format isn't recognized; in this case, consider the value
         // valid and return true
@@ -545,7 +548,7 @@ class ValidatorSchema
             return;
 
         if (count($data) < $schema->minItems)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too few items; should have at least $schema->minItems items"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too few items; should have at least $schema->minItems items"));
 
         return;
     }
@@ -559,7 +562,7 @@ class ValidatorSchema
             return;
 
         if (count($data) > $schema->maxItems)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too many items; should have at most $schema->maxItems items"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too many items; should have at most $schema->maxItems items"));
 
         return;
     }
@@ -577,7 +580,7 @@ class ValidatorSchema
             $prop_count++;
 
         if ($prop_count < $schema->minProperties)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too few properties; should have at least $schema->minProperties items"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too few properties; should have at least $schema->minProperties items"));
 
         return;
     }
@@ -595,7 +598,7 @@ class ValidatorSchema
             $prop_count++;
 
         if ($prop_count > $schema->maxProperties)
-            $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too many properties; should have at least $schema->maxProperties items"));
+            $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too many properties; should have at least $schema->maxProperties items"));
 
         return;
     }
@@ -613,7 +616,7 @@ class ValidatorSchema
         foreach ($schema->required as $key)
         {
             if (!self::json_property_exists($data, $key))
-                $this->setError(ValidatorSchema::ERROR_MISSING_PARAMETER, _("Property " . json_encode($key) . " is required, but is missing"));
+                $this->setError(self::ERROR_MISSING_PARAMETER, _("Property " . json_encode($key) . " is required, but is missing"));
         }
 
         return;
@@ -653,7 +656,7 @@ class ValidatorSchema
             $max_item_count = count($schema_items);
             if (count($data) > $max_item_count)
             {
-                $this->setError(ValidatorSchema::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too many items; should have at most $max_item_count items"));
+                $this->setError(self::ERROR_INVALID_PARAMETER, self::example($property, $data) . _(" has too many items; should have at most $max_item_count items"));
                 return;
             }
 
@@ -914,20 +917,20 @@ class ValidatorSchema
         $pair = array($key => $value);
         return json_encode($pair);
     }
-    
+
     private static function example_list($data)
     {
         $count = count($data);
-        
+
         if ($count === 0)
             return '';
-            
+
         if ($count === 1)
             return $data[0];
 
         if ($count === 2)
             return $data[0] . ' or ' . $data[1];
-            
+
         $result = '';
         $idx = 0;
         foreach ($data as $d)
@@ -936,11 +939,11 @@ class ValidatorSchema
                 $result .= ', ';
             if ($idx === ($count - 1))
                 $result .= 'or ';
-            
-            $result .= $d;    
+
+            $result .= $d;
             $idx++;
         }
-        
+
         return $result;
     }
 }

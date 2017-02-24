@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();
-        $actual = 'Flexio\\Object\\Comment';
+        $actual = 'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'Comment::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -40,7 +40,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();
-        $actual = \Eid::isValid($object->getEid());
+        $actual = \Flexio\System\Eid::isValid($object->getEid());
         $expected = true;
         TestCheck::assertBoolean('A.4', 'Comment::create(); make sure a valid eid is set when an object is created',  $actual, $expected, $results);
 
@@ -64,7 +64,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_COMMENT, null);
         $object = \Flexio\Object\Comment::load($eid);
-        $actual = 'Flexio\\Object\\Comment';
+        $actual = 'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Comment::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -89,7 +89,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();
         $object = $object->delete();
-        $actual =  'Flexio\\Object\\Comment';
+        $actual =  'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'Comment::delete(); return the object',  $actual, $expected, $results);
 
@@ -97,7 +97,7 @@ class Test
         $object = \Flexio\Object\Comment::create();
         $eid1 = $object->getEid();
         $eid2 = $object->delete()->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('C.2', 'Comment::delete(); deleting an object shouldn\'t change its eid',  $actual, $expected, $results);
 
@@ -123,7 +123,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();
         $object = $object->set(null);
-        $actual =  'Flexio\\Object\\Comment';
+        $actual =  'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Comment::set(); return the object',  $actual, $expected, $results);
 
@@ -131,7 +131,7 @@ class Test
         $object = \Flexio\Object\Comment::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(null)->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.2', 'Comment::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -139,7 +139,7 @@ class Test
         $object = \Flexio\Object\Comment::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(array('eid'=>'xxxxxxxxxxxx'))->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.3', 'Comment::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -175,7 +175,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
-        $actual =  'Flexio\\Object\\Comment';
+        $actual =  'Flexio\Object\Comment';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Comment::setStatus(); return the object',  $actual, $expected, $results);
 
@@ -183,7 +183,7 @@ class Test
         $object = \Flexio\Object\Comment::create();
         $eid1 = $object->getEid();
         $eid2 = $object->setStatus(\Model::STATUS_TRASH)->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('F.2', 'Comment::setStatus(); setting status of an object shouldn\'t change its eid',  $actual, $expected, $results);
 

@@ -18,7 +18,7 @@ namespace Flexio\Controllers;
 // calls to the TestController are only allowed on localhost for
 // now, and calls cut off when not running in debug model
 
-class TestController extends \FxControllerAction
+class TestController extends \Flexio\System\FxControllerAction
 {
     public function init()
     {
@@ -109,6 +109,53 @@ class TestController extends \FxControllerAction
         // keep this function empty
         $this->renderRaw();
         echo '{}';
+    }
+
+    public function benAction()
+    {
+        if (!IS_TESTING())
+            return;
+
+        // keep this function empty
+        $this->renderRaw();
+
+echo "<pre>";
+
+        
+        $expr = 'to_char(-10,"999.99")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(10,"999")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(0,"9")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(0,"9.9$")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(-123,"9.9$")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(0,"9.9$")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+        
+        $expr = 'to_char(0,"FM9.9$")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
     }
 
     public function uploadAction()
@@ -235,70 +282,5 @@ EOD;
         $this->renderRaw();
 
         echo json_encode($_POST);
-    }
-
-    public function benAction()
-    {
-        if (!IS_TESTING())
-            return;
-
-        // keep this function empty
-        $this->renderRaw();
-
-
-        $service = \AmazonS3Service::create(array('accesskey' => 'AKIAIZG3NCNHLQMCDOVQ',
-                                                  'secretkey' => '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',
-                                                  'bucket' => 'flexio-wp',
-                                                  'region' => 'us-east-1'));
-
-
-     //  $objects = $service->read('output.csv', function ($data) { echo $data; });
-
-
-       $counter = 0;
-       $data = str_repeat('0123456789',1000000);
-       $objects = $service->write('output2.csv', function ($len) use (&$data) {
-            $ret = substr($data, 0, $len);
-            if (strlen($ret) == 0) return null;
-            $data = substr($data, $len);
-            return $ret;
-        });
-
-
-       // var_dump($objects);
-        die();
-
-
-
-
-        //$retval = null;
-        //$res = \ExprEvaluate::evaluate("abs(null)", [], [], $retval);
-        //var_dump($retval);
-
-        //$retval = null;
-        //$res = \ExprEvaluate::evaluate("trim(a)", [ 'a' => 'abc' ], null, $retval);
-        //var_dump($retval);
-
-/*
-        $retval = null;
-        $res = \ExprEvaluate::evaluate("to_char(to_timestamp('1950-11-30 15:23:59'), 'YYYY-MON-DD HH:MM:SS P.M.')", [ 'a' => 'abc' ], null, $retval);
-        //$res = \ExprEvaluate::evaluate("to_timestamp('1950-11-30 15:23:59')", [ 'a' => 'abc' ], null, $retval);
-        $res = \ExprEvaluate::evaluate("to_char(to_timestamp(''), 'YYYY')", [ 'a' => 'abc' ], null, $retval);
-
-        var_dump($retval);
-        */
-
-        // first, try to parse the expression
-
-        /*
-        $p = new ExprTranslatorPostgres;
-        $err = $p->parse("to_timestamp('')");
-        if ($err === false)
-            return \TestError::ERROR_BAD_PARSE;
-
-        $postgres_expr = $p->getResult();
-        var_dump($postgres_expr);
-        */
-
     }
 }

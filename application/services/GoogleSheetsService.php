@@ -12,12 +12,9 @@
  */
 
 
-if (!isset($GLOBALS['oauth_included']))
-{
-    $GLOBALS['oauth_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'phpoauthlib' . DIRECTORY_SEPARATOR . 'src'));
-}
+namespace Flexio\Services;
 
+require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 
 use OAuth\OAuth2\Service\Google;
 use OAuth\Common\Storage\Memory;
@@ -27,8 +24,7 @@ use OAuth\OAuth2\Token\StdOAuth2Token;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class GoogleSheetsService implements IConnection
+class GoogleSheetsService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -48,9 +44,9 @@ class GoogleSheetsService implements IConnection
     public static function create($params = null)
     {
         if (!isset($params))
-            return new static();
+            return new self;
 
-        return GoogleSheetsService::initialize($params);
+        return self::initialize($params);
     }
 
     public function connect($params)
@@ -207,7 +203,7 @@ class GoogleSheetsService implements IConnection
         $result = curl_exec($ch);
 
 
-        $doc = new DOMDocument;
+        $doc = new \DOMDocument;
         if ($doc->loadXML($result))
         {
             $entries = $doc->getElementsByTagName("entry");
@@ -224,7 +220,7 @@ class GoogleSheetsService implements IConnection
                     continue;
                 $id = $ids[0]->nodeValue;
 
-                $id = \Util::afterLast($id, '/');
+                $id = \Flexio\System\Util::afterLast($id, '/');
 
 
                 $updateds = $entry->getElementsByTagName("updated");
@@ -234,7 +230,7 @@ class GoogleSheetsService implements IConnection
 
 
 
-                $spreadsheet = new GoogleSpreadsheet;
+                $spreadsheet = new \GoogleSpreadsheet;
                 $spreadsheet->access_token = $this->access_token;
                 $spreadsheet->title = $title;
                 $spreadsheet->spreadsheet_id = $id;
@@ -349,7 +345,7 @@ class GoogleSheetsService implements IConnection
                 return;
             $idx = max($idxc, $idxr);
             $xml = substr($buf, 0, $idx+14);
-            $doc = new DOMDocument;
+            $doc = new \DOMDocument;
             if (!$doc->loadXML($xml . '</feed>'))
             {
                 $buf = '';
@@ -394,7 +390,7 @@ class GoogleSheetsService implements IConnection
         $buf = substr($buf, 0, $idx+8);
 
         // parse the buffer
-        $doc = new DOMDocument;
+        $doc = new \DOMDocument;
         if (!$doc->loadXML($info['prologue'] . $buf . (strrpos($buf,'</feed>')===false?'</feed>':'')))
         {
             //$buf = '';
@@ -497,7 +493,7 @@ class GoogleSheetsService implements IConnection
         if (strlen($spreadsheet_id) == 0)
             return false;
 
-        $spreadsheet = new GoogleSpreadsheet;
+        $spreadsheet = new \GoogleSpreadsheet;
         $spreadsheet->access_token = $this->access_token;
         $spreadsheet->title = $name;
         $spreadsheet->spreadsheet_id = $spreadsheet_id;
@@ -571,7 +567,7 @@ class GoogleSheetsService implements IConnection
             if ($curtime < $expires)
             {
                 // access token is valid (not expired); use it
-                $object = new GoogleSheetsService;
+                $object = new self;
                 $object->access_token = $params['access_token'];
                 $object->refresh_token = isset_or($params['refresh_token'],'');
                 $object->expires = $expires;
@@ -590,7 +586,7 @@ class GoogleSheetsService implements IConnection
                     return null; // refresh token is missing
                 $refresh_token = $params['refresh_token'];
 
-                $token = new StdOAuth2Token($access_token, $refresh_token);
+                $token = new \StdOAuth2Token($access_token, $refresh_token);
                 if (isset($params['token_expires']) && !is_null($params['token_expires']) && $params['token_expires'] > 0)
                     $token->setEndOfLife($params['token_expires']);
 
@@ -598,7 +594,7 @@ class GoogleSheetsService implements IConnection
                 if (!$token)
                     return null;
 
-                $object = new GoogleSheetsService;
+                $object = new self;
                 $object->access_token = $token->getAccessToken();
                 $object->refresh_token = $refresh_token;
                 $object->expires = $token->getEndOfLife();
@@ -620,7 +616,7 @@ class GoogleSheetsService implements IConnection
             $token = $oauth->requestAccessToken($params['code']);
             if (!$token)
                 return null;
-            $object = new GoogleSheetsService;
+            $object = new self;
             $object->access_token = $token->getAccessToken();
             $object->refresh_token = $token->getRefreshToken();
             $object->expires = $token->getEndOfLife();
@@ -656,9 +652,9 @@ class GoogleSheetsService implements IConnection
             return null;
 
         $service_factory = new \OAuth\ServiceFactory();
-        $storage = new Memory();
+        $storage = new \OAuth\Common\Storage\Memory();
 
-        $credentials = new Credentials(
+        $credentials = new \OAuth\Common\Consumer\Credentials(
             $client_id,
             $client_secret,
             $oauth_callback
@@ -723,7 +719,7 @@ class GoogleSpreadsheet
 
         $this->worksheets = [];
 
-        $doc = new DOMDocument;
+        $doc = new \DOMDocument;
         if ($doc->loadXML($result))
         {
             $entries = $doc->getElementsByTagName("entry");
@@ -760,9 +756,9 @@ class GoogleSpreadsheet
                 $col_count = (int)$e[0]->textContent;
 
 
-                $worksheet_id = \Util::afterLast($id, '/');
+                $worksheet_id = \Flexio\System\Util::afterLast($id, '/');
 
-                $worksheet = new GoogleWorksheet;
+                $worksheet = new \GoogleWorksheet;
                 $worksheet->access_token = $this->access_token;
                 $worksheet->spreadsheet_id = $this->spreadsheet_id;
                 $worksheet->worksheet_id = $worksheet_id;

@@ -39,7 +39,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('current_date()');
-        $expected = substr(\System::getTimestamp(), 0, 11);
+        $expected = substr(\Flexio\System\System::getTimestamp(), 0, 11);
         TestCheck::assertDateApprox('A.2', 'Expression; current_date() date function',  $actual, $expected, $results);
 
 
@@ -209,7 +209,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('now()');
-        $expected = \System::getTimestamp();
+        $expected = \Flexio\System\System::getTimestamp();
         TestCheck::assertDateApprox('F.2', 'Expression; now() date function',  $actual, $expected, $results);
 
 

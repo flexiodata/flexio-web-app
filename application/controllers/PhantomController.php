@@ -15,7 +15,7 @@
 namespace Flexio\Controllers;
 
 
-class PhantomController extends \FxControllerAction
+class PhantomController extends \Flexio\System\FxControllerAction
 {
     public function init()
     {
@@ -29,10 +29,10 @@ class PhantomController extends \FxControllerAction
             return false;
 
         // get phantomjs executable path
-        $exe = \Util::getBinaryPath('phantomjs');
+        $exe = \Flexio\System\Util::getBinaryPath('phantomjs');
 
         // get phantomjs script path
-        $js_script_path = \System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'phantomjs' . DIRECTORY_SEPARATOR . 'render-workspace-thumbnail.js';
+        $js_script_path = \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'phantomjs' . DIRECTORY_SEPARATOR . 'render-workspace-thumbnail.js';
 
         // run phantomjs
         $params_file = self::createParamsFile($params);
@@ -76,7 +76,7 @@ class PhantomController extends \FxControllerAction
             $args['url'] = urlencode($url);
         }
 
-        $params_file = \Util::getTempFilename('json');
+        $params_file = \Flexio\System\Util::getTempFilename('json');
         file_put_contents($params_file, json_encode($args));
         chmod($params_file, 0600);
 

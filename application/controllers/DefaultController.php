@@ -15,7 +15,7 @@
 namespace Flexio\Controllers;
 
 
-class DefaultController extends \FxControllerAction
+class DefaultController extends \Flexio\System\FxControllerAction
 {
     public function init()
     {

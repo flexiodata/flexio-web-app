@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class DbUtil
 {
     const TYPE_TEXT          = 'text';

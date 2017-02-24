@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\Services;
+
+
 if (!isset($GLOBALS['phpseclib_included']))
 {
     $GLOBALS['phpseclib_included'] = true;
@@ -21,8 +24,7 @@ if (!isset($GLOBALS['phpseclib_included']))
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class SftpService implements IConnection
+class SftpService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -39,7 +41,7 @@ class SftpService implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);
@@ -50,7 +52,7 @@ class SftpService implements IConnection
     public function connect($params)
     {
         $this->close();
-        if (($params = \Validator::getInstance()->check($params, array(
+        if (($params = \Flexio\System\Validator::getInstance()->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)

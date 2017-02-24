@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class GrepJob extends Base
+class GrepJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -35,7 +38,7 @@ class GrepJob extends Base
     private function createOutputFromInput($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
         $streamreader = \Flexio\Object\StreamReader($instream);
         $streamwriter = \Flexio\Object\StreamWriter($outstream);
@@ -49,7 +52,7 @@ class GrepJob extends Base
 
 
         // build command line
-        $cmd = \Util::getBinaryPath('grep') . ' ' . $grepexpr;
+        $cmd = \Flexio\System\Util::getBinaryPath('grep') . ' ' . $grepexpr;
         //$cmd = "\"C:\Program Files\Git\usr\bin\cat.exe\"";
 
         // run the process
@@ -72,7 +75,7 @@ class GrepJob extends Base
         */
 
         $cwd = sys_get_temp_dir();
-        $external_process = new PhpPipe;
+        $external_process = new \PhpPipe;
         if (!$external_process->exec($cmd, $cwd))
         {
             @unlink($filename);
@@ -80,7 +83,7 @@ class GrepJob extends Base
         }
 
         $mime_type = $instream->getMimeType();
-        if ($mime_type === ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // write header row
             $row = $instream->getStructure()->getNames();
@@ -228,7 +231,7 @@ class WindowsPipe
 
     function __construct()
     {
-        $this->wsh = new COM("WScript.Shell");
+        $this->wsh = new \COM("WScript.Shell");
     }
 
     function __destruct()

@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class Identifier
 {
     public static function isValid($identifier, &$message = '')
@@ -54,7 +57,7 @@ class Identifier
             return false;
         }
 
-        if (Identifier::isKeyWord($identifier))
+        if (self::isKeyWord($identifier))
         {
             $message = _('An identifier must not be a reserved or illegal word');
             return false;
@@ -66,10 +69,10 @@ class Identifier
 
     public static function isKeyWord($word)
     {
-        if (Identifier::isReservedWord($word))
+        if (self::isReservedWord($word))
             return true;
 
-        if (Identifier::isIllegalWord($word))
+        if (self::isIllegalWord($word))
             return true;
 
         return false;

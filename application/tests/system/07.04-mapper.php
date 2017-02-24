@@ -33,14 +33,14 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
             }
         ]
         ';
-        TestCheck::assertArray('A.1', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -55,7 +55,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -63,7 +63,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.2', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.2', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -79,7 +79,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -88,7 +88,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.3', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.3', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -105,7 +105,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -115,7 +115,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.4', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.4', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -132,7 +132,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -142,7 +142,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.5', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.5', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -163,7 +163,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -174,7 +174,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.6', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.6', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -192,7 +192,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -200,7 +200,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.7', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.7', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -222,7 +222,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -231,7 +231,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.8', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.8', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -255,7 +255,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -266,7 +266,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.9', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.9', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -303,7 +303,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -318,7 +318,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.10', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.10', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -357,7 +357,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -374,7 +374,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.11', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.11', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -394,7 +394,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -404,7 +404,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.12', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.12', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -424,7 +424,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -434,7 +434,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.13', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        TestCheck::assertArray('A.13', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -454,7 +454,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -464,7 +464,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.14', '\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object; duplicate keys are removed',  $actual, $expected, $results);
+        TestCheck::assertArray('A.14', '\Flexio\System\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object; duplicate keys are removed',  $actual, $expected, $results);
 
 
 
@@ -482,14 +482,14 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
             }
         ]
         ';
-        TestCheck::assertArray('B.1', '\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        TestCheck::assertArray('B.1', '\Flexio\System\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -504,7 +504,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -512,7 +512,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.2', '\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        TestCheck::assertArray('B.2', '\Flexio\System\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -527,7 +527,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -535,7 +535,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.3', '\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        TestCheck::assertArray('B.3', '\Flexio\System\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -550,7 +550,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -558,7 +558,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.4', '\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        TestCheck::assertArray('B.4', '\Flexio\System\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -574,7 +574,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -585,7 +585,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.5', '\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        TestCheck::assertArray('B.5', '\Flexio\System\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -602,7 +602,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -615,7 +615,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.6', '\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        TestCheck::assertArray('B.6', '\Flexio\System\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -636,7 +636,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -657,7 +657,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.7', '\Mapper::flatten(); an object with multiple subarray creates a cross product of the array; equivalent to a header table being joined to two child tables on differnet keys',  $actual, $expected, $results);
+        TestCheck::assertArray('B.7', '\Flexio\System\Mapper::flatten(); an object with multiple subarray creates a cross product of the array; equivalent to a header table being joined to two child tables on differnet keys',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -677,7 +677,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -688,7 +688,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.8', '\Mapper::flatten(); an object with an array of objects uses the object keys in the array',  $actual, $expected, $results);
+        TestCheck::assertArray('B.8', '\Flexio\System\Mapper::flatten(); an object with an array of objects uses the object keys in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -706,7 +706,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -717,7 +717,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.9', '\Mapper::flatten(); an object with an array of arrays distributes the parent key',  $actual, $expected, $results);
+        TestCheck::assertArray('B.9', '\Flexio\System\Mapper::flatten(); an object with an array of arrays distributes the parent key',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -742,7 +742,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {"key1_key1" : "value1"},
@@ -751,7 +751,7 @@ class Test
             {"key1_key3" : "value3"}
         ]
         ';
-        TestCheck::assertArray('B.10', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('B.10', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -772,14 +772,14 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {"key1" : "value1", "key2" : "value2", "key3_key4" : "value4", "key6" : "value6", "key7" : "value7"},
             {"key1" : "value1", "key2" : "value2", "key3_key5" : "value5", "key6" : "value6", "key7" : "value7"}
         ]
         ';
-        TestCheck::assertArray('B.11', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('B.11', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -806,7 +806,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {"key1_key2" : "value2", "key4" : "value4", "key5" : "value5"},
@@ -815,7 +815,7 @@ class Test
             {"key4" : "value4", "key5" : "value5", "key1_key3" : "value3"}
         ]
         ';
-        TestCheck::assertArray('B.12', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('B.12', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -855,7 +855,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -906,7 +906,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.12', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('B.12', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
 
 
@@ -924,7 +924,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -932,7 +932,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.1', '\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        TestCheck::assertArray('C.1', '\Flexio\System\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -947,7 +947,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -956,7 +956,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.2', '\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        TestCheck::assertArray('C.2', '\Flexio\System\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -973,7 +973,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -984,7 +984,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.3', '\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        TestCheck::assertArray('C.3', '\Flexio\System\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1003,7 +1003,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -1016,7 +1016,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.4', '\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        TestCheck::assertArray('C.4', '\Flexio\System\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1034,7 +1034,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -1043,7 +1043,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.5', '\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        TestCheck::assertArray('C.5', '\Flexio\System\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1060,7 +1060,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -1075,7 +1075,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.6', '\Mapper::flatten(); an array with mixed types flattens each type',  $actual, $expected, $results);
+        TestCheck::assertArray('C.6', '\Flexio\System\Mapper::flatten(); an array with mixed types flattens each type',  $actual, $expected, $results);
 
 
 
@@ -1094,7 +1094,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -1105,7 +1105,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.1', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('D.1', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1122,7 +1122,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -1133,7 +1133,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.2', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('D.2', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1150,7 +1150,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -1161,7 +1161,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.3', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('D.3', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1178,7 +1178,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -1189,7 +1189,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.4', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('D.4', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1208,7 +1208,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -1225,7 +1225,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.5', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('D.5', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1244,7 +1244,7 @@ class Test
         {
         }
         ';
-        $actual = \Mapper::flatten($data, $schema);
+        $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -1261,6 +1261,6 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.6', '\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        TestCheck::assertArray('D.6', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
     }
 }

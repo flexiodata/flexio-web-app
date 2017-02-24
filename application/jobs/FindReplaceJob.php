@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class FindReplaceJob extends Base
+class FindReplaceJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -30,7 +33,7 @@ class FindReplaceJob extends Base
                     break;
 
                 // table input
-                case ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTableNative($instream); // TODO: new implementation
                     //$this->createOutputFromTableSql($instream); // TODO: old implementation
                     break;
@@ -53,7 +56,7 @@ class FindReplaceJob extends Base
         }
 
         // create the output with the replaced values
-        $outstream = $instream->copy()->setPath(Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -111,9 +114,9 @@ class FindReplaceJob extends Base
 
         foreach ($columns as $column)
         {
-            $qname = DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $qfind = preg_quote($params['find'],'/');
-            $qreplace = ExprUtil::quote($params['replace']);
+            $qreplace = \Flexio\Services\ExprUtil::quote($params['replace']);
 
             $location = isset_or($params['location'],'any');
             if ($location == 'any') {}
@@ -125,7 +128,7 @@ class FindReplaceJob extends Base
                 $qfind = '(^' . $qfind .')|(' . $qfind . '$)';
             else if ($location == 'whole')
                 $qfind = '^' . $qfind . '$';
-            $qfind = ExprUtil::quote($qfind);
+            $qfind = \Flexio\Services\ExprUtil::quote($qfind);
 
             $flags = 'gi';
             if (isset($params['match_case']) && $params['match_case'])
@@ -143,7 +146,7 @@ class FindReplaceJob extends Base
         $job_definition['type'] = 'flexio.copy';
         $job_definition['params'] = $copy_params;
 
-        $job = CopyJob::create($this->getProcess(), $job_definition);
+        $job = \Flexio\Jobs\CopyJob::create($this->getProcess(), $job_definition);
         $job->getInput()->push($instream);
         $job->run();
         $this->getOutput()->merge($job->getOutput());
@@ -168,9 +171,9 @@ class FindReplaceJob extends Base
         foreach ($columns as $column)
         {
             // build the replace expression for the given column
-            $qname = DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $qfind = preg_quote($params['find'],'/');
-            $qreplace = ExprUtil::quote($params['replace']);
+            $qreplace = \Flexio\Services\ExprUtil::quote($params['replace']);
 
             $location = isset_or($params['location'],'any');
             if ($location == 'any') {}
@@ -182,7 +185,7 @@ class FindReplaceJob extends Base
                 $qfind = '(^' . $qfind .')|(' . $qfind . '$)';
             else if ($location == 'whole')
                 $qfind = '^' . $qfind . '$';
-            $qfind = ExprUtil::quote($qfind);
+            $qfind = \Flexio\Services\ExprUtil::quote($qfind);
 
             $flags = 'gi';
             if (isset($params['match_case']) && $params['match_case'])
@@ -191,7 +194,7 @@ class FindReplaceJob extends Base
             $exprtext = "regexp_replace($qname,$qfind,$qreplace,'$flags')";
 
             // map the column to the expression
-            $expreval = new ExprEvaluate;
+            $expreval = new \Flexio\Services\ExprEvaluate;
             $parse_result = $expreval->prepare($exprtext, $instream->getStructure()->enum());
             if ($parse_result === false)
                 return; // trouble building the expression

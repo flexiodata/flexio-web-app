@@ -26,9 +26,9 @@ class PipeModel extends ModelBase
             // create the object base
             $eid = $this->getModel()->createObjectBase(Model::TYPE_PIPE, $params);
             if ($eid === false)
-                throw new Exception();
+                throw new \Exception();
 
-            $timestamp = \System::getTimestamp();
+            $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'             => $eid,
                 'name'            => isset_or($params['name'], ''),
@@ -50,12 +50,12 @@ class PipeModel extends ModelBase
 
             // add the properties
             if ($db->insert('tbl_pipe', $process_arr) === false)
-                throw new Exception();
+                throw new \Exception();
 
             $db->commit();
             return $eid;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create pipe'));
@@ -89,7 +89,7 @@ class PipeModel extends ModelBase
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Eid::isValid($eid))
+        if (!\Flexio\System\Eid::isValid($eid))
             return false;
 
         if (($process_arr = \Model::check($params, array(
@@ -103,7 +103,7 @@ class PipeModel extends ModelBase
                 'schedule_status' => array('type' => 'string',  'required' => false)
             ))) === false)
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update pipe'));
-        $process_arr['updated'] = \System::getTimestamp();
+        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         $db->beginTransaction();
         try
@@ -131,7 +131,7 @@ class PipeModel extends ModelBase
             $db->commit();
             return true;
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $db->rollback();
             return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update pipe'));
@@ -144,7 +144,7 @@ class PipeModel extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!Eid::isValid($eid))
+        if (!\Flexio\System\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         $row = $db->fetchRow("select tob.eid as eid,
@@ -181,8 +181,8 @@ class PipeModel extends ModelBase
                      'schedule'        => $row['schedule'],
                      'schedule_status' => $row['schedule_status'],
                      'eid_status'      => $row['eid_status'],
-                     'created'         => \Util::formatDate($row['created']),
-                     'updated'         => \Util::formatDate($row['updated']));
+                     'created'         => \Flexio\System\Util::formatDate($row['created']),
+                     'updated'         => \Flexio\System\Util::formatDate($row['updated']));
     }
 
     public function getScheduledPipes()

@@ -73,7 +73,7 @@ class Test
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = \Eid::generate();
+        $eid3 = \Flexio\System\Eid::generate();
         $add_operation = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $delete_operation = $model->assoc_delete($eid1, \Model::EDGE_LINKED_TO, $eid3);
         $actual = $add_operation === true && $delete_operation === false;

@@ -12,6 +12,9 @@
  */
 
 
+namespace Flexio\System;
+
+
 class FrameworkRequest
 {
     public $controller = '';
@@ -260,7 +263,11 @@ class FxControllerAction
     public function invokeAction($controller, $action)
     {
         if (!method_exists($this, $action . 'Action'))
-            die("Invalid action");
+        {
+            http_response_code(404);
+            echo "Invalid action";
+            exit();
+        }
 
         $this->controller = $controller;
         $this->action = $action;
@@ -333,7 +340,7 @@ class FxControllerAction
      */
     public function __call($name, $args)
     {
-        throw new Exception('Sorry, the requested action is unavailable');
+        throw new \Exception('Sorry, the requested action is unavailable');
     }
 
     protected function renderRaw()
@@ -503,7 +510,7 @@ class Framework
 
             if (!$obj)
                 $obj = new $classname;
-            
+
             $obj->initControllerAction($view, $request, $response);
             $obj->invokeAction($request->controller, $request->action);
 

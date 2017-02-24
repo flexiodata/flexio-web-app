@@ -24,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \GoogleSheetsService::create(null);
-        $actual = get_class($service) === 'GoogleSheetsService';
-        $expected = true;
-        TestCheck::assertBoolean('A.1', '\GoogleSheetsService::create(); create an instance of the class',  $actual, $expected, $results);
+        $service = \Flexio\Services\GoogleSheetsService::create(null);
+        $actual = get_class($service);
+        $expected = 'Flexio\Services\GoogleSheetsService';
+        TestCheck::assertString('A.1', '\GoogleSheetsService::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

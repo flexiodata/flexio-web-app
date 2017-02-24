@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class EmailSendJob extends Base
+class EmailSendJob extends \Flexio\Jobs\Base
 {
     const DATA_MODE_NONE       = 'none';
     const DATA_MODE_BODY       = 'body';
@@ -92,7 +95,7 @@ class EmailSendJob extends Base
             // everything else; equivalent for now to nothing
         }
 
-        $email = \Email::create($email_params);
+        $email = \Flexio\Services\Email::create($email_params);
         $res = $email->send();
 
         // delete the temporary attachments
@@ -114,21 +117,21 @@ class EmailSendJob extends Base
             $mime_type = $instream->getMimeType();
             $name = $instream->getName();
 
-            if ($mime_type === ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
             {
                 $extension_to_add = 'csv';
-                $filename = \Util::getFilename($name);
+                $filename = \Flexio\System\Util::getFilename($name);
                 $name = "$filename.$extension_to_add";
 
-                $mime_type = \ContentType::MIME_TYPE_CSV;
-                $attachment_file = \Util::getTempFilename($extension_to_add);
+                $mime_type = \Flexio\System\ContentType::MIME_TYPE_CSV;
+                $attachment_file = \Flexio\System\Util::getTempFilename($extension_to_add);
                 if (!$this->saveDataToCsv($instream, $attachment_file, -1, 20000000))
                     continue; // TODO: fail?
             }
              else
             {
-                $extension = \Util::getFileExtension($name);
-                $attachment_file = \Util::getTempFilename($extension);
+                $extension = \Flexio\System\Util::getFileExtension($name);
+                $attachment_file = \Flexio\System\Util::getTempFilename($extension);
                 if (!$this->saveDataToFile($instream, $attachment_file))
                     continue; // TODO: fail?
             }

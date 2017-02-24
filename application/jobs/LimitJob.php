@@ -12,9 +12,12 @@
  */
 
 
+namespace Flexio\Jobs;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class LimitJob extends Base
+class LimitJob extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -30,14 +33,14 @@ class LimitJob extends Base
                     break;
 
                 // table input
-                case ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutput($instream);
                     break;
 
                 // stream/text/csv input
-                case ContentType::MIME_TYPE_STREAM:
-                case ContentType::MIME_TYPE_TXT:
-                case ContentType::MIME_TYPE_CSV:
+                case \Flexio\System\ContentType::MIME_TYPE_STREAM:
+                case \Flexio\System\ContentType::MIME_TYPE_TXT:
+                case \Flexio\System\ContentType::MIME_TYPE_CSV:
                     $this->createOutput($instream);
                     break;
             }
@@ -47,7 +50,7 @@ class LimitJob extends Base
     private function createOutput($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // get the number of rows to return

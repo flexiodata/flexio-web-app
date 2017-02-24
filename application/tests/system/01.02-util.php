@@ -22,32 +22,32 @@ class Test
         // TEST: test for non-numeric input
 
         // BEGIN TEST
-        $str = \Util::generateRandomString(null);
+        $str = \Flexio\System\Util::generateRandomString(null);
         $actual = strlen($str) === 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Util::generateRandomString() test for non-numeric input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\System\Util::generateRandomString() test for non-numeric input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Util::generateRandomString('1');
+        $str = \Flexio\System\Util::generateRandomString('1');
         $actual = strlen($str) === 1;
         $expected = true;
-        TestCheck::assertBoolean('A.2', 'Util::generateRandomString() test for non-numeric input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\System\Util::generateRandomString() test for non-numeric input',  $actual, $expected, $results);
 
 
 
         // TEST: test for numeric input
 
         // BEGIN TEST
-        $str = \Util::generateRandomString(1);
+        $str = \Flexio\System\Util::generateRandomString(1);
         $actual = strlen($str) === 1;
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Flexio\System\Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Util::generateRandomString(8);
+        $str = \Flexio\System\Util::generateRandomString(8);
         $actual = strlen($str) === 8;
         $expected = true;
-        TestCheck::assertBoolean('B.2', 'Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Flexio\System\Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
 
 
 
@@ -57,12 +57,12 @@ class Test
         $random_str = array();
         for ($i = 0; $i < 1000; $i++)
         {
-            $str = \Util::generateRandomString(20);
+            $str = \Flexio\System\Util::generateRandomString(20);
             $random_str[$str] = 1;
         }
         $random_str_count = count($random_str);
         $actual = $random_str_count === 1000;  // with 20 chars, we should have enough variation to have 1000 unique values
         $expected = true;
-        TestCheck::assertBoolean('C.1', 'Util::generateRandomString() test for randomness',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.1', '\Flexio\System\Util::generateRandomString() test for randomness',  $actual, $expected, $results);
     }
 }

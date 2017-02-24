@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
-        $actual = 'Flexio\\Object\\Connection';
+        $actual = 'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'Connection::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -40,7 +40,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
-        $actual = \Eid::isValid($object->getEid());
+        $actual = \Flexio\System\Eid::isValid($object->getEid());
         $expected = true;
         TestCheck::assertBoolean('A.4', 'Connection::create(); make sure a valid eid is set when an object is created',  $actual, $expected, $results);
 
@@ -64,7 +64,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_CONNECTION, null);
         $object = \Flexio\Object\Connection::load($eid);
-        $actual = 'Flexio\\Object\\Connection';
+        $actual = 'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Connection::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -89,7 +89,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
         $object = $object->delete();
-        $actual =  'Flexio\\Object\\Connection';
+        $actual =  'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'Connection::delete(); return the object',  $actual, $expected, $results);
 
@@ -97,7 +97,7 @@ class Test
         $object = \Flexio\Object\Connection::create();
         $eid1 = $object->getEid();
         $eid2 = $object->delete()->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('C.2', 'Connection::delete(); deleting an object shouldn\'t change its eid',  $actual, $expected, $results);
 
@@ -123,7 +123,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
         $object = $object->set(null);
-        $actual =  'Flexio\\Object\\Connection';
+        $actual =  'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Connection::set(); return the object',  $actual, $expected, $results);
 
@@ -131,7 +131,7 @@ class Test
         $object = \Flexio\Object\Connection::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(null)->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.2', 'Connection::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -139,7 +139,7 @@ class Test
         $object = \Flexio\Object\Connection::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(array('eid'=>'xxxxxxxxxxxx'))->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.3', 'Connection::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -175,7 +175,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
-        $actual =  'Flexio\\Object\\Connection';
+        $actual =  'Flexio\Object\Connection';
         $expected = get_class($object);
         TestCheck::assertString('F.1', 'Connection::setStatus(); return the object',  $actual, $expected, $results);
 
@@ -183,7 +183,7 @@ class Test
         $object = \Flexio\Object\Connection::create();
         $eid1 = $object->getEid();
         $eid2 = $object->setStatus(\Model::STATUS_TRASH)->getEid();
-        $actual =  \Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('F.2', 'Connection::setStatus(); setting status of an object shouldn\'t change its eid',  $actual, $expected, $results);
 

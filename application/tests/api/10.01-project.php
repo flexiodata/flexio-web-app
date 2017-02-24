@@ -24,7 +24,7 @@ class Test
         // TEST: object creation
 
         // BEGIN TEST
-        $username = \Util::generateHandle();
+        $username = \Flexio\System\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
         $user = \Flexio\Object\User::create($properties);

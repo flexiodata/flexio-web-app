@@ -12,10 +12,12 @@
  */
 
 
+namespace Flexio\Services;
+
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-
-class SocrataService implements IConnection
+class SocrataService implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -32,7 +34,7 @@ class SocrataService implements IConnection
 
     public static function create($params = null)
     {
-        $service = new static();
+        $service = new self;
 
         if (isset($params))
             $service->connect($params);
@@ -42,7 +44,7 @@ class SocrataService implements IConnection
 
     public function connect($params)
     {
-        $validator = \Validator::getInstance();
+        $validator = \Flexio\System\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true)
@@ -136,10 +138,10 @@ class SocrataService implements IConnection
 
         $items = [];
 
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML($html);
-        $xpath = new DOMXPath($doc);
+        $xpath = new \DOMXPath($doc);
         $nlist = $xpath->query("//a[@itemprop='url']");
 
         foreach ($nlist as $n)
@@ -230,7 +232,7 @@ class SocrataService implements IConnection
             $rows = [];
             while (true)
             {
-                $comma_pos = \Util::json_strpos($buf, ',', $start);
+                $comma_pos = \Flexio\System\Util::json_strpos($buf, ',', $start);
                 if ($comma_pos === false)
                 {
                     $buf = substr($buf, $start);
