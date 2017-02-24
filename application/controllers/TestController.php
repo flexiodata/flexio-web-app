@@ -118,8 +118,44 @@ class TestController extends \Flexio\System\FxControllerAction
 
         // keep this function empty
         $this->renderRaw();
-                $actual = \Flexio\Tests\TestUtil::evalExpressionNative('to_char(0,"9.9$")');
-                var_dump($actual);
+
+echo "<pre>";
+
+        
+        $expr = 'to_char(-10,"999.99")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(10,"999")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(0,"9")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(0,"9.9$")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(-123,"9.9$")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(0,"9.9$")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+        
+        $expr = 'to_char(0,"FM9.9$")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
     }
 
     public function uploadAction()
