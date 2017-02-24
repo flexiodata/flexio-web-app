@@ -170,7 +170,7 @@ class MysqlService implements \Flexio\Services\IConnection
         // connect to the database
         try
         {
-            $mysqli = @new mysqli($this->host,
+            $mysqli = @new \mysqli($this->host,
                                  $this->username,
                                  $this->password,
                                  $this->database,
