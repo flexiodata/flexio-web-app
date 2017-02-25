@@ -122,7 +122,7 @@ class TestController extends \Flexio\System\FxControllerAction
 echo "<pre>";
 
 
-        $expr = 'to_char(to_timestamp("1460-01-01 00:00:01"), "Month")';
+        $expr = 'to_char(to_timestamp(""), "Month")';
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
         echo "<br>" . $expr. "<br>";
         var_dump($actual);

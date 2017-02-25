@@ -2325,6 +2325,12 @@ TODO: remove deprecated implementation; following was split into two functions,
         // TODO: do we want to pass dates as strings?
         if (!$this->doEval($params[0], $param0)) return false;
 
+        if (trim($param0) == '')
+        {
+            $retval = null;
+            return true;
+        }
+
         $e = new ExprDateTime();
         if (!$e->parse($param0))
         {
