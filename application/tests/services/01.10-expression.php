@@ -3352,7 +3352,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "YY")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('U.1', 'Expression; to_char() conversion function; \'YY\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3431,7 +3431,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "MM")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('V.1', 'Expression; to_char() conversion function; \'MM\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3510,7 +3510,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "DD")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('W.1', 'Expression; to_char() conversion function; \'DD\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3589,7 +3589,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "HH24")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('X.1', 'Expression; to_char() conversion function; \'HH24\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3668,7 +3668,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "HH12")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('Y.1', 'Expression; to_char() conversion function; \'HH12\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3747,7 +3747,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "HH")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('Z.1', 'Expression; to_char() conversion function; \'HH\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3826,7 +3826,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "MI")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('AA.1', 'Expression; to_char() conversion function; \'MI\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3905,7 +3905,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "SS")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('AB.1', 'Expression; to_char() conversion function; \'SS\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3984,7 +3984,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "MONTH")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AC.1', 'Expression; to_char() conversion function; \'MONTH\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4063,7 +4063,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "Month")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AD.1', 'Expression; to_char() conversion function; \'Month\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4142,7 +4142,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "month")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AE.1', 'Expression; to_char() conversion function; \'month\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4221,7 +4221,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "MON")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AF.1', 'Expression; to_char() conversion function; \'MON\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4300,7 +4300,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "Mon")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AG.1', 'Expression; to_char() conversion function; \'Mon\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4379,7 +4379,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "mon")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AH.1', 'Expression; to_char() conversion function; \'mon\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4458,7 +4458,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "DAY")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AI.1', 'Expression; to_char() conversion function; \'DAY\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4537,7 +4537,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "Day")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AJ.1', 'Expression; to_char() conversion function; \'Day\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4616,7 +4616,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "day")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AK.1', 'Expression; to_char() conversion function; \'day\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4695,7 +4695,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "DY")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AL.1', 'Expression; to_char() conversion function; \'DY\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4774,7 +4774,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "Dy")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AM.1', 'Expression; to_char() conversion function; \'Dy\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4853,7 +4853,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "dy")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AN.1', 'Expression; to_char() conversion function; \'dy\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4932,7 +4932,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "D")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('AO.1', 'Expression; to_char() conversion function; \'D\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
