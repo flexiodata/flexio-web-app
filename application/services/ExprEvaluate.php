@@ -1598,7 +1598,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         while ($f < $format_length)
         {
             $ch = $format[$f];
-            $nextch = ($f+1 < $format_length ? $format[$f] : '');
+            $nextch = ($f+1 < $format_length ? $format[$f+1] : '');
 
             if (self::isFormatString($format, $f, "FM", true))
             {
