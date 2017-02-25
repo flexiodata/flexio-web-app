@@ -509,8 +509,9 @@
             me.$store.dispatch('testConnection', { eid, attrs })
 
             // re-open the input file chooser modal and set its connection
+            me.show_input_output_modal = true
             me.$refs['modal-choose-input-output']
-              .open()
+              .open({ mode: me.is_active_task_input ? 'choose-input' : 'choose-output' })
               .setConnection(response.body)
           }
            else
