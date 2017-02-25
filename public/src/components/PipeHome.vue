@@ -477,6 +477,7 @@
       },
 
       openConnectionModal() {
+        this.$refs['modal-choose-input-output'].close()
         this.$refs['modal-add-connection'].open()
       },
 
@@ -501,13 +502,17 @@
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
           if (response.ok)
           {
+            // close the connection modal
             modal.close()
 
             // try to connect to the connection
             me.$store.dispatch('testConnection', { eid, attrs })
 
             // re-open the input file chooser modal and set its connection
-            me.$refs['modal-choose-input'].setConnection(response.body)
+            me.show_input_output_modal = true
+            me.$refs['modal-choose-input-output']
+              .open({ mode: me.is_active_task_input ? 'choose-input' : 'choose-output' })
+              .setConnection(response.body)
           }
            else
           {

@@ -29,7 +29,7 @@
 
     <!-- add modal -->
     <pipe-props-modal
-      ref="modal-add"
+      ref="modal-add-pipe"
       open-from=".btn-add"
       close-to=".btn-add"
       :project-eid="projectEid"
@@ -39,21 +39,21 @@
 
     <!-- edit modal -->
     <pipe-props-modal
-      ref="modal-edit"
+      ref="modal-edit-pipe"
       :project-eid="projectEid"
       @submit="tryUpdatePipe"
     ></pipe-props-modal>
 
     <!-- share modal -->
     <pipe-share-modal
-      ref="modal-share"
+      ref="modal-share-pipe"
       @hide="show_share_modal = false"
       v-if="show_share_modal"
     ></pipe-share-modal>
 
     <!-- schedule modal -->
     <pipe-schedule-modal
-      ref="modal-schedule"
+      ref="modal-schedule-pipe"
       @submit="trySchedulePipe"
       @hide="show_schedule_modal = false"
       v-if="show_schedule_modal"
@@ -116,20 +116,21 @@
         'getAllProjects'
       ]),
       openAddModal(ref, attrs) {
-        this.$refs['modal-add'].open()
+        this.$refs['modal-add-pipe'].open()
       },
       openEditModal(item) {
-        this.$refs['modal-edit'].open(item)
+        this.$refs['modal-edit-pipe'].open(item)
       },
       openShareModal(item) {
         this.show_share_modal = true
-        this.$nextTick(() => { this.$refs['modal-share'].open(item) })
+        this.$nextTick(() => { this.$refs['modal-share-pipe'].open(item) })
       },
       openScheduleModal(item) {
         this.show_schedule_modal = true
-        this.$nextTick(() => { this.$refs['modal-schedule'].open(item) })
+        this.$nextTick(() => { this.$refs['modal-schedule-pipe'].open(item) })
       },
       openConnectionModal() {
+        this.$refs['modal-add-pipe'].close()
         this.$refs['modal-add-connection'].open()
       },
       duplicatePipe(item) {
@@ -204,7 +205,9 @@
             me.$store.dispatch('testConnection', { eid, attrs })
 
             // re-open the add pipe modal and set its connection
-            me.$refs['modal-add'].setConnection(response.body)
+            me.$refs['modal-add-pipe']
+              .open()
+              .setConnection(response.body)
           }
            else
           {
