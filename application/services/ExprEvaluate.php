@@ -1977,10 +1977,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             if ($ch == 'S' || $ch == 's')
             {
                 $sign_always = true;
-                if (!$digit_encountered)
-                    $sign_left = true;
-                     else
-                    $sign_left = false;
+                $sign_encountered_at = $left_format_digits;
             }
             if (($ch == 'M' || $ch == 'm') && ($ch_next == 'I' || $ch_next == 'i'))
             {
@@ -2008,6 +2005,14 @@ TODO: remove deprecated implementation; following was split into two functions,
                     $zero_right_digits = $right_format_digits;
             }
         }
+
+
+
+        if (isset($sign_encountered_at) && $sign_encountered_at >= $left_format_digits)
+        {
+            $sign_left = false;
+        }
+
 
         if ($right_format_digits == 0 && $format_has_decimal)
         {

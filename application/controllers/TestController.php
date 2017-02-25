@@ -127,9 +127,7 @@ echo "<pre>";
         echo "<br>" . $expr. "<br>";
         var_dump($actual);
 
-
-
-        $expr = 'to_char(-1,"0,000.MI0")';
+        $expr = 'to_char(-1,"0,00S0.0")';
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
         echo "<br>" . $expr. "<br>";
         var_dump($actual);
