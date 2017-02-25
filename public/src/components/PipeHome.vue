@@ -509,7 +509,9 @@
             me.$store.dispatch('testConnection', { eid, attrs })
 
             // re-open the input file chooser modal and set its connection
-            me.$refs['modal-choose-input-output'].open({ connection: attrs })
+            me.$refs['modal-choose-input-output']
+              .open()
+              .setConnection(response.body)
           }
            else
           {

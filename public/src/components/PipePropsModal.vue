@@ -267,6 +267,7 @@
         this.reset(attrs)
         this.mode = _.get(attrs, 'mode', this.has_eid ? 'edit-pipe' : 'create-pipe'),
         this.$refs['dialog'].open()
+        return this
       },
       close() {
         this.$refs['dialog'].close()

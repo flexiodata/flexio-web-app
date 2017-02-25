@@ -205,7 +205,9 @@
             me.$store.dispatch('testConnection', { eid, attrs })
 
             // re-open the add pipe modal and set its connection
-            me.$refs['modal-add-pipe'].open({ connection: attrs })
+            me.$refs['modal-add-pipe']
+              .open()
+              .setConnection(response.body)
           }
            else
           {
