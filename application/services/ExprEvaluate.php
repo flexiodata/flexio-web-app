@@ -1984,10 +1984,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             }
             if (($ch == 'M' || $ch == 'm') && ($ch_next == 'I' || $ch_next == 'i'))
             {
-                if (!$digit_encountered)
-                    $sign_left = true;
-                     else
-                    $sign_left = false;
+                $sign_left = null; // sign will be placed whereever MI is
                 $p++;
                 continue;
             }
@@ -2067,6 +2064,12 @@ TODO: remove deprecated implementation; following was split into two functions,
                 $p++;
                 continue;
             }
+            else if (($ch == 'M' || $ch == 'm') && ($ch_next == 'I' || $ch_next == 'i'))
+            {
+                $result .= ($is_negative ? '-' : ' ');
+                $p++;
+                continue;
+            }
              else if ($ch == '.' || $ch == 'D' || $ch == 'd')
             {
                 if ($ch == '.')
@@ -2111,7 +2114,7 @@ TODO: remove deprecated implementation; following was split into two functions,
 
                     if ($ch == '0' || $digit != '0' || $digit_printed || ($l == 1 && (!$format_has_decimal || !$padding)))
                     {
-                        if ($sign_left && !$digit_printed)
+                        if ($sign_left === true && !$digit_printed)
                         {
                             if ($is_negative)
                             {
@@ -2150,7 +2153,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                     */
 
 /*
-                    if ($sign_left && !$digit_printed && ($l <= $zero_left_digits || $digit != '0'))
+                    if ($sign_left === true && !$digit_printed && ($l <= $zero_left_digits || $digit != '0'))
                     {
                         if ($is_negative)
                         {
@@ -2222,7 +2225,7 @@ TODO: remove deprecated implementation; following was split into two functions,
 
         }
 
-        if (!$sign_left)
+        if ($sign_left === false)
         {
             if ($is_negative)
             {
