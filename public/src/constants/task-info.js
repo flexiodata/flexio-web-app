@@ -142,7 +142,7 @@ const SORT = {
 
 const TRANSFORM = {
   name: 'Transform',
-  type: types.TASK_TYPE_SORT,
+  type: types.TASK_TYPE_TRANSFORM,
   icon: 'transform'
 }
 
