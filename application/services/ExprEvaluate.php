@@ -1961,7 +1961,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             {
                 $padlen++;
             }
-            if ($ch == '$' || $ch == 8364 /* euro symbol */)
+            if ($ch == '$' || $ch == 'L' || $ch == 8364 /* euro symbol */)
             {
                 $padlen++;
             }
@@ -2095,6 +2095,10 @@ TODO: remove deprecated implementation; following was split into two functions,
             {
                 //$currency_sign = $ch;
                 $result .= $ch;
+            }
+            else if ($ch == 'L')
+            {
+                $result .= '$';
             }
             else if ($ch == '9' || $ch == '0')
             {
