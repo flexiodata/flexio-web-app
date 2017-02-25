@@ -1984,7 +1984,14 @@ TODO: remove deprecated implementation; following was split into two functions,
             }
             if (($ch == 'M' || $ch == 'm') && ($ch_next == 'I' || $ch_next == 'i'))
             {
-                $sign_left = null; // sign will be placed whereever MI is
+                $sign_left = null; // minus sign will be placed whereever MI is
+                $p++;
+                continue;
+            }
+            if (($ch == 'P' || $ch == 'p') && ($ch_next == 'L' || $ch_next == 'l'))
+            {
+                //$sign_left = null; // plus sign will be placed whereever PL is
+                $padlen++;
                 $p++;
                 continue;
             }
@@ -2067,6 +2074,12 @@ TODO: remove deprecated implementation; following was split into two functions,
             else if (($ch == 'M' || $ch == 'm') && ($ch_next == 'I' || $ch_next == 'i'))
             {
                 $result .= ($is_negative ? '-' : ' ');
+                $p++;
+                continue;
+            }
+            else if (($ch == 'P' || $ch == 'p') && ($ch_next == 'L' || $ch_next == 'l'))
+            {
+                $result .= ($is_negative ? ' ' : '+');
                 $p++;
                 continue;
             }
