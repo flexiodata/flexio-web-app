@@ -121,7 +121,7 @@ class TestController extends \Flexio\System\FxControllerAction
 
 echo "<pre>";
 
-        $result2 = \Flexio\Tests\TestUtil::evalExpressionPostgres('acos(1.01)');
+        $result2 = \Flexio\Tests\TestUtil::evalExpressionPostgres('iskindof("abc@def.com","email")');
         var_dump($result2);
         die();
 

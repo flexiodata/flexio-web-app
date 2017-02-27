@@ -947,11 +947,11 @@ class ExprTranslatorPostgres
 
         switch ($match_type)
         {
-            case 'email':
+            case "'email'":
                 $match_regex = "^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$";
                 break;
 
-            case 'english':
+            case "'english'":
                 $match_regex = "^[\\x00-\\x7F]*$";
                 break;
         }
