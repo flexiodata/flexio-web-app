@@ -2153,10 +2153,13 @@ TODO: remove deprecated implementation; following was split into two functions,
             }
              else if ($ch == '.' || $ch == 'D' || $ch == 'd')
             {
-                if ($ch == '.')
-                    $result .= $ch;
-                     else
-                    $result .= '.'; // getDecimalChar() from locale
+                if ($right_format_digits > 0)
+                {
+                    if ($ch == '.')
+                        $result .= $ch;
+                        else
+                        $result .= '.'; // getDecimalChar() from locale
+                }
                 $left = false;
                 $digit_printed = true;
             }
