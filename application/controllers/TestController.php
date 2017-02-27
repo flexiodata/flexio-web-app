@@ -122,7 +122,7 @@ class TestController extends \Flexio\System\FxControllerAction
 echo "<pre>";
 
 
-        $expr = 'to_char(19999.12341, "eeee")';
+        $expr = 'to_char(-19999.12341, ".9999eeee")';
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
         echo "<br>" . $expr. " should be <br>";
         var_dump($actual);
