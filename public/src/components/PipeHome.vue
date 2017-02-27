@@ -160,7 +160,7 @@
             class="flex-fill ba b--black-20 relative pipe-content"
             style="flex: 5 1"
             :val="execute_code"
-            :mode="execute_lang"
+            :lang="execute_lang"
             @change="updateExecuteJson"
             v-if="show_content && is_active_task_execute"
           ></code-editor>

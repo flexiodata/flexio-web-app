@@ -1,7 +1,10 @@
 <template>
   <div class="flex flex-column">
     <div class="flex-fill flex flex-row items-stretch relative">
-      <code-editor :val="code_text"></code-editor>
+      <code-editor
+        lang="python"
+        :val="code_text"
+      ></code-editor>
     </div>
   </div>
 </template>

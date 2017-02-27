@@ -19,19 +19,18 @@
   import {} from 'codemirror/mode/python/python'
 
   export default {
-    props: ['val', 'mode'],
+    props: {
+      'val': {
+        default: ''
+      },
+      'lang': {
+        default: 'python'
+      }
+    },
     data() {
       return {
         code_text: '',
         editor: null
-      }
-    },
-    computed: {
-      has_mode() {
-        return _.has(this, 'mode')
-      },
-      code_mode() {
-        return this.has_mode ? this.mode : 'python'
       }
     },
     created() {
@@ -42,7 +41,7 @@
 
       this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], {
         lineNumbers: true,
-        mode: this.code_mode
+        mode: this.lang
       })
       this.editor.focus()
 
