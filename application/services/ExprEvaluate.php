@@ -219,7 +219,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             {
                 return ExprParser::TYPE_NULL;
             }
-             else if (is_a($node->val, 'ExprDateTime'))
+             else if (is_a($node->val, '\Flexio\Services\ExprDateTime'))
             {
                 if ($node->val->hasTimePart())
                     return ExprParser::TYPE_DATETIME;
@@ -544,7 +544,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         'strpos'       => [ 'types' => [ 'i(ss)', 'i(ns)', 'i(bs)', 'i(Ns)' ], 'func' => 'func_strpos' ],
         'substr'       => [ 'types' => [ 's(si[i])', 's(ni[i])', 's(bi[i])', 's(Ni[i])' ], 'func' => 'func_substr' ],
         'tan'          => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_tan' ],
-        'to_char'      => [ 'types' => [ 's(ss)', 's(ns)', 's(ds)', 's(ts)', 's(bs)', 's(Ns)' ], 'func' => 'func_to_char' ],
+        'to_char'      => [ 'types' => [ 's(s)', 's(n)', 's(d)', 's(t)', 's(b)', 's(N)', 's(ns)', 's(ds)', 's(ts)', 's(Ns)' ], 'func' => 'func_to_char' ],
         'to_date'      => [ 'types' => [ 'd(ss)', 'd(ns)', 'd(ds)', 'd(bs)', 'd(Ns)' ], 'func' => 'func_to_date' ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
         'to_number'    => [ 'types' => [ 'f(ss)', 'f(ns)', 'f(ds)', 'f(bs)', 'f(Ns)' ], 'func' => 'func_to_number' ],
@@ -1552,12 +1552,12 @@ TODO: remove deprecated implementation; following was split into two functions,
     }
 
 
-    private static function getDayOfWeek($year, $month, $day)
+    private static function getDayOfWeek($year, $month, $day) // returns 0 as sunday, 1 as monday...
     {
         $a = intdiv(14-$month, 12);
         $y = $year - $a;
         $m = $month + (12*$a) - 2;
-        return (($day + $y + intdiv(y,4) - intdiv(y,100) + intdiv(y,400) + intdiv(31*m,12)) % 7);
+        return (($day + $y + intdiv($y,4) - intdiv($y,100) + intdiv($y,400) + intdiv(31*$m,12)) % 7);
     }
 
     private static function isFormatString($format, $idx, $str, $ignore_case = false)
@@ -1719,6 +1719,11 @@ TODO: remove deprecated implementation; following was split into two functions,
 
                 $res .= $buf;
                 $f += $offset;
+            }
+            else if (self::isFormatString($format, $f, "D", true))
+            {
+                $res .= sprintf("%d", self::getDayOfWeek($dt->getYear(), $dt->getMonth(), $dt->getDay()) + 1);
+                $f += 1;
             }
             else if (self::isFormatString($format, $f, "MON", true) || self::isFormatString($format, $f, "MONTH", true))
             {
@@ -1952,6 +1957,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         $sign_left = true;        // sign is on the left side
         $sign_always = false;
         $pr = false;
+        $eeee = false;
         $padding = true;          // true if padding is active
         $digit_encountered = false;
         $digit_printed = false;
@@ -1961,6 +1967,9 @@ TODO: remove deprecated implementation; following was split into two functions,
         // count the number of positions to the left
         // of the decimal in the format string
         $format_len = strlen($format);
+        if ($format_len == 0)
+            return '';
+        
         $p = $format;
         $left = true;
         for ($p = 0; $p < $format_len; ++$p)
@@ -1978,6 +1987,10 @@ TODO: remove deprecated implementation; following was split into two functions,
                 $padlen++;
             }
             if ($ch == ',' || $ch == 'G' || $ch == 'g')
+            {
+                $padlen++;
+            }
+            if ($ch == ' ')
             {
                 $padlen++;
             }
@@ -2027,8 +2040,11 @@ TODO: remove deprecated implementation; following was split into two functions,
                 if ($number < 1 || $number > 3999)
                     return '###############';
                 return str_pad(self::tochar_number_toroman($number), 15, ' ', STR_PAD_LEFT);
-                $p++;
-                continue;
+            }
+            if (($ch == 'E' || $ch == 'e') && strtoupper(substr($format, $p, 4)) == 'EEEE')
+            {
+                $eeee = true;
+                $p += 3;
             }
             if ($left)
             {
@@ -2058,6 +2074,27 @@ TODO: remove deprecated implementation; following was split into two functions,
             $padlen--;
         }
 
+
+        if ($eeee)
+        {
+            $dec = $right_format_digits;
+            $s = sprintf("%.{$dec}e", round($number, $dec+1));
+            $s = str_replace(',', '.', $s);
+            $epos = strpos($s, 'e');
+            if ($epos === false)
+                return '###';
+            $exp = intval(substr($s, $epos+1));
+            $s = substr($s, 0, $epos);
+            $s .= sprintf('e%s%02d', ($exp>=0?'+':'-'), abs($exp));
+
+            $pad = 6; // space for 1e+NN
+            if ($dec > 0)
+            {
+                $pad += ($dec+1); // +1 because of decimal point
+            }
+
+            return str_pad($s, $pad, ' ', STR_PAD_LEFT);
+        }
 
         // find decimal point in the input number
         $strnum = (string)round($number, $right_format_digits);
@@ -2128,26 +2165,21 @@ TODO: remove deprecated implementation; following was split into two functions,
             }
              else if ($ch == '.' || $ch == 'D' || $ch == 'd')
             {
-                if ($ch == '.')
-                    $result .= $ch;
-                     else
-                    $result .= '.'; // getDecimalChar() from locale
+                if ($right_format_digits > 0)
+                {
+                    if ($ch == '.')
+                        $result .= $ch;
+                        else
+                        $result .= '.'; // getDecimalChar() from locale
+                }
                 $left = false;
                 $digit_printed = true;
             }
              else if ($ch == ',' || $ch == 'G' || $ch == 'g')
             {
-                if (!$digit_printed)
+                if ($digit_printed)
                 {
-                    if ($padding)
-                        $result .= ' ';
-                }
-                else
-                {
-                    if ($ch == ',')
-                        $result .= $ch;
-                         else
-                        $result .= ','; // getThousandsSeparatorChar() from locale
+                    $result .= ','; // getThousandsSeparatorChar() from locale
                 }
             }
             else if ($ch == '$' || $ch == 8364 /* euro symbol */)
@@ -2158,6 +2190,10 @@ TODO: remove deprecated implementation; following was split into two functions,
             else if ($ch == 'L')
             {
                 $result .= '$';
+            }
+            else if ($ch == ' ')
+            {
+                $result .= ' ';
             }
             else if ($ch == '9' || $ch == '0')
             {
@@ -2267,6 +2303,20 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     public function func_to_char($func, $params, &$retval)
     {
+        if (count($params) < 2)
+        {
+            if (!$this->doEval($params[0], $param0)) return false;
+            if (is_null($param0))
+                $retval = null;
+            else if (is_bool($param0))
+                $retval = $param0 ? 'true' : 'false';
+            else if ($param0 instanceof ExprDateTime)
+                $retval = $param0->toString();
+            else
+                $retval = '' . $param0;
+            return true;
+        }
+
         if (!$this->doEval($params[0], $param0)) return false;
         if (!$this->doEval($params[1], $param1)) return false;
 
@@ -2459,7 +2509,7 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     private static function exprToDate($value)
     {
-        if (is_a($value, 'ExprDateTime'))
+        if (is_a($value, '\Flexio\Services\ExprDateTime'))
             return $value;
 
         $e = new ExprDateTime();
@@ -2645,7 +2695,7 @@ class ExprDateTime
 
     public function parse($value)
     {
-        if (is_a($value, 'ExprDateTime'))
+        if (is_a($value, '\Flexio\Services\ExprDateTime'))
         {
             $this->values = $value->values;
             return true;
