@@ -1074,12 +1074,12 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"9,.9")');
-        $expected = "  ,.0";
+        $expected = "   .0";
         TestCheck::assertString('G.3', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,",9.9")');
-        $expected = "  ,.0";
+        $expected = "   .0";
         TestCheck::assertString('G.4', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1099,7 +1099,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1,",9.9")');
-        $expected = " ,1.0";
+        $expected = "  1.0";
         TestCheck::assertString('G.8', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1851,7 +1851,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"G000.000")');
-        $expected = " ,012.340";
+        $expected = "  012.340";
         TestCheck::assertString('J.34', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
