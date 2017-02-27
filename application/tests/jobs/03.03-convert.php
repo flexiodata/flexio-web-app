@@ -47,11 +47,11 @@ class Test
         // TEST: ConvertJob; basic content upload test
 
         // BEGIN TEST
-        $data = '
-            "field1", "field2"
-            "a1", "b1"
-            "a2", "b2"
-        ';
+        $data = <<<EOD
+"field1", "field2"
+"a1", "b1"
+"a2", "b2"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -74,12 +74,12 @@ class Test
         // TEST: ConvertJob; content with troublesome characters
 
         // BEGIN TEST
-        $data = '
-            "field1", "field2"
-            "", ","
-            "b,", ",b"
-            "c,d", ","
-        ';
+        $data = <<<EOD
+"field1", "field2"
+"", ","
+"b,", ",b"
+"c,d", ","
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -104,10 +104,10 @@ class Test
         // in issue:FLEX-21
 
         // BEGIN TEST
-        $data = '
-            vend_name
-            SchwÃ¤bische SoftwarelÃ¶sungen AG
-        ';
+        $data = <<<EOD
+vend_name
+SchwÃ¤bische SoftwarelÃ¶sungen AG
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -160,10 +160,10 @@ EOD;
         // TEST: ConvertJob; content with integer numbers
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            0
-        ';
+        $data = <<<EOD
+"field1"
+0
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -194,10 +194,10 @@ EOD;
         TestCheck::assertArray('D.2', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            -1
-        ';
+        $data = <<<EOD
+"field1"
+-1
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -211,10 +211,10 @@ EOD;
         TestCheck::assertArray('D.3', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            9999
-        ';
+        $data = <<<EOD
+"field1"
+9999
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -228,10 +228,10 @@ EOD;
         TestCheck::assertArray('D.4', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            -9999
-        ';
+        $data = <<<EOD
+"field1"
+-9999
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -245,10 +245,10 @@ EOD;
         TestCheck::assertArray('D.5', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            999999999999999
-        ';
+        $data = <<<EOD
+"field1"
+999999999999999
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -262,10 +262,10 @@ EOD;
         TestCheck::assertArray('D.6', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            -999999999999999
-        ';
+        $data = <<<EOD
+"field1"
+-999999999999999
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -279,10 +279,10 @@ EOD;
         TestCheck::assertArray('D.7', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            9999999999999999
-        ';
+        $data = <<<EOD
+"field1"
+9999999999999999
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -296,10 +296,10 @@ EOD;
         TestCheck::assertArray('D.8', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            -9999999999999999
-        ';
+        $data = <<<EOD
+"field1"
+-9999999999999999
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -317,10 +317,10 @@ EOD;
         // TEST: ConvertJob; content with decimal numbers
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            0.0
-        ';
+        $data = <<<EOD
+"field1"
+0.0
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -334,10 +334,10 @@ EOD;
         TestCheck::assertArray('E.1', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            0.00
-        ';
+        $data = <<<EOD
+"field1"
+0.00
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -351,10 +351,10 @@ EOD;
         TestCheck::assertArray('E.2', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            0.0001
-        ';
+        $data = <<<EOD
+"field1"
+0.0001
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -368,10 +368,10 @@ EOD;
         TestCheck::assertArray('E.3', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            -0.0001
-        ';
+        $data = <<<EOD
+"field1"
+-0.0001
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -385,10 +385,10 @@ EOD;
         TestCheck::assertArray('E.4', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            0.000000000001
-        ';
+        $data = <<<EOD
+"field1"
+0.000000000001
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -402,10 +402,10 @@ EOD;
         TestCheck::assertArray('E.5', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            -0.000000000001
-        ';
+        $data = <<<EOD
+"field1"
+-0.000000000001
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -419,12 +419,12 @@ EOD;
         TestCheck::assertArray('E.6', 'Convert Job; numeric range check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            1.1
-            0.0001
-            -0.0001
-        ';
+        $data = <<<EOD
+"field1"
+1.1
+0.0001
+-0.0001
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -442,12 +442,12 @@ EOD;
         // TEST: ConvertJob; troublesome characters in a numeric field
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "1.1"
-            "0.0001"
-            "  0  "
-        ';
+        $data = <<<EOD
+"field1"
+"1.1"
+"0.0001"
+"  0  "
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -461,12 +461,12 @@ EOD;
         TestCheck::assertArray('F.1', 'Convert Job; if non-numeric characters are present, keep field in character format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "1.1"
-            "0.0001"
-            "123,456.78"
-        ';
+        $data = <<<EOD
+"field1"
+"1.1"
+"0.0001"
+"123,456.78"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -480,12 +480,12 @@ EOD;
         TestCheck::assertArray('F.2', 'Convert Job; if non-numeric characters are present, keep field in character format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "0"
-            "0"
-            "1776-07-04"
-        ';
+        $data = <<<EOD
+"field1"
+"0"
+"0"
+"1776-07-04"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -503,10 +503,10 @@ EOD;
         // TEST: ConvertJob; content with dates, single format
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "1999-12-31"
-        ';
+        $data = <<<EOD
+"field1"
+"1999-12-31"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -520,10 +520,10 @@ EOD;
         TestCheck::assertArray('G.1', 'Convert Job; valid date values should load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "2001-01-01"
-        ';
+        $data = <<<EOD
+"field1"
+"2001-01-01"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -537,10 +537,10 @@ EOD;
         TestCheck::assertArray('G.2', 'Convert Job; valid date values should load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "1999/12/31"
-        ';
+        $data = <<<EOD
+"field1"
+"1999/12/31"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -554,10 +554,10 @@ EOD;
         TestCheck::assertArray('G.3', 'Convert Job; valid date values should load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "2001/01/01"
-        ';
+        $data = <<<EOD
+"field1"
+"2001/01/01"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -571,10 +571,10 @@ EOD;
         TestCheck::assertArray('G.4', 'Convert Job; valid date values should load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "19991231"
-        ';
+        $data = <<<EOD
+"field1"
+"19991231"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -588,10 +588,10 @@ EOD;
         TestCheck::assertArray('G.5', 'Convert Job; valid date values should load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "20010101"
-        ';
+        $data = <<<EOD
+"field1"
+"20010101"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -609,11 +609,11 @@ EOD;
         // TEST: ConvertJob; content with dates, mixed format
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "1969-07-20"
-            "19700101"
-        ';
+        $data = <<<EOD
+"field1"
+"1969-07-20"
+"19700101"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -627,12 +627,12 @@ EOD;
         TestCheck::assertArray('H.1', 'Convert Job; valid date values should load if the format is recognized',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "1969-07-20"
-            "19700101"
-            "0"
-        ';
+        $data = <<<EOD
+"field1"
+"1969-07-20"
+"19700101"
+"0"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -646,12 +646,12 @@ EOD;
         TestCheck::assertArray('H.2', 'Convert Job; mixed date values with blank or zero values should end up as character fields',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "19690720"
-            19700101
-            0
-        ';
+        $data = <<<EOD
+"field1"
+"19690720"
+19700101
+0
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -665,12 +665,12 @@ EOD;
         TestCheck::assertArray('H.3', 'Convert Job; mixed date values with zero values should end up as numeric',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "1969-07-20"
-            "19700101"
-            "false"
-        ';
+        $data = <<<EOD
+"field1"
+"1969-07-20"
+"19700101"
+"false"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -684,12 +684,12 @@ EOD;
         TestCheck::assertArray('H.4', 'Convert Job; mixed date values with invalid date values should be imported as characters',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "1969-07-20"
-            "19700101"
-            "January"
-        ';
+        $data = <<<EOD
+"field1"
+"1969-07-20"
+"19700101"
+"January"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
@@ -703,12 +703,12 @@ EOD;
         TestCheck::assertArray('H.5', 'Convert Job; mixed date values with values that can\'t be interpreted correctly should be imported as characters',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $data = '
-            "field1"
-            "1969-07-20"
-            "19700101"
-            "1/89"
-        ';
+        $data = <<<EOD
+"field1"
+"1969-07-20"
+"19700101"
+"1/89"
+EOD;
         $params = [
             "data" => base64_encode(trim($data)),
             "format" => "delimited_text",
