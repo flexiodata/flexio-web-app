@@ -2333,7 +2333,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0.1,"PL0,000.0")');
-        $expected = " +0,000.1";
+        $expected = "+ 0,000.1";
         TestCheck::assertString('M.16', 'Expression; to_char() conversion function; \'PL\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2373,7 +2373,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-0.1,"PL0,000.0")');
-        $expected = "- 0,000.1";
+        $expected = " -0,000.1";
         TestCheck::assertString('M.24', 'Expression; to_char() conversion function; \'PL\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2413,7 +2413,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1234.5,"PL0,000.0")');
-        $expected = " +1,234.5";
+        $expected = "+ 1,234.5";
         TestCheck::assertString('M.32', 'Expression; to_char() conversion function; \'PL\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2453,7 +2453,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-1234.5,"PL0,000.0")');
-        $expected = "- 1,234.5";
+        $expected = " -1,234.5";
         TestCheck::assertString('M.40', 'Expression; to_char() conversion function; \'PL\' format element',  $actual, $expected, $results);
 
 
