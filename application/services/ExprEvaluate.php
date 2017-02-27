@@ -1919,6 +1919,25 @@ TODO: remove deprecated implementation; following was split into two functions,
         return $res;
     }
 
+    private static function tochar_number_toroman($number)
+    {
+        $lookup = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100,
+                        'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10,
+                        'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        
+        $result = '';
+        $number = intval($number);
+
+        foreach ($lookup as $roman => $value)
+        {
+            $matches = intval($number/$value);
+            $result .= str_repeat($roman,$matches);
+            $number = $number % $value;
+        }
+        
+        return $result;
+    }
+
     private static function tochar_number($number, $format)
     {
         $is_negative = false;
@@ -1998,6 +2017,16 @@ TODO: remove deprecated implementation; following was split into two functions,
                 // angle brackets for negative numbers
                 $sign_left = null;
                 $pr = true;
+                $p++;
+                continue;
+            }
+            if (($ch == 'R' || $ch == 'r') && ($ch_next == 'N' || $ch_next == 'n'))
+            {
+                // roman numerals
+                $number = intval($number);
+                if ($number < 1 || $number > 3999)
+                    return '###############';
+                return str_pad(self::tochar_number_toroman($number), 15, ' ', STR_PAD_LEFT);
                 $p++;
                 continue;
             }
