@@ -219,7 +219,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             {
                 return ExprParser::TYPE_NULL;
             }
-             else if (is_a($node->val, 'ExprDateTime'))
+             else if (is_a($node->val, '\Flexio\Services\ExprDateTime'))
             {
                 if ($node->val->hasTimePart())
                     return ExprParser::TYPE_DATETIME;
@@ -2471,7 +2471,7 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     private static function exprToDate($value)
     {
-        if (is_a($value, 'ExprDateTime'))
+        if (is_a($value, '\Flexio\Services\ExprDateTime'))
             return $value;
 
         $e = new ExprDateTime();
