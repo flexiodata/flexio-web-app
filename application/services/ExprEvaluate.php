@@ -1932,6 +1932,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         $currency_sign = '';
         $sign_left = true;        // sign is on the left side
         $sign_always = false;
+        $pr = false;
         $padding = true;          // true if padding is active
         $digit_encountered = false;
         $digit_printed = false;
@@ -1989,6 +1990,14 @@ TODO: remove deprecated implementation; following was split into two functions,
             {
                 //$sign_left = null; // plus sign will be placed whereever PL is
                 $padlen++;
+                $p++;
+                continue;
+            }
+            if (($ch == 'P' || $ch == 'p') && ($ch_next == 'R' || $ch_next == 'r'))
+            {
+                // angle brackets for negative numbers
+                $sign_left = null;
+                $pr = true;
                 $p++;
                 continue;
             }
@@ -2127,22 +2136,32 @@ TODO: remove deprecated implementation; following was split into two functions,
                 {
                     $digit = $overflow ? '#' : self::getLeftDigit($strnum, $dec, $l);
 
-
-
                     //if ($ch == '0' || $digit != '0' || $digit_printed || ($l == 1 && (!$format_has_decimal || !$padding)))
                     if ($ch == '0' || $digit != '0' || $digit_printed || $l == 1)
                     {
-                        if ($sign_left === true && !$digit_printed)
+                        if (!$digit_printed)
                         {
-                            if ($is_negative)
+                            if ($pr)
                             {
-                                $result .= '-';
+                                $result .= ($is_negative ? '<' : ' ');
                             }
-                            else
+                            else if ($sign_left === true)
                             {
-                                if ($sign_always)
+                                if ($is_negative)
                                 {
-                                    $result .= '+';
+                                    $result .= '-';
+                                }
+                                else
+                                {
+                                    if ($sign_always)
+                                    {
+                                        $result .= '+';
+                                    }
+                                    else
+                                    {
+                                        if ($padding)
+                                            $result .= ' ';
+                                    }
                                 }
                             }
                         }
@@ -2156,67 +2175,6 @@ TODO: remove deprecated implementation; following was split into two functions,
                             $digit_printed = true;
                         }
                     }
-
-
-/*
-                    if ($l > $zero_left_digits && $format_has_decimal)
-                    {
-                        if ($digit != '0' || $digit_printed)
-                        {
-                            $result .= $digit;
-                            $digit_printed = true;
-                        }
-                    }
-                    else
-                    {
-                        
-                        $result .= $digit;
-                        $digit_printed = true;
-                    }
-                    */
-
-/*
-                    if ($sign_left === true && !$digit_printed && ($l <= $zero_left_digits || $digit != '0'))
-                    {
-                        if ($is_negative)
-                        {
-                            $result .= '-';
-                        }
-                        else
-                        {
-                            if ($sign_always)
-                            {
-                                $result .= '+';
-                            }
-                            else
-                            {
-                                if ($padding)
-                                    $result .= ' ';
-                            }
-                        }
-                    }
-*/
-
-/*
-                    if ($l > $zero_left_digits)
-                    {
-                        if ($digit != '0' || $digit_printed)
-                        {
-                            $result .= $digit;
-                            $digit_printed = true;
-                        }
-                        else
-                        {
-                            if ($padding)
-                                $result .= ' ';
-                        }
-                    }
-                    else
-                    {
-                        $result .= $digit;
-                        $digit_printed = true;
-                    }
-                    */
 
                     --$l;
                 }
@@ -2242,13 +2200,14 @@ TODO: remove deprecated implementation; following was split into two functions,
                         $result .= $digit;
                     }
                 }
-
             }
-
-
         }
 
-        if ($sign_left === false)
+        if ($pr)
+        {
+            $result .= ($is_negative ? '>' : ' ');
+        }
+        else if ($sign_left === false)
         {
             if ($is_negative)
             {
