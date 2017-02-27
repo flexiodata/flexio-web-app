@@ -2165,17 +2165,9 @@ TODO: remove deprecated implementation; following was split into two functions,
             }
              else if ($ch == ',' || $ch == 'G' || $ch == 'g')
             {
-                if (!$digit_printed)
+                if ($digit_printed)
                 {
-                    if ($padding)
-                        $result .= ' ';
-                }
-                else
-                {
-                    if ($ch == ',')
-                        $result .= $ch;
-                         else
-                        $result .= ','; // getThousandsSeparatorChar() from locale
+                    $result .= ','; // getThousandsSeparatorChar() from locale
                 }
             }
             else if ($ch == '$' || $ch == 8364 /* euro symbol */)
