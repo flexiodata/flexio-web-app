@@ -145,38 +145,38 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(false,"FM00000")');
-        $expected = "00000";
-        TestCheck::assertString('A.9', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.9', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(true,"FM00000")');
-        $expected = "00001";
-        TestCheck::assertString('A.10', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.10', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("0","FM00000")');
-        $expected = "00000";
-        TestCheck::assertString('A.11', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.11', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("1","FM00000")');
-        $expected = "00001";
-        TestCheck::assertString('A.12', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.12', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("10","FM00000")');
-        $expected = "00010";
-        TestCheck::assertString('A.13', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.13', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("123","FM00000")');
-        $expected = "00123";
-        TestCheck::assertString('A.14', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.14', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("abc","FM00000")');
-        $expected = null;
-        TestCheck::assertNull('A.15', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.15', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"")');

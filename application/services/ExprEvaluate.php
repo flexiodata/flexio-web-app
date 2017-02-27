@@ -544,7 +544,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         'strpos'       => [ 'types' => [ 'i(ss)', 'i(ns)', 'i(bs)', 'i(Ns)' ], 'func' => 'func_strpos' ],
         'substr'       => [ 'types' => [ 's(si[i])', 's(ni[i])', 's(bi[i])', 's(Ni[i])' ], 'func' => 'func_substr' ],
         'tan'          => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_tan' ],
-        'to_char'      => [ 'types' => [ 's(s)', 's(n)', 's(d)', 's(t)', 's(b)', 's(N)', 's(ss)', 's(ns)', 's(ds)', 's(ts)', 's(bs)', 's(Ns)' ], 'func' => 'func_to_char' ],
+        'to_char'      => [ 'types' => [ 's(s)', 's(n)', 's(d)', 's(t)', 's(b)', 's(N)', 's(ns)', 's(ds)', 's(ts)', 's(Ns)' ], 'func' => 'func_to_char' ],
         'to_date'      => [ 'types' => [ 'd(ss)', 'd(ns)', 'd(ds)', 'd(bs)', 'd(Ns)' ], 'func' => 'func_to_date' ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
         'to_number'    => [ 'types' => [ 'f(ss)', 'f(ns)', 'f(ds)', 'f(bs)', 'f(Ns)' ], 'func' => 'func_to_number' ],
@@ -1967,6 +1967,9 @@ TODO: remove deprecated implementation; following was split into two functions,
         // count the number of positions to the left
         // of the decimal in the format string
         $format_len = strlen($format);
+        if ($format_len == 0)
+            return '';
+        
         $p = $format;
         $left = true;
         for ($p = 0; $p < $format_len; ++$p)
