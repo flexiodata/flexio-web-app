@@ -121,6 +121,9 @@ class TestController extends \Flexio\System\FxControllerAction
 
 echo "<pre>";
 
+        $result2 = \Flexio\Tests\TestUtil::evalExpressionPostgres('acos(1.01)');
+        var_dump($result2);
+        die();
 
         $expr = 'to_char(to_timestamp("1460-01-01 00:00:01"), "D")';
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);

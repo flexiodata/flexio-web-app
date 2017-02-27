@@ -44,8 +44,6 @@ class TestUtil
         if ($result1 === $result2)
             return $result1;
 
-
-
         $error = TestError::ERROR_EVAL_MISMATCH . ": PHP evaluation returned (" . gettype($result1) . ") $result1; Postgres evaluation returned (" . gettype($result2) . ") $result2";
 
         if (is_string($result1) && is_string($result2))
@@ -133,12 +131,13 @@ class TestUtil
                 case 790:  // money
                 case 700:  // float4
                 case 701:  // float8
-                        return (float)$row['testval'];
+                    if ($row['testval'] == 'NaN')
+                        return NAN;
+                    return (float)$row['testval'];
 
                 default:
                     return $row['testval'];
             }
-
         }
 
         return '';
