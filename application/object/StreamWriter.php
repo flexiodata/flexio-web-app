@@ -22,7 +22,7 @@ class StreamWriter
     private $table_inserter = false;
     private $file_inserter = false;
     private $datastore_mode = false;
-    private $bytes_written = false; // total bytes written
+    private $bytes_written = 0; // total bytes written
 
 
     function __construct()
@@ -98,9 +98,6 @@ class StreamWriter
         // data being written should be either a string or an array;
         // get a representative string of the content so we can find
         // out the size of the data that was written
-        if ($this->bytes_written === false)
-            $this->bytes_written = 0;
-
         if (is_string($data))
             $content_str = $data;
         if (is_array($data))
