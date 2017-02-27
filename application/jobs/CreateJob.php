@@ -26,13 +26,17 @@ class CreateJob extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $this->getOutput()->merge($this->getInput());
 
-        if (isset( $job_definition['params']['content']))
+        $validator = \Flexio\System\ValidatorSchema::check($job_definition, \Flexio\Jobs\CreateJob::SCHEMA);
+        if ($validator->hasErrors() === true)
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+
+        if (isset($job_definition['params']['content']))
         {
             $this->createStreamOutput();
             return;
         }
 
-        if (isset( $job_definition['params']['columns']))
+        if (isset($job_definition['params']['columns']))
         {
             $this->createTableOutput();
             return;
@@ -48,8 +52,10 @@ class CreateJob extends \Flexio\Jobs\Base
         $name = isset_or($job_definition['params']['name'], 'New File');
 
         // get the content and decode it
-        $content = $job_definition['params']['content'];
-        $content = base64_decode($content);
+        $content = '';
+        if (isset($job_definition['params']['content']))
+            $content = base64_decode($job_definition['params']['content']);
+
         $mime_type = \Flexio\System\ContentType::getMimeType($name, $content);
 
         // create the output stream
@@ -130,7 +136,6 @@ class CreateJob extends \Flexio\Jobs\Base
             "columns": [
                 { "name": "myfield", "type": "character", "width": 40, "scale": 0 }
             ]
-
         }
     }
 EOD;
@@ -166,7 +171,7 @@ EOD;
                                 },
                                 "type": {
                                     "type": "string",
-                                    "enum": ["text","character","numeric","double","integer","date","datetime","boolean"]
+                                    "enum": ["text","character","widecharacter","numeric","double","integer","date","datetime","boolean"]
                                 },
                                 "width": {
                                     "type": "integer",
@@ -184,10 +189,7 @@ EOD;
                     "rows" : {
                         "type": "array",
                         "items": {
-                            "type": "array",
-                            "items": {
-                                "type": ["string","number","integer","boolean","null"]
-                            }
+                            "type": ["array","object"]
                         }
                     }
                 }
