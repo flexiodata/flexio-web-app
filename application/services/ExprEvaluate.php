@@ -2657,7 +2657,7 @@ class ExprDateTime
 
     public function parse($value)
     {
-        if (is_a($value, 'ExprDateTime'))
+        if (is_a($value, '\Flexio\Services\ExprDateTime'))
         {
             $this->values = $value->values;
             return true;
