@@ -1952,6 +1952,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         $sign_left = true;        // sign is on the left side
         $sign_always = false;
         $pr = false;
+        $eeee = true;
         $padding = true;          // true if padding is active
         $digit_encountered = false;
         $digit_printed = false;
@@ -2027,8 +2028,11 @@ TODO: remove deprecated implementation; following was split into two functions,
                 if ($number < 1 || $number > 3999)
                     return '###############';
                 return str_pad(self::tochar_number_toroman($number), 15, ' ', STR_PAD_LEFT);
-                $p++;
-                continue;
+            }
+            if (($ch == 'E' || $ch == 'e') && strtoupper(substr($format, $p, 4)) == 'EEEE')
+            {
+                $eeee = true;
+                $p += 3;
             }
             if ($left)
             {
@@ -2058,7 +2062,15 @@ TODO: remove deprecated implementation; following was split into two functions,
             $padlen--;
         }
 
-
+/*
+        if ($eeee)
+        {
+            $digits = 2;
+            
+            //$s = sprintf("%.{$right_format_digits
+            //return str_pad($c . 'e' . sprintf('%02d',$power), 6, ' ', STR_PAD_LEFT);
+        }
+*/
         // find decimal point in the input number
         $strnum = (string)round($number, $right_format_digits);
         $strnum_len = strlen($strnum);
