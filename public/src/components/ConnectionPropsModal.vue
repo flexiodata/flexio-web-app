@@ -18,7 +18,7 @@
           &times;
         </div>
       </div>
-      <div class="flex flex-row mt1 mb3 pt2 bt b--black-10" v-if="has_connection">
+      <div class="flex flex-row mt1 pt2 bt b--black-10" v-if="has_connection">
         <connection-icon :type="ctype" class="flex-none dib v-top br2 fx-square-4" style="max-height: 3rem"></connection-icon>
         <div class="flex-fill flex flex-column ml2">
           <div class="mid-gray f4 fw6">{{service_name}}</div>

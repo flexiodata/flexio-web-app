@@ -1,17 +1,17 @@
 <template>
   <div class="pa4">
     <div class="flex flex-row flex-wrap">
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openConfirmModal">Confirm Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openNewProjectPropsModal">New Project Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEditProjectPropsModal">Edit Project Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openNewConnectionModal">New Connection Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEditConnectionModal">Edit Connection Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openNewPipePropsModal">New Pipe Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEditPipePropsModal">Edit Pipe Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openPipeScheduleModal">Pipe Schedule Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openPipeShareModal">Pipe Share Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openEmailSupportModal">Email Support Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid" @click="openMemberAddModal">Member Add Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openConfirmModal">Confirm Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewProjectPropsModal">New Project Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditProjectPropsModal">Edit Project Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewConnectionModal">New Connection Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditConnectionModal">Edit Connection Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewPipePropsModal">New Pipe Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditPipePropsModal">Edit Pipe Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeScheduleModal">Pipe Schedule Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeShareModal">Pipe Share Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEmailSupportModal">Email Support Modal</btn></div>
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openMemberAddModal">Member Add Modal</btn></div>
     </div>
 
     <confirm-modal

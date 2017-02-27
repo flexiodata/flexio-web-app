@@ -8,7 +8,7 @@
   >
     <div slot="header" class="f4">Schedule '{{pipe.name}}'</div>
 
-    <div class="flex flex-row items-center mv3">
+    <div class="flex flex-row items-center mb3">
       <toggle-button
         :checked="is_scheduled"
         @click.stop="toggleScheduled"

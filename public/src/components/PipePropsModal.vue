@@ -67,7 +67,6 @@
     </div>
     <div v-else>
       <form
-        class="mt3"
         novalidate
         @submit.prevent="submit"
         v-if="mode != 'choose-input' && mode != 'choose-output'"

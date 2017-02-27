@@ -43,7 +43,7 @@
         @submit.prevent="submitDelete"
         v-show="mode=='delete'"
       >
-        <p class="ma0 pb3 lh-copy">Are you sure you want to delete the <span class="b">{{original_project.name}}</span> project and all of its contents? To confirm and continue with this action, enter the project name below.</p>
+        <p class="ma0 pb1 lh-copy">Are you sure you want to delete the <span class="b">{{original_project.name}}</span> project and all of its contents? To confirm and continue with this action, enter the project name below.</p>
         <input v-model="original_project.name" data-vv-name="project_name" name="project_name" type="hidden">
         <ui-textbox
           ref="js-input-confirm-name"
