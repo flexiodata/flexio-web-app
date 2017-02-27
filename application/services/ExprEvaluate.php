@@ -1552,12 +1552,12 @@ TODO: remove deprecated implementation; following was split into two functions,
     }
 
 
-    private static function getDayOfWeek($year, $month, $day)
+    private static function getDayOfWeek($year, $month, $day) // returns 0 as sunday, 1 as monday...
     {
         $a = intdiv(14-$month, 12);
         $y = $year - $a;
         $m = $month + (12*$a) - 2;
-        return (($day + $y + intdiv(y,4) - intdiv(y,100) + intdiv(y,400) + intdiv(31*m,12)) % 7);
+        return (($day + $y + intdiv($y,4) - intdiv($y,100) + intdiv($y,400) + intdiv(31*$m,12)) % 7);
     }
 
     private static function isFormatString($format, $idx, $str, $ignore_case = false)
@@ -1719,6 +1719,11 @@ TODO: remove deprecated implementation; following was split into two functions,
 
                 $res .= $buf;
                 $f += $offset;
+            }
+            else if (self::isFormatString($format, $f, "D", true))
+            {
+                $res .= sprintf("%d", self::getDayOfWeek($dt->getYear(), $dt->getMonth(), $dt->getDay()) + 1);
+                $f += 1;
             }
             else if (self::isFormatString($format, $f, "MON", true) || self::isFormatString($format, $f, "MONTH", true))
             {
