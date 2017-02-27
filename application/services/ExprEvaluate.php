@@ -1008,6 +1008,7 @@ TODO: remove deprecated implementation; following was split into two functions,
 
             default:
                 $retval = false;
+                return true;
 
             case 'email':
                 $retval = \Flexio\System\Util::isValidEmail($param0);
