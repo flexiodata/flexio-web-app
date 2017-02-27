@@ -544,7 +544,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         'strpos'       => [ 'types' => [ 'i(ss)', 'i(ns)', 'i(bs)', 'i(Ns)' ], 'func' => 'func_strpos' ],
         'substr'       => [ 'types' => [ 's(si[i])', 's(ni[i])', 's(bi[i])', 's(Ni[i])' ], 'func' => 'func_substr' ],
         'tan'          => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_tan' ],
-        'to_char'      => [ 'types' => [ 's(ss)', 's(ns)', 's(ds)', 's(ts)', 's(bs)', 's(Ns)' ], 'func' => 'func_to_char' ],
+        'to_char'      => [ 'types' => [ 's(s)', 's(n)', 's(d)', 's(t)', 's(b)', 's(N)', 's(ss)', 's(ns)', 's(ds)', 's(ts)', 's(bs)', 's(Ns)' ], 'func' => 'func_to_char' ],
         'to_date'      => [ 'types' => [ 'd(ss)', 'd(ns)', 'd(ds)', 'd(bs)', 'd(Ns)' ], 'func' => 'func_to_date' ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
         'to_number'    => [ 'types' => [ 'f(ss)', 'f(ns)', 'f(ds)', 'f(bs)', 'f(Ns)' ], 'func' => 'func_to_number' ],
@@ -2292,6 +2292,20 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     public function func_to_char($func, $params, &$retval)
     {
+        if (count($params) < 2)
+        {
+            if (!$this->doEval($params[0], $param0)) return false;
+            if (is_null($param0))
+                $retval = null;
+            else if (is_bool($param0))
+                $retval = $param0 ? 'true' : 'false';
+            else if ($param0 instanceof ExprDateTime)
+                $retval = $param0->toString();
+            else
+                $retval = '' . $param0;
+            return true;
+        }
+
         if (!$this->doEval($params[0], $param0)) return false;
         if (!$this->doEval($params[1], $param1)) return false;
 

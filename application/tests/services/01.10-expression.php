@@ -115,7 +115,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(null)');
-        $expected = "1";
+        $expected = null;
         TestCheck::assertString('A.3', 'Expression; to_char() conversion function; support conversion of a number to a string without a format',  $actual, $expected, $results);
 
         // BEGIN TEST
