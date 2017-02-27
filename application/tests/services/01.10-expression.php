@@ -1696,12 +1696,12 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"9G.9")');
-        $expected = "  ,.0";
+        $expected = "   .0";
         TestCheck::assertString('J.3', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"G9.9")');
-        $expected = "  ,.0";
+        $expected = "   .0";
         TestCheck::assertString('J.4', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3224,7 +3224,7 @@ class Test
         TestCheck::assertString('S.23', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results);
 
         $actual = TestUtil::evalExpression('to_char(485, "L999")');
-        $expected = "DM 485";
+        $expected = "$ 485";
         TestCheck::assertString('S.24', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results);
 
         $actual = TestUtil::evalExpression('to_char(485, "RN")');
