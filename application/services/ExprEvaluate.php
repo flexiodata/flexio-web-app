@@ -2066,7 +2066,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         if ($eeee)
         {
             $dec = $right_format_digits;
-            $s = sprintf("%.{$dec}e", $number);
+            $s = sprintf("%.{$dec}e", round($number, $dec+1));
             $s = str_replace(',', '.', $s);
             $epos = strpos($s, 'e');
             if ($epos === false)
