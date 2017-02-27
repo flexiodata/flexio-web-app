@@ -2020,6 +2020,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             $padlen--;
         }
 
+
         // find decimal point in the input number
         $strnum = (string)round($number, $right_format_digits);
         $strnum_len = strlen($strnum);
@@ -2055,7 +2056,6 @@ TODO: remove deprecated implementation; following was split into two functions,
 
         if (self::dblcompare($number, 0.0) < 0)
             $is_negative = true;
-
 
         $result = '';
         $l = $left_format_digits;
@@ -2129,8 +2129,8 @@ TODO: remove deprecated implementation; following was split into two functions,
 
 
 
-
-                    if ($ch == '0' || $digit != '0' || $digit_printed || ($l == 1 && (!$format_has_decimal || !$padding)))
+                    //if ($ch == '0' || $digit != '0' || $digit_printed || ($l == 1 && (!$format_has_decimal || !$padding)))
+                    if ($ch == '0' || $digit != '0' || $digit_printed || $l == 1)
                     {
                         if ($sign_left === true && !$digit_printed)
                         {
@@ -2147,9 +2147,14 @@ TODO: remove deprecated implementation; following was split into two functions,
                             }
                         }
 
-
-                        $result .= $digit;
-                        $digit_printed = true;
+                        if (!$digit_printed && $ch == '9' && $digit == '0' && !($l == 1 && !$format_has_decimal))
+                        {
+                        }
+                         else
+                        {
+                            $result .= $digit;
+                            $digit_printed = true;
+                        }
                     }
 
 

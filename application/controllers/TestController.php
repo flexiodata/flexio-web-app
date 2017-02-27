@@ -122,6 +122,11 @@ class TestController extends \Flexio\System\FxControllerAction
 echo "<pre>";
 
 
+        $expr = 'to_char(-0.1,"9.99")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. " should be -.10<br>";
+        var_dump($actual);
+
         $expr = 'to_char(to_timestamp(""), "Month")';
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
         echo "<br>" . $expr. "<br>";
@@ -159,7 +164,7 @@ echo "<pre>";
 
         $expr = 'to_char(0,"9.9$")';
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
-        echo "<br>" . $expr. "<br>";
+        echo "<br>" . $expr. " should be '  .0$'<br>";
         var_dump($actual);
         
         $expr = 'to_char(0,"FM9.9$")';
