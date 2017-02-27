@@ -1756,12 +1756,12 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"9G99.999")');
-        $expected = "  ,12.340";
+        $expected = "   12.340";
         TestCheck::assertString('J.15', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"G999.999")');
-        $expected = " , 12.340";
+        $expected = "   12.340";
         TestCheck::assertString('J.16', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
