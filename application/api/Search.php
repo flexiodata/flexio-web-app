@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class SearchApi
+class Search
 {
     public static function search($params, $request)
     {

@@ -287,7 +287,7 @@ class Api
             case 'POS /logout'                         : return '\Flexio\Api\SystemApi::logout';
 
             // search
-            case 'GET /search'                         : return '\Flexio\Api\SearchApi::search';
+            case 'GET /search'                         : return '\Flexio\Api\Search::exec';
 
             // users
             case 'GET /users/me'                       : return '\Flexio\Api\UserApi::about';
