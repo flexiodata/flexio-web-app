@@ -507,7 +507,7 @@ class TransformJob extends \Flexio\Jobs\Base
         $job_definition['type'] = 'flexio.copy';
         $job_definition['params'] = $copy_params;
 
-        $job = \Flexio\Jobs\CopyJob::create($this->getProcess(), $job_definition);
+        $job = \Flexio\Jobs\Copy::create($this->getProcess(), $job_definition);
         $job->getInput()->push($instream);
         $job->run();
         $this->getOutput()->merge($job->getOutput());
