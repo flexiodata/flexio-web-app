@@ -282,9 +282,9 @@ class Api
                 return false;
 
             // system (public)
-            case 'POS /signup/check'                   : return '\Flexio\Api\SystemApi::signupcheck';
-            case 'POS /login'                          : return '\Flexio\Api\SystemApi::login';
-            case 'POS /logout'                         : return '\Flexio\Api\SystemApi::logout';
+            case 'POS /signup/check'                   : return '\Flexio\Api\System::signupcheck';
+            case 'POS /login'                          : return '\Flexio\Api\System::login';
+            case 'POS /logout'                         : return '\Flexio\Api\System::logout';
 
             // search
             case 'GET /search'                         : return '\Flexio\Api\Search::exec';
@@ -386,7 +386,7 @@ class Api
             // DEBUG: endpoints for easy debugging using a URL in a browser
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';
             case 'GET /users/createsampleproject'      : return '\Flexio\Api\UserApi::createSample';
-            case 'GET /debug/config'                   : return '\Flexio\Api\SystemApi::configuration';
+            case 'GET /debug/config'                   : return '\Flexio\Api\System::configuration';
         }
     }
 

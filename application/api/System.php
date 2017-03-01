@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class SystemApi
+class System
 {
     public static function login($params, $request)
     {
