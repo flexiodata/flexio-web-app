@@ -92,11 +92,11 @@ class Test
         TestCheck::assertBoolean('A.11', '\Flexio\Jobs\Grep definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\GroupJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Group::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\GroupJob::MIME_TYPE && $mime_type == 'flexio.group';
+        $actual = $mime_type == \Flexio\Jobs\Group::MIME_TYPE && $mime_type == 'flexio.group';
         $expected = true;
-        TestCheck::assertBoolean('A.12', '\Flexio\Jobs\GroupJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.12', '\Flexio\Jobs\Group definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\InputJob::TEMPLATE,true);

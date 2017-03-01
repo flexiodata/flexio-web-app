@@ -82,10 +82,10 @@ class Test
         TestCheck::assertString('A.11', '\Flexio\Jobs\Grep::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\GroupJob::create();
+        $task = \Flexio\Jobs\Group::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\GroupJob::MIME_TYPE;
-        TestCheck::assertString('A.12', '\Flexio\Jobs\GroupJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Group::MIME_TYPE;
+        TestCheck::assertString('A.12', '\Flexio\Jobs\Group::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\InputJob::create();

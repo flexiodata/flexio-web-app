@@ -99,8 +99,8 @@ class Task
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \Flexio\Jobs\GroupJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\GroupJob',
+                'type' => \Flexio\Jobs\Group::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Group',
                 'name' => 'Summarize',
                 'verb' => 'Summarizing'
             ),

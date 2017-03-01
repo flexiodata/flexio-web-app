@@ -82,10 +82,10 @@ class Test
         TestCheck::assertBoolean('A.11', '\Flexio\Jobs\Grep schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\GroupJob::SCHEMA;
+        $schema = \Flexio\Jobs\Group::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.12', '\Flexio\Jobs\GroupJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.12', '\Flexio\Jobs\Group schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\InputJob::SCHEMA;
