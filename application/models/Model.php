@@ -321,7 +321,7 @@ class Model
 
     public function search($path)
     {
-        return $this->search->search($path);
+        return $this->search->exec($path);
     }
 
     public function assoc_add($source_eid, $type, $target_eid)

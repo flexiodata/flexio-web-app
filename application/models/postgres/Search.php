@@ -21,7 +21,7 @@ class SearchTerm
 
 class Search extends ModelBase
 {
-    public function search($search_path)
+    public function exec($search_path)
     {
         // parse the search path; if the path doesn't parse correctly,
         // return false
@@ -67,7 +67,7 @@ class Search extends ModelBase
         {
             // search for a list of objects based on the search path
             // if we can't find any objects, we're done
-            $objects = $this->search($search_path);
+            $objects = $this->exec($search_path);
             if ($objects === false || count($objects) === 0)
                 break;
 
