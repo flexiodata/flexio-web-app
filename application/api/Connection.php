@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class ConnectionApi
+class Connection
 {
     public static function create($params, $request)
     {

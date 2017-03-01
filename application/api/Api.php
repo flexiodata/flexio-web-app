@@ -340,14 +340,14 @@ class Api
             case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\PipeApi::run';
 
             // connections
-            case 'POS /connections'                    : return '\Flexio\Api\ConnectionApi::create';
-            case 'POS /connections/:eid'               : return '\Flexio\Api\ConnectionApi::set';
-            case 'GET /connections/:eid'               : return '\Flexio\Api\ConnectionApi::get';
-            case 'DEL /connections/:eid'               : return '\Flexio\Api\ConnectionApi::delete';
-            case 'GET /connections/:eid/comments'      : return '\Flexio\Api\ConnectionApi::comments';
-            case 'GET /connections/:eid/describe'      : return '\Flexio\Api\ConnectionApi::describe';
-            case 'POS /connections/:eid/connect'       : return '\Flexio\Api\ConnectionApi::connect';
-            case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\ConnectionApi::disconnect';
+            case 'POS /connections'                    : return '\Flexio\Api\Connection::create';
+            case 'POS /connections/:eid'               : return '\Flexio\Api\Connection::set';
+            case 'GET /connections/:eid'               : return '\Flexio\Api\Connection::get';
+            case 'DEL /connections/:eid'               : return '\Flexio\Api\Connection::delete';
+            case 'GET /connections/:eid/comments'      : return '\Flexio\Api\Connection::comments';
+            case 'GET /connections/:eid/describe'      : return '\Flexio\Api\Connection::describe';
+            case 'POS /connections/:eid/connect'       : return '\Flexio\Api\Connection::connect';
+            case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\Connection::disconnect';
 
             // processes
             case 'POS /processes'                      : return '\Flexio\Api\ProcessApi::create';
