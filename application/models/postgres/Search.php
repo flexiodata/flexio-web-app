@@ -19,7 +19,7 @@ class SearchTerm
     public $edge_types = false;
 }
 
-class SearchModel extends ModelBase
+class Search extends ModelBase
 {
     public function search($search_path)
     {
