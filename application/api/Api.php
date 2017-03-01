@@ -306,17 +306,17 @@ class Api
             case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\TokenApi::delete';
 
             // projects
-            case 'POS /projects'                       : return '\Flexio\Api\ProjectApi::create';
-            case 'GET /projects'                       : return '\Flexio\Api\ProjectApi::listall';
-            case 'POS /projects/:eid'                  : return '\Flexio\Api\ProjectApi::set';
-            case 'GET /projects/:eid'                  : return '\Flexio\Api\ProjectApi::get';
-            case 'DEL /projects/:eid'                  : return '\Flexio\Api\ProjectApi::delete';
-            case 'GET /projects/:eid/pipes'            : return '\Flexio\Api\ProjectApi::pipes';
-            case 'GET /projects/:eid/connections'      : return '\Flexio\Api\ProjectApi::connections';
-            case 'POS /projects/:eid/trash'            : return '\Flexio\Api\ProjectApi::addTrash';
-            case 'GET /projects/:eid/trash'            : return '\Flexio\Api\ProjectApi::trashed';
-            case 'DEL /projects/:eid/trash'            : return '\Flexio\Api\ProjectApi::clearTrash';
-            case 'POS /projects/:eid/restore'          : return '\Flexio\Api\ProjectApi::unTrash';
+            case 'POS /projects'                       : return '\Flexio\Api\Project::create';
+            case 'GET /projects'                       : return '\Flexio\Api\Project::listall';
+            case 'POS /projects/:eid'                  : return '\Flexio\Api\Project::set';
+            case 'GET /projects/:eid'                  : return '\Flexio\Api\Project::get';
+            case 'DEL /projects/:eid'                  : return '\Flexio\Api\Project::delete';
+            case 'GET /projects/:eid/pipes'            : return '\Flexio\Api\Project::pipes';
+            case 'GET /projects/:eid/connections'      : return '\Flexio\Api\Project::connections';
+            case 'POS /projects/:eid/trash'            : return '\Flexio\Api\Project::addTrash';
+            case 'GET /projects/:eid/trash'            : return '\Flexio\Api\Project::trashed';
+            case 'DEL /projects/:eid/trash'            : return '\Flexio\Api\Project::clearTrash';
+            case 'POS /projects/:eid/restore'          : return '\Flexio\Api\Project::unTrash';
 
             // followers
             case 'POS /projects/:eid/followers'        : return '\Flexio\Api\Follower::create';

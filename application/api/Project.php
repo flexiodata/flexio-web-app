@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class ProjectApi
+class Project
 {
     public static function create($params, $request)
     {
