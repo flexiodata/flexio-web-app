@@ -374,7 +374,7 @@ class Api
             case 'POS /streams/:eid/upload'            : return '\Flexio\Api\StreamApi::upload';
 
             // comments
-            case 'POS /comments'                       : return '\Flexio\Api\CommentApi::create';
+            case 'POS /comments'                       : return '\Flexio\Api\Comment::create';
 
             // help
             case 'POS /help/conversation'              : return '\Flexio\Api\HelpApi::createConversation';
