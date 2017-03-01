@@ -12,7 +12,7 @@
  */
 
 
-class CommentModel extends ModelBase
+class Action extends ModelBase
 {
     public function create($params)
     {
