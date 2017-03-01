@@ -12,13 +12,13 @@
  */
 
 
-class TokenModel extends ModelBase
+class Token extends ModelBase
 {
     public function create($params)
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Model::ERROR_NO_DATABASE);
 
         $db->beginTransaction();
         try

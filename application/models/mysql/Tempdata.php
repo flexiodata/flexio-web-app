@@ -12,7 +12,7 @@
  */
 
 
-class TempdataModel extends ModelBase
+class Tempdata extends ModelBase
 {
     public function entryExists($name)
     {
