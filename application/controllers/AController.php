@@ -192,7 +192,7 @@ class AController extends \Flexio\System\FxControllerAction
         if (isset($params['object_eid']))
             $project_eid = $params['object_eid'];
 
-        $project_url = '/app/project' . (isset($project_eid) ? "?eid=$project_eid" : '');
+        $project_url = isset($project_eid) ? "/app/project/$project_eid" : '/app/home';
 
         if (\Flexio\System\System::isLoggedIn() && isset($email) && $email === \Flexio\System\System::getCurrentUserName())
         {
