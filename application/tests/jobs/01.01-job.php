@@ -99,11 +99,11 @@ class Test
         TestCheck::assertBoolean('A.12', '\Flexio\Jobs\Group definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\InputJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Input::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\InputJob::MIME_TYPE && $mime_type == 'flexio.input';
+        $actual = $mime_type == \Flexio\Jobs\Input::MIME_TYPE && $mime_type == 'flexio.input';
         $expected = true;
-        TestCheck::assertBoolean('A.13', '\Flexio\Jobs\InputJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.13', '\Flexio\Jobs\Input definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\LimitJob::TEMPLATE,true);

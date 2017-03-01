@@ -105,8 +105,8 @@ class Task
                 'verb' => 'Summarizing'
             ),
             array(
-                'type' => \Flexio\Jobs\InputJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\InputJob',
+                'type' => \Flexio\Jobs\Input::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Input',
                 'name' => 'Input',
                 'verb' => 'Inputting'
             ),
