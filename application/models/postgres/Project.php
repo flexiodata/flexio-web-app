@@ -12,7 +12,7 @@
  */
 
 
-class ProjectModel extends ModelBase
+class Project extends ModelBase
 {
     public function create($params)
     {
