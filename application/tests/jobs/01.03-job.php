@@ -148,10 +148,10 @@ class Test
         TestCheck::assertString('A.22', '\Flexio\Jobs\Search::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\SelectColumnJob::create();
+        $task = \Flexio\Jobs\SelectColumn::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\SelectColumnJob::MIME_TYPE;
-        TestCheck::assertString('A.23', '\Flexio\Jobs\SelectColumnJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\SelectColumn::MIME_TYPE;
+        TestCheck::assertString('A.23', '\Flexio\Jobs\SelectColumn::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\SleepJob::create();

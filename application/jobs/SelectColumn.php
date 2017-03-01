@@ -17,7 +17,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class SelectColumnJob extends \Flexio\Jobs\Base
+class SelectColumn extends \Flexio\Jobs\Base
 {
     public function run()
     {
