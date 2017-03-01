@@ -177,8 +177,8 @@ class Task
                 'verb' => 'Sorting'
             ),
             array(
-                'type' => \Flexio\Jobs\TransformJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\TransformJob',
+                'type' => \Flexio\Jobs\Transform::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Transform',
                 'name' => 'Transform',
                 'verb' => 'Transforming'
             )

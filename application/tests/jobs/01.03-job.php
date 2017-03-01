@@ -166,9 +166,9 @@ class Test
         TestCheck::assertString('A.25', '\Flexio\Jobs\Sort::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\TransformJob::create();
+        $task = \Flexio\Jobs\Transform::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\TransformJob::MIME_TYPE;
-        TestCheck::assertString('A.26', '\Flexio\Jobs\TransformJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Transform::MIME_TYPE;
+        TestCheck::assertString('A.26', '\Flexio\Jobs\Transform::create()',  $actual, $expected, $results);
     }
 }

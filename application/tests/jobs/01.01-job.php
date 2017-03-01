@@ -190,10 +190,10 @@ class Test
         TestCheck::assertBoolean('A.25', '\Flexio\Jobs\Sort definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\TransformJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Transform::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\TransformJob::MIME_TYPE && $mime_type == 'flexio.transform';
+        $actual = $mime_type == \Flexio\Jobs\Transform::MIME_TYPE && $mime_type == 'flexio.transform';
         $expected = true;
-        TestCheck::assertBoolean('A.26', '\Flexio\Jobs\TransformJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.26', '\Flexio\Jobs\Transform definition type constant',  $actual, $expected, $results);
     }
 }

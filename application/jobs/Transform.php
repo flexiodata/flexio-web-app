@@ -17,7 +17,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class TransformJob extends \Flexio\Jobs\Base
+class Transform extends \Flexio\Jobs\Base
 {
     // transform options
     const OPERATION_NONE        = '';

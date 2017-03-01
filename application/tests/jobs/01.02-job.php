@@ -166,9 +166,9 @@ class Test
         TestCheck::assertBoolean('A.25', '\Flexio\Jobs\Sort schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\TransformJob::SCHEMA;
+        $schema = \Flexio\Jobs\Transform::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.26', '\Flexio\Jobs\TransformJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.26', '\Flexio\Jobs\Transform schema format',  $actual, $expected, $results);
     }
 }
