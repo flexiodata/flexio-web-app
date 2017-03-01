@@ -300,10 +300,10 @@ class Api
             case 'POS /users/:eid'                     : return '\Flexio\Api\UserApi::set';
             case 'GET /users/:eid'                     : return '\Flexio\Api\UserApi::get';
             case 'POS /users/:eid/changepassword'      : return '\Flexio\Api\UserApi::changepassword';
-            case 'GET /users/:eid/tokens'              : return '\Flexio\Api\TokenApi::listall';
-            case 'POS /users/:eid/tokens'              : return '\Flexio\Api\TokenApi::create';
-            case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\TokenApi::get';
-            case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\TokenApi::delete';
+            case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::listall';
+            case 'POS /users/:eid/tokens'              : return '\Flexio\Api\Token::create';
+            case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
+            case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
 
             // projects
             case 'POS /projects'                       : return '\Flexio\Api\Project::create';

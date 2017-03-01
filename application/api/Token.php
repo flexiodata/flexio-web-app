@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class TokenApi
+class Token
 {
     public static function create($params, $request)
     {
