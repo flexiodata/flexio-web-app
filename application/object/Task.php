@@ -147,8 +147,8 @@ class Task
                 'verb' => 'Renaming columns in'
             ),
             array(
-                'type' => \Flexio\Jobs\RenameFileJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\RenameFileJob',
+                'type' => \Flexio\Jobs\RenameFile::MIME_TYPE,
+                'class' => '\Flexio\Jobs\RenameFile',
                 'name' => 'Rename Files',
                 'verb' => 'Renaming file'
             ),
