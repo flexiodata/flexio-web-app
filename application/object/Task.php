@@ -123,8 +123,8 @@ class Task
                 'verb' => 'Merging'
             ),
             array(
-                'type' => \Flexio\Jobs\NopJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\NopJob',
+                'type' => \Flexio\Jobs\Nop::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Nop',
                 'name' => '',
                 'verb' => 'Processing'
             ),

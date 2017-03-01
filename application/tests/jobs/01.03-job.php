@@ -106,10 +106,10 @@ class Test
         TestCheck::assertString('A.15', '\Flexio\Jobs\Merge::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\NopJob::create();
+        $task = \Flexio\Jobs\Nop::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\NopJob::MIME_TYPE;
-        TestCheck::assertString('A.16', '\Flexio\Jobs\NopJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Nop::MIME_TYPE;
+        TestCheck::assertString('A.16', '\Flexio\Jobs\Nop::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\OutputJob::create();
