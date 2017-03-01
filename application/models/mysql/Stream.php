@@ -12,42 +12,37 @@
  */
 
 
-class StreamModel extends ModelBase
+class Stream extends ModelBase
 {
     public function create($params)
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(Model::ERROR_NO_DATABASE);
 
         $db->beginTransaction();
         try
         {
             // create the stream object base
-            $stream_eid = $this->getModel()->createObjectBase(\Model::TYPE_STREAM, $params);
+            $stream_eid = $this->getModel()->createObjectBase(Model::TYPE_STREAM, $params);
             if ($stream_eid === false)
                 throw new \Exception();
-
-            // make sure the size is an integer or null
-            $size = null;
-            if (isset($params['size']) && is_numeric($params['size']))
-                $size = $params['size'];
 
             // add the stream properties
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
-                'eid'                   => $stream_eid,
-                'name'                  => isset_or($params['name'], ''),
-                'path'                  => isset_or($params['path'], ''),
-                'size'                  => $size,
-                'hash'                  => isset_or($params['hash'], ''),
-                'mime_type'             => isset_or($params['mime_type'], ''),
-                'structure'             => isset_or($params['structure'], '[]'),
-                'file_created'          => isset_or($params['file_created'], null),
-                'file_modified'         => isset_or($params['file_modified'], null),
-                'connection_eid'        => isset_or($params['connection_eid'], ''),
-                'cache_path'            => isset_or($params['cache_path'], ''),
-                'cache_connection_eid'  => isset_or($params['cache_connection_eid'], ''),
+                'eid'                  => $stream_eid,
+                'name'                 => isset_or($params['name'], ''),
+                'path'                 => isset_or($params['path'], ''),
+                'size'                 => isset_or($params['size'], null),
+                'hash'                 => isset_or($params['hash'], ''),
+                'mime_type'            => isset_or($params['mime_type'], ''),
+                'structure'            => isset_or($params['structure'], '[]'),
+                'file_created'         => isset_or($params['file_created'], null),
+                'file_modified'        => isset_or($params['file_modified'], null),
+                'connection_eid'       => isset_or($params['connection_eid'], ''),
+                'cache_path'           => isset_or($params['cache_path'], ''),
+                'cache_connection_eid' => isset_or($params['cache_connection_eid'], ''),
                 'created'              => $timestamp,
                 'updated'              => $timestamp
             );
@@ -61,7 +56,7 @@ class StreamModel extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create stream'));
+            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create stream'));
         }
     }
 
@@ -98,12 +93,12 @@ class StreamModel extends ModelBase
         if (($process_arr = \Model::check($params, array(
                 'name'                 => array('type' => 'string',  'required' => false),
                 'path'                 => array('type' => 'string',  'required' => false),
-                'size'                 => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
+                'size'                 => array('type' => 'number',  'required' => false),
                 'hash'                 => array('type' => 'string',  'required' => false),
                 'mime_type'            => array('type' => 'string',  'required' => false),
                 'structure'            => array('type' => 'string',  'required' => false),
-                'file_created'         => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
-                'file_modified'        => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
+                'file_created'         => array('type' => 'string',  'required' => false),
+                'file_modified'        => array('type' => 'string',  'required' => false),
                 'connection_eid'       => array('type' => 'eid',     'required' => false),
                 'cache_path'           => array('type' => 'string',  'required' => false),
                 'cache_connection_eid' => array('type' => 'eid',     'required' => false)

@@ -6,7 +6,7 @@ diff -u ..\mysql\Process.php Process.php
 diff -u ..\mysql\Project.php Project.php
 diff -u ..\mysql\Registry.php Registry.php
 diff -u ..\mysql\Search.php Search.php
-diff -u ..\mysql\StreamModel.php StreamModel.php
+diff -u ..\mysql\Stream.php Stream.php
 diff -u ..\mysql\TempdataModel.php TempdataModel.php
 diff -u ..\mysql\TokenModel.php TokenModel.php
 diff -u ..\mysql\UserModel.php UserModel.php
