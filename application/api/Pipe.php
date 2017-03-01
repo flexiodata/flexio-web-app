@@ -420,7 +420,7 @@ class Pipe
         $p['run'] = true;
         $p['params'] = $_POST;
 
-        return ProcessApi::create($p, $request);
+        return Process::create($p, $request);
         */
     }
 

@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class ProcessApi
+class Process
 {
     public static function create($params, $request)
     {

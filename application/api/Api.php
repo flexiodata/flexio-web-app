@@ -333,7 +333,7 @@ class Api
             case 'DEL /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::deleteTaskStep';
             case 'POS /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::setTaskStep';
             case 'GET /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::getTaskStep';
-            case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\ProcessApi::create';
+            case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\Process::create';
             case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\Pipe::processes';
 
             // experimental API endpoint for running a pipe with form parameters
@@ -350,20 +350,20 @@ class Api
             case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\Connection::disconnect';
 
             // processes
-            case 'POS /processes'                      : return '\Flexio\Api\ProcessApi::create';
-            case 'GET /processes/:eid'                 : return '\Flexio\Api\ProcessApi::get';
-            case 'POS /processes/:eid'                 : return '\Flexio\Api\ProcessApi::set';
-            case 'POS /processes/:eid/input'           : return '\Flexio\Api\ProcessApi::addInput';
-            case 'GET /processes/:eid/input'           : return '\Flexio\Api\ProcessApi::getInput';
-            case 'GET /processes/:eid/output'          : return '\Flexio\Api\ProcessApi::getOutput';
-            case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\ProcessApi::getTaskInputInfo';
-            case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\ProcessApi::getTaskOutputInfo';
-            case 'GET /processes/statistics'           : return '\Flexio\Api\ProcessApi::getStatistics';
+            case 'POS /processes'                      : return '\Flexio\Api\Process::create';
+            case 'GET /processes/:eid'                 : return '\Flexio\Api\Process::get';
+            case 'POS /processes/:eid'                 : return '\Flexio\Api\Process::set';
+            case 'POS /processes/:eid/input'           : return '\Flexio\Api\Process::addInput';
+            case 'GET /processes/:eid/input'           : return '\Flexio\Api\Process::getInput';
+            case 'GET /processes/:eid/output'          : return '\Flexio\Api\Process::getOutput';
+            case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\Process::getTaskInputInfo';
+            case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\Process::getTaskOutputInfo';
+            case 'GET /processes/statistics'           : return '\Flexio\Api\Process::getStatistics';
 
             // DEPRECATED: another way to do this that doesn't involve a high-level url endpoint verb?
-            case 'POS /processes/:eid/run'             : return '\Flexio\Api\ProcessApi::run';
-            case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\ProcessApi::cancel';
-            case 'POS /processes/:eid/pause'           : return '\Flexio\Api\ProcessApi::pause';
+            case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
+            case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\Process::cancel';
+            case 'POS /processes/:eid/pause'           : return '\Flexio\Api\Process::pause';
 
             // streams
             case 'POS /streams'                        : return '\Flexio\Api\StreamApi::create';
@@ -384,7 +384,7 @@ class Api
             case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
 
             // DEBUG: endpoints for easy debugging using a URL in a browser
-            case 'GET /processes/debug'                : return '\Flexio\Api\ProcessApi::debug';
+            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';
             case 'GET /users/createsampleproject'      : return '\Flexio\Api\UserApi::createSample';
             case 'GET /debug/config'                   : return '\Flexio\Api\SystemApi::configuration';
         }
