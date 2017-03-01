@@ -46,10 +46,10 @@ class Test
         TestCheck::assertBoolean('A.5', '\Flexio\Jobs\Create schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\DistinctJob::SCHEMA;
+        $schema = \Flexio\Jobs\Distinct::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.6', '\Flexio\Jobs\DistinctJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.6', '\Flexio\Jobs\Distinct schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\DuplicateJob::SCHEMA;
