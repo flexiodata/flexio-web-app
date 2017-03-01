@@ -17,7 +17,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class RenameColumnJob extends \Flexio\Jobs\Base
+class RenameColumn extends \Flexio\Jobs\Base
 {
     public function run()
     {

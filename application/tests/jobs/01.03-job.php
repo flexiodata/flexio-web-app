@@ -130,10 +130,10 @@ class Test
         TestCheck::assertString('A.19', '\Flexio\Jobs\Execute::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\RenameColumnJob::create();
+        $task = \Flexio\Jobs\RenameColumn::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\RenameColumnJob::MIME_TYPE;
-        TestCheck::assertString('A.20', '\Flexio\Jobs\RenameColumnJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\RenameColumn::MIME_TYPE;
+        TestCheck::assertString('A.20', '\Flexio\Jobs\RenameColumn::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\RenameFileJob::create();

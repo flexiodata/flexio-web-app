@@ -148,11 +148,11 @@ class Test
         TestCheck::assertBoolean('A.19', '\Flexio\Jobs\Prompt definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\RenameColumnJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\RenameColumn::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\RenameColumnJob::MIME_TYPE && $mime_type == 'flexio.rename';
+        $actual = $mime_type == \Flexio\Jobs\RenameColumn::MIME_TYPE && $mime_type == 'flexio.rename';
         $expected = true;
-        TestCheck::assertBoolean('A.20', '\Flexio\Jobs\RenameColumnJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.20', '\Flexio\Jobs\RenameColumn definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\RenameFileJob::TEMPLATE,true);
