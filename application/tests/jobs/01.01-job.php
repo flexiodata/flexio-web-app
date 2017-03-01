@@ -71,11 +71,11 @@ class Test
         TestCheck::assertBoolean('A.8', '\Flexio\Jobs\EmailSend definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\FilterJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Filter::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\FilterJob::MIME_TYPE && $mime_type == 'flexio.filter';
+        $actual = $mime_type == \Flexio\Jobs\Filter::MIME_TYPE && $mime_type == 'flexio.filter';
         $expected = true;
-        TestCheck::assertBoolean('A.9', '\Flexio\Jobs\FilterJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.9', '\Flexio\Jobs\Filter definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\FindReplaceJob::TEMPLATE,true);

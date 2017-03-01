@@ -81,8 +81,8 @@ class Task
                 'verb' => 'Outputting'
             ),
             array(
-                'type' => \Flexio\Jobs\FilterJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\FilterJob',
+                'type' => \Flexio\Jobs\Filter::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Filter',
                 'name' => 'Filter',
                 'verb' => 'Processing'
             ),

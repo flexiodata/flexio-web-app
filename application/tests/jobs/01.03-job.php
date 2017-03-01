@@ -64,10 +64,10 @@ class Test
         TestCheck::assertString('A.8', '\Flexio\Jobs\EmailSend::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\FilterJob::create();
+        $task = \Flexio\Jobs\Filter::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\FilterJob::MIME_TYPE;
-        TestCheck::assertString('A.9', '\Flexio\Jobs\FilterJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Filter::MIME_TYPE;
+        TestCheck::assertString('A.9', '\Flexio\Jobs\Filter::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\FindReplaceJob::create();

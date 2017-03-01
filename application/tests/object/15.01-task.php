@@ -241,7 +241,7 @@ class Test
         $task = \Flexio\Object\Task::create()
                         ->push(\Flexio\Jobs\Create::create())
                         ->push(\Flexio\Jobs\Convert::create())
-                        ->push(\Flexio\Jobs\FilterJob::create());
+                        ->push(\Flexio\Jobs\Filter::create());
         $task_list = $task->pop()->get();
         $actual = end($task_list)['type'];
         $expected = \Flexio\Jobs\Convert::MIME_TYPE;
@@ -251,7 +251,7 @@ class Test
         $task = \Flexio\Object\Task::create()
                         ->push(\Flexio\Jobs\Create::create())
                         ->push(\Flexio\Jobs\Convert::create())
-                        ->push(\Flexio\Jobs\FilterJob::create());
+                        ->push(\Flexio\Jobs\Filter::create());
         $task_list = $task->pop()->pop()->get();
         $actual = end($task_list)['type'];
         $expected = \Flexio\Jobs\Create::MIME_TYPE;
@@ -261,7 +261,7 @@ class Test
         $task = \Flexio\Object\Task::create()
                         ->push(\Flexio\Jobs\Create::create())
                         ->push(\Flexio\Jobs\Convert::create())
-                        ->push(\Flexio\Jobs\FilterJob::create());
+                        ->push(\Flexio\Jobs\Filter::create());
         $task->pop()->pop()->pop();
         $actual = $task->get();
         $expected = array();

@@ -64,10 +64,10 @@ class Test
         TestCheck::assertBoolean('A.8', '\Flexio\Jobs\EmailSend schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\FilterJob::SCHEMA;
+        $schema = \Flexio\Jobs\Filter::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.9', '\Flexio\Jobs\FilterJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.9', '\Flexio\Jobs\Filter schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\FindReplaceJob::SCHEMA;
