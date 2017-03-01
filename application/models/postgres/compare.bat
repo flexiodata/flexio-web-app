@@ -1,4 +1,4 @@
-diff -u ..\mysql\ActionModel.php ActionModel.php
+diff -u ..\mysql\Action.php Action.php
 diff -u ..\mysql\CommentModel.php CommentModel.php
 diff -u ..\mysql\ConnectionModel.php ConnectionModel.php
 diff -u ..\mysql\PipeModel.php PipeModel.php

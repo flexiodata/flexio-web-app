@@ -12,7 +12,7 @@
  */
 
 
-class ActionModel extends ModelBase
+class Action extends ModelBase
 {
     public function record($params)
     {
