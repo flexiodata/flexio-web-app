@@ -111,8 +111,8 @@ class Task
                 'verb' => 'Inputting'
             ),
             array(
-                'type' => \Flexio\Jobs\LimitJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\LimitJob',
+                'type' => \Flexio\Jobs\Limit::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Limit',
                 'name' => 'Limit',
                 'verb' => 'Limiting'
             ),

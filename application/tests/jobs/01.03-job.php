@@ -94,10 +94,10 @@ class Test
         TestCheck::assertString('A.13', '\Flexio\Jobs\Input::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\LimitJob::create();
+        $task = \Flexio\Jobs\Limit::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\LimitJob::MIME_TYPE;
-        TestCheck::assertString('A.14', '\Flexio\Jobs\LimitJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Limit::MIME_TYPE;
+        TestCheck::assertString('A.14', '\Flexio\Jobs\Limit::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\MergeJob::create();
