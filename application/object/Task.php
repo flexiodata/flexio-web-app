@@ -57,8 +57,8 @@ class Task
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \Flexio\Jobs\DistinctJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\DistinctJob',
+                'type' => \Flexio\Jobs\Distinct::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Distinct',
                 'name' => 'Remove Duplicates',
                 'verb' => 'Removing duplicates from'
             ),
