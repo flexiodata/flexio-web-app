@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class FollowerApi
+class Follower
 {
     public static function create($params, $request)
     {

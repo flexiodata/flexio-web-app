@@ -319,9 +319,9 @@ class Api
             case 'POS /projects/:eid/restore'          : return '\Flexio\Api\ProjectApi::unTrash';
 
             // followers
-            case 'POS /projects/:eid/followers'        : return '\Flexio\Api\FollowerApi::create';
-            case 'GET /projects/:eid/followers'        : return '\Flexio\Api\FollowerApi::listall';
-            case 'DEL /projects/:eid/followers/:eid'   : return '\Flexio\Api\FollowerApi::delete';
+            case 'POS /projects/:eid/followers'        : return '\Flexio\Api\Follower::create';
+            case 'GET /projects/:eid/followers'        : return '\Flexio\Api\Follower::listall';
+            case 'DEL /projects/:eid/followers/:eid'   : return '\Flexio\Api\Follower::delete';
 
             // pipes
             case 'POS /pipes'                          : return '\Flexio\Api\PipeApi::create';
