@@ -609,9 +609,9 @@ class Email
 
         if (null === $this->_ses)
         {
-            $credentials = new Aws\Credentials\Credentials($g_config->ses_access_key, $g_config->ses_secret_key);
+            $credentials = new \Aws\Credentials\Credentials($g_config->ses_access_key, $g_config->ses_secret_key);
 
-            $this->_ses = new Aws\Ses\SesClient([
+            $this->_ses = new \Aws\Ses\SesClient([
                 'version'     => 'latest',
                 'region'      => 'us-east-1',
                 'credentials' => $credentials
@@ -648,7 +648,7 @@ class Email
             if (!isset($g_config->ses_access_key) || !isset($g_config->ses_secret_key))
                 return null;
 
-            $this->_aws = Aws\Common\Aws::factory(array(
+            $this->_aws = \Aws\Common\Aws::factory(array(
                'key' => $g_config->ses_access_key,
                'secret' => $g_config->ses_secret_key,
                'region' => 'us-east-1'
