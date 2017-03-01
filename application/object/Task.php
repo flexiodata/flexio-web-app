@@ -165,8 +165,8 @@ class Task
                 'verb' => 'Selecting columns in'
             ),
             array(
-                'type' => \Flexio\Jobs\SleepJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\SleepJob',
+                'type' => \Flexio\Jobs\Sleep::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Sleep',
                 'name' => 'Sleep',
                 'verb' => 'Sleeping'
             ),

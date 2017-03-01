@@ -176,11 +176,11 @@ class Test
         TestCheck::assertBoolean('A.23', '\Flexio\Jobs\SelectColumn definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\SleepJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Sleep::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\SleepJob::MIME_TYPE && $mime_type == 'flexio.sleep';
+        $actual = $mime_type == \Flexio\Jobs\Sleep::MIME_TYPE && $mime_type == 'flexio.sleep';
         $expected = true;
-        TestCheck::assertBoolean('A.24', '\Flexio\Jobs\SleepJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.24', '\Flexio\Jobs\Sleep definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\SortJob::TEMPLATE,true);
