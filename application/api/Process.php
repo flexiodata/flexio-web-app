@@ -322,7 +322,7 @@ class Process
         $stream = \Flexio\Object\Stream::create();
 
 
-        StreamApi::handleStreamUpload($params, $stream);
+        \Flexio\Api\Stream::handleStreamUpload($params, $stream);
 
 
         return $process->addInput($stream)->get();

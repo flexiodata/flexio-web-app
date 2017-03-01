@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class StreamApi
+class Stream
 {
     public static function create($params, $request)
     {

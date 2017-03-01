@@ -366,12 +366,12 @@ class Api
             case 'POS /processes/:eid/pause'           : return '\Flexio\Api\Process::pause';
 
             // streams
-            case 'POS /streams'                        : return '\Flexio\Api\StreamApi::create';
-            case 'GET /streams/:eid'                   : return '\Flexio\Api\StreamApi::get';
-            case 'POS /streams/:eid'                   : return '\Flexio\Api\StreamApi::set';
-            case 'GET /streams/:eid/content'           : return '\Flexio\Api\StreamApi::content';
-            case 'GET /streams/:eid/download'          : return '\Flexio\Api\StreamApi::download';
-            case 'POS /streams/:eid/upload'            : return '\Flexio\Api\StreamApi::upload';
+            case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
+            case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
+            case 'POS /streams/:eid'                   : return '\Flexio\Api\Stream::set';
+            case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
+            case 'GET /streams/:eid/download'          : return '\Flexio\Api\Stream::download';
+            case 'POS /streams/:eid/upload'            : return '\Flexio\Api\Stream::upload';
 
             // comments
             case 'POS /comments'                       : return '\Flexio\Api\Comment::create';
