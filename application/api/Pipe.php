@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class PipeApi
+class Pipe
 {
     public static function create($params, $request)
     {

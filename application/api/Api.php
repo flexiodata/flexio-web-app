@@ -324,20 +324,20 @@ class Api
             case 'DEL /projects/:eid/followers/:eid'   : return '\Flexio\Api\Follower::delete';
 
             // pipes
-            case 'POS /pipes'                          : return '\Flexio\Api\PipeApi::create';
-            case 'POS /pipes/:eid'                     : return '\Flexio\Api\PipeApi::set';
-            case 'GET /pipes/:eid'                     : return '\Flexio\Api\PipeApi::get';
-            case 'DEL /pipes/:eid'                     : return '\Flexio\Api\PipeApi::delete';
-            case 'GET /pipes/:eid/comments'            : return '\Flexio\Api\PipeApi::comments';
-            case 'POS /pipes/:eid/tasks'               : return '\Flexio\Api\PipeApi::addTaskStep';
-            case 'DEL /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\PipeApi::deleteTaskStep';
-            case 'POS /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\PipeApi::setTaskStep';
-            case 'GET /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\PipeApi::getTaskStep';
+            case 'POS /pipes'                          : return '\Flexio\Api\Pipe::create';
+            case 'POS /pipes/:eid'                     : return '\Flexio\Api\Pipe::set';
+            case 'GET /pipes/:eid'                     : return '\Flexio\Api\Pipe::get';
+            case 'DEL /pipes/:eid'                     : return '\Flexio\Api\Pipe::delete';
+            case 'GET /pipes/:eid/comments'            : return '\Flexio\Api\Pipe::comments';
+            case 'POS /pipes/:eid/tasks'               : return '\Flexio\Api\Pipe::addTaskStep';
+            case 'DEL /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::deleteTaskStep';
+            case 'POS /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::setTaskStep';
+            case 'GET /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::getTaskStep';
             case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\ProcessApi::create';
-            case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\PipeApi::processes';
+            case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\Pipe::processes';
 
             // experimental API endpoint for running a pipe with form parameters
-            case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\PipeApi::run';
+            case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
 
             // connections
             case 'POS /connections'                    : return '\Flexio\Api\Connection::create';
