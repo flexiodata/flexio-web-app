@@ -17,7 +17,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class CreateJob extends \Flexio\Jobs\Base
+class Create extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -26,7 +26,7 @@ class CreateJob extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $this->getOutput()->merge($this->getInput());
 
-        $validator = \Flexio\System\ValidatorSchema::check($job_definition, \Flexio\Jobs\CreateJob::SCHEMA);
+        $validator = \Flexio\System\ValidatorSchema::check($job_definition, \Flexio\Jobs\Create::SCHEMA);
         if ($validator->hasErrors() === true)
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 

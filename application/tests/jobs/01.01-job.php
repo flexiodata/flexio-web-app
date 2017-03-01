@@ -43,11 +43,11 @@ class Test
         TestCheck::assertBoolean('A.4', '\Flexio\Jobs\Copy definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\CreateJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Create::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\CreateJob::MIME_TYPE && $mime_type == 'flexio.create';
+        $actual = $mime_type == \Flexio\Jobs\Create::MIME_TYPE && $mime_type == 'flexio.create';
         $expected = true;
-        TestCheck::assertBoolean('A.5', '\Flexio\Jobs\CreateJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', '\Flexio\Jobs\Create definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\DistinctJob::TEMPLATE,true);

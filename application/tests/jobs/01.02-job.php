@@ -40,10 +40,10 @@ class Test
         TestCheck::assertBoolean('A.4', '\Flexio\Jobs\Copy schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\CreateJob::SCHEMA;
+        $schema = \Flexio\Jobs\Create::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.5', '\Flexio\Jobs\CreateJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', '\Flexio\Jobs\Create schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\DistinctJob::SCHEMA;

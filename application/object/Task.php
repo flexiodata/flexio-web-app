@@ -51,8 +51,8 @@ class Task
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \Flexio\Jobs\CreateJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\CreateJob',
+                'type' => \Flexio\Jobs\Create::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Create',
                 'name' => '',
                 'verb' => 'Processing'
             ),
