@@ -67,10 +67,10 @@ class Test
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create([
-                \Flexio\Jobs\ConvertJob::create()
+                \Flexio\Jobs\Convert::create()
             ]);
         $actual = $task->get()[0]['type'];
-        $expected = \Flexio\Jobs\ConvertJob::MIME_TYPE;
+        $expected = \Flexio\Jobs\Convert::MIME_TYPE;
         TestCheck::assertString('A.8', 'Task::create(); add valid steps', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -92,18 +92,18 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Object\Task::create([
                 \Flexio\Jobs\CreateJob::create(),
-                \Flexio\Jobs\ConvertJob::create(),
+                \Flexio\Jobs\Convert::create(),
             ]);
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE;
+        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
         TestCheck::assertBoolean('A.11', 'Task::create(); add valid steps', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create([
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                \Flexio\Jobs\ConvertJob::create(),
+                \Flexio\Jobs\Convert::create(),
             ]);
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE;
+        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
         TestCheck::assertBoolean('A.12', 'Task::create(); add valid steps; allow mixed input types', $actual, $expected, $results);
 
@@ -112,7 +112,7 @@ class Test
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
                 '{"type": "flexio.convert", "params": {}}'
             ]);
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE;
+        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
         TestCheck::assertBoolean('A.13', 'Task::create(); add valid steps; allow mixed input types', $actual, $expected, $results);
 
@@ -124,7 +124,7 @@ class Test
                 '{"type": "flexio.convert", "params": {}}',
                 null
             ]);
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE;
+        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
         TestCheck::assertBoolean('A.14', 'Task::create(); add valid steps; allow mixed input types; ingore bad input', $actual, $expected, $results);
 
@@ -175,9 +175,9 @@ class Test
         TestCheck::assertString('B.7', 'Task::push(); add valid steps', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\ConvertJob::create());
+        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\Convert::create());
         $actual = $task->get()[0]['type'];
-        $expected = \Flexio\Jobs\ConvertJob::MIME_TYPE;
+        $expected = \Flexio\Jobs\Convert::MIME_TYPE;
         TestCheck::assertString('B.8', 'Task::push(); add valid steps', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -195,16 +195,16 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()
                         ->push(\Flexio\Jobs\CreateJob::create())
-                        ->push(\Flexio\Jobs\ConvertJob::create());
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE;
+                        ->push(\Flexio\Jobs\Convert::create());
+        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
         TestCheck::assertBoolean('B.11', 'Task::push(); add valid steps', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()
                         ->push(["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]])
-                        ->push(\Flexio\Jobs\ConvertJob::create());
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE;
+                        ->push(\Flexio\Jobs\Convert::create());
+        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
         TestCheck::assertBoolean('B.12', 'Task::push(); add valid steps; allow mixed input types', $actual, $expected, $results);
 
@@ -212,7 +212,7 @@ class Test
         $task = \Flexio\Object\Task::create()
                         ->push(["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]])
                         ->push('{"type": "flexio.convert", "params": {}}');
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE;
+        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
         TestCheck::assertBoolean('B.13', 'Task::push(); add valid steps; allow mixed input types', $actual, $expected, $results);
 
@@ -223,7 +223,7 @@ class Test
                         ->push(true)
                         ->push('{"type": "flexio.convert", "params": {}}')
                         ->push(null);
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE;
+        $actual = $task->get()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
         TestCheck::assertBoolean('B.14', 'Task::push(); add valid steps; allow mixed input types; ingore bad input', $actual, $expected, $results);
 
@@ -240,17 +240,17 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()
                         ->push(\Flexio\Jobs\CreateJob::create())
-                        ->push(\Flexio\Jobs\ConvertJob::create())
+                        ->push(\Flexio\Jobs\Convert::create())
                         ->push(\Flexio\Jobs\FilterJob::create());
         $task_list = $task->pop()->get();
         $actual = end($task_list)['type'];
-        $expected = \Flexio\Jobs\ConvertJob::MIME_TYPE;
+        $expected = \Flexio\Jobs\Convert::MIME_TYPE;
         TestCheck::assertString('C.2', 'Task::pop(); remove the last element', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()
                         ->push(\Flexio\Jobs\CreateJob::create())
-                        ->push(\Flexio\Jobs\ConvertJob::create())
+                        ->push(\Flexio\Jobs\Convert::create())
                         ->push(\Flexio\Jobs\FilterJob::create());
         $task_list = $task->pop()->pop()->get();
         $actual = end($task_list)['type'];
@@ -260,7 +260,7 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()
                         ->push(\Flexio\Jobs\CreateJob::create())
-                        ->push(\Flexio\Jobs\ConvertJob::create())
+                        ->push(\Flexio\Jobs\Convert::create())
                         ->push(\Flexio\Jobs\FilterJob::create());
         $task->pop()->pop()->pop();
         $actual = $task->get();
@@ -359,21 +359,21 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
         $task->addTaskStep(["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]);
-        $task->addTaskStep(["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]);
+        $task->addTaskStep(["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('D.11', 'Task::addTaskStep(); make sure that steps without any supplied index are added to the end of the task list', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
-        $task->addTaskStep(["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]);
+        $task->addTaskStep(["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]);
         $task->addTaskStep(["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]);
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('D.12', 'Task::addTaskStep(); make sure that steps without any supplied index are added to the end of the task list', $actual, $expected, $results);
@@ -381,13 +381,13 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->addTaskStep(["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]);
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]
         ];
@@ -396,13 +396,13 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->addTaskStep(["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]], null);
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]
         ];
@@ -411,13 +411,13 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->addTaskStep(["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]], false);
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]
         ];
@@ -426,13 +426,13 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->addTaskStep(["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]], 'abc');
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]
         ];
@@ -468,10 +468,10 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
         $task->addTaskStep(["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]], 0);
-        $task->addTaskStep(["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]], 0);
+        $task->addTaskStep(["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]], 0);
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('D.20', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
@@ -479,25 +479,25 @@ class Test
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
         $task->addTaskStep(["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]], 0);
-        $task->addTaskStep(["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]], 1);
+        $task->addTaskStep(["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]], 1);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('D.21', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->addTaskStep(["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]], -1);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('D.22', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
@@ -505,14 +505,14 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->addTaskStep(["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]], 0);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('D.23', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
@@ -520,13 +520,13 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->addTaskStep(["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]], 1);
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]]
         ];
@@ -535,13 +535,13 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->addTaskStep(["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]], 2);
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]
         ];
@@ -550,13 +550,13 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->addTaskStep(["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]], 3);
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]],
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]
         ];
@@ -569,63 +569,63 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->deleteTaskStep(null);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('E.1', 'Task::deleteTaskStep(); don\'t delete the step if the eid is bad', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->deleteTaskStep(false);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('E.2', 'Task::deleteTaskStep(); don\'t delete the step if the eid is bad', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->deleteTaskStep('abc');
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('E.3', 'Task::deleteTaskStep(); don\'t delete the step if the eid is bad', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task_list = $task->get();
         $task->deleteTaskStep($task_list[0]['eid']);
         $actual = $task->get();
         $expected = [
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('E.4', 'Task::deleteTaskStep(); delete the step if the specified eid matches one of the task step eids', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task_list = $task->get();
@@ -639,14 +639,14 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->deleteTaskStep(\Flexio\System\Eid::generate());
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('E.6', 'Task::deleteTaskStep(); don\'t delete the step if the specified eid doesn\'t match any of the task step eids', $actual, $expected, $results);
 
@@ -657,91 +657,91 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->setTaskStep(null, ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('F.1', 'Task::setTaskStep(); don\'t replace the step if the eid is bad', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->setTaskStep(false, ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('F.2', 'Task::setTaskStep(); don\'t replace the step if the eid is bad', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->setTaskStep($eid1, null);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('F.3', 'Task::setTaskStep(); don\'t replace the step if the input is bad', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->setTaskStep($eid1, false);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('F.4', 'Task::setTaskStep(); don\'t replace the step if the input is bad', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->setTaskStep($eid1, 1);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('F.5', 'Task::setTaskStep(); don\'t replace the step if the input is bad', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->setTaskStep($eid1, "a");
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('F.6', 'Task::setTaskStep(); don\'t replace the step if the input is bad', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task_list = $task->get();
@@ -749,14 +749,14 @@ class Test
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('F.7', 'Task::setTaskStep(); set the specified task if it exists', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task_list = $task->get();
@@ -771,14 +771,14 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task->setTaskStep(\Flexio\System\Eid::generate(), ["type" => \Flexio\Jobs\NopJob::MIME_TYPE, "params" => (object)[]]);
         $actual = $task->get();
         $expected = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         TestCheck::assertInArray('F.9', 'Task::setTaskStep(); set the specified task if it exists', $actual, $expected, $results);
 
@@ -786,7 +786,7 @@ class Test
         $eid1 = \Flexio\System\Eid::generate();
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task_list = $task->get();
@@ -804,7 +804,7 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $actual = $task->getTaskStep(null);
@@ -814,7 +814,7 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $actual = $task->getTaskStep(false);
@@ -824,7 +824,7 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $actual = $task->getTaskStep('abc');
@@ -834,7 +834,7 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task_list = $task->get();
@@ -845,18 +845,18 @@ class Test
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $task_list = $task->get();
         $actual = $task->getTaskStep($task_list[1]['eid']);
-        $expected = ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]];
+        $expected = ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]];
         TestCheck::assertInArray('G.5', 'Task::getTaskStep(); get a specified step if it exists', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
                 ["type" => \Flexio\Jobs\CreateJob::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\ConvertJob::MIME_TYPE, "params" => (object)[]]
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
         $task = \Flexio\Object\Task::create($steps);
         $actual = $task->getTaskStep(\Flexio\System\Eid::generate());

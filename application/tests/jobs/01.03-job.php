@@ -28,10 +28,10 @@ class Test
         TestCheck::assertString('A.1', '\Flexio\Jobs\CalcField::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\ConvertJob::create();
+        $task = \Flexio\Jobs\Convert::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\ConvertJob::MIME_TYPE;
-        TestCheck::assertString('A.2', '\Flexio\Jobs\ConvertJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Convert::MIME_TYPE;
+        TestCheck::assertString('A.2', '\Flexio\Jobs\Convert::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\CopyJob::create();

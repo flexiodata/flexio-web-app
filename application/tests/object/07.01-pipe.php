@@ -228,16 +228,16 @@ class Test
         TestCheck::assertNumber('G.2', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\CreateJob::create())->push(\Flexio\Jobs\ConvertJob::create());
+        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\CreateJob::create())->push(\Flexio\Jobs\Convert::create());
         $object = \Flexio\Object\Pipe::create()->setTask($task->get());
         $actual = count($object->getTask());
         $expected = 2;
         TestCheck::assertNumber('G.3', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\CreateJob::create())->push(\Flexio\Jobs\ConvertJob::create());
+        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\CreateJob::create())->push(\Flexio\Jobs\Convert::create());
         $object = \Flexio\Object\Pipe::create()->setTask($task->get());
-        $actual = ($object->getTask()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE) && ($object->getTask()[1]['type'] === \Flexio\Jobs\ConvertJob::MIME_TYPE);
+        $actual = ($object->getTask()[0]['type'] === \Flexio\Jobs\CreateJob::MIME_TYPE) && ($object->getTask()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE);
         $expected = true;
         TestCheck::assertBoolean('G.4', 'Pipe::setTask(); make sure tasks are set correctly',  $actual, $expected, $results);
     }

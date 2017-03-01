@@ -29,11 +29,11 @@ class Test
         TestCheck::assertBoolean('A.1', '\Flexio\Jobs\CalcField definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\ConvertJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Convert::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\ConvertJob::MIME_TYPE && $mime_type == 'flexio.convert';
+        $actual = $mime_type == \Flexio\Jobs\Convert::MIME_TYPE && $mime_type == 'flexio.convert';
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\Jobs\ConvertJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\Jobs\Convert definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\CopyJob::TEMPLATE,true);

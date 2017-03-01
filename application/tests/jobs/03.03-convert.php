@@ -44,7 +44,7 @@ class Test
 
 
 
-        // TEST: ConvertJob; basic content upload test
+        // TEST: Convert; basic content upload test
 
         // BEGIN TEST
         $data = <<<EOD
@@ -71,7 +71,7 @@ EOD;
 
 
 
-        // TEST: ConvertJob; content with troublesome characters
+        // TEST: Convert; content with troublesome characters
 
         // BEGIN TEST
         $data = <<<EOD
@@ -95,7 +95,7 @@ EOD;
 
         // note: This line uses php's fgetcsv rules
         $expected = '[["",","],["b,",",b"],["c,d",","]]';
-        TestCheck::assertArray('B.1', 'ConvertJob; troublesome characters in content',  $actual, $expected, $results);
+        TestCheck::assertArray('B.1', 'Convert; troublesome characters in content',  $actual, $expected, $results);
 
 
 
@@ -118,7 +118,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["SchwÃ¤bische SoftwarelÃ¶sungen AG"]]';
-        TestCheck::assertArray('C.1', 'ConvertJob; troublesome characters in content',  $actual, $expected, $results);
+        TestCheck::assertArray('C.1', 'Convert; troublesome characters in content',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -135,7 +135,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["SchwÃ¤bische SoftwarelÃ¶sungen AG"]]';
-        TestCheck::assertArray('C.2', 'ConvertJob; troublesome characters in content',  $actual, $expected, $results);
+        TestCheck::assertArray('C.2', 'Convert; troublesome characters in content',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = <<<EOD
@@ -153,11 +153,11 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["SchwÃ¤bische SoftwarelÃ¶sungen AG"]]';
-        TestCheck::assertArray('C.3', 'ConvertJob; troublesome characters in content',  $actual, $expected, $results);
+        TestCheck::assertArray('C.3', 'Convert; troublesome characters in content',  $actual, $expected, $results);
 
 
 
-        // TEST: ConvertJob; content with integer numbers
+        // TEST: Convert; content with integer numbers
 
         // BEGIN TEST
         $data = <<<EOD
@@ -314,7 +314,7 @@ EOD;
 
 
 
-        // TEST: ConvertJob; content with decimal numbers
+        // TEST: Convert; content with decimal numbers
 
         // BEGIN TEST
         $data = <<<EOD
@@ -439,7 +439,7 @@ EOD;
 
 
 
-        // TEST: ConvertJob; troublesome characters in a numeric field
+        // TEST: Convert; troublesome characters in a numeric field
 
         // BEGIN TEST
         $data = <<<EOD
@@ -500,7 +500,7 @@ EOD;
 
 
 
-        // TEST: ConvertJob; content with dates, single format
+        // TEST: Convert; content with dates, single format
 
         // BEGIN TEST
         $data = <<<EOD
@@ -606,7 +606,7 @@ EOD;
 
 
 
-        // TEST: ConvertJob; content with dates, mixed format
+        // TEST: Convert; content with dates, mixed format
 
         // BEGIN TEST
         $data = <<<EOD

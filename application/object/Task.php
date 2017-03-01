@@ -39,8 +39,8 @@ class Task
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \Flexio\Jobs\ConvertJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\ConvertJob',
+                'type' => \Flexio\Jobs\Convert::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Convert',
                 'name' => 'Convert File',
                 'verb' => 'Converting'
             ),

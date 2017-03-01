@@ -28,10 +28,10 @@ class Test
         TestCheck::assertBoolean('A.1', '\Flexio\Jobs\CalcField schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\ConvertJob::SCHEMA;
+        $schema = \Flexio\Jobs\Convert::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Flexio\Jobs\ConvertJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\Jobs\Convert schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\CopyJob::SCHEMA;
