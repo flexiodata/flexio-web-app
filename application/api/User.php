@@ -23,7 +23,7 @@ if (!isset($GLOBALS['humannameparser_included']))
 require_once 'humannameparser_init.php';
 
 
-class UserApi
+class User
 {
     public static function create($params, $request)
     {
@@ -277,12 +277,12 @@ class UserApi
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
         // check the rights, but only if the object isn't pending;
-        // TODO: proper approach is to always check rights; right now, UserApi::set()
-        // is used to set user info for unverified accounts that were created from
-        // an invitation the rest of the info needs to be set to complete the process
-        // before the user is able to log in; probably best to pass the verification code
-        // and use the UserApi::create() function to complete the process rather than
-        // this, since this approach could be used to set info for unverified users
+        // TODO: proper approach is to always check rights; right now, \Flexio\Api\User::set()
+        // is used to set user info for unverified accounts that were created from an invitation
+        // the rest of the info needs to be set to complete the process before the user is able
+        // to log in; probably best to pass the verification code and use the \Flexio\Api\User::create()
+        // function to complete the process rather than this, since this approach could be used to
+        // set info for unverified users
         if ($user->getStatus() !== \Model::STATUS_PENDING)
         {
             if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)

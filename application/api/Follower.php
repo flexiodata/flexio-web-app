@@ -96,7 +96,7 @@ class Follower
                                        'create_sample_project' => false);
 
                 // if the user isn't invited, create the user; if something went wrong, move on
-                $user_info = UserApi::create($new_user_info, $request);
+                $user_info = \Flexio\Api\User::create($new_user_info, $request);
                 if (!isset($user_info) || $user_info === false)
                     continue;
 

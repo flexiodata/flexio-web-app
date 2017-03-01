@@ -290,16 +290,16 @@ class Api
             case 'GET /search'                         : return '\Flexio\Api\Search::exec';
 
             // users
-            case 'GET /users/me'                       : return '\Flexio\Api\UserApi::about';
+            case 'GET /users/me'                       : return '\Flexio\Api\User::about';
 
-            case 'POS /users'                          : return '\Flexio\Api\UserApi::create';
-            case 'POS /users/resetpassword'            : return '\Flexio\Api\UserApi::resetpassword';
-            case 'POS /users/requestpasswordreset'     : return '\Flexio\Api\UserApi::requestpasswordreset';
-            case 'POS /users/resendverify'             : return '\Flexio\Api\UserApi::resendverify';
-            case 'POS /users/activate'                 : return '\Flexio\Api\UserApi::activate';
-            case 'POS /users/:eid'                     : return '\Flexio\Api\UserApi::set';
-            case 'GET /users/:eid'                     : return '\Flexio\Api\UserApi::get';
-            case 'POS /users/:eid/changepassword'      : return '\Flexio\Api\UserApi::changepassword';
+            case 'POS /users'                          : return '\Flexio\Api\User::create';
+            case 'POS /users/resetpassword'            : return '\Flexio\Api\User::resetpassword';
+            case 'POS /users/requestpasswordreset'     : return '\Flexio\Api\User::requestpasswordreset';
+            case 'POS /users/resendverify'             : return '\Flexio\Api\User::resendverify';
+            case 'POS /users/activate'                 : return '\Flexio\Api\User::activate';
+            case 'POS /users/:eid'                     : return '\Flexio\Api\User::set';
+            case 'GET /users/:eid'                     : return '\Flexio\Api\User::get';
+            case 'POS /users/:eid/changepassword'      : return '\Flexio\Api\User::changepassword';
             case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::listall';
             case 'POS /users/:eid/tokens'              : return '\Flexio\Api\Token::create';
             case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
@@ -385,7 +385,7 @@ class Api
 
             // DEBUG: endpoints for easy debugging using a URL in a browser
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';
-            case 'GET /users/createsampleproject'      : return '\Flexio\Api\UserApi::createSample';
+            case 'GET /users/createsampleproject'      : return '\Flexio\Api\User::createSample';
             case 'GET /debug/config'                   : return '\Flexio\Api\System::configuration';
         }
     }
