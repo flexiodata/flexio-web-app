@@ -76,10 +76,10 @@ class Test
         TestCheck::assertBoolean('A.10', '\Flexio\Jobs\FindReplace schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\GrepJob::SCHEMA;
+        $schema = \Flexio\Jobs\Grep::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.11', '\Flexio\Jobs\GrepJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.11', '\Flexio\Jobs\Grep schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\GroupJob::SCHEMA;

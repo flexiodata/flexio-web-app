@@ -93,8 +93,8 @@ class Task
                 'verb' => 'Replacing values in'
             ),
             array(
-                'type' => \Flexio\Jobs\GrepJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\GrepJob',
+                'type' => \Flexio\Jobs\Grep::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Grep',
                 'name' => '',
                 'verb' => 'Processing'
             ),

@@ -85,11 +85,11 @@ class Test
         TestCheck::assertBoolean('A.10', '\Flexio\Jobs\FindReplace definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\GrepJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Grep::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\GrepJob::MIME_TYPE && $mime_type == 'flexio.grep';
+        $actual = $mime_type == \Flexio\Jobs\Grep::MIME_TYPE && $mime_type == 'flexio.grep';
         $expected = true;
-        TestCheck::assertBoolean('A.11', '\Flexio\Jobs\GrepJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.11', '\Flexio\Jobs\Grep definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\GroupJob::TEMPLATE,true);
