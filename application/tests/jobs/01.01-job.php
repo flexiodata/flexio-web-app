@@ -162,11 +162,11 @@ class Test
         TestCheck::assertBoolean('A.21', '\Flexio\Jobs\RenameFile definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\SearchJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Search::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\SearchJob::MIME_TYPE && $mime_type == 'flexio.search';
+        $actual = $mime_type == \Flexio\Jobs\Search::MIME_TYPE && $mime_type == 'flexio.search';
         $expected = true;
-        TestCheck::assertBoolean('A.22', '\Flexio\Jobs\SearchJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.22', '\Flexio\Jobs\Search definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\SelectColumnJob::TEMPLATE,true);

@@ -153,8 +153,8 @@ class Task
                 'verb' => 'Renaming file'
             ),
             array(
-                'type' => \Flexio\Jobs\SearchJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\SearchJob',
+                'type' => \Flexio\Jobs\Search::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Search',
                 'name' => 'Search',
                 'verb' => 'Searching'
             ),

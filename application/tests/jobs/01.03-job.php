@@ -142,10 +142,10 @@ class Test
         TestCheck::assertString('A.21', '\Flexio\Jobs\RenameFile::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\SearchJob::create();
+        $task = \Flexio\Jobs\Search::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\SearchJob::MIME_TYPE;
-        TestCheck::assertString('A.22', '\Flexio\Jobs\SearchJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Search::MIME_TYPE;
+        TestCheck::assertString('A.22', '\Flexio\Jobs\Search::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\SelectColumnJob::create();

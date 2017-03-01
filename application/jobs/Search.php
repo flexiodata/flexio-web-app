@@ -17,7 +17,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class SearchJob extends \Flexio\Jobs\Base
+class Search extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -67,10 +67,11 @@ class SearchJob extends \Flexio\Jobs\Base
 
     private static function prepareOutput($job_definition, $instream, &$outstream)
     {
-        // note: the SearchJob used to be implement the functionality using
-        // the Filter, the old implementation of which is now below until
-        // the SearchJob is reworked; this function takes the SearchJob JSON
-        // definition and constructs the JSON necessary for the old Filter
+        // note: \Flexio\Jobs\Search used to be implement the functionality using
+        // \Flexio\Jobs\Filter, the old implementation of which is now below until
+        // \Flexio\Jobs\Search is reworked; this function takes \Flexio\Jobs\Search
+        // JSON definition and constructs the JSON necessary for the old
+        // \Flexio\Jobs\Filter job
 
         // get the columns and search criteria
         $columns = $job_definition['params']['columns'];
