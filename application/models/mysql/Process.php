@@ -12,7 +12,7 @@
  */
 
 
-class ProcessModel extends ModelBase
+class Process extends ModelBase
 {
     public function create($params, $primary_process = true)
     {
@@ -76,7 +76,7 @@ class ProcessModel extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create process'));
+            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create process'));
         }
     }
 
@@ -84,7 +84,7 @@ class ProcessModel extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(Model::ERROR_NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -175,6 +175,8 @@ class ProcessModel extends ModelBase
                                          tpr.process_eid as process_eid,
                                          tpr.process_mode as process_mode,
                                          tpr.impl_revision as impl_revision,
+                                         tpr.task_type as task_type,
+                                         tpr.task_version as task_version,
                                          tpr.task as task,
                                          tpr.input as input,
                                          tpr.output as output,
@@ -208,6 +210,8 @@ class ProcessModel extends ModelBase
                      'process_eid'      => $row['process_eid'],
                      'process_mode'     => $row['process_mode'],
                      'impl_revision'    => $row['impl_revision'],
+                     'task_type'        => $row['task_type'],
+                     'task_version'     => $row['task_version'],
                      'task'             => $row['task'],
                      'input'            => $row['input'],
                      'output'           => $row['output'],
@@ -249,8 +253,6 @@ class ProcessModel extends ModelBase
                                           tpr.process_eid as process_eid,
                                           tpr.process_mode as process_mode,
                                           tpr.impl_revision as impl_revision,
-                                          tpr.task_type as task_type,
-                                          tpr.task_version as task_version,
                                           tpr.task as task,
                                           tpr.input as input,
                                           tpr.output as output,
@@ -288,8 +290,6 @@ class ProcessModel extends ModelBase
                               'process_eid'      => $row['process_eid'],
                               'process_mode'     => $row['process_mode'],
                               'impl_revision'    => $row['impl_revision'],
-                              'task_type'        => $row['task_type'],
-                              'task_version'     => $row['task_version'],
                               'task'             => $row['task'],
                               'input'            => $row['input'],
                               'output'           => $row['output'],
@@ -304,58 +304,6 @@ class ProcessModel extends ModelBase
                               'cache_used'       => $row['cache_used'],
                               'created'          => \Flexio\System\Util::formatDate($row['created']),
                               'updated'          => \Flexio\System\Util::formatDate($row['updated']));
-        }
-
-        return $output;
-    }
-
-    public function getProcessStatistics()
-    {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
-        try
-        {
-            // note: get the process statistics by looking at all the subprocesses
-            $rows = $db->fetchAll("select tpr.task_type as task_type,
-                                         count(case when tpr.process_status = ''  then 1 end) as undefined,
-                                         count(case when tpr.process_status = 'S' then 1 end) as pending,
-                                         count(case when tpr.process_status = 'W' then 1 end) as waiting,
-                                         count(case when tpr.process_status = 'R' then 1 end) as running,
-                                         count(case when tpr.process_status = 'X' then 1 end) as cancelled,
-                                         count(case when tpr.process_status = 'P' then 1 end) as paused,
-                                         count(case when tpr.process_status = 'F' then 1 end) as failed,
-                                         count(case when tpr.process_status = 'C' then 1 end) as completed,
-                                         avg(extract(epoch from (tpr.finished - tpr.started))) as average_time,
-                                         sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
-                                         count(*) as total_count
-                                   from tbl_process tpr
-                                   where tpr.parent_eid != tpr.eid
-                                   group by task_type
-                                   order by total_count desc, task_type
-                                 ");
-         }
-         catch (\Exception $e)
-         {
-             return $this->fail(Model::ERROR_READ_FAILED, _('Could not get the process'));
-         }
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $output[] = array('task_type'    => $row['task_type'],
-                              'undefined'    => $row['undefined'],
-                              'pending'      => $row['pending'],
-                              'waiting'      => $row['waiting'],
-                              'running'      => $row['running'],
-                              'cancelled'    => $row['cancelled'],
-                              'paused'       => $row['paused'],
-                              'failed'       => $row['failed'],
-                              'completed'    => $row['completed'],
-                              'total_count'  => $row['total_count'],
-                              'total_time'   => $row['total_time'],
-                              'average_time' => $row['average_time']);
         }
 
         return $output;
@@ -402,7 +350,7 @@ class ProcessModel extends ModelBase
             // to prevent the very unlikely case of where we might find a cached
             // result that's based on some other input and task
             $output = $rows[0]['output'];
-            return $output;
+            return true;
          }
          catch (\Exception $e)
          {

@@ -2,7 +2,7 @@ diff -u ..\mysql\Action.php Action.php
 diff -u ..\mysql\Action.php Action.php
 diff -u ..\mysql\Connection.php Connection.php
 diff -u ..\mysql\Pipe.php Pipe.php
-diff -u ..\mysql\ProcessModel.php ProcessModel.php
+diff -u ..\mysql\Process.php Process.php
 diff -u ..\mysql\ProjectModel.php ProjectModel.php
 diff -u ..\mysql\RegistryModel.php RegistryModel.php
 diff -u ..\mysql\SearchModel.php SearchModel.php
