@@ -12,13 +12,13 @@
  */
 
 
-class ConnectionModel extends ModelBase
+class Connection extends ModelBase
 {
     public function create($params)
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(Model::ERROR_NO_DATABASE);
 
         // if the connection_status parameter is set, make sure the status is set
         // to a valid value
@@ -56,7 +56,7 @@ class ConnectionModel extends ModelBase
                 'password'          => isset_or($params['password'], ''),
                 'token'             => isset_or($params['token'], ''),
                 'refresh_token'     => isset_or($params['refresh_token'], ''),
-                'token_expires'     => isset_or($params['token_expires'], null),
+                'token_expires'     => isset_or($params['token_expires'], ''),
                 'database'          => isset_or($params['database'], $default_database),
                 'connection_type'   => isset_or($params['connection_type'], ''),
                 'connection_status' => isset_or($params['connection_status'], \Model::CONNECTION_STATUS_UNAVAILABLE),
@@ -79,7 +79,7 @@ class ConnectionModel extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create connection'));
+            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create connection'));
         }
     }
 
@@ -100,7 +100,7 @@ class ConnectionModel extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete connection'));
+            return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete connection'));
         }
     }
 
@@ -123,14 +123,13 @@ class ConnectionModel extends ModelBase
                 'password'          => array('type' => 'string',  'required' => false),
                 'token'             => array('type' => 'string',  'required' => false),
                 'refresh_token'     => array('type' => 'string',  'required' => false),
-                'token_expires'     => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
+                'token_expires'     => array('type' => 'string',  'required' => false),
                 'database'          => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update connection'));
+            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update connection'));
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
-
 
         if (isset($process_arr['username'])) $process_arr['username'] = \Flexio\System\Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
         if (isset($process_arr['password'])) $process_arr['password'] = \Flexio\System\Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
@@ -148,7 +147,6 @@ class ConnectionModel extends ModelBase
                 $process_arr['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;  // default status
             }
         }
-
 
         $db->beginTransaction();
         try
@@ -224,7 +222,7 @@ class ConnectionModel extends ModelBase
                      'description'       => $row['description'],
                      'display_icon'      => $row['display_icon'],
                      'host'              => $row['host'],
-                     'port'              => $row['port'],
+                     'port'              => (int)$row['port'],
                      'username'          => $row['username'],
                      'password'          => $row['password'],
                      'token'             => $row['token'],

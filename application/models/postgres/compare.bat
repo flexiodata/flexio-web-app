@@ -1,6 +1,6 @@
 diff -u ..\mysql\Action.php Action.php
 diff -u ..\mysql\Action.php Action.php
-diff -u ..\mysql\ConnectionModel.php ConnectionModel.php
+diff -u ..\mysql\Connection.php Connection.php
 diff -u ..\mysql\PipeModel.php PipeModel.php
 diff -u ..\mysql\ProcessModel.php ProcessModel.php
 diff -u ..\mysql\ProjectModel.php ProjectModel.php

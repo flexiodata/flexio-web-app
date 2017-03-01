@@ -29,22 +29,22 @@ class Test
         // BEGIN TEST
         $actual = \Model::CONNECTION_STATUS_INVALID;
         $expected = 'I';
-        TestCheck::assertString('A.1', 'ConnectionModel status constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', '\Flexio\Model\Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_STATUS_AVAILABLE;
         $expected = 'A';
-        TestCheck::assertString('A.2', 'ConnectionModel status constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.2', '\Flexio\Model\Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_STATUS_UNAVAILABLE;
         $expected = 'U';
-        TestCheck::assertString('A.3', 'ConnectionModel status constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.3', '\Flexio\Model\Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_STATUS_ERROR;
         $expected = 'E';
-        TestCheck::assertString('A.4', 'ConnectionModel status constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.4', '\Flexio\Model\Connection status constant',  $actual, $expected, $results);
 
 
 
