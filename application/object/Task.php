@@ -135,8 +135,8 @@ class Task
                 'verb' => 'Waiting for information'
             ),
             array(
-                'type' => \Flexio\Jobs\ExecuteJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\ExecuteJob',
+                'type' => \Flexio\Jobs\Execute::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Execute',
                 'name' => '',
                 'verb' => 'Running a program on'
             ),

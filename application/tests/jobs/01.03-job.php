@@ -124,10 +124,10 @@ class Test
         TestCheck::assertString('A.18', '\Flexio\Jobs\PromptJob::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\ExecuteJob::create();
+        $task = \Flexio\Jobs\Execute::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\ExecuteJob::MIME_TYPE;
-        TestCheck::assertString('A.19', '\Flexio\Jobs\ExecuteJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Execute::MIME_TYPE;
+        TestCheck::assertString('A.19', '\Flexio\Jobs\Execute::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\RenameColumnJob::create();
