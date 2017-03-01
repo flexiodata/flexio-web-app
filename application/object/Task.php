@@ -63,8 +63,8 @@ class Task
                 'verb' => 'Removing duplicates from'
             ),
             array(
-                'type' => \Flexio\Jobs\DuplicateJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\DuplicateJob',
+                'type' => \Flexio\Jobs\Duplicate::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Duplicate',
                 'name' => 'Identify Duplicates',
                 'verb' => 'Identifying duplicates in'
             ),

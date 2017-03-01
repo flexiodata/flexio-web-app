@@ -52,10 +52,10 @@ class Test
         TestCheck::assertString('A.6', '\Flexio\Jobs\Distinct::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\DuplicateJob::create();
+        $task = \Flexio\Jobs\Duplicate::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\DuplicateJob::MIME_TYPE;
-        TestCheck::assertString('A.7', '\Flexio\Jobs\DuplicateJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Duplicate::MIME_TYPE;
+        TestCheck::assertString('A.7', '\Flexio\Jobs\Duplicate::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\EmailSendJob::create();

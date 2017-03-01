@@ -52,10 +52,10 @@ class Test
         TestCheck::assertBoolean('A.6', '\Flexio\Jobs\Distinct schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\DuplicateJob::SCHEMA;
+        $schema = \Flexio\Jobs\Duplicate::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.7', '\Flexio\Jobs\DuplicateJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.7', '\Flexio\Jobs\Duplicate schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\EmailSendJob::SCHEMA;

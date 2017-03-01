@@ -57,11 +57,11 @@ class Test
         TestCheck::assertBoolean('A.6', '\Flexio\Jobs\Distinct definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\DuplicateJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Duplicate::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\DuplicateJob::MIME_TYPE && $mime_type == 'flexio.duplicate';
+        $actual = $mime_type == \Flexio\Jobs\Duplicate::MIME_TYPE && $mime_type == 'flexio.duplicate';
         $expected = true;
-        TestCheck::assertBoolean('A.7', '\Flexio\Jobs\DuplicateJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.7', '\Flexio\Jobs\Duplicate definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\EmailSendJob::TEMPLATE,true);
