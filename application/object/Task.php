@@ -69,8 +69,8 @@ class Task
                 'verb' => 'Identifying duplicates in'
             ),
             array(
-                'type' => \Flexio\Jobs\EmailSendJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\EmailSendJob',
+                'type' => \Flexio\Jobs\EmailSend::MIME_TYPE,
+                'class' => '\Flexio\Jobs\EmailSend',
                 'name' => 'Email',
                 'verb' => 'Sending email'
             ),
