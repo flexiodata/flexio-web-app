@@ -112,10 +112,10 @@ class Test
         TestCheck::assertBoolean('A.16', '\Flexio\Jobs\Nop schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\OutputJob::SCHEMA;
+        $schema = \Flexio\Jobs\Output::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.17', '\Flexio\Jobs\OutputJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.17', '\Flexio\Jobs\Output schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\Execute::SCHEMA;

@@ -127,11 +127,11 @@ class Test
         TestCheck::assertBoolean('A.16', '\Flexio\Jobs\Nop definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\OutputJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Output::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\OutputJob::MIME_TYPE && $mime_type == 'flexio.output';
+        $actual = $mime_type == \Flexio\Jobs\Output::MIME_TYPE && $mime_type == 'flexio.output';
         $expected = true;
-        TestCheck::assertBoolean('A.17', '\Flexio\Jobs\OutputJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.17', '\Flexio\Jobs\Output definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Execute::TEMPLATE,true);

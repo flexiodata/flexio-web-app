@@ -17,7 +17,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class OutputJob extends \Flexio\Jobs\Base
+class Output extends \Flexio\Jobs\Base
 {
     // job-global connection properties
     private $cached_connection_properties = null;

@@ -75,8 +75,8 @@ class Task
                 'verb' => 'Sending email'
             ),
             array(
-                'type' => \Flexio\Jobs\OutputJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\OutputJob',
+                'type' => \Flexio\Jobs\Output::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Output',
                 'name' => 'Output',
                 'verb' => 'Outputting'
             ),

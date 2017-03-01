@@ -112,10 +112,10 @@ class Test
         TestCheck::assertString('A.16', '\Flexio\Jobs\Nop::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\OutputJob::create();
+        $task = \Flexio\Jobs\Output::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\OutputJob::MIME_TYPE;
-        TestCheck::assertString('A.17', '\Flexio\Jobs\OutputJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Output::MIME_TYPE;
+        TestCheck::assertString('A.17', '\Flexio\Jobs\Output::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\PromptJob::create();
