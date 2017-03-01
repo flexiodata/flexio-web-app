@@ -17,7 +17,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class CalcFieldJob extends \Flexio\Jobs\Base
+class CalcField extends \Flexio\Jobs\Base
 {
     public function run()
     {

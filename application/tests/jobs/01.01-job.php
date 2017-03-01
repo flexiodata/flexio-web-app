@@ -22,11 +22,11 @@ class Test
         // TEST: job constant tests
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\CalcFieldJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\CalcField::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\CalcFieldJob::MIME_TYPE && $mime_type == 'flexio.calc';
+        $actual = $mime_type == \Flexio\Jobs\CalcField::MIME_TYPE && $mime_type == 'flexio.calc';
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Jobs\CalcFieldJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Jobs\CalcField definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\ConvertJob::TEMPLATE,true);

@@ -22,10 +22,10 @@ class Test
         // TEST: make sure there are no errors in the job schemas
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\CalcFieldJob::SCHEMA;
+        $schema = \Flexio\Jobs\CalcField::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.1', '\Flexio\Jobs\CalcFieldJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Jobs\CalcField schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\ConvertJob::SCHEMA;

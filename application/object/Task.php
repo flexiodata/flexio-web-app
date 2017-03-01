@@ -33,8 +33,8 @@ class Task
         //    description: a description of the command
         $manifest = array(
             array(
-                'type' => \Flexio\Jobs\CalcFieldJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\CalcFieldJob',
+                'type' => \Flexio\Jobs\CalcField::MIME_TYPE,
+                'class' => '\Flexio\Jobs\CalcField',
                 'name' => 'Add Calculation',
                 'verb' => 'Processing'
             ),

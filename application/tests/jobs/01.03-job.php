@@ -22,10 +22,10 @@ class Test
         // TEST: task creation
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\CalcFieldJob::create();
+        $task = \Flexio\Jobs\CalcField::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\CalcFieldJob::MIME_TYPE;
-        TestCheck::assertString('A.1', '\Flexio\Jobs\CalcFieldJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\CalcField::MIME_TYPE;
+        TestCheck::assertString('A.1', '\Flexio\Jobs\CalcField::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\ConvertJob::create();
