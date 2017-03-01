@@ -129,8 +129,8 @@ class Task
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \Flexio\Jobs\PromptJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\PromptJob',
+                'type' => \Flexio\Jobs\Prompt::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Prompt',
                 'name' => 'Ask For Information',
                 'verb' => 'Waiting for information'
             ),
