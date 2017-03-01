@@ -171,8 +171,8 @@ class Task
                 'verb' => 'Sleeping'
             ),
             array(
-                'type' => \Flexio\Jobs\SortJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\SortJob',
+                'type' => \Flexio\Jobs\Sort::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Sort',
                 'name' => 'Sort',
                 'verb' => 'Sorting'
             ),

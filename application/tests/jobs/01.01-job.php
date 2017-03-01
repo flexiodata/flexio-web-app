@@ -183,11 +183,11 @@ class Test
         TestCheck::assertBoolean('A.24', '\Flexio\Jobs\Sleep definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\SortJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Sort::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\SortJob::MIME_TYPE && $mime_type == 'flexio.sort';
+        $actual = $mime_type == \Flexio\Jobs\Sort::MIME_TYPE && $mime_type == 'flexio.sort';
         $expected = true;
-        TestCheck::assertBoolean('A.25', '\Flexio\Jobs\SortJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.25', '\Flexio\Jobs\Sort definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\TransformJob::TEMPLATE,true);

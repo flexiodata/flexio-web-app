@@ -17,7 +17,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
-class SortJob extends \Flexio\Jobs\Base
+class Sort extends \Flexio\Jobs\Base
 {
     public function run()
     {

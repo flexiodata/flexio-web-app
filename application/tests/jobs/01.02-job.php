@@ -160,10 +160,10 @@ class Test
         TestCheck::assertBoolean('A.24', '\Flexio\Jobs\Sleep schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\SortJob::SCHEMA;
+        $schema = \Flexio\Jobs\Sort::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.25', '\Flexio\Jobs\SortJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.25', '\Flexio\Jobs\Sort schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\TransformJob::SCHEMA;

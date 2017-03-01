@@ -160,10 +160,10 @@ class Test
         TestCheck::assertString('A.24', '\Flexio\Jobs\Sleep::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\SortJob::create();
+        $task = \Flexio\Jobs\Sort::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\SortJob::MIME_TYPE;
-        TestCheck::assertString('A.25', '\Flexio\Jobs\SortJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Sort::MIME_TYPE;
+        TestCheck::assertString('A.25', '\Flexio\Jobs\Sort::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\TransformJob::create();
