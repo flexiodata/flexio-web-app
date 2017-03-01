@@ -12,12 +12,7 @@
  */
 
 
-// NOTE: for MySQL implementations, make sure to set the following
-// param in the my.ini:
-// max_allowed_packet = 16M
-
-
-class RegistryModel extends ModelBase
+class Registry extends ModelBase
 {
     /**
      * gets a variable; if the setting doesn't exist,
@@ -143,7 +138,7 @@ class RegistryModel extends ModelBase
      */
     public function entryExists($object_eid, $name)
     {
-        if (!RegistryModel::checkInput($object_eid, $name))
+        if (!self::checkInput($object_eid, $name))
             return false;
 
         $db = $this->getDatabase();
@@ -156,7 +151,7 @@ class RegistryModel extends ModelBase
 
     public function deleteEntryByName($object_eid, $name)
     {
-        if (!RegistryModel::checkInput($object_eid, $name))
+        if (!self::checkInput($object_eid, $name))
             return false;
 
         $db = $this->getDatabase();
@@ -169,9 +164,9 @@ class RegistryModel extends ModelBase
 
     public function expireKey($object_eid, $name, $seconds_from_now = 0)
     {
-        if (!RegistryModel::checkInput($object_eid, $name))
+        if (!self::checkInput($object_eid, $name))
             return false;
-        if (!RegistryModel::checkExpiresValue($seconds_from_now))
+        if (!self::checkExpiresValue($seconds_from_now))
             return false;
 
         $db = $this->getDatabase();
@@ -183,7 +178,7 @@ class RegistryModel extends ModelBase
         $qtimestamp = $db->quote(\Flexio\System\System::getTimestamp());
         $qseconds = $db->quote((int)$seconds_from_now);
 
-        $db->exec("update tbl_registry set updated=$qtimestamp,expires=date_add(now(), interval $qseconds second) where object_eid=$qobject_eid and name=$qname");
+        $db->exec("update tbl_registry set updated=$qtimestamp,expires=(now() + interval '$qseconds seconds') where object_eid=$qobject_eid and name=$qname");
 
         return true;
     }
@@ -210,9 +205,9 @@ class RegistryModel extends ModelBase
      */
     public function setVariable($object_eid, $name, $value, $type = 'STRING', $expires = null, $mime_type = '', $db = null)
     {
-        if (!RegistryModel::checkInput($object_eid, $name))
+        if (!self::checkInput($object_eid, $name))
             return false;
-        if (isset($expires) && !RegistryModel::checkExpiresValue($expires))
+        if (isset($expires) && !self::checkExpiresValue($expires))
             return false;
 
         // get the database
@@ -268,7 +263,7 @@ class RegistryModel extends ModelBase
         $expiresset = 'null';
         if (isset($expires))
         {
-            $expiresset = "date_add(now(), interval $expires second)";
+            $expiresset = "(now() + interval '$expires seconds')";
         }
 
 
@@ -276,17 +271,22 @@ class RegistryModel extends ModelBase
 
         try
         {
+            $rows_updated = $db->exec("update tbl_registry set
+                           value=$qvalue,
+                           value_type=$qvalue_type,
+                           expires=$expiresset,
+                           mime_type=$qmime_type,
+                           updated=$qtimestamp where object_eid=$qobject_eid and name=$qname");
+
+            if ($rows_updated > 0)
+                return true;
+
             $db->exec("insert into tbl_registry
                            (object_eid, name, value, value_type, mime_type,
                             expires, created, updated)
                        values
                            ($qobject_eid, $qname, $qvalue, $qvalue_type, $qmime_type,
                             $expiresset, $qtimestamp, $qtimestamp)
-                       on duplicate key update
-                           value=$qvalue,
-                           value_type=$qvalue_type,
-                           expires=$expiresset,
-                           updated=$qtimestamp
                       ");
         }
         catch (\Exception $e)
@@ -308,7 +308,7 @@ class RegistryModel extends ModelBase
      */
     public function getVariable($object_eid, $name, $db = null, $for_update = false)
     {
-        if (!RegistryModel::checkInput($object_eid, $name))
+        if (!self::checkInput($object_eid, $name))
             return null;
 
         try

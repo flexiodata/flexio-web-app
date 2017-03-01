@@ -78,7 +78,7 @@ class TempdataModel extends ModelBase
         $values = array_filter($values, function($var){return !is_null($var);} );
         if (!$registry_model->setString('', "tempdata.$name", json_encode($values), $expires, $db))
         {
-            // return error; RegistryModel sets error code and message
+            // return error; \Flexio\Model\Registry sets error code and message
             $db->rollback();
             return false;
         }
