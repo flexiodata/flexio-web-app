@@ -12,7 +12,7 @@
  */
 
 
-class PipeModel extends ModelBase
+class Pipe extends ModelBase
 {
     public function create($params)
     {

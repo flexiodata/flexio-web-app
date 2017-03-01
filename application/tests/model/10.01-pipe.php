@@ -29,7 +29,7 @@ class Test
         // BEGIN TEST
         $actual = \Model::PIPE_STATUS_ACTIVE;
         $expected = 'A';
-        TestCheck::assertString('A.1', 'PipeModel status constant',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::PIPE_STATUS_INACTIVE;
