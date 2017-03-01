@@ -15,7 +15,7 @@
 namespace Flexio\Api;
 
 
-class HelpApi
+class Help
 {
     public static function createConversation($params, $request)
     {
