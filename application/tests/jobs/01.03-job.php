@@ -100,10 +100,10 @@ class Test
         TestCheck::assertString('A.14', '\Flexio\Jobs\Limit::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\MergeJob::create();
+        $task = \Flexio\Jobs\Merge::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\MergeJob::MIME_TYPE;
-        TestCheck::assertString('A.15', '\Flexio\Jobs\MergeJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Merge::MIME_TYPE;
+        TestCheck::assertString('A.15', '\Flexio\Jobs\Merge::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\NopJob::create();

@@ -100,10 +100,10 @@ class Test
         TestCheck::assertBoolean('A.14', '\Flexio\Jobs\Limit schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\MergeJob::SCHEMA;
+        $schema = \Flexio\Jobs\Merge::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.15', '\Flexio\Jobs\MergeJob schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.15', '\Flexio\Jobs\Merge schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\NopJob::SCHEMA;

@@ -117,8 +117,8 @@ class Task
                 'verb' => 'Limiting'
             ),
             array(
-                'type' => \Flexio\Jobs\MergeJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\MergeJob',
+                'type' => \Flexio\Jobs\Merge::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Merge',
                 'name' => 'Merge',
                 'verb' => 'Merging'
             ),

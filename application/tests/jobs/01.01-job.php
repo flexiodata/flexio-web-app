@@ -113,11 +113,11 @@ class Test
         TestCheck::assertBoolean('A.14', '\Flexio\Jobs\Limit definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\MergeJob::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Merge::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\MergeJob::MIME_TYPE && $mime_type == 'flexio.merge';
+        $actual = $mime_type == \Flexio\Jobs\Merge::MIME_TYPE && $mime_type == 'flexio.merge';
         $expected = true;
-        TestCheck::assertBoolean('A.15', '\Flexio\Jobs\MergeJob definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.15', '\Flexio\Jobs\Merge definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\NopJob::TEMPLATE,true);
