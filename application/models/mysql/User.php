@@ -12,7 +12,7 @@
  */
 
 
-class UserModel extends ModelBase
+class User extends ModelBase
 {
     public function create($params)
     {

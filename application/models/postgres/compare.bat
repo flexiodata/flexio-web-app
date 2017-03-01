@@ -9,4 +9,4 @@ diff -u ..\mysql\Search.php Search.php
 diff -u ..\mysql\Stream.php Stream.php
 diff -u ..\mysql\Tempdata.php Tempdata.php
 diff -u ..\mysql\Token.php Token.php
-diff -u ..\mysql\UserModel.php UserModel.php
+diff -u ..\mysql\User.php User.php
