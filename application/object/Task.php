@@ -87,8 +87,8 @@ class Task
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \Flexio\Jobs\FindReplaceJob::MIME_TYPE,
-                'class' => '\Flexio\Jobs\FindReplaceJob',
+                'type' => \Flexio\Jobs\FindReplace::MIME_TYPE,
+                'class' => '\Flexio\Jobs\FindReplace',
                 'name' => 'Find and Replace',
                 'verb' => 'Replacing values in'
             ),

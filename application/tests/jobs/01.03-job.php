@@ -70,10 +70,10 @@ class Test
         TestCheck::assertString('A.9', '\Flexio\Jobs\Filter::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\FindReplaceJob::create();
+        $task = \Flexio\Jobs\FindReplace::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\FindReplaceJob::MIME_TYPE;
-        TestCheck::assertString('A.10', '\Flexio\Jobs\FindReplaceJob::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\FindReplace::MIME_TYPE;
+        TestCheck::assertString('A.10', '\Flexio\Jobs\FindReplace::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\GrepJob::create();
