@@ -77,14 +77,9 @@ class Test
         TestCheck::assertBoolean('A.11', 'Configuration; php mbstring extension must be installed', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = extension_loaded('mailparse');
-        $expected = true;
-        TestCheck::assertBoolean('A.12', 'Configuration; php mailparse extension must be installed', $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = extension_loaded('intl');
         $expected = true;
-        TestCheck::assertBoolean('A.13', 'Configuration; php intl extension must be installed', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.12', 'Configuration; php intl extension must be installed', $actual, $expected, $results);
 
 
 

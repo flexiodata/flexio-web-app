@@ -219,7 +219,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             {
                 return ExprParser::TYPE_NULL;
             }
-             else if (is_a($node->val, 'ExprDateTime'))
+             else if (is_a($node->val, '\Flexio\Services\ExprDateTime'))
             {
                 if ($node->val->hasTimePart())
                     return ExprParser::TYPE_DATETIME;
@@ -544,7 +544,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         'strpos'       => [ 'types' => [ 'i(ss)', 'i(ns)', 'i(bs)', 'i(Ns)' ], 'func' => 'func_strpos' ],
         'substr'       => [ 'types' => [ 's(si[i])', 's(ni[i])', 's(bi[i])', 's(Ni[i])' ], 'func' => 'func_substr' ],
         'tan'          => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_tan' ],
-        'to_char'      => [ 'types' => [ 's(ss)', 's(ns)', 's(ds)', 's(ts)', 's(bs)', 's(Ns)' ], 'func' => 'func_to_char' ],
+        'to_char'      => [ 'types' => [ 's(s)', 's(n)', 's(d)', 's(t)', 's(b)', 's(N)', 's(ns)', 's(ds)', 's(ts)', 's(Ns)' ], 'func' => 'func_to_char' ],
         'to_date'      => [ 'types' => [ 'd(ss)', 'd(ns)', 'd(ds)', 'd(bs)', 'd(Ns)' ], 'func' => 'func_to_date' ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
         'to_number'    => [ 'types' => [ 'f(ss)', 'f(ns)', 'f(ds)', 'f(bs)', 'f(Ns)' ], 'func' => 'func_to_number' ],
@@ -1008,6 +1008,7 @@ TODO: remove deprecated implementation; following was split into two functions,
 
             default:
                 $retval = false;
+                return true;
 
             case 'email':
                 $retval = \Flexio\System\Util::isValidEmail($param0);
@@ -1552,12 +1553,12 @@ TODO: remove deprecated implementation; following was split into two functions,
     }
 
 
-    private static function getDayOfWeek($year, $month, $day)
+    private static function getDayOfWeek($year, $month, $day) // returns 0 as sunday, 1 as monday...
     {
         $a = intdiv(14-$month, 12);
         $y = $year - $a;
         $m = $month + (12*$a) - 2;
-        return (($day + $y + intdiv(y,4) - intdiv(y,100) + intdiv(y,400) + intdiv(31*m,12)) % 7);
+        return (($day + $y + intdiv($y,4) - intdiv($y,100) + intdiv($y,400) + intdiv(31*$m,12)) % 7);
     }
 
     private static function isFormatString($format, $idx, $str, $ignore_case = false)
@@ -1598,7 +1599,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         while ($f < $format_length)
         {
             $ch = $format[$f];
-            $nextch = ($f+1 < $format_length ? $format[$f] : '');
+            $nextch = ($f+1 < $format_length ? $format[$f+1] : '');
 
             if (self::isFormatString($format, $f, "FM", true))
             {
@@ -1719,6 +1720,11 @@ TODO: remove deprecated implementation; following was split into two functions,
 
                 $res .= $buf;
                 $f += $offset;
+            }
+            else if (self::isFormatString($format, $f, "D", true))
+            {
+                $res .= sprintf("%d", self::getDayOfWeek($dt->getYear(), $dt->getMonth(), $dt->getDay()) + 1);
+                $f += 1;
             }
             else if (self::isFormatString($format, $f, "MON", true) || self::isFormatString($format, $f, "MONTH", true))
             {
@@ -1919,6 +1925,25 @@ TODO: remove deprecated implementation; following was split into two functions,
         return $res;
     }
 
+    private static function tochar_number_toroman($number)
+    {
+        $lookup = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100,
+                        'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10,
+                        'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        
+        $result = '';
+        $number = intval($number);
+
+        foreach ($lookup as $roman => $value)
+        {
+            $matches = intval($number/$value);
+            $result .= str_repeat($roman,$matches);
+            $number = $number % $value;
+        }
+        
+        return $result;
+    }
+
     private static function tochar_number($number, $format)
     {
         $is_negative = false;
@@ -1932,6 +1957,8 @@ TODO: remove deprecated implementation; following was split into two functions,
         $currency_sign = '';
         $sign_left = true;        // sign is on the left side
         $sign_always = false;
+        $pr = false;
+        $eeee = false;
         $padding = true;          // true if padding is active
         $digit_encountered = false;
         $digit_printed = false;
@@ -1941,6 +1968,9 @@ TODO: remove deprecated implementation; following was split into two functions,
         // count the number of positions to the left
         // of the decimal in the format string
         $format_len = strlen($format);
+        if ($format_len == 0)
+            return '';
+        
         $p = $format;
         $left = true;
         for ($p = 0; $p < $format_len; ++$p)
@@ -1961,7 +1991,11 @@ TODO: remove deprecated implementation; following was split into two functions,
             {
                 $padlen++;
             }
-            if ($ch == '$' || $ch == 8364 /* euro symbol */)
+            if ($ch == ' ')
+            {
+                $padlen++;
+            }
+            if ($ch == '$' || $ch == 'L' || $ch == 8364 /* euro symbol */)
             {
                 $padlen++;
             }
@@ -1977,19 +2011,41 @@ TODO: remove deprecated implementation; following was split into two functions,
             if ($ch == 'S' || $ch == 's')
             {
                 $sign_always = true;
-                if (!$digit_encountered)
-                    $sign_left = true;
-                     else
-                    $sign_left = false;
+                $sign_encountered_at = $left_format_digits;
             }
             if (($ch == 'M' || $ch == 'm') && ($ch_next == 'I' || $ch_next == 'i'))
             {
-                if (!$digit_encountered)
-                    $sign_left = true;
-                     else
-                    $sign_left = false;
+                $sign_left = null; // minus sign will be placed whereever MI is
                 $p++;
                 continue;
+            }
+            if (($ch == 'P' || $ch == 'p') && ($ch_next == 'L' || $ch_next == 'l'))
+            {
+                //$sign_left = null; // plus sign will be placed whereever PL is
+                $padlen++;
+                $p++;
+                continue;
+            }
+            if (($ch == 'P' || $ch == 'p') && ($ch_next == 'R' || $ch_next == 'r'))
+            {
+                // angle brackets for negative numbers
+                $sign_left = null;
+                $pr = true;
+                $p++;
+                continue;
+            }
+            if (($ch == 'R' || $ch == 'r') && ($ch_next == 'N' || $ch_next == 'n'))
+            {
+                // roman numerals
+                $number = intval($number);
+                if ($number < 1 || $number > 3999)
+                    return '###############';
+                return str_pad(self::tochar_number_toroman($number), 15, ' ', STR_PAD_LEFT);
+            }
+            if (($ch == 'E' || $ch == 'e') && strtoupper(substr($format, $p, 4)) == 'EEEE')
+            {
+                $eeee = true;
+                $p += 3;
             }
             if ($left)
             {
@@ -2005,10 +2061,40 @@ TODO: remove deprecated implementation; following was split into two functions,
             }
         }
 
+
+
+        if (isset($sign_encountered_at) && $sign_encountered_at >= $left_format_digits)
+        {
+            $sign_left = false;
+        }
+
+
         if ($right_format_digits == 0 && $format_has_decimal)
         {
             // no digits in format to the right of decimal, ignore decimal in fmt
             $padlen--;
+        }
+
+
+        if ($eeee)
+        {
+            $dec = $right_format_digits;
+            $s = sprintf("%.{$dec}e", round($number, $dec+1));
+            $s = str_replace(',', '.', $s);
+            $epos = strpos($s, 'e');
+            if ($epos === false)
+                return '###';
+            $exp = intval(substr($s, $epos+1));
+            $s = substr($s, 0, $epos);
+            $s .= sprintf('e%s%02d', ($exp>=0?'+':'-'), abs($exp));
+
+            $pad = 6; // space for 1e+NN
+            if ($dec > 0)
+            {
+                $pad += ($dec+1); // +1 because of decimal point
+            }
+
+            return str_pad($s, $pad, ' ', STR_PAD_LEFT);
         }
 
         // find decimal point in the input number
@@ -2047,7 +2133,6 @@ TODO: remove deprecated implementation; following was split into two functions,
         if (self::dblcompare($number, 0.0) < 0)
             $is_negative = true;
 
-
         $result = '';
         $l = $left_format_digits;
         $r = 0;
@@ -2067,28 +2152,35 @@ TODO: remove deprecated implementation; following was split into two functions,
                 $p++;
                 continue;
             }
+            else if (($ch == 'M' || $ch == 'm') && ($ch_next == 'I' || $ch_next == 'i'))
+            {
+                $result .= ($is_negative ? '-' : ' ');
+                $p++;
+                continue;
+            }
+            else if (($ch == 'P' || $ch == 'p') && ($ch_next == 'L' || $ch_next == 'l'))
+            {
+                $result .= ($is_negative ? ' ' : '+');
+                $p++;
+                continue;
+            }
              else if ($ch == '.' || $ch == 'D' || $ch == 'd')
             {
-                if ($ch == '.')
-                    $result .= $ch;
-                     else
-                    $result .= '.'; // getDecimalChar() from locale
+                if ($right_format_digits > 0)
+                {
+                    if ($ch == '.')
+                        $result .= $ch;
+                        else
+                        $result .= '.'; // getDecimalChar() from locale
+                }
                 $left = false;
                 $digit_printed = true;
             }
              else if ($ch == ',' || $ch == 'G' || $ch == 'g')
             {
-                if (!$digit_printed)
+                if ($digit_printed)
                 {
-                    if ($padding)
-                        $result .= ' ';
-                }
-                else
-                {
-                    if ($ch == ',')
-                        $result .= $ch;
-                         else
-                        $result .= ','; // getThousandsSeparatorChar() from locale
+                    $result .= ','; // getThousandsSeparatorChar() from locale
                 }
             }
             else if ($ch == '$' || $ch == 8364 /* euro symbol */)
@@ -2096,97 +2188,59 @@ TODO: remove deprecated implementation; following was split into two functions,
                 //$currency_sign = $ch;
                 $result .= $ch;
             }
+            else if ($ch == 'L')
+            {
+                $result .= '$';
+            }
+            else if ($ch == ' ')
+            {
+                $result .= ' ';
+            }
             else if ($ch == '9' || $ch == '0')
             {
                 if ($left)
                 {
                     $digit = $overflow ? '#' : self::getLeftDigit($strnum, $dec, $l);
 
-
-
-
-                    if ($ch == '0' || $digit != '0' || $digit_printed || ($l == 1 && (!$format_has_decimal || !$padding)))
+                    //if ($ch == '0' || $digit != '0' || $digit_printed || ($l == 1 && (!$format_has_decimal || !$padding)))
+                    if ($ch == '0' || $digit != '0' || $digit_printed || $l == 1)
                     {
-                        if ($sign_left && !$digit_printed)
+                        if (!$digit_printed)
                         {
-                            if ($is_negative)
+                            if ($pr)
                             {
-                                $result .= '-';
+                                $result .= ($is_negative ? '<' : ' ');
                             }
-                            else
+                            else if ($sign_left === true)
                             {
-                                if ($sign_always)
+                                if ($is_negative)
                                 {
-                                    $result .= '+';
+                                    $result .= '-';
+                                }
+                                else
+                                {
+                                    if ($sign_always)
+                                    {
+                                        $result .= '+';
+                                    }
+                                    else
+                                    {
+                                        if ($padding)
+                                            $result .= ' ';
+                                    }
                                 }
                             }
                         }
 
-
-                        $result .= $digit;
-                        $digit_printed = true;
-                    }
-
-
-/*
-                    if ($l > $zero_left_digits && $format_has_decimal)
-                    {
-                        if ($digit != '0' || $digit_printed)
+                        if (!$digit_printed && $ch == '9' && $digit == '0' && !($l == 1 && !$format_has_decimal))
+                        {
+                        }
+                         else
                         {
                             $result .= $digit;
                             $digit_printed = true;
                         }
                     }
-                    else
-                    {
-                        
-                        $result .= $digit;
-                        $digit_printed = true;
-                    }
-                    */
-
-/*
-                    if ($sign_left && !$digit_printed && ($l <= $zero_left_digits || $digit != '0'))
-                    {
-                        if ($is_negative)
-                        {
-                            $result .= '-';
-                        }
-                        else
-                        {
-                            if ($sign_always)
-                            {
-                                $result .= '+';
-                            }
-                            else
-                            {
-                                if ($padding)
-                                    $result .= ' ';
-                            }
-                        }
-                    }
-*/
-
-/*
-                    if ($l > $zero_left_digits)
-                    {
-                        if ($digit != '0' || $digit_printed)
-                        {
-                            $result .= $digit;
-                            $digit_printed = true;
-                        }
-                        else
-                        {
-                            if ($padding)
-                                $result .= ' ';
-                        }
-                    }
-                    else
-                    {
-                        $result .= $digit;
-                        $digit_printed = true;
-                    }
-                    */
 
                     --$l;
                 }
@@ -2212,13 +2266,14 @@ TODO: remove deprecated implementation; following was split into two functions,
                         $result .= $digit;
                     }
                 }
-
             }
-
-
         }
 
-        if (!$sign_left)
+        if ($pr)
+        {
+            $result .= ($is_negative ? '>' : ' ');
+        }
+        else if ($sign_left === false)
         {
             if ($is_negative)
             {
@@ -2249,6 +2304,20 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     public function func_to_char($func, $params, &$retval)
     {
+        if (count($params) < 2)
+        {
+            if (!$this->doEval($params[0], $param0)) return false;
+            if (is_null($param0))
+                $retval = null;
+            else if (is_bool($param0))
+                $retval = $param0 ? 'true' : 'false';
+            else if ($param0 instanceof ExprDateTime)
+                $retval = $param0->toString();
+            else
+                $retval = '' . $param0;
+            return true;
+        }
+
         if (!$this->doEval($params[0], $param0)) return false;
         if (!$this->doEval($params[1], $param1)) return false;
 
@@ -2299,6 +2368,12 @@ TODO: remove deprecated implementation; following was split into two functions,
     {
         // TODO: do we want to pass dates as strings?
         if (!$this->doEval($params[0], $param0)) return false;
+
+        if (trim($param0) == '')
+        {
+            $retval = null;
+            return true;
+        }
 
         $e = new ExprDateTime();
         if (!$e->parse($param0))
@@ -2435,7 +2510,7 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     private static function exprToDate($value)
     {
-        if (is_a($value, 'ExprDateTime'))
+        if (is_a($value, '\Flexio\Services\ExprDateTime'))
             return $value;
 
         $e = new ExprDateTime();
@@ -2621,7 +2696,7 @@ class ExprDateTime
 
     public function parse($value)
     {
-        if (is_a($value, 'ExprDateTime'))
+        if (is_a($value, '\Flexio\Services\ExprDateTime'))
         {
             $this->values = $value->values;
             return true;

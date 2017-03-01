@@ -455,7 +455,7 @@ class XferFsS3
 
         if (null === self::$_aws)
         {
-            self::$_aws = Aws\Common\Aws::factory(array(
+            self::$_aws = \Aws\Common\Aws::factory(array(
                'key' => $g_config->s3fs_access_key,
                'secret' => $g_config->s3fs_secret_key
             ));

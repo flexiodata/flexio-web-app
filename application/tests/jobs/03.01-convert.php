@@ -19,7 +19,7 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: ConvertJob; tests for when object doesn't exist
+        // TEST: Convert; tests for when object doesn't exist
 
         // TODO: fill out
 

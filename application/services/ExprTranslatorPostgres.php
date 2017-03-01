@@ -672,7 +672,7 @@ class ExprTranslatorPostgres
         'strpos'       => [ 'types' => [ 'i(ss)', 'i(ns)', 'i(bs)', 'i(Ns)' ], 'func' => 'func_strpos' ],
         'substr'       => [ 'types' => [ 's(si[i])', 's(ni[i])', 's(bi[i])', 's(Ni[i])' ], 'func' => 'func_substr' ],
         'tan'          => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ] ],
-        'to_char'      => [ 'types' => [ 's(ss)', 's(ns)', 's(ds)', 's(ts)', 's(bs)', 's(Ns)' ], 'func' => 'func_to_char' ],
+        'to_char'      => [ 'types' => [ 's(s)', 's(n)', 's(d)', 's(t)', 's(b)', 's(N)', 's(ns)', 's(ds)', 's(ts)', 's(Ns)' ], 'func' => 'func_to_char' ],
         'to_date'      => [ 'types' => [ 'd(s[s])', 'd(n[s])', 'd(d[s])', 'd(b[s])', 'd(N[s])' ] ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
         'to_timestamp' => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ],
@@ -947,11 +947,11 @@ class ExprTranslatorPostgres
 
         switch ($match_type)
         {
-            case 'email':
+            case "'email'":
                 $match_regex = "^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$";
                 break;
 
-            case 'english':
+            case "'english'":
                 $match_regex = "^[\\x00-\\x7F]*$";
                 break;
         }

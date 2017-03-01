@@ -115,7 +115,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(null)');
-        $expected = "1";
+        $expected = null;
         TestCheck::assertString('A.3', 'Expression; to_char() conversion function; support conversion of a number to a string without a format',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -145,38 +145,38 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(false,"FM00000")');
-        $expected = "00000";
-        TestCheck::assertString('A.9', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.9', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(true,"FM00000")');
-        $expected = "00001";
-        TestCheck::assertString('A.10', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.10', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("0","FM00000")');
-        $expected = "00000";
-        TestCheck::assertString('A.11', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.11', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("1","FM00000")');
-        $expected = "00001";
-        TestCheck::assertString('A.12', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.12', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("10","FM00000")');
-        $expected = "00010";
-        TestCheck::assertString('A.13', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.13', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("123","FM00000")');
-        $expected = "00123";
-        TestCheck::assertString('A.14', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.14', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char("abc","FM00000")');
-        $expected = null;
-        TestCheck::assertNull('A.15', 'Expression; to_char() conversion function; cast non-numeric value input to numeric type',  $actual, $expected, $results);
+        $expected = TestError::ERROR_BAD_PARSE;
+        TestCheck::assertString('A.15', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"")');
@@ -1074,12 +1074,12 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"9,.9")');
-        $expected = "  ,.0";
+        $expected = "   .0";
         TestCheck::assertString('G.3', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,",9.9")');
-        $expected = "  ,.0";
+        $expected = "   .0";
         TestCheck::assertString('G.4', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1099,7 +1099,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1,",9.9")');
-        $expected = " ,1.0";
+        $expected = "  1.0";
         TestCheck::assertString('G.8', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1134,12 +1134,12 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"9,99.999")');
-        $expected = "  ,12.340";
+        $expected = "   12.340";
         TestCheck::assertString('G.15', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,",999.999")');
-        $expected = " , 12.340";
+        $expected = "   12.340";
         TestCheck::assertString('G.16', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1169,7 +1169,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,",0.0")');
-        $expected = " ,0.0";
+        $expected = "  0.0";
         TestCheck::assertString('G.22', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1189,7 +1189,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1,",0.0")');
-        $expected = " ,1.0";
+        $expected = "  1.0";
         TestCheck::assertString('G.26', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1229,7 +1229,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,",000.000")');
-        $expected = " ,012.340";
+        $expected = "  012.340";
         TestCheck::assertString('G.34', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1283,7 +1283,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1,"$9.9")');
-        $expected = " $1.0";
+        $expected = "$ 1.0";
         TestCheck::assertString('H.8', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1318,7 +1318,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"9$99.999")');
-        $expected = "  $12.340";
+        $expected = " $ 12.340";
         TestCheck::assertString('H.15', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1353,7 +1353,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"$0.0")');
-        $expected = " $0.0";
+        $expected = "$ 0.0";
         TestCheck::assertString('H.22', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1373,7 +1373,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1,"$0.0")');
-        $expected = " $1.0";
+        $expected = "$ 1.0";
         TestCheck::assertString('H.26', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1413,7 +1413,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"$000.000")');
-        $expected = " $012.340";
+        $expected = "$ 012.340";
         TestCheck::assertString('H.34', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1696,12 +1696,12 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"9G.9")');
-        $expected = "  ,.0";
+        $expected = "   .0";
         TestCheck::assertString('J.3', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"G9.9")');
-        $expected = "  ,.0";
+        $expected = "   .0";
         TestCheck::assertString('J.4', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1721,7 +1721,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1,"G9.9")');
-        $expected = " ,1.0";
+        $expected = "  1.0";
         TestCheck::assertString('J.8', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1756,12 +1756,12 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"9G99.999")');
-        $expected = "  ,12.340";
+        $expected = "   12.340";
         TestCheck::assertString('J.15', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"G999.999")');
-        $expected = " , 12.340";
+        $expected = "   12.340";
         TestCheck::assertString('J.16', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1791,7 +1791,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"G0.0")');
-        $expected = " ,0.0";
+        $expected = "  0.0";
         TestCheck::assertString('J.22', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1811,7 +1811,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1,"G0.0")');
-        $expected = " ,1.0";
+        $expected = "  1.0";
         TestCheck::assertString('J.26', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1851,7 +1851,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"G000.000")');
-        $expected = " ,012.340";
+        $expected = "  012.340";
         TestCheck::assertString('J.34', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1905,7 +1905,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1,"L9.9")');
-        $expected = " $1.0";
+        $expected = "$ 1.0";
         TestCheck::assertString('K.8', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1940,7 +1940,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"9L99.999")');
-        $expected = "  $12.340";
+        $expected = " $ 12.340";
         TestCheck::assertString('K.15', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1975,7 +1975,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"L0.0")');
-        $expected = " $0.0";
+        $expected = "$ 0.0";
         TestCheck::assertString('K.22', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1995,7 +1995,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1,"L0.0")');
-        $expected = " $1.0";
+        $expected = "$ 1.0";
         TestCheck::assertString('K.26', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2035,7 +2035,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(12.34,"L000.000")');
-        $expected = " $012.340";
+        $expected = "$ 012.340";
         TestCheck::assertString('K.34', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2293,7 +2293,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"PL0,000.0")');
-        $expected = " +0,000.0";
+        $expected = "+ 0,000.0";
         TestCheck::assertString('M.8', 'Expression; to_char() conversion function; \'PL\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2333,7 +2333,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0.1,"PL0,000.0")');
-        $expected = " +0,000.1";
+        $expected = "+ 0,000.1";
         TestCheck::assertString('M.16', 'Expression; to_char() conversion function; \'PL\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2373,7 +2373,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-0.1,"PL0,000.0")');
-        $expected = "- 0,000.1";
+        $expected = " -0,000.1";
         TestCheck::assertString('M.24', 'Expression; to_char() conversion function; \'PL\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2413,7 +2413,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1234.5,"PL0,000.0")');
-        $expected = " +1,234.5";
+        $expected = "+ 1,234.5";
         TestCheck::assertString('M.32', 'Expression; to_char() conversion function; \'PL\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2453,7 +2453,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-1234.5,"PL0,000.0")');
-        $expected = "- 1,234.5";
+        $expected = " -1,234.5";
         TestCheck::assertString('M.40', 'Expression; to_char() conversion function; \'PL\' format element',  $actual, $expected, $results);
 
 
@@ -2467,32 +2467,32 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"0,000.S0")');
-        $expected = "0,000.+0";
+        $expected = "0,000.0+";
         TestCheck::assertString('N.2', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"0,000S.0")');
-        $expected = "0,000+.0";
+        $expected = "0,000.0+";
         TestCheck::assertString('N.3', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"0,00S0.0")');
-        $expected = "0,00+0.0";
+        $expected = "+0,000.0";
         TestCheck::assertString('N.4', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"0,0S00.0")');
-        $expected = "0,0+00.0";
+        $expected = "+0,000.0";
         TestCheck::assertString('N.5', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"0,S000.0")');
-        $expected = "0,+000.0";
+        $expected = "+0,000.0";
         TestCheck::assertString('N.6', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0,"0S,000.0")');
-        $expected = "0+,000.0";
+        $expected = "+0,000.0";
         TestCheck::assertString('N.7', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2507,32 +2507,32 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0.1,"0,000.S0")');
-        $expected = "0,000.+1";
+        $expected = "0,000.1+";
         TestCheck::assertString('N.10', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0.1,"0,000S.0")');
-        $expected = "0,000+.1";
+        $expected = "0,000.1+";
         TestCheck::assertString('N.11', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0.1,"0,00S0.0")');
-        $expected = "0,00+0.1";
+        $expected = "+0,000.1";
         TestCheck::assertString('N.12', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0.1,"0,0S00.0")');
-        $expected = "0,0+00.1";
+        $expected = "+0,000.1";
         TestCheck::assertString('N.13', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0.1,"0,S000.0")');
-        $expected = "0,+000.1";
+        $expected = "+0,000.1";
         TestCheck::assertString('N.14', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(0.1,"0S,000.0")');
-        $expected = "0+,000.1";
+        $expected = "+0,000.1";
         TestCheck::assertString('N.15', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2547,32 +2547,32 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-0.1,"0,000.S0")');
-        $expected = "0,000.-1";
+        $expected = "0,000.1-";
         TestCheck::assertString('N.18', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-0.1,"0,000S.0")');
-        $expected = "0,000-.1";
+        $expected = "0,000.1-";
         TestCheck::assertString('N.19', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-0.1,"0,00S0.0")');
-        $expected = "0,00-0.1";
+        $expected = "-0,000.1";
         TestCheck::assertString('N.20', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-0.1,"0,0S00.0")');
-        $expected = "0,0-00.1";
+        $expected = "-0,000.1";
         TestCheck::assertString('N.21', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-0.1,"0,S000.0")');
-        $expected = "0,-000.1";
+        $expected = "-0,000.1";
         TestCheck::assertString('N.22', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-0.1,"0S,000.0")');
-        $expected = "0-,000.1";
+        $expected = "-0,000.1";
         TestCheck::assertString('N.23', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2587,32 +2587,32 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1234.5,"0,000.S0")');
-        $expected = "1,234.+5";
+        $expected = "1,234.5+";
         TestCheck::assertString('N.26', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1234.5,"0,000S.0")');
-        $expected = "1,234+.5";
+        $expected = "1,234.5+";
         TestCheck::assertString('N.27', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1234.5,"0,00S0.0")');
-        $expected = "1,23+4.5";
+        $expected = "+1,234.5";
         TestCheck::assertString('N.28', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1234.5,"0,0S00.0")');
-        $expected = "1,2+34.5";
+        $expected = "+1,234.5";
         TestCheck::assertString('N.29', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1234.5,"0,S000.0")');
-        $expected = "1,+234.5";
+        $expected = "+1,234.5";
         TestCheck::assertString('N.30', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(1234.5,"0S,000.0")');
-        $expected = "1+,234.5";
+        $expected = "+1,234.5";
         TestCheck::assertString('N.31', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2627,32 +2627,32 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-1234.5,"0,000.S0")');
-        $expected = "1,234.-5";
+        $expected = "1,234.5-";
         TestCheck::assertString('N.34', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-1234.5,"0,000S.0")');
-        $expected = "1,234-.5";
+        $expected = "1,234.5-";
         TestCheck::assertString('N.35', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-1234.5,"0,00S0.0")');
-        $expected = "1,23-4.5";
+        $expected = "-1,234.5";
         TestCheck::assertString('N.36', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-1234.5,"0,0S00.0")');
-        $expected = "1,2-34.5";
+        $expected = "-1,234.5";
         TestCheck::assertString('N.37', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-1234.5,"0,S000.0")');
-        $expected = "1,-234.5";
+        $expected = "-1,234.5";
         TestCheck::assertString('N.38', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(-1234.5,"0S,000.0")');
-        $expected = "1-,234.5";
+        $expected = "-1,234.5";
         TestCheck::assertString('N.39', 'Expression; to_char() conversion function; \'S\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3204,7 +3204,7 @@ class Test
         TestCheck::assertString('S.18', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results);
 
         $actual = TestUtil::evalExpression('to_char(485, "PL999")');
-        $expected = "+485";
+        $expected = "+ 485";
         TestCheck::assertString('S.19', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results);
 
         $actual = TestUtil::evalExpression('to_char(485, "SG999")');
@@ -3224,7 +3224,7 @@ class Test
         TestCheck::assertString('S.23', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results);
 
         $actual = TestUtil::evalExpression('to_char(485, "L999")');
-        $expected = "DM 485";
+        $expected = "$ 485";
         TestCheck::assertString('S.24', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results);
 
         $actual = TestUtil::evalExpression('to_char(485, "RN")');
@@ -3352,7 +3352,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "YY")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('U.1', 'Expression; to_char() conversion function; \'YY\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3431,7 +3431,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "MM")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('V.1', 'Expression; to_char() conversion function; \'MM\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3510,7 +3510,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "DD")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('W.1', 'Expression; to_char() conversion function; \'DD\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3589,7 +3589,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "HH24")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('X.1', 'Expression; to_char() conversion function; \'HH24\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3668,7 +3668,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "HH12")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('Y.1', 'Expression; to_char() conversion function; \'HH12\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3747,7 +3747,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "HH")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('Z.1', 'Expression; to_char() conversion function; \'HH\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3826,7 +3826,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "MI")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('AA.1', 'Expression; to_char() conversion function; \'MI\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3905,7 +3905,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "SS")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('AB.1', 'Expression; to_char() conversion function; \'SS\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -3984,7 +3984,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "MONTH")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AC.1', 'Expression; to_char() conversion function; \'MONTH\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4063,7 +4063,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "Month")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AD.1', 'Expression; to_char() conversion function; \'Month\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4142,7 +4142,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "month")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AE.1', 'Expression; to_char() conversion function; \'month\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4221,7 +4221,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "MON")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AF.1', 'Expression; to_char() conversion function; \'MON\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4300,7 +4300,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "Mon")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AG.1', 'Expression; to_char() conversion function; \'Mon\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4379,7 +4379,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "mon")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AH.1', 'Expression; to_char() conversion function; \'mon\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4458,7 +4458,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "DAY")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AI.1', 'Expression; to_char() conversion function; \'DAY\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4537,7 +4537,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "Day")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AJ.1', 'Expression; to_char() conversion function; \'Day\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4616,7 +4616,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "day")');
-        $expected = "         ";
+        $expected = null;
         TestCheck::assertString('AK.1', 'Expression; to_char() conversion function; \'day\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4695,7 +4695,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "DY")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AL.1', 'Expression; to_char() conversion function; \'DY\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4774,7 +4774,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "Dy")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AM.1', 'Expression; to_char() conversion function; \'Dy\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4853,7 +4853,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "dy")');
-        $expected = "   ";
+        $expected = null;
         TestCheck::assertString('AN.1', 'Expression; to_char() conversion function; \'dy\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -4932,7 +4932,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp(""), "D")');
-        $expected = "";
+        $expected = null;
         TestCheck::assertString('AO.1', 'Expression; to_char() conversion function; \'D\' format element',  $actual, $expected, $results);
 
         // BEGIN TEST

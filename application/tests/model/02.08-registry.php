@@ -51,6 +51,6 @@ class Test
         }
         $actual = count($entries) === $entry_count && $read_successes === $entry_count;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'RegistryModel; number of actual created entries vs. expected created entries', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', 'Registry; number of actual created entries vs. expected created entries', $actual, $expected, $results);
     }
 }

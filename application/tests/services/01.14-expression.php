@@ -279,7 +279,7 @@ class Test
         TestCheck::assertBoolean('D.4', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('iskindof("\"firstnamelastname\"@domain.com","email")');
+        $actual = TestUtil::evalExpression('iskindof(\'"firstnamelastname"@domain.com\',"email")');
         $expected = true;
         TestCheck::assertBoolean('D.5', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
 

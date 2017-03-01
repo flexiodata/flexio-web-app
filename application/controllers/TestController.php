@@ -121,7 +121,40 @@ class TestController extends \Flexio\System\FxControllerAction
 
 echo "<pre>";
 
-        
+        $result2 = \Flexio\Tests\TestUtil::evalExpressionPostgres('iskindof(\'"firstnamelastname"@domain.com\',"email")');
+        var_dump($result2);
+        die();
+
+        $expr = 'to_char(to_timestamp("1460-01-01 00:00:01"), "D")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. " should be 1<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(0.15,".EEEE")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. " should be  2e-01<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(-19999.12341, ".9999eeee")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. " should be <br>";
+        var_dump($actual);
+
+        $expr = 'to_char(-0.1,"9.99")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. " should be -.10<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(to_timestamp(""), "Month")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
+        $expr = 'to_char(-1,"0,00S0.0")';
+        $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
+        echo "<br>" . $expr. "<br>";
+        var_dump($actual);
+
         $expr = 'to_char(-10,"999.99")';
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
         echo "<br>" . $expr. "<br>";
@@ -149,7 +182,7 @@ echo "<pre>";
 
         $expr = 'to_char(0,"9.9$")';
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
-        echo "<br>" . $expr. "<br>";
+        echo "<br>" . $expr. " should be '  .0$'<br>";
         var_dump($actual);
         
         $expr = 'to_char(0,"FM9.9$")';

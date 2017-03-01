@@ -142,7 +142,7 @@ class Model
         if (isset($this->objs[$name]))
             return $this->objs[$name];
 
-        $classname = ucfirst($name) . 'Model';
+        $classname = ucfirst($name);
 
         require_once __DIR__ . '/' . $this->dbtype . '/' . $classname . '.php';
 
@@ -321,7 +321,7 @@ class Model
 
     public function search($path)
     {
-        return $this->search->search($path);
+        return $this->search->exec($path);
     }
 
     public function assoc_add($source_eid, $type, $target_eid)

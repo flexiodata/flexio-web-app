@@ -282,111 +282,111 @@ class Api
                 return false;
 
             // system (public)
-            case 'POS /signup/check'                   : return '\Flexio\Api\SystemApi::signupcheck';
-            case 'POS /login'                          : return '\Flexio\Api\SystemApi::login';
-            case 'POS /logout'                         : return '\Flexio\Api\SystemApi::logout';
+            case 'POS /signup/check'                   : return '\Flexio\Api\System::signupcheck';
+            case 'POS /login'                          : return '\Flexio\Api\System::login';
+            case 'POS /logout'                         : return '\Flexio\Api\System::logout';
 
             // search
-            case 'GET /search'                         : return '\Flexio\Api\SearchApi::search';
+            case 'GET /search'                         : return '\Flexio\Api\Search::exec';
 
             // users
-            case 'GET /users/me'                       : return '\Flexio\Api\UserApi::about';
+            case 'GET /users/me'                       : return '\Flexio\Api\User::about';
 
-            case 'POS /users'                          : return '\Flexio\Api\UserApi::create';
-            case 'POS /users/resetpassword'            : return '\Flexio\Api\UserApi::resetpassword';
-            case 'POS /users/requestpasswordreset'     : return '\Flexio\Api\UserApi::requestpasswordreset';
-            case 'POS /users/resendverify'             : return '\Flexio\Api\UserApi::resendverify';
-            case 'POS /users/activate'                 : return '\Flexio\Api\UserApi::activate';
-            case 'POS /users/:eid'                     : return '\Flexio\Api\UserApi::set';
-            case 'GET /users/:eid'                     : return '\Flexio\Api\UserApi::get';
-            case 'POS /users/:eid/changepassword'      : return '\Flexio\Api\UserApi::changepassword';
-            case 'GET /users/:eid/tokens'              : return '\Flexio\Api\TokenApi::listall';
-            case 'POS /users/:eid/tokens'              : return '\Flexio\Api\TokenApi::create';
-            case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\TokenApi::get';
-            case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\TokenApi::delete';
+            case 'POS /users'                          : return '\Flexio\Api\User::create';
+            case 'POS /users/resetpassword'            : return '\Flexio\Api\User::resetpassword';
+            case 'POS /users/requestpasswordreset'     : return '\Flexio\Api\User::requestpasswordreset';
+            case 'POS /users/resendverify'             : return '\Flexio\Api\User::resendverify';
+            case 'POS /users/activate'                 : return '\Flexio\Api\User::activate';
+            case 'POS /users/:eid'                     : return '\Flexio\Api\User::set';
+            case 'GET /users/:eid'                     : return '\Flexio\Api\User::get';
+            case 'POS /users/:eid/changepassword'      : return '\Flexio\Api\User::changepassword';
+            case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::listall';
+            case 'POS /users/:eid/tokens'              : return '\Flexio\Api\Token::create';
+            case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
+            case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
 
             // projects
-            case 'POS /projects'                       : return '\Flexio\Api\ProjectApi::create';
-            case 'GET /projects'                       : return '\Flexio\Api\ProjectApi::listall';
-            case 'POS /projects/:eid'                  : return '\Flexio\Api\ProjectApi::set';
-            case 'GET /projects/:eid'                  : return '\Flexio\Api\ProjectApi::get';
-            case 'DEL /projects/:eid'                  : return '\Flexio\Api\ProjectApi::delete';
-            case 'GET /projects/:eid/pipes'            : return '\Flexio\Api\ProjectApi::pipes';
-            case 'GET /projects/:eid/connections'      : return '\Flexio\Api\ProjectApi::connections';
-            case 'POS /projects/:eid/trash'            : return '\Flexio\Api\ProjectApi::addTrash';
-            case 'GET /projects/:eid/trash'            : return '\Flexio\Api\ProjectApi::trashed';
-            case 'DEL /projects/:eid/trash'            : return '\Flexio\Api\ProjectApi::clearTrash';
-            case 'POS /projects/:eid/restore'          : return '\Flexio\Api\ProjectApi::unTrash';
+            case 'POS /projects'                       : return '\Flexio\Api\Project::create';
+            case 'GET /projects'                       : return '\Flexio\Api\Project::listall';
+            case 'POS /projects/:eid'                  : return '\Flexio\Api\Project::set';
+            case 'GET /projects/:eid'                  : return '\Flexio\Api\Project::get';
+            case 'DEL /projects/:eid'                  : return '\Flexio\Api\Project::delete';
+            case 'GET /projects/:eid/pipes'            : return '\Flexio\Api\Project::pipes';
+            case 'GET /projects/:eid/connections'      : return '\Flexio\Api\Project::connections';
+            case 'POS /projects/:eid/trash'            : return '\Flexio\Api\Project::addTrash';
+            case 'GET /projects/:eid/trash'            : return '\Flexio\Api\Project::trashed';
+            case 'DEL /projects/:eid/trash'            : return '\Flexio\Api\Project::clearTrash';
+            case 'POS /projects/:eid/restore'          : return '\Flexio\Api\Project::unTrash';
 
             // followers
-            case 'POS /projects/:eid/followers'        : return '\Flexio\Api\FollowerApi::create';
-            case 'GET /projects/:eid/followers'        : return '\Flexio\Api\FollowerApi::listall';
-            case 'DEL /projects/:eid/followers/:eid'   : return '\Flexio\Api\FollowerApi::delete';
+            case 'POS /projects/:eid/followers'        : return '\Flexio\Api\Follower::create';
+            case 'GET /projects/:eid/followers'        : return '\Flexio\Api\Follower::listall';
+            case 'DEL /projects/:eid/followers/:eid'   : return '\Flexio\Api\Follower::delete';
 
             // pipes
-            case 'POS /pipes'                          : return '\Flexio\Api\PipeApi::create';
-            case 'POS /pipes/:eid'                     : return '\Flexio\Api\PipeApi::set';
-            case 'GET /pipes/:eid'                     : return '\Flexio\Api\PipeApi::get';
-            case 'DEL /pipes/:eid'                     : return '\Flexio\Api\PipeApi::delete';
-            case 'GET /pipes/:eid/comments'            : return '\Flexio\Api\PipeApi::comments';
-            case 'POS /pipes/:eid/tasks'               : return '\Flexio\Api\PipeApi::addTaskStep';
-            case 'DEL /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\PipeApi::deleteTaskStep';
-            case 'POS /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\PipeApi::setTaskStep';
-            case 'GET /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\PipeApi::getTaskStep';
-            case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\ProcessApi::create';
-            case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\PipeApi::processes';
+            case 'POS /pipes'                          : return '\Flexio\Api\Pipe::create';
+            case 'POS /pipes/:eid'                     : return '\Flexio\Api\Pipe::set';
+            case 'GET /pipes/:eid'                     : return '\Flexio\Api\Pipe::get';
+            case 'DEL /pipes/:eid'                     : return '\Flexio\Api\Pipe::delete';
+            case 'GET /pipes/:eid/comments'            : return '\Flexio\Api\Pipe::comments';
+            case 'POS /pipes/:eid/tasks'               : return '\Flexio\Api\Pipe::addTaskStep';
+            case 'DEL /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::deleteTaskStep';
+            case 'POS /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::setTaskStep';
+            case 'GET /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::getTaskStep';
+            case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\Process::create';
+            case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\Pipe::processes';
 
             // experimental API endpoint for running a pipe with form parameters
-            case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\PipeApi::run';
+            case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
 
             // connections
-            case 'POS /connections'                    : return '\Flexio\Api\ConnectionApi::create';
-            case 'POS /connections/:eid'               : return '\Flexio\Api\ConnectionApi::set';
-            case 'GET /connections/:eid'               : return '\Flexio\Api\ConnectionApi::get';
-            case 'DEL /connections/:eid'               : return '\Flexio\Api\ConnectionApi::delete';
-            case 'GET /connections/:eid/comments'      : return '\Flexio\Api\ConnectionApi::comments';
-            case 'GET /connections/:eid/describe'      : return '\Flexio\Api\ConnectionApi::describe';
-            case 'POS /connections/:eid/connect'       : return '\Flexio\Api\ConnectionApi::connect';
-            case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\ConnectionApi::disconnect';
+            case 'POS /connections'                    : return '\Flexio\Api\Connection::create';
+            case 'POS /connections/:eid'               : return '\Flexio\Api\Connection::set';
+            case 'GET /connections/:eid'               : return '\Flexio\Api\Connection::get';
+            case 'DEL /connections/:eid'               : return '\Flexio\Api\Connection::delete';
+            case 'GET /connections/:eid/comments'      : return '\Flexio\Api\Connection::comments';
+            case 'GET /connections/:eid/describe'      : return '\Flexio\Api\Connection::describe';
+            case 'POS /connections/:eid/connect'       : return '\Flexio\Api\Connection::connect';
+            case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\Connection::disconnect';
 
             // processes
-            case 'POS /processes'                      : return '\Flexio\Api\ProcessApi::create';
-            case 'GET /processes/:eid'                 : return '\Flexio\Api\ProcessApi::get';
-            case 'POS /processes/:eid'                 : return '\Flexio\Api\ProcessApi::set';
-            case 'POS /processes/:eid/input'           : return '\Flexio\Api\ProcessApi::addInput';
-            case 'GET /processes/:eid/input'           : return '\Flexio\Api\ProcessApi::getInput';
-            case 'GET /processes/:eid/output'          : return '\Flexio\Api\ProcessApi::getOutput';
-            case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\ProcessApi::getTaskInputInfo';
-            case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\ProcessApi::getTaskOutputInfo';
-            case 'GET /processes/statistics'           : return '\Flexio\Api\ProcessApi::getStatistics';
+            case 'POS /processes'                      : return '\Flexio\Api\Process::create';
+            case 'GET /processes/:eid'                 : return '\Flexio\Api\Process::get';
+            case 'POS /processes/:eid'                 : return '\Flexio\Api\Process::set';
+            case 'POS /processes/:eid/input'           : return '\Flexio\Api\Process::addInput';
+            case 'GET /processes/:eid/input'           : return '\Flexio\Api\Process::getInput';
+            case 'GET /processes/:eid/output'          : return '\Flexio\Api\Process::getOutput';
+            case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\Process::getTaskInputInfo';
+            case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\Process::getTaskOutputInfo';
+            case 'GET /processes/statistics'           : return '\Flexio\Api\Process::getStatistics';
 
             // DEPRECATED: another way to do this that doesn't involve a high-level url endpoint verb?
-            case 'POS /processes/:eid/run'             : return '\Flexio\Api\ProcessApi::run';
-            case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\ProcessApi::cancel';
-            case 'POS /processes/:eid/pause'           : return '\Flexio\Api\ProcessApi::pause';
+            case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
+            case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\Process::cancel';
+            case 'POS /processes/:eid/pause'           : return '\Flexio\Api\Process::pause';
 
             // streams
-            case 'POS /streams'                        : return '\Flexio\Api\StreamApi::create';
-            case 'GET /streams/:eid'                   : return '\Flexio\Api\StreamApi::get';
-            case 'POS /streams/:eid'                   : return '\Flexio\Api\StreamApi::set';
-            case 'GET /streams/:eid/content'           : return '\Flexio\Api\StreamApi::content';
-            case 'GET /streams/:eid/download'          : return '\Flexio\Api\StreamApi::download';
-            case 'POS /streams/:eid/upload'            : return '\Flexio\Api\StreamApi::upload';
+            case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
+            case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
+            case 'POS /streams/:eid'                   : return '\Flexio\Api\Stream::set';
+            case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
+            case 'GET /streams/:eid/download'          : return '\Flexio\Api\Stream::download';
+            case 'POS /streams/:eid/upload'            : return '\Flexio\Api\Stream::upload';
 
             // comments
-            case 'POS /comments'                       : return '\Flexio\Api\CommentApi::create';
+            case 'POS /comments'                       : return '\Flexio\Api\Comment::create';
 
             // help
-            case 'POS /help/conversation'              : return '\Flexio\Api\HelpApi::createConversation';
+            case 'POS /help/conversation'              : return '\Flexio\Api\Help::createConversation';
 
             // test suite
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
             case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
 
             // DEBUG: endpoints for easy debugging using a URL in a browser
-            case 'GET /processes/debug'                : return '\Flexio\Api\ProcessApi::debug';
-            case 'GET /users/createsampleproject'      : return '\Flexio\Api\UserApi::createSample';
-            case 'GET /debug/config'                   : return '\Flexio\Api\SystemApi::configuration';
+            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';
+            case 'GET /users/createsampleproject'      : return '\Flexio\Api\User::createSample';
+            case 'GET /debug/config'                   : return '\Flexio\Api\System::configuration';
         }
     }
 

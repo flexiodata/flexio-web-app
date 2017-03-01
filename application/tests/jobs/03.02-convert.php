@@ -44,7 +44,7 @@ class Test
 
 
 
-        // TEST: ConvertJob; single, valid fieldname
+        // TEST: Convert; single, valid fieldname
 
         // BEGIN TEST
         $data = '
@@ -102,7 +102,7 @@ class Test
 
 
 
-        // TEST: ConvertJob; single fieldname with leading/trailing spaces
+        // TEST: Convert; single fieldname with leading/trailing spaces
 
         // BEGIN TEST
         $data = '
@@ -160,7 +160,7 @@ class Test
 
 
 
-        // TEST: ConvertJob; single fieldname with embedded spaces
+        // TEST: Convert; single fieldname with embedded spaces
 
         // BEGIN TEST
         $data = '
@@ -236,7 +236,7 @@ class Test
 
 
 
-        // TEST: ConvertJob; single fieldname with uppercase characters
+        // TEST: Convert; single fieldname with uppercase characters
 
         // BEGIN TEST
         $data = '
@@ -312,7 +312,7 @@ class Test
 
 
 
-        // TEST: ConvertJob; embedded symbols
+        // TEST: Convert; embedded symbols
 
         // BEGIN TEST
         $data = '
@@ -424,7 +424,7 @@ class Test
 
 
 
-        // TEST: ConvertJob; keywords are allowed for now; TODO: behavior we want?
+        // TEST: Convert; keywords are allowed for now; TODO: behavior we want?
 
         // BEGIN TEST
         $data = '
@@ -554,7 +554,7 @@ class Test
 
 
 
-        // TEST: ConvertJob; multiple fieldnames
+        // TEST: Convert; multiple fieldnames
 
         // BEGIN TEST
         $data = '
@@ -594,7 +594,7 @@ class Test
 
 
 
-        // TEST: ConvertJob; duplicate fieldnames should be enumerated to avoid duplication
+        // TEST: Convert; duplicate fieldnames should be enumerated to avoid duplication
 
         // BEGIN TEST
         $data = '

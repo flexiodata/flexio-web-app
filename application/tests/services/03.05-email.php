@@ -20,14 +20,14 @@ function getTestEmailContents($filename)
     // loads a test email stream from the php parsing library;
     // TODO: remove external library dependency on these tests
 
-    $testfilepath = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'phpmimemailparser' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'mails';
+    $testfilepath = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'mailmimeparser' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . '_data' . DIRECTORY_SEPARATOR . 'emails';
     $testfile = $testfilepath . DIRECTORY_SEPARATOR . $filename;
     return file_get_contents($testfile);
 }
 
 function getTestEmailFile($filename)
 {
-    $testfilepath = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'phpmimemailparser' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'mails';
+    $testfilepath = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'mailmimeparser' . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . '_data' . DIRECTORY_SEPARATOR . 'emails';
     $testfile = $testfilepath . DIRECTORY_SEPARATOR . $filename;
     return $testfile;
 }
@@ -51,10 +51,10 @@ class Test
         // TEST: content parsing; "from" information
 
         // BEGIN TEST
-        $file = getTestEmailFile('m0001');
+        $file = getTestEmailFile('m0001.txt');
         $email = \Flexio\Services\Email::parseStream($file);
         $actual = $email->getFrom();
-        $expected = '["Name <name@company.com>"]';
+        $expected = '["Doug Sauder <doug@example.com>"]';
         TestCheck::assertArray('B.1', '\Flexio\Services\Email::parseText(); get the "from" addresses', $actual, $expected, $results);
     }
 }

@@ -31,7 +31,7 @@ class Test
         }
         ',true);
         $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
-        $actual = \Flexio\Api\ConnectionApi::create($params, $request);
+        $actual = \Flexio\Api\Connection::create($params, $request);
         $expected = '
         {
             "eid_type": "'.\Model::TYPE_CONNECTION.'",
@@ -39,6 +39,6 @@ class Test
             "description": "Test connection"
         }
         ';
-        TestCheck::assertInArray('A.1', '\Flexio\Api\ConnectionApi::create(); return the object',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', '\Flexio\Api\Connection::create(); return the object',  $actual, $expected, $results);
     }
 }

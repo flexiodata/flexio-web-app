@@ -13,52 +13,11 @@
 
 
 // email processing involves parsing the email; to parse emails,
-// pecl mailparse is used:  https://pecl.php.net/package/mailparse
-// and therefore needs to be installed; however, because of a compile
-// directive problem involving the following lines in mailparse.c
-//     #if !HAVE_MBSTRING
-//     #error The mailparse extension requires the mbstring extension!
-// where the error is flagged even though mbstring is installed,
-// the library needs to be installed manually with these two lines commented
-// out; to install the library manually, do the following:
-// 1.   cd /tmp
-// 2.   pecl download mailparse
-// 3.   tar xvzf mailparse-3.0.1.tgz
-// 4.   cd mailparse-3.0.1
-// 5.   phpize
-// 6.   ./configure
-// 7.   <
-//      edit mailparse.c and comment out the following three lines
-//          #if !HAVE_MBSTRING
-//          #error The mailparse extension requires the mbstring extension!
-//          #endif
-//      so that we have
-//          // #if !HAVE_MBSTRING
-//          // #error The mailparse extension requires the mbstring extension!
-//          // #endif
-//      >
-// 8.   make
-// 9.   make install
-// 10.  <
-//      add the following to php.ini and restart the web server
-//      extension=mailparse.so
-//      >
-
-
-// TODO: here's a standalone library:  https://github.com/zbateson/MailMimeParser
-// replace the current implementation?
+// the following library is used:  https://github.com/zbateson/MailMimeParser
 
 
 namespace Flexio\Services;
 
-
-// library for parsing emails
-if (!isset($GLOBALS['phpmimemailparser_included']))
-{
-    $GLOBALS['phpmimemailparser_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'phpmimemailparser'));
-}
-require_once 'phpmimemailparser_init.php';
 
 // library for building up mime email
 if (!isset($GLOBALS['phpmailmime_included']))
@@ -66,6 +25,23 @@ if (!isset($GLOBALS['phpmailmime_included']))
     $GLOBALS['phpmailmime_included'] = true;
     set_include_path(get_include_path() . PATH_SEPARATOR . (\Flexio\System\System::getBaseDirectory() . '/library/phpmailmime'));
 }
+
+
+spl_autoload_register(function ($class) {
+    $class = ltrim($class, '\\');
+    if (strpos($class, 'ZBateson\\MailMimeParser') === 0)
+    {
+        $sl = strpos($class,'\\', 10);
+        $class = str_replace('\\', '/', $class);
+        $class = dirname(dirname(__DIR__)) . '/library/mailmimeparser/src/' . substr($class,$sl+1) . '.php';
+        if (file_exists($class))
+        {
+            require_once $class;
+            return true;
+        }
+        return false;
+    }
+});
 
 
 class Email
@@ -135,6 +111,20 @@ class Email
             return false;
 
         // parse the content
+        $parser = new \ZBateson\MailMimeParser\MailMimeParser;
+        $message = $parser->parse($content);
+
+        // create the email with the parsed values
+        $email = new self;
+        $email->initializeFromParsedMessage($message);
+
+        return $email;
+
+/*
+        if (!is_string($content))
+            return false;
+
+        // parse the content
         $parser = new \PhpMimeMailParser\Parser;
         $parser->setText($content);
 
@@ -143,10 +133,34 @@ class Email
         $email->initializeFromParser($parser);
 
         return $email;
+*/
     }
 
     public static function parseStream($stream)
     {
+        if (!is_string($stream))
+            return false;
+        if (strlen($stream) === 0)
+            return false;
+
+        // get the stream
+        $handle = fopen($stream, 'r');
+        if ($handle === false)
+            return false;
+
+        // parse the stream
+        $parser = new \ZBateson\MailMimeParser\MailMimeParser;
+        $message = $parser->parse($handle);
+        fclose($handle);
+
+        // create the email with the parsed values
+        $email = new self;
+        $email->initializeFromParsedMessage($message);
+
+        return $email;
+
+
+/*
         if (!is_string($stream))
             return false;
         if (strlen($stream) === 0)
@@ -163,9 +177,10 @@ class Email
 
         // create the email with the parsed values
         $email = new self;
-        $email->initializeFromParser($parser);
+        $email->($parser);
 
         return $email;
+*/
     }
 
     public function send()
@@ -365,8 +380,59 @@ class Email
         $this->attachments = array();
     }
 
-    private function initializeFromParser($parser)
+    private function initializeFromParsedMessage($message)
     {
+        // start with a clean slate
+        $this->initialize();
+
+        // get the 'from' address headers
+        $from_header = $message->getHeader('from');
+        if ($from_header instanceof \ZBateson\MailMimeParser\Header\AddressHeader)
+        {
+            $from = array();
+            $addresses = $from_header->getParts();
+            foreach ($addresses as $a)
+            {
+                $display = $a->getName();
+                $address = $a->getEmail();
+                $from[] = "$display <$address>";
+            }
+            $this->setFrom($from);
+        }
+
+        // get the 'to' address headers
+        $to_header = $message->getHeader('to');
+        if ($to_header instanceof \ZBateson\MailMimeParser\Header\AddressHeader)
+        {
+            $to = array();
+            $addresses = $to_header->getParts();
+            foreach ($addresses as $a)
+            {
+                $display = $a->getName();
+                $address = $a->getEmail();
+                $to[] = "$display <$address>";
+            }
+            $this->setTo($to);
+        }
+
+        // get the "cc"
+        $this->setCC(''); // TODO: populate
+
+        // get the "bcc"
+        $this->setBCC(''); // TODO: populate
+
+        // get the "replyto"
+        $this->setReplyTo(''); // TODO: populate
+
+                // get the subject
+        $this->setSubject($message->getHeaderValue('subject'));
+
+                // get the body
+        $this->setMessageText($message->getTextContent());
+        $this->setMessageHtml($message->getHtmlContent());
+        $this->setMessageHtmlEmbedded($message->getHtmlContent());
+
+/*
         // start with a clean slate
         $this->initialize();
 
@@ -427,6 +493,7 @@ class Email
                 $this->attachments[] = $a;
             }
         }
+*/
     }
 
     private function sendWithoutAttachments()
@@ -542,9 +609,9 @@ class Email
 
         if (null === $this->_ses)
         {
-            $credentials = new Aws\Credentials\Credentials($g_config->ses_access_key, $g_config->ses_secret_key);
+            $credentials = new \Aws\Credentials\Credentials($g_config->ses_access_key, $g_config->ses_secret_key);
 
-            $this->_ses = new Aws\Ses\SesClient([
+            $this->_ses = new \Aws\Ses\SesClient([
                 'version'     => 'latest',
                 'region'      => 'us-east-1',
                 'credentials' => $credentials
@@ -581,7 +648,7 @@ class Email
             if (!isset($g_config->ses_access_key) || !isset($g_config->ses_secret_key))
                 return null;
 
-            $this->_aws = Aws\Common\Aws::factory(array(
+            $this->_aws = \Aws\Common\Aws::factory(array(
                'key' => $g_config->ses_access_key,
                'secret' => $g_config->ses_secret_key,
                'region' => 'us-east-1'
