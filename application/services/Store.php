@@ -156,7 +156,7 @@ class Store
                         'username' => isset_or($connection_info['username'],''),
                         'password' => isset_or($connection_info['password'],'')
                     );
-                    $service = \Flexio\Services\MailJetService::create($auth_params);
+                    $service = \Flexio\Services\MailJet::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_TWILIO:

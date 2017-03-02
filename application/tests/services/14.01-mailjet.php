@@ -24,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \Flexio\Services\MailJetService::create(null);
+        $service = \Flexio\Services\MailJet::create(null);
         $actual = get_class($service);
-        $expected = 'Flexio\Services\MailJetService';
-        TestCheck::assertString('A.1', '\Flexio\Services\MailJetService::create(); create an instance of the class',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\MailJet';
+        TestCheck::assertString('A.1', '\Flexio\Services\MailJet::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }
