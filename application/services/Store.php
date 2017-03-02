@@ -131,7 +131,7 @@ class Store
                         'accesskey' => isset_or($connection_info['username'],''),
                         'secretkey' => isset_or($connection_info['password'],'')
                     );
-                    $service = \Flexio\Services\AmazonS3Service::create($auth_params);
+                    $service = \Flexio\Services\AmazonS3::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_SOCRATA:

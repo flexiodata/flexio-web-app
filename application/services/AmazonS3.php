@@ -17,7 +17,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class AmazonS3Service implements \Flexio\Services\IConnection
+class AmazonS3 implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
