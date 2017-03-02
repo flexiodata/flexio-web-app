@@ -25,7 +25,7 @@ if (!isset($GLOBALS['simplepie_included']))
 require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'idn' . DIRECTORY_SEPARATOR . 'idna_convert.class.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class RssService implements \Flexio\Services\IConnection
+class Rss implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
