@@ -47,7 +47,7 @@ class Store
                     $auth_params = array(
                         // TODO: add parameters for basic auth?
                     );
-                    $service = \Flexio\Services\HttpService::create($auth_params);
+                    $service = \Flexio\Services\Http::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_RSS:
