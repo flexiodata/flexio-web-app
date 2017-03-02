@@ -148,7 +148,7 @@ class Store
                    $auth_params = array(
                         'token' => isset_or($connection_info['token'],'')
                     );
-                    $service = \Flexio\Services\PipelineDealsService::create($auth_params);
+                    $service = \Flexio\Services\PipelineDeals::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_MAILJET:

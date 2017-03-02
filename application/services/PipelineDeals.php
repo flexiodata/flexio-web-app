@@ -17,7 +17,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class PipelineDealsService implements \Flexio\Services\IConnection
+class PipelineDeals implements \Flexio\Services\IConnection
 {
     private $is_ok = false;
     private $apikey = '';
