@@ -4,13 +4,13 @@ Header set Cache-Control "public, max-age=7200, must-revalidate"
 Header unset Cache-Control
 </FilesMatch>
 
-<If "%{THE_REQUEST} =~ m#POST /api/v1/streams/.{12}/upload#">
+<If "%{THE_REQUEST} =~ m#POST /api/v1/streams/.*/upload#">
 php_flag enable_post_data_reading off
 </If>
-<If "%{THE_REQUEST} =~ m#POST /api/v1/processes/.{12}/input#">
+<If "%{THE_REQUEST} =~ m#POST /api/v1/processes/.*/input#">
 php_flag enable_post_data_reading off
 </If>
-<If "%{THE_REQUEST} =~ m#POST /api/v1/pipes/.{12}/run#">
+<If "%{THE_REQUEST} =~ m#POST /api/v1/pipes/.*/run#">
 php_flag enable_post_data_reading off
 </If>
 
