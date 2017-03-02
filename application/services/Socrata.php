@@ -17,7 +17,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class SocrataService implements \Flexio\Services\IConnection
+class Socrata implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables

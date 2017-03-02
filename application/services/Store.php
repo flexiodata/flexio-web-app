@@ -141,7 +141,7 @@ class Store
                         'username' => isset_or($connection_info['username'],''),
                         'password' => isset_or($connection_info['password'],'')
                     );
-                    $service = \Flexio\Services\SocrataService::create($auth_params);
+                    $service = \Flexio\Services\Socrata::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_PIPELINEDEALS:
