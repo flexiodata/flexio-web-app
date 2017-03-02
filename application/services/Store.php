@@ -164,7 +164,7 @@ class Store
                         'key' => isset_or($connection_info['username'],''),
                         'token' => isset_or($connection_info['token'],'')
                     );
-                    $service = \Flexio\Services\TwilioService::create($auth_params);
+                    $service = \Flexio\Services\Twilio::create($auth_params);
                 break;
         }
 
