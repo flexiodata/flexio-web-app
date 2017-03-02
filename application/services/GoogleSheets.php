@@ -223,7 +223,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
 
 
 
-                $spreadsheet = new \GoogleSpreadsheet;
+                $spreadsheet = new \Flexio\Services\GoogleSpreadsheet;
                 $spreadsheet->access_token = $this->access_token;
                 $spreadsheet->title = $title;
                 $spreadsheet->spreadsheet_id = $id;
@@ -486,7 +486,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         if (strlen($spreadsheet_id) == 0)
             return false;
 
-        $spreadsheet = new \GoogleSpreadsheet;
+        $spreadsheet = new \Flexio\Services\GoogleSpreadsheet;
         $spreadsheet->access_token = $this->access_token;
         $spreadsheet->title = $name;
         $spreadsheet->spreadsheet_id = $spreadsheet_id;
@@ -751,7 +751,7 @@ class GoogleSpreadsheet
 
                 $worksheet_id = \Flexio\System\Util::afterLast($id, '/');
 
-                $worksheet = new \GoogleWorksheet;
+                $worksheet = new \Flexio\Services\GoogleWorksheet;
                 $worksheet->access_token = $this->access_token;
                 $worksheet->spreadsheet_id = $this->spreadsheet_id;
                 $worksheet->worksheet_id = $worksheet_id;
