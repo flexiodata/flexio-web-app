@@ -85,8 +85,6 @@ class MultipartParser
                 $boundary_pos = strpos($buf, $boundary);
             }
 
-
-
             if ($boundary_pos === false)
             {
                 // no boundary found
@@ -112,8 +110,8 @@ class MultipartParser
                             $callback(self::TYPE_FILE_DATA, $current_name, $buf, $current_filename, $current_mimetype);
                             $buf = '';
                             $callback(self::TYPE_FILE_END, $current_name, '', $current_filename, $current_mimetype);
-                            return true;
                         }
+                        return true;
                     }
                     else
                     {
