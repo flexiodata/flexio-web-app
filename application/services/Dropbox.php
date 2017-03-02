@@ -15,12 +15,6 @@
 namespace Flexio\Services;
 
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-
-use OAuth\OAuth2\Service\Dropbox;
-use OAuth\Common\Storage\Memory;
-use OAuth\Common\Consumer\Credentials;
-use OAuth\OAuth2\Token\StdOAuth2Token;
-
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 
