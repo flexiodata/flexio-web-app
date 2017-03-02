@@ -17,7 +17,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class MysqlService implements \Flexio\Services\IConnection
+class MySql implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -587,7 +587,7 @@ class MysqlInserter
             if (strlen($this->fields) > 0)
                 $this->fields .= ',';
 
-            $this->fields .= \Flexio\Services\MysqlService::quoteIdentifier($field);
+            $this->fields .= \Flexio\Services\MySql::quoteIdentifier($field);
         }
 
         return true;
@@ -669,7 +669,7 @@ class MysqlInserter
     {
         if (count($this->rows) > 0)
         {
-            $sql = "INSERT INTO " . \Flexio\Services\MysqlService::quoteIdentifier($this->table) . " VALUES ";
+            $sql = "INSERT INTO " . \Flexio\Services\MySql::quoteIdentifier($this->table) . " VALUES ";
 
             $cnt = 0;
             foreach ($this->rows as $row)

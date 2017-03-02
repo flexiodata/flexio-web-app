@@ -24,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \Flexio\Services\MysqlService::create(null);
+        $service = \Flexio\Services\MySql::create(null);
         $actual = get_class($service);
-        $expected = 'Flexio\Services\MysqlService';
-        TestCheck::assertString('A.1', '\Flexio\Services\MysqlService::create(); create an instance of the class',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\MySql';
+        TestCheck::assertString('A.1', '\Flexio\Services\MySql::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

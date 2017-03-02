@@ -85,7 +85,7 @@ class Store
                         'password' => isset_or($connection_info['password'],''),
                         'database' => isset_or($connection_info['database'],'')
                     );
-                    $service = \Flexio\Services\MysqlService::create($auth_params);
+                    $service = \Flexio\Services\MySql::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_POSTGRES:
