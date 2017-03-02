@@ -172,6 +172,32 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
+    public function getPipes()
+    {
+        $eid = $this->getEid();
+
+        // get the pipes for the user based on the pipes the user owns or has access to from projects that are being followed
+        $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")->(".\Model::EDGE_HAS_MEMBER.")->(".\Model::TYPE_PIPE.")";
+        $pipes = \Flexio\Object\Search::exec($search_path);
+
+        $res = array();
+        foreach ($pipes as $p)
+        {
+            // load the object
+            $project = \Flexio\Object\Pipe::load($p);
+            if ($project === false)
+                continue;
+
+            // only show pipes that are available
+            if ($project->getStatus() !== \Model::STATUS_AVAILABLE)
+                continue;
+
+            $res[] = $project;
+        }
+
+        return $res;
+    }
+
     public function getTokens()
     {
         $res = array();

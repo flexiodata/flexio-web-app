@@ -325,6 +325,7 @@ class Api
 
             // pipes
             case 'POS /pipes'                          : return '\Flexio\Api\Pipe::create';
+            case 'GET /pipes'                          : return '\Flexio\Api\Pipe::listall';
             case 'POS /pipes/:eid'                     : return '\Flexio\Api\Pipe::set';
             case 'GET /pipes/:eid'                     : return '\Flexio\Api\Pipe::get';
             case 'DEL /pipes/:eid'                     : return '\Flexio\Api\Pipe::delete';

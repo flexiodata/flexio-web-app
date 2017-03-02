@@ -203,6 +203,34 @@ class Pipe
         return $pipe->get();
     }
 
+    public static function listall($params, $request)
+    {
+        // get the pipes for the requesting user
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // load the object
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+
+        // check the rights on the object
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+
+        // get the pipes
+        $result = array();
+        $pipes = $user->getPipes();
+        foreach ($pipes as $p)
+        {
+            if ($p->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+                continue;
+
+            $result[] = $p->get();
+        }
+
+        return $result;
+    }
+
     public static function comments($params, $request)
     {
         if (($params = $request->getValidator()->check($params, array(
