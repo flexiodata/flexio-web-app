@@ -20,11 +20,11 @@ class Test
     public function run(&$results)
     {
         // TEST: public blog entry pipe
-        // PIPE NAME: Convert all text in a CSV file to upper case and filter rows
-        // PIPE LINK: https://www.flex.io/app/project?eid=f3zsl6lkgzdp
-        // BLOG LINK: https://www.flex.io/blog/we-are-reinventing-the-query-builder-well-kinda/
+        // Pipe Description: Convert all text in a CSV file to upper case and filter rows
+        // Pipe Link: https://www.flex.io/app/project?eid=f3zsl6lkgzdp
+        // Blog Link: https://www.flex.io/blog/we-are-reinventing-the-query-builder-well-kinda/
 
-        // SETUP
+        // BEGIN TEST
         $task = \Flexio\Object\Task::create('
         [
             {
@@ -109,11 +109,6 @@ class Test
         ]
         ')->get();
 
-
-
-        // TEST: Blog Entry Job
-
-        // BEGIN TEST
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $result = TestUtil::getProcessSingleOutputResult($process,true,1535,1); // 1536 rows in output; get the last one
         $actual = isset_or($result['rows'][0],array());
@@ -142,5 +137,91 @@ class Test
         }
         ',true);
         TestCheck::assertArray('A.1', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
+
+
+
+        // TEST: public blog entry pipe
+        // Pipe Name: Import information about the SaaStr podcast and filter it
+        // Pipe Link: https://www.flex.io/app/project?eid=fkw7c18kp544
+        // Pipe API Link: https://www.flex.io/api/v1/pipes/podcast-search-v1
+        // Blog Link: https://www.flex.io/blog/adding-dynamic-content-static-web-page/
+
+        // BEGIN TEST
+        $task = \Flexio\Object\Task::create('
+        [
+            {
+                "type": "flexio.input",
+                "params": {
+                    "items": [
+                        {
+                            "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/sample-data\/master\/saastr-podcast-20170205.csv"
+                        }
+                    ]
+                },
+                "metadata": {
+                    "connection_type": "http.api"
+                },
+                "eid": "k01ckt2m9d9n"
+            },
+            {
+                "type": "flexio.convert",
+                "params": {
+                    "input": {
+                        "format": "delimited",
+                        "delimiter": "{comma}",
+                        "qualifier": "{double-quote}",
+                        "header": true
+                    },
+                    "output": {
+                        "format": "table"
+                    }
+                },
+                "eid": "d8wkhh3v25xy"
+            },
+            {
+                "type": "flexio.select",
+                "params": {
+                    "columns": [
+                        "url",
+                        "title",
+                        "description",
+                        "date",
+                        "guest",
+                        "position",
+                        "company",
+                        "category",
+                        "biggest challenge",
+                        "saas resources",
+                        "notes"
+                    ]
+                },
+                "eid": "nhmghbyxdtvc"
+            },
+            {
+                "type": "flexio.filter",
+                "params": {
+                    "where": "contains(lower(concat(title,description,notes,[saas resources])),lower(\'${filter}\'))"
+                },
+                "eid": "cyfg5rv0lftm"
+            },{
+                "eid": "gvv8ypwhw9lz",
+                "type": "flexio.convert",
+                "params": {
+                    "output": {
+                        "format": "json"
+                    }
+                }
+            }
+        ]
+        ')->get();
+
+        $params = [
+            "filter" => "bootstrap"
+        ];
+        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $result = TestUtil::getProcessResult($process,10,122);
+        $actual = is_array($result) ? isset_or($result[0],'') : '';
+        $expected = 'http:\\/\\/saastr.libsyn.com\\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-laura-roeder-founder-ceo-edgar';
+        TestCheck::assertString('A.2', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
     }
 }
