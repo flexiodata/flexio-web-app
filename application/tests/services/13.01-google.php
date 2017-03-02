@@ -24,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \Flexio\Services\GoogleService::create(null);
+        $service = \Flexio\Services\GoogleDrive::create(null);
         $actual = get_class($service);
-        $expected = 'Flexio\Services\GoogleService';
-        TestCheck::assertString('A.1', '\GoogleService::create(); create an instance of the class',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\GoogleDrive';
+        TestCheck::assertString('A.1', '\GoogleDrive::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

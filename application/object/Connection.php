@@ -146,7 +146,7 @@ class Connection extends \Flexio\Object\Base
                 break;
 
             case 'googledrive':
-                $response = \Flexio\Services\GoogleService::create($auth_params);
+                $response = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
 
             case 'googlesheets':
