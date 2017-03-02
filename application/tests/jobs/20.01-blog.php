@@ -19,6 +19,80 @@ class Test
 {
     public function run(&$results)
     {
+        // TEST: demo video pipe
+
+        // BEGIN TEST
+        $task = \Flexio\Object\Task::create('
+        [
+            {
+                "eid": "ls3nzjhkkbgx",
+                "type": "flexio.input",
+                "params": {
+                    "items": [
+                        {
+                            "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/sample-data\/master\/contacts-2016-11.csv"
+                        }
+                    ]
+                },
+                "metadata": {
+                    "connection_type": "http.api"
+                }
+            },
+            {
+                "eid": "q3yhx2y611l4",
+                "type": "flexio.convert",
+                "params": {
+                    "input": {
+                        "format": "delimited",
+                        "delimiter": "{comma}",
+                        "header": true
+                    },
+                    "output": {
+                        "format": "table"
+                    }
+                }
+            },
+            {
+                "eid": "fnk06dsykhfg",
+                "type": "flexio.select",
+                "params": {
+                    "columns": [
+                        "givenname",
+                        "surname",
+                        "streetaddress",
+                        "city",
+                        "state",
+                        "zipcode",
+                        "birthday"
+                    ]
+                }
+            },
+            {
+                "type": "flexio.filter",
+                "params": {
+                    "where": "strpart(birthday, \"\/\", 1) = \"1980\""
+                },
+                "eid": "m8065fhls7lv"
+            },
+            {
+                "eid": "drmxq9f8zl4g",
+                "type": "flexio.execute",
+                "params": {
+                    "lang": "python",
+                    "code": "aW1wb3J0IHN5cwoKaW5wdXQgPSAnJzsKZm9yIGxpbmUgaW4gc3lzLnN0ZGluOgogICAgaW5wdXQgKz0gbGluZS51cHBlcigpOwogICAgCnN5cy5zdGRvdXQud3JpdGUoaW5wdXQpCg=="
+                }
+            }
+        ]
+        ')->get();
+
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $result = TestUtil::getProcessResult($process,0,50);
+        $actual = is_array($result) ? isset_or($result[0],'') : '';
+        $expected = 'GIVENNAME,SURNAME,STREETADDRESS,CITY,STATE,ZIPCODE';
+        TestCheck::assertString('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results);
+
+
+
         // TEST: public blog entry pipe
         // Pipe Description: Convert all text in a CSV file to upper case and filter rows
         // Pipe Link: https://www.flex.io/app/project?eid=f3zsl6lkgzdp
@@ -136,7 +210,7 @@ class Test
             "ups": "1Z 3W5 6V5 59 2261 267 6"
         }
         ',true);
-        TestCheck::assertArray('A.1', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
+        TestCheck::assertArray('A.2', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
 
 
 
@@ -222,6 +296,7 @@ class Test
         $result = TestUtil::getProcessResult($process,10,122);
         $actual = is_array($result) ? isset_or($result[0],'') : '';
         $expected = 'http:\\/\\/saastr.libsyn.com\\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-laura-roeder-founder-ceo-edgar';
-        TestCheck::assertString('A.2', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
+        TestCheck::assertString('A.3', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
     }
 }
+
