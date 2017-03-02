@@ -24,9 +24,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \Flexio\Services\RssService::create(null);
+        $service = \Flexio\Services\Rss::create(null);
         $actual = get_class($service);
-        $expected = 'Flexio\Services\RssService';
-        TestCheck::assertString('A.1', '\Flexio\Services\RssService::create(); create an instance of the class',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Rss';
+        TestCheck::assertString('A.1', '\Flexio\Services\Rss::create(); create an instance of the class',  $actual, $expected, $results);
     }
 }

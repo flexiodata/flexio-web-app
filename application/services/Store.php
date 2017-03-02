@@ -54,7 +54,7 @@ class Store
                     $auth_params = array(
                         // TODO: add parameters for basic auth?
                     );
-                    $service = \Flexio\Services\RssService::create($auth_params);
+                    $service = \Flexio\Services\Rss::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_FTP:
