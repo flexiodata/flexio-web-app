@@ -74,7 +74,7 @@ class Store
                         'username' => isset_or($connection_info['username'],''),
                         'password' => isset_or($connection_info['password'],'')
                     );
-                    $service = \Flexio\Services\SftpService::create($auth_params);
+                    $service = \Flexio\Services\Sftp::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_MYSQL:

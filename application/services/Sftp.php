@@ -24,7 +24,7 @@ if (!isset($GLOBALS['phpseclib_included']))
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class SftpService implements \Flexio\Services\IConnection
+class Sftp implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
