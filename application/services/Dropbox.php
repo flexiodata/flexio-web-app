@@ -24,7 +24,7 @@ use OAuth\OAuth2\Token\StdOAuth2Token;
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 
-class DropboxService implements \Flexio\Services\IConnection
+class Dropbox implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables

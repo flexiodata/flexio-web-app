@@ -142,7 +142,7 @@ class Connection extends \Flexio\Object\Base
                 return false;
 
             case 'dropbox':
-                $response = \Flexio\Services\DropboxService::create($auth_params);
+                $response = \Flexio\Services\Dropbox::create($auth_params);
                 break;
 
             case 'googledrive':

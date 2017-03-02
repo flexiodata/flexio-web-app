@@ -103,7 +103,7 @@ class Store
                     $auth_params = array(
                         'access_token' => isset_or($connection_info['token'],'')
                     );
-                    $service = \Flexio\Services\DropboxService::create($auth_params);
+                    $service = \Flexio\Services\Dropbox::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
