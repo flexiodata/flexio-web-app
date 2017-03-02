@@ -121,7 +121,7 @@ class Store
                         'refresh_token' => isset_or($connection_info['refresh_token'],''),
                         'expires' => isset_or($connection_info['token_expires'],0)
                     );
-                    $service = \Flexio\Services\GoogleSheetsService::create($auth_params);
+                    $service = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_AMAZONS3:

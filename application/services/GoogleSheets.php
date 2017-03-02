@@ -24,7 +24,7 @@ use OAuth\OAuth2\Token\StdOAuth2Token;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class GoogleSheetsService implements \Flexio\Services\IConnection
+class GoogleSheets implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
