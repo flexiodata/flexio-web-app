@@ -66,7 +66,7 @@ try
     $dbparams['username'] = $username;
     $dbparams['password'] = $password;
 
-    $db_datastore = PostgresService::create($dbparams);
+    $db_datastore = Postgres::create($dbparams);
     if (!$db_datastore)
         throw new \Exception('Could not connect to datastore');
 

@@ -193,7 +193,7 @@ class Transform extends \Flexio\Jobs\Base
         {
             $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $width = isset_or($column['width'], -1);
-            if ($width == 1024) $width = -1; // PostgresService is returning us huge columns of indeterminate width
+            if ($width == 1024) $width = -1; // \Flexio\Services\Postgres is returning us huge columns of indeterminate width
             $scale = $column['scale'];
 
             $expr = $qname;
@@ -537,7 +537,7 @@ class Transform extends \Flexio\Jobs\Base
         {
             $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $width = isset_or($column['width'], -1);
-            if ($width == 1024) $width = -1; // PostgresService is returning us huge columns of indeterminate width
+            if ($width == 1024) $width = -1; // \Flexio\Services\Postgres is returning us huge columns of indeterminate width
             $scale = $column['scale'];
 
             $expr = $qname;

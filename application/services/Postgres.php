@@ -17,7 +17,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class PostgresService implements \Flexio\Services\IConnection
+class Postgres implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -879,7 +879,7 @@ class PostgresIterator
 
         if ($this->cursor_type == 'xh1')
         {
-            $decoded = \Flexio\Services\PostgresService::base64url_decode(substr($handle,3));
+            $decoded = \Flexio\Services\Postgres::base64url_decode(substr($handle,3));
             $arr = explode("\t", $decoded);
             if (count($arr) != 3)
                 return false;
@@ -893,7 +893,7 @@ class PostgresIterator
 
     public function getHandle()
     {
-        return $this->cursor_type . \Flexio\Services\PostgresService::base64url_encode($this->table . "\t" . $this->row_count . "\t" . $this->primary_key);
+        return $this->cursor_type . \Flexio\Services\Postgres::base64url_encode($this->table . "\t" . $this->row_count . "\t" . $this->primary_key);
     }
 
     public function getRows($offset, $limit)
@@ -1014,7 +1014,7 @@ class PostgresInserter
             $this->columns[] = $structure_indexed[strtolower($field)];
         }
 
-        $this->fields = \Flexio\Services\PostgresService::createDelimitedFieldList($fields);
+        $this->fields = \Flexio\Services\Postgres::createDelimitedFieldList($fields);
         return true;
     }
 
@@ -1153,7 +1153,7 @@ class PostgresInserterMultiRow
             $this->columns[] = $structure_indexed[$cleaned_fieldname];
         }
 
-        $this->fields = \Flexio\Services\PostgresService::createDelimitedFieldList($fields);
+        $this->fields = \Flexio\Services\Postgres::createDelimitedFieldList($fields);
         return true;
     }
 
@@ -1300,8 +1300,8 @@ class PostgresInserterSimple
 
     public function startInsert($fields)
     {
-        $sql =  'insert into '. \Flexio\Services\PostgresService::quoteIdentifierIfNecessary($this->table) . ' (';
-        $sql .= \Flexio\Services\PostgresService::createDelimitedFieldList($fields);
+        $sql =  'insert into '. \Flexio\Services\Postgres::quoteIdentifierIfNecessary($this->table) . ' (';
+        $sql .= \Flexio\Services\Postgres::createDelimitedFieldList($fields);
         $sql .= ') VALUES ( ' . trim(str_repeat('?,',count($fields)),',') . ')';
 
         $this->stmt = $this->db->prepare($sql);

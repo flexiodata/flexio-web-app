@@ -348,7 +348,7 @@ class Connection extends \Flexio\Object\Base
         $params['username'] = $username;
         $params['password'] = $password;
 
-        $db = \Flexio\Services\PostgresService::create($params);
+        $db = \Flexio\Services\Postgres::create($params);
         if (!$db)
             return false;   // service not available
 

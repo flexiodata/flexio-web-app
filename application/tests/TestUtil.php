@@ -88,7 +88,7 @@ class TestUtil
 
         $datastore_id = $params['database'] . ';' . $params['host'];
         if (!isset($g_store->datastores[$datastore_id]))
-            $g_store->datastores[$datastore_id] = \Flexio\Services\PostgresService::create($params);
+            $g_store->datastores[$datastore_id] = \Flexio\Services\Postgres::create($params);
 
         $datastore = $g_store->datastores[$datastore_id];
         $pdo = $datastore->getPDO();
@@ -210,7 +210,7 @@ class TestUtil
         }
         if ($path[0] != '/')
             $path = '/' . $path;
-        
+
         foreach ($params as $key => &$value)
         {
             if (substr($value, 0, 1) == '@')
@@ -231,7 +231,7 @@ class TestUtil
                 curl_setopt($ch, CURLOPT_POST, TRUE);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
                 if (isset($content_type))
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, [ 'Content-Type: '. $content_type ]); 
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [ 'Content-Type: '. $content_type ]);
                 break;
             case 'PUT':     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');    break;
             case 'DELETE':  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); break;

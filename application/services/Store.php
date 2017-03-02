@@ -96,7 +96,7 @@ class Store
                         'password' => isset_or($connection_info['password'],''),
                         'database' => isset_or($connection_info['database'],'')
                     );
-                    $service = \Flexio\Services\PostgresService::create($auth_params);
+                    $service = \Flexio\Services\Postgres::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_DROPBOX:
