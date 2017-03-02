@@ -17,7 +17,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class FtpService implements \Flexio\Services\IConnection
+class Ftp implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
