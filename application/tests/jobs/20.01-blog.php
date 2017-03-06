@@ -150,35 +150,12 @@ class Test
                 "description": "Change the data type and transform values of selected columns"
             },
             {
-                "eid": "d5gg6qmf9bt8",
                 "name": "Filter",
                 "type": "flexio.filter",
                 "params": {
-                    "condition": {
-                        "items": [
-                            {
-                                "left": [
-                                    "gender"
-                                ],
-                                "right": "FEMALE",
-                                "operator": "eq"
-                            }
-                        ]
-                    }
+                    "where": "gender = \"FEMALE\""
                 },
                 "description": "Filter records based on selected conditions"
-            },
-            {
-                "eid": "htq3vk5z3t47",
-                "name": "Output",
-                "type": "flexio.output",
-                "params": {
-                    "path": "",
-                    "connection": {
-                        "connection_type": "download.api"
-                    }
-                },
-                "description": "Add a location in which to output pipe results."
             }
         ]
         ')->get();
