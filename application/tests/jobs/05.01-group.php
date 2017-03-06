@@ -100,7 +100,7 @@ class Test
 
 
 
-        // TEST: Group Job; invalid or duplicate column name
+        // TEST: Group Job; output column names
 
         // BEGIN TEST
         $params = [
@@ -111,8 +111,8 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = \Model::PROCESS_STATUS_FAILED;
-        TestCheck::assertString('C.1', 'Group Job; fail when the column output is a bad name',  $actual, $expected, $results);
+        $expected = \Model::PROCESS_STATUS_COMPLETED;
+        TestCheck::assertString('C.1', 'Group Job; make sure output fieldnames don\'t have internal storage restrictions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
