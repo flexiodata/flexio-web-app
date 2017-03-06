@@ -486,6 +486,7 @@ class Test
         $expected = '
         [
             {
+                "key1": null
             }
         ]
         ';
@@ -508,7 +509,8 @@ class Test
         $expected = '
         [
             {
-                "key1" : "value1"
+                "key1" : "value1",
+                "key2" : null
             }
         ]
         ';
@@ -531,6 +533,7 @@ class Test
         $expected = '
         [
             {
+                "key1" : null,
                 "key2" : "value2"
             }
         ]

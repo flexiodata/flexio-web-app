@@ -71,7 +71,7 @@ class Mapper
 
         if (isset($node) && count($data) === 0)
         {
-            $flattened_array[] = new \stdClass();
+            $flattened_array[] = array($node => null); // similar to left join; key is preserved with a null
             return $flattened_array;
         }
 
