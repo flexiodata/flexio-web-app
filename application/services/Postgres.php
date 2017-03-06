@@ -1020,10 +1020,6 @@ class PostgresInserter
 
     public function insertRow($row)
     {
-        // only take sequential arrays
-        if (!isset($row[0]))
-            return;
-
         $field_idx = 0;
         $column_count = count($this->columns);
 
@@ -1159,10 +1155,6 @@ class PostgresInserterMultiRow
 
     public function insertRow($row)
     {
-         // only take sequential arrays
-        if (!isset($row[0]))
-            return;
-
         $field_idx = 0;
         $column_count = count($this->columns);
 

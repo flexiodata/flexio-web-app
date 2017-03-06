@@ -106,7 +106,7 @@ class Create extends \Flexio\Jobs\Base
                     $output_structure = $outstream->getStructure()->enum();
                     foreach($output_structure as $col)
                     {
-                        if (isset($row[$idx]))
+                        if (array_key_exists($idx, $row))
                             $row_with_keys[$col['name']] = $row[$idx];
                         $idx++;
                     }
