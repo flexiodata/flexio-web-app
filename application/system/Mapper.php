@@ -21,9 +21,9 @@ class Mapper
     // such as when converting json to a table
 
     const DEFAULT_KEY_NAME = "field";
-    const KEY_DELIMITER = "_";
+    const KEY_DELIMITER = ".";
 
-    public static function flatten($data, $schema = null)
+    public static function flatten($data, $schema = null, $key_delimiter = self::KEY_DELIMITER)
     {
         // if the input data is a string, try to convert it to an object;
         // if it can't be converted, use the string
@@ -47,22 +47,22 @@ class Mapper
             return false;
 
         $mapper = new Mapper;
-        $flattened_object = $mapper->flatten_internal($data, $schema);
+        $flattened_object = $mapper->flatten_internal($data, $schema, $key_delimiter);
         return json_decode(json_encode($flattened_object),true);
     }
 
-    private function flatten_internal($data, $schema, $node = null)
+    private function flatten_internal($data, $schema, $key_delimiter, $node = null)
     {
         if (is_array($data))
-            return $this->flatten_array($data, $schema, $node);
+            return $this->flatten_array($data, $schema, $key_delimiter, $node);
 
         if (is_object($data))
-            return $this->flatten_object($data, $schema, $node);
+            return $this->flatten_object($data, $schema, $key_delimiter, $node);
 
-        return $this->flatten_value($data, $schema, $node);
+        return $this->flatten_value($data, $schema, $key_delimiter, $node);
     }
 
-    private function flatten_array($data, $schema, $node)
+    private function flatten_array($data, $schema, $key_delimiter, $node)
     {
         $flattened_array = array();
 
@@ -72,7 +72,7 @@ class Mapper
         // iterate over the indexes
         foreach ($data as $value)
         {
-            $flattened_objects = $this->flatten_internal($value, $schema, $node);
+            $flattened_objects = $this->flatten_internal($value, $schema, $key_delimiter, $node);
             foreach ($flattened_objects as $object)
             {
                 $flattened_array[] = $object;
@@ -82,7 +82,7 @@ class Mapper
         return $flattened_array;
     }
 
-    private function flatten_object($data, $schema, $node)
+    private function flatten_object($data, $schema, $key_delimiter, $node)
     {
         if (!is_object($data))
             return array();
@@ -98,10 +98,10 @@ class Mapper
             // if a parent node is specified, prepend the node name to the key
             $new_node = $key;
             if (is_string($node))
-                $new_node = $node . self::KEY_DELIMITER . $key;
+                $new_node = $node . $key_delimiter . $key;
 
             // flatten the value
-            $flattened_object_value = $this->flatten_internal($value, $schema, $new_node);
+            $flattened_object_value = $this->flatten_internal($value, $schema, $key_delimiter, $new_node);
 
             // merge the flattened value in with the key/values of the object that have already been flattened
             // this is an equivalent to an outer join between the rows of objects from the flattened
@@ -112,7 +112,7 @@ class Mapper
         return $flattened_object;
     }
 
-    private function flatten_value($data, $schema, $node)
+    private function flatten_value($data, $schema, $key_delimiter, $node)
     {
         $key = self::DEFAULT_KEY_NAME; // default key name
 

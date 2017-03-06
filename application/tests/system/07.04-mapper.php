@@ -59,7 +59,7 @@ class Test
         $expected = '
         [
             {
-                "key1_key2" : "value2"
+                "key1.key2" : "value2"
             }
         ]
         ';
@@ -83,8 +83,8 @@ class Test
         $expected = '
         [
             {
-                "key1_key2" : "value2",
-                "key1_key3" : "value3"
+                "key1.key2" : "value2",
+                "key1.key3" : "value3"
             }
         ]
         ';
@@ -110,8 +110,8 @@ class Test
         [
             {
                 "key1" : "value1",
-                "key2_key3" : "value3",
-                "key2_key4" : "value4"
+                "key2.key3" : "value3",
+                "key2.key4" : "value4"
             }
         ]
         ';
@@ -136,8 +136,8 @@ class Test
         $expected = '
         [
             {
-                "key1_key2" : "value2",
-                "key1_key3" : "value3",
+                "key1.key2" : "value2",
+                "key1.key3" : "value3",
                 "key4" : "value4"
             }
         ]
@@ -167,10 +167,10 @@ class Test
         $expected = '
         [
             {
-                "key1_key2" : "value2",
-                "key1_key3" : "value3",
-                "key4_key5" : "value5",
-                "key4_key6" : "value6"
+                "key1.key2" : "value2",
+                "key1.key3" : "value3",
+                "key4.key5" : "value5",
+                "key4.key6" : "value6"
             }
         ]
         ';
@@ -196,7 +196,7 @@ class Test
         $expected = '
         [
             {
-                "key1_key2_key3" : "value3"
+                "key1.key2.key3" : "value3"
             }
         ]
         ';
@@ -226,8 +226,8 @@ class Test
         $expected = '
         [
             {
-                "key1_key2_key3" : "value3",
-                "key1_key4_key5" : "value5"
+                "key1.key2.key3" : "value3",
+                "key1.key4.key5" : "value5"
             }
         ]
         ';
@@ -259,10 +259,10 @@ class Test
         $expected = '
         [
             {
-                "key1_key2_key3" : "value3",
-                "key1_key2_key4" : "value4",
-                "key1_key5_key6" : "value6",
-                "key1_key5_key7" : "value7"
+                "key1.key2.key3" : "value3",
+                "key1.key2.key4" : "value4",
+                "key1.key5.key6" : "value6",
+                "key1.key5.key7" : "value7"
             }
         ]
         ';
@@ -307,14 +307,14 @@ class Test
         $expected = '
         [
             {
-                "key1_key2_key3" : "value3",
-                "key1_key2_key4" : "value4",
-                "key1_key5_key6" : "value6",
-                "key1_key5_key7" : "value7",
-                "key8_key9_key10" : "value10",
-                "key8_key9_key11" : "value11",
-                "key8_key12_key13" : "value13",
-                "key8_key12_key14" : "value14"
+                "key1.key2.key3" : "value3",
+                "key1.key2.key4" : "value4",
+                "key1.key5.key6" : "value6",
+                "key1.key5.key7" : "value7",
+                "key8.key9.key10" : "value10",
+                "key8.key9.key11" : "value11",
+                "key8.key12.key13" : "value13",
+                "key8.key12.key14" : "value14"
             }
         ]
         ';
@@ -361,16 +361,16 @@ class Test
         $expected = '
         [
             {
-                "key1_key2_key3" : null,
-                "key1_key4_key5" : true,
-                "key1_key4_key6" : false,
-                "key7_key8_key9" : -1,
-                "key7_key8_key10" : -0.1,
-                "key7_key8_key11" : 0,
-                "key7_key8_key12" : 0.1,
-                "key7_key8_key13" : 1,
-                "key7_key14_key15" : "value15",
-                "key7_key14_key16" : "value16"
+                "key1.key2.key3" : null,
+                "key1.key4.key5" : true,
+                "key1.key4.key6" : false,
+                "key7.key8.key9" : -1,
+                "key7.key8.key10" : -0.1,
+                "key7.key8.key11" : 0,
+                "key7.key8.key12" : 0.1,
+                "key7.key8.key13" : 1,
+                "key7.key14.key15" : "value15",
+                "key7.key14.key16" : "value16"
             }
         ]
         ';
@@ -399,8 +399,8 @@ class Test
         [
             {
                 "key1" : "value1",
-                "key2_key3_key4" : "value4",
-                "key2_key5" : "value5"
+                "key2.key3.key4" : "value4",
+                "key2.key5" : "value5"
             }
         ]
         ';
@@ -428,8 +428,8 @@ class Test
         $expected = '
         [
             {
-                "key1_key2_key3" : "value3",
-                "key1_key2_key4" : "value4",
+                "key1.key2.key3" : "value3",
+                "key1.key2.key4" : "value4",
                 "key5" : "value5"
             }
         ]
@@ -458,8 +458,8 @@ class Test
         $expected = '
         [
             {
-                "key1_key2_key" : "a",
-                "key1_key2_key3" : "value3",
+                "key1.key2.key" : "a",
+                "key1.key2.key3" : "value3",
                 "key" : "b"
             }
         ]
@@ -681,10 +681,10 @@ class Test
         $expected = '
         [
             {
-                "key1_key2" : 2
+                "key1.key2" : 2
             },
             {
-                "key1_key3" : 3
+                "key1.key3" : 3
             }
         ]
         ';
@@ -745,10 +745,10 @@ class Test
         $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
-            {"key1_key1" : "value1"},
-            {"key1_key2" : "value2"},
-            {"key1_key1" : "value1"},
-            {"key1_key3" : "value3"}
+            {"key1.key1" : "value1"},
+            {"key1.key2" : "value2"},
+            {"key1.key1" : "value1"},
+            {"key1.key3" : "value3"}
         ]
         ';
         TestCheck::assertArray('B.10', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
@@ -775,8 +775,8 @@ class Test
         $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
-            {"key1" : "value1", "key2" : "value2", "key3_key4" : "value4", "key6" : "value6", "key7" : "value7"},
-            {"key1" : "value1", "key2" : "value2", "key3_key5" : "value5", "key6" : "value6", "key7" : "value7"}
+            {"key1" : "value1", "key2" : "value2", "key3.key4" : "value4", "key6" : "value6", "key7" : "value7"},
+            {"key1" : "value1", "key2" : "value2", "key3.key5" : "value5", "key6" : "value6", "key7" : "value7"}
         ]
         ';
         TestCheck::assertArray('B.11', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
@@ -809,10 +809,10 @@ class Test
         $actual = \Flexio\System\Mapper::flatten($data, $schema);
         $expected = '
         [
-            {"key1_key2" : "value2", "key4" : "value4", "key5" : "value5"},
-            {"key1_key3" : "value3", "key4" : "value4", "key5" : "value5"},
-            {"key4" : "value4", "key5" : "value5", "key1_key2" : "value2"},
-            {"key4" : "value4", "key5" : "value5", "key1_key3" : "value3"}
+            {"key1.key2" : "value2", "key4" : "value4", "key5" : "value5"},
+            {"key1.key3" : "value3", "key4" : "value4", "key5" : "value5"},
+            {"key4" : "value4", "key5" : "value5", "key1.key2" : "value2"},
+            {"key4" : "value4", "key5" : "value5", "key1.key3" : "value3"}
         ]
         ';
         TestCheck::assertArray('B.12', '\Flexio\System\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
@@ -860,43 +860,43 @@ class Test
         [
             {
                 "key1" : 1,
-                "key2_key3_key4" : 3,
-                "key2_key5_key6" : 5
+                "key2.key3.key4" : 3,
+                "key2.key5.key6" : 5
             },
             {
                 "key1" : 1,
-                "key2_key3_key4" : 3,
-                "key2_key5_key6" : 6
+                "key2.key3.key4" : 3,
+                "key2.key5.key6" : 6
             },
             {
                 "key1" : 1,
-                "key2_key3_key4" : 4,
-                "key2_key5_key6" : 5
+                "key2.key3.key4" : 4,
+                "key2.key5.key6" : 5
             },
             {
                 "key1" : 1,
-                "key2_key3_key4" : 4,
-                "key2_key5_key6" : 6
+                "key2.key3.key4" : 4,
+                "key2.key5.key6" : 6
             },
             {
                 "key1" : 2,
-                "key2_key3_key4" : 3,
-                "key2_key5_key6" : 5
+                "key2.key3.key4" : 3,
+                "key2.key5.key6" : 5
             },
             {
                 "key1" : 2,
-                "key2_key3_key4" : 3,
-                "key2_key5_key6" : 6
+                "key2.key3.key4" : 3,
+                "key2.key5.key6" : 6
             },
             {
                 "key1" : 2,
-                "key2_key3_key4" : 4,
-                "key2_key5_key6" : 5
+                "key2.key3.key4" : 4,
+                "key2.key5.key6" : 5
             },
             {
                 "key1" : 2,
-                "key2_key3_key4" : 4,
-                "key2_key5_key6" : 6
+                "key2.key3.key4" : 4,
+                "key2.key5.key6" : 6
             },
             {
                 "key7" : 7
@@ -1039,7 +1039,7 @@ class Test
         [
             {
                 "key1" : 1,
-                "key2_key3" : 3
+                "key2.key3" : 3
             }
         ]
         ';

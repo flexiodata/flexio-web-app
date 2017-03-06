@@ -271,7 +271,7 @@ class MailJet implements \Flexio\Services\IConnection
 
         foreach ($rows as $r)
         {
-            $r = \Flexio\System\Mapper::flatten($r);
+            $r = \Flexio\System\Mapper::flatten($r, null, '_');
             $r = $r[0];
 
             $output_row = array();
