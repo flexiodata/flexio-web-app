@@ -69,6 +69,12 @@ class Mapper
         if (!is_array($data))
             return $flattened_array;
 
+        if (isset($node) && count($data) === 0)
+        {
+            $flattened_array[] = new \stdClass();
+            return $flattened_array;
+        }
+
         // iterate over the indexes
         foreach ($data as $value)
         {
