@@ -416,6 +416,10 @@ class Task
             $updated = false;
             foreach ($original_item as $key => $value)
             {
+                // replace any variables in the key
+                self::replaceValueWithVariable($variables, $key, $key);
+
+                // replace any variables in the value
                 $new_value = $value;
                 if (self::updateTaskItemWithVariable($variables, $value, $new_value))
                 {
