@@ -438,54 +438,56 @@ class Task
         }
 
         if (is_string($original_item))
-        {
-            // note: for now, variables are alphanumeric-plus-underscore-plus-hyphen string values
-            // that are enclosed in brackets that begin with a $: (e.g. ${variable_name})
-
-            // replace any variables in the string
-            $updated = false;
-            $updated_item = $original_item;
-
-            foreach ($variables as $variable_key => $variable_value)
-            {
-                // make sure variables are appropriately named
-                if (!preg_match('/^[a-zA-Z_-][a-zA-Z0-9_-]*$/', $variable_key))
-                    continue;
-
-                $variable_match_name = '${'.$variable_key.'}';
-                $variable_match_regex = '/\$\{'.$variable_key.'\}/';
-
-                // see if the variable matches anything in the string
-                if (!preg_match($variable_match_regex, $original_item))
-                    continue;
-
-                // if the variable matches the entire value, replace the
-                // value with the variable value and type; if it matches
-                // part of the value, do a string replacement
-                if ($variable_match_name === $original_item)
-                {
-                    $updated_item = $variable_value;
-                }
-                 else
-                {
-                    // use true/false text for boolean value replacements in a string
-                    if ($variable_value === true)
-                        $variable_value = 'true';
-                    if ($variable_value === false)
-                        $variable_value = 'false';
-
-                    $updated_item = preg_replace($variable_match_regex, $variable_value, $updated_item);
-                }
-
-                $updated = true;
-            }
-
-            return $updated;
-        }
+            return self::replaceValueWithVariable($variables, $original_item, $updated_item);
 
         // item is some other primitive, such as a number or a boolean;
         // don't do anything
         return false;
+    }
+
+    private static function replaceValueWithVariable($variables, $old_value, &$new_value)
+    {
+        // returns true if value was updated; false otherwise
+
+        // replace any variables in the string
+        $updated = false;
+        $new_value = $old_value;
+
+        foreach ($variables as $variable_key => $variable_value)
+        {
+            // make sure variables are appropriately named
+            if (!preg_match('/^[a-zA-Z_-][a-zA-Z0-9_-]*$/', $variable_key))
+                continue;
+
+            $variable_match_name = '${'.$variable_key.'}';
+            $variable_match_regex = '/\$\{'.$variable_key.'\}/';
+
+            // see if the variable matches anything in the string
+            if (!preg_match($variable_match_regex, $old_value))
+                continue;
+
+            // if the variable matches the entire value, replace the
+            // value with the variable value and type; if it matches
+            // part of the value, do a string replacement
+            if ($variable_match_name === $old_value)
+            {
+                $new_value = $variable_value;
+            }
+                else
+            {
+                // use true/false text for boolean value replacements in a string
+                if ($variable_value === true)
+                    $variable_value = 'true';
+                if ($variable_value === false)
+                    $variable_value = 'false';
+
+                $new_value = preg_replace($variable_match_regex, $variable_value, $new_value); // replace on updated value to support multiple variable replacements
+            }
+
+            $updated = true;
+        }
+
+        return $updated;
     }
 
     private static function addEidToTaskStep($step)
