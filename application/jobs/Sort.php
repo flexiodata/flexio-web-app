@@ -71,14 +71,20 @@ class Sort extends \Flexio\Jobs\Base
         $order = '';
         foreach ($job_definition['params']['order'] as $part)
         {
-            if (isset($part['expression']))
+            if (array_key_exists('expression',$part))
             {
+                if (!is_string($part['expression']))
+                    return false;
+
                 $s = \Flexio\Services\ExprTranslatorPostgres::translate($part['expression'], $input_columns);
                 if ($s === false)
                     return false;
 
-                if (isset($part['direction']))
+                if (array_key_exists('direction',$part))
                 {
+                if (!is_string($part['direction']))
+                    return false;
+
                     if (0 == strcasecmp($part['direction'], 'desc'))
                         $s .= ' DESC';
                     else if (0 == strcasecmp($part['direction'], 'asc'))
