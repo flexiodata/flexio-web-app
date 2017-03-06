@@ -240,7 +240,7 @@ class StreamWriter
 
         if ($this->table_inserter !== false)
         {
-            if (isset($data[0]))
+            if (array_key_exists('0', $data))
             {
                 // array is sequential, non-associative
                 $result = $this->table_inserter->insertRow($data);
