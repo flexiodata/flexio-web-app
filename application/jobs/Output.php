@@ -352,9 +352,11 @@ class Output extends \Flexio\Jobs\Base
         if ($streamreader === false)
             return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
 
-        $filename = $output_info['name'];
+        $params = array();
+        $params['path'] = $output_info['name'];
+        $params['content_type'] =  $streamreader->getMimeType();
 
-        $service->write($filename, function($length) use (&$streamreader) {
+        $service->write($params, function($length) use (&$streamreader) {
             return $streamreader->read($length);  // returns false upon EOF
         });
 
@@ -393,7 +395,10 @@ class Output extends \Flexio\Jobs\Base
         $filename = $foldername . "/" . $filename;
 
         // write the file
-        $service->write($filename, function($length) use (&$streamreader) {
+        $params = array();
+        $params['path'] = $filename;
+        $params['content_type'] = $mime_type;
+        $service->write($params, function($length) use (&$streamreader) {
             return $streamreader->read($length);  // returns false upon EOF
         });
 

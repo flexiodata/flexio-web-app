@@ -143,8 +143,11 @@ class Ftp implements \Flexio\Services\IConnection
         // TODO: FTP write implementation
     }
 
-    public function write($path, $callback)
+    public function write($params, $callback)
     {
+        $path = isset_or($params['path'],'');
+        $content_type = isset_or($params['content_type'], \Flexio\System\ContentType::MIME_TYPE_STREAM);
+
         if (!$this->isOk())
         {
             // try to reconnect

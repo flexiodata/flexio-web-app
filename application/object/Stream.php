@@ -290,6 +290,8 @@ class Stream extends \Flexio\Object\Base
                 $data_to_write[$col['name']] = isset_or($data[$col['store_name']], null);
         }
 
+        // TODO: this looks like a problem, since the service write function takes
+        // parameters and a callback; is this legacy and unused?
         $service->write($data_to_write);
     }
 

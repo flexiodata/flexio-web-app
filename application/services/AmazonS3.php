@@ -239,10 +239,10 @@ class AmazonS3 implements \Flexio\Services\IConnection
         return true;
     }
 
-    public function write($path, $callback)
+    public function write($params, $callback)
     {
-        // TODO: get mime type from funtion parameters
-        $content_type = \Flexio\System\ContentType::MIME_TYPE_STREAM;
+        $path = isset_or($params['path'],'');
+        $content_type = isset_or($params['content_type'], \Flexio\System\ContentType::MIME_TYPE_STREAM);
 
         if (!$this->isOk())
             return false;
