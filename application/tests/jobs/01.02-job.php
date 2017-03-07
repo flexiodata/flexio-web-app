@@ -70,10 +70,10 @@ class Test
         TestCheck::assertBoolean('A.9', '\Flexio\Jobs\Filter schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\FindReplace::SCHEMA;
+        $schema = \Flexio\Jobs\Replace::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\FindReplace schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\Replace schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\Grep::SCHEMA;
