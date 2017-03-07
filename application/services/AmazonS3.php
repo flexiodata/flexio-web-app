@@ -241,6 +241,9 @@ class AmazonS3 implements \Flexio\Services\IConnection
 
     public function write($path, $callback)
     {
+        // TODO: get mime type from funtion parameters
+        $content_type = \Flexio\System\ContentType::MIME_TYPE_STREAM;
+
         if (!$this->isOk())
             return false;
 
@@ -251,7 +254,8 @@ class AmazonS3 implements \Flexio\Services\IConnection
         {
             $response = $this->s3->createMultipartUpload(array(
                 'Bucket' => $this->bucket,
-                'Key'    => $path
+                'Key'    => $path,
+                'ContentType' => $content_type
             ));
             $upload_id = $response['UploadId'];
 
