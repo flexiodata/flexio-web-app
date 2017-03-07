@@ -169,11 +169,11 @@ class Test
         TestCheck::assertBoolean('A.22', '\Flexio\Jobs\Search definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\SelectColumn::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Select::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\SelectColumn::MIME_TYPE && $mime_type == 'flexio.select';
+        $actual = $mime_type == \Flexio\Jobs\Select::MIME_TYPE && $mime_type == 'flexio.select';
         $expected = true;
-        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\SelectColumn definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\Select definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Sleep::TEMPLATE,true);

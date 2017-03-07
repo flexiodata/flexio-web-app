@@ -159,8 +159,8 @@ class Task
                 'verb' => 'Searching'
             ),
             array(
-                'type' => \Flexio\Jobs\SelectColumn::MIME_TYPE,
-                'class' => '\Flexio\Jobs\SelectColumn',
+                'type' => \Flexio\Jobs\Select::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Select',
                 'name' => 'Select Columns',
                 'verb' => 'Selecting columns in'
             ),

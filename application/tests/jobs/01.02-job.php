@@ -148,10 +148,10 @@ class Test
         TestCheck::assertBoolean('A.22', '\Flexio\Jobs\Search schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\SelectColumn::SCHEMA;
+        $schema = \Flexio\Jobs\Select::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\SelectColumn schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\Select schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\Sleep::SCHEMA;
