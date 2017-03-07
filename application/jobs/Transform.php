@@ -112,8 +112,8 @@ class Transform extends \Flexio\Jobs\Base
 
                 // table input
                 case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    //$this->createOutputFromTableNative($instream); // TODO: new implementation
-                    $this->createOutputFromTableSql($instream); // TODO: old implementation
+                    $this->createOutputFromTableNative($instream); // TODO: new implementation
+                    //$this->createOutputFromTableSql($instream); // TODO: old implementation
                     break;
             }
         }
@@ -126,7 +126,7 @@ class Transform extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
 
         // if there aren't any operations, simply create an output stream
-        // pointing to the origina content
+        // pointing to the original content
         if (count($column_expression_map) === 0)
         {
             $this->getOutput()->push($instream->copy());
@@ -136,6 +136,21 @@ class Transform extends \Flexio\Jobs\Base
         // create the output with the replaced values
         $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
         $this->getOutput()->push($outstream);
+
+        $output_columns = $outstream->getStructure()->enum();
+        foreach ($output_columns as &$column)
+        {
+            $output_name = $column['name'];
+            if (isset($column_expression_map[$output_name]))
+            {
+                $output_structure = $column_expression_map[$output_name]['structure'];
+                $column['type'] = $output_structure['type'];
+                $column['width'] = $output_structure['width'];
+                $column['scale'] = $output_structure['scale'];
+            }
+        }
+        $outstream->setStructure($output_columns);
+
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
@@ -535,6 +550,9 @@ class Transform extends \Flexio\Jobs\Base
         $column_expression_map = array();
         foreach ($columns as $column)
         {
+            // copy the structure info so we can adjust it if needed
+            $new_structure = $column;
+
             $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $width = isset_or($column['width'], -1);
             if ($width == 1024) $width = -1; // \Flexio\Services\Postgres is returning us huge columns of indeterminate width
@@ -625,7 +643,7 @@ class Transform extends \Flexio\Jobs\Base
                         }
                     }
 
-                    $expr = \Flexio\Services\ExprUtil::getCastExpression($column['name'], $old_type, $new_type, $width, $scale);
+                    $expr = self::getTypeChangeExpression($column['name'], $old_type, $new_type, $width, $scale, $new_structure);
                 }
 
                 if ($operation_type == self::OPERATION_CHANGE_CASE && $is_character)
@@ -827,7 +845,7 @@ class Transform extends \Flexio\Jobs\Base
 
                         if ($width >= 0)
                         {
-                            //$expr = "cast($expr, character($width))";
+                            $expr = "substr($expr, 1, $width)";
                         }
                     }
                 }
@@ -842,11 +860,73 @@ class Transform extends \Flexio\Jobs\Base
 
             $column_expression_map[$column['name']] = array(
                 'exprtext' => $exprtext,
-                'expreval' => $expreval
+                'expreval' => $expreval,
+                'structure' => $new_structure
             );
         }
 
         return $column_expression_map;
+    }
+
+    public static function getTypeChangeExpression($name, $old_type, $new_type, $new_width, $new_scale, &$new_structure)
+    {
+        $width = $new_width;
+        $scale = $new_scale;
+
+        $expr = $name;
+
+        // if the type is the same return the same thing; TODO: for now, ignore width changes
+        if ($old_type === $new_type)
+            return $expr;
+
+        $new_structure['type'] = $new_type;
+        $new_structure['width'] = $new_width;
+        $new_structure['scale'] = $new_scale;
+
+        switch ($new_type)
+        {
+            case 'text':
+            case 'character':
+            case 'widecharacter':
+                if ($new_width == -1 || is_null($new_width))
+                    $expr = "to_char($expr)";
+                     else
+                    $expr = "substr(to_char($expr),1,$width)";
+                break;
+
+            case 'numeric':
+            case 'float':
+            case 'double':
+            case 'integer':
+                $expr = "to_number($expr)";
+                break;
+
+            case 'date':
+                $expr = "to_date($expr)";
+                break;
+
+            case 'timestamp':
+            case 'datetime':
+                $expr = "to_timestamp($expr)";
+                break;
+
+            case 'boolean':
+                {
+                    if ($old_type === 'text' || $old_type === 'character' || $old_type === 'widecharacter')
+                        $expr = "if(lower($expr) = 'true' or lower($expr) = 't', true, false)";
+                    if ($old_type === 'numeric' || $old_type === 'float' || $old_type === 'double' || $old_type === 'integer')
+                        $expr = "if($expr != 0, true, false)";
+                    if ($old_type === 'date' || $old_type === 'datetime' || $old_type === 'timestamp')
+                        $expr = "if(isnull($expr), true, false)";
+                }
+                break;
+
+            default:
+                // unknown/unallowed type
+                return null;
+        }
+
+        return $expr;
     }
 
 
