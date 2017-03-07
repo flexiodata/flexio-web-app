@@ -54,7 +54,7 @@ class Test
 
 
 
-        // TEST: FindAndReplace Job
+        // TEST: Replace Job
 
         // BEGIN TEST
         $params = [
@@ -62,6 +62,6 @@ class Test
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = [["a","D"],["D","B"],["c","D"]];
-        TestCheck::assertString('A.1', 'FindAndReplace Job; check basic functionality',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'Replace Job; check basic functionality',  $actual, $expected, $results);
     }
 }

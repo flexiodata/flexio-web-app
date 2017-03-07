@@ -34,14 +34,13 @@ class Replace extends \Flexio\Jobs\Base
 
                 // table input
                 case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutputFromTableNative($instream); // TODO: new implementation
-                    //$this->createOutputFromTableSql($instream); // TODO: old implementation
+                    $this->createOutputFromTable($instream);
                     break;
             }
         }
     }
 
-    private function createOutputFromTableNative($instream)
+    private function createOutputFromTable($instream)
     {
         $column_expression_map = $this->getColumnExpressionMap($instream);
         if ($column_expression_map === false)
@@ -91,65 +90,6 @@ class Replace extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-    }
-
-    private function createOutputFromTableSql($instream)
-    {
-        // properties
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'];
-        unset($job_definition['params']);
-
-        // determine the list of columns to use in the job
-
-        // TODO: for numeric and other types, try to do the replace, but
-        // if it's invalid, convert to null
-
-        $specified_column_names = $params['columns'];
-        $columns = $instream->getStructure()->enum($specified_column_names);
-        if (count($columns) == 0)
-            return $this->fail(\Model::ERROR_NO_OBJECT, _(''), __FILE__, __LINE__);
-
-        $copy_params = [ 'actions' => [] ];
-
-        foreach ($columns as $column)
-        {
-            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
-            $qfind = preg_quote($params['find'],'/');
-            $qreplace = \Flexio\Services\ExprUtil::quote($params['replace']);
-
-            $location = isset_or($params['location'],'any');
-            if ($location == 'any') {}
-            else if ($location == 'leading')
-                $qfind = '^' . $qfind;
-            else if ($location == 'trailing')
-                $qfind = $qfind . '$';
-            else if ($location == 'leading_trailing')
-                $qfind = '(^' . $qfind .')|(' . $qfind . '$)';
-            else if ($location == 'whole')
-                $qfind = '^' . $qfind . '$';
-            $qfind = \Flexio\Services\ExprUtil::quote($qfind);
-
-            $flags = 'gi';
-            if (isset($params['match_case']) && $params['match_case'])
-                $flags = 'g';
-
-            $expr = "regexp_replace($qname,$qfind,$qreplace,'$flags')";
-
-            $copy_params['actions'][] = array(
-                'action'     => 'alter',
-                'name'       => $column['name'],
-                'params'     => array('expression' => $expr)
-            );
-        }
-
-        $job_definition['type'] = 'flexio.copy';
-        $job_definition['params'] = $copy_params;
-
-        $job = \Flexio\Jobs\Copy::create($this->getProcess(), $job_definition);
-        $job->getInput()->push($instream);
-        $job->run();
-        $this->getOutput()->merge($job->getOutput());
     }
 
     private function getColumnExpressionMap($instream)
