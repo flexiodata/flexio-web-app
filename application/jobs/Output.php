@@ -354,7 +354,7 @@ class Output extends \Flexio\Jobs\Base
 
         $params = array();
         $params['path'] = $output_info['name'];
-        $params['content_type'] =  $streamreader->getMimeType();
+        $params['content_type'] =  $instream->getMimeType();
 
         $service->write($params, function($length) use (&$streamreader) {
             return $streamreader->read($length);  // returns false upon EOF
