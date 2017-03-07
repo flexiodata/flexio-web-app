@@ -36,13 +36,6 @@ class Test
         TestCheck::assertBoolean('A.2', '\Flexio\Jobs\Convert definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\Copy::TEMPLATE,true);
-        $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\Copy::MIME_TYPE && $mime_type == 'flexio.copy';
-        $expected = true;
-        TestCheck::assertBoolean('A.4', '\Flexio\Jobs\Copy definition type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Create::TEMPLATE,true);
         $mime_type = $definition['type'];
         $actual = $mime_type == \Flexio\Jobs\Create::MIME_TYPE && $mime_type == 'flexio.create';

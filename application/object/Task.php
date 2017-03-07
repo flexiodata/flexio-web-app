@@ -45,12 +45,6 @@ class Task
                 'verb' => 'Converting'
             ),
             array(
-                'type' => \Flexio\Jobs\Copy::MIME_TYPE,
-                'class' => '\Flexio\Jobs\Copy',
-                'name' => '',
-                'verb' => 'Processing'
-            ),
-            array(
                 'type' => \Flexio\Jobs\Create::MIME_TYPE,
                 'class' => '\Flexio\Jobs\Create',
                 'name' => '',

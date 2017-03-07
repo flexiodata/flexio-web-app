@@ -34,12 +34,6 @@ class Test
         TestCheck::assertString('A.2', '\Flexio\Jobs\Convert::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\Copy::create();
-        $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\Copy::MIME_TYPE;
-        TestCheck::assertString('A.4', '\Flexio\Jobs\Copy::create()',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $task = \Flexio\Jobs\Create::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Create::MIME_TYPE;

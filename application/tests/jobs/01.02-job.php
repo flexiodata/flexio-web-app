@@ -34,12 +34,6 @@ class Test
         TestCheck::assertBoolean('A.2', '\Flexio\Jobs\Convert schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\Copy::SCHEMA;
-        $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
-        $expected = false;
-        TestCheck::assertBoolean('A.4', '\Flexio\Jobs\Copy schema format',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $schema = \Flexio\Jobs\Create::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
