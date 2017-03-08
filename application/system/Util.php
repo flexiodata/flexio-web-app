@@ -50,7 +50,7 @@ class Util
         foreach ($files as $file)
         {
             if (is_dir($dir . DIRECTORY_SEPARATOR . $file))
-                \Flexio\System\Util::rmtree($dir . DIRECTORY_SEPARATOR . $file);
+                self::rmtree($dir . DIRECTORY_SEPARATOR . $file);
                  else
                 unlink($dir . DIRECTORY_SEPARATOR . $file);
         }
@@ -261,7 +261,7 @@ class Util
         // between them and reports the results similarly to how a text
         // diff program would, with + and - for the insertions/deletions;
         // for example, if we have the following:
-        //     \Flexio\System\Util::diff(array('b','c','d'),array('a','b','c','e'))
+        //     Util::diff(array('b','c','d'),array('a','b','c','e'))
         // we get:
         //     [{"+":"a"},{"=":"b"},{"=":"c"},{"-":"d"},{"+":"e"}]
 
@@ -336,9 +336,9 @@ class Util
         // we found a sequence; return the sequence plus the sequences
         // for the parts that have smaller lengths
         return array_merge(
-            \Flexio\System\Util::diff(array_slice($array1, 0, $offset1), array_slice($array2, 0, $offset2)),
+            self::diff(array_slice($array1, 0, $offset1), array_slice($array2, 0, $offset2)),
             $result_array,
-            \Flexio\System\Util::diff(array_slice($array1, $offset1 + $max_length), array_slice($array2, $offset2 + $max_length))
+            self::diff(array_slice($array1, $offset1 + $max_length), array_slice($array2, $offset2 + $max_length))
         );
     }
 
@@ -748,12 +748,12 @@ class Util
 
     public static function generateHandle()
     {
-        return \Flexio\System\Util::generateRandomString(20);
+        return self::generateRandomString(20);
     }
 
     public static function generatePassword()
     {
-        $pw = \Flexio\System\Util::generateRandomString(10);
+        $pw = self::generateRandomString(10);
         $pw[2] = ''.random_int(0, 9);
         $pw[6] = ''.random_int(0, 9);
         $i = random_int(0, 9);
