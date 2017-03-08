@@ -37,24 +37,6 @@ class Util
         return (strpos(strtoupper(PHP_BINDIR), "XAMPP") !== false) ? true : false;
     }
 
-    public static function customAction($action, &$params)
-    {
-        if (!(class_exists($action, false) || interface_exists($action, false)))
-        {
-            //if (file_exists(\Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . "custom" . DIRECTORY_SEPARATOR . "$action.php"))
-            //    \Flexio\System\Framework::loadClass($action);
-        }
-
-        if (class_exists($action, false) || interface_exists($action, false))
-        {
-            $obj = new $action;
-            $obj->action($params);
-            return true;
-        }
-
-        return false;
-    }
-
     public static function getFilename($filename)
     {
         // pathinfo will parse paths differently, depending on the
