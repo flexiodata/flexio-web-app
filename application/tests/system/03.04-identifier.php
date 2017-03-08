@@ -22,73 +22,73 @@ class Test
         // TEST: identifiers can't use a reserved or illegal words
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('flexio');
+        $actual = \Flexio\Base\Identifier::isValid('flexio');
         $expected = false;
-        TestCheck::assertBoolean('A.1', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('index');
+        $actual = \Flexio\Base\Identifier::isValid('index');
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('home');
+        $actual = \Flexio\Base\Identifier::isValid('home');
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('data');
+        $actual = \Flexio\Base\Identifier::isValid('data');
         $expected = false;
-        TestCheck::assertBoolean('A.4', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('api');
+        $actual = \Flexio\Base\Identifier::isValid('api');
         $expected = false;
-        TestCheck::assertBoolean('A.5', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('public');
+        $actual = \Flexio\Base\Identifier::isValid('public');
         $expected = false;
-        TestCheck::assertBoolean('A.6', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.6', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('private');
+        $actual = \Flexio\Base\Identifier::isValid('private');
         $expected = false;
-        TestCheck::assertBoolean('A.7', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.7', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('project');
+        $actual = \Flexio\Base\Identifier::isValid('project');
         $expected = false;
-        TestCheck::assertBoolean('A.8', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.8', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('workspace');
+        $actual = \Flexio\Base\Identifier::isValid('workspace');
         $expected = false;
-        TestCheck::assertBoolean('A.9', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.9', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('connection');
+        $actual = \Flexio\Base\Identifier::isValid('connection');
         $expected = false;
-        TestCheck::assertBoolean('A.10', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.10', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('account');
+        $actual = \Flexio\Base\Identifier::isValid('account');
         $expected = false;
-        TestCheck::assertBoolean('A.11', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.11', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('sex');
+        $actual = \Flexio\Base\Identifier::isValid('sex');
         $expected = false;
-        TestCheck::assertBoolean('A.12', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.12', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('shit');
+        $actual = \Flexio\Base\Identifier::isValid('shit');
         $expected = false;
-        TestCheck::assertBoolean('A.13', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.13', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('damn');
+        $actual = \Flexio\Base\Identifier::isValid('damn');
         $expected = false;
-        TestCheck::assertBoolean('A.14', '\Flexio\System\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.14', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
     }
 }

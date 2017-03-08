@@ -86,7 +86,7 @@ class User
         $password = $params['password'];
 
         // make sure the user_name is valid syntactically; note: don't check for existence here
-        if (!\Flexio\System\Identifier::isValid($user_name))
+        if (!\Flexio\Base\Identifier::isValid($user_name))
             return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER, _('This username is invalid.  Please try another.'));
 
         $description = isset_or($params['description'], '');

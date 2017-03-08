@@ -252,7 +252,7 @@ class Model
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\Base\Eid::isValid($identifier) && !\Flexio\System\Identifier::isValid($identifier))
+        if (!\Flexio\Base\Eid::isValid($identifier) && !\Flexio\Base\Identifier::isValid($identifier))
             return \Model::TYPE_UNDEFINED;
 
         $qidentifier = $db->quote($identifier);
@@ -655,7 +655,7 @@ class Model
             return $this->fail(Model::ERROR_NO_DATABASE);
 
         // if the identifier isn't valid, there's no corresponding eid
-        if (\Flexio\System\Identifier::isValid($identifier) === false)
+        if (\Flexio\Base\Identifier::isValid($identifier) === false)
             return false;
 
         // look for the eid
@@ -707,7 +707,7 @@ class Model
         $ename = isset_or($params['ename'], '');
         if (strlen($ename) > 0)
         {
-            if (\Flexio\System\Identifier::isValid($ename) === false)
+            if (\Flexio\Base\Identifier::isValid($ename) === false)
                 return $this->fail(Model::ERROR_CREATE_FAILED);
             if (\Flexio\Base\Eid::isValid($ename) === true)
                 return $this->fail(Model::ERROR_CREATE_FAILED);
@@ -822,7 +822,7 @@ class Model
         if (isset($params['ename']))
         {
             $ename = $params['ename'];
-            if ($ename !== '' && \Flexio\System\Identifier::isValid($ename) === false)
+            if ($ename !== '' && \Flexio\Base\Identifier::isValid($ename) === false)
                 return $this->fail(Model::ERROR_CREATE_FAILED);
             if (\Flexio\Base\Eid::isValid($ename) === true)
                 return $this->fail(\Model::ERROR_CREATE_FAILED);

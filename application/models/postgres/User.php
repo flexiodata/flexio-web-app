@@ -29,7 +29,7 @@ class User extends ModelBase
         $params['user_name'] = strtolower($params['user_name']);
         $params['email'] = strtolower($params['email']);
 
-        if (!\Flexio\System\Identifier::isValid($params['user_name']))
+        if (!\Flexio\Base\Identifier::isValid($params['user_name']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
         if (!\Flexio\Services\Email::isValid($params['email']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
@@ -137,7 +137,7 @@ class User extends ModelBase
             $params['email'] = strtolower($params['email']);
 
         // if user_name or email is specified, make sure it's not set to null
-        if (is_array($params) && array_key_exists('user_name', $params) && !\Flexio\System\Identifier::isValid($params['user_name']))
+        if (is_array($params) && array_key_exists('user_name', $params) && !\Flexio\Base\Identifier::isValid($params['user_name']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
         if (is_array($params) && array_key_exists('email', $params) && !\Flexio\Services\Email::isValid($params['email']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));

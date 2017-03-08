@@ -142,7 +142,7 @@ class Validator
                 // the field exists; make sure the field conforms to the type specified
                 if ($value['type'] == 'eid' && !\Flexio\Base\Eid::isValid($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
-                if ($value['type'] == 'identifier' && !\Flexio\Base\Eid::isValid($p) && (strlen($p) > 0 && !\Flexio\System\Identifier::isValid($p))) // allow identifiers to be zero length so they can be set to ''
+                if ($value['type'] == 'identifier' && !\Flexio\Base\Eid::isValid($p) && (strlen($p) > 0 && !\Flexio\Base\Identifier::isValid($p))) // allow identifiers to be zero length so they can be set to ''
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'json' && !$this->check_json($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);

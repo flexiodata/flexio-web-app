@@ -82,7 +82,7 @@ class System
             $result['user_name']['message'] = '';
 
             // check if the username isn't a valid identifier
-            if (!\Flexio\System\Identifier::isValid($username))
+            if (!\Flexio\Base\Identifier::isValid($username))
             {
                 $result['user_name']['valid'] = false;
                 $result['user_name']['message'] = _('A username must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
