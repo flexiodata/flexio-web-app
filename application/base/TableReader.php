@@ -8,11 +8,11 @@
  * Created:  2011-05-17
  *
  * @package flexio
- * @subpackage System
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
 class TableReader
