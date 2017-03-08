@@ -79,7 +79,7 @@ EOD;
             // TODO: temporarily disable
 
             // make sure the properties are valid
-            //$validator = \Flexio\System\ValidatorSchema::check($object->properties, $object::SCHEMA);
+            //$validator = \Flexio\Base\ValidatorSchema::check($object->properties, $object::SCHEMA);
             //if ($validator->hasErrors())
             //    return false;
 
