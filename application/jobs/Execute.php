@@ -49,7 +49,7 @@ class Execute extends \Flexio\Jobs\Base
     private function createOutput($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // if the input mime type is a table, set the output type to text
@@ -101,7 +101,7 @@ class Execute extends \Flexio\Jobs\Base
         // the code is base64 encoded, so decode it and write it out
         // to a temporary file
         $code = base64_decode($code);
-        $filename = \Flexio\System\Util::createTempFile('fxscript', $program_extension);
+        $filename = \Flexio\Base\Util::createTempFile('fxscript', $program_extension);
         file_put_contents($filename, $code);
 
         // initiate the program process

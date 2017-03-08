@@ -50,7 +50,7 @@ class Limit extends \Flexio\Jobs\Base
     private function createOutput($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // get the number of rows to return

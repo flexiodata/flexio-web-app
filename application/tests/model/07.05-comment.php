@@ -29,7 +29,7 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $input_eid = 'xxxxxxxxxxxx';
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid' => $input_eid,
             'comment' => $handle
@@ -42,7 +42,7 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $eid_type = \Model::TYPE_USER;  // try something besides \Model::TYPE_UNDEFINED
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid_type' => $eid_type,
             'comment' => $handle
@@ -55,7 +55,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
         );
@@ -72,7 +72,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_COMMENT, $info);
@@ -83,7 +83,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_COMMENT, $info);
@@ -102,7 +102,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
         );
@@ -115,7 +115,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => 'Test comment'
         );

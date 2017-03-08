@@ -232,7 +232,7 @@ class Socrata implements \Flexio\Services\IConnection
             $rows = [];
             while (true)
             {
-                $comma_pos = \Flexio\System\Util::json_strpos($buf, ',', $start);
+                $comma_pos = \Flexio\Base\Util::json_strpos($buf, ',', $start);
                 if ($comma_pos === false)
                 {
                     $buf = substr($buf, $start);

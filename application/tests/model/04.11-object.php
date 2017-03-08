@@ -223,8 +223,8 @@ class Test
             array('eid' => $eid2, 'eid_type' => 'OBJ', 'eid_status' => \Model::STATUS_AVAILABLE),
             array('eid' => $eid3, 'eid_type' => 'OBJ', 'eid_status' => \Model::STATUS_DELETED)
         );
-        \Flexio\System\Util::sortByFieldAsc($actual, 'eid');
-        \Flexio\System\Util::sortByFieldAsc($expected, 'eid');
+        \Flexio\Base\Util::sortByFieldAsc($actual, 'eid');
+        \Flexio\Base\Util::sortByFieldAsc($expected, 'eid');
         TestCheck::assertArray('D.2', '\Model::assoc_range(); return array() of eids that have the specified association; deleted objects are included in associations',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -243,8 +243,8 @@ class Test
             array('eid' => $eid2, 'eid_type' => 'OBJ', 'eid_status' => \Model::STATUS_AVAILABLE),
             array('eid' => $eid3, 'eid_type' => 'OBJ', 'eid_status' => \Model::STATUS_AVAILABLE)
         );
-        \Flexio\System\Util::sortByFieldAsc($actual, 'eid');
-        \Flexio\System\Util::sortByFieldAsc($expected, 'eid');
+        \Flexio\Base\Util::sortByFieldAsc($actual, 'eid');
+        \Flexio\Base\Util::sortByFieldAsc($expected, 'eid');
         TestCheck::assertArray('D.3', '\Model::assoc_range(); return array() of eids that have the specified association; deleted objects are included in associations',  $actual, $expected, $results);
 
         // BEGIN TEST

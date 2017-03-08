@@ -258,7 +258,7 @@ class TestUtil
 
     public static function createTestUser($username, $email, $password)
     {
-        $verify_code = \Flexio\System\Util::generateHandle();
+        $verify_code = \Flexio\Base\Util::generateHandle();
         $new_user_info = array('user_name' => $username,
                                'email' => $email,
                                'full_name' => $username,
@@ -408,8 +408,8 @@ class TestUtil
 
     public static function generateEmail()
     {
-        $handle1 = \Flexio\System\Util::generateHandle();
-        $handle2 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Base\Util::generateHandle();
         return $handle1 . '@' . $handle2 . '.com';
     }
 

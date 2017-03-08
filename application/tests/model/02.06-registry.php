@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 4); // expires in 4 seconds
         $first_exists = $model->registry->entryExists($object_eid, $name);
@@ -40,7 +40,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 4); // expires in 4 seconds
         $first_exists = $model->registry->entryExists($object_eid, $name);
@@ -57,7 +57,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         $model->registry->expireKey($object_eid, $name, -1); // try to set expiration to one second ago
@@ -71,7 +71,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         sleep(1);
@@ -86,7 +86,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         $model->registry->expireKey($object_eid, $name, 4); // expire in 4 seconds
@@ -100,7 +100,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         $model->registry->expireKey($object_eid, $name.'a', 0); // expire now
@@ -113,7 +113,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
         $model->registry->expireKey($object_eid.'a', $name, 0); // expire now

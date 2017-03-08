@@ -90,16 +90,16 @@ function updateConnectionTableCredentialInfo($db)
         $connection_eid = $row['eid'];
 
         // decrypt the credentials
-        $username = \Flexio\System\Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
-        $password = \Flexio\System\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
-        $token = \Flexio\System\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
-        $refresh_token = \Flexio\System\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+        $username = \Flexio\Base\Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
+        $password = \Flexio\Base\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
+        $token = \Flexio\Base\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
+        $refresh_token = \Flexio\Base\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
 
         // encrypt the credentials
-        $username_encrypted = \Flexio\System\Util::encrypt($username, $GLOBALS['g_store']->connection_enckey);
-        $password_encrypted = \Flexio\System\Util::encrypt($password, $GLOBALS['g_store']->connection_enckey);
-        $token_encrypted = \Flexio\System\Util::encrypt($token, $GLOBALS['g_store']->connection_enckey);
-        $refresh_token_encrypted = \Flexio\System\Util::encrypt($refresh_token, $GLOBALS['g_store']->connection_enckey);
+        $username_encrypted = \Flexio\Base\Util::encrypt($username, $GLOBALS['g_store']->connection_enckey);
+        $password_encrypted = \Flexio\Base\Util::encrypt($password, $GLOBALS['g_store']->connection_enckey);
+        $token_encrypted = \Flexio\Base\Util::encrypt($token, $GLOBALS['g_store']->connection_enckey);
+        $refresh_token_encrypted = \Flexio\Base\Util::encrypt($refresh_token, $GLOBALS['g_store']->connection_enckey);
 
         // write out the encrypted credentials
         writeConnectionInfo($db, $connection_eid, $username_encrypted, $password_encrypted, $token_encrypted, $refresh_token_encrypted);

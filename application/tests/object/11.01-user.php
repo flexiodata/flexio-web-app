@@ -62,7 +62,7 @@ class Test
         TestCheck::assertBoolean('B.2', 'User::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $username = \Flexio\System\Util::generateHandle();
+        $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
         $eid = $model->create(\Model::TYPE_USER, $properties);
@@ -72,7 +72,7 @@ class Test
         TestCheck::assertString('B.3', 'User::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $username = \Flexio\System\Util::generateHandle();
+        $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
         $eid = $model->create(\Model::TYPE_USER, $properties);
@@ -82,7 +82,7 @@ class Test
         TestCheck::assertString('B.4', 'User::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $username = \Flexio\System\Util::generateHandle();
+        $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
         $eid = $model->create(\Model::TYPE_USER, $properties);

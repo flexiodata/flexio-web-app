@@ -60,7 +60,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'user_name' => $handle
         );
@@ -72,7 +72,7 @@ class Test
 
         // TEST: \Model::create(); user creation with basic user_name input
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -85,7 +85,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info1 = array(
             'user_name' => $handle1,
@@ -103,7 +103,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info1 = array(
             'user_name' => $handle1 . 'a',
@@ -139,7 +139,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -152,7 +152,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = strtoupper(\Flexio\System\Util::generateHandle());
+        $handle1 = strtoupper(\Flexio\Base\Util::generateHandle());
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -183,7 +183,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -196,7 +196,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = strtoupper(TestUtil::generateEmail());
         $info = array(
             'user_name' => $handle1,
@@ -220,7 +220,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $eid = $model->user->getEidFromIdentifier($handle);
         $actual = $eid === false && $model->hasErrors() === false; // shouldn't set an error
         $expected = true;
@@ -228,7 +228,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -241,7 +241,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = strtoupper(\Flexio\System\Util::generateHandle());
+        $handle1 = strtoupper(\Flexio\Base\Util::generateHandle());
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -254,7 +254,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = strtolower(\Flexio\System\Util::generateHandle());
+        $handle1 = strtolower(\Flexio\Base\Util::generateHandle());
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -277,14 +277,14 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $actual = $model->user->checkUserPassword($handle,'');
         $expected = false;
         TestCheck::assertBoolean('F.2', 'User\Model::checkUserPassword(); return false if user cannot be found',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = \Flexio\System\Util::generateHandle();
+        $username = \Flexio\Base\Util::generateHandle();
         $password = 'xxxxxxxx';
         $info = array(
             'user_name' => $username,
@@ -297,7 +297,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = \Flexio\System\Util::generateHandle();
+        $username = \Flexio\Base\Util::generateHandle();
         $password = 'xxxxxxxx';
         $info = array(
             'user_name' => $username,
@@ -310,7 +310,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = \Flexio\System\Util::generateHandle();
+        $username = \Flexio\Base\Util::generateHandle();
         $email = TestUtil::generateEmail();
         $password = 'xxxxxxxx';
         $info = array(
@@ -325,7 +325,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = strtoupper(\Flexio\System\Util::generateHandle());
+        $username = strtoupper(\Flexio\Base\Util::generateHandle());
         $email = TestUtil::generateEmail();
         $password = 'xxxxxxxx';
         $info = array(
@@ -340,7 +340,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $username = strtolower(\Flexio\System\Util::generateHandle());
+        $username = strtolower(\Flexio\Base\Util::generateHandle());
         $email = TestUtil::generateEmail();
         $password = 'xxxxxxxx';
         $info = array(

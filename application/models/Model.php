@@ -872,8 +872,8 @@ class Model
                      'eid_type'        => $row['eid_type'],
                      'ename'           => $row['ename'],
                      'eid_status'      => $row['eid_status'],
-                     'created'         => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'         => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'         => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
     public function setDbVersionNumber($version)

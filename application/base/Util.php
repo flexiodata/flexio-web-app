@@ -8,11 +8,11 @@
  * Created:  2009-03-31
  *
  * @package flexio
- * @subpackage System
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
 class Util

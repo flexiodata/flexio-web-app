@@ -220,12 +220,12 @@ class Process extends ModelBase
                      'started_by'       => $row['started_by'],
                      'started'          => $row['started'],
                      'finished'         => $row['finished'],
-                     'duration'         => \Flexio\System\Util::formateDateDiff($row['started'], $row['finished']),
+                     'duration'         => \Flexio\Base\Util::formateDateDiff($row['started'], $row['finished']),
                      'process_info'     => $row['process_info'],
                      'process_status'   => $row['process_status'],
                      'cache_used'       => $row['cache_used'],
-                     'created'          => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'          => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'          => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
     public function getProcessTree($eid)
@@ -298,12 +298,12 @@ class Process extends ModelBase
                               'started_by'       => $row['started_by'],
                               'started'          => $row['started'],
                               'finished'         => $row['finished'],
-                              'duration'         => \Flexio\System\Util::formateDateDiff($row['started'], $row['finished']),
+                              'duration'         => \Flexio\Base\Util::formateDateDiff($row['started'], $row['finished']),
                               'process_info'     => $row['process_info'],
                               'process_status'   => $row['process_status'],
                               'cache_used'       => $row['cache_used'],
-                              'created'          => \Flexio\System\Util::formatDate($row['created']),
-                              'updated'          => \Flexio\System\Util::formatDate($row['updated']));
+                              'created'          => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
         }
 
         return $output;

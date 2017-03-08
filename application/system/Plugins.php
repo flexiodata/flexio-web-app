@@ -155,7 +155,7 @@ class Flexio_View_Filter_Translate
         $offset = 0;
         while (($start_pos = strpos($value, Flexio_View_Filter_Translate::I18N_DELIMITER_START, $offset)) !== false)
         {
-            if (($close_tag = \Flexio\System\Util::zlstrpos($value, '>', $start_pos)) === false)
+            if (($close_tag = \Flexio\Base\Util::zlstrpos($value, '>', $start_pos)) === false)
                 throw new \Exception("Open tag was not terminated after position [$offset]!");
 
             if (($end_pos = strpos($value, Flexio_View_Filter_Translate::I18N_DELIMITER_END, $close_tag)) === false)
@@ -198,7 +198,7 @@ class Flexio_View_Filter_Translate
         {
             $str = trim($str);
 
-            $space = \Flexio\System\Util::zlstrpos($str, ' ');
+            $space = \Flexio\Base\Util::zlstrpos($str, ' ');
             if ($space === false)
             {
                 $piece = $str;
@@ -212,8 +212,8 @@ class Flexio_View_Filter_Translate
 
             if (strpos($piece, '=') !== false)
             {
-                $k = trim(\Flexio\System\Util::beforeFirst($piece, '='));
-                $v = trim(\Flexio\System\Util::afterFirst($piece, '='));
+                $k = trim(\Flexio\Base\Util::beforeFirst($piece, '='));
+                $v = trim(\Flexio\Base\Util::afterFirst($piece, '='));
             }
              else
             {

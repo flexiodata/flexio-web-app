@@ -50,7 +50,7 @@ class Program
 
     public static function notepad($msg)
     {
-        $filename = \Flexio\System\Util::createTempFile('', 'txt');
+        $filename = \Flexio\Base\Util::createTempFile('', 'txt');
         file_put_contents($filename, $msg);
 
         $wsh_shell = new \COM("WScript.Shell");

@@ -251,7 +251,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\Base\Validator;
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $values = array(
             'id' => $handle
         );

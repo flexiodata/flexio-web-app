@@ -108,7 +108,7 @@ class User
 
         $verify_code = '';
         if ($require_verification === true)
-            $verify_code = isset($params['verify_code']) ? $params['verify_code'] : \Flexio\System\Util::generateHandle(); // code to verify user's email address
+            $verify_code = isset($params['verify_code']) ? $params['verify_code'] : \Flexio\Base\Util::generateHandle(); // code to verify user's email address
 
         // use email to check if account already exists; if it exists
         // based on the email, see if the user is pending (invitations
@@ -190,7 +190,7 @@ class User
                     // in either case, we need to create a new verification code and let
                     // the user verify
 
-                    $new_verify_code = \Flexio\System\Util::generateHandle();
+                    $new_verify_code = \Flexio\Base\Util::generateHandle();
                     $new_user_info['verify_code'] = $new_verify_code;
 
                     $result = $user->set($new_user_info);
@@ -457,7 +457,7 @@ class User
             return $request->getValidator()->fail();
 
         $email = $params['email'];
-        $verify_code = \Flexio\System\Util::generateHandle();
+        $verify_code = \Flexio\Base\Util::generateHandle();
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)

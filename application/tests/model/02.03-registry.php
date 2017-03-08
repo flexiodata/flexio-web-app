@@ -44,7 +44,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = null;
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $actual = $model->registry->setBoolean($object_eid, $name, $value);
         $expected = false;
@@ -52,7 +52,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $actual = $model->registry->setBoolean($object_eid, $name, $value);
         $expected = true;
@@ -60,7 +60,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = 1;
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $actual = $model->registry->setBoolean($object_eid, $name, $value);
         $expected = false;
@@ -68,7 +68,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $expires = false;
         $actual = $model->registry->setBoolean($object_eid, $name, $value, $expires);
@@ -77,7 +77,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $expires = 1.1;
         $actual = $model->registry->setBoolean($object_eid, $name, $value, $expires);
@@ -86,7 +86,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $expires = null;
         $actual = $model->registry->setBoolean($object_eid, $name, $value, $expires);
@@ -95,7 +95,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $expires = 3600;
         $actual = $model->registry->setBoolean($object_eid, $name, $value, $expires);
@@ -115,14 +115,14 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $actual = $model->registry->entryExists($object_eid, $name);
         $expected = false;
         TestCheck::assertBoolean('B.2', 'Registry\Model::entryExists(); with no entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->entryExists($object_eid, $name);
@@ -131,7 +131,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->entryExists($object_eid, 'a');
@@ -140,7 +140,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = '';
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->entryExists('', $name);
@@ -161,14 +161,14 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $actual = $model->registry->getBoolean($object_eid, $name, true);
         $expected = true;
         TestCheck::assertBoolean('C.2', 'Registry\Model::getBoolean(); with no entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = true;
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->getBoolean($object_eid, $name, false);
@@ -177,7 +177,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = '';
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = false;
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->getBoolean($object_eid, $name, true);
@@ -186,7 +186,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = false;
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->getBoolean($object_eid, 'a', true);
@@ -195,7 +195,7 @@ class Test
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
-        $name = \Flexio\System\Util::generateHandle();
+        $name = \Flexio\Base\Util::generateHandle();
         $value = false;
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->getBoolean('', $name, true);

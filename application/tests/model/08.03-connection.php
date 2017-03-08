@@ -32,7 +32,7 @@ class Test
         $failed_connection_creation = 0;
         for ($i = 0; $i < $total_count; $i++)
         {
-            $handle = \Flexio\System\Util::generateHandle();
+            $handle = \Flexio\Base\Util::generateHandle();
             $info = array(
                 'name' => $handle,
                 'description' => "Test connection $i"

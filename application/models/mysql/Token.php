@@ -104,8 +104,8 @@ class Token extends ModelBase
                      'access_code' => $row['access_code'],
                      'secret_code' => $row['secret_code'],
                      'eid_status'  => $row['eid_status'],
-                     'created'     => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'     => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'     => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
     public function getInfoFromAccessCode($code)
@@ -138,8 +138,8 @@ class Token extends ModelBase
                      'access_code' => $row['access_code'],
                      'secret_code' => $row['secret_code'],
                      'eid_status'  => $row['eid_status'],
-                     'created'     => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'     => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'     => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
     public function getInfoFromUserEid($user_eid)
@@ -176,8 +176,8 @@ class Token extends ModelBase
                               'access_code' => $row['access_code'],
                               'secret_code' => $row['secret_code'],
                               'eid_status'  => $row['eid_status'],
-                              'created'     => \Flexio\System\Util::formatDate($row['created']),
-                              'updated'     => \Flexio\System\Util::formatDate($row['updated']));
+                              'created'     => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
         }
 
         return $output;

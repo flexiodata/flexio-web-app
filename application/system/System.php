@@ -167,7 +167,7 @@ class System
                 if (!$token_info)
                 {
                     // unknown user
-                    \Flexio\System\Util::header_error(401);
+                    \Flexio\Base\Util::header_error(401);
                     exit(0);
                 }
 
@@ -175,7 +175,7 @@ class System
                 if ($user === false)
                 {
                     // deleted user
-                    \Flexio\System\Util::header_error(401);
+                    \Flexio\Base\Util::header_error(401);
                     exit(0);
                 }
 
@@ -213,14 +213,14 @@ class System
              else
             {
                 // unknown algorith/auth type
-                \Flexio\System\Util::header_error(404);
+                \Flexio\Base\Util::header_error(404);
                 exit(0);
             }
 
             if (!$user_info)
             {
                 // unknown algorith/auth type
-                \Flexio\System\Util::header_error(404);
+                \Flexio\Base\Util::header_error(404);
                 exit(0);
             }
 

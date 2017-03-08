@@ -76,7 +76,7 @@ class PhantomController extends \Flexio\System\FxControllerAction
             $args['url'] = urlencode($url);
         }
 
-        $params_file = \Flexio\System\Util::getTempFilename('json');
+        $params_file = \Flexio\Base\Util::getTempFilename('json');
         file_put_contents($params_file, json_encode($args));
         chmod($params_file, 0600);
 

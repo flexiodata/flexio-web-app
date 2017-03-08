@@ -130,7 +130,7 @@ class System
             $result['password']['message'] = '';
 
             // check the password
-            if (!\Flexio\System\Util::isValidPassword($password))
+            if (!\Flexio\Base\Util::isValidPassword($password))
             {
                 $result['password']['valid'] = false;
                 $result['password']['message'] = _('A password must have at least 8 characters');

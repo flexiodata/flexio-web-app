@@ -273,7 +273,7 @@ class Process extends \Flexio\Object\Base
             return $this;
 
         // make sure the params are key/value pairs
-        if (\Flexio\System\Util::isAssociativeArray($params) === false)
+        if (\Flexio\Base\Util::isAssociativeArray($params) === false)
             return $this;
 
         // add on the new input

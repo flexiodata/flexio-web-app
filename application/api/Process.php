@@ -587,7 +587,7 @@ class Process
         $include_content = false;
         if ($fields !== false)
         {
-            $stream_properties = \Flexio\System\Util::filterArray($stream_properties, $fields);
+            $stream_properties = \Flexio\Base\Util::filterArray($stream_properties, $fields);
 
             // see whether or not to include the content
             $include_content = array_search('content', $fields);

@@ -187,7 +187,7 @@ class Test
         TestCheck::assertBoolean('D.7', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $username = \Flexio\System\Util::generateHandle();
+        $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
         $eid = $model->create(\Model::TYPE_USER, $properties); // user creation requires user_name and email

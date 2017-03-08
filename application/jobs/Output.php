@@ -185,7 +185,7 @@ class Output extends \Flexio\Jobs\Base
         $stream_idx = 0;
         foreach ($this->streams as $stream)
         {
-            if (\Flexio\System\Util::matchPath($stream->getName(), $pattern, false) !== false)
+            if (\Flexio\Base\Util::matchPath($stream->getName(), $pattern, false) !== false)
             {
                 $expanded_items[] = array("name" => $stream->getName(),
                                           "path" => isset($path) ? $path : $stream->getName(),
@@ -387,7 +387,7 @@ class Output extends \Flexio\Jobs\Base
         {
             // we're exporting a table, which is saved as a csv
             $extension_to_add = 'csv';
-            $filename = \Flexio\System\Util::getFilename($filename);
+            $filename = \Flexio\Base\Util::getFilename($filename);
             $filename = "$filename.$extension_to_add";
             $mime_type = \Flexio\Base\ContentType::MIME_TYPE_CSV;
         }

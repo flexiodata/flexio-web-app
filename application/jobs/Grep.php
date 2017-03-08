@@ -38,7 +38,7 @@ class Grep extends \Flexio\Jobs\Base
     private function createOutputFromInput($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
         $streamreader = \Flexio\Object\StreamReader($instream);
         $streamwriter = \Flexio\Object\StreamWriter($outstream);

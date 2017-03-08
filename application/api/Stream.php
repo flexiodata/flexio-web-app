@@ -224,10 +224,10 @@ class Stream
 
             // determine the filename, stripping off the leading path info;
             // use a default if one wasn't supplied
-            $default_name = \Flexio\System\Util::generateHandle() . '.dat';
+            $default_name = \Flexio\Base\Util::generateHandle() . '.dat';
             $filename = strlen($part_filename) > 0 ? $part_filename : $default_name;
-            $name = \Flexio\System\Util::getFilename($filename);
-            $ext = \Flexio\System\Util::getFileExtension($filename);
+            $name = \Flexio\Base\Util::getFilename($filename);
+            $ext = \Flexio\Base\Util::getFileExtension($filename);
             $filename = $name . (strlen($ext) > 0 ? ".$ext" : '');
 
             // sense the mime type, but go with what is declared if it's available
@@ -264,7 +264,7 @@ class Stream
             if ($part_data_snippet === false)
                 $part_data_snippet = '';
 
-            $filename = isset_or($_GET['name'], \Flexio\System\Util::generateHandle() . '.dat');
+            $filename = isset_or($_GET['name'], \Flexio\Base\Util::generateHandle() . '.dat');
 
             if (strlen($declared_mime_type) > 0)
                 $mime_type = $declared_mime_type;

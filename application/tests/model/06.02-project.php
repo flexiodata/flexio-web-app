@@ -51,7 +51,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
         );
@@ -62,7 +62,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
         );

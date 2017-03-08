@@ -19,76 +19,76 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: \Flexio\System\Util::formatNumber() integer input; configuration dependent, so just test the most basic functionality
+        // TEST: \Flexio\Base\Util::formatNumber() integer input; configuration dependent, so just test the most basic functionality
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(0);
+        $str = \Flexio\Base\Util::formatNumber(0);
         $actual = ($str == '0' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\System\Util::formatNumber() integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Base\Util::formatNumber() integer input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(1,0);
+        $str = \Flexio\Base\Util::formatNumber(1,0);
         $actual = ($str == '1' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\System\Util::formatNumber() integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\Base\Util::formatNumber() integer input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(-1,0);
+        $str = \Flexio\Base\Util::formatNumber(-1,0);
         $actual = ($str == '-1' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.3', '\Flexio\System\Util::formatNumber() integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Flexio\Base\Util::formatNumber() integer input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(999,0);
+        $str = \Flexio\Base\Util::formatNumber(999,0);
         $actual = ($str == '999' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.4', '\Flexio\System\Util::formatNumber() integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', '\Flexio\Base\Util::formatNumber() integer input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        //$str = \Flexio\System\Util::formatNumber(1000,0); // configuration dependent
+        //$str = \Flexio\Base\Util::formatNumber(1000,0); // configuration dependent
         //$actual = ($str == '1000' ? true : false);
         //$expected = true;
-        //TestCheck::assertBoolean('A.5', '\Flexio\System\Util::formatNumber() integer input',  $actual, $expected, $results);
+        //TestCheck::assertBoolean('A.5', '\Flexio\Base\Util::formatNumber() integer input',  $actual, $expected, $results);
 
 
 
-        // TEST: \Flexio\System\Util::formatNumber() non-integer input
+        // TEST: \Flexio\Base\Util::formatNumber() non-integer input
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(0.1);
+        $str = \Flexio\Base\Util::formatNumber(0.1);
         $actual = ($str == '0' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Flexio\System\Util::formatNumber() non-integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Flexio\Base\Util::formatNumber() non-integer input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(-0.1);
+        $str = \Flexio\Base\Util::formatNumber(-0.1);
         $actual = ($str == '0' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('B.2', '\Flexio\System\Util::formatNumber() non-integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Flexio\Base\Util::formatNumber() non-integer input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(0.6);
+        $str = \Flexio\Base\Util::formatNumber(0.6);
         $actual = ($str == '1' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('B.3', '\Flexio\System\Util::formatNumber() non-integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', '\Flexio\Base\Util::formatNumber() non-integer input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(-0.6);
+        $str = \Flexio\Base\Util::formatNumber(-0.6);
         $actual = ($str == '-1' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('B.4', '\Flexio\System\Util::formatNumber() non-integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.4', '\Flexio\Base\Util::formatNumber() non-integer input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(2.5,0);
+        $str = \Flexio\Base\Util::formatNumber(2.5,0);
         $actual = ($str == '3' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('B.5', '\Flexio\System\Util::formatNumber() non-integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.5', '\Flexio\Base\Util::formatNumber() non-integer input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $str = \Flexio\System\Util::formatNumber(-2.5,0);
+        $str = \Flexio\Base\Util::formatNumber(-2.5,0);
         $actual = ($str == '-3' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('B.6', '\Flexio\System\Util::formatNumber() non-integer input',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.6', '\Flexio\Base\Util::formatNumber() non-integer input',  $actual, $expected, $results);
     }
 }

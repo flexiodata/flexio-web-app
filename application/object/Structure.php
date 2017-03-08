@@ -118,7 +118,7 @@ class Structure
         }
 
         // sort the structures in descending order of frequency
-        \Flexio\System\Util::sortByFieldDesc($structure_list, 'count');
+        \Flexio\Base\Util::sortByFieldDesc($structure_list, 'count');
 
         // recursively merge the structures
         $structure_output = array();
@@ -502,9 +502,9 @@ class Structure
         }
 
         // get the diff between the two name arrays; produces an output as follows:
-        //     \Flexio\System\Util::diff(array('b','c','d'),array('a','b','c','e'))
+        //     \Flexio\Base\Util::diff(array('b','c','d'),array('a','b','c','e'))
         //     [{"+":"a"},{"=":"b"},{"=":"c"},{"-":"d"},{"+":"e"}]
-        $diff = \Flexio\System\Util::diff($structure1_names, $structure2_names);
+        $diff = \Flexio\Base\Util::diff($structure1_names, $structure2_names);
 
         $merged_structure = array();
         foreach ($diff as $d)

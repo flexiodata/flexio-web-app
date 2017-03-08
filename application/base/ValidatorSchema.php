@@ -518,12 +518,12 @@ class ValidatorSchema
         switch ($schema->format)
         {
             // general formats
-            case 'date-time': $result = \Flexio\System\Util::isValidDateTime($data); break;
-            case 'email':     $result = \Flexio\System\Util::isValidEmail($data);    break;
-            case 'hostname':  $result = \Flexio\System\Util::isValidHostName($data); break;
-            case 'ipv4':      $result = \Flexio\System\Util::isValidIPV4($data);     break;
-            case 'ipv6':      $result = \Flexio\System\Util::isValidIPV6($data);     break;
-            case 'uri':       $result = \Flexio\System\Util::isValidUrl($data);      break; // TODO: expand to uri?
+            case 'date-time': $result = \Flexio\Base\Util::isValidDateTime($data); break;
+            case 'email':     $result = \Flexio\Base\Util::isValidEmail($data);    break;
+            case 'hostname':  $result = \Flexio\Base\Util::isValidHostName($data); break;
+            case 'ipv4':      $result = \Flexio\Base\Util::isValidIPV4($data);     break;
+            case 'ipv6':      $result = \Flexio\Base\Util::isValidIPV6($data);     break;
+            case 'uri':       $result = \Flexio\Base\Util::isValidUrl($data);      break; // TODO: expand to uri?
 
             // custom formats
             case 'fx.eid':        $result = \Flexio\Base\Eid::isValid($data);                      break;

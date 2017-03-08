@@ -1011,7 +1011,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                 return true;
 
             case 'email':
-                $retval = \Flexio\System\Util::isValidEmail($param0);
+                $retval = \Flexio\Base\Util::isValidEmail($param0);
                 break;
 
             case 'english':
@@ -1022,7 +1022,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                 break;
 
             case 'url':
-                $retval = \Flexio\System\Util::isValidUrl($param0);
+                $retval = \Flexio\Base\Util::isValidUrl($param0);
                 break;
         }
 
@@ -1930,7 +1930,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         $lookup = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100,
                         'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10,
                         'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
-        
+
         $result = '';
         $number = intval($number);
 
@@ -1940,7 +1940,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             $result .= str_repeat($roman,$matches);
             $number = $number % $value;
         }
-        
+
         return $result;
     }
 
@@ -1970,7 +1970,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         $format_len = strlen($format);
         if ($format_len == 0)
             return '';
-        
+
         $p = $format;
         $left = true;
         for ($p = 0; $p < $format_len; ++$p)

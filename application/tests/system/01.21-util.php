@@ -39,6 +39,6 @@ class Test
 
         $actual = ($str == $tmpfile ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\System\Util::runInBackground(); $wait = false',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Base\Util::runInBackground(); $wait = false',  $actual, $expected, $results);
     }
 }

@@ -99,7 +99,7 @@ class Convert extends \Flexio\Jobs\Base
     {
         $outstream = \Flexio\Object\Stream::create();
         $outstream->setName($instream->getName());
-        $outstream->setPath(\Flexio\System\Util::generateHandle());
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);
 
         $this->getOutput()->push($outstream);
@@ -149,7 +149,7 @@ class Convert extends \Flexio\Jobs\Base
 
 
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
             return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
 
@@ -255,7 +255,7 @@ class Convert extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
             return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
 
@@ -499,7 +499,7 @@ class Convert extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
             return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
 

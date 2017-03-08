@@ -178,7 +178,7 @@ class Stream extends ModelBase
                      'cache_path'           => $row['cache_path'],
                      'cache_connection_eid' => $row['cache_connection_eid'],
                      'eid_status'           => $row['eid_status'],
-                     'created'              => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'              => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'              => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
     }
 }

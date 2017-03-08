@@ -49,7 +49,7 @@ class Search extends \Flexio\Jobs\Base
     private function createOutputFromTable($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // create the output

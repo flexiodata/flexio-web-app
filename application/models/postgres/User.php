@@ -263,8 +263,8 @@ class User extends ModelBase
                      'verify_code'            => $row['verify_code'],
                      'config'                 => $row['config'],
                      'eid_status'             => $row['eid_status'],
-                     'created'                => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'                => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'                => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
     public function getUsernameFromEid($eid)

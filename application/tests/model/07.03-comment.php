@@ -32,7 +32,7 @@ class Test
         $failed_comment_creation = 0;
         for ($i = 0; $i < $total_count; $i++)
         {
-            $handle = \Flexio\System\Util::generateHandle();
+            $handle = \Flexio\Base\Util::generateHandle();
             $info = array(
                 'comment' => "Test comment $i"
             );

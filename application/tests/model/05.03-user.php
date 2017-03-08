@@ -32,7 +32,7 @@ class Test
         $failed_user_creation = 0;
         for ($i = 0; $i < $total_count; $i++)
         {
-            $handle1 = \Flexio\System\Util::generateHandle();
+            $handle1 = \Flexio\Base\Util::generateHandle();
             $handle2 = TestUtil::generateEmail();
             $info = array(
                 'user_name' => $handle1,

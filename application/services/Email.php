@@ -65,7 +65,7 @@ class Email
     public static function isValid($email)
     {
         // checks if an email address is valid
-        return \Flexio\System\Util::isValidEmail($email);
+        return \Flexio\Base\Util::isValidEmail($email);
     }
 
     public static function create($params = false)

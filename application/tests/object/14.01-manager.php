@@ -56,7 +56,7 @@ class Test
         ', true);
         $pipe = \Flexio\Object\Pipe::create($properties);
         $content = getSampleEmailWithAttachment();
-        $file = \Flexio\System\Util::getTempFilename('txt');
+        $file = \Flexio\Base\Util::getTempFilename('txt');
         file_put_contents($file, $content);
         $process_info = \Flexio\Object\Manager::handleEmail($file, $pipe->getEid());
         unlink($file);

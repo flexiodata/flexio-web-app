@@ -99,7 +99,7 @@ class Create extends \Flexio\Jobs\Base
             {
                 // if the row array is non-associative, then insert them
                 // based on the index of the field compared to the structure
-                if (\Flexio\System\Util::isAssociativeArray($row) === false)
+                if (\Flexio\Base\Util::isAssociativeArray($row) === false)
                 {
                     $idx = 0;
                     $row_with_keys = array();

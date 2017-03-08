@@ -131,7 +131,7 @@ class ContentType
     public static function getMimeTypeFromExtension($ext, $def_return = self::MIME_TYPE_STREAM)
     {
         if (strpos($ext, '.') !== false)
-            $ext = \Flexio\System\Util::getFileExtension($ext);
+            $ext = \Flexio\Base\Util::getFileExtension($ext);
 
         $ext = strtolower($ext);
 

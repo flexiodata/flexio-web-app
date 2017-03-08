@@ -455,18 +455,18 @@ class Api
                 // assign ERROR_GENERAL to other categories when appropriate
                 default:
                 case Api::ERROR_GENERAL:
-                    \Flexio\System\Util::header_error(400);
+                    \Flexio\Base\Util::header_error(400);
                     break;
 
                 // "UNAUTHORIZED" type errors; the user might have access to the object
                 // if they were logged in, but the session is invalid
                 case Api::ERROR_UNAUTHORIZED:
-                    \Flexio\System\Util::header_error(401);
+                    \Flexio\Base\Util::header_error(401);
                     break;
 
                 // "FORBIDDEN" type errors; access not allowed
                 case Api::ERROR_INSUFFICIENT_RIGHTS:
-                    \Flexio\System\Util::header_error(403);
+                    \Flexio\Base\Util::header_error(403);
                     break;
 
                 // "NOT FOUND" type errors; invalid requests, invalid
@@ -481,7 +481,7 @@ class Api
                 case Api::ERROR_NO_MODEL:
                 case Api::ERROR_NO_SERVICE:
                 case Api::ERROR_NO_OBJECT:
-                    \Flexio\System\Util::header_error(404);
+                    \Flexio\Base\Util::header_error(404);
                     break;
 
                 // "UNPROCESSABLE ENTITY"; request can't be processed
@@ -491,7 +491,7 @@ class Api
                 case Api::ERROR_WRITE_FAILED:
                 case Api::ERROR_READ_FAILED:
                 case Api::ERROR_SIZE_LIMIT_EXCEEDED:
-                    \Flexio\System\Util::header_error(422);
+                    \Flexio\Base\Util::header_error(422);
                     break;
 
                 // "INTERNAL SERVER ERROR"; something is wrong internally
@@ -500,7 +500,7 @@ class Api
                 case Api::ERROR_NO_DATABASE:
                 case Api::ERROR_NO_MODEL:
                 case Api::ERROR_NO_SERVICE:
-                    \Flexio\System\Util::header_error(500);
+                    \Flexio\Base\Util::header_error(500);
                     break;
             }
         }

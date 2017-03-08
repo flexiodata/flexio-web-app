@@ -55,7 +55,7 @@ class Replace extends \Flexio\Jobs\Base
         }
 
         // create the output with the replaced values
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);

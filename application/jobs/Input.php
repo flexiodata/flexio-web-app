@@ -334,7 +334,7 @@ class Input extends \Flexio\Jobs\Base
     {
         // get a default connection and path
         $properties['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
-        $properties['path'] = \Flexio\System\Util::generateHandle();
+        $properties['path'] = \Flexio\Base\Util::generateHandle();
 
         if (!\Flexio\Base\Eid::isValid($properties['connection_eid']))
             return false;
@@ -455,7 +455,7 @@ class Input extends \Flexio\Jobs\Base
                 continue;
 
             // look for the item -- pattern can be a filename or a wildcard
-            if (\Flexio\System\Util::matchPath($filename, $pattern, true) === false)
+            if (\Flexio\Base\Util::matchPath($filename, $pattern, true) === false)
                 continue;
 
             // we found the item

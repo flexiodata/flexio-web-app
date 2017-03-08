@@ -29,7 +29,7 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $input_eid = 'xxxxxxxxxxxx';
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid' => $input_eid,
             'name' => $handle
@@ -42,7 +42,7 @@ class Test
         // BEGIN TEST
         $model->clearErrors();
         $eid_type = \Model::TYPE_PROJECT;  // try something besides \Model::TYPE_UNDEFINED
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid_type' => $eid_type,
             'name' => $handle
@@ -55,7 +55,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'xxx' => $handle
         );
@@ -72,7 +72,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_PIPE, $info);
@@ -83,7 +83,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_PIPE, $info);
@@ -109,7 +109,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
         );
@@ -122,7 +122,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => 'Test container name'
         );
@@ -135,7 +135,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'description' => 'Test container description'
         );
@@ -148,7 +148,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'display_icon' => 'Test container display icon data'
         );
@@ -161,7 +161,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'input' => '{}'
         );
@@ -174,7 +174,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'output' => '{}'
         );
@@ -187,7 +187,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'task' => '{}'
         );
@@ -201,7 +201,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'schedule' => '{}'
         );
@@ -214,7 +214,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'schedule_status' => 'A'
         );
@@ -227,7 +227,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'schedule_status' => 'D' // valid inputs are A and I
         );

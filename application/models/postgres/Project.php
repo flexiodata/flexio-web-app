@@ -148,7 +148,7 @@ class Project extends ModelBase
                      'description'  => $row['description'],
                      'display_icon' => $row['display_icon'],
                      'eid_status'   => $row['eid_status'],
-                     'created'      => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'      => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'      => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'      => \Flexio\Base\Util::formatDate($row['updated']));
     }
 }
