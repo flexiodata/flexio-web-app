@@ -34,12 +34,6 @@ class Test
         TestCheck::assertString('A.2', '\Flexio\Jobs\Convert::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\Copy::create();
-        $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\Copy::MIME_TYPE;
-        TestCheck::assertString('A.4', '\Flexio\Jobs\Copy::create()',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $task = \Flexio\Jobs\Create::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Create::MIME_TYPE;
@@ -70,10 +64,10 @@ class Test
         TestCheck::assertString('A.9', '\Flexio\Jobs\Filter::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\FindReplace::create();
+        $task = \Flexio\Jobs\Replace::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\FindReplace::MIME_TYPE;
-        TestCheck::assertString('A.10', '\Flexio\Jobs\FindReplace::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Replace::MIME_TYPE;
+        TestCheck::assertString('A.10', '\Flexio\Jobs\Replace::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Grep::create();
@@ -148,10 +142,10 @@ class Test
         TestCheck::assertString('A.22', '\Flexio\Jobs\Search::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\SelectColumn::create();
+        $task = \Flexio\Jobs\Select::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\SelectColumn::MIME_TYPE;
-        TestCheck::assertString('A.23', '\Flexio\Jobs\SelectColumn::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Select::MIME_TYPE;
+        TestCheck::assertString('A.23', '\Flexio\Jobs\Select::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Sleep::create();

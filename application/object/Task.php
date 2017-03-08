@@ -45,12 +45,6 @@ class Task
                 'verb' => 'Converting'
             ),
             array(
-                'type' => \Flexio\Jobs\Copy::MIME_TYPE,
-                'class' => '\Flexio\Jobs\Copy',
-                'name' => '',
-                'verb' => 'Processing'
-            ),
-            array(
                 'type' => \Flexio\Jobs\Create::MIME_TYPE,
                 'class' => '\Flexio\Jobs\Create',
                 'name' => '',
@@ -87,8 +81,8 @@ class Task
                 'verb' => 'Processing'
             ),
             array(
-                'type' => \Flexio\Jobs\FindReplace::MIME_TYPE,
-                'class' => '\Flexio\Jobs\FindReplace',
+                'type' => \Flexio\Jobs\Replace::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Replace',
                 'name' => 'Find and Replace',
                 'verb' => 'Replacing values in'
             ),
@@ -159,8 +153,8 @@ class Task
                 'verb' => 'Searching'
             ),
             array(
-                'type' => \Flexio\Jobs\SelectColumn::MIME_TYPE,
-                'class' => '\Flexio\Jobs\SelectColumn',
+                'type' => \Flexio\Jobs\Select::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Select',
                 'name' => 'Select Columns',
                 'verb' => 'Selecting columns in'
             ),

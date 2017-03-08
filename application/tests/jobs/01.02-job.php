@@ -34,12 +34,6 @@ class Test
         TestCheck::assertBoolean('A.2', '\Flexio\Jobs\Convert schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\Copy::SCHEMA;
-        $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
-        $expected = false;
-        TestCheck::assertBoolean('A.4', '\Flexio\Jobs\Copy schema format',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $schema = \Flexio\Jobs\Create::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
@@ -70,10 +64,10 @@ class Test
         TestCheck::assertBoolean('A.9', '\Flexio\Jobs\Filter schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\FindReplace::SCHEMA;
+        $schema = \Flexio\Jobs\Replace::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\FindReplace schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\Replace schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\Grep::SCHEMA;
@@ -148,10 +142,10 @@ class Test
         TestCheck::assertBoolean('A.22', '\Flexio\Jobs\Search schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\SelectColumn::SCHEMA;
+        $schema = \Flexio\Jobs\Select::SCHEMA;
         $actual = \Flexio\System\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\SelectColumn schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\Select schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\Sleep::SCHEMA;

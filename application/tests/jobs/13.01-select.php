@@ -50,7 +50,7 @@ class Test
         ')->get();
 
 
-        // TEST: SelectColumn Job
+        // TEST: Select Job
 
         // BEGIN TEST
         $params = [
@@ -58,6 +58,6 @@ class Test
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = [["c","b"],["c","B"],["c","b"]];
-        TestCheck::assertString('A.1', 'SelectColumn Job; check basic functionality',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'Select Job; check basic functionality',  $actual, $expected, $results);
     }
 }

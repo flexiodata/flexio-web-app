@@ -36,13 +36,6 @@ class Test
         TestCheck::assertBoolean('A.2', '\Flexio\Jobs\Convert definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\Copy::TEMPLATE,true);
-        $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\Copy::MIME_TYPE && $mime_type == 'flexio.copy';
-        $expected = true;
-        TestCheck::assertBoolean('A.4', '\Flexio\Jobs\Copy definition type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Create::TEMPLATE,true);
         $mime_type = $definition['type'];
         $actual = $mime_type == \Flexio\Jobs\Create::MIME_TYPE && $mime_type == 'flexio.create';
@@ -78,11 +71,11 @@ class Test
         TestCheck::assertBoolean('A.9', '\Flexio\Jobs\Filter definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\FindReplace::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Replace::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\FindReplace::MIME_TYPE && $mime_type == 'flexio.replace';
+        $actual = $mime_type == \Flexio\Jobs\Replace::MIME_TYPE && $mime_type == 'flexio.replace';
         $expected = true;
-        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\FindReplace definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\Replace definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Grep::TEMPLATE,true);
@@ -169,11 +162,11 @@ class Test
         TestCheck::assertBoolean('A.22', '\Flexio\Jobs\Search definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\SelectColumn::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Select::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\SelectColumn::MIME_TYPE && $mime_type == 'flexio.select';
+        $actual = $mime_type == \Flexio\Jobs\Select::MIME_TYPE && $mime_type == 'flexio.select';
         $expected = true;
-        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\SelectColumn definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\Select definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Sleep::TEMPLATE,true);

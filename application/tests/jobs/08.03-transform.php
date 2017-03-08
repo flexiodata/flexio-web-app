@@ -354,7 +354,7 @@ class Test
                         "f"
                     ],
                     "operations": [
-                        { "operation": "pad", "location": "left", "length": 0, "value": "0" }
+                        { "operation": "pad", "location": "left", "length": 1, "value": "0" }
                     ]
                 }
             }
@@ -368,10 +368,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"rows": [
-        		[""],
+        		["a"],
         		[null],
-        		[""],
-        		[""]
+        		["A"],
+        		["a"]
         	]
         }
         ';
@@ -643,7 +643,7 @@ class Test
                         "f"
                     ],
                     "operations": [
-                        { "operation": "pad", "location": "right", "length": 0, "value": "0" }
+                        { "operation": "pad", "location": "right", "length": 1, "value": "0" }
                     ]
                 }
             }
@@ -657,10 +657,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"rows": [
-        		[""],
+        		["a"],
         		[null],
-        		[""],
-        		[""]
+        		["A"],
+        		["a"]
         	]
         }
         ';
