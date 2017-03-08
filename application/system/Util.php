@@ -37,22 +37,6 @@ class Util
         return (strpos(strtoupper(PHP_BINDIR), "XAMPP") !== false) ? true : false;
     }
 
-    public static function exec($cmdline, $wait = false)
-    {
-        if (\Flexio\System\Util::isPlatformWindows())
-        {
-            $wsh_shell = new \COM("WScript.Shell");
-            $exec = $wsh_shell->Run("$cmdline", 0, $wait);
-        }
-         else
-        {
-            $cmd = "$cmdline > /dev/null";
-            if (!$wait)
-                $cmd .= " &";
-            exec($cmd);
-        }
-    }
-
     public static function customAction($action, &$params)
     {
         if (!(class_exists($action, false) || interface_exists($action, false)))
@@ -69,32 +53,6 @@ class Util
         }
 
         return false;
-    }
-
-    // this is a function that will pop up a traditional
-    // GUI message box, which can be useful for debugging
-    // At present, it only works on Win32
-    public static function messageBox($msg, $caption = 'Message')
-    {
-        // to show object data, use var_export (similar to var_dump):
-        // \Flexio\System\Util::messageBox(var_export($validation_info,true));
-
-        if (\Flexio\System\Util::isPlatformWindows())
-        {
-            $wsh_shell = new \COM('WScript.Shell');
-            $wsh_shell->Popup($msg, 0, $caption, 0x1040);
-        }
-    }
-
-    public static function notepad($msg)
-    {
-        $filename = \Flexio\System\Util::createTempFile('', 'txt');
-        file_put_contents($filename, $msg);
-
-        $wsh_shell = new \COM("WScript.Shell");
-        $exec = $wsh_shell->Run("notepad $filename", 1, true);
-
-        unlink($filename);
     }
 
     public static function getFilename($filename)
