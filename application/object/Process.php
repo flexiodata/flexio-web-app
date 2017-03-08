@@ -137,7 +137,7 @@ class Process extends \Flexio\Object\Base
         }
 
         $process_eid = $this->getEid();
-        \Flexio\System\Util::runInBackground("\Flexio\Object\Process::run_internal('$process_eid')");
+        \Flexio\System\Program::runInBackground("\Flexio\Object\Process::run_internal('$process_eid')");
         return $this;
     }
 
