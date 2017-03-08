@@ -468,7 +468,7 @@ class System
             case 'es':  $res = "%e %B %Y"; break;
         }
 
-        if (\Flexio\System\Util::isPlatformWindows())
+        if (\Flexio\System\System::isPlatformWindows())
             $res = str_replace('%e', '%#d', $res);
 
         return $res;
@@ -488,7 +488,7 @@ class System
             case 'es':  $res = "%e %B %Y a %H:%M";        break;
         }
 
-        if (\Flexio\System\Util::isPlatformWindows())
+        if (\Flexio\System\System::isPlatformWindows())
             $res = str_replace('%e', '%#d', $res);
 
         return $res;
@@ -624,7 +624,6 @@ class System
         return trim($str);
     }
 
-
     public static function getBinaryPath($bin)
     {
         $fxhome = \Flexio\System\System::getBaseDirectory();
@@ -638,7 +637,7 @@ class System
         if (is_dir($base_path . DIRECTORY_SEPARATOR . 'server'))
             $base_path .= (DIRECTORY_SEPARATOR . 'server');
 
-        if (\Flexio\System\Util::isPlatformWindows())
+        if (\Flexio\System\System::isPlatformWindows())
         {
             // running on windows -- we need to fully qualify the exe path
             switch ($bin)
@@ -660,11 +659,11 @@ class System
          else
         {
             $xtra_bin_dir = '';
-            if (\Flexio\System\Util::isXampp() && \Flexio\System\Util::isPlatformMac())
+            if (\Flexio\System\System::isXampp() && \Flexio\System\System::isPlatformMac())
                 $xtra_bin_dir = PHP_BINDIR.'/';
 
             $phantom_js_platform_folder = 'linux64';
-            if (\Flexio\System\Util::isPlatformMac())
+            if (\Flexio\System\System::isPlatformMac())
                 $phantom_js_platform_folder = 'macosx';
 
             // running on linux, no need to fully qualify exe path
@@ -719,6 +718,26 @@ class System
     public static function getCurrentUserEid()
     {
         return $GLOBALS['g_store']->user_eid;
+    }
+
+    public static function isPlatformWindows()
+    {
+        return (strtoupper(substr(PHP_OS, 0, 3)) == "WIN") ? true : false;
+    }
+
+    public static function isPlatformMac()
+    {
+        return (strtoupper(substr(PHP_OS, 0, 6)) == "DARWIN") ? true : false;
+    }
+
+    public static function isPlatformLinux()
+    {
+        return (strtoupper(substr(PHP_OS, 0, 5)) == "LINUX") ? true : false;
+    }
+
+    public static function isXampp()
+    {
+        return (strpos(strtoupper(PHP_BINDIR), "XAMPP") !== false) ? true : false;
     }
 
     public static function isNewInstallation()

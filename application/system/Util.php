@@ -17,32 +17,12 @@ namespace Flexio\System;
 
 class Util
 {
-    public static function isPlatformWindows()
-    {
-        return (strtoupper(substr(PHP_OS, 0, 3)) == "WIN") ? true : false;
-    }
-
-    public static function isPlatformMac()
-    {
-        return (strtoupper(substr(PHP_OS, 0, 6)) == "DARWIN") ? true : false;
-    }
-
-    public static function isPlatformLinux()
-    {
-        return (strtoupper(substr(PHP_OS, 0, 5)) == "LINUX") ? true : false;
-    }
-
-    public static function isXampp()
-    {
-        return (strpos(strtoupper(PHP_BINDIR), "XAMPP") !== false) ? true : false;
-    }
-
     public static function getFilename($filename)
     {
         // pathinfo will parse paths differently, depending on the
         // platform being run on
 
-        if (!\Flexio\System\Util::isPlatformWindows())
+        if (!\Flexio\System\System::isPlatformWindows())
             $filename = str_replace("\\", "/", $filename); // parse using linux-style paths
              else
             $filename = str_replace("/", "\\", $filename); // parse using windows-style paths
@@ -55,7 +35,7 @@ class Util
         // pathinfo will parse paths differently, depending on the
         // platform being run on
 
-        if (!\Flexio\System\Util::isPlatformWindows())
+        if (!\Flexio\System\System::isPlatformWindows())
             $filename = str_replace("\\", "/", $filename); // parse using linux-style paths
              else
             $filename = str_replace("/", "\\", $filename); // parse using windows-style paths

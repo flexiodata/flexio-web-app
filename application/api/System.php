@@ -189,17 +189,17 @@ class System
             $messages[] = 'php sqlite library not installed; please install php5-sqlite';
 
         //$val = class_exists("Imagick", false);
-        //if (\Flexio\System\Util::isPlatformLinux() && !$val)
+        //if (\Flexio\System\System::isPlatformLinux() && !$val)
         //    $messages[] = 'php imagick library not installed; please install php5-imagick';
 
         $val = file_exists(\Flexio\System\System::getBinaryPath('php'));
         if (!$val)
             $messages[] = 'cannot find php command line executable. On Linux, install php5-cli. On Windows, make sure $g_config->dir_home is set.';
 
-        if (\Flexio\System\Util::isPlatformWindows() && !class_exists("COM", false))
+        if (\Flexio\System\System::isPlatformWindows() && !class_exists("COM", false))
             $messages[] = 'please enable extension=php_com_dotnet.dll in php.ini';
 
-        if (\Flexio\System\Util::isPlatformLinux())
+        if (\Flexio\System\System::isPlatformLinux())
         {
             // make sure certain debian/ubuntu packages are installed
         }
