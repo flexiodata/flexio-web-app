@@ -8,11 +8,11 @@
  * Created:  2014-10-16
  *
  * @package flexio
- * @subpackage System
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
 class HttpRequest
