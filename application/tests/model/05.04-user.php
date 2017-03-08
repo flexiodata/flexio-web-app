@@ -118,7 +118,7 @@ class Test
             'email' => $handle2
         );
         $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = \Flexio\System\Eid::isValid($eid);
+        $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('A.7', '\Model::create(); make sure that a valid eid is returned on success',  $actual, $expected, $results);
 

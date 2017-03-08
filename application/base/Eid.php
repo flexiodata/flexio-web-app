@@ -8,11 +8,11 @@
  * Created:  2015-03-16
  *
  * @package flexio
- * @subpackage System
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
 class Eid
@@ -21,7 +21,7 @@ class Eid
     {
         // note: valid eids are 12 character alphanumeric strings
         // without vowels; if this definition changes, make sure
-        // to update \Flexio\System\Eid::isValid()
+        // to update \Flexio\Base\Eid::isValid()
 
         list($usec, $sec) = explode(' ', microtime());
         $full = sprintf("%06d",random_int(0,999999)) . $sec . substr($usec, 2, 6);
@@ -77,7 +77,7 @@ class Eid
 
         // note: valid eids are 12 character alphanumeric strings
         // without vowels; this definition is based on the logic
-        // in \Flexio\System\Eid::generate(); if the logic changes in this
+        // in \Flexio\Base\Eid::generate(); if the logic changes in this
         // generation function, it will need to be changed here
         // as well
         if (!preg_match('/^[bcdfghjklmnpqrstvwxyz0123456789]{'.$eid_length.'}$/', $eid))

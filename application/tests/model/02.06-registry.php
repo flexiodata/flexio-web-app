@@ -27,7 +27,7 @@ class Test
         // TEST: basic expired entry cleanup
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 4); // expires in 4 seconds
@@ -39,7 +39,7 @@ class Test
         TestCheck::assertBoolean('A.1', 'Registry\Model::cleanupExpiredEntries(); clean up entries that have expired', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 4); // expires in 4 seconds
@@ -56,7 +56,7 @@ class Test
         // TEST: entry expiration update
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
@@ -70,7 +70,7 @@ class Test
         TestCheck::assertBoolean('B.1', 'Registry\Model::expireKey(); make sure key expiration value is valid', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
@@ -85,7 +85,7 @@ class Test
         TestCheck::assertBoolean('B.2', 'Registry\Model::expireKey(); make sure keys can be expired immediately', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
@@ -99,7 +99,7 @@ class Test
         TestCheck::assertBoolean('B.3', 'Registry\Model::expireKey(); make sure keys expire for time that\'s set', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour
@@ -112,7 +112,7 @@ class Test
         TestCheck::assertBoolean('B.4', 'Registry\Model::expireKey(); make sure expiration is sensitive to name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value, 3600); // expires in an hour

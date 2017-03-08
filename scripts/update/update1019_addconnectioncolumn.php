@@ -113,7 +113,7 @@ function setProjectConnectionEid($db, $project_eid)
     $owner_eid = $row['eid'];
     $connection_eid = getExistingDefaultConnectionEid($owner_eid);
 
-    if (!\Flexio\System\Eid::isValid($connection_eid))
+    if (!\Flexio\Base\Eid::isValid($connection_eid))
         return false;
 
     $qconnection_eid = $db->quote($connection_eid);

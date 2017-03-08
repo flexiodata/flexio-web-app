@@ -112,7 +112,7 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         );
         $eid = $model->create(\Model::TYPE_CONNECTION, $info);
         $object = $model->get($eid);
-        $actual = isset($object['database']) && \Flexio\System\Eid::isValid($object['database']);
+        $actual = isset($object['database']) && \Flexio\Base\Eid::isValid($object['database']);
         $expected = true;
         TestCheck::assertBoolean('B.3', '\Model::create(); in connection creation, make sure essential fields are created',  $actual, $expected, $results);
 */

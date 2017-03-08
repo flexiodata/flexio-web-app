@@ -45,7 +45,7 @@ class Test
         TestCheck::assertBoolean('A.2', 'Registry\Model::deleteEntryByName(); null or blank entries aren\'t allowed', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $actual = $model->registry->deleteEntryByName($object_eid, $name);
         $expected = false;
@@ -61,7 +61,7 @@ class Test
         TestCheck::assertBoolean('A.4', 'Registry\Model::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = '';
         $creation = $model->registry->setString($object_eid, $name, $value);
@@ -70,7 +70,7 @@ class Test
         TestCheck::assertBoolean('A.5', 'Registry\Model::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 3.14;
         $creation = $model->registry->setNumber($object_eid, $name, $value);
@@ -81,7 +81,7 @@ class Test
         TestCheck::assertBoolean('A.6', 'Registry\Model::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = true;
         $creation = $model->registry->setBoolean($object_eid, $name, $value);
@@ -109,7 +109,7 @@ class Test
         TestCheck::assertBoolean('B.1', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value);
@@ -121,7 +121,7 @@ class Test
         TestCheck::assertBoolean('B.2', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value);
@@ -133,7 +133,7 @@ class Test
         TestCheck::assertBoolean('B.3', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = 'a';
         $creation = $model->registry->setString($object_eid, $name, $value);

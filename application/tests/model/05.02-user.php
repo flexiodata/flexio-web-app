@@ -79,7 +79,7 @@ class Test
             'email' => $handle2
         );
         $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = \Flexio\System\Eid::isValid($eid);
+        $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('B.1', '\Model::create(); make sure valid eid is returned when user is created',  $actual, $expected, $results);
 
@@ -97,7 +97,7 @@ class Test
         );
         $eid_first_time_creation = $model->create(\Model::TYPE_USER, $info1);
         $eid_second_time_creation = $model->create(\Model::TYPE_USER, $info2);
-        $actual = (\Flexio\System\Eid::isValid($eid_first_time_creation) && $eid_second_time_creation === false);
+        $actual = (\Flexio\Base\Eid::isValid($eid_first_time_creation) && $eid_second_time_creation === false);
         $expected = true;
         TestCheck::assertBoolean('B.2', '\Model::create(); do not allow multiple users with the same username',  $actual, $expected, $results);
 
@@ -115,7 +115,7 @@ class Test
         );
         $eid_first_time_creation = $model->create(\Model::TYPE_USER, $info1);
         $eid_second_time_creation = $model->create(\Model::TYPE_USER, $info2);
-        $actual = (\Flexio\System\Eid::isValid($eid_first_time_creation) && $eid_second_time_creation === false);
+        $actual = (\Flexio\Base\Eid::isValid($eid_first_time_creation) && $eid_second_time_creation === false);
         $expected = true;
         TestCheck::assertBoolean('B.3', '\Model::create(); do not allow multiple users with the same email',  $actual, $expected, $results);
 

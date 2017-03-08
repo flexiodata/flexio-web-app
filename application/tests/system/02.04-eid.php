@@ -27,8 +27,8 @@ class Test
 
         for ($i = 0; $i < $total_eid_count; ++$i)
         {
-            $eid = \Flexio\System\Eid::generate();
-            $valid = \Flexio\System\Eid::isValid($eid);
+            $eid = \Flexio\Base\Eid::generate();
+            $valid = \Flexio\Base\Eid::isValid($eid);
 
             if ($valid === true)
                 $valid_eid_count++;
@@ -36,6 +36,6 @@ class Test
 
         $actual = ($valid_eid_count === $total_eid_count); // all eids that were created should be valid
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\System\Eid::generate() test for valid eid creation', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Base\Eid::generate() test for valid eid creation', $actual, $expected, $results);
     }
 }

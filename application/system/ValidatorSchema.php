@@ -526,7 +526,7 @@ class ValidatorSchema
             case 'uri':       $result = \Flexio\System\Util::isValidUrl($data);      break; // TODO: expand to uri?
 
             // custom formats
-            case 'fx.eid':        $result = \Flexio\System\Eid::isValid($data);                      break;
+            case 'fx.eid':        $result = \Flexio\Base\Eid::isValid($data);                      break;
             case 'fx.identifier': $result = \Flexio\System\Identifier::isValid($data);               break;
             case 'fx.fieldname':  $result = \Flexio\Services\Postgres::isValidFieldName($data); break;
         }

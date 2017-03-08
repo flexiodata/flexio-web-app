@@ -53,7 +53,7 @@ class Stream extends \Flexio\Object\Base
                 $properties['path'] = \Flexio\System\Util::generateHandle();
 
             $default_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();
-            if (\Flexio\System\Eid::isValid($default_connection_eid))
+            if (\Flexio\Base\Eid::isValid($default_connection_eid))
                 $properties['connection_eid'] = $default_connection_eid;
         }
 

@@ -38,7 +38,7 @@ class Test
             );
             $eid = $model->create(\Model::TYPE_COMMENT, $info);
             $created_eids[$eid] = 1;
-            if (!\Flexio\System\Eid::isValid($eid))
+            if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_comment_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_comment_creation == 0;

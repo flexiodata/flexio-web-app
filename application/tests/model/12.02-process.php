@@ -31,7 +31,7 @@ class Test
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_PROCESS, $info);
-        $actual = \Flexio\System\Eid::isValid($eid);
+        $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('A.1', '\Model::create(); for process creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 

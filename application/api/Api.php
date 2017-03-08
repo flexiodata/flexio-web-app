@@ -73,7 +73,7 @@ class Api
         // an internal constant that isn't a valid eid so we can distinguish
         // between it and properly authenticated users)
         $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
-        if (!\Flexio\System\Eid::isValid($requesting_user_eid))
+        if (!\Flexio\Base\Eid::isValid($requesting_user_eid))
             $requesting_user_eid = \Flexio\Object\User::USER_PUBLIC;
 
         // create the request object
@@ -200,9 +200,9 @@ class Api
         // second and forth api parameters
         $api_params = self::mapUrlParamsToApiParams($url_params);
 
-        if (\Flexio\System\Eid::isValid($api_params['apiparam2']) || \Flexio\System\Identifier::isValid($api_params['apiparam2']))
+        if (\Flexio\Base\Eid::isValid($api_params['apiparam2']) || \Flexio\System\Identifier::isValid($api_params['apiparam2']))
             $api_params['apiparam2'] = ':eid';
-        if (\Flexio\System\Eid::isValid($api_params['apiparam4']) || \Flexio\System\Identifier::isValid($api_params['apiparam4']))
+        if (\Flexio\Base\Eid::isValid($api_params['apiparam4']) || \Flexio\System\Identifier::isValid($api_params['apiparam4']))
             $api_params['apiparam4'] = ':eid';
 
         $api_path = self::createApiPath($request_method, $api_params);

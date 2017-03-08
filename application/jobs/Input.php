@@ -336,7 +336,7 @@ class Input extends \Flexio\Jobs\Base
         $properties['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $properties['path'] = \Flexio\System\Util::generateHandle();
 
-        if (!\Flexio\System\Eid::isValid($properties['connection_eid']))
+        if (!\Flexio\Base\Eid::isValid($properties['connection_eid']))
             return false;
 
         $stream = \Flexio\Object\Stream::create($properties);

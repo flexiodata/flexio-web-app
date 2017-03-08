@@ -158,7 +158,7 @@ class TestUtil
 
         // see if the user already exists
         $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
-        if (\Flexio\System\Eid::isValid($user_eid))
+        if (\Flexio\Base\Eid::isValid($user_eid))
             return $user_eid;
 
         $user_eid = TestUtil::createTestUser($user_name, $email, $password);

@@ -39,7 +39,7 @@ class Test
             );
             $eid = $model->create(\Model::TYPE_CONNECTION, $info);
             $created_eids[$eid] = 1;
-            if (!\Flexio\System\Eid::isValid($eid))
+            if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_connection_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_connection_creation == 0;

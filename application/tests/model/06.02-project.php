@@ -31,7 +31,7 @@ class Test
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $actual = \Flexio\System\Eid::isValid($eid);
+        $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('A.1', '\Model::create(); for project creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
@@ -56,7 +56,7 @@ class Test
             'name' => $handle
         );
         $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $actual = \Flexio\System\Eid::isValid($eid);
+        $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('B.1', '\Model::create(); make sure valid eid is returned when project with name is created',  $actual, $expected, $results);
 
@@ -68,7 +68,7 @@ class Test
         );
         $eid_first_time_creation = $model->create(\Model::TYPE_PROJECT, $info);
         $eid_second_time_creation = $model->create(\Model::TYPE_PROJECT, $info);
-        $actual = (\Flexio\System\Eid::isValid($eid_first_time_creation) && \Flexio\System\Eid::isValid($eid_second_time_creation));
+        $actual = (\Flexio\Base\Eid::isValid($eid_first_time_creation) && \Flexio\Base\Eid::isValid($eid_second_time_creation));
         $expected = true;
         TestCheck::assertBoolean('B.2', '\Model::create(); allow multiple projects with the same name',  $actual, $expected, $results);
     }

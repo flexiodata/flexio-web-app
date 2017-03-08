@@ -56,7 +56,7 @@ class Query
         if (!is_object($query))
             return null;
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return null;
 
         return self::get_internal($eid, $query);

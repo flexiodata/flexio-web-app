@@ -40,7 +40,7 @@ class Test
             );
             $eid = $model->create(\Model::TYPE_USER, $info);
             $created_eids[$eid] = 1;
-            if (!\Flexio\System\Eid::isValid($eid))
+            if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_user_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_user_creation == 0;

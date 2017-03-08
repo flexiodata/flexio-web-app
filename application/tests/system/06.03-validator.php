@@ -101,7 +101,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => $eid
         );
@@ -113,7 +113,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => $eid,
             'name' => 'Object name',
@@ -132,7 +132,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -187,7 +187,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => $eid,
             'name' => 'Object name'
@@ -206,7 +206,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => $eid
         );
@@ -221,7 +221,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => 'abc'
         );
@@ -234,7 +234,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => 123
         );
@@ -516,7 +516,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'name' => 3.2
         );
@@ -529,7 +529,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'name' => 'John Williams'
         );
@@ -560,7 +560,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'name' => true
         );
@@ -573,7 +573,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'name' => 'John Williams'
         );
@@ -604,7 +604,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'value' => false
         );
@@ -619,7 +619,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'value' => 'true'
         );
@@ -634,7 +634,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'value' => 1
         );
@@ -647,7 +647,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'value' => null
         );
@@ -660,7 +660,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'value' => null
         );
@@ -677,7 +677,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'id' => 1,
             'name' => 'John Williams',
@@ -705,7 +705,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => ''
         );
@@ -719,7 +719,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'name' => null
         );
@@ -732,7 +732,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => $eid
         );
@@ -748,7 +748,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -766,7 +766,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -790,7 +790,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -802,7 +802,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -814,7 +814,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
         );
         $checks = array(
@@ -830,8 +830,8 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid1 = \Flexio\System\Eid::generate();
-        $eid2 = \Flexio\System\Eid::generate();
+        $eid1 = \Flexio\Base\Eid::generate();
+        $eid2 = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => "$eid1,$eid2"
         );
@@ -849,7 +849,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'eid' => "$eid1,x"
         );
@@ -866,8 +866,8 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid1 = \Flexio\System\Eid::generate();
-        $eid2 = \Flexio\System\Eid::generate();
+        $eid1 = \Flexio\Base\Eid::generate();
+        $eid2 = \Flexio\Base\Eid::generate();
         $values = array(
             'info' => '['
         );
@@ -882,8 +882,8 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid1 = \Flexio\System\Eid::generate();
-        $eid2 = \Flexio\System\Eid::generate();
+        $eid1 = \Flexio\Base\Eid::generate();
+        $eid2 = \Flexio\Base\Eid::generate();
         $values = array(
             'info' => '[1,2,3]'
         );
@@ -902,7 +902,7 @@ class Test
 
         // BEGIN TEST
         $validator = new \Flexio\System\Validator;
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $values = array(
             'info' => '{"a":"b"}'
         );

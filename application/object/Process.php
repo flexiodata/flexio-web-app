@@ -680,7 +680,7 @@ class Process extends \Flexio\Object\Base
             // be that it should be processed as it occurs in the pipe
             foreach ($user_variables as $name => $value)
             {
-                if (\Flexio\System\Eid::isValid($value))
+                if (\Flexio\Base\Eid::isValid($value))
                 {
                     $stream = \Flexio\Object\Stream::load($value);
                     if ($stream !== false)

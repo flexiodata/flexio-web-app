@@ -91,7 +91,7 @@ class Collection
             return $this;
         }
 
-        if (\Flexio\System\Eid::isValid($object))
+        if (\Flexio\Base\Eid::isValid($object))
         {
             $object_eid = $object;
             $object = \Flexio\Object\Store::load($object_eid);

@@ -110,7 +110,7 @@ class Process extends ModelBase
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         if (($process_arr = \Model::check($params, array(
@@ -162,7 +162,7 @@ class Process extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         try
@@ -235,7 +235,7 @@ class Process extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         $rows = array();
@@ -439,7 +439,7 @@ class Process extends ModelBase
         if ($db === false)
             return false; // internal function, so don't flag an error
 
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $result = $db->fetchOne("select eid from tbl_process where eid= ?", $eid);
 
         if ($result === false)

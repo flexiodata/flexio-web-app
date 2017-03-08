@@ -31,7 +31,7 @@ class Test
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = \Flexio\System\Eid::isValid($eid);
+        $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('A.1', '\Model::create(); for pipe creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
@@ -56,7 +56,7 @@ class Test
             'name' => 'This is a test pipe'
         );
         $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = \Flexio\System\Eid::isValid($eid);
+        $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('B.1', '\Model::create(); make sure valid eid is returned when pipe is created',  $actual, $expected, $results);
 
@@ -68,7 +68,7 @@ class Test
         );
         $eid_first_time_creation = $model->create(\Model::TYPE_PIPE, $info);
         $eid_second_time_creation = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = (\Flexio\System\Eid::isValid($eid_first_time_creation) && \Flexio\System\Eid::isValid($eid_second_time_creation));
+        $actual = (\Flexio\Base\Eid::isValid($eid_first_time_creation) && \Flexio\Base\Eid::isValid($eid_second_time_creation));
         $expected = true;
         TestCheck::assertBoolean('B.2', '\Model::create(); allow multiple pipes with the same value',  $actual, $expected, $results);
     }

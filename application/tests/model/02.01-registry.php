@@ -27,7 +27,7 @@ class Test
         // TEST: string entry creation tests
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = null;
         $value = null;
         $actual = $model->registry->setString($object_eid, $name, $value);
@@ -35,7 +35,7 @@ class Test
         TestCheck::assertBoolean('A.1', 'Registry\Model::setString(); return false when no name is specified', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = '';
         $value = '';
         $actual = $model->registry->setString($object_eid, $name, $value);
@@ -113,7 +113,7 @@ class Test
         TestCheck::assertBoolean('B.1', 'Registry\Model::entryExists(); handle null input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $actual = $model->registry->entryExists($object_eid, $name);
         $expected = false;
@@ -129,7 +129,7 @@ class Test
         TestCheck::assertBoolean('B.3', 'Registry\Model::entryExists(); with existing entry', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = '';
         $result = $model->registry->setString($object_eid, $name, $value);
@@ -138,7 +138,7 @@ class Test
         TestCheck::assertBoolean('B.4', 'Registry\Model::entryExists(); should be sensitive to the name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = '';
         $result = $model->registry->setString($object_eid, $name, $value);
@@ -159,7 +159,7 @@ class Test
         TestCheck::assertBoolean('C.1', 'Registry\Model::getString(); handle null input; default output is null', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $actual = $model->registry->getString($object_eid, $name, 'value');
         $expected = 'value';
@@ -175,7 +175,7 @@ class Test
         TestCheck::assertString('C.3', 'Registry\Model::getString(); with existing entry', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = \Flexio\System\Util::generateHandle();
         $result = $model->registry->setString($object_eid, $name, $value);
@@ -184,7 +184,7 @@ class Test
         TestCheck::assertString('C.4', 'Registry\Model::getString(); should be sensitive to the name', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\System\Eid::generate();
+        $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\System\Util::generateHandle();
         $value = \Flexio\System\Util::generateHandle();
         $result = $model->registry->setString($object_eid, $name, $value);

@@ -59,7 +59,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $path = "$eid->";
         $result = $model->search($path);
         $actual = $result;
@@ -68,7 +68,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $path = "->$eid";
         $result = $model->search($path);
         $actual = $result;
