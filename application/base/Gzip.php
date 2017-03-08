@@ -8,14 +8,14 @@
  * Created:  2013-02-19
  *
  * @package flexio
- * @subpackage System
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
-class UtilGzip
+class Gzip
 {
     public static function gzip($in, $out = false)
     {
