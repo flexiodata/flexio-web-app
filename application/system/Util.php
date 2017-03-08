@@ -1265,30 +1265,6 @@ EOT;
 
         return $res;
     }
-
-    public static function zipFile($target_zip, $file)
-    {
-        $exe = \Flexio\System\Util::getBinaryPath('zip');
-
-        if (is_array($file))
-            $arr = $file;
-             else
-            $arr = array($file);
-
-        // make sure specified input files exist
-        foreach ($arr as $f)
-        {
-            if (!file_exists($f))
-                return false;
-        }
-
-        foreach ($arr as $f)
-        {
-            \Flexio\System\Util::exec("$exe -j $target_zip \"$f\"", true);
-        }
-
-        return true;
-    }
 }
 
 
