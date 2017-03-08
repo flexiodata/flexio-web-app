@@ -8,11 +8,11 @@
  * Created:  2013-02-10
  *
  * @package flexio
- * @subpackage System
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
 class G2FA
