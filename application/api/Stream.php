@@ -189,10 +189,10 @@ class Stream
             $part_active = false;
             $part_succeeded = false;
 
-            $parser = \Flexio\Services\MultipartParser::create();
+            $parser = \Flexio\Base\MultipartParser::create();
 
             $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$streamwriter, &$part_data_snippet, &$part_filename, &$part_mimetype, &$part_active, &$part_succeeded) {
-                if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_BEGIN)
+                if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
                 {
                     if ($name == 'media' || $name == 'file') // we're looking for an element named 'media'; 'file' for temporary backward-compatibility
                     {
@@ -202,7 +202,7 @@ class Stream
                         $part_succeeded = true;
                     }
                 }
-                else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_DATA && $part_active)
+                else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_DATA && $part_active)
                 {
                     // get a sample of the data for mime sensing
                     if ($part_data_snippet === false)
@@ -211,7 +211,7 @@ class Stream
                     // write out the data
                     $streamwriter->write($data);
                 }
-                else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_END)
+                else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_END)
                 {
                     $part_active = false;
                 }
