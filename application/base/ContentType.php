@@ -8,11 +8,11 @@
  * Created:  2016-04-19
  *
  * @package flexio
- * @subpackage System
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
 class ContentType

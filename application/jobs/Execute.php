@@ -35,10 +35,10 @@ class Execute extends \Flexio\Jobs\Base
                     break;
 
                 // stream/text/csv input
-                case \Flexio\System\ContentType::MIME_TYPE_STREAM:
-                case \Flexio\System\ContentType::MIME_TYPE_TXT:
-                case \Flexio\System\ContentType::MIME_TYPE_CSV:
-                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
+                case \Flexio\Base\ContentType::MIME_TYPE_TXT:
+                case \Flexio\Base\ContentType::MIME_TYPE_CSV:
+                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutput($instream);
                     break;
             }
@@ -53,8 +53,8 @@ class Execute extends \Flexio\Jobs\Base
         $this->getOutput()->push($outstream);
 
         // if the input mime type is a table, set the output type to text
-        if ($instream->getMimeType() === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            $outstream->setMimeType(\Flexio\System\ContentType::MIME_TYPE_TXT);
+        if ($instream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
 
         // properties
         $job_definition = $this->getProperties();
@@ -123,7 +123,7 @@ class Execute extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
         }
 
-        if ($instream->getMimeType() !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($instream->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             $instream->read(function ($data) use (&$pipes) {
                 fputs($pipes[0], $data);

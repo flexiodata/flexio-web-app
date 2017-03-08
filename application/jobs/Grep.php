@@ -83,7 +83,7 @@ class Grep extends \Flexio\Jobs\Base
         }
 
         $mime_type = $instream->getMimeType();
-        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // write header row
             $row = $instream->getStructure()->getNames();

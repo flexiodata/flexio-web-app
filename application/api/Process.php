@@ -529,12 +529,12 @@ class Process
         {
             // use json if the format is something that isn't allowed
             default:
-                $mime_type = \Flexio\System\ContentType::MIME_TYPE_JSON;
+                $mime_type = \Flexio\Base\ContentType::MIME_TYPE_JSON;
                 break;
 
             // allowed formats
-            case \Flexio\System\ContentType::MIME_TYPE_TXT:
-            case \Flexio\System\ContentType::MIME_TYPE_JSON:
+            case \Flexio\Base\ContentType::MIME_TYPE_TXT:
+            case \Flexio\Base\ContentType::MIME_TYPE_JSON:
                 break;
         }
 
@@ -545,7 +545,7 @@ class Process
 
         header('Content-Type: ' . $mime_type);
 
-        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_JSON)
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_JSON)
             echo('[');
 
         $first = true;
@@ -567,7 +567,7 @@ class Process
             $first = false;
         }
 
-        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_JSON)
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_JSON)
             echo(']');
 
         exit(0);
@@ -611,7 +611,7 @@ class Process
         $result = '';
         switch ($mime_type)
         {
-            case \Flexio\System\ContentType::MIME_TYPE_TXT:
+            case \Flexio\Base\ContentType::MIME_TYPE_TXT:
             {
                 if (count($stream_properties) > 0)
                     $result .= json_encode($stream_properties);
@@ -624,7 +624,7 @@ class Process
             }
             break;
 
-            case \Flexio\System\ContentType::MIME_TYPE_JSON:
+            case \Flexio\Base\ContentType::MIME_TYPE_JSON:
             {
                 if ($include_content === true)
                     $stream_properties['content'] = $content;

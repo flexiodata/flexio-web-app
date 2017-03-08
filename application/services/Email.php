@@ -348,7 +348,7 @@ class Email
         $a = array();
         $a['name'] = isset_or($attachment['name'],'');
         $a['file'] = isset_or($attachment['file'],'');
-        $a['mime_type'] = isset_or($attachment['mime_type'], \Flexio\System\ContentType::MIME_TYPE_NONE);
+        $a['mime_type'] = isset_or($attachment['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_NONE);
         $a['content'] = isset_or($attachment['content'],'');
 
         $this->attachments[] = $a;

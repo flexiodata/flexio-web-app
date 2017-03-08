@@ -177,7 +177,7 @@ class Input extends \Flexio\Jobs\Base
 
         // create the output
         $stream_properties = $file_info;
-        $stream_properties['mime_type'] = \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
@@ -219,7 +219,7 @@ class Input extends \Flexio\Jobs\Base
 
         // create the output
         $stream_properties = $file_info;
-        $stream_properties['mime_type'] = \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
@@ -268,7 +268,7 @@ class Input extends \Flexio\Jobs\Base
         $streamwriter->close();
 
         // set the mime type
-        $mime_type = \Flexio\System\ContentType::getMimeType($path, $mime_data_sample);
+        $mime_type = \Flexio\Base\ContentType::getMimeType($path, $mime_data_sample);
         $outstream->setMimeType($mime_type);
         $outstream->setSize($streamwriter->getBytesWritten());
     }
@@ -280,7 +280,7 @@ class Input extends \Flexio\Jobs\Base
 
         // create the output
         $stream_properties = $file_info;
-        $stream_properties['mime_type'] = \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
             return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);

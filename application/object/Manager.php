@@ -97,7 +97,7 @@ class Manager
 
             $name = $attachment['name'];
             $content = $attachment['content'];
-            $mime_type = \Flexio\System\ContentType::getMimeType($name, $content);
+            $mime_type = \Flexio\Base\ContentType::getMimeType($name, $content);
 
             // create the stream
             $outstream_properties = array(

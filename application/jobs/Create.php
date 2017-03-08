@@ -56,7 +56,7 @@ class Create extends \Flexio\Jobs\Base
         if (isset($job_definition['params']['content']))
             $content = base64_decode($job_definition['params']['content']);
 
-        $mime_type = \Flexio\System\ContentType::getMimeType($name, $content);
+        $mime_type = \Flexio\Base\ContentType::getMimeType($name, $content);
 
         // create the output stream
         $outstream_properties = array(
@@ -83,7 +83,7 @@ class Create extends \Flexio\Jobs\Base
         $structure = isset_or($job_definition['params']['columns'], '[]');
         $outstream_properties = array(
             'name' => $name,
-            'mime_type' => \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE,
+            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
             'structure' => $structure
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
