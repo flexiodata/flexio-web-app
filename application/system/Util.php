@@ -1132,15 +1132,6 @@ EOT;
         return $res;
     }
 
-    public static function getGitRevision()
-    {
-        $path = dirname(dirname(__DIR__)) . '/.git/refs/heads/master';
-        $str = @file_get_contents($path);
-        if (!$str)
-            $str = '';
-        return trim($str);
-    }
-
     // mode should be either 'inline' or 'download'
     public static function headersPdf($output_filename, $file_location, $mode = 'inline')
     {

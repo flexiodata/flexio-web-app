@@ -615,6 +615,15 @@ class System
         return $version;
     }
 
+    public static function getGitRevision()
+    {
+        $path = dirname(dirname(__DIR__)) . '/.git/refs/heads/master';
+        $str = @file_get_contents($path);
+        if (!$str)
+            $str = '';
+        return trim($str);
+    }
+
     public static function getCurrentUserFirstName()
     {
         return $GLOBALS['g_store']->user_first_name;

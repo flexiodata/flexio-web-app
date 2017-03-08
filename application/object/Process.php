@@ -641,7 +641,7 @@ class Process extends \Flexio\Object\Base
         // track what version of the task implementation we're using
         // (more granular than task version, which may or may not be updated
         // with small logic changes)
-        $implementation_revision = \Flexio\System\Util::getGitRevision();
+        $implementation_revision = \Flexio\System\System::getGitRevision();
 
         // set initial job status
         $process_params = array();
@@ -732,7 +732,7 @@ class Process extends \Flexio\Object\Base
 
             // if the implementation has changed during the task, the result is
             // unreliable; set an error so that the process fails
-            $implementation_revision_update = \Flexio\System\Util::getGitRevision();
+            $implementation_revision_update = \Flexio\System\System::getGitRevision();
             if ($implementation_revision !== $implementation_revision_update)
                 $this->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
 

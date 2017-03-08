@@ -1254,15 +1254,5 @@ class Test
         $actual = \Flexio\System\Util::getFilename('c:\\path\name.ext');
         $expected = 'name';
         TestCheck::assertString('J.14', '\Flexio\System\Util::getFileExtension() test to extract extension',  $actual, $expected, $results);
-
-
-
-        // TEST: validation tests for getGitRevision()
-
-        // BEGIN TEST
-        $git_revision = \Flexio\System\Util::getGitRevision();
-        $actual = is_string($git_revision) === true && preg_match('/^[0-9a-f]{40}$/', $git_revision) === 1;
-        $expected = true;
-        TestCheck::assertBoolean('K.1', '\Flexio\System\Util::getGitRevision() test to verify a valid hash is returned',  $actual, $expected, $results);
     }
 }
