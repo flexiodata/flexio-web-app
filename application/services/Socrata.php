@@ -44,7 +44,7 @@ class Socrata implements \Flexio\Services\IConnection
 
     public function connect($params)
     {
-        $validator = \Flexio\System\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true)

@@ -48,7 +48,7 @@ class Twilio implements \Flexio\Services\IConnection
     {
         $this->close();
 
-        $validator = \Flexio\System\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'key'   => array('type' => 'string', 'required' => true),
                 'token' => array('type' => 'string', 'required' => true)

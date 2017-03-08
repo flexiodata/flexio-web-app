@@ -1145,7 +1145,7 @@ class Model
     {
         // validate the parameters; if they check out, then return
         // the cleaned parameters
-        if (($params = \Flexio\System\Validator::getInstance()->check($params, $checks)) !== false)
+        if (($params = \Flexio\Base\Validator::getInstance()->check($params, $checks)) !== false)
             return $params;
 
         // if the parameters don't check out, return false

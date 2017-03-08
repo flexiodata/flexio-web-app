@@ -8,11 +8,11 @@
  * Created:  2015-03-16
  *
  * @package flexio
- * @subpackage System
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
 class Validator

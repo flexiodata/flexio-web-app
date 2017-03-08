@@ -78,7 +78,7 @@ class Api
 
         // create the request object
         $request = Request::create();
-        $request->setValidator(\Flexio\System\Validator::getInstance());
+        $request->setValidator(\Flexio\Base\Validator::getInstance());
         $request->setRequestingUser($requesting_user_eid);
 
 
@@ -557,12 +557,12 @@ class Api
         // an api code
         switch ($code)
         {
-            case \Flexio\System\Validator::ERROR_NONE:              $code = Api::ERROR_NONE;              break;
-            case \Flexio\System\Validator::ERROR_UNDEFINED:         $code = Api::ERROR_UNDEFINED;         break;
-            case \Flexio\System\Validator::ERROR_GENERAL:           $code = Api::ERROR_GENERAL;           break;
-            case \Flexio\System\Validator::ERROR_INVALID_SYNTAX:    $code = Api::ERROR_INVALID_SYNTAX;    break;
-            case \Flexio\System\Validator::ERROR_MISSING_PARAMETER: $code = Api::ERROR_MISSING_PARAMETER; break;
-            case \Flexio\System\Validator::ERROR_INVALID_PARAMETER: $code = Api::ERROR_INVALID_PARAMETER; break;
+            case \Flexio\Base\Validator::ERROR_NONE:              $code = Api::ERROR_NONE;              break;
+            case \Flexio\Base\Validator::ERROR_UNDEFINED:         $code = Api::ERROR_UNDEFINED;         break;
+            case \Flexio\Base\Validator::ERROR_GENERAL:           $code = Api::ERROR_GENERAL;           break;
+            case \Flexio\Base\Validator::ERROR_INVALID_SYNTAX:    $code = Api::ERROR_INVALID_SYNTAX;    break;
+            case \Flexio\Base\Validator::ERROR_MISSING_PARAMETER: $code = Api::ERROR_MISSING_PARAMETER; break;
+            case \Flexio\Base\Validator::ERROR_INVALID_PARAMETER: $code = Api::ERROR_INVALID_PARAMETER; break;
         }
 
         // if a message isn't specified, supply a default message

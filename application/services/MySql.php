@@ -56,7 +56,7 @@ class MySql implements \Flexio\Services\IConnection
         if (isset($params['port']))
             $params['port'] = (string)$params['port'];
 
-        $validator = \Flexio\System\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true),
@@ -715,7 +715,7 @@ class MySqlWriter
 
     public static function create($params, $structure = null)
     {
-        $validator = \Flexio\System\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'any', 'required' => true),
