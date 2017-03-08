@@ -89,7 +89,7 @@ class Execute extends \Flexio\Jobs\Base
         if ($program_type === false)
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
-        $program_path = \Flexio\System\Util::getBinaryPath($program_type);
+        $program_path = \Flexio\System\System::getBinaryPath($program_type);
         if (!isset($program_path))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 

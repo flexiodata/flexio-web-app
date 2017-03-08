@@ -45,7 +45,7 @@ if (is_null($g_context) || !isset($g_context['utility_fullpath']))
 
 
 // invoke the desired php file
-$phpbin = \Flexio\System\Util::getBinaryPath('php');
+$phpbin = \Flexio\System\System::getBinaryPath('php');
 $path = $g_context['utility_fullpath'];
 
 

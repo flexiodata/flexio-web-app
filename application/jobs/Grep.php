@@ -52,7 +52,7 @@ class Grep extends \Flexio\Jobs\Base
 
 
         // build command line
-        $cmd = \Flexio\System\Util::getBinaryPath('grep') . ' ' . $grepexpr;
+        $cmd = \Flexio\System\System::getBinaryPath('grep') . ' ' . $grepexpr;
         //$cmd = "\"C:\Program Files\Git\usr\bin\cat.exe\"";
 
         // run the process

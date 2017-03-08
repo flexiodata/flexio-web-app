@@ -192,7 +192,7 @@ class System
         //if (\Flexio\System\Util::isPlatformLinux() && !$val)
         //    $messages[] = 'php imagick library not installed; please install php5-imagick';
 
-        $val = file_exists(\Flexio\System\Util::getBinaryPath('php'));
+        $val = file_exists(\Flexio\System\System::getBinaryPath('php'));
         if (!$val)
             $messages[] = 'cannot find php command line executable. On Linux, install php5-cli. On Windows, make sure $g_config->dir_home is set.';
 

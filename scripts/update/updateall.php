@@ -90,7 +90,7 @@ if ($max_ver <= $current_version)
 // TODO: log message
 // logMessage("Starting");
 
-$php = \Flexio\System\Util::getBinaryPath('php');
+$php = \Flexio\System\System::getBinaryPath('php');
 $prog_args = $argv;
 array_shift($prog_args);
 

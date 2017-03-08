@@ -19,7 +19,7 @@ class Program
 {
     public static function runInBackground($code, $wait = false)
     {
-        $phpbin = \Flexio\System\Util::getBinaryPath('php');
+        $phpbin = \Flexio\System\System::getBinaryPath('php');
 
         $stubphp = \Flexio\System\System::getBaseDirectory();
         $stubphp = str_replace("\\", "/", $stubphp);
