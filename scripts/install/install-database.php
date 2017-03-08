@@ -118,7 +118,7 @@ function createPostgresDatabase($params)
     $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $connect_params);
 
     $script_filename = System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'models'  . DIRECTORY_SEPARATOR . 'postgres'  . DIRECTORY_SEPARATOR . 'createdb.sql';
-    $commands = \Flexio\System\DbUtil::parseSqlScript($script_filename);
+    $commands = \Flexio\Base\DbUtil::parseSqlScript($script_filename);
     if (!$commands)
         return false;
 
@@ -245,7 +245,7 @@ function createMySqlDatabase($params)
 
 
     $script_filename = System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'models'  . DIRECTORY_SEPARATOR . 'postgres'  . DIRECTORY_SEPARATOR . 'createdb.sql';
-    $commands = \Flexio\System\DbUtil::parseSqlScript($script_filename);
+    $commands = \Flexio\Base\DbUtil::parseSqlScript($script_filename);
     if (!$commands)
         return false;
 

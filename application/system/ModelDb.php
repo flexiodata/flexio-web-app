@@ -515,7 +515,7 @@ class ModelResultDb extends ModelResultBase
 
     public function showDebugInfo()
     {
-        return \Flexio\System\DbUtil::formatSQL($this->select->assemble());
+        return \Flexio\Base\DbUtil::formatSQL($this->select->assemble());
     }
 
     function __destruct()

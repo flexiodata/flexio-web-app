@@ -8,11 +8,11 @@
  * Created:  2012-03-27
  *
  * @package flexio
- * @subpackage Model
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
 class DbUtil

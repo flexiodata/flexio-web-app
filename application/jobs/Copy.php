@@ -95,7 +95,7 @@ class Copy extends \Flexio\Jobs\Base
                 $columns .= ',';
 
             // build up the expression using the internal storage name
-            $qcolumn_name = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($col['store_name']);
+            $qcolumn_name = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($col['store_name']);
 
             $columns .= $qcolumn_name;
             if (strlen($exprs) > 0)
@@ -234,7 +234,7 @@ class Copy extends \Flexio\Jobs\Base
 
 
                 // start out by passing through the column as it is
-                $output_columns[$k]['expression'] = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($field);
+                $output_columns[$k]['expression'] = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($field);
                 $old_type = $output_columns[$k]['type'];
 
                 if (isset($action['params']['type']) && $old_type != $action['params']['type'])

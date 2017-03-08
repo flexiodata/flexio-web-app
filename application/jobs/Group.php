@@ -206,7 +206,7 @@ class Group extends \Flexio\Jobs\Base
                     return false;
             }
 
-            $qstore_name = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($store_name);
+            $qstore_name = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($store_name);
             $column_expr .= "($expr) AS $qstore_name";
         }
 

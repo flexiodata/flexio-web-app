@@ -538,7 +538,7 @@ class Structure
         // resolve the types
         $type1 = $field1_info['type'];
         $type2 = $field2_info['type'];
-        $output_type = \Flexio\System\DbUtil::getCompatibleType($type1, $type2);
+        $output_type = \Flexio\Base\DbUtil::getCompatibleType($type1, $type2);
 
         // resolve the widths
         $width1 = $field1_info['width'];

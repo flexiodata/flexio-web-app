@@ -111,7 +111,7 @@ class Replace extends \Flexio\Jobs\Base
         foreach ($columns as $column)
         {
             // build the replace expression for the given column
-            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $qfind = preg_quote($params['find'],'/');
             $qreplace = \Flexio\Services\ExprUtil::quote($params['replace']);
 

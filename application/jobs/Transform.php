@@ -210,7 +210,7 @@ class Transform extends \Flexio\Jobs\Base
             // copy the structure info so we can adjust it if needed
             $new_structure = $column;
 
-            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $width = isset_or($column['width'], -1);
             if ($width == 1024) $width = -1; // \Flexio\Services\Postgres is returning us huge columns of indeterminate width
             $scale = $column['scale'];
