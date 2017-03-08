@@ -20,9 +20,14 @@ class Util
     public static function getFilename($filename)
     {
         // pathinfo will parse paths differently, depending on the
-        // platform being run on
+        // platform being run on; test which type of parsing is being
+        // used and convert the filename over to that
 
-        if (!\Flexio\System\System::isPlatformWindows())
+        $sample_path = '/etc/temp.txt';
+        $sample_filename = pathinfo($sample_path, PATHINFO_FILENAME);
+        $is_linux = ($sample_filename === 'temp');
+
+        if ($is_linux === true)
             $filename = str_replace("\\", "/", $filename); // parse using linux-style paths
              else
             $filename = str_replace("/", "\\", $filename); // parse using windows-style paths
@@ -33,9 +38,14 @@ class Util
     public static function getFileExtension($filename)
     {
         // pathinfo will parse paths differently, depending on the
-        // platform being run on
+        // platform being run on; test which type of parsing is being
+        // used and convert the filename over to that
 
-        if (!\Flexio\System\System::isPlatformWindows())
+        $sample_path = '/etc/temp.txt';
+        $sample_filename = pathinfo($sample_path, PATHINFO_EXTENSION);
+        $is_linux = $sample_filename === 'txt';
+
+        if ($is_linux === true)
             $filename = str_replace("\\", "/", $filename); // parse using linux-style paths
              else
             $filename = str_replace("/", "\\", $filename); // parse using windows-style paths
