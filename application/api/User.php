@@ -31,23 +31,23 @@ class User
                 'user_name'             => array('type' => 'string',  'required' => true),
                 'email'                 => array('type' => 'string',  'required' => true),
                 'password'              => array('type' => 'string',  'required' => true),
-                'description'           => array('type' => 'string',  'required' => false),
-                'full_name'             => array('type' => 'string',  'required' => false),
-                'first_name'            => array('type' => 'string',  'required' => false),
-                'last_name'             => array('type' => 'string',  'required' => false),
-                'phone'                 => array('type' => 'string',  'required' => false),
-                'location_city'         => array('type' => 'string',  'required' => false),
-                'location_state'        => array('type' => 'string',  'required' => false),
-                'location_country'      => array('type' => 'string',  'required' => false),
-                'company_name'          => array('type' => 'string',  'required' => false),
-                'company_url'           => array('type' => 'string',  'required' => false),
-                'locale_language'       => array('type' => 'string',  'required' => false),
-                'locale_decimal'        => array('type' => 'string',  'required' => false),
-                'locale_thousands'      => array('type' => 'string',  'required' => false),
-                'locale_dateformat'     => array('type' => 'string',  'required' => false),
-                'timezone'              => array('type' => 'string',  'required' => false),
-                'verify_code'           => array('type' => 'string',  'required' => false),
-                'config'                => array('type' => 'string',  'required' => false),
+                'description'           => array('type' => 'string',  'required' => false, 'default' => ''),
+                'full_name'             => array('type' => 'string',  'required' => false, 'default' => ''),
+                'first_name'            => array('type' => 'string',  'required' => false, 'default' => ''),
+                'last_name'             => array('type' => 'string',  'required' => false, 'default' => ''),
+                'phone'                 => array('type' => 'string',  'required' => false, 'default' => ''),
+                'location_city'         => array('type' => 'string',  'required' => false, 'default' => ''),
+                'location_state'        => array('type' => 'string',  'required' => false, 'default' => ''),
+                'location_country'      => array('type' => 'string',  'required' => false, 'default' => ''),
+                'company_name'          => array('type' => 'string',  'required' => false, 'default' => ''),
+                'company_url'           => array('type' => 'string',  'required' => false, 'default' => ''),
+                'locale_language'       => array('type' => 'string',  'required' => false, 'default' => 'en_US'),
+                'locale_decimal'        => array('type' => 'string',  'required' => false, 'default' => '.'),
+                'locale_thousands'      => array('type' => 'string',  'required' => false, 'default' => ','),
+                'locale_dateformat'     => array('type' => 'string',  'required' => false, 'default' => 'm/d/Y'),
+                'timezone'              => array('type' => 'string',  'required' => false, 'default' => 'UTC'),
+                'verify_code'           => array('type' => 'string',  'required' => false, 'default' => ''),
+                'config'                => array('type' => 'string',  'required' => false, 'default' => '{}'),
                 'send_email'            => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'create_sample_project' => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'require_verification'  => array('type' => 'boolean', 'required' => false, 'default' => false)
@@ -63,152 +63,117 @@ class User
         if (!\Flexio\Base\Identifier::isValid($user_name))
             return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER, _('This username is invalid.  Please try another.'));
 
-        $description = isset_or($params['description'], '');
-        $full_name = isset_or($params['full_name'], '');  // TODO: should we combine first/last name if full_name isn't set?
-        $first_name = isset_or($params['first_name'], '');
-        $last_name = isset_or($params['last_name'], '');
-        $phone = isset_or($params['phone'], '');
-        $location_city = isset_or($params['location_city'], '');
-        $location_state = isset_or($params['location_state'], '');
-        $location_country = isset_or($params['location_country'], '');
-        $company_name = isset_or($params['company_name'], '');
-        $company_url = isset_or($params['company_url'], '');
-        $locale_language = isset_or($params['locale_language'], 'en_US');
-        $locale_decimal = isset_or($params['locale_decimal'], '.');
-        $locale_thousands = isset_or($params['locale_thousands'], ',');
-        $locale_dateformat = isset_or($params['locale_dateformat'], 'm/d/Y');
-        $timezone = isset_or($params['timezone'], 'UTC');
-        $config = isset_or($params['config'], '{}');
-        $require_verification = isset_or($params['require_verification'], false);
+        // configuration fields we don't want to pass on
+        $send_email = $params['send_email'];
+        $create_sample_project = $params['create_sample_project'];
+        $require_verification = $params['require_verification'];
+        unset($params['send_email']);
+        unset($params['create_sample_project']);
+        unset($params['require_verification']);
 
-        $verify_code = '';
-        if ($require_verification === true)
-            $verify_code = isset($params['verify_code']) ? $params['verify_code'] : \Flexio\Base\Util::generateHandle(); // code to verify user's email address
-
-        // use email to check if account already exists; if it exists
-        // based on the email, see if the user is pending (invitations
-        // use email)
-
+        // try to find the user
         $user = \Flexio\Object\User::load($email);
-        $new_user_info = array(
-                            'user_name' => $user_name,
-                            'description' => $description,
-                            'full_name' => $full_name,
-                            'first_name' => $first_name,
-                            'last_name' => $last_name,
-                            'email' => $email,
-                            'phone' => $phone,
-                            'location_city' => $location_city,
-                            'location_state' => $location_state,
-                            'location_country' => $location_country,
-                            'company_name' => $company_name,
-                            'company_url' => $company_url,
-                            'locale_language' => $locale_language,
-                            'locale_decimal' => $locale_decimal,
-                            'locale_thousands' => $locale_thousands,
-                            'locale_dateformat' => $locale_dateformat,
-                            'timezone' => $timezone,
-                            'password' => $password,
-                            'verify_code' => $verify_code,
-                            'config' => $config,
-                            'eid_status' => ($require_verification === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE)
-                         );
 
-        if ($require_verification === false)
-        {
-            // without verification, the user should never already exist; fail if they do
-            if ($user !== false)
-                return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED, _('This email address is already taken.  Please try another.'));
-        }
-         else
-        {
-            if ($user !== false)
-            {
-                // user already exists; if we're trying to activate a user that's
-                // not in a pending state, flag an error
-                if ($user->getStatus() != \Model::STATUS_PENDING)
-                    return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED, _('This email address is already taken.  Please try another.'));
 
-                // check if the verification code is set and matches the verfication code we
-                // have on record
-                $verify_code = $user->getVerifyCode();
-                if (strlen($verify_code) > 0 && isset($params['verify_code']) && $params['verify_code'] === $verify_code)
-                {
-                    // user already exists, and has the correct verification code;
-                    // set the rest of the information, and activate the user
-
-                    // invited users already exist, but need to have the rest of their
-                    // info set; don't allow last minute changes to the username or email
-                    unset($new_user_info['user_name']);
-                    unset($new_user_info['email']);
-
-                    // link was clicked in notification email and verify code checks out;
-                    // so automatically promote user to verified/active status
-                    $new_user_info['verify_code'] = '';
-                    $new_user_info['eid_status'] = \Model::STATUS_AVAILABLE;
-
-                    $result = $user->set($new_user_info);
-                    if ($result === false)
-                        $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('Operation failed'));
-
-                    // we're done; other parts of the account will have already been created
-                    return $user->get();
-                }
-                else
-                {
-                    // user exists, but the user isn't yet verified and either the
-                    // verification code doesn't exist or the verification code that's
-                    // been provided doesn't match; the user could be trying to create an
-                    // account after having a project shared with them and having not
-                    // verified; or a user could be trying to create an account when they
-                    // hadn't yet completed the verification proc_get_status previously;
-                    // in either case, we need to create a new verification code and let
-                    // the user verify
-
-                    $new_verify_code = \Flexio\Base\Util::generateHandle();
-                    $new_user_info['verify_code'] = $new_verify_code;
-
-                    $result = $user->set($new_user_info);
-                    if ($result === false)
-                        $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('Operation failed'));
-
-                    // if appropriate, send an email
-                    if ($params['send_email'] === true)
-                    {
-                        $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
-                        $email_params = array('email' => $email, 'verify_code' => $new_verify_code);
-                        $message = \Flexio\Object\Message::create($message_type, $email_params);
-                        $message->send();
-                    }
-
-                    // return the user info
-                    return $user->get();
-                }
-            }
-        }
-
-        // user doesn't exist; create the user
-        $user = \Flexio\Object\User::create($new_user_info);
+        // POSSIBILITY 1: user doesn't exist; create the user
         if ($user === false)
-            return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED, _('Account creation not available at this time'));
+        {
+            // determine the status and verify code based on whether or not we're requiring verification
+            $eid_status = ($require_verification === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
+            $verify_code = ($require_verification === true ? \Flexio\Base\Util::generateHandle() : '');
 
-        // set the owner and creator
-        $user_eid = $user->getEid();
-        $user->setOwner($user_eid);
-        $user->setCreatedBy($user_eid);
+            // set the new user info
+            $new_user_info = $params;
+            $new_user_info['eid_status'] = $eid_status;
+            $new_user_info['verify_code'] = $verify_code;
+
+            // create the user
+            $user = \Flexio\Object\User::create($new_user_info);
+            if ($user === false)
+                return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED, _('Unable to create the user.'));
+
+            // set the owner and creator
+            $user_eid = $user->getEid();
+            $user->setOwner($user_eid);
+            $user->setCreatedBy($user_eid);
+
+            // if appropriate, send an email
+            if ($send_email === true)
+            {
+                $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
+                $email_params = array('email' => $email, 'verify_code' => $verify_code);
+                $message = \Flexio\Object\Message::create($message_type, $email_params);
+                $message->send();
+            }
+
+            // if appropriate, create a default project
+            if ($create_sample_project === true)
+                self::createSampleProject($user_eid);
+
+            // return the user info
+            return $user->get();
+        }
+
+
+        // POSSIBILITY 2: the user already already exists; fail if the user status is anything besides pending
+        if ($user->getStatus() != \Model::STATUS_PENDING)
+            return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED, _('This email address is already taken.  Please try another.'));
+
+
+        // POSSIBILITY 3: user already exists and has the correct verification code;
+        // set the rest of the information, and activate the user
+        $existing_verification_code = $user->getVerifyCode();
+        $provided_verification_code = $params['verify_code'];
+
+        if (strlen($existing_verification_code) > 0 && $existing_verification_code === $provided_verification_code)
+        {
+            // start with the info provided
+            $new_user_info = $params;
+
+            // invited users already exist, but need to have the rest of their
+            // info set; don't allow last minute changes to the username or email
+            unset($new_user_info['user_name']);
+            unset($new_user_info['email']);
+
+            // link was clicked in notification email and verify code checks out;
+            // so automatically promote user to verified/active status
+            $new_user_info['verify_code'] = '';
+            $new_user_info['eid_status'] = \Model::STATUS_AVAILABLE;
+
+            $result = $user->set($new_user_info);
+            if ($result === false)
+                $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('Operation failed'));
+
+            // we're done; other parts of the account will have already been created
+            return $user->get();
+        }
+
+
+        // POSSIBILITY 4: user exists, but the user isn't yet verified and either the
+        // verification code doesn't exist or the verification code that's been provided
+        // doesn't match; the user could be trying to create an account after having a
+        // project shared with them and having not verified; or a user could be trying
+        // to create an account when they hadn't yet completed the verification process
+        // previously; in either case, we need to create a new verification code and let
+        // the user verify
+
+        $new_verify_code = \Flexio\Base\Util::generateHandle();
+
+        $new_user_info = array();
+        $new_user_info['verify_code'] = $new_verify_code;
+
+        $result = $user->set($new_user_info);
+        if ($result === false)
+            $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('Operation failed'));
 
         // if appropriate, send an email
-        if ($params['send_email'] === true)
+        if ($send_email === true)
         {
             $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
-            $email_params = array('email' => $email, 'verify_code' => $verify_code);
+            $email_params = array('email' => $email, 'verify_code' => $new_verify_code);
             $message = \Flexio\Object\Message::create($message_type, $email_params);
             $message->send();
         }
-
-        // if appropriate, create a default project
-        if ($params['create_sample_project'] === true)
-            self::createSampleProject($user_eid);
 
         // return the user info
         return $user->get();
