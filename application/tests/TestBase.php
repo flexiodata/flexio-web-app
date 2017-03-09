@@ -44,8 +44,9 @@ class TestBase
             return array();
 
         $tests = array();
-        TestBase::addTests('base', $tests);
+        TestBase::addTests('test', $tests);
         TestBase::addTests('config', $tests);
+        TestBase::addTests('base', $tests);
         TestBase::addTests('system', $tests);
         TestBase::addTests('services', $tests);
         TestBase::addTests('model', $tests);
