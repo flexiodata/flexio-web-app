@@ -234,8 +234,7 @@ class ExprTranslatorPostgres
         {
             if (is_string($node->val))
             {
-                // TODO: we should use the specific datastore connection, instead of getModel()
-                return \Flexio\System\System::getModel()->getDatabase()->quote($node->val);
+                return \Flexio\Services\ExprUtil::quote($node->val);
             }
              else if (is_bool($node->val))
             {
@@ -1264,7 +1263,7 @@ class ExprTranslatorPostgres
     {
         if ($this->getType($params[0]) == ExprParser::TYPE_NULL)
             return "null::text";
-        
+
         if (count($params) == 1)
         {
             $param0 = $this->printNode($params[0]);
