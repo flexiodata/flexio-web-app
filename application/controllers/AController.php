@@ -250,7 +250,7 @@ class AController extends \Flexio\System\FxControllerAction
 
                     // TODO: remove the beta invite code when it's no longer necessary
                     $beta_invite_code = 'invite_code=e0miwu7qkv89h3rlrnst25e3jdxbbrpn';
-                    $redirect = "/app/signup?$beta_invite_code&ref=share_auth&email=".urlencode($email)."&user_eid=$target_user_eid&code=$target_user_verified_code&redirect=".urlencode($project_url);
+                    $redirect = "/app/signup?$beta_invite_code&ref=share_auth&email=".urlencode($email)."&user_eid=$target_user_eid&verify_code=$target_user_verified_code&redirect=".urlencode($project_url);
                     $this->_redirect($redirect);
                     return;
                 }

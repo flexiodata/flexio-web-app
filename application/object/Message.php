@@ -86,7 +86,7 @@ class Message
         $to = $params['email'];
         $verify_code = $params['verify_code'];
 
-        $activation_link = self::getBaseUrl() . '/app/signin?ref=verification_email&email='.urlencode($to).'&code='.$verify_code;
+        $activation_link = self::getBaseUrl() . '/app/signin?ref=verification_email&email='.urlencode($to).'&verify_code='.$verify_code;
 
         // get templates from the application res directory
         $msg_text = self::getTextEmail('template-account-verify', [ 'activation_link' => $activation_link ]);
@@ -115,7 +115,7 @@ class Message
         $verify_code = $params['verify_code'];
 
         // prepare info structure for create account
-        $reset_link = self::getBaseUrl() . '/app/resetpassword?email='.urlencode($to).'&code='.$verify_code;
+        $reset_link = self::getBaseUrl() . '/app/resetpassword?email='.urlencode($to).'&verify_code='.$verify_code;
 
         // get templates from the application res directory
         $msg_text = self::getTextEmail('template-forgot-password', [ 'reset_link' => $reset_link ]);
