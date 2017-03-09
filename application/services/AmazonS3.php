@@ -250,7 +250,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
         if (substr($path,0,1) == '/')
             $path = substr($path,1);
 
-        //try
+        try
         {
             $response = $this->s3->createMultipartUpload(array(
                 'Bucket' => $this->bucket,
@@ -293,12 +293,11 @@ class AmazonS3 implements \Flexio\Services\IConnection
                 )
             ));
         }
-        /*
         catch (\Exception $e)
         {
             return false;
         }
-*/
+
         return true;
     }
 
