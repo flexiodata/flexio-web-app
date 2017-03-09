@@ -27,10 +27,6 @@ class User
 {
     public static function create($params, $request)
     {
-        // set to true if we want to require a verification email
-        $require_verification = false;
-
-
         if (($params = $request->getValidator()->check($params, array(
                 'user_name'             => array('type' => 'string',  'required' => true),
                 'email'                 => array('type' => 'string',  'required' => true),
@@ -53,7 +49,8 @@ class User
                 'verify_code'           => array('type' => 'string',  'required' => false),
                 'config'                => array('type' => 'string',  'required' => false),
                 'send_email'            => array('type' => 'boolean', 'required' => false, 'default' => true),
-                'create_sample_project' => array('type' => 'boolean', 'required' => false, 'default' => true)
+                'create_sample_project' => array('type' => 'boolean', 'required' => false, 'default' => true),
+                'require_verification'  => array('type' => 'boolean', 'required' => false, 'dfeault' => false)
             ))) === false)
             return $request->getValidator()->fail();
 
@@ -105,6 +102,7 @@ class User
         $locale_dateformat = isset_or($params['locale_dateformat'], 'm/d/Y');
         $timezone = isset_or($params['timezone'], 'UTC');
         $config = isset_or($params['config'], '{}');
+        $require_verification = isset_or($params['require_verification'], false);
 
         $verify_code = '';
         if ($require_verification === true)

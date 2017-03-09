@@ -94,7 +94,8 @@ class Follower
                                        'last_name' => '',
                                        'full_name' => '',
                                        'send_email' => false,
-                                       'create_sample_project' => false);
+                                       'create_sample_project' => false,
+                                       'require_verification' => true); // require verification to give user a chance to fill out their info
 
                 // if the user isn't invited, create the user; if something went wrong, move on
                 $user_info = \Flexio\Api\User::create($new_user_info, $request);
