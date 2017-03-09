@@ -396,12 +396,12 @@ class User
     {
         if (($params = $request->getValidator()->check($params, array(
                 'email'     => array('type' => 'string', 'required' => true),
-                'code'      => array('type' => 'string', 'required' => true)
+                'verify_code'      => array('type' => 'string', 'required' => true)
             ))) === false)
             return $request->getValidator()->fail();
 
         $email = $params['email'];
-        $code = $params['code'];
+        $code = $params['verify_code'];
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)
@@ -475,15 +475,15 @@ class User
     public static function resetpassword($params, $request)
     {
         if (($params = $request->getValidator()->check($params, array(
-                'email'     => array('type' => 'string', 'required' => true),
-                'password'  => array('type' => 'string', 'required' => true),
-                'code'      => array('type' => 'string', 'required' => true)
+                'email'       => array('type' => 'string', 'required' => true),
+                'password'    => array('type' => 'string', 'required' => true),
+                'verify_code' => array('type' => 'string', 'required' => true)
             ))) === false)
             return $request->getValidator()->fail();
 
         $email = $params['email'];
         $password = $params['password'];
-        $code = $params['code'];
+        $code = $params['verify_code'];
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)
