@@ -120,10 +120,11 @@ class Dropbox implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function read($path, $callback)
+    public function read($params, $callback)
     {
-        // download the file
+        $path = isset_or($params['path'],'');
 
+        // download the file
         $ch = curl_init();
 
         $filename = rawurlencode($path);

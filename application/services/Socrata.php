@@ -188,8 +188,10 @@ class Socrata implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function read($path, $callback)
+    public function read($params, $callback)
     {
+        $path = isset_or($params['path'],'');
+
         // url qualified with table name? if so, find out the real base path
         $baseurl = $this->base_url;
         $parts = explode('/', $baseurl);

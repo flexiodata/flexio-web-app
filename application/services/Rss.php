@@ -79,8 +79,10 @@ class Rss implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function read($path, $callback)
+    public function read($params, $callback)
     {
+        $path = isset_or($params['path'],'');
+
         $feed = new \SimplePie();
         $feed->enable_cache(false);
         $feed->set_feed_url($path);

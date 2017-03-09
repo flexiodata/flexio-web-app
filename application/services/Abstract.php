@@ -26,6 +26,6 @@ interface IConnection
     public function exists($path);
     public function getInfo($path);
 
-    public function read($path, $callback);
+    public function read($params, $callback);
     public function write($params, $callback);
 }

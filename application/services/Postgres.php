@@ -119,8 +119,10 @@ class Postgres implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function read($path, $callback)
+    public function read($params, $callback)
     {
+        $path = isset_or($params['path'],'');
+
         // find out if we have a table or not
         $is_table = false;
         $finfo = $this->getFileInfo($path);
