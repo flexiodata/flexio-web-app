@@ -20,7 +20,7 @@
         </div>
         <div v-show="false">
           <input v-model="email" type="hidden">
-          <input v-model="code" type="hidden">
+          <input v-model="verify_code" type="hidden">
         </div>
         <div class="mv3">
           <input v-model="password" v-focus :class="input_cls" placeholder="Password" type="password" autocomplete=off>
@@ -51,7 +51,7 @@
       next(vm => {
         // access to component instance via `vm`
         vm.email = _.get(to, 'query.email', '')
-        vm.code = _.get(to, 'query.code', '')
+        vm.verify_code = _.get(to, 'query.verify_code', '')
 
         // now that we have them, we can remove the query params from the url
         vm.$router.replace(to.path)
@@ -60,7 +60,7 @@
     data() {
       return {
         email: '',
-        code: '',
+        verify_code: '',
         password: '',
         password2: '',
         is_submitting: false,
@@ -74,7 +74,7 @@
         // assemble non-empty values for submitting to the backend
         return _
           .chain(this.$data)
-          .pick(['email', 'code', 'password', 'password2'])
+          .pick(['email', 'verify_code', 'password', 'password2'])
           .omitBy(_.isEmpty)
           .value()
       },
