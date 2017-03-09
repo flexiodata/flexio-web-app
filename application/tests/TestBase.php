@@ -48,7 +48,7 @@ class TestBase
         TestBase::addTests('config', $tests);
         TestBase::addTests('base', $tests);
         TestBase::addTests('system', $tests);
-        TestBase::addTests('services', $tests);
+        TestBase::addTests('service', $tests);
         TestBase::addTests('model', $tests);
         TestBase::addTests('object', $tests);
         TestBase::addTests('jobs', $tests);
