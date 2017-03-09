@@ -50,7 +50,7 @@ class User
                 'config'                => array('type' => 'string',  'required' => false),
                 'send_email'            => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'create_sample_project' => array('type' => 'boolean', 'required' => false, 'default' => true),
-                'require_verification'  => array('type' => 'boolean', 'required' => false, 'dfeault' => false)
+                'require_verification'  => array('type' => 'boolean', 'required' => false, 'default' => false)
             ))) === false)
             return $request->getValidator()->fail();
 
