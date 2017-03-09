@@ -6,13 +6,6 @@
 
     <!-- pipe header -->
     <div class="flex flex-row flex-none pt2">
-        <router-link
-          :to="project_link"
-          class="flex-none link dib f5 f4-m f3-l fw6 ph1 ph2-ns v-mid black-60 hint--bottom-right"
-          aria-label="Back to project home"
-        >
-        <i class="material-icons v-mid f2">home</i>
-        </router-link>
       <div class="flex-fill flex flex-column justify-center">
         <span class="dib f4 f3-ns fw6 lh-title truncate mr2 black-60">{{pipe.name}}</span>
       </div>

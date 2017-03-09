@@ -54,6 +54,10 @@ export const getActiveProject = state => {
   return _.find(getAllProjects(state), { eid: state.active_project })
 }
 
+export const getActiveDocument = state => {
+  return _.find(state.objects, { eid: state.active_document })
+}
+
 export const getActiveUserProjects = state => {
   // NOTE: it's really important to include the '_' on the same line
   // as the 'return', otherwise JS will return without doing anything

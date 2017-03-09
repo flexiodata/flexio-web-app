@@ -2,17 +2,35 @@
   <nav v-if="render_nav" v-show="show_nav" class="bb b--black-20">
     <div class="flex flex-row bg-white pa2 ph3-ns items-center">
       <div class="flex-fill flex flex-row items-center truncate">
-        <router-link to="/home" class="dib v-mid link min-w3" title="Home">
+        <router-link to="/home" class="dib link min-w3" title="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <router-link
-          v-if="show_title"
-          :to="project_link"
-          class="link dib lh-title underline-hover truncate f5 f4-m f3-l fw6 br1 pv1 ph1 ph2-ns v-mid ml2 black-60"
-          title="Back to project home"
-        >
-          {{project_name}}
-        </router-link>
+        <div class="dib lh-title f6 f4-ns fw6">
+          <router-link
+            v-if="show_title"
+            :to="home_link"
+            title="Project List"
+            class="link dib v-mid ml2 ml3-ns pl2 pl3-ns black-60 b--black-20 bl"
+          >
+            <i class="material-icons lh-inherit">home</i>
+          </router-link>
+          <i v-if="show_project_title" class="material-icons md-24 black-60 v-mid fa-rotate-270" style="margin: 0px -4px;">arrow_drop_down</i>
+          <router-link
+            v-if="show_title && show_project_title"
+            :to="project_link"
+            title="Project Overview"
+            class="link dib v-mid black-60 underline-hover truncate"
+          >
+            {{project_name}}
+          </router-link>
+          <i v-if="show_document_title" class="material-icons md-24 black-60 v-mid fa-rotate-270" style="margin: 0px -4px;">arrow_drop_down</i>
+          <div
+            v-if="show_title && show_document_title"
+            class="dib v-mid black-60 truncate"
+          >
+            {{document_name}}
+          </div>
+        </div>
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
@@ -126,7 +144,8 @@
     computed: {
       ...mapState([
         'user_fetching',
-        'active_project'
+        'active_project',
+        'active_document'
       ]),
       render_nav() {
         switch (this.$route.name)
@@ -154,11 +173,23 @@
       show_title() {
         return this.active_project.length > 0
       },
+      show_project_title() {
+        return this.active_project.length > 0
+      },
+      show_document_title() {
+        return this.show_project_title && this.active_project != this.active_document
+      },
+      home_link() {
+        return '/home'
+      },
       project_link() {
         return '/project/'+this.active_project
       },
       project_name() {
         return _.get(this.getActiveProject(), 'name', '')
+      },
+      document_name() {
+        return _.get(this.getActiveDocument(), 'name', '')
       },
       user_eid() {
         return _.get(this.getActiveUser(), 'eid', '')
@@ -176,6 +207,7 @@
     methods: {
       ...mapGetters([
         'getActiveProject',
+        'getActiveDocument',
         'getActiveUser'
       ]),
       openHelpDocs() {
