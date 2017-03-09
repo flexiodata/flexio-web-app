@@ -108,8 +108,10 @@ class Twilio implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function read($path, $callback)
+    public function read($params, $callback)
     {
+        $path = isset_or($params['path'],'');
+
         if (!$this->isOk())
             return false;
 

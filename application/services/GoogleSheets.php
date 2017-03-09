@@ -135,8 +135,10 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function read($path, $callback)
+    public function read($params, $callback)
     {
+        $path = isset_or($params['path'],'');
+
         $spreadsheet_id = null;
         $worksheet_id = null;
 

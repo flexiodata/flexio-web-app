@@ -247,7 +247,9 @@ class Stream extends \Flexio\Object\Base
             $is_internal_table = true;
         $structure = $this->getStructure()->enum();
 
-        $service->read($this->getPath(), function ($data) use (&$callback, &$is_internal_table, $structure) {
+        $params = array();
+        $params['path'] = $this->getPath();
+        $service->read($params, function ($data) use (&$callback, &$is_internal_table, $structure) {
 
             // if we have an internal table, convert the data keys from
             // the store_name to the application name

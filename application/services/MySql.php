@@ -132,9 +132,10 @@ class MySql implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function read($path, $callback)
+    public function read($params, $callback)
     {
         // TODO: implement
+        $path = isset_or($params['path'],'');
     }
 
     public function write($params, $callback)

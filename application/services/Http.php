@@ -71,8 +71,10 @@ class Http implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function read($path, $callback)
+    public function read($params, $callback)
     {
+        $path = isset_or($params['path'],'');
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $path);
         curl_setopt($ch, CURLOPT_HTTPGET, true);

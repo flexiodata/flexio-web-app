@@ -231,7 +231,9 @@ class Input extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // transfer the data
-        $service->read($path, function($row) use (&$streamwriter) {
+        $params = array();
+        $params['path'] = $path;
+        $service->read($params, function($row) use (&$streamwriter) {
             $streamwriter->write($row);
         });
 
@@ -254,7 +256,10 @@ class Input extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $mime_data_sample = '';
-        $service->read($path, function($data) use (&$streamwriter, &$mime_data_sample) {
+        $params = array();
+        $params['path'] = $path;
+
+        $service->read($params, function($data) use (&$streamwriter, &$mime_data_sample) {
 
             // save a sample of data for determining the mime type
             if (strlen($mime_data_sample) <= 1024)
@@ -291,7 +296,10 @@ class Input extends \Flexio\Jobs\Base
         $structure = \Flexio\Object\Structure::create();
 
         $streamwriter = false;
-        $service->read($path, function($row) use (&$outstream, &$structure, &$streamwriter, &$rownum) {
+        $params = array();
+        $params['path'] = $path;
+
+        $service->read($params, function($row) use (&$outstream, &$structure, &$streamwriter, &$rownum) {
 
             $rownum++;
 
