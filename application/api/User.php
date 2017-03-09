@@ -50,32 +50,9 @@ class User
                 'config'                => array('type' => 'string',  'required' => false),
                 'send_email'            => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'create_sample_project' => array('type' => 'boolean', 'required' => false, 'default' => true),
-                'require_verification'  => array('type' => 'boolean', 'required' => false, 'dfeault' => false)
+                'require_verification'  => array('type' => 'boolean', 'required' => false, 'default' => false)
             ))) === false)
             return $request->getValidator()->fail();
-
-
-        // if a full name is specified, try to parse it
-        $first_name_parsed = '';
-        $last_name_parsed = '';
-/*
-// TODO: currently, the name parser is throwing an Exception; need to fix
-
-        if (isset($params['full_name']))
-        {
-            try
-            {
-                $parser = new HumanNameParser_Parser($params['full_name']);
-                $first_name_parsed = $parser->getFirst();
-                $last_name_parsed = $parser->getLast();
-            }
-             catch (\Exception $e)
-            {
-                // unable to parse the name; treat the set the first name as whatever was entered
-                $first_name_parsed = $params['full_name'];
-            }
-        }
-*/
 
         // required fields
         $user_name = $params['user_name'];
@@ -88,8 +65,8 @@ class User
 
         $description = isset_or($params['description'], '');
         $full_name = isset_or($params['full_name'], '');  // TODO: should we combine first/last name if full_name isn't set?
-        $first_name = isset_or($params['first_name'], $first_name_parsed);
-        $last_name = isset_or($params['last_name'], $last_name_parsed);
+        $first_name = isset_or($params['first_name'], '');
+        $last_name = isset_or($params['last_name'], '');
         $phone = isset_or($params['phone'], '');
         $location_city = isset_or($params['location_city'], '');
         $location_state = isset_or($params['location_state'], '');
@@ -287,33 +264,6 @@ class User
                 return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
         }
 
-/*
-// TODO: currently, the name parser is throwing an Exception; need to fix
-        // try to fill in any unspecified first/last name from any specified full name
-        if (isset($params['full_name']))
-        {
-            try
-            {
-                $parser = new HumanNameParser_Parser($params['full_name']);
-                $first_name_parsed = $parser->getFirst();
-                $last_name_parsed = $parser->getLast();
-
-                if (!isset($params['first_name']))
-                    $params['first_name'] = $first_name_parsed;
-                if (!isset($params['last_name']))
-                    $params['last_name'] = $last_name_parsed;
-            }
-             catch (\Exception $e)
-            {
-                // unable to parse the name; treat the set the first name as whatever was entered
-                $first_name_parsed = $params['full_name'];
-
-                if (!isset($params['first_name']))
-                    $params['first_name'] = $first_name_parsed;
-            }
-        }
-*/
-
         $user->set($params);
         return $user->get();
     }
@@ -496,6 +446,27 @@ class User
             return $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('Could not update user at this time'));
 
         return true;
+    }
+
+    public static function parseFullname($full_name, &$first_name, &$last_name)
+    {
+        // if a full name is specified, try to parse it
+        $first_name = '';
+        $last_name = '';
+        /*
+        // TODO: currently, the name parser is throwing an Exception; need to fix
+        try
+        {
+            $parser = new HumanNameParser_Parser($full_name);
+            $first_name = $parser->getFirst();
+            $last_name = $parser->getLast();
+        }
+            catch (\Exception $e)
+        {
+            // unable to parse the name; treat the set the first name as whatever was entered
+            $first_name = $params['full_name'];
+        }
+        */
     }
 
     public static function createSample($params, $request)
