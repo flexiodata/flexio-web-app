@@ -80,6 +80,7 @@ class Follower
              else
             {
                 // user doesn't exist; create a user
+                $user_email = $identifier;
                 $username = \Flexio\Base\Util::generateHandle(); // default username
                 $password = \Flexio\Base\Util::generateHandle();
                 $verify_code = \Flexio\Base\Util::generateHandle(); // code to verify user's email address
