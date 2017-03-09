@@ -70,6 +70,7 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         // access to component instance via `vm`
+        vm.verify_code = _.get(to, 'query.verify_code', '')
         vm.invite_code = _.get(to, 'query.invite_code', '')
         vm.email = _.get(to, 'query.email', '')
 
@@ -100,6 +101,7 @@
         error_msg: '',
         errors: {},
         invite_code: '',
+        verify_code: '',
         input_cls: 'input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue lh-title ph3 pv2a w-100'
       }
     },
@@ -122,7 +124,7 @@
         // assemble non-empty values for submitting to the backend
         return _
           .chain(this.$data)
-          .pick(['first_name', 'last_name', 'user_name', 'email', 'password'])
+          .pick(['first_name', 'last_name', 'user_name', 'email', 'password', 'verify_code'])
           .omitBy(_.isEmpty)
           .value()
       },
