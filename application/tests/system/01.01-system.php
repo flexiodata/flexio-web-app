@@ -127,5 +127,18 @@ class Test
         $actual = is_string($git_revision) === true && preg_match('/^[0-9a-f]{40}$/', $git_revision) === 1;
         $expected = true;
         TestCheck::assertBoolean('F.1', '\Flexio\System\System::getGitRevision() test to verify a valid hash is returned',  $actual, $expected, $results);
+
+
+
+        // TEST: platform check tests; see if we're on a standard platform
+
+        // BEGIN TEST
+        $is_windows = \Flexio\System\System::isPlatformWindows();
+        $is_mac = \Flexio\System\System::isPlatformMac();
+        $is_linux = \Flexio\System\System::isPlatformLinux();
+        $platform_check = $is_windows || $is_mac || $is_linux;
+        $actual = $platform_check;
+        $expected = true;
+        TestCheck::assertBoolean('G.1', 'Platform detection test',  $actual, $expected, $results);
     }
 }
