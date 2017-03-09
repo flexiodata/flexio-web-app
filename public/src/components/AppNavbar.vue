@@ -6,29 +6,28 @@
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
         <div class="dib lh-title f6 f4-ns fw6">
-          <router-link
-            v-if="show_title"
-            :to="home_link"
-            title="Project List"
-            class="link dib v-mid ml2 ml3-ns pl2 pl3-ns black-60 b--black-20 bl"
-          >
-            <i class="material-icons lh-inherit">home</i>
-          </router-link>
+          <div class="dib ml2 ml3-ns pl2 pl3-ns b--black-20 bl">
+            <router-link
+              v-if="show_title"
+              :to="home_link"
+              title="Project List"
+              class="link dib v-mid black-60 css-border-underline-hover"
+            ><i class="material-icons lh-inherit dib">home</i>
+            </router-link>
+          </div>
           <i v-if="show_project_title" class="material-icons md-24 black-60 v-mid fa-rotate-270" style="margin: 0px -4px;">arrow_drop_down</i>
           <router-link
             v-if="show_title && show_project_title"
             :to="project_link"
             title="Project Overview"
-            class="link dib v-mid black-60 underline-hover truncate"
-          >
-            {{project_name}}
+            class="link dib v-mid black-60 css-border-underline-hover pv1 truncate"
+          >{{project_name}}
           </router-link>
           <i v-if="show_document_title" class="material-icons md-24 black-60 v-mid fa-rotate-270" style="margin: 0px -4px;">arrow_drop_down</i>
           <div
             v-if="show_title && show_document_title"
             class="dib v-mid black-60 truncate"
-          >
-            {{document_name}}
+          >{{document_name}}
           </div>
         </div>
       </div>
@@ -264,4 +263,17 @@
     }
   }
 </script>
-2
+
+<style lang="less">
+  .css-border-underline-hover {
+    // compensate for border
+    position: relative;
+    top: 2px;
+
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+      border-bottom-color: rgba(0,0,0,0.6);
+    }
+  }
+</style>
