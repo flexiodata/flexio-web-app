@@ -193,8 +193,14 @@
         })
       },
       doRedirect() {
+        debugger
+
         // grab the redirect from the query string if it exists
-        var redirect = this.$route.query.redirect
+        var redirect = _.get(this.$route, 'query.redirect', '')
+
+        // fix problem with /app/app when redirecting
+        if (redirect.substr(0, 5) == '/app/')
+          redirect = redirect.substr(4)
 
         if (redirect && redirect.length > 0)
           this.$router.push({ path: redirect })
