@@ -8,11 +8,11 @@
  * Created:  2016-02-01
  *
  * @package flexio
- * @subpackage Services
+ * @subpackage Base
  */
 
 
-namespace Flexio\Services;
+namespace Flexio\Base;
 
 
 class ExprValue

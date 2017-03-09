@@ -76,7 +76,7 @@ class Sort extends \Flexio\Jobs\Base
                 if (!is_string($part['expression']))
                     return false;
 
-                $s = \Flexio\Services\ExprTranslatorPostgres::translate($part['expression'], $input_columns);
+                $s = \Flexio\Base\ExprTranslatorPostgres::translate($part['expression'], $input_columns);
                 if ($s === false)
                     return false;
 

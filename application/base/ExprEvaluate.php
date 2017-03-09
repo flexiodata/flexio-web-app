@@ -8,11 +8,11 @@
  * Created:  2016-02-08
  *
  * @package flexio
- * @subpackage Services
+ * @subpackage Base
  */
 
 
-namespace Flexio\Services;
+namespace Flexio\Base;
 
 
 class ExprEvaluate
@@ -219,7 +219,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             {
                 return ExprParser::TYPE_NULL;
             }
-             else if (is_a($node->val, '\Flexio\Services\ExprDateTime'))
+             else if (is_a($node->val, '\Flexio\Base\ExprDateTime'))
             {
                 if ($node->val->hasTimePart())
                     return ExprParser::TYPE_DATETIME;
@@ -2510,7 +2510,7 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     private static function exprToDate($value)
     {
-        if (is_a($value, '\Flexio\Services\ExprDateTime'))
+        if (is_a($value, '\Flexio\Base\ExprDateTime'))
             return $value;
 
         $e = new ExprDateTime();
@@ -2696,7 +2696,7 @@ class ExprDateTime
 
     public function parse($value)
     {
-        if (is_a($value, '\Flexio\Services\ExprDateTime'))
+        if (is_a($value, '\Flexio\Base\ExprDateTime'))
         {
             $this->values = $value->values;
             return true;

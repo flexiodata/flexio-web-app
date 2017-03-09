@@ -8,11 +8,11 @@
  * Created:  2016-02-08
  *
  * @package flexio
- * @subpackage Services
+ * @subpackage Base
  */
 
 
-namespace Flexio\Services;
+namespace Flexio\Base;
 
 
 class ExprTranslatorPostgres
@@ -234,7 +234,7 @@ class ExprTranslatorPostgres
         {
             if (is_string($node->val))
             {
-                return \Flexio\Services\ExprUtil::quote($node->val);
+                return \Flexio\Base\ExprUtil::quote($node->val);
             }
              else if (is_bool($node->val))
             {
@@ -967,7 +967,7 @@ class ExprTranslatorPostgres
              else
             $res .= $this->printNode($params[0]);
 
-        $res .= ' ~* ' . \Flexio\Services\ExprUtil::quote($match_regex);
+        $res .= ' ~* ' . \Flexio\Base\ExprUtil::quote($match_regex);
         return $res . ')';
     }
 

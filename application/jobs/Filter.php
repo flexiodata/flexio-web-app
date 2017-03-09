@@ -59,7 +59,7 @@ class Filter extends \Flexio\Jobs\Base
         }
 
         // make sure we have a valid expression
-        $expreval = new \Flexio\Services\ExprEvaluate;
+        $expreval = new \Flexio\Base\ExprEvaluate;
         $input_structure = $instream->getStructure()->enum();
         $success = $expreval->prepare($filter_expression, $input_structure);
 

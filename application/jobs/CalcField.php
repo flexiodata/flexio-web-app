@@ -56,7 +56,7 @@ class CalcField extends \Flexio\Jobs\Base
             $scale = (int)$scale;
 
         // make sure we have a valid expression
-        $expreval = new \Flexio\Services\ExprEvaluate;
+        $expreval = new \Flexio\Base\ExprEvaluate;
         $input_structure = $instream->getStructure()->enum();
         $success = $expreval->prepare($expression, $input_structure);
 

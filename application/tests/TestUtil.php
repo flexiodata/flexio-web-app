@@ -57,7 +57,7 @@ class TestUtil
     public static function evalExpressionNative($expr)
     {
         $retval = null;
-        $success = \Flexio\Services\ExprEvaluate::evaluate($expr, [], [], $retval);
+        $success = \Flexio\Base\ExprEvaluate::evaluate($expr, [], [], $retval);
         if ($success === false)
             return TestError::ERROR_BAD_PARSE;
 
@@ -71,7 +71,7 @@ class TestUtil
         $dbconfig = \Model::getDatabaseConfig();
 
         // first, try to parse the expression
-        $p = new \Flexio\Services\ExprTranslatorPostgres;
+        $p = new \Flexio\Base\ExprTranslatorPostgres;
         $err = $p->parse($expr);
         if ($err === false)
             return TestError::ERROR_BAD_PARSE;

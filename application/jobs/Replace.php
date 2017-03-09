@@ -113,7 +113,7 @@ class Replace extends \Flexio\Jobs\Base
             // build the replace expression for the given column
             $qname = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $qfind = preg_quote($params['find'],'/');
-            $qreplace = \Flexio\Services\ExprUtil::quote($params['replace']);
+            $qreplace = \Flexio\Base\ExprUtil::quote($params['replace']);
 
             $location = isset_or($params['location'],'any');
             if ($location == 'any') {}
@@ -125,7 +125,7 @@ class Replace extends \Flexio\Jobs\Base
                 $qfind = '(^' . $qfind .')|(' . $qfind . '$)';
             else if ($location == 'whole')
                 $qfind = '^' . $qfind . '$';
-            $qfind = \Flexio\Services\ExprUtil::quote($qfind);
+            $qfind = \Flexio\Base\ExprUtil::quote($qfind);
 
             $flags = 'gi';
             if (isset($params['match_case']) && $params['match_case'])
@@ -134,7 +134,7 @@ class Replace extends \Flexio\Jobs\Base
             $exprtext = "regexp_replace($qname,$qfind,$qreplace,'$flags')";
 
             // map the column to the expression
-            $expreval = new \Flexio\Services\ExprEvaluate;
+            $expreval = new \Flexio\Base\ExprEvaluate;
             $parse_result = $expreval->prepare($exprtext, $instream->getStructure()->enum());
             if ($parse_result === false)
                 return; // trouble building the expression

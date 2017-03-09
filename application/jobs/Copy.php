@@ -103,7 +103,7 @@ class Copy extends \Flexio\Jobs\Base
 
             if (isset($col['expression']))
             {
-                $pgsqlexpr = \Flexio\Services\ExprTranslatorPostgres::translate($col['expression'], $input_columns);
+                $pgsqlexpr = \Flexio\Base\ExprTranslatorPostgres::translate($col['expression'], $input_columns);
                 if ($pgsqlexpr === false)
                     return false; // couldn't translate the expression
                 $exprs .= $pgsqlexpr . ' AS ' . $qcolumn_name;
@@ -299,7 +299,7 @@ class Copy extends \Flexio\Jobs\Base
                     }
                         else
                     {
-                        $output_columns[$k]['expression'] = \Flexio\Services\ExprUtil::getCastExpression($expr, $old_type, $new_type, $width, $scale);
+                        $output_columns[$k]['expression'] = \Flexio\Base\ExprUtil::getCastExpression($expr, $old_type, $new_type, $width, $scale);
                     }
 
                     continue;
