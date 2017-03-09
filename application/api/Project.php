@@ -460,7 +460,7 @@ class Project
                 return false;
 
             // if we have a string, but it isn't an eid, just ignore it
-            if (!\Flexio\System\Eid::isValid($i))
+            if (!\Flexio\Base\Eid::isValid($i))
                 continue;
 
             $filtered_items[] = $i;

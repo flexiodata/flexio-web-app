@@ -51,14 +51,14 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $actual = $model->delete($eid);
         $expected = false;
         TestCheck::assertBoolean('B.1', '\Model::delete(); return false after trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $result = $model->delete($eid);
         $actual = $model->hasErrors();
         $expected = false;
@@ -70,7 +70,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -83,7 +83,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -97,7 +97,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
@@ -113,7 +113,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle1 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,

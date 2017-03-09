@@ -50,7 +50,7 @@ class Help
         $subject = $params['subject'];
         $mailbox = '64691';  // mailbox desintation set up in Help Scout
         $message = $params['message'];
-        $timestamp = \Flexio\System\Util::formatDate(\Flexio\System\System::getTimestamp());
+        $timestamp = \Flexio\Base\Util::formatDate(\Flexio\System\System::getTimestamp());
 
         // help request conversation package
         $conversation = "
@@ -87,7 +87,7 @@ class Help
 
         $api_endpoint = "https://api.helpscout.net/v1/conversations.json";
         $basic_auth = "$api_key:X";
-        $result = \Flexio\System\HttpRequest::exec('POST', $api_endpoint, $basic_auth, $conversation);
+        $result = \Flexio\Base\HttpRequest::exec('POST', $api_endpoint, $basic_auth, $conversation);
 
         // TODO: build up api result
         return true;

@@ -48,7 +48,7 @@ class Convert extends \Flexio\Jobs\Base
 
         // default to convert to table
         if ($output_mime_type_from_definition === false)
-            $output_mime_type_from_definition = \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
+            $output_mime_type_from_definition = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
 
         // iterate through the inputs
         $input = $this->getInput()->enum();
@@ -57,10 +57,10 @@ class Convert extends \Flexio\Jobs\Base
             // get the mime type for the input; use the job format if it's
             // specified, as long as the input format isn't a flexio table
             $mime_type = $instream->getMimeType();
-            if ($mime_type != \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             {
                 if ($input_mime_type_from_definition === false)
-                    $mime_type = \Flexio\System\ContentType::MIME_TYPE_CSV; // default to csv
+                    $mime_type = \Flexio\Base\ContentType::MIME_TYPE_CSV; // default to csv
                      else
                     $mime_type = $input_mime_type_from_definition;
             }
@@ -73,22 +73,22 @@ class Convert extends \Flexio\Jobs\Base
                     break;
 
                 // table input
-                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTableInput($instream, $output_mime_type_from_definition);
                     break;
 
                 // csv input
-                case \Flexio\System\ContentType::MIME_TYPE_CSV:
+                case \Flexio\Base\ContentType::MIME_TYPE_CSV:
                     $this->createOutputFromCsvInput($instream, $output_mime_type_from_definition);
                     break;
 
                 // text input
-                case \Flexio\System\ContentType::MIME_TYPE_TXT:
+                case \Flexio\Base\ContentType::MIME_TYPE_TXT:
                     $this->createOutputFromFixedLengthInput($instream, $output_mime_type_from_definition);
                     break;
 
                 // text input
-                case \Flexio\System\ContentType::MIME_TYPE_PDF:
+                case \Flexio\Base\ContentType::MIME_TYPE_PDF:
                     $this->createOutputFromPdfInput($instream, $output_mime_type_from_definition);
                     break;
             }
@@ -99,8 +99,8 @@ class Convert extends \Flexio\Jobs\Base
     {
         $outstream = \Flexio\Object\Stream::create();
         $outstream->setName($instream->getName());
-        $outstream->setPath(\Flexio\System\Util::generateHandle());
-        $outstream->setMimeType(\Flexio\System\ContentType::MIME_TYPE_JSON);
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);
 
         $this->getOutput()->push($outstream);
 
@@ -149,11 +149,11 @@ class Convert extends \Flexio\Jobs\Base
 
 
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
             return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
 
-        $outstream->setMimeType(\Flexio\System\ContentType::MIME_TYPE_TXT);
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
         $this->getOutput()->push($outstream);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
@@ -198,7 +198,7 @@ class Convert extends \Flexio\Jobs\Base
         $streamwriter = null;
 
         $delimiter = isset_or($job_definition['params']['input']['delimiter'], self::DELIMITER_COMMA);
-        $is_output_json = ($output_mime_type == \Flexio\System\ContentType::MIME_TYPE_JSON ? true : false);
+        $is_output_json = ($output_mime_type == \Flexio\Base\ContentType::MIME_TYPE_JSON ? true : false);
 
         if (isset($job_definition['params']['input']['header']))
             $header = $job_definition['params']['input']['header'];
@@ -255,12 +255,12 @@ class Convert extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
             return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
 
 
-        $outstream->setMimeType($is_output_json ? \Flexio\System\ContentType::MIME_TYPE_JSON : \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE);
+        $outstream->setMimeType($is_output_json ? \Flexio\Base\ContentType::MIME_TYPE_JSON : \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
 
         if ($is_output_json)
@@ -422,7 +422,7 @@ class Convert extends \Flexio\Jobs\Base
         if (!$is_output_json)
         {
             $output_properties = array(
-                'mime_type' => \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE,
+                'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
                 'structure' => $structure
             );
 
@@ -499,11 +499,11 @@ class Convert extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
             return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
 
-        $outstream->setMimeType(\Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE);
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
 
         $structure = [];
@@ -665,8 +665,8 @@ class Convert extends \Flexio\Jobs\Base
 
             if ($detected_type == 'D1' || $detected_type == 'D2' || $detected_type == 'D3')
             {
-                $cast = \Flexio\Services\ExprUtil::getCastExpression($name, $fld['type'], 'date');
-                $cast = \Flexio\Services\ExprTranslatorPostgres::translate($cast, $structure);
+                $cast = \Flexio\Base\ExprUtil::getCastExpression($name, $fld['type'], 'date');
+                $cast = \Flexio\Base\ExprTranslatorPostgres::translate($cast, $structure);
 
                 if ($cast !== false)
                 {
@@ -689,8 +689,8 @@ class Convert extends \Flexio\Jobs\Base
                         $type .= ')';
                 }
 
-                $cast = \Flexio\Services\ExprUtil::getCastExpression($name, $fld['type'], 'numeric', $width, $scale);
-                $cast = \Flexio\Services\ExprTranslatorPostgres::translate($cast, $structure);
+                $cast = \Flexio\Base\ExprUtil::getCastExpression($name, $fld['type'], 'numeric', $width, $scale);
+                $cast = \Flexio\Base\ExprTranslatorPostgres::translate($cast, $structure);
 
                 if ($cast !== false)
                 {
@@ -922,15 +922,15 @@ class Convert extends \Flexio\Jobs\Base
         $format = $job_definition['params']['input']['format'];
 
         if ($format == self::FORMAT_DELIMITED_TEXT || $format == 'delimited_text' /* compatibility */)
-            return \Flexio\System\ContentType::MIME_TYPE_CSV;
+            return \Flexio\Base\ContentType::MIME_TYPE_CSV;
         else if ($format == self::FORMAT_FIXED_LENGTH || $format == 'fixed_length_text' /* compatibility */)
-            return \Flexio\System\ContentType::MIME_TYPE_TXT;
+            return \Flexio\Base\ContentType::MIME_TYPE_TXT;
         else if ($format == self::FORMAT_JSON)
-            return \Flexio\System\ContentType::MIME_TYPE_JSON;
+            return \Flexio\Base\ContentType::MIME_TYPE_JSON;
         else if ($format == self::FORMAT_PDF)
-            return \Flexio\System\ContentType::MIME_TYPE_PDF;
+            return \Flexio\Base\ContentType::MIME_TYPE_PDF;
         else if ($format == self::FORMAT_TABLE)
-            return \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
+            return \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         else
             return false;
     }
@@ -942,15 +942,15 @@ class Convert extends \Flexio\Jobs\Base
         $format = $job_definition['params']['output']['format'];
 
         if ($format == self::FORMAT_DELIMITED_TEXT)
-            return \Flexio\System\ContentType::MIME_TYPE_CSV;
+            return \Flexio\Base\ContentType::MIME_TYPE_CSV;
         else if ($format == self::FORMAT_FIXED_LENGTH)
-            return \Flexio\System\ContentType::MIME_TYPE_TXT;
+            return \Flexio\Base\ContentType::MIME_TYPE_TXT;
         else if ($format == self::FORMAT_JSON)
-            return \Flexio\System\ContentType::MIME_TYPE_JSON;
+            return \Flexio\Base\ContentType::MIME_TYPE_JSON;
         else if ($format == self::FORMAT_PDF)
-            return \Flexio\System\ContentType::MIME_TYPE_PDF;
+            return \Flexio\Base\ContentType::MIME_TYPE_PDF;
         else if ($format == self::FORMAT_TABLE)
-            return \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE;
+            return \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         else
             return false;
     }

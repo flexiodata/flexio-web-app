@@ -38,7 +38,7 @@ class Grep extends \Flexio\Jobs\Base
     private function createOutputFromInput($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
         $streamreader = \Flexio\Object\StreamReader($instream);
         $streamwriter = \Flexio\Object\StreamWriter($outstream);
@@ -52,7 +52,7 @@ class Grep extends \Flexio\Jobs\Base
 
 
         // build command line
-        $cmd = \Flexio\System\Util::getBinaryPath('grep') . ' ' . $grepexpr;
+        $cmd = \Flexio\System\System::getBinaryPath('grep') . ' ' . $grepexpr;
         //$cmd = "\"C:\Program Files\Git\usr\bin\cat.exe\"";
 
         // run the process
@@ -83,7 +83,7 @@ class Grep extends \Flexio\Jobs\Base
         }
 
         $mime_type = $instream->getMimeType();
-        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // write header row
             $row = $instream->getStructure()->getNames();

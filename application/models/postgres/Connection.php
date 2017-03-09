@@ -64,10 +64,10 @@ class Connection extends ModelBase
                 'updated'           => $timestamp
             );
 
-            $process_arr['username'] = \Flexio\System\Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
-            $process_arr['password'] = \Flexio\System\Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
-            $process_arr['token'] = \Flexio\System\Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
-            $process_arr['refresh_token'] = \Flexio\System\Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+            $process_arr['username'] = \Flexio\Base\Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
+            $process_arr['password'] = \Flexio\Base\Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
+            $process_arr['token'] = \Flexio\Base\Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
+            $process_arr['refresh_token'] = \Flexio\Base\Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
 
             // add the properties
             if ($db->insert('tbl_connection', $process_arr) === false)
@@ -110,7 +110,7 @@ class Connection extends ModelBase
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         if (($process_arr = \Model::check($params, array(
@@ -132,10 +132,10 @@ class Connection extends ModelBase
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
 
-        if (isset($process_arr['username'])) $process_arr['username'] = \Flexio\System\Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
-        if (isset($process_arr['password'])) $process_arr['password'] = \Flexio\System\Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
-        if (isset($process_arr['token'])) $process_arr['token'] = \Flexio\System\Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
-        if (isset($process_arr['refresh_token'])) $process_arr['refresh_token'] = \Flexio\System\Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+        if (isset($process_arr['username'])) $process_arr['username'] = \Flexio\Base\Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
+        if (isset($process_arr['password'])) $process_arr['password'] = \Flexio\Base\Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
+        if (isset($process_arr['token'])) $process_arr['token'] = \Flexio\Base\Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
+        if (isset($process_arr['refresh_token'])) $process_arr['refresh_token'] = \Flexio\Base\Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
 
         // if the connection_status parameter is set, make sure the status is set
         // to a valid value
@@ -181,7 +181,7 @@ class Connection extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         $row = $db->fetchRow("select tob.eid as eid,
@@ -211,10 +211,10 @@ class Connection extends ModelBase
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row['username'] = \Flexio\System\Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
-        $row['password'] = \Flexio\System\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
-        $row['token'] = \Flexio\System\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
-        $row['refresh_token'] = \Flexio\System\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+        $row['username'] = \Flexio\Base\Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
+        $row['password'] = \Flexio\Base\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
+        $row['token'] = \Flexio\Base\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
+        $row['refresh_token'] = \Flexio\Base\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
 
 
         return array('eid'               => $row['eid'],
@@ -234,7 +234,7 @@ class Connection extends ModelBase
                      'connection_type'   => $row['connection_type'],
                      'connection_status' => $row['connection_status'],
                      'eid_status'        => $row['eid_status'],
-                     'created'           => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'           => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'           => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'           => \Flexio\Base\Util::formatDate($row['updated']));
     }
 }

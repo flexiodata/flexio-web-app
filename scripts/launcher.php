@@ -38,14 +38,14 @@ if (is_null($g_context) || !isset($g_context['utility_fullpath']))
 {
     include_once 'stub.php';
     // TODO: log error message:
-    // \Flexio\System\Util::logMessage('Error: error while invoking launcher.php - missing parameters');
+    // \Flexio\Base\Util::logMessage('Error: error while invoking launcher.php - missing parameters');
 }
 
 
 
 
 // invoke the desired php file
-$phpbin = \Flexio\System\Util::getBinaryPath('php');
+$phpbin = \Flexio\System\System::getBinaryPath('php');
 $path = $g_context['utility_fullpath'];
 
 
@@ -66,5 +66,5 @@ if (strlen(''.$output))
 {
     include_once 'stub.php';
     // TODO: log message
-    // \Flexio\System\Util::logMessage("Utility output: $output");
+    // \Flexio\Base\Util::logMessage("Utility output: $output");
 }

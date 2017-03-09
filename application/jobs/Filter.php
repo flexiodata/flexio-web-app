@@ -33,7 +33,7 @@ class Filter extends \Flexio\Jobs\Base
                     break;
 
                 // table input
-                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutput($instream);
                     break;
             }
@@ -59,7 +59,7 @@ class Filter extends \Flexio\Jobs\Base
         }
 
         // make sure we have a valid expression
-        $expreval = new \Flexio\Services\ExprEvaluate;
+        $expreval = new \Flexio\Base\ExprEvaluate;
         $input_structure = $instream->getStructure()->enum();
         $success = $expreval->prepare($filter_expression, $input_structure);
 
@@ -67,7 +67,7 @@ class Filter extends \Flexio\Jobs\Base
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // create the output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // if we don't have a filter expression, then there's no output; we're done

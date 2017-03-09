@@ -137,7 +137,7 @@ class Process extends \Flexio\Object\Base
         }
 
         $process_eid = $this->getEid();
-        \Flexio\System\Util::runInBackground("\Flexio\Object\Process::run_internal('$process_eid')");
+        \Flexio\System\Program::runInBackground("\Flexio\Object\Process::run_internal('$process_eid')");
         return $this;
     }
 
@@ -273,7 +273,7 @@ class Process extends \Flexio\Object\Base
             return $this;
 
         // make sure the params are key/value pairs
-        if (\Flexio\System\Util::isAssociativeArray($params) === false)
+        if (\Flexio\Base\Util::isAssociativeArray($params) === false)
             return $this;
 
         // add on the new input
@@ -641,7 +641,7 @@ class Process extends \Flexio\Object\Base
         // track what version of the task implementation we're using
         // (more granular than task version, which may or may not be updated
         // with small logic changes)
-        $implementation_revision = \Flexio\System\Util::getGitRevision();
+        $implementation_revision = \Flexio\System\System::getGitRevision();
 
         // set initial job status
         $process_params = array();
@@ -680,7 +680,7 @@ class Process extends \Flexio\Object\Base
             // be that it should be processed as it occurs in the pipe
             foreach ($user_variables as $name => $value)
             {
-                if (\Flexio\System\Eid::isValid($value))
+                if (\Flexio\Base\Eid::isValid($value))
                 {
                     $stream = \Flexio\Object\Stream::load($value);
                     if ($stream !== false)
@@ -732,7 +732,7 @@ class Process extends \Flexio\Object\Base
 
             // if the implementation has changed during the task, the result is
             // unreliable; set an error so that the process fails
-            $implementation_revision_update = \Flexio\System\Util::getGitRevision();
+            $implementation_revision_update = \Flexio\System\System::getGitRevision();
             if ($implementation_revision !== $implementation_revision_update)
                 $this->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
 

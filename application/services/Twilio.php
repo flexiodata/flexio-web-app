@@ -48,7 +48,7 @@ class Twilio implements \Flexio\Services\IConnection
     {
         $this->close();
 
-        $validator = \Flexio\System\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'key'   => array('type' => 'string', 'required' => true),
                 'token' => array('type' => 'string', 'required' => true)
@@ -139,7 +139,7 @@ class Twilio implements \Flexio\Services\IConnection
     public function write($params, $callback)
     {
         $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\System\ContentType::MIME_TYPE_STREAM);
+        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
 
         // TODO: implement
     }
@@ -226,7 +226,7 @@ class Twilio implements \Flexio\Services\IConnection
 
         foreach ($rows as $r)
         {
-            $r = \Flexio\System\Mapper::flatten($r, null, '_');
+            $r = \Flexio\Base\Mapper::flatten($r, null, '_');
             $r = $r[0];
 
             $output_row = array();

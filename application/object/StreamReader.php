@@ -83,7 +83,7 @@ class StreamReader
             return false;
 
         $mime_type = $this->getMimeType();
-        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             return $this->readFromTable($length);
              else
             return $this->readFromFile($length);
@@ -95,7 +95,7 @@ class StreamReader
             return false;
 
         $mime_type = $this->getMimeType();
-        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             return $this->readRowFromTable();
              else
             return $this->readRowFromFile();

@@ -29,7 +29,7 @@ class PhantomController extends \Flexio\System\FxControllerAction
             return false;
 
         // get phantomjs executable path
-        $exe = \Flexio\System\Util::getBinaryPath('phantomjs');
+        $exe = \Flexio\System\System::getBinaryPath('phantomjs');
 
         // get phantomjs script path
         $js_script_path = \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'phantomjs' . DIRECTORY_SEPARATOR . 'render-workspace-thumbnail.js';
@@ -76,7 +76,7 @@ class PhantomController extends \Flexio\System\FxControllerAction
             $args['url'] = urlencode($url);
         }
 
-        $params_file = \Flexio\System\Util::getTempFilename('json');
+        $params_file = \Flexio\Base\Util::getTempFilename('json');
         file_put_contents($params_file, json_encode($args));
         chmod($params_file, 0600);
 

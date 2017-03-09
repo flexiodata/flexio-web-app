@@ -45,7 +45,7 @@ class Ftp implements \Flexio\Services\IConnection
     public function connect($params)
     {
         $this->close();
-        if (($params = \Flexio\System\Validator::getInstance()->check($params, array(
+        if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
@@ -146,7 +146,7 @@ class Ftp implements \Flexio\Services\IConnection
     public function write($params, $callback)
     {
         $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\System\ContentType::MIME_TYPE_STREAM);
+        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
 
         if (!$this->isOk())
         {

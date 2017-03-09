@@ -87,7 +87,7 @@ class Stream extends ModelBase
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         if (($process_arr = \Model::check($params, array(
@@ -137,7 +137,7 @@ class Stream extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         $row = $db->fetchRow("select tob.eid as eid,
@@ -178,7 +178,7 @@ class Stream extends ModelBase
                      'cache_path'           => $row['cache_path'],
                      'cache_connection_eid' => $row['cache_connection_eid'],
                      'eid_status'           => $row['eid_status'],
-                     'created'              => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'              => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'              => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
     }
 }

@@ -128,7 +128,7 @@ class PipelineDeals implements \Flexio\Services\IConnection
     public function write($params, $callback)
     {
         $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\System\ContentType::MIME_TYPE_STREAM);
+        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
 
         // TODO: implement
     }
@@ -214,7 +214,7 @@ class PipelineDeals implements \Flexio\Services\IConnection
 
         foreach ($rows as $r)
         {
-            $r = \Flexio\System\Mapper::flatten($r, null, '_');
+            $r = \Flexio\Base\Mapper::flatten($r, null, '_');
             $r = $r[0];
 
             $output_row = array();

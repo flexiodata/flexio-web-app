@@ -22,9 +22,9 @@ class Test
         // TEST: platform check tests; see if we're on a standard platform
 
         // BEGIN TEST
-        $is_windows = \Flexio\System\Util::isPlatformWindows();
-        $is_mac = \Flexio\System\Util::isPlatformMac();
-        $is_linux = \Flexio\System\Util::isPlatformLinux();
+        $is_windows = \Flexio\System\System::isPlatformWindows();
+        $is_mac = \Flexio\System\System::isPlatformMac();
+        $is_linux = \Flexio\System\System::isPlatformLinux();
         $platform_check = $is_windows || $is_mac || $is_linux;
         $actual = $platform_check;
         $expected = true;

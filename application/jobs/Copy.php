@@ -33,7 +33,7 @@ class Copy extends \Flexio\Jobs\Base
                     break;
 
                 // table input
-                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTable($instream);
                     break;
             }
@@ -43,7 +43,7 @@ class Copy extends \Flexio\Jobs\Base
     private function createOutputFromTable($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // create the output
@@ -95,7 +95,7 @@ class Copy extends \Flexio\Jobs\Base
                 $columns .= ',';
 
             // build up the expression using the internal storage name
-            $qcolumn_name = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($col['store_name']);
+            $qcolumn_name = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($col['store_name']);
 
             $columns .= $qcolumn_name;
             if (strlen($exprs) > 0)
@@ -103,7 +103,7 @@ class Copy extends \Flexio\Jobs\Base
 
             if (isset($col['expression']))
             {
-                $pgsqlexpr = \Flexio\Services\ExprTranslatorPostgres::translate($col['expression'], $input_columns);
+                $pgsqlexpr = \Flexio\Base\ExprTranslatorPostgres::translate($col['expression'], $input_columns);
                 if ($pgsqlexpr === false)
                     return false; // couldn't translate the expression
                 $exprs .= $pgsqlexpr . ' AS ' . $qcolumn_name;
@@ -234,7 +234,7 @@ class Copy extends \Flexio\Jobs\Base
 
 
                 // start out by passing through the column as it is
-                $output_columns[$k]['expression'] = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($field);
+                $output_columns[$k]['expression'] = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($field);
                 $old_type = $output_columns[$k]['type'];
 
                 if (isset($action['params']['type']) && $old_type != $action['params']['type'])
@@ -299,7 +299,7 @@ class Copy extends \Flexio\Jobs\Base
                     }
                         else
                     {
-                        $output_columns[$k]['expression'] = \Flexio\Services\ExprUtil::getCastExpression($expr, $old_type, $new_type, $width, $scale);
+                        $output_columns[$k]['expression'] = \Flexio\Base\ExprUtil::getCastExpression($expr, $old_type, $new_type, $width, $scale);
                     }
 
                     continue;

@@ -117,5 +117,15 @@ class Test
         $actual = intval($version) > 0;
         $expected = true;
         TestCheck::assertBoolean('E.2', '\Flexio\System\System::getLatestVersionNumber(); make sure function returns an integer that\'s positive',  $actual, $expected, $results);
+
+
+
+        // TEST: validation tests for getGitRevision()
+
+        // BEGIN TEST
+        $git_revision = \Flexio\System\System::getGitRevision();
+        $actual = is_string($git_revision) === true && preg_match('/^[0-9a-f]{40}$/', $git_revision) === 1;
+        $expected = true;
+        TestCheck::assertBoolean('F.1', '\Flexio\System\System::getGitRevision() test to verify a valid hash is returned',  $actual, $expected, $results);
     }
 }

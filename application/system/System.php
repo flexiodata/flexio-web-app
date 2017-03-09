@@ -167,7 +167,7 @@ class System
                 if (!$token_info)
                 {
                     // unknown user
-                    \Flexio\System\Util::header_error(401);
+                    \Flexio\Base\Util::header_error(401);
                     exit(0);
                 }
 
@@ -175,7 +175,7 @@ class System
                 if ($user === false)
                 {
                     // deleted user
-                    \Flexio\System\Util::header_error(401);
+                    \Flexio\Base\Util::header_error(401);
                     exit(0);
                 }
 
@@ -213,14 +213,14 @@ class System
              else
             {
                 // unknown algorith/auth type
-                \Flexio\System\Util::header_error(404);
+                \Flexio\Base\Util::header_error(404);
                 exit(0);
             }
 
             if (!$user_info)
             {
                 // unknown algorith/auth type
-                \Flexio\System\Util::header_error(404);
+                \Flexio\Base\Util::header_error(404);
                 exit(0);
             }
 
@@ -468,7 +468,7 @@ class System
             case 'es':  $res = "%e %B %Y"; break;
         }
 
-        if (\Flexio\System\Util::isPlatformWindows())
+        if (\Flexio\System\System::isPlatformWindows())
             $res = str_replace('%e', '%#d', $res);
 
         return $res;
@@ -488,7 +488,7 @@ class System
             case 'es':  $res = "%e %B %Y a %H:%M";        break;
         }
 
-        if (\Flexio\System\Util::isPlatformWindows())
+        if (\Flexio\System\System::isPlatformWindows())
             $res = str_replace('%e', '%#d', $res);
 
         return $res;
@@ -615,6 +615,86 @@ class System
         return $version;
     }
 
+    public static function getGitRevision()
+    {
+        $path = dirname(dirname(__DIR__)) . '/.git/refs/heads/master';
+        $str = @file_get_contents($path);
+        if (!$str)
+            $str = '';
+        return trim($str);
+    }
+
+    public static function getBinaryPath($bin)
+    {
+        $fxhome = \Flexio\System\System::getBaseDirectory();
+        $base_path = dirname($fxhome);
+
+        // on some newer windows setups, we've been installing the server software
+        // separately from the code tree
+        // \fxsite\flexio - code
+        // \fxsite\server\php\php.exe
+
+        if (is_dir($base_path . DIRECTORY_SEPARATOR . 'server'))
+            $base_path .= (DIRECTORY_SEPARATOR . 'server');
+
+        if (\Flexio\System\System::isPlatformWindows())
+        {
+            // running on windows -- we need to fully qualify the exe path
+            switch ($bin)
+            {
+                case 'grep':        return $fxhome    . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'unixutil'        . DIRECTORY_SEPARATOR . 'grep.exe';
+                // TODO: add paths for python, nodejs, golang
+                case 'r':           return $fxhome    . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'rlang'           . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'r-portable' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'x64' . DIRECTORY_SEPARATOR . 'rscript.exe';
+                case 'gs':          return $fxhome    . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'gs'              . DIRECTORY_SEPARATOR . 'gswin32c.exe';
+                case 'unzip':       return $fxhome    . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'zipwin32'        . DIRECTORY_SEPARATOR . 'unzip.exe';
+                case 'zip':         return $fxhome    . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'zipwin32'        . DIRECTORY_SEPARATOR . 'zip.exe';
+                case 'php':         return $base_path . DIRECTORY_SEPARATOR . 'php'     . DIRECTORY_SEPARATOR . 'php.exe';
+                case 'mysql':       return $base_path . DIRECTORY_SEPARATOR . 'mysql'   . DIRECTORY_SEPARATOR . 'bin'             . DIRECTORY_SEPARATOR . 'mysql.exe';
+                case 'mysqldump':   return $base_path . DIRECTORY_SEPARATOR . 'mysql'   . DIRECTORY_SEPARATOR . 'bin'             . DIRECTORY_SEPARATOR . 'mysqldump.exe';
+                case 'pdftk':       return $fxhome    . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'pdftk'           . DIRECTORY_SEPARATOR . 'pdftk.exe';
+                case 'phantomjs':   return $fxhome    . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'phantomjs-1.9.1' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'windows'     . DIRECTORY_SEPARATOR . 'phantomjs.exe';
+                default:            return null;
+            }
+        }
+         else
+        {
+            $xtra_bin_dir = '';
+            if (\Flexio\System\System::isXampp() && \Flexio\System\System::isPlatformMac())
+                $xtra_bin_dir = PHP_BINDIR.'/';
+
+            $phantom_js_platform_folder = 'linux64';
+            if (\Flexio\System\System::isPlatformMac())
+                $phantom_js_platform_folder = 'macosx';
+
+            // running on linux, no need to fully qualify exe path
+            switch ($bin)
+            {
+                case 'grep':        return 'grep';
+                case 'python':      return 'python3';
+                case 'javascript':  return 'nodejs';
+                case 'go':          return 'go run';
+                case 'r':           return 'rscript';
+
+                case 'php':
+                    if (strlen($xtra_bin_dir) > 0)
+                        return $xtra_bin_dir . 'php';
+                         else
+                        return '/usr/bin/php';
+
+                case 'gs':          return 'gs';
+                case 'unzip':       return $xtra_bin_dir . 'unzip';
+                case 'zip':         return $xtra_bin_dir . 'zip';
+                case 'mysql':       return $xtra_bin_dir . 'mysql';
+                case 'mysqldump':   return $xtra_bin_dir . 'mysqldump';
+                case 'pdftk':       return 'pdftk';
+                case 'phantomjs':   return 'phantomjs';
+                default:            return null;
+            }
+        }
+
+        return null;
+    }
+
     public static function getCurrentUserFirstName()
     {
         return $GLOBALS['g_store']->user_first_name;
@@ -638,6 +718,26 @@ class System
     public static function getCurrentUserEid()
     {
         return $GLOBALS['g_store']->user_eid;
+    }
+
+    public static function isPlatformWindows()
+    {
+        return (strtoupper(substr(PHP_OS, 0, 3)) == "WIN") ? true : false;
+    }
+
+    public static function isPlatformMac()
+    {
+        return (strtoupper(substr(PHP_OS, 0, 6)) == "DARWIN") ? true : false;
+    }
+
+    public static function isPlatformLinux()
+    {
+        return (strtoupper(substr(PHP_OS, 0, 5)) == "LINUX") ? true : false;
+    }
+
+    public static function isXampp()
+    {
+        return (strpos(strtoupper(PHP_BINDIR), "XAMPP") !== false) ? true : false;
     }
 
     public static function isNewInstallation()

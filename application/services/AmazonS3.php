@@ -50,7 +50,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
     {
         $this->close();
 
-        $validator = \Flexio\System\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'region' => array('type' => 'string', 'required' => true),
                 'bucket' => array('type' => 'string', 'required' => true),
@@ -242,7 +242,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
     public function write($params, $callback)
     {
         $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\System\ContentType::MIME_TYPE_STREAM);
+        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
 
         if (!$this->isOk())
             return false;
@@ -250,7 +250,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
         if (substr($path,0,1) == '/')
             $path = substr($path,1);
 
-        //try
+        try
         {
             $response = $this->s3->createMultipartUpload(array(
                 'Bucket' => $this->bucket,
@@ -293,12 +293,11 @@ class AmazonS3 implements \Flexio\Services\IConnection
                 )
             ));
         }
-        /*
         catch (\Exception $e)
         {
             return false;
         }
-*/
+
         return true;
     }
 

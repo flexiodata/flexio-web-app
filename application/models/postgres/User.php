@@ -29,7 +29,7 @@ class User extends ModelBase
         $params['user_name'] = strtolower($params['user_name']);
         $params['email'] = strtolower($params['email']);
 
-        if (!\Flexio\System\Identifier::isValid($params['user_name']))
+        if (!\Flexio\Base\Identifier::isValid($params['user_name']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
         if (!\Flexio\Services\Email::isValid($params['email']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
@@ -123,7 +123,7 @@ class User extends ModelBase
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         // encode the password
@@ -137,7 +137,7 @@ class User extends ModelBase
             $params['email'] = strtolower($params['email']);
 
         // if user_name or email is specified, make sure it's not set to null
-        if (is_array($params) && array_key_exists('user_name', $params) && !\Flexio\System\Identifier::isValid($params['user_name']))
+        if (is_array($params) && array_key_exists('user_name', $params) && !\Flexio\Base\Identifier::isValid($params['user_name']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
         if (is_array($params) && array_key_exists('email', $params) && !\Flexio\Services\Email::isValid($params['email']))
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
@@ -203,7 +203,7 @@ class User extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         $row = $db->fetchRow("select tob.eid as eid,
@@ -263,8 +263,8 @@ class User extends ModelBase
                      'verify_code'            => $row['verify_code'],
                      'config'                 => $row['config'],
                      'eid_status'             => $row['eid_status'],
-                     'created'                => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'                => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'                => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
     public function getUsernameFromEid($eid)
@@ -273,7 +273,7 @@ class User extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         $user_name = $db->fetchOne('select user_name from tbl_user where eid = ?', $eid);
@@ -289,7 +289,7 @@ class User extends ModelBase
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         $email = $db->fetchOne('select email from tbl_user where eid = ?', $eid);

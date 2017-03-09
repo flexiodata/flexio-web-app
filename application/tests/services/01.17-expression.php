@@ -102,7 +102,7 @@ class Test
             array("name" => "f", "type" => "character")
         );
         $retval = null;
-        \Flexio\Services\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
+        \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = null;
         TestCheck::assertNull('D.1', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
@@ -114,7 +114,7 @@ class Test
             array("name" => "f", "type" => "character")
         );
         $retval = null;
-        \Flexio\Services\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
+        \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = null;
         TestCheck::assertNull('D.2', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
@@ -130,7 +130,7 @@ class Test
             array("name" => "f", "type" => "character")
         );
         $retval = null;
-        \Flexio\Services\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
+        \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = "a";
         TestCheck::assertString('E.1', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
@@ -142,7 +142,7 @@ class Test
             array("name" => "f", "type" => "character")
         );
         $retval = null;
-        \Flexio\Services\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
+        \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = "b";
         TestCheck::assertString('E.2', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
@@ -154,7 +154,7 @@ class Test
             array("name" => "f", "type" => "character")
         );
         $retval = null;
-        \Flexio\Services\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
+        \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = "c";
         TestCheck::assertString('E.3', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);

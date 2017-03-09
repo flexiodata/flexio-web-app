@@ -32,13 +32,13 @@ class Test
         $failed_comment_creation = 0;
         for ($i = 0; $i < $total_count; $i++)
         {
-            $handle = \Flexio\System\Util::generateHandle();
+            $handle = \Flexio\Base\Util::generateHandle();
             $info = array(
                 'comment' => "Test comment $i"
             );
             $eid = $model->create(\Model::TYPE_COMMENT, $info);
             $created_eids[$eid] = 1;
-            if (!\Flexio\System\Eid::isValid($eid))
+            if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_comment_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_comment_creation == 0;

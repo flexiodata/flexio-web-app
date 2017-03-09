@@ -26,7 +26,7 @@ class Create extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $this->getOutput()->merge($this->getInput());
 
-        $validator = \Flexio\System\ValidatorSchema::check($job_definition, \Flexio\Jobs\Create::SCHEMA);
+        $validator = \Flexio\Base\ValidatorSchema::check($job_definition, \Flexio\Jobs\Create::SCHEMA);
         if ($validator->hasErrors() === true)
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
@@ -56,7 +56,7 @@ class Create extends \Flexio\Jobs\Base
         if (isset($job_definition['params']['content']))
             $content = base64_decode($job_definition['params']['content']);
 
-        $mime_type = \Flexio\System\ContentType::getMimeType($name, $content);
+        $mime_type = \Flexio\Base\ContentType::getMimeType($name, $content);
 
         // create the output stream
         $outstream_properties = array(
@@ -83,7 +83,7 @@ class Create extends \Flexio\Jobs\Base
         $structure = isset_or($job_definition['params']['columns'], '[]');
         $outstream_properties = array(
             'name' => $name,
-            'mime_type' => \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE,
+            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
             'structure' => $structure
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
@@ -99,7 +99,7 @@ class Create extends \Flexio\Jobs\Base
             {
                 // if the row array is non-associative, then insert them
                 // based on the index of the field compared to the structure
-                if (\Flexio\System\Util::isAssociativeArray($row) === false)
+                if (\Flexio\Base\Util::isAssociativeArray($row) === false)
                 {
                     $idx = 0;
                     $row_with_keys = array();

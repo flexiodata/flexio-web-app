@@ -13,7 +13,6 @@
 
 
 require_once __DIR__ . '/../system/ModelDb.php';
-require_once __DIR__ . '/../system/DbUtil.php';
 require_once 'ModelBase.php';
 
 
@@ -236,7 +235,7 @@ class Model
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::TYPE_UNDEFINED;
 
         $result = $db->fetchOne("select eid_type from tbl_object where eid = ?", $eid);
@@ -252,7 +251,7 @@ class Model
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($identifier) && !\Flexio\System\Identifier::isValid($identifier))
+        if (!\Flexio\Base\Eid::isValid($identifier) && !\Flexio\Base\Identifier::isValid($identifier))
             return \Model::TYPE_UNDEFINED;
 
         $qidentifier = $db->quote($identifier);
@@ -280,7 +279,7 @@ class Model
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         // make sure the status is set to a valid value
@@ -309,7 +308,7 @@ class Model
         if ($db === false)
             return $this->fail(\Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
 
         $result = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
@@ -336,9 +335,9 @@ class Model
             return $this->fail(Model::ERROR_INVALID_PARAMETER);
 
         // invalid eids can't be associated with each other
-        if (!\Flexio\System\Eid::isValid($source_eid))
+        if (!\Flexio\Base\Eid::isValid($source_eid))
             return false;
-        if (!\Flexio\System\Eid::isValid($target_eid))
+        if (!\Flexio\Base\Eid::isValid($target_eid))
             return false;
 
         try
@@ -377,9 +376,9 @@ class Model
             return $this->fail(Model::ERROR_INVALID_PARAMETER);
 
         // nothing to delete; return false
-        if (!\Flexio\System\Eid::isValid($source_eid))
+        if (!\Flexio\Base\Eid::isValid($source_eid))
             return false;
-        if (!\Flexio\System\Eid::isValid($target_eid))
+        if (!\Flexio\Base\Eid::isValid($target_eid))
             return false;
 
         try
@@ -415,9 +414,9 @@ class Model
             return $this->fail(Model::ERROR_INVALID_PARAMETER);
 
         // invalid eids can't be associated with each other
-        if (!\Flexio\System\Eid::isValid($source_eid))
+        if (!\Flexio\Base\Eid::isValid($source_eid))
             return false;
-        if (!\Flexio\System\Eid::isValid($target_eid))
+        if (!\Flexio\Base\Eid::isValid($target_eid))
             return false;
 
         $db->beginTransaction();
@@ -477,7 +476,7 @@ class Model
 
         // nothing went wrong, but an invalid eid doesn't exist so there's
         // nothing to find
-        if (!\Flexio\System\Eid::isValid($source_eid))
+        if (!\Flexio\Base\Eid::isValid($source_eid))
             return array();
 
         // if the target_eid_set is something besides an array or a string,
@@ -499,7 +498,7 @@ class Model
         $first = true;
         foreach ($target_eid_set as $eid)
         {
-            if (!\Flexio\System\Eid::isValid($eid))
+            if (!\Flexio\Base\Eid::isValid($eid))
                 continue;
 
             if (!$first)
@@ -561,7 +560,7 @@ class Model
 
         // nothing went wrong, but an invalid eid doesn't exist so there's
         // nothing to find
-        if (!\Flexio\System\Eid::isValid($source_eid))
+        if (!\Flexio\Base\Eid::isValid($source_eid))
             return array();
 
         try
@@ -614,7 +613,7 @@ class Model
 
         // nothing went wrong, but an invalid eid doesn't exist so there's
         // nothing to find
-        if (!\Flexio\System\Eid::isValid($source_eid))
+        if (!\Flexio\Base\Eid::isValid($source_eid))
             return 0;
 
         try
@@ -655,7 +654,7 @@ class Model
             return $this->fail(Model::ERROR_NO_DATABASE);
 
         // if the identifier isn't valid, there's no corresponding eid
-        if (\Flexio\System\Identifier::isValid($identifier) === false)
+        if (\Flexio\Base\Identifier::isValid($identifier) === false)
             return false;
 
         // look for the eid
@@ -707,9 +706,9 @@ class Model
         $ename = isset_or($params['ename'], '');
         if (strlen($ename) > 0)
         {
-            if (\Flexio\System\Identifier::isValid($ename) === false)
+            if (\Flexio\Base\Identifier::isValid($ename) === false)
                 return $this->fail(Model::ERROR_CREATE_FAILED);
-            if (\Flexio\System\Eid::isValid($ename) === true)
+            if (\Flexio\Base\Eid::isValid($ename) === true)
                 return $this->fail(Model::ERROR_CREATE_FAILED);
 
             // make sure that the ename is unique
@@ -750,7 +749,7 @@ class Model
             return $this->fail(Model::ERROR_NO_DATABASE);
 
         // eid isn't valid; return false
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         // if an item is deleted, don't allow it to be redeleted (i.e., act
@@ -786,7 +785,7 @@ class Model
             return $this->fail(Model::ERROR_NO_DATABASE);
 
         // eid isn't valid
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         // if an item is deleted, don't allow it to be edited
@@ -822,9 +821,9 @@ class Model
         if (isset($params['ename']))
         {
             $ename = $params['ename'];
-            if ($ename !== '' && \Flexio\System\Identifier::isValid($ename) === false)
+            if ($ename !== '' && \Flexio\Base\Identifier::isValid($ename) === false)
                 return $this->fail(Model::ERROR_CREATE_FAILED);
-            if (\Flexio\System\Eid::isValid($ename) === true)
+            if (\Flexio\Base\Eid::isValid($ename) === true)
                 return $this->fail(\Model::ERROR_CREATE_FAILED);
 
             // make sure that the ename is unique
@@ -853,7 +852,7 @@ class Model
         if ($db === false)
             return $this->fail(Model::ERROR_NO_DATABASE);
 
-        if (!\Flexio\System\Eid::isValid($eid))
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         $row = $db->fetchRow("select tob.eid as eid,
@@ -873,8 +872,8 @@ class Model
                      'eid_type'        => $row['eid_type'],
                      'ename'           => $row['ename'],
                      'eid_status'      => $row['eid_status'],
-                     'created'         => \Flexio\System\Util::formatDate($row['created']),
-                     'updated'         => \Flexio\System\Util::formatDate($row['updated']));
+                     'created'         => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
     public function setDbVersionNumber($version)
@@ -1130,7 +1129,7 @@ class Model
         if ($db === false)
             return false; // internal function, so don't flag an error
 
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $qeid = $db->quote($eid);
 
         $result = $db->fetchOne("select eid from tbl_object where eid = $qeid");
@@ -1145,7 +1144,7 @@ class Model
     {
         // validate the parameters; if they check out, then return
         // the cleaned parameters
-        if (($params = \Flexio\System\Validator::getInstance()->check($params, $checks)) !== false)
+        if (($params = \Flexio\Base\Validator::getInstance()->check($params, $checks)) !== false)
             return $params;
 
         // if the parameters don't check out, return false

@@ -135,9 +135,9 @@ class Rights
     {
         // invalid objects can't owned; object can't be owned
         // by an invalid user
-        if (!\Flexio\System\Eid::isValid($object_eid))
+        if (!\Flexio\Base\Eid::isValid($object_eid))
             return false;
-        if (!\Flexio\System\Eid::isValid($user_eid))
+        if (!\Flexio\Base\Eid::isValid($user_eid))
             return false;
 
         // see if the object is owned by the user directly
@@ -152,9 +152,9 @@ class Rights
     public static function ismember($object_eid, $user_eid)
     {
         // invalid objects or users can't be followed or follow
-        if (!\Flexio\System\Eid::isValid($object_eid))
+        if (!\Flexio\Base\Eid::isValid($object_eid))
             return false;
-        if (!\Flexio\System\Eid::isValid($user_eid))
+        if (!\Flexio\Base\Eid::isValid($user_eid))
             return false;
 
         // note: in the following, we want to check if an object can be accessed by

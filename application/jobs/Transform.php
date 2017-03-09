@@ -111,7 +111,7 @@ class Transform extends \Flexio\Jobs\Base
                     break;
 
                 // table input
-                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTable($instream);
                     break;
             }
@@ -133,7 +133,7 @@ class Transform extends \Flexio\Jobs\Base
         }
 
         // create the output with the replaced values
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         $output_columns = $outstream->getStructure()->enum();
@@ -210,7 +210,7 @@ class Transform extends \Flexio\Jobs\Base
             // copy the structure info so we can adjust it if needed
             $new_structure = $column;
 
-            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $width = isset_or($column['width'], -1);
             if ($width == 1024) $width = -1; // \Flexio\Services\Postgres is returning us huge columns of indeterminate width
             $scale = $column['scale'];
@@ -354,7 +354,7 @@ class Transform extends \Flexio\Jobs\Base
                         if (!isset($operation['delimiter']))
                             return false;
                         $field = (int)$params['substring']['field'];
-                        $delimiter = \Flexio\Services\ExprUtil::quote(''.$params['substring']['delimiter']);
+                        $delimiter = \Flexio\Base\ExprUtil::quote(''.$params['substring']['delimiter']);
 
                         $expr = "strpart(($expr),$delimiter,$field)";
                     }
@@ -427,7 +427,7 @@ class Transform extends \Flexio\Jobs\Base
                         else if ($location == self::REMOVE_LOCATION_LEADING_TRAILING)
                             $regex = "(^[$value]+)|([$value]+$)";
 
-                        $qregex = \Flexio\Services\ExprUtil::quote($regex);
+                        $qregex = \Flexio\Base\ExprUtil::quote($regex);
                         $expr = "regexp_replace(($expr),$qregex,'','$flags')";
                     }
                     else if (isset($operation['value']))
@@ -451,12 +451,12 @@ class Transform extends \Flexio\Jobs\Base
                         else
                             return false;
 
-                        $qregex = \Flexio\Services\ExprUtil::quote($regex);
+                        $qregex = \Flexio\Base\ExprUtil::quote($regex);
                         $expr = "regexp_replace(($expr),$qregex,'','$flags')";
                     }
                     else if (isset($operation['regex']))
                     {
-                        $qregex = \Flexio\Services\ExprUtil::quote($operation['regex']);
+                        $qregex = \Flexio\Base\ExprUtil::quote($operation['regex']);
                         $expr = "regexp_replace(($expr),$qregex,'','g')";
                     }
                     else
@@ -491,7 +491,7 @@ class Transform extends \Flexio\Jobs\Base
                     if ($length >= 0 && $value != '')
                     {
                         if (is_string($value))
-                            $value = \Flexio\Services\ExprUtil::quote($value); // if we have a string, make sure to do quote replacement
+                            $value = \Flexio\Base\ExprUtil::quote($value); // if we have a string, make sure to do quote replacement
                              else
                             $value = "'".$value."'";
 
@@ -510,7 +510,7 @@ class Transform extends \Flexio\Jobs\Base
 
             // map the column to the expression
             $exprtext = $expr;
-            $expreval = new \Flexio\Services\ExprEvaluate;
+            $expreval = new \Flexio\Base\ExprEvaluate;
             $parse_result = $expreval->prepare($exprtext, $instream->getStructure()->enum());
             if ($parse_result === false)
                 return false; // trouble building the expression

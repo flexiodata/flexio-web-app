@@ -57,7 +57,7 @@ class TestUtil
     public static function evalExpressionNative($expr)
     {
         $retval = null;
-        $success = \Flexio\Services\ExprEvaluate::evaluate($expr, [], [], $retval);
+        $success = \Flexio\Base\ExprEvaluate::evaluate($expr, [], [], $retval);
         if ($success === false)
             return TestError::ERROR_BAD_PARSE;
 
@@ -71,7 +71,7 @@ class TestUtil
         $dbconfig = \Model::getDatabaseConfig();
 
         // first, try to parse the expression
-        $p = new \Flexio\Services\ExprTranslatorPostgres;
+        $p = new \Flexio\Base\ExprTranslatorPostgres;
         $err = $p->parse($expr);
         if ($err === false)
             return TestError::ERROR_BAD_PARSE;
@@ -158,7 +158,7 @@ class TestUtil
 
         // see if the user already exists
         $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
-        if (\Flexio\System\Eid::isValid($user_eid))
+        if (\Flexio\Base\Eid::isValid($user_eid))
             return $user_eid;
 
         $user_eid = TestUtil::createTestUser($user_name, $email, $password);
@@ -258,7 +258,7 @@ class TestUtil
 
     public static function createTestUser($username, $email, $password)
     {
-        $verify_code = \Flexio\System\Util::generateHandle();
+        $verify_code = \Flexio\Base\Util::generateHandle();
         $new_user_info = array('user_name' => $username,
                                'email' => $email,
                                'full_name' => $username,
@@ -408,8 +408,8 @@ class TestUtil
 
     public static function generateEmail()
     {
-        $handle1 = \Flexio\System\Util::generateHandle();
-        $handle2 = \Flexio\System\Util::generateHandle();
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Base\Util::generateHandle();
         return $handle1 . '@' . $handle2 . '.com';
     }
 

@@ -185,7 +185,7 @@ class Output extends \Flexio\Jobs\Base
         $stream_idx = 0;
         foreach ($this->streams as $stream)
         {
-            if (\Flexio\System\Util::matchPath($stream->getName(), $pattern, false) !== false)
+            if (\Flexio\Base\Util::matchPath($stream->getName(), $pattern, false) !== false)
             {
                 $expanded_items[] = array("name" => $stream->getName(),
                                           "path" => isset($path) ? $path : $stream->getName(),
@@ -341,7 +341,7 @@ class Output extends \Flexio\Jobs\Base
         }
 
         $streamwriter->close();
-        $outstream->setMimeType(\Flexio\System\ContentType::MIME_TYPE_NONE); // external table
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_NONE); // external table
         */
     }
 
@@ -383,13 +383,13 @@ class Output extends \Flexio\Jobs\Base
         $foldername = $outstream->getPath();
         $filename = $outstream->getName();
 
-        if ($mime_type === \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // we're exporting a table, which is saved as a csv
             $extension_to_add = 'csv';
-            $filename = \Flexio\System\Util::getFilename($filename);
+            $filename = \Flexio\Base\Util::getFilename($filename);
             $filename = "$filename.$extension_to_add";
-            $mime_type = \Flexio\System\ContentType::MIME_TYPE_CSV;
+            $mime_type = \Flexio\Base\ContentType::MIME_TYPE_CSV;
         }
 
         $filename = $foldername . "/" . $filename;
@@ -455,7 +455,7 @@ class Output extends \Flexio\Jobs\Base
         }
 
         $inserter->finishInsert();
-        $outstream->setMimeType(\Flexio\System\ContentType::MIME_TYPE_NONE); // external table
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_NONE); // external table
     }
 
     private function runMailJetExport($instream, $service, $output_info)

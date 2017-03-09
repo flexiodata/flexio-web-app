@@ -354,7 +354,7 @@ class Connection extends \Flexio\Object\Base
 
         try
         {
-            $qdb = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($database);
+            $qdb = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($database);
             $db->execute("CREATE DATABASE $qdb ENCODING 'UTF8'");
         }
         catch (\Exception $e)

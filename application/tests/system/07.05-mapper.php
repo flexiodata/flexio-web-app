@@ -108,7 +108,7 @@ class Test
         ';
         $schema = null;
         $delimiter = '_';
-        $actual = \Flexio\System\Mapper::flatten($data, $schema, $delimiter);
+        $actual = \Flexio\Base\Mapper::flatten($data, $schema, $delimiter);
         $expected = '
         [
             {
@@ -230,7 +230,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.1', '\Flexio\System\Mapper::flatten(); subset of PipelineDeals "People" API call result',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', '\Flexio\Base\Mapper::flatten(); subset of PipelineDeals "People" API call result',  $actual, $expected, $results);
 
 
         // BEGIN TEST; See here for example documentation: https://app.pipelinedeals.com/api/docs/resources/documents
@@ -263,7 +263,7 @@ class Test
         ]
         ';
         $schema = null;
-        $actual = \Flexio\System\Mapper::flatten($data, $schema);
+        $actual = \Flexio\Base\Mapper::flatten($data, $schema);
         $expected = '
         [
             {
@@ -288,6 +288,6 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.2', '\Flexio\System\Mapper::flatten(); subset of PipelineDeals "Documents" API call result',  $actual, $expected, $results);
+        TestCheck::assertArray('A.2', '\Flexio\Base\Mapper::flatten(); subset of PipelineDeals "Documents" API call result',  $actual, $expected, $results);
     }
 }

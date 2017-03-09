@@ -340,10 +340,10 @@ class Pipe
         $streamwriter = false;
         $form_params = array();
 
-        $parser = \Flexio\Services\MultipartParser::create();
+        $parser = \Flexio\Base\MultipartParser::create();
 
         $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params) {
-            if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_BEGIN)
+            if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
             {
                 $stream = \Flexio\Object\Stream::create();
                 if ($stream)
@@ -356,7 +356,7 @@ class Pipe
                         $stream = false;
                 }
             }
-             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_DATA)
+             else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_DATA)
             {
                 if ($streamwriter !== false)
                 {
@@ -364,13 +364,13 @@ class Pipe
                     $streamwriter->write($data);
                 }
             }
-             else if ($type == \Flexio\Services\MultipartParser::TYPE_FILE_END)
+             else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_END)
             {
                 $process->addInput($stream);
                 $streamwriter = false;
                 $stream = false;
             }
-             else if ($type == \Flexio\Services\MultipartParser::TYPE_KEY_VALUE)
+             else if ($type == \Flexio\Base\MultipartParser::TYPE_KEY_VALUE)
             {
                 $form_params[$name] = $data;
             }
@@ -406,7 +406,7 @@ class Pipe
                     $handle = 'create';
                     $content = $stream->content($start, $limit, $columns, $metadata, $handle);
 
-                    if ($mime_type !== \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE)
+                    if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
                     {
                         // return content as-is
                         header('Content-Type: ' . $mime_type);
@@ -414,7 +414,7 @@ class Pipe
                     else
                     {
                         // flexio table; return application/json in place of internal mime
-                        header('Content-Type: ' . \Flexio\System\ContentType::MIME_TYPE_JSON);
+                        header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON);
                         $content = json_encode($content);
                     }
 

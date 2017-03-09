@@ -22,42 +22,42 @@ class Test
         // TEST: identifiers should be a lowercase string
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('xxxxx');
+        $actual = \Flexio\Base\Identifier::isValid('xxxxx');
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\System\Identifier::isValid(); identifiers should be a lowercase string', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Base\Identifier::isValid(); identifiers should be a lowercase string', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('Xxxxx');
+        $actual = \Flexio\Base\Identifier::isValid('Xxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Flexio\System\Identifier::isValid(); identifiers should be a lowercase string', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\Base\Identifier::isValid(); identifiers should be a lowercase string', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('xxxxX');
+        $actual = \Flexio\Base\Identifier::isValid('xxxxX');
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Flexio\System\Identifier::isValid(); identifiers should be a lowercase string', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Flexio\Base\Identifier::isValid(); identifiers should be a lowercase string', $actual, $expected, $results);
 
 
 
         // TEST: identifiers should be between 3 and 39 chars in length
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('xx');
+        $actual = \Flexio\Base\Identifier::isValid('xx');
         $expected = false;
-        TestCheck::assertBoolean('B.1', '\Flexio\System\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('xxx');
+        $actual = \Flexio\Base\Identifier::isValid('xxx');
         $expected = true;
-        TestCheck::assertBoolean('B.2', '\Flexio\System\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // 39 chars
+        $actual = \Flexio\Base\Identifier::isValid('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // 39 chars
         $expected = true;
-        TestCheck::assertBoolean('B.3', '\Flexio\System\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\System\Identifier::isValid('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // 40 chars
+        $actual = \Flexio\Base\Identifier::isValid('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // 40 chars
         $expected = false;
-        TestCheck::assertBoolean('B.4', '\Flexio\System\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.4', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
     }
 }

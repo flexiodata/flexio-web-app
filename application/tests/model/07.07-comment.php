@@ -28,7 +28,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -38,7 +38,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -48,7 +48,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -63,22 +63,22 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $actual = $model->set($eid, $info);
         $expected = false;
         TestCheck::assertBoolean('B.1', '\Model::set(); return false after trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
-        $eid = \Flexio\System\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
         $result = $model->set($eid, $info);
         $actual = $model->hasErrors();
         $expected = false;
@@ -86,7 +86,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -94,7 +94,7 @@ class Test
         $delete_result = $model->delete($eid);
         $set_result = $model->set($eid, $info);
         $has_errors = $model->hasErrors();
-        $actual = \Flexio\System\Eid::isValid($eid) && $delete_result === true && $set_result === false && $has_errors === false;
+        $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === false && $has_errors === false;
         $expected = true;
         TestCheck::assertBoolean('B.3', '\Model::set(); return false and don\'t flag an error when trying to set parameters on an object that\'s been deleted',  $actual, $expected, $results);
 
@@ -104,7 +104,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $info = array(
         );
@@ -114,7 +114,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -128,7 +128,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -142,7 +142,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );
@@ -156,7 +156,7 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $handle = \Flexio\System\Util::generateHandle();
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
         );

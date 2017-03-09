@@ -33,7 +33,7 @@ class Replace extends \Flexio\Jobs\Base
                     break;
 
                 // table input
-                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTable($instream);
                     break;
             }
@@ -55,7 +55,7 @@ class Replace extends \Flexio\Jobs\Base
         }
 
         // create the output with the replaced values
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -111,9 +111,9 @@ class Replace extends \Flexio\Jobs\Base
         foreach ($columns as $column)
         {
             // build the replace expression for the given column
-            $qname = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($column['name']);
+            $qname = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($column['name']);
             $qfind = preg_quote($params['find'],'/');
-            $qreplace = \Flexio\Services\ExprUtil::quote($params['replace']);
+            $qreplace = \Flexio\Base\ExprUtil::quote($params['replace']);
 
             $location = isset_or($params['location'],'any');
             if ($location == 'any') {}
@@ -125,7 +125,7 @@ class Replace extends \Flexio\Jobs\Base
                 $qfind = '(^' . $qfind .')|(' . $qfind . '$)';
             else if ($location == 'whole')
                 $qfind = '^' . $qfind . '$';
-            $qfind = \Flexio\Services\ExprUtil::quote($qfind);
+            $qfind = \Flexio\Base\ExprUtil::quote($qfind);
 
             $flags = 'gi';
             if (isset($params['match_case']) && $params['match_case'])
@@ -134,7 +134,7 @@ class Replace extends \Flexio\Jobs\Base
             $exprtext = "regexp_replace($qname,$qfind,$qreplace,'$flags')";
 
             // map the column to the expression
-            $expreval = new \Flexio\Services\ExprEvaluate;
+            $expreval = new \Flexio\Base\ExprEvaluate;
             $parse_result = $expreval->prepare($exprtext, $instream->getStructure()->enum());
             if ($parse_result === false)
                 return; // trouble building the expression

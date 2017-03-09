@@ -167,7 +167,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
     public function write($params, $callback)
     {
         $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\System\ContentType::MIME_TYPE_STREAM);
+        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
 
         // TODO: implement
     }
@@ -216,7 +216,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
                     continue;
                 $id = $ids[0]->nodeValue;
 
-                $id = \Flexio\System\Util::afterLast($id, '/');
+                $id = \Flexio\Base\Util::afterLast($id, '/');
 
 
                 $updateds = $entry->getElementsByTagName("updated");
@@ -752,7 +752,7 @@ class GoogleSpreadsheet
                 $col_count = (int)$e[0]->textContent;
 
 
-                $worksheet_id = \Flexio\System\Util::afterLast($id, '/');
+                $worksheet_id = \Flexio\Base\Util::afterLast($id, '/');
 
                 $worksheet = new \Flexio\Services\GoogleWorksheet;
                 $worksheet->access_token = $this->access_token;

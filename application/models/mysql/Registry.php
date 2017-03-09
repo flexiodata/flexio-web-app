@@ -355,7 +355,7 @@ class Registry extends ModelBase
         if (!is_string($object_eid))
             return false;
 
-        if (strlen($object_eid) > 0 && !\Flexio\System\Eid::isValid($object_eid))
+        if (strlen($object_eid) > 0 && !\Flexio\Base\Eid::isValid($object_eid))
             return false;
 
         return true;

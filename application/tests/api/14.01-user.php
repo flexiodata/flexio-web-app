@@ -22,9 +22,9 @@ class Test
         // TEST: object creation
 
         // BEGIN TEST
-        $username = \Flexio\System\Util::generateHandle();
+        $username = \Flexio\Base\Util::generateHandle();
         $email = TestUtil::generateEmail();
-        $password = \Flexio\System\Util::generateHandle();
+        $password = \Flexio\Base\Util::generateHandle();
         $params = json_decode('
         {
             "user_name": "'.$username.'",

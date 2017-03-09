@@ -136,7 +136,7 @@ class Test
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = \Flexio\System\Eid::generate();
+        $eid3 = \Flexio\Base\Eid::generate();
         $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $get_result = $model->assoc_get($eid3, \Model::EDGE_LINKED_TO, $eid2);
         $actual = $add_result === true && $get_result === array();
@@ -149,7 +149,7 @@ class Test
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = \Flexio\System\Eid::generate();
+        $eid3 = \Flexio\Base\Eid::generate();
         $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $get_result = $model->assoc_get($eid1, \Model::EDGE_LINKED_TO, $eid3);
         $actual = $add_result === true && $get_result === array();
@@ -162,7 +162,7 @@ class Test
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = \Flexio\System\Eid::generate();
+        $eid3 = \Flexio\Base\Eid::generate();
         $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $get_result = $model->assoc_get($eid1, \Model::EDGE_LINKED_TO, "$eid3,$eid3");
         $actual = $add_result === true && $get_result === array();

@@ -24,7 +24,7 @@ class Manager
         // be used
 
         // STEP 1: save the email to a temporary file
-        $emailfile = \Flexio\System\Util::getTempFilename('txt');
+        $emailfile = \Flexio\Base\Util::getTempFilename('txt');
 
         $instream = fopen($stream, 'rb');
         $outstream = fopen($emailfile, 'w');
@@ -97,7 +97,7 @@ class Manager
 
             $name = $attachment['name'];
             $content = $attachment['content'];
-            $mime_type = \Flexio\System\ContentType::getMimeType($name, $content);
+            $mime_type = \Flexio\Base\ContentType::getMimeType($name, $content);
 
             // create the stream
             $outstream_properties = array(

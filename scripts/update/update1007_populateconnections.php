@@ -74,9 +74,9 @@ try
         $update['server_password'] = $row['server_password'];
 		$update['token']           = $row['token'];
 
-		if (substr($update['server_username'], 0, 4) == 'ZZXV') $update['server_username'] = \Flexio\System\Util::decrypt($update['server_username'], $g_store->connection_enckey);
-		if (substr($update['server_password'], 0, 4) == 'ZZXV') $update['server_password'] = \Flexio\System\Util::decrypt($update['server_password'], $g_store->connection_enckey);
-		if (substr($update['token'], 0, 4) == 'ZZXV')           $update['token'] = \Flexio\System\Util::decrypt($update['token'], $g_store->connection_enckey);
+		if (substr($update['server_username'], 0, 4) == 'ZZXV') $update['server_username'] = \Flexio\Base\Util::decrypt($update['server_username'], $g_store->connection_enckey);
+		if (substr($update['server_password'], 0, 4) == 'ZZXV') $update['server_password'] = \Flexio\Base\Util::decrypt($update['server_password'], $g_store->connection_enckey);
+		if (substr($update['token'], 0, 4) == 'ZZXV')           $update['token'] = \Flexio\Base\Util::decrypt($update['token'], $g_store->connection_enckey);
 
         if (isset_and_populated($config['server']))          $update['server'] =           $config['server'];
         if (isset_and_populated($config['port']))            $update['server_port'] =      $config['port'];
@@ -88,9 +88,9 @@ try
         if (isset_and_populated($config['expires']))         $update['token_expires'] =    $config['expires'];
 
 
-		$update['server_username'] = \Flexio\System\Util::encrypt($update['server_username'], $g_store->connection_enckey);
-		$update['server_password'] = \Flexio\System\Util::encrypt($update['server_password'], $g_store->connection_enckey);
-		$update['token'] = \Flexio\System\Util::encrypt($update['token'], $g_store->connection_enckey);
+		$update['server_username'] = \Flexio\Base\Util::encrypt($update['server_username'], $g_store->connection_enckey);
+		$update['server_password'] = \Flexio\Base\Util::encrypt($update['server_password'], $g_store->connection_enckey);
+		$update['token'] = \Flexio\Base\Util::encrypt($update['token'], $g_store->connection_enckey);
 
         $db->update('tbl_connection', $update, 'eid = ' . $db->quote($eid));
     }

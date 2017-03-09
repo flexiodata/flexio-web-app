@@ -35,17 +35,17 @@ class Test
     "maxProperties": null
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.1', '\Flexio\System\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -61,17 +61,17 @@ EOD;
     "maxProperties": true
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.2', '\Flexio\System\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -87,17 +87,17 @@ EOD;
     "maxProperties": -1
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.3', '\Flexio\System\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -113,17 +113,17 @@ EOD;
     "maxProperties": 0
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,false,false,false,false,true);
-        TestCheck::assertArray('A.4', '\Flexio\System\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -139,17 +139,17 @@ EOD;
     "maxProperties": 1
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,false,false,false,true);
-        TestCheck::assertArray('A.5', '\Flexio\System\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -165,17 +165,17 @@ EOD;
     "maxProperties": 2
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,true,false,false,true);
-        TestCheck::assertArray('A.6', '\Flexio\System\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -191,17 +191,17 @@ EOD;
     "maxProperties": 3
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,true,true,false,true);
-        TestCheck::assertArray('A.7', '\Flexio\System\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
 
 
@@ -221,17 +221,17 @@ EOD;
     "minProperties": null
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.1', '\Flexio\System\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -247,17 +247,17 @@ EOD;
     "minProperties": true
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.2', '\Flexio\System\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -273,17 +273,17 @@ EOD;
     "minProperties": -1
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.3', '\Flexio\System\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
+        TestCheck::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -299,17 +299,17 @@ EOD;
     "minProperties": 0
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,true,true,true,true);
-        TestCheck::assertArray('B.4', '\Flexio\System\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('B.4', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -325,17 +325,17 @@ EOD;
     "minProperties": 1
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,false,true,true,true,true,true);
-        TestCheck::assertArray('B.5', '\Flexio\System\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('B.5', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -351,17 +351,17 @@ EOD;
     "minProperties": 2
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,false,false,true,true,true,true);
-        TestCheck::assertArray('B.6', '\Flexio\System\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('B.6', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -377,16 +377,16 @@ EOD;
     "minProperties": 3
 }
 EOD;
-        $r1 = \Flexio\System\ValidatorSchema::check($v1, $template)->hasErrors() === false;
-        $r2 = \Flexio\System\ValidatorSchema::check($v2, $template)->hasErrors() === false;
-        $r3 = \Flexio\System\ValidatorSchema::check($v3, $template)->hasErrors() === false;
-        $r4 = \Flexio\System\ValidatorSchema::check($v4, $template)->hasErrors() === false;
-        $r5 = \Flexio\System\ValidatorSchema::check($v5, $template)->hasErrors() === false;
-        $r6 = \Flexio\System\ValidatorSchema::check($v6, $template)->hasErrors() === false;
-        $r7 = \Flexio\System\ValidatorSchema::check($v7, $template)->hasErrors() === false;
-        $r8 = \Flexio\System\ValidatorSchema::check($v8, $template)->hasErrors() === false;
+        $r1 = \Flexio\Base\ValidatorSchema::check($v1, $template)->hasErrors() === false;
+        $r2 = \Flexio\Base\ValidatorSchema::check($v2, $template)->hasErrors() === false;
+        $r3 = \Flexio\Base\ValidatorSchema::check($v3, $template)->hasErrors() === false;
+        $r4 = \Flexio\Base\ValidatorSchema::check($v4, $template)->hasErrors() === false;
+        $r5 = \Flexio\Base\ValidatorSchema::check($v5, $template)->hasErrors() === false;
+        $r6 = \Flexio\Base\ValidatorSchema::check($v6, $template)->hasErrors() === false;
+        $r7 = \Flexio\Base\ValidatorSchema::check($v7, $template)->hasErrors() === false;
+        $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,false,false,false,true,true,true);
-        TestCheck::assertArray('B.7', '\Flexio\System\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        TestCheck::assertArray('B.7', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
     }
 }

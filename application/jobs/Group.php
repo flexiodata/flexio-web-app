@@ -33,7 +33,7 @@ class Group extends \Flexio\Jobs\Base
                     break;
 
                 // table input
-                case \Flexio\System\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTable($instream);
                     break;
             }
@@ -43,7 +43,7 @@ class Group extends \Flexio\Jobs\Base
     public function createOutputFromTable($instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\System\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // create the output
@@ -206,14 +206,14 @@ class Group extends \Flexio\Jobs\Base
                     return false;
             }
 
-            $qstore_name = \Flexio\System\DbUtil::quoteIdentifierIfNecessary($store_name);
+            $qstore_name = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($store_name);
             $column_expr .= "($expr) AS $qstore_name";
         }
 
 
         // build the output statement
-        $where = \Flexio\Services\ExprTranslatorPostgres::translate($where, $input_columns);
-        $having = \Flexio\Services\ExprTranslatorPostgres::translate($having, $output_columns);
+        $where = \Flexio\Base\ExprTranslatorPostgres::translate($where, $input_columns);
+        $having = \Flexio\Base\ExprTranslatorPostgres::translate($having, $output_columns);
 
         $sql = "CREATE TABLE " . $outstream->getPath() . " AS SELECT ";
         $sql .= " $column_expr ";

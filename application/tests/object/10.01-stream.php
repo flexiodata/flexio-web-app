@@ -40,7 +40,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Stream::create();
-        $actual = \Flexio\System\Eid::isValid($object->getEid());
+        $actual = \Flexio\Base\Eid::isValid($object->getEid());
         $expected = true;
         TestCheck::assertBoolean('A.4', 'Stream::create(); make sure a valid eid is set when an object is created',  $actual, $expected, $results);
 
@@ -97,7 +97,7 @@ class Test
         $object = \Flexio\Object\Stream::create();
         $eid1 = $object->getEid();
         $eid2 = $object->delete()->getEid();
-        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('C.2', 'Stream::delete(); deleting an object shouldn\'t change its eid',  $actual, $expected, $results);
 
@@ -131,7 +131,7 @@ class Test
         $object = \Flexio\Object\Stream::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(null)->getEid();
-        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.2', 'Stream::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -139,7 +139,7 @@ class Test
         $object = \Flexio\Object\Stream::create();
         $eid1 = $object->getEid();
         $eid2 = $object->set(array('eid'=>'xxxxxxxxxxxx'))->getEid();
-        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.3', 'Stream::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
@@ -183,7 +183,7 @@ class Test
         $object = \Flexio\Object\Stream::create();
         $eid1 = $object->getEid();
         $eid2 = $object->setStatus(\Model::STATUS_TRASH)->getEid();
-        $actual =  \Flexio\System\Eid::isValid($eid1) && $eid1 === $eid2;
+        $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('F.2', 'Stream::setStatus(); setting status of an object shouldn\'t change its eid',  $actual, $expected, $results);
 
