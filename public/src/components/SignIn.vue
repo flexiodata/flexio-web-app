@@ -45,6 +45,7 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         // access to component instance via `vm`
+        vm.verify_code = _.get(to, 'query.verify_code', '')
         vm.username = _.get(to, 'query.email', '')
 
         // if an email address has been provided to us, this indicates
@@ -63,6 +64,7 @@
         username_provided: false,
         is_submitting: false,
         error_msg: '',
+        verify_code: '',
         input_cls: 'input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue lh-title ph3 pv2a w-100'
       }
     },
@@ -71,7 +73,7 @@
         // assemble non-empty values for submitting to the backend
         return _
           .chain(this.$data)
-          .pick(['username', 'password'])
+          .pick(['username', 'password', 'verify_code'])
           .omitBy(_.isEmpty)
           .value()
       },
@@ -97,7 +99,11 @@
       },
       doRedirect() {
         // grab the redirect from the query string if it exists
-        var redirect = this.$route.query.redirect
+        var redirect = _.get(this.$route, 'query.redirect', '')
+
+        // fix problem with /app/app when redirecting
+        if (redirect.substr(0, 5) == '/app/')
+          redirect = redirect.substr(4)
 
         if (redirect && redirect.length > 0)
           this.$router.push({ path: redirect })
