@@ -90,7 +90,7 @@
         this.text = val
       },
       text(val, old_val) {
-        //this.checkTextareaHeight()
+        this.checkTextareaHeight()
         this.$emit('change', this.text)
       }
     },
