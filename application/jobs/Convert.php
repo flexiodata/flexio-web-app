@@ -60,7 +60,7 @@ class Convert extends \Flexio\Jobs\Base
             if ($mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             {
                 if ($input_mime_type_from_definition === false)
-                    $mime_type = \Flexio\Base\ContentType::MIME_TYPE_CSV; // default to csv
+                    $mime_type = $instream->getMimeType();
                      else
                     $mime_type = $input_mime_type_from_definition;
             }
@@ -75,6 +75,12 @@ class Convert extends \Flexio\Jobs\Base
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTableInput($instream, $output_mime_type_from_definition);
+                    break;
+
+                // json input
+                case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
+                case \Flexio\Base\ContentType::MIME_TYPE_JSON:
+                    $this->createOutputFromJsonInput($instream, $output_mime_type_from_definition);
                     break;
 
                 // csv input
@@ -189,7 +195,44 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
+    private function createOutputFromJsonInput($instream, $output_mime_type)
+    {
+        // input/output
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        if ($outstream === false)
+            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
 
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
+        $this->getOutput()->push($outstream);
+
+        // read the json into a buffer
+        $buffer = '';
+        $instream->read(function ($data) use (&$buffer) {
+            $buffer .= $data;
+        });
+
+        // flatten the json
+        $items = \Flexio\Base\Mapper::flatten($buffer);
+
+        // set the output structure and write the rows
+        $structure = self::determineStructureFromJsonArray($items);
+        if ($structure === false)
+            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+
+        $outstream->setStructure($structure);
+
+        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        if ($streamwriter === false)
+            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+
+        foreach($items as $i)
+        {
+            $streamwriter->write($i);
+        }
+
+        $streamwriter->close();
+        $outstream->setSize($streamwriter->getBytesWritten());
+    }
 
     private function createOutputFromCsvInput($instream, $output_mime_type)
     {
@@ -872,6 +915,31 @@ class Convert extends \Flexio\Jobs\Base
                 'type' =>          $type,
                 'width' =>         (int)$width,
                 'scale' =>         (int)$scale
+            );
+        }
+
+        return $structure;
+    }
+
+    private static function determineStructureFromJsonArray($items)
+    {
+        // create the fields based off the first row
+        if (!is_array($items))
+            return false;
+
+        if (count($items) === 0)
+            return false;
+
+        $structure = array();
+
+        $first_item = $items[0];
+        foreach ($first_item as $key => $value)
+        {
+            $structure[] = array(
+                'name'  => $key,
+                'type'  => 'text',
+                'width' => null,
+                'scale' => 0
             );
         }
 
