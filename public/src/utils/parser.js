@@ -1517,7 +1517,8 @@
             'calc',
             //'email', // removed for release
             'execute',
-            'transform'
+            'transform',
+            'merge'
           ]
         }
       }

@@ -149,7 +149,7 @@
           case types.TASK_TYPE_GROUP         : return ''
           case types.TASK_TYPE_INPUT         : return 'input from: my-connection file: /path/to/file1, /path/to/file2'
           case types.TASK_TYPE_LIMIT         : return 'limit sample: top value: 50054'
-          case types.TASK_TYPE_MERGE         : return ''
+          case types.TASK_TYPE_MERGE         : return 'merge'
           case types.TASK_TYPE_NOP           : return ''
           case types.TASK_TYPE_OUTPUT        : return 'output to: my-connection location: /path/to/folder'
           case types.TASK_TYPE_PROMPT        : return ''
@@ -181,7 +181,7 @@
           case types.TASK_TYPE_GROUP         : return base_url
           case types.TASK_TYPE_INPUT         : return base_url+'#input'
           case types.TASK_TYPE_LIMIT         : return base_url+'#limit'
-          case types.TASK_TYPE_MERGE         : return base_url
+          case types.TASK_TYPE_MERGE         : return base_url+'#merge'
           case types.TASK_TYPE_NOP           : return base_url
           case types.TASK_TYPE_OUTPUT        : return base_url+'#output'
           case types.TASK_TYPE_PROMPT        : return base_url
