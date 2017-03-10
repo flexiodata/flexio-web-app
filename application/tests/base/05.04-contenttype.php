@@ -355,6 +355,17 @@ EOD;
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         TestCheck::assertString('B.28', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+
+
+
+        // TEST: urls that return various content
+        $filename = 'https://www.company.com/file';
+        $buffer = <<<EOD
+This is a raw text file
+EOD;
+        $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
+        $expected = 'text/plain';
+        TestCheck::assertString('C.1', '\Flexio\Base\ContentType::getMimeType(); check raw url endpoint with no extension',  $actual, $expected, $results);
     }
 }
 

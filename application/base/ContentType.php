@@ -61,6 +61,11 @@ class ContentType
         if ($extension === ''  && $buffer === '')
             return self::MIME_TYPE_EMPTY;
 
+        // the extension may be a path; if it is, get the actual extension
+        if (strpos($extension, '.') !== false)
+            $extension = \Flexio\Base\Util::getFileExtension($extension);
+        $extension = strtolower($extension);
+
         $file_mime_type;
         $buffer_mime_type;
         $buffer_content_type;
@@ -71,6 +76,7 @@ class ContentType
         $buffer_length = strlen($buffer);
         $file_mime_type = self::getMimeTypeFromExtension($extension);
         self::getMimeAndContentType($buffer, $buffer_mime_type, $buffer_content_type);
+
 
         // if the mime type is the same, we're done
         if ($file_mime_type === $buffer_mime_type)
