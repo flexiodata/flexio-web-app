@@ -82,7 +82,7 @@
         target="_blank"
         rel="noopener noreferrer"
         class="ml2 pointer hint--top"
-        aria-label="Visit docs.flex.io"
+        aria-label="Visit help docs"
         :href="code_more_link"
       >More...</a>
     </div>
@@ -91,6 +91,7 @@
 
 <script>
   import * as types from '../constants/task-type'
+  import { HOSTNAME } from '../constants/common'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
   import Autocomplete from './Autocomplete.vue'
@@ -162,7 +163,36 @@
         }
       },
       code_more_link() {
-        return 'https://docs.flex.io'
+        var base_url = 'https://'+HOSTNAME+'/docs/web-app/'
+
+        switch (this.task_type)
+        {
+          default                            : return base_url
+          case types.TASK_TYPE_CALC          : return base_url+'#calc'
+          case types.TASK_TYPE_CONVERT       : return base_url+'#convert'
+          case types.TASK_TYPE_COPY          : return base_url
+          case types.TASK_TYPE_CUSTOM        : return base_url
+          case types.TASK_TYPE_DISTINCT      : return base_url
+          case types.TASK_TYPE_DUPLICATE     : return base_url
+          case types.TASK_TYPE_EMAIL_SEND    : return base_url
+          case types.TASK_TYPE_EXECUTE       : return base_url+'#execute'
+          case types.TASK_TYPE_FIND_REPLACE  : return base_url
+          case types.TASK_TYPE_FILTER        : return base_url+'#filter'
+          case types.TASK_TYPE_GROUP         : return base_url
+          case types.TASK_TYPE_INPUT         : return base_url+'#input'
+          case types.TASK_TYPE_LIMIT         : return base_url+'#limit'
+          case types.TASK_TYPE_MERGE         : return base_url
+          case types.TASK_TYPE_NOP           : return base_url
+          case types.TASK_TYPE_OUTPUT        : return base_url+'#output'
+          case types.TASK_TYPE_PROMPT        : return base_url
+          case types.TASK_TYPE_R             : return base_url
+          case types.TASK_TYPE_RENAME        : return base_url
+          case types.TASK_TYPE_RENAME_COLUMN : return base_url
+          case types.TASK_TYPE_SEARCH        : return base_url
+          case types.TASK_TYPE_SELECT        : return base_url+'#select'
+          case types.TASK_TYPE_SORT          : return base_url+'#sort'
+          case types.TASK_TYPE_TRANSFORM     : return base_url+'#transform'
+        }
       }
     },
     mounted() {
