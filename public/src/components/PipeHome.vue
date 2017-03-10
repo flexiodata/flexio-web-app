@@ -28,37 +28,6 @@
         >
           Run pipe
         </btn>
-
-        <a
-          class="v-mid dib pointer fw6 bg-black-10 black-60 f6 pv1 ph2 br1 darken-10 hint--bottom-left"
-          aria-label="Open menu"
-          ref="dropdownTrigger"
-          tabindex="0"
-        ><i class="material-icons v-mid">menu</i></a>
-
-        <ui-popover
-          trigger="dropdownTrigger"
-          ref="dropdown"
-          dropdown-position="bottom right"
-        >
-          <ui-menu
-            contain-focus
-            has-icons
-
-            :options="[{
-              id: 'file-list',
-              label: 'Toggle file list',
-              icon: 'list'
-            },{
-              id: 'content',
-              label: 'Toggle content',
-              icon: 'description'
-            }]"
-
-            @select="onDropdownItemClick"
-            @close="$refs.dropdown.close()"
-          ></ui-menu>
-        </ui-popover>
       </div>
     </div>
 
@@ -104,6 +73,7 @@
         :input-columns="task_input_columns"
         :output-columns="task_output_columns"
         @show-input-file-chooser="openInputFileChooserModal"
+        @toggle-file-list="toggleFiles"
         @cancel="inserting_task ? endTaskInsert() : revertTaskChanges()"
         @save="saveTask"
       ></command-bar>
@@ -779,14 +749,6 @@
 
       sendErrorReport() {
         alert('TODO')
-      },
-
-      onDropdownItemClick(menu_item) {
-        switch (menu_item.id)
-        {
-          case 'file-list': return this.toggleFiles()
-          case 'content':   return this.toggleContent()
-        }
       },
 
       getOurConnections() {

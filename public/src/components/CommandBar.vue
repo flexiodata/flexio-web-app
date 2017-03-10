@@ -22,11 +22,11 @@
               label: 'Open input file chooser',
               icon: 'folder_open'
             },{
-              id: 'docs',
-              label: 'Online documentation',
-              icon: 'import_contacts'
-            },{
               type: 'divider'
+            },{
+              id: 'toggle-file-list',
+              label: 'Toggle file list',
+              icon: 'list'
             },{
               id: 'examples',
               label: 'Toggle command examples',
@@ -81,7 +81,7 @@
       <a
         target="_blank"
         rel="noopener noreferrer"
-        class="ml2 pointer hint--top"
+        class="ml2 pointer blue hint--top"
         aria-label="Visit help docs"
         :href="code_more_link"
       >More...</a>
@@ -257,6 +257,7 @@
         switch (menu_item.id)
         {
           case 'input-file-chooser': return this.$emit('show-input-file-chooser')
+          case 'toggle-file-list':   return this.$emit('toggle-file-list')
           case 'docs':               return this.openHelpDocs()
           case 'examples':           return this.toggleExamples()
         }
