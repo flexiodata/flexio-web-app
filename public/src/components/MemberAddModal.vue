@@ -28,6 +28,8 @@
         label="Message (optional)"
         floating-label
         help=" "
+        :multi-line="true"
+        :rows="1"
         v-model="invite_info.message"
       ></ui-textbox>
     </form>
