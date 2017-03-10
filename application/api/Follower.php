@@ -125,9 +125,12 @@ class Follower
 
             $message_type = \Flexio\Object\Message::TYPE_EMAIL_SHARE;
             $from_name = $sender_name;
+            $from_email = \Flexio\System\System::getCurrentUserEmail();
+
             $object_name = $object_properties['name'];
             $email_params['email'] = $user_email;
             $email_params['from_name'] = $from_name;
+            $email_params['from_email'] = $from_email;
             $email_params['object_name'] = $object_name;
             $email_params['object_eid'] = $object->getEid();
             $email_params['message'] = $message;

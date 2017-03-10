@@ -137,6 +137,7 @@ class Message
         if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
+                'from_email'   => array('type' => 'string', 'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
                 'object_eid'  => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => false),
@@ -146,6 +147,7 @@ class Message
 
         $to = $params['email'];
         $from_name = $params['from_name'];
+        $from_email = $params['from_email'];
         $object_name = $params['object_name'];
         $object_eid = $params['object_eid'];
         $message = isset_or($params['message'], '');
@@ -155,6 +157,7 @@ class Message
         // get text template from the application res directory
         $msg_text = self::getTextEmail('template-project-share', [
             'name' => $from_name,
+            'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "\n$message\n",
             'object_name' => $object_name,
             'share_link' => $share_link
@@ -163,6 +166,7 @@ class Message
         // get html template from the application res directory
         $msg_html = self::getHtmlEmail('template-project-share', [
             'name' => $from_name,
+            'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "$message<br><br>",
             'object_name' => $object_name,
             'share_link' => $share_link
