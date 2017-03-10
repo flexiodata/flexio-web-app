@@ -983,7 +983,6 @@
           "params": { }
         };
 
-      var params = this.split(str, this.args.limit);
       return json;
     };
 
