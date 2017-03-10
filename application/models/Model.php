@@ -585,7 +585,8 @@ class Model
                    "    inner join tbl_object tobtar on tas.target_eid = tobtar.eid ".
                    "    where tas.source_eid = $qsource_eid ".
                    "        $status_condition ".
-                   "        and tas.association_type = $qtype ";
+                   "        and tas.association_type = $qtype ".
+                   "    order by tobtar.id ";
             $result = $db->query($sql);
 
             $objects = array();
