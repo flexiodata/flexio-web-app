@@ -356,8 +356,8 @@
       // convert from: delimited to: table delimiter: "," qualifier: '"' header: 1
 
       var params = this.split(str, this.args.convert);
-      var from_format = 'delimited';
-      var to_format = 'table';
+      var from_format = '';
+      var to_format = '';
 
       if (params.hasOwnProperty('from'))
       {
@@ -375,6 +375,13 @@
           json.params.input.format = 'pdf';
         else
           return json;  // unknown from: type
+      }
+      
+      if (from_format == '' && (params.hasOwnProperty('delimiter') || params.hasOwnProperty('qualifier') || params.hasOwnProperty('header')))
+      {
+        // no from format specified -- implicit format is delimited
+        json.params.input = { "format": "delimited" };
+        from_format = 'delimited';
       }
 
       if (params.hasOwnProperty('to'))
