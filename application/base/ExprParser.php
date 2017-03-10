@@ -244,11 +244,11 @@ class ExprParser
 
 
         // look for an identifier
-        if (ctype_alpha($this->expr[$off]) || false !== strpos('_@#', $this->expr[$off]))
+        if (ctype_alpha($this->expr[$off]) || false !== strpos('_@#.', $this->expr[$off]))
         {
             $val = $this->expr[$off];
             ++$off;
-            while ($off < $this->expr_len && (ctype_alnum($this->expr[$off]) || false !== strpos('_@#', $this->expr[$off])))
+            while ($off < $this->expr_len && (ctype_alnum($this->expr[$off]) || false !== strpos('_@#.', $this->expr[$off])))
             {
                 $val .= $this->expr[$off];
                 $off++;
