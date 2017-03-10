@@ -972,6 +972,31 @@
 
 
 
+    this.args.merge = [];
+    this.hints.merge = {
+    };
+    this.keywords.merge = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.merge",
+          "params": { }
+        };
+
+      return json;
+    };
+
+
+    this.templates["flexio.merge"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "merge";
+      return res;
+    };
+
+
 
     this.args.sleep= ['value'];
     this.keywords.sleep = function(str)
@@ -1180,6 +1205,78 @@
 
 
 
+    this.args.rename = ['col'];
+    this.keywords.rename = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.rename",
+          "params": {
+            "columns": []
+          }
+        };
+
+
+      var params = this.split(str, this.args.rename);
+
+      if (params.hasOwnProperty('col') || params.hasOwnProperty('columns') || params.hasOwnProperty('column'))
+      {
+        var arr = this.parseList(params.hasOwnProperty('col') ? params['col'] : (params.hasOwnProperty('columns') ? params['columns'] : params['column']));
+
+        json.params.columns = [];
+        for (var i = 0; i < arr.length; ++i)
+        {
+          if (arr[i] instanceof Object)
+          {
+            if (arr[i].hasOwnProperty('key') && arr[i].hasOwnProperty('value'))
+            {
+              // arrow syntax
+              json.params.columns.push({"name": arr[i].key, "new_name": arr[i].value});
+            }
+            else if (arr[i].hasOwnProperty('name') && arr[i].hasOwnProperty('new_name'))
+            {
+              var name = arr[i].name;
+              var new_name = arr[i].new_name;
+              json.params.columns.push({"name": name, "new_name": new_name});
+            }
+          }
+        }
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.rename"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "rename";
+
+      if (json.params.hasOwnProperty('columns'))
+      {
+        var str = '';
+        var first = true;
+        for (var i = 0; i < json.params.columns.length; ++i)
+        {
+          if (first === false)
+            str += ', ';
+
+          if (json.params.columns[i].hasOwnProperty('name') && json.params.columns[i].hasOwnProperty('new_name'))
+          {
+            str += this.quoteColumnIfNecessary(json.params.columns[i].name);
+            str += "=>";
+            str += this.quoteColumnIfNecessary(json.params.columns[i].new_name);
+          }
+
+          first = false;
+        }
+
+        res = this.append(res, "col: " + str);
+      }
+      return res;
+    }
 
 
 
@@ -1486,12 +1583,14 @@
             'convert',
             'limit',
             'select',
+            'rename',
             'sort',
             'filter',
             'calc',
             //'email', // removed for release
             'execute',
-            'transform'
+            'transform',
+            'merge'
           ]
         }
       }
