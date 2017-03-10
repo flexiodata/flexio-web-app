@@ -4,7 +4,7 @@
     remove-close-button
     @hide="onHide"
   >
-    <div slot="header" class="f4">Invite members</div>
+    <div slot="header" class="f4">Add members</div>
 
     <form novalidate @submit.prevent="submit">
       <ui-textbox
