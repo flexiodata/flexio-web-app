@@ -260,7 +260,7 @@
             me.$store.dispatch('testConnection', { eid, attrs }).then(response => {
               if (response.ok)
               {
-                me.updateConnection(_.omit(response.body, ['name', 'ename', 'description']))
+                me.updateConnection(_.omit(response.body, ['name', 'ename', 'description', 'token', 'host', 'port', 'username', 'password', 'database']))
               }
                else
               {
