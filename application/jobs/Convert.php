@@ -78,12 +78,13 @@ class Convert extends \Flexio\Jobs\Base
                     break;
 
                 // json input
-                case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
+
                 case \Flexio\Base\ContentType::MIME_TYPE_JSON:
                     $this->createOutputFromJsonInput($instream, $output_mime_type_from_definition);
                     break;
 
-                // csv input
+                // csv input; also handle raw stream content with csv handler
+                case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
                 case \Flexio\Base\ContentType::MIME_TYPE_CSV:
                     $this->createOutputFromCsvInput($instream, $output_mime_type_from_definition);
                     break;
