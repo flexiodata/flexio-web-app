@@ -15,7 +15,7 @@
         >
       </div>
       <div class="flex-none">
-        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openModal('modal-add')">Invite members</btn>
+        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openModal('modal-add')">Add members</btn>
       </div>
     </div>
 

@@ -20,17 +20,17 @@
             :options="[{
               id: 'input-file-chooser',
               label: 'Open input file chooser',
-              icon: 'folder_open'
+              icon: 'input'
             },{
-              id: 'docs',
-              label: 'Online documentation',
-              icon: 'import_contacts'
+              id: 'output-file-chooser',
+              label: 'Open output file chooser',
+              icon: 'input'
             },{
               type: 'divider'
             },{
-              id: 'examples',
-              label: 'Toggle command examples',
-              icon: 'info'
+              id: 'toggle-file-list',
+              label: 'Toggle file list',
+              icon: 'list'
             }]"
 
             @select="onDropdownItemClick"
@@ -81,7 +81,7 @@
       <a
         target="_blank"
         rel="noopener noreferrer"
-        class="ml2 pointer hint--top"
+        class="ml2 pointer blue hint--top"
         aria-label="Visit help docs"
         :href="code_more_link"
       >More...</a>
@@ -256,9 +256,11 @@
       onDropdownItemClick(menu_item) {
         switch (menu_item.id)
         {
-          case 'input-file-chooser': return this.$emit('show-input-file-chooser')
-          case 'docs':               return this.openHelpDocs()
-          case 'examples':           return this.toggleExamples()
+          case 'input-file-chooser':  return this.$emit('show-input-file-chooser')
+          case 'output-file-chooser': return this.$emit('show-output-file-chooser')
+          case 'toggle-file-list':    return this.$emit('toggle-file-list')
+          case 'docs':                return this.openHelpDocs()
+          case 'examples':            return this.toggleExamples()
         }
       }
     }

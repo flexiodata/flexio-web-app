@@ -22,7 +22,6 @@ class Follower
         // TODO: this function is a bit outdated in the conventions
         // it uses; should be updated to be more consistent with other
         // api functions
-
         if (($params = $request->getValidator()->check($params, array(
                 'eid'     => array('type' => 'identifier', 'required' => true),
                 'users'   => array('type' => 'object', 'required' => true),
@@ -107,6 +106,7 @@ class Follower
                 // add an invitation association
                 \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_INVITED, $user_eid);
                 \Flexio\System\System::getModel()->assoc_add($user_eid, \Model::EDGE_INVITED_BY, $requesting_user_eid);
+
             }
 
             // send out the invite
@@ -134,8 +134,9 @@ class Follower
             $email_params['object_name'] = $object_name;
             $email_params['object_eid'] = $object->getEid();
             $email_params['message'] = $message;
-            $message = \Flexio\Object\Message::create($message_type, $email_params);
-            $message->send();
+
+            $email = \Flexio\Object\Message::create($message_type, $email_params);
+            $email->send();
 
             // regardless of whether or not they're a new user, add a sharing association
             \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_SHARED_WITH, $user_eid);
