@@ -38,10 +38,13 @@
         <div v-if="user_fetching"></div>
         <div v-else-if="logged_in">
           <a
-            class="b dib pointer ml1 ml2-ns pv2 ph1 ph2-ns br1 blue hover-bg-light-gray popover-trigger"
+            class="b dib pointer ml1 ml2-ns pv2 ph1 ph2-ns br1 hover-bg-light-gray popover-trigger"
             ref="helpdropdowntrigger"
             tabindex="0"
-          ><i class="material-icons md-24 v-mid">help</i></a>
+          >
+            <i class="material-icons md-24 v-mid blue" style="margin: 0 -2px 0 -1px">help</i>
+            <i class="material-icons v-mid black-40 md-18" style="margin: 0 -2px">arrow_drop_down</i>
+          </a>
 
           <ui-popover
             trigger="helpdropdowntrigger"
@@ -69,12 +72,12 @@
           </ui-popover>
 
           <a
-            class="no-underline f5 b dib pointer ml1 mr0 mr2-ns pv2 ph1 ph2-ns br1 black-60 hover-bg-light-gray popover-trigger"
+            class="no-underline f5 b dib pointer ml1 mr0 mr2-ns pv2 ph1 ph2-ns br1 hover-bg-light-gray popover-trigger"
             ref="userdropdowntrigger"
             tabindex="0"
           >
             <img :src="user_profile_src" class="dib v-mid ba b--black-10 db br-100"/>
-            <i class="material-icons v-mid">arrow_drop_down</i>
+            <i class="material-icons v-mid black-40 md-18" style="margin: 0 -2px">arrow_drop_down</i>
           </a>
 
           <ui-popover
