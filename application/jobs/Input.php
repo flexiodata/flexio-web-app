@@ -274,6 +274,22 @@ class Input extends \Flexio\Jobs\Base
 
         // set the mime type
         $mime_type = \Flexio\Base\ContentType::getMimeType($path, $mime_data_sample);
+
+
+        // TODO: we want to identify json content, but this isn't easily distinguishable
+        // from text if we only have a snippet of the data; ideally, we should get the
+        // content type from the service, but this will take a some work to patch this
+        // through; for now, if we have 'plain/text', see if the first part of the string
+        // look like json (e.g is either '[' or '{')
+
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_TXT)
+        {
+            $mime_data_sample_clean = trim($mime_data_sample);
+            $first_char = substr($mime_data_sample_clean,0,1);
+            if ($first_char === '[' || $first_char === '{')
+                $mime_type = \Flexio\Base\ContentType::MIME_TYPE_JSON;
+        }
+
         $outstream->setMimeType($mime_type);
         $outstream->setSize($streamwriter->getBytesWritten());
     }
