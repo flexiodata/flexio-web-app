@@ -138,6 +138,7 @@
     ROUTE_FORGOTPASSWORD,
     ROUTE_RESETPASSWORD
   } from '../constants/route'
+  import { HOSTNAME } from '../constants/common'
   import { mapState, mapGetters } from 'vuex'
   import EmailSupportModal from './EmailSupportModal.vue'
 
@@ -218,7 +219,7 @@
         'getActiveUser'
       ]),
       openHelpDocs() {
-        window.open('https://docs.flex.io', '_blank')
+        window.open('https://'+HOSTNAME+'/docs/web-app/', '_blank')
       },
       openEmailSupportModal() {
         this.$refs['modal-email-support'].open()
