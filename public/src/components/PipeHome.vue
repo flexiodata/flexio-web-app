@@ -689,12 +689,17 @@
               }
             })
 
+            me.endTaskInsert()
+
+            // TODO: this needs to be rethought -- this was a big usability issue
+            /*
             // start another insert unless on an execute step
             // which will go into edit mode for the code editor
             if (is_execute)
               me.endTaskInsert()
                else
               me.startTaskInsert(me.insert_idx+1)
+            */
           }
            else
           {
