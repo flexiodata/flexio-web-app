@@ -20,17 +20,17 @@
             :options="[{
               id: 'input-file-chooser',
               label: 'Open input file chooser',
-              icon: 'folder_open'
+              icon: 'input'
+            },{
+              id: 'output-file-chooser',
+              label: 'Open output file chooser',
+              icon: 'input'
             },{
               type: 'divider'
             },{
               id: 'toggle-file-list',
               label: 'Toggle file list',
               icon: 'list'
-            },{
-              id: 'examples',
-              label: 'Toggle command examples',
-              icon: 'info'
             }]"
 
             @select="onDropdownItemClick"
@@ -256,10 +256,11 @@
       onDropdownItemClick(menu_item) {
         switch (menu_item.id)
         {
-          case 'input-file-chooser': return this.$emit('show-input-file-chooser')
-          case 'toggle-file-list':   return this.$emit('toggle-file-list')
-          case 'docs':               return this.openHelpDocs()
-          case 'examples':           return this.toggleExamples()
+          case 'input-file-chooser':  return this.$emit('show-input-file-chooser')
+          case 'output-file-chooser': return this.$emit('show-output-file-chooser')
+          case 'toggle-file-list':    return this.$emit('toggle-file-list')
+          case 'docs':                return this.openHelpDocs()
+          case 'examples':            return this.toggleExamples()
         }
       }
     }

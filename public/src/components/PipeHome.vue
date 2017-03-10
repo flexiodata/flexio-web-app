@@ -73,6 +73,7 @@
         :input-columns="task_input_columns"
         :output-columns="task_output_columns"
         @show-input-file-chooser="openInputFileChooserModal"
+        @show-output-file-chooser="openOutputFileChooserModal"
         @toggle-file-list="toggleFiles"
         @cancel="inserting_task ? endTaskInsert() : revertTaskChanges()"
         @save="saveTask"
