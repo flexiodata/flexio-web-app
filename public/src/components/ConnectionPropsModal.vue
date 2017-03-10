@@ -260,7 +260,7 @@
             me.$store.dispatch('testConnection', { eid, attrs }).then(response => {
               if (response.ok)
               {
-                me.updateConnection(response.body)
+                me.updateConnection(_.omit(response.body, ['name', 'ename', 'description']))
               }
                else
               {
@@ -276,15 +276,16 @@
       },
       tryOauthConnect() {
         var me = this
+        var eid = this.eid
 
         this.oauthPopup(this.oauth_url, (params) => {
           // TODO: handle 'code' and 'state' and 'error' here...
 
           // for now, re-fetch the connection to update its state
-          this.$store.dispatch('fetchConnection', { eid: this.eid }).then(response => {
+          this.$store.dispatch('fetchConnection', { eid }).then(response => {
             if (response.ok)
             {
-              me.updateConnection(response.body)
+              me.updateConnection(_.omit(response.body, ['name', 'ename', 'description']))
             }
              else
             {
