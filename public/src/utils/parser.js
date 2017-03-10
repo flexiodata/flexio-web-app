@@ -972,6 +972,32 @@
 
 
 
+    this.args.merge = [];
+    this.hints.merge = {
+    };
+    this.keywords.merge = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.merge",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.limit);
+      return json;
+    };
+
+
+    this.templates["flexio.merge"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "merge";
+      return res;
+    };
+
+
 
     this.args.sleep= ['value'];
     this.keywords.sleep = function(str)
