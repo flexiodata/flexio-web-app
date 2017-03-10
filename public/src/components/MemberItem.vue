@@ -29,7 +29,7 @@
     props: ['item'],
     computed: {
       profile_src() {
-        return 'https://secure.gravatar.com/avatar/'+this.item.email_hash+'?d=mm&amp;s=64'
+        return 'https://secure.gravatar.com/avatar/'+this.item.email_hash+'?d=mm&s=64'
       },
       is_owner() {
         return _.toLower(_.get(this.item, 'user_group')) == 'owner'

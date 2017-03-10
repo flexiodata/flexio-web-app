@@ -110,7 +110,6 @@
 
       <!-- content area -->
       <div class="flex-fill flex flex-column mb3 relative">
-
         <!-- v-if; running in build mode (from adding/editing a task step) -->
         <div v-if="is_process_running && !is_process_run_mode" class="mb3 relative flex flex-column flex-fill">
           <spinner size="medium" show-text loading-text="Running pipe..."></spinner>

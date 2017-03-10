@@ -1,6 +1,6 @@
 <template>
   <nav v-if="render_nav" v-show="show_nav" class="bb b--black-20">
-    <div class="flex flex-row bg-white pa1 ph3-ns items-center">
+    <div class="flex flex-row bg-white pa1 pl3-ns pr2-ns items-center">
       <div class="flex-fill flex flex-row items-center truncate">
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
@@ -38,10 +38,10 @@
         <div v-if="user_fetching"></div>
         <div v-else-if="logged_in">
           <a
-            class="f5 b dib pointer ml1 ml2-ns ph1 ph3-ns pv1 pv2-ns br1 blue hover-bg-light-gray popover-trigger"
+            class="b dib pointer ml1 ml2-ns pv2 ph1 ph2-ns br1 blue hover-bg-light-gray popover-trigger"
             ref="helpdropdowntrigger"
             tabindex="0"
-          ><i class="material-icons v-mid">help</i></a>
+          ><i class="material-icons md-24 v-mid">help</i></a>
 
           <ui-popover
             trigger="helpdropdowntrigger"
@@ -69,11 +69,11 @@
           </ui-popover>
 
           <a
-            class="no-underline f5 b dib pointer ml1 mr0 mr2-ns ph1 ph3-ns pv1 pv2-ns br1 black-60 hover-bg-light-gray popover-trigger"
+            class="no-underline f5 b dib pointer ml1 mr0 mr2-ns pv2 ph1 ph2-ns br1 black-60 hover-bg-light-gray popover-trigger"
             ref="userdropdowntrigger"
             tabindex="0"
           >
-            <span class="v-mid">{{first_name}}</span>
+            <img :src="user_profile_src" class="dib v-mid ba b--black-10 db br-100"/>
             <i class="material-icons v-mid">arrow_drop_down</i>
           </a>
 
@@ -94,6 +94,8 @@
                 id: 'account',
                 label: 'Account',
                 icon: 'account_circle'
+              },{
+                type: 'divider'
               },{
                 id: 'sign-out',
                 label: 'Sign out',
@@ -198,6 +200,12 @@
       },
       user_name() {
         return _.get(this.getActiveUser(), 'user_name', '')
+      },
+      user_email_hash() {
+        return _.get(this.getActiveUser(), 'email_hash', '')
+      },
+      user_profile_src() {
+        return 'https://secure.gravatar.com/avatar/'+this.user_email_hash+'?d=mm&s=24'
       },
       logged_in() {
         return this.user_eid.length > 0
