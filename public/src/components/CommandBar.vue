@@ -186,7 +186,7 @@
           case types.TASK_TYPE_OUTPUT        : return base_url+'#output'
           case types.TASK_TYPE_PROMPT        : return base_url
           case types.TASK_TYPE_R             : return base_url
-          case types.TASK_TYPE_RENAME        : return base_url
+          case types.TASK_TYPE_RENAME        : return base_url+'#rename'
           case types.TASK_TYPE_RENAME_COLUMN : return base_url+'#rename'
           case types.TASK_TYPE_SEARCH        : return base_url
           case types.TASK_TYPE_SELECT        : return base_url+'#select'
