@@ -93,8 +93,8 @@
             <ui-textbox
               autocomplete="off"
               label="Alias"
-              floating-label
               help=" "
+              :placeholder="alias_placeholder"
               v-model="pipe.ename"
             ></ui-textbox>
           </div>
@@ -167,6 +167,7 @@
   } from '../constants/connection-type'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
+  import { mapGetters } from 'vuex'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
@@ -256,9 +257,18 @@
           ? 'Done' : this.mode == 'edit-pipe'
           ? 'Save changes'
           : 'Create pipe'
+      },
+      active_username() {
+        return _.get(this.getActiveUser(), 'user_name', '')
+      },
+      alias_placeholder() {
+        return _.kebabCase(this.active_username + ' ' + this.pipe.name)
       }
     },
     methods: {
+      ...mapGetters([
+        'getActiveUser'
+      ]),
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },

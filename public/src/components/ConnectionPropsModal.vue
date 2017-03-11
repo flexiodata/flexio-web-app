@@ -66,8 +66,8 @@
               <ui-textbox
                 autocomplete="off"
                 label="Alias"
-                floating-label
                 help=" "
+                :placeholder="alias_placeholder"
                 v-model="connection.ename"
               ></ui-textbox>
             </div>
@@ -110,6 +110,7 @@
   import * as connections from '../constants/connection-info'
   import { HOSTNAME } from '../constants/common'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
+  import { mapGetters } from 'vuex'
   import Btn from './Btn.vue'
   import ServiceList from './ServiceList.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
@@ -177,9 +178,18 @@
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create connection'
+      },
+      active_username() {
+        return _.get(this.getActiveUser(), 'user_name', '')
+      },
+      alias_placeholder() {
+        return _.kebabCase(this.active_username + ' ' + this.connection.name)
       }
     },
     methods: {
+      ...mapGetters([
+        'getActiveUser'
+      ]),
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },

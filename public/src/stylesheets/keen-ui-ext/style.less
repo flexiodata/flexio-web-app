@@ -56,8 +56,14 @@
 }
 
 .ui-select.has-label .ui-select__label-text,
+.ui-textbox.has-label .ui-textbox__label-text,
 .ui-textbox.has-floating-label .ui-textbox__label-text.is-floating {
   font-size: 0.75rem;
+}
+
+// reset to default value
+.ui-textbox.has-floating-label .ui-textbox__label-text:not(.is-floating) {
+  font-size: 0.9375rem;
 }
 
 /* UI Menu */
