@@ -118,9 +118,7 @@
         <div
           class="fw6 mt4 mb1 mid-gray"
           v-if="mode == 'create-pipe' || mode == 'edit-pipe'"
-        >
-          Select Input (optional)
-        </div>
+        >Select Input</div>
         <div class="relative min-h4">
           <connection-chooser-list
             :project-eid="projectEid"
@@ -212,7 +210,7 @@
         return _.result(this, 'cinfo.service_name', '')
       },
       ctype() {
-        return _.get(this.connection, 'connection_type', '')
+        return _.get(this.connection, 'connection_type', CONNECTION_TYPE_BLANK_PIPE)
       },
       cname() {
         return _.get(this.connection, 'name', this.service_name)
