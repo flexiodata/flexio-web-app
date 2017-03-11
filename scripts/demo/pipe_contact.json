@@ -1,25 +1,60 @@
 {
-    "name": "contacts",
-    "description": "",
+    "name": "Contact Refinement",
+    "description": "Select a subset of a list of contacts",
     "task": [
         {
-            "type": "flexio.transform",
+            "eid": "ddvwfjzwblc2",
+            "type": "flexio.input",
             "params": {
-                "capitalize": "upper",
-                "columns": [
-                    "*"
+                "items": [
+                    {
+                        "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/sample-data\/master\/contacts-2016-11.csv"
+                    }
                 ]
             }
         },
         {
+            "eid": "kg0lb3l7vq14",
+            "type": "flexio.convert",
+            "params": {
+                "input": {
+                    "format": "delimited",
+                    "delimiter": "{comma}",
+                    "header": true
+                },
+                "output": {
+                    "format": "table"
+                }
+            }
+        },
+        {
+            "type": "flexio.select",
+            "params": {
+                "columns": [
+                    "givenname",
+                    "surname",
+                    "streetaddress",
+                    "city",
+                    "state",
+                    "zipcode"
+                ]
+            },
+            "eid": "dnmtdvx566j6"
+        },
+        {
             "type": "flexio.transform",
             "params": {
-                "remove": {
-                    "location": "any",
-                    "character_class": "punct"
-                },
                 "columns": [
-                    "streetaddress"
+                    "givenname",
+                    "surname",
+                    "streetaddress",
+                    "city"
+                ],
+                "operations": [
+                    {
+                        "operation": "case",
+                        "case": "upper"
+                    }
                 ]
             }
         }

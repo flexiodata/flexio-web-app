@@ -470,8 +470,8 @@ class User
 
         // create sample pipes
         $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
-        self::createSamplePipe($user_eid, $project->getEid(), '', '', $demo_dir .'pipe_weather.json');
-        self::createSamplePipe($user_eid, $project->getEid(), '', '', $demo_dir .'pipe_rss.json');
+        self::createSamplePipe($user_eid, $project->getEid(), '', '', $demo_dir .'pipe_commit.json');
+        self::createSamplePipe($user_eid, $project->getEid(), '', '', $demo_dir .'pipe_contact.json');
 
         return true;
     }

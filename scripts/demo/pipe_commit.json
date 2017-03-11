@@ -1,0 +1,97 @@
+{
+    "name": "Github Commits",
+    "description": "Review commits across multiple repositories",
+    "task": [
+        {
+            "type": "flexio.input",
+            "params": {
+                "items": [
+                    {
+                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-web-app\/commits"
+                    },
+                    {
+                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-api\/commits"
+                    },
+                    {
+                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-getting-started\/commits"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "flexio.convert",
+            "params": {
+                "output": {
+                    "format": "table"
+                }
+            }
+        },
+        {
+            "type": "flexio.calc",
+            "params": {
+                "name": "repository",
+                "expression": "concat(strpart([commit.tree.url],'\/',5),'\/',strpart([commit.tree.url],'\/',6))"
+            }
+        },
+        {
+            "type": "flexio.select",
+            "params": {
+                "columns": [
+                    "repository",
+                    "commit.author.date",
+                    "commit.author.name",
+                    "commit.author.email",
+                    "commit.committer.name",
+                    "commit.committer.email",
+                    "commit.message"
+                ]
+            }
+        },
+        {
+            "type": "flexio.rename",
+            "params": {
+                "columns": [
+                    {
+                        "name": "commit.author.date",
+                        "new_name": "author_date"
+                    },
+                    {
+                        "name": "commit.author.name",
+                        "new_name": "author_name"
+                    },
+                    {
+                        "name": "commit.author.email",
+                        "new_name": "author_email"
+                    },
+                    {
+                        "name": "commit.committer.name",
+                        "new_name": "committer_name"
+                    },
+                    {
+                        "name": "commit.committer.email",
+                        "new_name": "committer_email"
+                    },
+                    {
+                        "name": "commit.message",
+                        "new_name": "commit_message"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "flexio.merge",
+            "params": []
+        },
+        {
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {
+                        "expression": "author_date",
+                        "direction": "desc"
+                    }
+                ]
+            }
+        }
+    ]
+}
