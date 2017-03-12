@@ -100,7 +100,7 @@
           </div>
           <div
             class="hint--bottom-left hint--large cursor-default"
-            aria-label="Adding an alias will allow this pipe to be referenced from the Flex.io command line"
+            aria-label="When using the Flex.io command line interface (CLI) or API, pipes may be referenced either via their object ID or via an alias created here. Aliases are unique across the app, so we recommend prefixing your username to the alias (e.g., username-foo)."
           >
             <i class="material-icons blue md-18">info</i>
           </div>
