@@ -4,6 +4,9 @@
     "task": [
         {
             "type": "flexio.input",
+            "metadata": {
+                "connection_type": "http.api"
+            },
             "params": {
                 "items": [
                     {
