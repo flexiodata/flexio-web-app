@@ -73,7 +73,7 @@
             </div>
             <div
               class="hint--bottom-left hint--large cursor-default"
-              aria-label="Adding an alias will allow this connection to be referenced from a pipe's command bar when adding an input or output task to a pipe"
+              aria-label="When adding an input or output from the Flex.io command bar, a connection can be referenced using its object ID or via an alias created here. Aliases are unique across the app, so we recommend prefixing your alias with your username (e.g., myname-foo)."
             >
               <i class="material-icons blue md-18">info</i>
             </div>
