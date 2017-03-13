@@ -12,7 +12,7 @@
  */
 
 
-require_once __DIR__ . '/../system/ModelDb.php';
+require_once __DIR__ . '/../base/Db.php';
 require_once 'ModelBase.php';
 
 
@@ -975,7 +975,7 @@ class Model
             $params['username'] = $dbconfig['directory_username'];
             $params['password'] = $dbconfig['directory_password'];
 
-            $db = \Flexio\System\ModelDb::factory($pdo_database_type, $params);
+            $db = \Flexio\Base\Db::factory($pdo_database_type, $params);
 
             // if logging is turned on, set the logging function
             if (isset($GLOBALS['g_config']->query_log))

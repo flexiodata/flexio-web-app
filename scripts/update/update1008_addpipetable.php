@@ -30,7 +30,7 @@ $params = array('host' => $argv[1],
 
 try
 {
-    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $params);
+    $db = \Flexio\Base\Db::factory('PDO_POSTGRES', $params);
     $conn = $db->getConnection();
 }
 catch \Exception $e)

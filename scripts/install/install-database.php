@@ -97,7 +97,7 @@ function createPostgresDatabase($params)
     $connect_params['password'] = $params['db_admin_password'];
 
     // create the application database
-    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $connect_params);
+    $db = \Flexio\Base\Db::factory('PDO_POSTGRES', $connect_params);
     $qdb = $db->quoteIdentifier($params['directory_dbname']);
     $db->exec("create database $qdb");
 
@@ -115,7 +115,7 @@ function createPostgresDatabase($params)
     $connect_params['password'] = $params['directory_password'];
 
     // create the application database
-    $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $connect_params);
+    $db = \Flexio\Base\Db::factory('PDO_POSTGRES', $connect_params);
 
     $script_filename = System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'models'  . DIRECTORY_SEPARATOR . 'postgres'  . DIRECTORY_SEPARATOR . 'createdb.sql';
     $commands = \Flexio\Base\DbUtil::parseSqlScript($script_filename);
@@ -312,7 +312,7 @@ function checkPostgresDatabase($params)
 
     try
     {
-        $db = \Flexio\System\ModelDb::factory('PDO_POSTGRES', $connect_params);
+        $db = \Flexio\Base\Db::factory('PDO_POSTGRES', $connect_params);
 
         $conn = $db->getConnection();
 
