@@ -976,6 +976,11 @@ class Model
             $params['password'] = $dbconfig['directory_password'];
 
             $db = \Flexio\System\ModelDb::factory($pdo_database_type, $params);
+
+            // if logging is turned on, set the logging function
+            if (isset($GLOBALS['g_config']->query_log))
+                $db->setLogger(array('\Flexio\System\System','log'));
+
             $conn = $db->getConnection();
             $this->database = $db;
             return $db;

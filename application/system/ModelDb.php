@@ -60,6 +60,7 @@ class ModelDb extends ModelDbBase
     protected $db_username = null;
     protected $db_password = null;
     private $db = null;
+    private $log_callback = null;
 
     public static function factory($type, $params)
     {
@@ -89,6 +90,27 @@ class ModelDb extends ModelDbBase
         return new Select;
     }
 
+    public function setLogger($callback)
+    {
+        $this->log_callback = $callback;
+    }
+
+    public function doLog()
+    {
+        if (isset($this->log_callback))
+            return true;
+
+        return false;
+    }
+
+    public function log($text)
+    {
+        if ($this->doLog() === false)
+            return;
+
+        call_user_func($this->log_callback,$text);
+    }
+
     public function getConnection()
     {
         if (isset($this->db))
@@ -100,8 +122,8 @@ class ModelDb extends ModelDbBase
         else if ($this->connection_type == 'PDO_POSTGRES')
             $dsn = 'pgsql:host=' . $this->db_host . ';port=' . $this->db_port . ';dbname=' . $this->db_dbname;
 
-        if (isset($GLOBALS['g_config']->query_log))
-            \Flexio\System\System::log("CONNECTING TO: $dsn\n\n");
+        if ($this->doLog())
+            $this->log("CONNECTING TO: $dsn\n\n");
 
         $this->db = new \PDO($dsn, $this->db_username, $this->db_password);
 
@@ -132,7 +154,7 @@ class ModelDb extends ModelDbBase
         if (!is_array($params))
             $params = array($params);
 
-        if (isset($GLOBALS['g_config']->query_log))
+        if ($this->doLog())
         {
             $t1 = microtime(true);
             $result = $this->getConnection()->prepare($sql);
@@ -143,7 +165,7 @@ class ModelDb extends ModelDbBase
             $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
-            \Flexio\System\System::log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::query()", ($t2-$t1)) . "\n$sql\n\n");
+            $this->log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::query()", ($t2-$t1)) . "\n$sql\n\n");
 
             return $result;
         }
@@ -160,7 +182,7 @@ class ModelDb extends ModelDbBase
         if ($sql instanceof Select)
             $sql = $statement->assemble();
 
-        if (isset($GLOBALS['g_config']->query_log))
+        if ($this->doLog())
         {
             $t1 = microtime(true);
             $result = $this->getConnection()->exec($sql);
@@ -170,7 +192,7 @@ class ModelDb extends ModelDbBase
             $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
-            \Flexio\System\System::log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::exec()", ($t2-$t1)) . "\n$sql\n\n");
+            $this->log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::exec()", ($t2-$t1)) . "\n$sql\n\n");
 
             return $result;
         }
