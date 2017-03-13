@@ -14,9 +14,9 @@
 
 namespace Flexio\Services;
 
+
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
 
 class Dropbox implements \Flexio\Services\IConnection
 {
