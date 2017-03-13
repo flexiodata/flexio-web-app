@@ -179,6 +179,7 @@ class System
                     else
                     {
                         $valid = true;
+                        $message = '';
                     }
                 }
                 break;
@@ -200,6 +201,7 @@ class System
                     else
                     {
                         $valid = true;
+                        $message = '';
                     }
                 }
                 break;
@@ -215,6 +217,7 @@ class System
                     else
                     {
                         $valid = true;
+                        $message = '';
                     }
                 }
                 break;
@@ -229,8 +232,7 @@ class System
         $result = array();
         $result['key'] = $key;
         $result['valid'] = $valid;
-        if ($valid === false)
-            $result['message'] = $message;
+        $result['message'] = $message;
 
         return $result;
     }
