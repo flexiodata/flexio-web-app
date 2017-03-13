@@ -5,34 +5,7 @@
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <div class="flex flex-row items-center lh-title f6 f4-ns fw6">
-          <router-link
-            v-if="show_project_title"
-            to="/home"
-            title="Project List"
-            class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns link b--black-20 bl black-60 hover-black"
-          ><i class="material-icons">home</i>
-          </router-link>
-          <i v-if="show_project_title" class="material-icons md-24 black-60 fa-rotate-270">arrow_drop_down</i>
-          <router-link
-            v-if="show_project_title && show_document_title"
-            :to="project_link"
-            title="Project Overview"
-            class="link black-60 hover-black truncate"
-          >{{project_name}}
-          </router-link>
-          <div
-            v-else
-            class="link black-60 truncate"
-          >{{project_name}}
-          </div>
-          <i v-if="show_document_title" class="material-icons md-24 black-60 fa-rotate-270">arrow_drop_down</i>
-          <div
-            v-if="show_document_title"
-            class="dib black-60 truncate"
-          >{{document_name}}
-          </div>
-        </div>
+        <app-breadcrumbs class="flex flex-row items-center lh-title f6 f4-ns fw6"><app-breadcrumbs>
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
@@ -143,17 +116,17 @@
   } from '../constants/route'
   import { HOSTNAME } from '../constants/common'
   import { mapState, mapGetters } from 'vuex'
+  import AppBreadcrumbs from './AppBreadcrumbs.vue'
   import EmailSupportModal from './EmailSupportModal.vue'
 
   export default {
     components: {
+      AppBreadcrumbs,
       EmailSupportModal
     },
     computed: {
       ...mapState([
-        'user_fetching',
-        'active_project',
-        'active_document'
+        'user_fetching'
       ]),
       render_nav() {
         switch (this.$route.name)
@@ -178,34 +151,10 @@
             return true
         }
       },
-      show_project_title() {
-        return this.active_project.length > 0
-      },
-      show_document_title() {
-        return this.show_project_title && this.active_project != this.active_document
-      },
-      home_link() {
-        return '/home'
-      },
-      project_link() {
-        return '/project/'+this.active_project
-      },
-      project_name() {
-        return _.get(this.getActiveProject(), 'name', '')
-      },
-      document_name() {
-        return _.get(this.getActiveDocument(), 'name', '')
-      },
       user_eid() {
         return _.get(this.getActiveUser(), 'eid', '')
       },
-      first_name() {
-        return _.get(this.getActiveUser(), 'first_name', '')
-      },
-      user_name() {
-        return _.get(this.getActiveUser(), 'user_name', '')
-      },
-      user_email_hash() {
+       user_email_hash() {
         return _.get(this.getActiveUser(), 'email_hash', '')
       },
       user_profile_src() {
@@ -217,8 +166,6 @@
     },
     methods: {
       ...mapGetters([
-        'getActiveProject',
-        'getActiveDocument',
         'getActiveUser'
       ]),
       openHelpDocs() {
