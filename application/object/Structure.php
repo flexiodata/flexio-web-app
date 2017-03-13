@@ -8,7 +8,7 @@
  * Created:  2016-10-19
  *
  * @package flexio
- * @subpackage Services
+ * @subpackage Object
  */
 
 

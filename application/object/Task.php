@@ -8,7 +8,7 @@
  * Created:  2016-05-03
  *
  * @package flexio
- * @subpackage Controller
+ * @subpackage Object
  */
 
 
