@@ -8,14 +8,14 @@
  * Created:  2014-04-03
  *
  * @package flexio
- * @subpackage System
+ * @subpackage Base
  */
 
 
-namespace Flexio\System;
+namespace Flexio\Base;
 
 
-class ModelDbExpr
+class DbExpr
 {
     protected $expr = null;
 
@@ -30,7 +30,7 @@ class ModelDbExpr
     }
 }
 
-abstract class ModelDbBase
+abstract class DbBase
 {
     public abstract function getConnection();
     public abstract function exec($sql);
@@ -51,7 +51,7 @@ abstract class ModelDbBase
     public abstract function delete($table, $where);
 }
 
-class ModelDb extends ModelDbBase
+class Db extends DbBase
 {
     protected $connection_type = null;
     protected $db_host = null;
@@ -68,7 +68,7 @@ class ModelDb extends ModelDbBase
         if ($type != 'PDO_MYSQL' && $type != 'PDO_POSTGRES')
             throw new \Exception;
 
-        $modeldb = new ModelDb;
+        $modeldb = new Db;
 
         $modeldb->connection_type = $type;
         $modeldb->db_host = isset_or($params['host'], '');
@@ -82,12 +82,12 @@ class ModelDb extends ModelDbBase
 
     public static function createDbResult($obj, $db)
     {
-        return new ModelResultDb($obj, $db);
+        return new DbResult($obj, $db);
     }
 
     public static function select()
     {
-        return new Select;
+        return new DbSelect;
     }
 
     public function setLogger($callback)
@@ -148,7 +148,7 @@ class ModelDb extends ModelDbBase
 
     public function query($sql, $params = array())
     {
-        if ($sql instanceof Select)
+        if ($sql instanceof DbSelect)
             $sql = $sql->assemble();
 
         if (!is_array($params))
@@ -165,7 +165,7 @@ class ModelDb extends ModelDbBase
             $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
-            $this->log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::query()", ($t2-$t1)) . "\n$sql\n\n");
+            $this->log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; Db::query()", ($t2-$t1)) . "\n$sql\n\n");
 
             return $result;
         }
@@ -179,7 +179,7 @@ class ModelDb extends ModelDbBase
 
     public function exec($sql)
     {
-        if ($sql instanceof Select)
+        if ($sql instanceof DbSelect)
             $sql = $statement->assemble();
 
         if ($this->doLog())
@@ -192,7 +192,7 @@ class ModelDb extends ModelDbBase
             $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
             $timestamp = $date->format("Y-m-d H:i:s.u");
 
-            $this->log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; ModelDb::exec()", ($t2-$t1)) . "\n$sql\n\n");
+            $this->log("Timestamp: $timestamp; Query time: " . sprintf("%0.4f sec; Db::exec()", ($t2-$t1)) . "\n$sql\n\n");
 
             return $result;
         }
@@ -246,7 +246,7 @@ class ModelDb extends ModelDbBase
             $first = false;
             $fields .= $this->quoteIdentifier($f);
 
-            if (!($v instanceof ModelDbExpr))
+            if (!($v instanceof DbExpr))
             {
                 if (is_null($v))
                     $v = 'null';
@@ -317,7 +317,7 @@ class ModelDb extends ModelDbBase
 
             if (is_null($v))
                 $v = 'null';
-            else if (!($v instanceof ModelDbExpr))
+            else if (!($v instanceof DbExpr))
                 $v = $this->quote($v);
 
             $values .= $this->quoteIdentifier($f) . '=' . $v;
@@ -407,7 +407,7 @@ class ModelDb extends ModelDbBase
 }
 
 
-abstract class ModelResultBase
+abstract class DbResultBase
 {
     public abstract function init();
     public abstract function fetch();
@@ -421,7 +421,7 @@ abstract class ModelResultBase
 }
 
 
-class ModelResultDb extends ModelResultBase
+class DbResult extends DbResultBase
 {
     protected $select;
     protected $db;
@@ -558,7 +558,7 @@ class ModelResultDb extends ModelResultBase
 }
 
 
-class ModelResultArray extends ModelResultBase
+class DbResultArray extends DbResultBase
 {
     protected $arr;
     protected $metadata;
@@ -622,7 +622,7 @@ class ModelResultArray extends ModelResultBase
 
     public function toDelete($tbl)
     {
-        // no implementation for ModelResultArray
+        // no implementation for DbResultArray
     }
 
     public function showDebugInfo()
@@ -637,11 +637,11 @@ class ModelResultArray extends ModelResultBase
 }
 
 
-class Select
+class DbSelect
 {
     public static function create()
     {
-        return new Select;
+        return new DbSelect;
     }
 
     public function from($table, $columns = '*')
@@ -737,7 +737,7 @@ class Select
 
     protected function addSingleColumnAs($column, $as)
     {
-        $arr = ModelDb::parseExprOrColumn($column);
+        $arr = Db::parseExprOrColumn($column);
         if (isset($as))
             $arr['as'] = $as;
 
@@ -749,7 +749,7 @@ class Select
     protected function parseExprOrColumn($value)
     {
         // check for expressions/functions
-        if ($value instanceof ModelDbExpr)
+        if ($value instanceof DbExpr)
         {
             $arr = array('expr' => (string)$value);
         }
@@ -782,7 +782,7 @@ class Select
     {
         $this->where[] = array(
             'oper' => 'AND',
-            'condition' => ModelDb::quoteParam($condition, $value)
+            'condition' => Db::quoteParam($condition, $value)
         );
 
         return $this;
@@ -792,7 +792,7 @@ class Select
     {
         $this->where[] = array(
             'oper' => 'OR',
-            'condition' => ModelDb::quoteParam($condition, $value)
+            'condition' => Db::quoteParam($condition, $value)
         );
 
         return $this;
@@ -805,7 +805,7 @@ class Select
 
         foreach ($value as $v)
         {
-            $arr = ModelDb::parseExprOrColumn($v);
+            $arr = Db::parseExprOrColumn($v);
             $this->groups[] = $arr;
         }
 
@@ -830,7 +830,7 @@ class Select
                     $asc = false;
             }
 
-            $arr = ModelDb::parseExprOrColumn($v);
+            $arr = Db::parseExprOrColumn($v);
             if ($asc)
                 $arr['direction'] = 'ASC';
                  else
@@ -882,12 +882,12 @@ class Select
              else
             {
                 if (isset($v['table']))
-                    $sql .= ModelDb::quoteIdentifier($v['table']) . '.';
+                    $sql .= Db::quoteIdentifier($v['table']) . '.';
 
                 if ($v['column'] == '*')
                     $sql .= '*';
                      else
-                    $sql .= ModelDb::quoteIdentifier($v['column']);
+                    $sql .= Db::quoteIdentifier($v['column']);
             }
 
             if (isset($v['as']))
@@ -898,20 +898,20 @@ class Select
                 }
                  else
                 {
-                    $sql .= ' AS ' . ModelDb::quoteIdentifier($v['as']);
+                    $sql .= ' AS ' . Db::quoteIdentifier($v['as']);
                 }
             }
         }
 
 
         $sql .= ' FROM ';
-        if ($this->from['table'] instanceof Select)
+        if ($this->from['table'] instanceof DbSelect)
             $sql .= '(' . $this->from['table']->assemble() . ')';
              else
-            $sql .= ModelDb::quoteIdentifier($this->from['table']);
+            $sql .= Db::quoteIdentifier($this->from['table']);
         if (isset($this->from['alias']))
         {
-            $sql .= ' AS ' . ModelDb::quoteIdentifier($this->from['alias']);
+            $sql .= ' AS ' . Db::quoteIdentifier($this->from['alias']);
         }
 
 
@@ -919,15 +919,15 @@ class Select
         {
             $sql .= (' ' . $v['type'] . ' JOIN ');
 
-            if ($v['table'] instanceof Select)
+            if ($v['table'] instanceof DbSelect)
                 $sql .= '(' . $v['table']->assemble() . ')';
-            else if ($v['table'] instanceof ModelDbExpr)
+            else if ($v['table'] instanceof DbExpr)
                 $sql .= $v['table'];
             else
-                $sql .= ModelDb::quoteIdentifier($v['table']);
+                $sql .= Db::quoteIdentifier($v['table']);
 
             if (isset($v['alias']))
-                $sql .= ' AS ' . ModelDb::quoteIdentifier($v['alias']);
+                $sql .= ' AS ' . Db::quoteIdentifier($v['alias']);
 
             $sql .= ' ON '. $v['on'];
         }
@@ -966,8 +966,8 @@ class Select
                  else
                 {
                     if (isset($v['table']))
-                        $sql .= ModelDb::quoteIdentifier($v['table']) . '.';
-                    $sql .= ModelDb::quoteIdentifier($v['column']);
+                        $sql .= Db::quoteIdentifier($v['table']) . '.';
+                    $sql .= Db::quoteIdentifier($v['column']);
                 }
             }
         }
@@ -991,8 +991,8 @@ class Select
                  else
                 {
                     if (isset($v['table']))
-                        $sql .= ModelDb::quoteIdentifier($v['table']) . '.';
-                    $sql .= ModelDb::quoteIdentifier($v['column']);
+                        $sql .= Db::quoteIdentifier($v['table']) . '.';
+                    $sql .= Db::quoteIdentifier($v['column']);
                 }
 
                 if (isset($v['direction']))
@@ -1017,7 +1017,7 @@ class Select
         if (is_array($value))
         {
             foreach ($value as &$v)
-                $v = ModelDb::quote($v, $type);
+                $v = Db::quote($v, $type);
             return implode(', ', $value);
         }
 
@@ -1054,7 +1054,7 @@ class Select
             }
 
             $result .= substr($str, 0, $pos);
-            $result .= ModelDb::quote($value, $type);
+            $result .= Db::quote($value, $type);
             $str = substr($str, $pos+1);
         }
     }
