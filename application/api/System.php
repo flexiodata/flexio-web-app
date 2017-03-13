@@ -140,6 +140,101 @@ class System
         return $result;
     }
 
+    public static function validate($params, $request)
+    {
+        // checks to see if a username is available
+        if (($params = $request->getValidator()->check($params, array(
+                'key' => array('type' => 'string', 'required' => true),
+                'value' => array('type' => 'string', 'required' => true),
+                'type' => array('type' => 'string', 'required' => true)
+            ))) === false)
+            return $request->getValidator()->fail();
+
+        $key = $params['key']; // identifier to echo back to the caller
+        $value = $params['value'];
+        $type = $params['type'];
+        $valid = false;
+        $message = '';
+
+        switch ($type)
+        {
+            default:
+                return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+
+            case 'identifier':
+                {
+                    if (\Flexio\Base\Identifier::isValid($value) === false)
+                    {
+                        // invalid identifier
+                        $valid = false;
+                        $message = _('A identifier must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
+                    }
+                    else if (\Flexio\Object\User::load($value) !== false ||
+                             \Flexio\Object\Store::load($value) !== false)
+                    {
+                        // identifier already exists
+                        $valid = false;
+                        $message = _('This identifier is already taken.');
+                    }
+                    else
+                    {
+                        $valid = true;
+                    }
+                }
+                break;
+
+            case 'email':
+                {
+                    if (\Flexio\Services\Email::isValid($value) === false)
+                    {
+                        // invalid identifier
+                        $valid = false;
+                        $message = _('This email address must be formatted correctly.');
+                    }
+                    else if (\Flexio\Object\User::load($value) !== false)
+                    {
+                        // identifier already exists
+                        $valid = false;
+                        $message = _('This email address is already taken.');
+                    }
+                    else
+                    {
+                        $valid = true;
+                    }
+                }
+                break;
+
+            case 'password':
+                {
+                    if (\Flexio\Base\Util::isValidPassword($value) === false)
+                    {
+                        // invalid password
+                        $valid = false;
+                        $message = _('A password must have at least 8 characters');
+                    }
+                    else
+                    {
+                        $valid = true;
+                    }
+                }
+                break;
+        }
+
+        // wait 100 milliseconds to prevent large numbers of calls to mine for information
+        $wait_interval = 100;
+        usleep($wait_interval*1000);
+
+        // echo back the key and whether or not it's valid (note: don't echo
+        // back the value to minimize transport of values like a password)
+        $result = array();
+        $result['key'] = $key;
+        $result['valid'] = $valid;
+        if ($valid === false)
+            $result['message'] = $message;
+
+        return $result;
+    }
+
     public static function configuration()
     {
         if (!IS_TESTING())
