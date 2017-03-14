@@ -17,17 +17,8 @@ namespace Flexio\Object;
 
 class StreamWriter
 {
-    private $stream_info = false;
-    private $service = false;
-    private $table_inserter = false;
-    private $file_inserter = false;
-    private $datastore_mode = false;
+    private $writer = false;
     private $bytes_written = 0; // total bytes written
-
-
-    function __construct()
-    {
-    }
 
     function __destruct()
     {
@@ -44,50 +35,42 @@ class StreamWriter
         // the key information we need from the stream are the path, mime_type,
         // and structure for the source
 
-        $object = new self;
+        $object = new static;
 
+        $stream_info = array();
         if (($stream instanceof \Flexio\Object\Stream))
-            $object->stream_info = $stream->get();
+            $stream_info = $stream->get();
 
         if (is_array($stream))
         {
-            $object->stream_info = array();
-            $object->stream_info['connection_eid'] = isset_or($stream['connection_eid'], false);
-            $object->stream_info['path'] = isset_or($stream['path'], false);
-            $object->stream_info['mime_type'] = isset_or($stream['mime_type'], false);
-            $object->stream_info['structure'] = isset_or($stream['structure'], false);
+            $stream_info['connection_eid'] = isset_or($stream['connection_eid'], false);
+            $stream_info['path'] = isset_or($stream['path'], false);
+            $stream_info['mime_type'] = isset_or($stream['mime_type'], false);
+            $stream_info['structure'] = isset_or($stream['structure'], false);
         }
 
         // write out data using datastore conventions by default (included a
         // row identifier and use store_name, a safe fieldname convention, for
         // the fieldnames)
-        $object->setDatastoreMode($datastore_mode);
+        $stream_info['datastore_mode'] = $datastore_mode;
 
-        // create the table, check the service, etc
-        $object->init();
+        // create an appropriate writer based on the mime type
+        $mime_type = $stream_info['mime_type'];
+        switch ($mime_type)
+        {
+            default:
+                $object->writer = StreamFileWriter::create($stream_info);
+                break;
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                $object->writer = StreamTableWriter::create($stream_info);
+                break;
+        }
+
         if ($object->isOk() === false)
             return false;
 
         return $object;
-    }
-
-    public function init()
-    {
-        $this->close();
-
-        $this->initService();
-        if ($this->isOk() === false)
-            return false;
-
-        // TODO: check for existence of table/file; open it if it
-        // already exists, but make sure the basic mime type matches
-        // (e.g. table or not table)
-
-        $mime_type = $this->getMimeType();
-        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            return $this->createTable();
-             else
-            return $this->createFile();
     }
 
     public function write($data)
@@ -107,11 +90,7 @@ class StreamWriter
         $this->bytes_written += strlen($content_str);
 
         // write the data
-        $mime_type = $this->getMimeType();
-        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            return $this->writeToTable($data);
-             else
-            return $this->writeToFile($data);
+        return $this->writer->write($data);
     }
 
     public function getBytesWritten()
@@ -122,37 +101,129 @@ class StreamWriter
 
     public function close()
     {
-        // note: don't reset the stream item; this is
-        // used to be able to reinitialized the other
-        // members
+        if ($this->isOk() === false)
+            return;
 
-        if ($this->service !== false)
-            $this->service->close();
-
-        if ($this->table_inserter !== false)
-            $this->closeTable();
-
-        if ($this->file_inserter !== false)
-            $this->closeFile();
-
-        $this->service = false;
-        $this->table_inserter = false;
-        $this->file_inserter = false;
+        $this->writer->close();
     }
 
-    private function createTable()
+    private function isOk()
     {
-        // make sure we have a path and a structure
-        $path = $this->getPath();
-        if ($path === false)
+        if ($this->writer === false)
             return false;
 
-        $structure = $this->getStructure();
-        if ($structure === false)
+        return true;
+    }
+}
+
+
+
+// stream file writer implementation
+
+class StreamFileWriter
+{
+    private $stream_info = false;
+    private $service = false;
+    private $inserter = false;
+
+    public static function create($stream_info)
+    {
+        $object = new static;
+        $object->stream_info = $stream_info;
+
+        if (!isset($object->stream_info['path']))
             return false;
+
+        $path = $object->stream_info['path'];
+        $mime_type = isset_or($object->stream_info['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_NONE);
+
+        $service = $object->getService();
+        if ($service === false)
+            return false;
+
+        // create the file
+        if (!$service->createFile($path, $mime_type))
+            return false;
+
+        return $object;
+    }
+
+    public function write($data)
+    {
+        // data needs to be a string
+        if (!is_string($data))
+            return false;
+
+        if (!isset($this->stream_info['path']))
+            return false;
+        $path = $this->stream_info['path'];
+
+        if ($this->inserter === false)
+        {
+            $inserter = $this->getService()->openFile($path);
+            if (!$inserter)
+                return false;
+
+            $this->inserter = $inserter;
+        }
+
+        $result = $this->inserter->write($data);
+        if ($result === false)
+            return false;
+
+        return true;
+    }
+
+    public function close()
+    {
+        $this->inserter = false;
+    }
+
+    private function getService()
+    {
+        if ($this->service !== false)
+            return $this->service;
+
+        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($connection === false)
+            return false;
+
+        $connection_info = $connection->get();
+        if ($connection_info === false)
+            return false;
+
+        $service = $connection->getService();
+        if (!$service)
+            return false;
+
+        $this->service = $service;
+        return $this->service;
+    }
+}
+
+
+// stream table writer implementation
+class StreamTableWriter
+{
+    private $stream_info = false;
+    private $service = false;
+    private $inserter = false;
+
+    public static function create($stream_info)
+    {
+        $object = new static;
+        $object->stream_info = $stream_info;
+
+        if (!isset($object->stream_info['path']))
+            return false;
+
+        $path = $object->stream_info['path'];
+        $mime_type = isset_or($object->stream_info['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_NONE);
+        $structure = isset_or($object->stream_info['structure'], false);
 
         $store_structure = array();
-        if ($this->getDatastoreMode() === true)
+        if ($object->getDatastoreMode() === true)
         {
             $store_structure[] = array(
                 'name' => 'xdrowid',
@@ -166,7 +237,7 @@ class StreamWriter
         // stored in the name or store_name as the fieldname, depending on
         // the output mode
         $output_fieldname_mode = 'name';
-        if ($this->getDatastoreMode() === true)
+        if ($object->getDatastoreMode() === true)
             $output_fieldname_mode = 'store_name';
 
         foreach ($structure as $column)
@@ -178,47 +249,35 @@ class StreamWriter
             $store_structure[] = $store_column;
         }
 
+        $service = $object->getService();
+        if ($service === false)
+            return false;
+
         // create the table
-        if (!$this->service->createTable($path, $store_structure))
+        if (!$service->createTable($path, $store_structure))
             return false;
 
-        return true;
+        return $object;
     }
 
-    private function createFile()
-    {
-        $path = $this->getPath();
-        if ($path === false)
-            return false;
-
-        $mime_type = $this->getMimeType();
-        if ($mime_type === false)
-            $mime_type = \Flexio\Base\ContentType::MIME_TYPE_NONE;
-
-        if (!$this->service->createFile($path, $mime_type))
-            return false;
-
-        return true;
-    }
-
-    private function writeToTable($data)
+    public function write($data)
     {
         // data needs to be an array
         if (!is_array($data))
             return false;
 
-        $path = $this->getPath();
-        if ($path === false)
+        if (!isset($this->stream_info['path']))
             return false;
+        $path = $this->stream_info['path'];
 
-        $structure = $this->getStructure();
-        if ($structure === false)
+        if (!isset($this->stream_info['structure']))
             return false;
+        $structure = $this->stream_info['structure'];
 
         // don't allow xdrowid values to overwrite default internal values
         unset($data['xdrowid']);
 
-        if ($this->table_inserter === false)
+        if ($this->inserter === false)
         {
             // get the column names to use when inserting values (either the ones stored
             // in the structure 'name' field or the structure 'store_name' field) depending
@@ -229,21 +288,21 @@ class StreamWriter
 
             // get the fields from the structure using the store name
             $flds = array_column($structure, $output_fieldname_mode);
-            $this->table_inserter = $this->service->bulkInsert($path);
-            if ($this->table_inserter !== false)
+            $this->inserter = $this->getService()->bulkInsert($path);
+            if ($this->inserter !== false)
             {
-                $result = $this->table_inserter->startInsert($flds);
+                $result = $this->inserter->startInsert($flds);
                 if ($result === false)
                     return false;
             }
         }
 
-        if ($this->table_inserter !== false)
+        if ($this->inserter !== false)
         {
             if (array_key_exists('0', $data))
             {
                 // array is sequential, non-associative
-                $result = $this->table_inserter->insertRow($data);
+                $result = $this->inserter->insertRow($data);
                 if ($result === false)
                     return false;
             }
@@ -259,7 +318,7 @@ class StreamWriter
                     $mapped_row[] = $data_value_to_insert;
                 }
 
-                $result = $this->table_inserter->insertRow($mapped_row);
+                $result = $this->inserter->insertRow($mapped_row);
                 if ($result === false)
                     return false;
             }
@@ -268,35 +327,20 @@ class StreamWriter
         return true;
     }
 
-    private function writeToFile($data)
+    public function close()
     {
-        // data needs to be a string
-        if (!is_string($data))
-            return false;
+        if ($this->inserter !== false)
+            $result = $this->inserter->finishInsert();
 
-        $path = $this->getPath();
-        if ($path === false)
-            return false;
-
-        if ($this->file_inserter === false)
-        {
-            $file_inserter = $this->service->openFile($path);
-            if (!$file_inserter)
-                return false;
-
-            $this->file_inserter = $file_inserter;
-        }
-
-        $result = $this->file_inserter->write($data);
-        if ($result === false)
-            return false;
-
-        return true;
+        $this->inserter = false;
     }
 
-    private function initService()
+    private function getService()
     {
-        $connection_eid = $this->getConnection();
+        if ($this->service !== false)
+            return $this->service;
+
+        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
             return false;
@@ -310,59 +354,19 @@ class StreamWriter
             return false;
 
         $this->service = $service;
-        return true;
-    }
-
-    private function closeTable()
-    {
-        if ($this->table_inserter !== false)
-            $result = $this->table_inserter->finishInsert();
-
-        $this->table_inserter = false;
-    }
-
-    private function closeFile()
-    {
-        $this->file_inserter = false;
-    }
-
-    private function getConnection()
-    {
-        return $this->stream_info['connection_eid'];
-    }
-
-    private function getPath()
-    {
-        return $this->stream_info['path'];
-    }
-
-    private function getMimeType()
-    {
-        return $this->stream_info['mime_type'];
-    }
-
-    private function getStructure()
-    {
-        return $this->stream_info['structure'];
-    }
-
-    private function setDatastoreMode($mode)
-    {
-        // $mode is true/false
-        $this->datastore_mode = $mode;
+        return $this->service;
     }
 
     private function getDatastoreMode()
     {
-        return $this->datastore_mode;
-    }
-
-    private function isOk()
-    {
-        if ($this->service === false)
+        $datastore_mode = false;
+        if (!isset($this->stream_info['datastore_mode']))
             return false;
 
-        return true;
+        if ($this->stream_info['datastore_mode'] === true)
+            return true;
+
+        return false;
     }
 }
 
