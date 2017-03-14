@@ -37,6 +37,7 @@ class Test
         $writer->close();
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->read();
+        $reader->close();
         $expected = "";
         TestCheck::assertString('A.1', 'StreamReader/StreamWriter; check basic file read/write ',  $actual, $expected, $results);
 
@@ -51,6 +52,7 @@ class Test
         $writer->close();
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->read();
+        $reader->close();
         $expected = "A";
         TestCheck::assertString('A.2', 'StreamReader/StreamWriter; check basic file read/write ',  $actual, $expected, $results);
 
@@ -65,6 +67,7 @@ class Test
         $writer->close();
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->read();
+        $reader->close();
         $expected = "abcdefg";
         TestCheck::assertString('A.3', 'StreamReader/StreamWriter; check basic file read/write ',  $actual, $expected, $results);
 
@@ -89,7 +92,9 @@ class Test
         $writer->close();
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
+        $reader->close();
         $expected = $data;
         TestCheck::assertArray('B.1', 'StreamReader/StreamWriter; check basic table read/write ',  $actual, $expected, $results);
+
     }
 }
