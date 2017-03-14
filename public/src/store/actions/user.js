@@ -64,7 +64,7 @@ export const changePassword = ({ commit }, { eid, attrs }) => {
     // success callback
     commit(types.CHANGED_PASSWORD, { eid, attrs: response.body })
 
-    analytics.track('Changed Password', attrs)
+    analytics.track('Changed Password')
 
     return response
   }, response => {
@@ -81,7 +81,7 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
     commit(types.SIGNED_IN)
     commit(types.SIGNING_IN, false)
 
-    analytics.track('Signed In', attrs)
+    analytics.track('Signed In', _.omit(attrs, ['password']))
 
     // now that we've signed in, fetch the active user's info from the server
     dispatch('fetchCurrentUser')
@@ -120,7 +120,7 @@ export const signUp = ({ commit, dispatch }, { attrs }) => {
     commit(types.SIGNED_UP)
     commit(types.SIGNING_UP, false)
 
-    analytics.track('Signed Up')
+    analytics.track('Signed Up', _.omit(attrs, ['password']))
 
     return response
   }, response => {
