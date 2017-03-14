@@ -146,6 +146,17 @@ class User extends \Flexio\Object\Base
         return false;
     }
 
+    public function getStatistics()
+    {
+        $projects = $this->getProjects();
+        $pipes = $this->getPipes();
+
+        $result = array();
+        $result['project_count'] = count($projects);
+        $result['pipe_count'] = count($pipes);
+        return $result;
+    }
+
     public function getProjects()
     {
         $eid = $this->getEid();
@@ -184,15 +195,15 @@ class User extends \Flexio\Object\Base
         foreach ($pipes as $p)
         {
             // load the object
-            $project = \Flexio\Object\Pipe::load($p);
-            if ($project === false)
+            $pipe = \Flexio\Object\Pipe::load($p);
+            if ($pipe === false)
                 continue;
 
             // only show pipes that are available
-            if ($project->getStatus() !== \Model::STATUS_AVAILABLE)
+            if ($pipe->getStatus() !== \Model::STATUS_AVAILABLE)
                 continue;
 
-            $res[] = $project;
+            $res[] = $pipe;
         }
 
         return $res;

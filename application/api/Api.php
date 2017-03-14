@@ -292,6 +292,7 @@ class Api
 
             // users
             case 'GET /users/me'                       : return '\Flexio\Api\User::about';
+            case 'GET /users/me/statistics'            : return '\Flexio\Api\User::statistics';
 
             case 'POS /users'                          : return '\Flexio\Api\User::create';
             case 'POS /users/resetpassword'            : return '\Flexio\Api\User::resetpassword';

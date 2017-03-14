@@ -255,6 +255,23 @@ class User
         return $user->get();
     }
 
+    public static function statistics($params, $request)
+    {
+        // returns useage statistics for the current user
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // load the object
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+
+        // check the rights on the object
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+
+        return $user->getStatistics();
+    }
+
     public static function about($params, $request)
     {
         // returns the information for the currently logged-in user or an empty eid
