@@ -40,6 +40,7 @@ export default {
   // auth
   login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
   logout:                         function()                            { return LogoutResource[POS] ()                                                                   },
+  signUp:                         function()                            { return SignupResource[POS] ({ }, attrs)                                                         },
   checkSignup:                    function({ attrs })                   { return SignupResource[POS] ({ p1: 'check' }, attrs)                                             },
 
   // validation

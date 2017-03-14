@@ -40,7 +40,11 @@ export default {
 
   [types.SIGNED_OUT]: (state) => {
     resetState(state)
-  }
+  },
+
+  [types.SIGNING_UP]: (state) => {},
+
+  [types.SIGNED_UP]: (state) => {}
 
   // ----------------------------------------------------------------------- //
 
