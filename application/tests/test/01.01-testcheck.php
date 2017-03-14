@@ -271,12 +271,86 @@ class Test
         // G
 
 
+        // TEST: TestCheck::assertArrayKeys()
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+        }
+        ';
+        $expected_array = '
+        {
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = true;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.1', 'TestCheck::assertArrayKeys(); succeed with two empty objects', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1"
+        }
+        ';
+        $expected_array = '
+        {
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.2', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value1"
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.3', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1"
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value1"
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = true;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.4', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+
 
         // TEST: TestCheck::assertArray()
 
         // BEGIN TEST
-        // H
-
+        // I
 
 
         // TEST: TestCheck::assertInArray()
@@ -292,7 +366,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.1', 'TestCheck::assertInArray(); fail when there\'s a bad string input', $test_result, $test_message);
+        $results[] = new TestResult('J.1', 'TestCheck::assertInArray(); fail when there\'s a bad string input', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -309,7 +383,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.2', 'TestCheck::assertInArray(); succeed with two empty arrays', $test_result, $test_message);
+        $results[] = new TestResult('J.2', 'TestCheck::assertInArray(); succeed with two empty arrays', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -326,7 +400,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.3', 'TestCheck::assertInArray(); succeed with two empty objects', $test_result, $test_message);
+        $results[] = new TestResult('J.3', 'TestCheck::assertInArray(); succeed with two empty objects', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -345,7 +419,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.4', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new TestResult('J.4', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -364,7 +438,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.5', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new TestResult('J.5', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -382,7 +456,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === false ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.6', 'TestCheck::assertInArray(); fail if expected array values are not contained in the actual array values', $test_result, $test_message);
+        $results[] = new TestResult('J.6', 'TestCheck::assertInArray(); fail if expected array values are not contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -403,7 +477,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.7', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new TestResult('J.7', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -424,7 +498,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.8', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new TestResult('J.8', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -446,7 +520,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.9', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new TestResult('J.9', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -469,7 +543,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === false ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.10', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new TestResult('J.10', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -488,7 +562,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.11', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new TestResult('J.11', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
 
         // BEGIN TEST
@@ -508,7 +582,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.12', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new TestResult('J.12', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -529,7 +603,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.13', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new TestResult('J.13', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -548,7 +622,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.14', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new TestResult('J.14', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -567,7 +641,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.15', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new TestResult('J.15', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -586,7 +660,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.16', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new TestResult('J.16', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -605,7 +679,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.17', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new TestResult('J.17', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -626,7 +700,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.18', 'TestCheck::assertInArray(); fail if an expected key is in the actual array and the values are different', $test_result, $test_message);
+        $results[] = new TestResult('J.18', 'TestCheck::assertInArray(); fail if an expected key is in the actual array and the values are different', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -646,7 +720,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.19', 'TestCheck::assertInArray(); succeed if all keys in the expected array are in the actual array and the associated values are equivalent', $test_result, $test_message);
+        $results[] = new TestResult('J.19', 'TestCheck::assertInArray(); succeed if all keys in the expected array are in the actual array and the associated values are equivalent', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -667,7 +741,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.20', 'TestCheck::assertInArray(); fail if the expected array has a key that the actual array doesn\'t', $test_result, $test_message);
+        $results[] = new TestResult('J.20', 'TestCheck::assertInArray(); fail if the expected array has a key that the actual array doesn\'t', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -692,7 +766,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.21', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.21', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -716,7 +790,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.22', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.22', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -740,7 +814,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.23', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.23', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -765,7 +839,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.24', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.24', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -789,7 +863,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.25', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.25', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -813,7 +887,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.26', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.26', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -837,7 +911,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.27', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.27', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -861,7 +935,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.28', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.28', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -885,7 +959,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.29', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.29', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -911,7 +985,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('I.30', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new TestResult('J.30', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
     }
 }
 
