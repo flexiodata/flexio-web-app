@@ -221,7 +221,7 @@ class Test
             "updated" : null
         }
         ',true);
-        TestCheck::assertArrayKeys('E.2', 'Project::get(); return the properties as an array',  $actual, $expected, $results);
+        TestCheck::assertArrayKeys('E.2', 'Connection::get(); return the properties as an array',  $actual, $expected, $results);
 
 
         // TEST: object status change
