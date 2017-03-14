@@ -18,7 +18,7 @@
     <script type="text/javascript">
         // failsafe (make sure all analytics calls exist) even when we're not using Segment
         var analytics = window.analytics = window.analytics||[];
-        var methods = ["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","group","track","ready","alias","page","once","off","on"];
+        var methods = ["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];
         for (var i=0; i<methods.length; i++) { window.analytics[methods[i]] = function() {}; }
     </script>
   </head>
