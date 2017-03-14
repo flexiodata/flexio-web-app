@@ -19,7 +19,7 @@ export const fetchCurrentUser = ({ commit }) => {
           _.pick(user, ['first_name','last_name','email']), {
             username: _.get(user, 'user_name'),
             createdAt: _.get(user, 'created')
-          }
+          },
           stats_response.body
         )
       }))
