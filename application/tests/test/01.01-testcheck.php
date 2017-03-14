@@ -335,7 +335,7 @@ class Test
         ';
         $expected_array = '
         {
-            "key1": "value1"
+            "key1": "value2"
         }
         ';
         TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
@@ -344,6 +344,375 @@ class Test
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
         $results[] = new TestResult('H.4', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": "value2"
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value2"
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.5', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1"
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value1",
+            "key2": "value2"
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.6', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": "value2"
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value3",
+            "key2": "value4"
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = true;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.6', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+            }
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value3",
+            "key2": "value4"
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.7', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": "value2"
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value3",
+            "key2": {
+            }
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.8', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+            }
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value3",
+            "key2": {
+            }
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = true;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.9', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+                "key3": "value3"
+            }
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value2",
+            "key2": {
+            }
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.10', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+            }
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value2",
+            "key2": {
+                "key3": "value3"
+            }
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.11', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+                "key3": "value2"
+            }
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value2",
+            "key2": {
+                "key3": "value3"
+            }
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = true;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.12', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+                "key3": "value2"
+            },
+            "key3": ""
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value2",
+            "key2": {
+                "key3": "value3"
+            }
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.13', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+                "key3": "value2"
+            }
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value2",
+            "key2": {
+                "key3": "value3"
+            },
+            "key3": ""
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.14', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+                "key3": "value2"
+            },
+            "key3": "value4"
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value2",
+            "key2": {
+                "key3": "value3"
+            },
+            "key3": ""
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = true;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.15', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+                "key3": "value2",
+                "key4": "value3"
+            },
+            "key5": "value4"
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value5",
+            "key2": {
+                "key3": "value6",
+                "key4": "value7"
+            },
+            "key5": "value8"
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = true;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.16', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+                "key3": "value2",
+                "key4": "value3",
+                "key5": ""
+            },
+            "key6": "value4"
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value5",
+            "key2": {
+                "key3": "value6",
+                "key4": "value7"
+            },
+            "key6": "value8"
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.17', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+
+        // BEGIN TEST
+        $assert_result = array();
+        $actual_array = '
+        {
+            "key1": "value1",
+            "key2": {
+                "key3": "value2",
+                "key4": "value3",
+            },
+            "key6": "value4"
+        }
+        ';
+        $expected_array = '
+        {
+            "key1": "value5",
+            "key2": {
+                "key3": "value6",
+                "key4": "value7",
+                "key5": ""
+            },
+            "key6": "value8"
+        }
+        ';
+        TestCheck::assertArrayKeys('', '', $actual_array, $expected_array, $assert_result);
+        $actual = $assert_result[0]->passed;
+        $expected = false;
+        $test_result = ($actual === $expected);
+        $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
+        $results[] = new TestResult('H.18', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
 
 
