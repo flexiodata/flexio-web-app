@@ -14,12 +14,14 @@ export const fetchCurrentUser = ({ commit }) => {
     commit(types.FETCHING_USER, false)
 
     api.fetchUserStatistics({ eid: 'me' }).then(stats_response => {
-      analytics.identify(_.get(user, 'eid'), _.assign({},
-        _.pick(user, ['first_name','last_name','email']),
-        stats_response.body, {
-          username: _.get(user, 'user_name'),
-          createdAt: _.get(user, 'created')
-        }
+      analytics.identify(_.get(user, 'eid'),
+        _.assign({},
+          _.pick(user, ['first_name','last_name','email']), {
+            username: _.get(user, 'user_name'),
+            createdAt: _.get(user, 'created')
+          }
+          stats_response.body
+        )
       }))
     })
 
