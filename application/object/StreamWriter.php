@@ -176,6 +176,11 @@ class StreamFileWriter
     public function close()
     {
         $this->inserter = false;
+
+        if ($this->service !== false)
+            $this->service->close();
+
+        $this->service = false;
     }
 
     private function getService()
@@ -332,7 +337,11 @@ class StreamTableWriter
         if ($this->inserter !== false)
             $result = $this->inserter->finishInsert();
 
+        if ($this->service !== false)
+            $this->service->close();
+
         $this->inserter = false;
+        $this->service = false;
     }
 
     private function getService()
