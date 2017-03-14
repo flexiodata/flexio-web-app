@@ -162,19 +162,45 @@ class System
                 return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
 
             case 'identifier':
+            case 'username':
+            case 'ename':
                 {
                     if (\Flexio\Base\Identifier::isValid($value) === false)
                     {
                         // invalid identifier
                         $valid = false;
-                        $message = _('A identifier must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
+
+                        switch ($type)
+                        {
+                            case 'identifier':
+                                $message = _('An identifier must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
+                                break;
+                            case 'username':
+                                $message = _('A username must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
+                                break;
+                            case 'ename':
+                                $message = _('An alias must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
+                                break;
+                        }
                     }
                     else if (\Flexio\Object\User::load($value) !== false ||
                              \Flexio\Object\Store::load($value) !== false)
                     {
                         // identifier already exists
                         $valid = false;
-                        $message = _('This identifier is already taken.');
+
+                        switch ($type)
+                        {
+                            case 'identifier':
+                                $message = _('This identifier is already taken.');
+                                break;
+                            case 'username':
+                                $message = _('This username is already taken.');
+                                break;
+                            case 'ename':
+                                $message = _('This alias is already taken.');
+                                break;
+                        }
                     }
                     else
                     {
@@ -230,9 +256,9 @@ class System
         // echo back the key and whether or not it's valid (note: don't echo
         // back the value to minimize transport of values like a password)
         $result = array();
-        $result['key'] = $key;
-        $result['valid'] = $valid;
-        $result['message'] = $message;
+        $result[$key] = array();
+        $result[$key]['valid'] = $valid;
+        $result[$key]['message'] = $message;
 
         return $result;
     }

@@ -10,7 +10,8 @@ import {
   PipeResource,
   ProcessResource,
   StreamResource,
-  TestResource
+  TestResource,
+  ValidateResource
 } from './resources'
 
 /*
@@ -40,6 +41,9 @@ export default {
   login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
   logout:                         function()                            { return LogoutResource[POS] ()                                                                   },
   checkSignup:                    function({ attrs })                   { return SignupResource[POS] ({ p1: 'check' }, attrs)                                             },
+
+  // validation
+  validate:                       function({ attrs })                   { return ValidateResource[POS] ({ }, attrs)                                                       },
 
   // help
   sendEmailSupport:               function({ attrs })                   { return HelpResource[POS] ({}, attrs)                                                            },
