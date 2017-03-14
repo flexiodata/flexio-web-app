@@ -13,8 +13,10 @@ export const fetchCurrentUser = ({ commit }) => {
     commit(types.FETCHED_USER, user)
     commit(types.FETCHING_USER, false)
 
-    analytics.identify(user.eid, _.assign({}, user, {
-      id: _.get(user, 'eid'),
+    analytics.identify(_.get(user, 'eid'), {
+      email: _.get(user, 'email'),
+      firstName: _.get(user, 'first_name'),
+      lastName: _.get(user, 'last_name'),
       username: _.get(user, 'user_name'),
       createdAt: _.get(user, 'created')
     }));
