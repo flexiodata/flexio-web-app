@@ -529,7 +529,7 @@ class StreamTableJsonReader
             }
 
             // data is stored in json format in the content field; unpack it
-            $row = @json_decode($row['content'],true);
+            $row = @json_decode($row['xdcontent'],true);
 
             // map the stored name to the name
             $mapped_row = array();
@@ -577,7 +577,7 @@ class StreamTableJsonReader
             return false;
 
         // data is stored in json format in the content field; unpack it
-        $row = @json_decode($row['content'],true);
+        $row = @json_decode($row['xdcontent'],true);
 
         // map the stored name to the name
         $mapped_row = array();

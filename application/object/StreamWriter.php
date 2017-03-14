@@ -412,7 +412,7 @@ class StreamTableJsonWriter
         }
 
         $store_structure[] = array(
-            'name' => 'content',
+            'name' => 'xdcontent',
             'type' => 'text'
         );
 
@@ -444,7 +444,7 @@ class StreamTableJsonWriter
         if ($this->inserter === false)
         {
             // prepare the insert; we'll be inserting into the content field
-            $flds = array('content');
+            $flds = array('xdcontent');
             $this->inserter = $this->getService()->bulkInsert($path);
             if ($this->inserter !== false)
             {
