@@ -273,7 +273,7 @@ class User
         $pipes = $user->getPipes();
 
         $properties = array();
-        $properties['eid'] = '';
+        $properties['eid'] = $requesting_user_eid;
         $properties['eid_type'] = \Model::TYPE_USER;
         $properties['pipe_count'] = count($pipes);
         $properties['project_count'] = count($projects);

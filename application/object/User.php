@@ -174,8 +174,42 @@ class User extends \Flexio\Object\Base
 
     public function getPipes()
     {
+        // note: we need to query the pipes for active projects only; because we don't have the ability to specify
+        // properties in the graph query, we have to do two operations to get the pipes; first get the active projects,
+        // then for the active projects, get the pipe members
+
         $eid = $this->getEid();
 
+
+
+        // get the projects for the user
+        $projects = $this->getProjects();
+
+        $res = array();
+        foreach ($projects as $proj)
+        {
+            // lookup the projects for the pipe
+            $project_eid = $proj->getEid();
+            $members = $this->getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER, [\Model::STATUS_AVAILABLE]);
+
+            foreach ($members as $member_info)
+            {
+                $type = $member_info['eid_type'];
+                if ($type !== \Model::TYPE_PIPE)
+                    continue;
+
+                $pipe_eid = $member_info['eid'];
+
+                $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+                if ($pipe === false)
+                    continue;
+
+                $res[] = $pipe;
+            }
+        }
+
+        return $res;
+/*
         // get the pipes for the user based on the pipes the user owns or has access to from projects that are being followed
         $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")->(".\Model::EDGE_HAS_MEMBER.")->(".\Model::TYPE_PIPE.")";
         $pipes = \Flexio\Object\Search::exec($search_path);
@@ -196,6 +230,7 @@ class User extends \Flexio\Object\Base
         }
 
         return $res;
+*/
     }
 
     public function getTokens()
