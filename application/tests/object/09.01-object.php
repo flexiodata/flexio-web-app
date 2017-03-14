@@ -174,12 +174,14 @@ class Test
         $actual =  $properties;
         $expected = json_decode('
         {
-            "eid" : "' . $object->getEid() . '",
-            "eid_type" : "' . \Model::TYPE_OBJECT . '",
-            "eid_status" : "' . \Model::STATUS_AVAILABLE . '"
+            "eid" : "",
+            "eid_type" : "",
+            "eid_status" : "",
+            "created" : "",
+            "updated" : ""
         }
         ',true);
-        TestCheck::assertInArray('E.2', 'Object::get(); return the properties as an array',  $actual, $expected, $results);
+        TestCheck::assertArrayKeys('E.2', 'Object::get(); return the properties as an array',  $actual, $expected, $results);
 
 
 

@@ -168,6 +168,45 @@ class Test
         $expected = true;
         TestCheck::assertString('E.1', 'Project::get(); return the properties as an array',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $object = \Flexio\Object\Project::create();
+        $creator = \Flexio\Object\User::create();
+        $object->setOwner($creator->getEid());
+        $object->setCreatedBy($creator->getEid());
+        $properties = $object->get();
+        $actual =  $properties;
+        $expected = json_decode('
+        {
+            "eid" : null,
+            "eid_type" : null,
+            "eid_status" : null,
+            "ename" : null,
+            "name" : null,
+            "description" : null,
+            "follower_count" : null,
+            "pipe_count" : null,
+            "owned_by" : {
+                "eid" : null,
+                "eid_type" : null,
+                "user_name" : null,
+                "first_name" : null,
+                "last_name" : null,
+                "email_hash" : null
+            },
+            "created_by" : {
+                "eid" : null,
+                "eid_type" : null,
+                "user_name" : null,
+                "first_name" : null,
+                "last_name" : null,
+                "email_hash" : null
+            },
+            "created" : null,
+            "updated" : null
+        }
+        ',true);
+        TestCheck::assertArrayKeys('E.2', 'Project::get(); return the properties as an array',  $actual, $expected, $results);
+
 
 
         // TEST: object status change
