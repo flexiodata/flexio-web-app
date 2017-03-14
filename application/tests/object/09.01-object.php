@@ -168,6 +168,19 @@ class Test
         $expected = true;
         TestCheck::assertString('E.1', 'Object::get(); return the properties as an array',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $object = \Flexio\Object\Object::create();
+        $properties = $object->get();
+        $actual =  $properties;
+        $expected = json_decode('
+        {
+            "eid" : "' . $object->getEid() . '",
+            "eid_type" : "' . \Model::TYPE_OBJECT . '",
+            "eid_status" : "' . \Model::STATUS_AVAILABLE . '"
+        }
+        ',true);
+        TestCheck::assertInArray('E.2', 'Object::get(); return the properties as an array',  $actual, $expected, $results);
+
 
 
         // TEST: object status change
