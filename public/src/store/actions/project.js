@@ -27,7 +27,7 @@ export const createProject = ({ commit }, { attrs }) => {
     // success callback
     commit(types.CREATED_PROJECT, { attrs, project: response.body })
 
-    analytics.track('Created Project', _.assign({}, response.body, { project_count: 43 }))
+    analytics.track('Created Project', _.assign({}, response.body))
 
     return response
   }, response => {
