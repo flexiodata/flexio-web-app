@@ -7,9 +7,17 @@ export const fetchCurrentUser = ({ commit }) => {
   commit(types.FETCHING_USER, true)
 
   return api.fetchUser({ eid: 'me' }).then(response => {
+    var user = response.body
+
     // success callback
-    commit(types.FETCHED_USER, response.body)
+    commit(types.FETCHED_USER, user)
     commit(types.FETCHING_USER, false)
+
+    analytics.identify(_.get(user, 'eid'), _.assign({}, user, {
+      username: _.get(user, 'user_name'),
+      createdAt: _.get(user, 'created')
+    }));
+
     return response
   }, response => {
     // error callback
@@ -54,6 +62,9 @@ export const changePassword = ({ commit }, { eid, attrs }) => {
   return api.changePassword({ eid, attrs }).then(response => {
     // success callback
     commit(types.CHANGED_PASSWORD, { eid, attrs: response.body })
+
+    analytics.track('Changed Password')
+
     return response
   }, response => {
     // error callback
@@ -68,6 +79,8 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
     // success callback
     commit(types.SIGNED_IN)
     commit(types.SIGNING_IN, false)
+
+    analytics.track('Signed In', _.omit(attrs, ['password']))
 
     // now that we've signed in, fetch the active user's info from the server
     dispatch('fetchCurrentUser')
@@ -87,6 +100,9 @@ export const signOut = ({ commit }) => {
     // success callback
     commit(types.SIGNED_OUT)
     commit(types.SIGNING_OUT, false)
+
+    analytics.track('Signed Out')
+
     return response
   }, response => {
     // error callback
@@ -102,6 +118,8 @@ export const signUp = ({ commit, dispatch }, { attrs }) => {
     // success callback
     commit(types.SIGNED_UP)
     commit(types.SIGNING_UP, false)
+
+    analytics.track('Signed Up', _.omit(attrs, ['password']))
 
     return response
   }, response => {
