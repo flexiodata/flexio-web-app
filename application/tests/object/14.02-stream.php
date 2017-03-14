@@ -93,8 +93,28 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = $data;
+        $expected = json_decode('{ "f1" : "a", "f2": "b"}',true);
         TestCheck::assertArray('B.1', 'StreamReader/StreamWriter; check basic table read/write ',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "text"},
+            { "name": "f2", "type": "text"}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $data = json_decode('["a", "b"]',true);
+        $writer->write($data);
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : "a", "f2": "b"}',true);
+        TestCheck::assertArray('B.2', 'StreamReader/StreamWriter; check basic table read/write ',  $actual, $expected, $results);
     }
 }
