@@ -269,7 +269,15 @@ class User
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
             return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
 
-        return $user->getStatistics();
+        $projects = $user->getProjects();
+        $pipes = $user->getPipes();
+
+        $properties = array();
+        $properties['eid'] = '';
+        $properties['eid_type'] = \Model::TYPE_USER;
+        $properties['pipe_count'] = count($pipes);
+        $properties['project_count'] = count($projects);
+        return $properties;
     }
 
     public static function about($params, $request)

@@ -146,17 +146,6 @@ class User extends \Flexio\Object\Base
         return false;
     }
 
-    public function getStatistics()
-    {
-        $projects = $this->getProjects();
-        $pipes = $this->getPipes();
-
-        $result = array();
-        $result['project_count'] = count($projects);
-        $result['pipe_count'] = count($pipes);
-        return $result;
-    }
-
     public function getProjects()
     {
         $eid = $this->getEid();
