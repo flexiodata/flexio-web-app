@@ -119,7 +119,6 @@ class StreamWriter
 
 
 // stream file writer implementation
-
 class StreamFileWriter
 {
     private $stream_info = false;
@@ -201,6 +200,7 @@ class StreamFileWriter
         return $this->service;
     }
 }
+
 
 
 // stream table writer implementation
