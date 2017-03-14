@@ -168,6 +168,55 @@ class Test
         $expected = true;
         TestCheck::assertString('E.1', 'Pipe::get(); return the properties as an array',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $object = \Flexio\Object\Pipe::create();
+        $creator = \Flexio\Object\User::create();
+        $project = \Flexio\Object\Project::create();
+        $object->setOwner($creator->getEid());
+        $object->setCreatedBy($creator->getEid());
+        $project->addMember($object->getEid());
+        $properties = $object->get();
+        $actual =  $properties;
+        $expected = json_decode('
+        {
+            "eid" : null,
+            "eid_type" : null,
+            "eid_status" : null,
+            "ename" : null,
+            "name" : null,
+            "description" : null,
+            "project" : {
+                "eid" : null,
+                "eid_type" : null,
+                "name" : null,
+                "description" : null
+            },
+            "owned_by" : {
+                "eid" : null,
+                "eid_type" : null,
+                "user_name" : null,
+                "first_name" : null,
+                "last_name" : null,
+                "email_hash" : null
+            },
+            "created_by" : {
+                "eid" : null,
+                "eid_type" : null,
+                "user_name" : null,
+                "first_name" : null,
+                "last_name" : null,
+                "email_hash" : null
+            },
+            "task" : {
+            },
+            "schedule" : null,
+            "schedule_status" : null,
+            "created" : null,
+            "updated" : null
+        }
+        ',true);
+        TestCheck::assertArrayKeys('E.2', 'Pipe::get(); return the properties as an array',  $actual, $expected, $results);
+
 
 
         // TEST: object status change

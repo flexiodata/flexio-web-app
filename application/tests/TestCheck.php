@@ -200,17 +200,14 @@ class TestCheck
         if (is_string($expected))
             $expected = json_decode($expected,true); // use true param to convert into array rather than object
 
-        // if the two arrays are equal, their keys are the same
-        if ($actual === $expected)
+        // TODO: the arrays are different; compare the keys
+        $keys_are_equal = self::arrayKeysEqual($actual, $expected);
+        if ($keys_are_equal === true)
         {
             $test_result->passed = true;
             $test_result->message = '';
             return;
         }
-
-
-        // TODO: the arrays are different; compare the keys
-
 
         $test_result->passed = false;
         $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
@@ -335,6 +332,65 @@ class TestCheck
 
         $test_result->passed = false;
         $test_result->message = $test_result->message = 'Expected ' . TestCheck::stringify($expected) . 'to be a subset of ' . TestCheck::stringify($actual);
+    }
+
+    public static function arrayKeysEqual($item1, $item2)
+    {
+        // if both of the items aren't an array or an object,
+        // their keys are equal, we're done
+        if (!is_array($item1) && !is_object($item1) && !is_array($item2) && !is_object($item2))
+            return true;
+
+        // if one of the items is an array or an object and the other
+        // isn't then the keys aren't equal
+        if (is_array($item1) || is_object($item1))
+        {
+            if (!is_array($item2) && !is_object($item2))
+                return false;
+        }
+
+        if (is_array($item2) || is_object($item2))
+        {
+            if (!is_array($item1) && !is_object($item1))
+                return false;
+        }
+
+        // we're working with arrays or objects; cast them to arrays for
+        // easy comparison
+        $array1 = (array)$item1;
+        $array2 = (array)$item2;
+
+        // if the two arrays are equal, their keys are the same
+        if ($item1 === $item2)
+            return true;
+
+        // check the keys
+        foreach ($array1 as $k1 => $v1)
+        {
+            if (array_key_exists($k1, $item2) === false)
+                return false;
+
+            $next_item1 = $array1[$k1];
+            $next_item2 = $array2[$k1];
+
+            // the values may be objects themselves, so check them
+            // to see if their keys are the same
+            if (!self::arrayKeysEqual($next_item1, $next_item2))
+                return false;
+        }
+
+        foreach ($array2 as $k2 => $v2)
+        {
+            if (array_key_exists($k2, $item1) === false)
+                return false;
+
+            // the values may be objects themselves, so check them
+            // to see if their keys are the same
+            if (!self::arrayKeysEqual($next_item1, $next_item2))
+                return false;
+        }
+
+        return true;
     }
 
     public static function inArray($item1, $item2)

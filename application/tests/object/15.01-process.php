@@ -168,6 +168,54 @@ class Test
         $expected = true;
         TestCheck::assertString('E.1', 'Process::get(); return the properties as an array',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $object = \Flexio\Object\Process::create();
+        $creator = \Flexio\Object\User::create();
+        $pipe = \Flexio\Object\Pipe::create();
+        $object->setOwner($creator->getEid());
+        $object->setCreatedBy($creator->getEid());
+        $pipe->addProcess($object);
+        $properties = $object->get();
+        $actual =  $properties;
+        $expected = json_decode('
+        {
+            "eid" : null,
+            "eid_type" : null,
+            "eid_status" : null,
+            "parent" : {
+                "eid" : null,
+                "eid_type" : null,
+                "name" : null,
+                "description" : null
+            },
+            "owned_by" : {
+                "eid" : null,
+                "eid_type" : null,
+                "user_name" : null,
+                "first_name" : null,
+                "last_name" : null,
+                "email_hash" : null
+            },
+            "process_mode": null,
+            "task" : [
+            ],
+            "params" : {
+            },
+            "started_by" : null,
+            "started" : null,
+            "finished" : null,
+            "process_info" : {
+            },
+            "process_status" : null,
+            "cache_used" : null,
+            "subprocesses" : [
+            ],
+            "created" : null,
+            "updated" : null
+        }
+        ',true);
+        TestCheck::assertArrayKeys('E.2', 'Process::get(); return the properties as an array',  $actual, $expected, $results);
+
 
 
         // TEST: object status change

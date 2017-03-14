@@ -168,6 +168,60 @@ class Test
         $expected = true;
         TestCheck::assertString('E.1', 'Connection::get(); return the properties as an array',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $object = \Flexio\Object\Connection::create();
+        $creator = \Flexio\Object\User::create();
+        $project = \Flexio\Object\Project::create();
+        $object->setOwner($creator->getEid());
+        $object->setCreatedBy($creator->getEid());
+        $project->addMember($object->getEid());
+        $properties = $object->get();
+        $actual =  $properties;
+        $expected = json_decode('
+        {
+            "eid" : null,
+            "eid_type" : null,
+            "eid_status" : null,
+            "ename" : null,
+            "name" : null,
+            "description" : null,
+            "host" : null,
+            "port" : null,
+            "username" : null,
+            "database" : null,
+            "password" : null,
+            "token" : null,
+            "refresh_token" : null,
+            "token_expires" : null,
+            "connection_type" : null,
+            "connection_status" : null,
+            "project" : {
+                "eid" : null,
+                "eid_type" : null,
+                "name" : null,
+                "description" : null
+            },
+            "owned_by" : {
+                "eid" : null,
+                "eid_type" : null,
+                "user_name" : null,
+                "first_name" : null,
+                "last_name" : null,
+                "email_hash" : null
+            },
+            "created_by" : {
+                "eid" : null,
+                "eid_type" : null,
+                "user_name" : null,
+                "first_name" : null,
+                "last_name" : null,
+                "email_hash" : null
+            },
+            "created" : null,
+            "updated" : null
+        }
+        ',true);
+        TestCheck::assertArrayKeys('E.2', 'Connection::get(); return the properties as an array',  $actual, $expected, $results);
 
 
         // TEST: object status change
