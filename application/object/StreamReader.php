@@ -18,15 +18,7 @@ namespace Flexio\Object;
 class StreamReader
 {
     private $stream_info = false;
-    private $service = false;
-    private $table_iterator = false;
-    private $file_iterator = false;
-    private $table_read_buffer = '';
-    private $file_read_buffer = '';
-
-    function __construct()
-    {
-    }
+    private $reader = false;
 
     function __destruct()
     {
@@ -37,56 +29,51 @@ class StreamReader
     {
         // TODO: StreamReader is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service
-        // interface, so the reader will won't work on some type of services
+        // interface, so the reader won't work on some type of services
 
         // the stream parameter can either be a stream or stream properties;
         // the key information we need from the stream are the path, mime_type,
         // and structure for the source
 
-        $object = new self;
+        $object = new static;
 
+        $stream_info = array();
         if (($stream instanceof \Flexio\Object\Stream))
-            $object->stream_info = $stream->get();
+            $stream_info = $stream->get();
 
         if (is_array($stream))
         {
-            $object->stream_info = array();
-            $object->stream_info['connection_eid'] = isset_or($stream['connection_eid'], false);
-            $object->stream_info['path'] = isset_or($stream['path'], false);
-            $object->stream_info['mime_type'] = isset_or($stream['mime_type'], false);
-            $object->stream_info['structure'] = isset_or($stream['structure'], false);
+            $stream_info['connection_eid'] = isset_or($stream['connection_eid'], false);
+            $stream_info['path'] = isset_or($stream['path'], false);
+            $stream_info['mime_type'] = isset_or($stream['mime_type'], false);
+            $stream_info['structure'] = isset_or($stream['structure'], false);
         }
 
-        $object->init();
+        // create an appropriate reader based on the mime type
+        $mime_type = $stream_info['mime_type'];
+        switch ($mime_type)
+        {
+            default:
+                $object->reader = StreamFileReader::create($stream_info);
+                break;
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                $object->reader = StreamTableReader::create($stream_info);
+                break;
+        }
+
         if ($object->isOk() === false)
             return false;
 
         return $object;
     }
 
-    public function init()
-    {
-        $this->close();
-
-        $this->initService();
-        if ($this->isOk() === false)
-            return false;
-
-        return true;
-    }
-
     public function read($length = 1024)
     {
-        // TODO: implement
-
         if ($this->isOk() === false)
             return false;
 
-        $mime_type = $this->getMimeType();
-        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            return $this->readFromTable($length);
-             else
-            return $this->readFromFile($length);
+        return $this->reader->read($length);
     }
 
     public function readRow()
@@ -94,148 +81,95 @@ class StreamReader
         if ($this->isOk() === false)
             return false;
 
-        $mime_type = $this->getMimeType();
-        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            return $this->readRowFromTable();
-             else
-            return $this->readRowFromFile();
+        return $this->reader->readRow();
     }
 
     public function close()
     {
-        // note: don't reset the stream item; this is
-        // used to be able to reinitialized the other
-        // members
+        if ($this->isOk() === false)
+            return;
 
+        $this->reader->close();
+    }
+
+    private function isOk()
+    {
+        if ($this->reader === false)
+            return false;
+
+        return true;
+    }
+}
+
+
+
+// stream file reader implementation
+class StreamFileReader
+{
+    private $stream_info = false;
+    private $service = false;
+    private $iterator = false;
+    private $read_buffer = '';
+
+    function __destruct()
+    {
+        $this->close();
+    }
+
+    public static function create($stream_info)
+    {
+        $object = new static;
+        $object->stream_info = $stream_info;
+
+        $service = $object->getService();
+        if ($service === false)
+            return false;
+
+        return $object;
+    }
+
+    public function close()
+    {
         if ($this->service !== false)
             $this->service->close();
 
-        if ($this->table_iterator !== false)
-            $this->closeTable();
-
-        if ($this->file_iterator !== false)
-            $this->closeFile();
-
         $this->service = false;
-        $this->table_iterator = false;
-        $this->file_iterator = false;
+        $this->iterator = false;
+        $this->read_buffer = '';
     }
 
-    private function readFromTable($length)
+    public function read($length)
     {
-        $path = $this->getPath();
-        if ($path === false)
-            return false;
-
-        $structure = $this->getStructure();
-        if ($structure === false)
-            return false;
-
-        if ($this->table_iterator === false)
+        if ($this->iterator === false)
         {
-            $this->table_iterator = $this->service->query(['table' => $path]);
-            if (!$this->table_iterator)
+            if (!isset($this->stream_info['path']))
+                return false;
+            $path = $this->stream_info['path'];
+
+            $this->iterator = $this->getService()->openFile($path);
+            if (!$this->iterator)
                 return false;
 
-            $this->table_read_buffer = '';
-            $header_row = array_column($structure, 'name');
-            $this->table_read_buffer .= (self::arrayToCsv(array_values($header_row)));
+            $this->read_buffer = '';
         }
 
-        $done = false;
-        while (strlen($this->table_read_buffer) < $length)
-        {
-            // get the rows
-            $row = $this->table_iterator->fetchRow();
-            if (!$row)
-            {
-                $done = true;
-                break;
-            }
-
-            $mapped_row = array();
-            foreach ($structure as $col)
-                $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
-
-            $this->table_read_buffer .= (self::arrayToCsv(array_values($mapped_row)));
-        }
-
-        if ($done)
-        {
-            $ret = $this->table_read_buffer;
-            $this->table_read_buffer = '';
-            return $ret;
-        }
-         else
-        {
-            $ret = substr($this->table_read_buffer, 0, $length);
-            $this->table_read_buffer = substr($this->table_read_buffer, $length);
-            return $ret;
-        }
-    }
-
-    private function readFromFile($length)
-    {
-        if ($this->file_iterator === false)
-        {
-            $path = $this->getPath();
-            if ($path === false)
-                return false;
-
-            $this->file_iterator = $this->service->openFile($path);
-            if (!$this->file_iterator)
-                return false;
-
-            $this->file_read_buffer = '';
-        }
-
-        $read_chunk = $this->file_iterator->read($length);
+        $read_chunk = $this->iterator->read($length);
         return $read_chunk;
     }
 
-    private function readRowFromTable()
+    public function readRow()
     {
-        $path = $this->getPath();
-        if ($path === false)
-            return false;
-
-        $structure = $this->getStructure();
-        if ($structure === false)
-            return false;
-
-        if ($this->table_iterator === false)
+        if ($this->iterator === false)
         {
-            $this->table_iterator = $this->service->query(['table' => $path]);
-            if (!$this->table_iterator)
+            if (!isset($this->stream_info['path']))
+                return false;
+            $path = $this->stream_info['path'];
+
+            $this->iterator = $this->getService()->openFile($path);
+            if (!$this->iterator)
                 return false;
 
-            $this->table_read_buffer = '';
-        }
-
-        $row = $this->table_iterator->fetchRow();
-        if (!$row)
-            return false;
-
-        $mapped_row = array();
-        foreach ($structure as $col)
-            $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
-
-        return $mapped_row;
-    }
-
-    private function readRowFromFile()
-    {
-        if ($this->file_iterator === false)
-        {
-            $path = $this->getPath();
-            if ($path === false)
-                return false;
-
-            $this->file_iterator = $this->service->openFile($path);
-            if (!$this->file_iterator)
-                return false;
-
-            $this->file_read_buffer = '';
+            $this->read_buffer = '';
         }
 
         // read content into the buffer until we have a row
@@ -246,43 +180,43 @@ class StreamReader
         {
             // if we can get a row from the buffer, return it; note:
             // getRowFromBuffer() removes this chunk from the buffer
-            $row = self::getRowFromBuffer($this->file_read_buffer);
+            $row = self::getRowFromBuffer($this->read_buffer);
             if ($row !== false)
                 return $row;
 
             // we couldn't get a row from the buffer, so try to fill
             // the buffer with more data
-            $read_chunk = $this->file_iterator->read($amount_to_read);
+            $read_chunk = $this->iterator->read($amount_to_read);
             if (!$read_chunk)
             {
                 // if the length of the buffer is empty, we've returned
                 // everything that can be returned, and nothing more
                 // is available; return false to indicate there's nothing
                 // left to read
-                if (strlen($this->file_read_buffer) === 0)
+                if (strlen($this->read_buffer) === 0)
                     return false;
 
                 // we couldn't find anything more to read, which means
                 // whatever is in the buffer is the last row
-                $row = $this->file_read_buffer;
-                $this->file_read_buffer = '';
+                $row = $this->read_buffer;
+                $this->read_buffer = '';
                 return $row;
             }
 
-            $this->file_read_buffer .= $read_chunk;
+            $this->read_buffer .= $read_chunk;
 
             // if the size of the buffer is bigger than the max row size,
             // return the portion of the buffer equal to the max row size
-            if (strlen($this->file_read_buffer) > $max_row_size)
+            if (strlen($this->read_buffer) > $max_row_size)
             {
-                $row = substr($this->file_read_buffer, 0, $max_row_size);
-                $this->file_read_buffer = substr($this->file_read_buffer, $max_row_size + 1);
+                $row = substr($this->read_buffer, 0, $max_row_size);
+                $this->read_buffer = substr($this->read_buffer, $max_row_size + 1);
                 return $row;
             }
         }
     }
 
-    private function getRowFromBuffer(&$buffer)
+    private static function getRowFromBuffer(&$buffer)
     {
         $pos = strpos($buffer, "\n");
         if ($pos !== false)
@@ -348,9 +282,12 @@ class StreamReader
         */
     }
 
-    private function initService()
+    private function getService()
     {
-        $connection_eid = $this->getConnection();
+        if ($this->service !== false)
+            return $this->service;
+
+        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
             return false;
@@ -364,47 +301,150 @@ class StreamReader
             return false;
 
         $this->service = $service;
-        return true;
+        return $this->service;
+    }
+}
+
+
+
+// stream file reader implementation
+class StreamTableReader
+{
+    private $stream_info = false;
+    private $service = false;
+    private $iterator = false;
+    private $read_buffer = '';
+
+    function __destruct()
+    {
+        $this->close();
     }
 
-    private function closeTable()
+    public static function create($stream_info)
     {
-        $this->table_iterator = false;
-        $this->table_read_buffer = '';
-    }
+        $object = new static;
+        $object->stream_info = $stream_info;
 
-    private function closeFile()
-    {
-        $this->file_iterator = false;
-        $this->file_read_buffer = '';
-    }
-
-    private function getConnection()
-    {
-        return $this->stream_info['connection_eid'];
-    }
-
-    private function getPath()
-    {
-        return $this->stream_info['path'];
-    }
-
-    private function getMimeType()
-    {
-        return $this->stream_info['mime_type'];
-    }
-
-    private function getStructure()
-    {
-        return $this->stream_info['structure'];
-    }
-
-    private function isOk()
-    {
-        if ($this->service === false)
+        $service = $object->getService();
+        if ($service === false)
             return false;
 
-        return true;
+        return $object;
+    }
+
+    public function close()
+    {
+        if ($this->service !== false)
+            $this->service->close();
+
+        $this->service = false;
+        $this->iterator = false;
+        $this->read_buffer = '';
+    }
+
+    public function read($length)
+    {
+        if (!isset($this->stream_info['path']))
+            return false;
+        $path = $this->stream_info['path'];
+
+        if (!isset($this->stream_info['structure']))
+            return false;
+        $structure = $this->stream_info['structure'];
+
+        if ($this->iterator === false)
+        {
+            $this->iterator = $this->getService()->query(['table' => $path]);
+            if (!$this->iterator)
+                return false;
+
+            $this->read_buffer = '';
+            $header_row = array_column($structure, 'name');
+            $this->read_buffer .= (self::arrayToCsv(array_values($header_row)));
+        }
+
+        $done = false;
+        while (strlen($this->read_buffer) < $length)
+        {
+            // get the rows
+            $row = $this->iterator->fetchRow();
+            if (!$row)
+            {
+                $done = true;
+                break;
+            }
+
+            $mapped_row = array();
+            foreach ($structure as $col)
+                $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
+
+            $this->read_buffer .= (self::arrayToCsv(array_values($mapped_row)));
+        }
+
+        if ($done)
+        {
+            $ret = $this->read_buffer;
+            $this->read_buffer = '';
+            return $ret;
+        }
+         else
+        {
+            $ret = substr($this->read_buffer, 0, $length);
+            $this->read_buffer = substr($this->read_buffer, $length);
+            return $ret;
+        }
+    }
+
+    public function readRow()
+    {
+        if (!isset($this->stream_info['path']))
+            return false;
+        $path = $this->stream_info['path'];
+
+        if (!isset($this->stream_info['structure']))
+            return false;
+        $structure = $this->stream_info['structure'];
+
+        if ($this->iterator === false)
+        {
+            $this->iterator = $this->getService()->query(['table' => $path]);
+            if (!$this->iterator)
+                return false;
+
+            $this->read_buffer = '';
+        }
+
+        $row = $this->iterator->fetchRow();
+        if (!$row)
+            return false;
+
+        $mapped_row = array();
+        foreach ($structure as $col)
+            $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
+
+        return $mapped_row;
+    }
+
+    private function getService()
+    {
+        if ($this->service !== false)
+            return $this->service;
+
+        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($connection === false)
+            return false;
+
+        $connection_info = $connection->get();
+        if ($connection_info === false)
+            return false;
+
+        $service = $connection->getService();
+        if (!$service)
+            return false;
+
+        $this->service = $service;
+        return $this->service;
     }
 
     private static function arrayToCsv($arr)
