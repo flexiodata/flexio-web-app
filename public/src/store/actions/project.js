@@ -26,6 +26,9 @@ export const createProject = ({ commit }, { attrs }) => {
   return api.createProject({ attrs }).then(response => {
     // success callback
     commit(types.CREATED_PROJECT, { attrs, project: response.body })
+
+    analytics.track('Created Project', _.assign({}, response.body, { project_count: 43 }))
+
     return response
   }, response => {
     // error callback
