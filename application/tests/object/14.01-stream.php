@@ -168,6 +168,31 @@ class Test
         $expected = true;
         TestCheck::assertString('E.1', 'Stream::get(); return the properties as an array',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $object = \Flexio\Object\Stream::create();
+        $properties = $object->get();
+        $actual =  $properties;
+        $expected = json_decode('
+        {
+            "eid" : null,
+            "eid_type" : null,
+            "eid_status" : null,
+            "name" : null,
+            "path" : null,
+            "size" : null,
+            "hash" : null,
+            "mime_type" : null,
+            "structure" : {
+            },
+            "file_created" : null,
+            "file_modified" : null,
+            "connection_eid" :  null,
+            "created" : null,
+            "updated" : null
+        }
+        ',true);
+        TestCheck::assertArrayKeys('E.2', 'Stream::get(); return the properties as an array',  $actual, $expected, $results);
+
 
 
         // TEST: object status change
