@@ -25,5 +25,47 @@ class Test
 
 
         // TEST: stream read/writer
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
+        $stream_info['structure'] = array();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write("");
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->read();
+        $expected = "";
+        TestCheck::assertString('A.1', 'StreamReader/StreamWriter; check basic read/write ',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
+        $stream_info['structure'] = array();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write("A");
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->read();
+        $expected = "A";
+        TestCheck::assertString('A.2', 'StreamReader/StreamWriter; check basic read/write ',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
+        $stream_info['structure'] = array();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write("abcdefg");
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->read();
+        $expected = "abcdefg";
+        TestCheck::assertString('A.3', 'StreamReader/StreamWriter; check basic read/write ',  $actual, $expected, $results);
     }
 }
