@@ -35,7 +35,7 @@ class StreamReader
         // the key information we need from the stream are the path, mime_type,
         // and structure for the source
 
-        $object = new self;
+        $object = new static;
 
         $stream_info = array();
         if (($stream instanceof \Flexio\Object\Stream))
