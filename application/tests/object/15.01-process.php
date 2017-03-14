@@ -214,7 +214,7 @@ class Test
             "updated" : null
         }
         ',true);
-        TestCheck::assertArrayKeys('E.2', 'Stream::get(); return the properties as an array',  $actual, $expected, $results);
+        TestCheck::assertArrayKeys('E.2', 'Process::get(); return the properties as an array',  $actual, $expected, $results);
 
 
 
