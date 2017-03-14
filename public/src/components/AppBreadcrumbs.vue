@@ -3,10 +3,10 @@
     <router-link
       v-if="show_first_descendant"
       to="/home"
-      class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns link b--black-20 bl black-60 hover-black"
+      class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns link b--black-10 bl black-60 hover-black"
     ><i class="material-icons">home</i>
     </router-link>
-    <i v-if="show_first_descendant" class="material-icons md-24 black-60 fa-rotate-270">arrow_drop_down</i>
+    <i v-if="show_first_descendant" class="material-icons md-24 black-20 fa-rotate-270">arrow_drop_down</i>
     <router-link
       v-if="show_first_descendant && show_second_descendant"
       :to="first_link"
@@ -18,7 +18,7 @@
       class="link black-60 truncate"
     >{{first_name}}
     </div>
-    <i v-if="show_second_descendant" class="material-icons md-24 black-60 fa-rotate-270">arrow_drop_down</i>
+    <i v-if="show_second_descendant" class="material-icons md-24 black-20 fa-rotate-270">arrow_drop_down</i>
     <div
       v-if="show_second_descendant"
       class="dib black-60 truncate"

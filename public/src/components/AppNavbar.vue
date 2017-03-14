@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="render_nav" v-show="show_nav" class="bb b--black-20">
+  <nav v-if="render_nav" v-show="show_nav" class="bb b--black-10">
     <div class="flex flex-row bg-white pa1 pl3-ns pr2-ns items-center">
       <div class="flex-fill flex flex-row items-center truncate">
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">
@@ -16,7 +16,7 @@
             tabindex="0"
           >
             <i class="material-icons md-24 v-mid blue" style="margin: 0 -2px 0 -1px">help</i>
-            <i class="material-icons v-mid black-40 md-18" style="margin: 0 -2px">arrow_drop_down</i>
+            <i class="material-icons v-mid black-20" style="margin: 0 -6px">arrow_drop_down</i>
           </a>
 
           <ui-popover
@@ -50,7 +50,7 @@
             tabindex="0"
           >
             <img :src="user_profile_src" class="dib v-mid ba b--black-10 db br-100"/>
-            <i class="material-icons v-mid black-40 md-18" style="margin: 0 -2px">arrow_drop_down</i>
+            <i class="material-icons v-mid black-20" style="margin: 0 -6px">arrow_drop_down</i>
           </a>
 
           <ui-popover

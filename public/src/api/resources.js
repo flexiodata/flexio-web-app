@@ -18,6 +18,9 @@ export const LoginResource = Vue.resource(API_ROOT+'/login')
 export const LogoutResource = Vue.resource(API_ROOT+'/logout')
 export const SignupResource = Vue.resource(API_ROOT+'/signup'+SUFFIX)
 
+// validation
+export const ValidateResource = Vue.resource(API_ROOT+'/validate'+SUFFIX)
+
 // help
 export const HelpResource = Vue.resource(API_ROOT+'/help/conversation')
 

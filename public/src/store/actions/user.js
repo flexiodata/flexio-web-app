@@ -94,3 +94,19 @@ export const signOut = ({ commit }) => {
     return response
   })
 }
+
+export const signUp = ({ commit, dispatch }, { attrs }) => {
+  commit(types.SIGNING_UP, true)
+
+  return api.signUp({ attrs }).then(response => {
+    // success callback
+    commit(types.SIGNED_UP)
+    commit(types.SIGNING_UP, false)
+
+    return response
+  }, response => {
+    // error callback
+    commit(types.SIGNING_UP, false)
+    return response
+  })
+}

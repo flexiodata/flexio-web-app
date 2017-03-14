@@ -154,3 +154,6 @@ export const SIGNED_IN   = 'SIGNED_IN'
 
 export const SIGNING_OUT = 'SIGNING_OUT'
 export const SIGNED_OUT  = 'SIGNED_OUT'
+
+export const SIGNING_UP = 'SIGNING_UP'
+export const SIGNED_UP  = 'SIGNED_UP'

@@ -160,7 +160,7 @@
         // this will show errors below each input
         this.checkSignup()
 
-        api.signUp({ attrs }).then((response) => {
+        this.$store.dispatch('signUp', { attrs }).then((response) => {
           // success callback
           me.is_submitting = false
           me.trySignIn()
@@ -193,8 +193,6 @@
         })
       },
       doRedirect() {
-        debugger
-
         // grab the redirect from the query string if it exists
         var redirect = _.get(this.$route, 'query.redirect', '')
 
