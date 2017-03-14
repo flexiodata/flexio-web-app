@@ -307,7 +307,7 @@ class StreamFileReader
 
 
 
-// stream file reader implementation
+// stream table reader implementation
 class StreamTableReader
 {
     private $stream_info = false;
@@ -459,3 +459,164 @@ class StreamTableReader
     }
 }
 
+
+
+// experimental stream table writer implementation (JSON format)
+class StreamTableJsonReader
+{
+    private $stream_info = false;
+    private $service = false;
+    private $iterator = false;
+    private $read_buffer = '';
+
+    function __destruct()
+    {
+        $this->close();
+    }
+
+    public static function create($stream_info)
+    {
+        $object = new static;
+        $object->stream_info = $stream_info;
+
+        $service = $object->getService();
+        if ($service === false)
+            return false;
+
+        return $object;
+    }
+
+    public function close()
+    {
+        if ($this->service !== false)
+            $this->service->close();
+
+        $this->service = false;
+        $this->iterator = false;
+        $this->read_buffer = '';
+    }
+
+    public function read($length)
+    {
+        if (!isset($this->stream_info['path']))
+            return false;
+        $path = $this->stream_info['path'];
+
+        if (!isset($this->stream_info['structure']))
+            return false;
+        $structure = $this->stream_info['structure'];
+
+        if ($this->iterator === false)
+        {
+            $this->iterator = $this->getService()->query(['table' => $path]);
+            if (!$this->iterator)
+                return false;
+
+            $this->read_buffer = '';
+            $header_row = array_column($structure, 'name');
+            $this->read_buffer .= (self::arrayToCsv(array_values($header_row)));
+        }
+
+        $done = false;
+        while (strlen($this->read_buffer) < $length)
+        {
+            // get the rows
+            $row = $this->iterator->fetchRow();
+            if (!$row)
+            {
+                $done = true;
+                break;
+            }
+
+            // data is stored in json format in the content field; unpack it
+            $row = @json_decode($row['content'],true);
+
+            // map the stored name to the name
+            $mapped_row = array();
+            foreach ($structure as $col)
+                $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
+
+            $this->read_buffer .= (self::arrayToCsv(array_values($mapped_row)));
+        }
+
+        if ($done)
+        {
+            $ret = $this->read_buffer;
+            $this->read_buffer = '';
+            return $ret;
+        }
+         else
+        {
+            $ret = substr($this->read_buffer, 0, $length);
+            $this->read_buffer = substr($this->read_buffer, $length);
+            return $ret;
+        }
+    }
+
+    public function readRow()
+    {
+        if (!isset($this->stream_info['path']))
+            return false;
+        $path = $this->stream_info['path'];
+
+        if (!isset($this->stream_info['structure']))
+            return false;
+        $structure = $this->stream_info['structure'];
+
+        if ($this->iterator === false)
+        {
+            $this->iterator = $this->getService()->query(['table' => $path]);
+            if (!$this->iterator)
+                return false;
+
+            $this->read_buffer = '';
+        }
+
+        $row = $this->iterator->fetchRow();
+        if (!$row)
+            return false;
+
+        // data is stored in json format in the content field; unpack it
+        $row = @json_decode($row['content'],true);
+
+        // map the stored name to the name
+        $mapped_row = array();
+        foreach ($structure as $col)
+            $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
+
+        return $mapped_row;
+    }
+
+    private function getService()
+    {
+        if ($this->service !== false)
+            return $this->service;
+
+        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($connection === false)
+            return false;
+
+        $connection_info = $connection->get();
+        if ($connection_info === false)
+            return false;
+
+        $service = $connection->getService();
+        if (!$service)
+            return false;
+
+        $this->service = $service;
+        return $this->service;
+    }
+
+    private static function arrayToCsv($arr)
+    {
+        $buffer = fopen('php://temp', 'r+');
+        fputcsv($buffer, $arr, ',', '"', "\\");
+        rewind($buffer);
+        $output = fgets($buffer);
+        fclose($buffer);
+
+        return $output;
+    }
+}
