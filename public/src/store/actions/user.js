@@ -15,9 +15,6 @@ export const fetchCurrentUser = ({ commit }) => {
 
     analytics.identify(user.eid, _.assign({}, user, {
       id: _.get(user, 'eid'),
-      email: _.get(user, 'email'),
-      firstName: _.get(user, 'first_name'),
-      lastName: _.get(user, 'last_name'),
       username: _.get(user, 'user_name'),
       createdAt: _.get(user, 'created')
     }));
