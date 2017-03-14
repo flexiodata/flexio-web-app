@@ -218,6 +218,7 @@ class Test
         TestCheck::assertArrayKeys('E.2', 'Pipe::get(); return the properties as an array',  $actual, $expected, $results);
 
 
+
         // TEST: object status change
 
         // BEGIN TEST
