@@ -51,7 +51,7 @@ export const getActiveUser = state => {
 }
 
 export const getActiveProject = state => {
-  return _.find(getAllProjects(state), { eid: state.active_project })
+  return _.find(getAllProjects(state), { eid: state.active_project_eid })
 }
 
 export const getActiveDocument = state => {

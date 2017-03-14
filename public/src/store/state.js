@@ -6,7 +6,7 @@ export default () => {
 
     active_user_eid: '',
     active_document: '',
-    active_project: '',
+    active_project_eid: '',
 
     objects: {}
   }

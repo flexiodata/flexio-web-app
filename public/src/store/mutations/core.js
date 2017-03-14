@@ -6,6 +6,6 @@ export default {
   },
 
   [types.CHANGE_ACTIVE_PROJECT]: (state, eid) => {
-    state.active_project = eid
+    state.active_project_eid = eid
   }
 }

@@ -22,7 +22,7 @@ const actions = {
   [GET_PROJECT_PIPES]: ({ commit, dispatch, rootState }) => {
     commit(PIPES_FETCHING, true)
 
-    api.fetchProjectPipes(rootState.active_project).then(response => {
+    api.fetchProjectPipes(rootState.active_project_eid).then(response => {
       commit(PIPES_RECEIVED, response.body)
       commit(PIPES_FETCHING, false)
     }, response => {

@@ -34,27 +34,27 @@
   export default {
     computed: {
       ...mapState([
-        'active_project',
+        'active_project_eid',
         'active_document'
       ]),
       show_first_descendant() {
-        return this.active_project.length > 0 || this.$route.name == ROUTE_ACCOUNT
+        return this.active_project_eid.length > 0 || this.$route.name == ROUTE_ACCOUNT
       },
       show_second_descendant() {
         return this.show_first_descendant &&
-          this.active_project.length > 0 &&
+          this.active_project_eid.length > 0 &&
           this.active_document.length > 0 &&
-          this.active_project != this.active_document
+          this.active_project_eid != this.active_document
       },
       home_link() {
         return '/home'
       },
       first_link() {
-        return this.active_project.length > 0 ? '/project/'+this.active_project :
+        return this.active_project_eid.length > 0 ? '/project/'+this.active_project_eid :
           this.$route.name == ROUTE_ACCOUNT ? '/account' : ''
       },
       first_name() {
-        return this.active_project.length > 0 ? _.get(this.getActiveProject(), 'name', '') :
+        return this.active_project_eid.length > 0 ? _.get(this.getActiveProject(), 'name', '') :
           this.$route.name == ROUTE_ACCOUNT ? 'Account' : ''
       },
       document_name() {
