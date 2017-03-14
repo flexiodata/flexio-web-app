@@ -19,7 +19,7 @@ export const fetchCurrentUser = ({ commit }) => {
       lastName: _.get(user, 'last_name'),
       username: _.get(user, 'user_name'),
       createdAt: _.get(user, 'created')
-    }));
+    });
 
     return response
   }, response => {
