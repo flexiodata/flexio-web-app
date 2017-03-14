@@ -526,6 +526,11 @@ class Postgres implements \Flexio\Services\IConnection
                     $scale = ($pgtypemod & 0xffff);
                 }
             }
+             else if ($type == 'text')
+            {
+                $width = null;
+                $scale = 0;
+            }
              else if ($type == 'character')
             {
                 $width = $pgtypemod - 4;
@@ -790,9 +795,11 @@ class Postgres implements \Flexio\Services\IConnection
             case 1082: // date
                 return 'date';
 
+            case 25:   // text
+                return 'text';
+
             default:
             case 18:   // char
-            case 25:   // text
             case 1043: // varchar
                 return 'character';
         }
