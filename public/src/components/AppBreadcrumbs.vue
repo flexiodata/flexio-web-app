@@ -35,7 +35,7 @@
     computed: {
       ...mapState([
         'active_project_eid',
-        'active_document'
+        'active_document_eid'
       ]),
       show_first_descendant() {
         return this.active_project_eid.length > 0 || this.$route.name == ROUTE_ACCOUNT
@@ -43,8 +43,8 @@
       show_second_descendant() {
         return this.show_first_descendant &&
           this.active_project_eid.length > 0 &&
-          this.active_document.length > 0 &&
-          this.active_project_eid != this.active_document
+          this.active_document_eid.length > 0 &&
+          this.active_project_eid != this.active_document_eid
       },
       home_link() {
         return '/home'

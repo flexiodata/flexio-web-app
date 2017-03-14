@@ -5,7 +5,7 @@ export default () => {
     projects_fetching: false,
 
     active_user_eid: '',
-    active_document: '',
+    active_document_eid: '',
     active_project_eid: '',
 
     objects: {}
