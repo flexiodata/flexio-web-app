@@ -172,6 +172,50 @@ class TestCheck
         $test_result->message = 'Expected ' . TestCheck::stringify($expected,true) . ';  Returned ' . TestCheck::stringify($actual,true);
     }
 
+
+    public static function assertArrayKeys($name, $description, $actual, $expected, &$results)
+    {
+        // succeeds if the keys of the array are the same, without regard to the values
+
+        // add a TestResult onto the result array
+        $test_result = new TestResult;
+        $results[] = $test_result;
+
+        $test_result->name = $name;
+        $test_result->description = $description;
+
+        // make sure "actual" input is an array or a string; make sure "expected" input
+        // is an array or a string; in the case of a string, we'll treat it as JSON
+        // and convert the results to an array representation
+        if ((!is_array($actual) && !is_string($actual)) || (!is_array($expected) && !is_string($expected)))
+        {
+            $test_result->passed = false;
+            $test_result->message = 'Invalid test assertion.  Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+            return;
+        }
+
+        // if we have a string, convert it into an array
+        if (is_string($actual))
+            $actual = json_decode($actual,true); // use true param to convert into array rather than object
+        if (is_string($expected))
+            $expected = json_decode($expected,true); // use true param to convert into array rather than object
+
+        // if the two arrays are equal, their keys are the same
+        if ($actual === $expected)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
+
+
+        // TODO: the arrays are different; compare the keys
+
+
+        $test_result->passed = false;
+        $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+    }
+
     public static function assertArray($name, $description, $actual, $expected, &$results)
     {
         // add a TestResult onto the result array
@@ -181,7 +225,7 @@ class TestCheck
         $test_result->name = $name;
         $test_result->description = $description;
 
-        // make sure "actual" input is an arary; make sure "expected" input is
+        // make sure "actual" input is an array; make sure "expected" input is
         // an array or a string; in the case of a string, we'll treat it as JSON
         // and convert the results to an array representation
         if (!is_array($actual) || (!is_array($expected) && !is_string($expected)))
@@ -301,7 +345,7 @@ class TestCheck
         if ($item1 === $item2)
             return true;
 
-        // consider to nulls to be the same
+        // consider two nulls to be the same
         if (!isset($item1) && !isset($item2))
             return true;
 
