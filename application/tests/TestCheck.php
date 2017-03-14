@@ -181,7 +181,7 @@ class TestCheck
         $test_result->name = $name;
         $test_result->description = $description;
 
-        // make sure "actual" input is an arary; make sure "expected" input is
+        // make sure "actual" input is an array; make sure "expected" input is
         // an array or a string; in the case of a string, we'll treat it as JSON
         // and convert the results to an array representation
         if (!is_array($actual) || (!is_array($expected) && !is_string($expected)))
@@ -301,7 +301,7 @@ class TestCheck
         if ($item1 === $item2)
             return true;
 
-        // consider to nulls to be the same
+        // consider two nulls to be the same
         if (!isset($item1) && !isset($item2))
             return true;
 
