@@ -447,10 +447,10 @@ class Postgres implements \Flexio\Services\IConnection
 
     public function bulkInsert($table)
     {
-        //$inserter = new PostgresInserter;
-
-        // TODO: experimental
         $inserter = new PostgresInserterMultiRow;
+
+        // TODO: old implementation
+        //$inserter = new PostgresInserter;
 
         if (!$inserter->init($this, $this->db, $table))
             return false;
