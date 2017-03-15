@@ -142,24 +142,72 @@ class System
 
     public static function validate($params, $request)
     {
-        // checks to see if a username is available
-        if (($params = $request->getValidator()->check($params, array(
-                'key' => array('type' => 'string', 'required' => true),
-                'value' => array('type' => 'string', 'required' => true),
-                'type' => array('type' => 'string', 'required' => true)
-            ))) === false)
-            return $request->getValidator()->fail();
+        // the input for a validation is an array of objects that each
+        // have a key, value and type; only 10 items can be validated at a time
+        /*
+        [
+            {
+                "key": "",
+                "value": "",
+                "type": ""
+            },
+            {
+                "key": "",
+                "value": "",
+                "type": ""
+            }
+        ]
+        */
 
-        $key = $params['key']; // identifier to echo back to the caller
-        $value = $params['value'];
-        $type = $params['type'];
+        // make sure params is an array
+        if (!is_array($params))
+            return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+
+        if (count($params) === 0 || count($params) > 10)
+            return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+
+        // make sure each of the items in the array has the required params
+        foreach ($params as $p)
+        {
+            // checks to see if a username is available
+            if (($request->getValidator()->check($p, array(
+                    'key' => array('type' => 'string', 'required' => true),
+                    'value' => array('type' => 'string', 'required' => true),
+                    'type' => array('type' => 'string', 'required' => true)
+                ))) === false)
+                return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+        }
+
+        // build up the return object of results
+        $result = array();
+        foreach ($params as $p)
+        {
+            $r = self::validateObject($p['key'], $p['value'], $p['type']);
+
+            // if the validation of an object fails, there's some kind of an invalid parameter
+            // (e.g. type isn't specified)
+            if ($r === false)
+                return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+
+            $result[] = $r;
+        }
+
+        // wait 100 milliseconds to prevent large numbers of calls to mine for information
+        $wait_interval = 100;
+        usleep($wait_interval*1000);
+
+        return $result;
+    }
+
+    public static function validateObject($key, $value, $type)
+    {
         $valid = false;
         $message = '';
 
         switch ($type)
         {
             default:
-                return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+                return false;
 
             case 'identifier':
             case 'username':
@@ -249,9 +297,7 @@ class System
                 break;
         }
 
-        // wait 100 milliseconds to prevent large numbers of calls to mine for information
-        $wait_interval = 100;
-        usleep($wait_interval*1000);
+
 
         // echo back the key and whether or not it's valid (note: don't echo
         // back the value to minimize transport of values like a password)
