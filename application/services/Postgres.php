@@ -447,7 +447,7 @@ class Postgres implements \Flexio\Services\IConnection
 
     public function bulkInsert($table)
     {
-        $inserter = new PostgresInserter;
+        //$inserter = new PostgresInserter;
 
         // TODO: experimental
         $inserter = new PostgresInserterMultiRow;
@@ -1172,11 +1172,6 @@ class PostgresInserterMultiRow
 
         foreach ($row as &$f)
         {
-            if (false !== strpbrk($f, "\b\f\n\r\t\v"))
-            {
-                $f = strtr($f, array("\b" => "\\b", "\f" => "\\f", "\n" => "\\n", "\r" => "\\r", "\t" => "\\t", "\v" => "\\v"));
-            }
-
             if (is_null($f))
             {
                 $f = "null";
