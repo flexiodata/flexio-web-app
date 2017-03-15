@@ -335,7 +335,7 @@ class StreamTableWriter
     public function close()
     {
         if ($this->inserter !== false)
-            $result = $this->inserter->finishInsert();
+            $this->inserter->finishInsert();
 
         if ($this->service !== false)
             $this->service->close();
@@ -516,7 +516,7 @@ class StreamTableJsonWriter
     public function close()
     {
         if ($this->inserter !== false)
-            $result = $this->inserter->finishInsert();
+            $this->inserter->finishInsert();
 
         if ($this->service !== false)
             $this->service->close();
