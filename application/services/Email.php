@@ -515,9 +515,9 @@ class Email
         // build up the destination array
         $destination = array();
         $destination['ToAddresses'] = $this->to_addresses;
-        if (count($this->cc_addresses) >= 0)
+        if (count($this->cc_addresses) > 0)
             $destination['CcAddresses'] = $this->cc_addresses;
-        if (count($this->bcc_addresses) >= 0)
+        if (count($this->bcc_addresses) > 0)
             $destination['BccAddresses'] = $this->bcc_addresses;
 
         // build up the message array
@@ -570,6 +570,18 @@ class Email
         $mail_mime = new \Mail_mime(array('eol' => "\n"));
         $mail_mime->setTxtBody($this->msg_text);
         $mail_mime->setHTMLBody($this->msg_html);
+        foreach ($this->to_addresses as $to)
+        {
+            $mail_mime->addTo($to);
+        }
+        foreach ($this->cc_addresses as $cc)
+        {
+            $mail_mime->addCc($cc);
+        }
+        foreach ($this->bcc_addresses as $bcc)
+        {
+            $mail_mime->addBcc($bcc);
+        }
         foreach ($this->attachments as $attachment)
         {
             $mail_mime->addAttachment($attachment['file'], $attachment['mime_type'], $attachment['name']);
@@ -582,9 +594,17 @@ class Email
         error_reporting($old_error_settings);
 
         // create email array
+
+        $destination = array();
+        $destination['ToAddresses'] = implode(',',$this->to_addresses);
+        if (count($this->cc_addresses) > 0)
+            $destination['CcAddresses'] = implode(',',$this->cc_addresses);
+        if (count($this->bcc_addresses) > 0)
+            $destination['BccAddresses'] = implode(',',$this->bcc_addresses);
+
         $mail = array(
             'Source' => implode(',',$this->from_addresses),
-            'Destinations' => $this->to_addresses,
+            'Destinations' => $destination,
             'RawMessage' => array(
                                 'Data' => $message
                                 )
@@ -593,12 +613,14 @@ class Email
         try
         {
             $response = $ses->sendRawEmail($mail);
-
         }
         catch (\Exception $e)
         {
+            //die($e->getMessage());
             return false;
         }
+
+        return true;
     }
 
     private function getSes()
