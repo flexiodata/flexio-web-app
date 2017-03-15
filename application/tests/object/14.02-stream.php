@@ -847,12 +847,12 @@ class Test
         ]
         ',true))->get();
         $writer = \Flexio\Object\StreamWriter::create($stream_info);
-        $writer->write(json_decode('{ "f1" : "\0"}',true));
+        $writer->write(json_decode('{ "f1" : "\u0000"}',true));
         $writer->close();
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('{ "f1" : "\0"}',true);
+        $expected = json_decode('{ "f1" : ""}',true);
         TestCheck::assertArray('E.6', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -928,7 +928,187 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('{ "f1" : ")"]',true);
+        $expected = json_decode('{ "f1" : ")"}',true);
         TestCheck::assertArray('E.10', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "text"}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write(json_decode('{ "f1" : "/"}',true));
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : "/"}',true);
+        TestCheck::assertArray('E.11', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "text"}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write(json_decode('{ "f1" : "\\\\"}',true));
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : "\\\\"}',true);
+        TestCheck::assertArray('E.12', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
+
+
+        // TEST: numbers
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write(json_decode('{ "f1" : null}',true));
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : null}',true);
+        TestCheck::assertArray('F.1', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write(json_decode('{ "f1" : 0}',true));
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : "0"}',true);
+        TestCheck::assertArray('F.2', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write(json_decode('{ "f1" : 1}',true));
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : "1"}',true);
+        TestCheck::assertArray('F.3', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write(json_decode('{ "f1" : -1}',true));
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : "-1"}',true);
+        TestCheck::assertArray('F.4', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
+
+
+        // TEST: booleans
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "boolean"}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write(json_decode('{ "f1" : null}',true));
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : null}',true);
+        TestCheck::assertArray('G.1', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "boolean"}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write(json_decode('{ "f1" : true}',true));
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : true}',true);
+        TestCheck::assertArray('G.2', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "boolean"}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $writer->write(json_decode('{ "f1" : false}',true));
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $actual = $reader->readRow();
+        $reader->close();
+        $expected = json_decode('{ "f1" : false}',true);
+        TestCheck::assertArray('G.3', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
+
     }
 }
