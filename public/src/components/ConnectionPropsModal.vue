@@ -183,7 +183,7 @@
         return _.get(this.getActiveUser(), 'user_name', '')
       },
       alias_placeholder() {
-        return _.kebabCase(this.active_username + ' ' + this.connection.name)
+        return _.kebabCase('username-my-alias')
       }
     },
     methods: {
