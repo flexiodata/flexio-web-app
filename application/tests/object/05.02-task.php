@@ -19,6 +19,29 @@ class Test
 {
     public function run(&$results)
     {
+        // BEGIN TEST
+        $task = '
+        [{
+            "params": "${v1}"
+        }]
+        ';
+        $variables = [
+        ];
+        $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
+        $expected = '
+        [{
+            "params": ""
+        }]
+        ';
+        TestCheck::assertInArray('A.2', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results);
+
+
+
+
+return;
+
+
+
         // TEST: Task::setParams(); variable serialization with single variable
 
         // BEGIN TEST
@@ -49,10 +72,10 @@ class Test
         $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
         $expected = '
         [{
-            "params": "${v1}"
+            "params": ""
         }]
         ';
-        TestCheck::assertInArray('A.2', 'Task::setParams(); handle case with no replacement', $actual, $expected, $results);
+        TestCheck::assertInArray('A.2', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -66,10 +89,10 @@ class Test
         $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
         $expected = '
         [{
-            "params": "${v1}"
+            "params": ""
         }]
         ';
-        TestCheck::assertInArray('A.3', 'Task::setParams(); handle case with no replacement', $actual, $expected, $results);
+        TestCheck::assertInArray('A.3', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -117,7 +140,7 @@ class Test
         $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
         $expected = '
         [{
-            "params": "${V1}"
+            "params": ""
         }]
         ';
         TestCheck::assertInArray('A.6', 'Task::setParams(); basic replacement of single variable; case-sensitive check', $actual, $expected, $results);
@@ -137,7 +160,7 @@ class Test
             "params": "$ {v1}"
         }]
         ';
-        TestCheck::assertInArray('A.7', 'Task::setParams(); basic replacement of single variable; whitespace check', $actual, $expected, $results);
+        TestCheck::assertInArray('A.7', 'Task::setParams(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -154,7 +177,7 @@ class Test
             "params": "${ v1}"
         }]
         ';
-        TestCheck::assertInArray('A.8', 'Task::setParams(); basic replacement of single variable; whitespace check', $actual, $expected, $results);
+        TestCheck::assertInArray('A.8', 'Task::setParams(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -171,7 +194,7 @@ class Test
             "params": "${v1 }"
         }]
         ';
-        TestCheck::assertInArray('A.9', 'Task::setParams(); basic replacement of single variable; whitespace check', $actual, $expected, $results);
+        TestCheck::assertInArray('A.9', 'Task::setParams(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -188,7 +211,7 @@ class Test
             "params": "  field1  "
         }]
         ';
-        TestCheck::assertInArray('A.10', 'Task::setParams(); basic replacement of single variable; whitespace check', $actual, $expected, $results);
+        TestCheck::assertInArray('A.10', 'Task::setParams(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -205,7 +228,7 @@ class Test
             "params": "{v1}"
         }]
         ';
-        TestCheck::assertInArray('A.11', 'Task::setParams(); basic replacement of single variable; variable syntax check', $actual, $expected, $results);
+        TestCheck::assertInArray('A.11', 'Task::setParams(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -222,7 +245,7 @@ class Test
             "params": "$v1}"
         }]
         ';
-        TestCheck::assertInArray('A.12', 'Task::setParams(); basic replacement of single variable; variable syntax check', $actual, $expected, $results);
+        TestCheck::assertInArray('A.12', 'Task::setParams(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -239,7 +262,7 @@ class Test
             "params": "${v1"
         }]
         ';
-        TestCheck::assertInArray('A.13', 'Task::setParams(); basic replacement of single variable; variable syntax check', $actual, $expected, $results);
+        TestCheck::assertInArray('A.13', 'Task::setParams(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -253,7 +276,7 @@ class Test
         $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
         $expected = '
         [{
-            "params": "${1}"
+            "params": "test@flex.io"
         }]
         ';
         TestCheck::assertInArray('A.14', 'Task::setParams(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
@@ -362,7 +385,6 @@ class Test
 
 
 
-
         // TEST: Task::setParams(); variable serialization with variables of different types
 
         // BEGIN TEST
@@ -372,7 +394,7 @@ class Test
         }]
         ';
         $variables = [
-            "value" => null
+            "different_value" => null
         ];
         $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
         $expected = '
@@ -389,6 +411,40 @@ class Test
         }]
         ';
         $variables = [
+            "value" => null
+        ];
+        $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
+        $expected = '
+        [{
+            "params": null
+        }]
+        ';
+        TestCheck::assertInArray('B.2', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = '
+        [{
+            "params": "${value}"
+        }]
+        ';
+        $variables = [
+            "different_value" => false
+        ];
+        $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
+        $expected = '
+        [{
+            "params": null
+        }]
+        ';
+        TestCheck::assertInArray('B.3', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = '
+        [{
+            "params": "${value}"
+        }]
+        ';
+        $variables = [
             "value" => false
         ];
         $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
@@ -397,7 +453,7 @@ class Test
             "params": false
         }]
         ';
-        TestCheck::assertInArray('B.2', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.4', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -414,7 +470,24 @@ class Test
             "params": true
         }]
         ';
-        TestCheck::assertInArray('B.3', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.5', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = '
+        [{
+            "params": "${value}"
+        }]
+        ';
+        $variables = [
+            "different_value" => 10
+        ];
+        $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
+        $expected = '
+        [{
+            "params": null
+        }]
+        ';
+        TestCheck::assertInArray('B.6', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -431,7 +504,7 @@ class Test
             "params": 10
         }]
         ';
-        TestCheck::assertInArray('B.4', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.7', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -448,7 +521,24 @@ class Test
             "params": -2.1
         }]
         ';
-        TestCheck::assertInArray('B.5', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.8', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = '
+        [{
+            "params": "${value}"
+        }]
+        ';
+        $variables = [
+            "different_value" => [1,2,3]
+        ];
+        $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
+        $expected = '
+        [{
+            "params": null
+        }]
+        ';
+        TestCheck::assertInArray('B.9', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -465,7 +555,24 @@ class Test
             "params": [1,2,3]
         }]
         ';
-        TestCheck::assertInArray('B.6', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.10', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = '
+        [{
+            "params": "${value}"
+        }]
+        ';
+        $variables = [
+            "different_value" => ["a" => "b"]
+        ];
+        $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
+        $expected = '
+        [{
+            "params": null
+        }]
+        ';
+        TestCheck::assertInArray('B.11', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -482,7 +589,24 @@ class Test
             "params": {"a": "b"}
         }]
         ';
-        TestCheck::assertInArray('B.7', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.12', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = '
+        [{
+            "params": "The value is: ${value} units."
+        }]
+        ';
+        $variables = [
+            "different_value" => 10
+        ];
+        $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
+        $expected = '
+        [{
+            "params": "The value is:  units."
+        }]
+        ';
+        TestCheck::assertInArray('B.13', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -499,7 +623,24 @@ class Test
             "params": "The value is: 10 units."
         }]
         ';
-        TestCheck::assertInArray('B.8', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
+        TestCheck::assertInArray('B.14', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = '
+        [{
+            "params": "The statement is ${value}."
+        }]
+        ';
+        $variables = [
+            "different_value" => true
+        ];
+        $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
+        $expected = '
+        [{
+            "params": "The statement is ."
+        }]
+        ';
+        TestCheck::assertInArray('B.15', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -516,7 +657,7 @@ class Test
             "params": "The statement is true."
         }]
         ';
-        TestCheck::assertInArray('B.9', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
+        TestCheck::assertInArray('B.16', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -533,7 +674,7 @@ class Test
             "params": "The value is ."
         }]
         ';
-        TestCheck::assertInArray('B.10', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string; nulls become empty', $actual, $expected, $results);
+        TestCheck::assertInArray('B.17', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string; nulls become empty', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = '
@@ -550,7 +691,7 @@ class Test
             "params": "10/10 is 1"
         }]
         ';
-        TestCheck::assertInArray('B.11', 'Task::setParams(); basic replacement of single variable; replace multiple values in a string', $actual, $expected, $results);
+        TestCheck::assertInArray('B.18', 'Task::setParams(); basic replacement of single variable; replace multiple values in a string', $actual, $expected, $results);
 
 
 
@@ -730,10 +871,10 @@ class Test
                 "type": "flexio.nop",
                 "custom": "${v1}",
                 "params": [
-                    "${}",
+                    "",
                     "field1",
-                    "${V1}",
-                    "  ${v11} ",
+                    "",
+                    "   ",
                     "lpad(\'field1\',10,\'0\')"
                 ]
             }
@@ -768,10 +909,10 @@ class Test
                 "type": "flexio.nop",
                 "custom": "${v1}",
                 "params": {
-                    "p1": "${}",
+                    "p1": "",
                     "p2": "field1",
-                    "p3": "${V1}",
-                    "p4": "  ${v11} ",
+                    "p3": "",
+                    "p4": "   ",
                     "p5": "lpad(\'field1\',10,\'0\')"
                 }
             }
@@ -805,10 +946,10 @@ class Test
                 "type": "flexio.nop",
                 "custom": "${v1}",
                 "params": [
-                    {"p1": "${}"},
+                    {"p1": ""},
                     {"p2": "field1"},
-                    {"p3": "${V1}"},
-                    {"p4": "  ${v11} "},
+                    {"p3": ""},
+                    {"p4": "   "},
                     {"p5": "lpad(\'field1\',10,\'0\')"}
                 ]
             }
