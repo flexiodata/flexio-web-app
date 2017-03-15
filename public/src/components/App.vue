@@ -3,7 +3,7 @@
     <app-navbar class="flex-none"></app-navbar>
     <router-view class="flex-fill"></router-view>
 
-    <!-- share modal -->
+    <!-- onboarding modal -->
     <onboarding-modal
       ref="modal-onboarding"
       @hide="show_onboarding_modal = false"
