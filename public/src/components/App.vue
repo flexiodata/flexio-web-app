@@ -53,7 +53,7 @@
         'getActiveUser'
       ]),
       leaving() {
-        this.$store.dispatch('changePassword', { user: this.getActiveUser() })
+        this.$store.dispatch('fetchUserStatistics', { user: this.getActiveUser() })
         return null
       }
     }
