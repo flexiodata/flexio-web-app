@@ -1188,17 +1188,24 @@ class PostgresInserterMultiRow
                 case 'date':
                     if (strlen($f) < 10)
                         $f = "null";
+                         else
+                        $f = $this->db->quote($f);
                     break;
                 case 'datetime':
                     if (strlen($f) < 19)
                         $f = "null";
+                         else
+                        $f = $this->db->quote($f);
                     break;
                 case 'boolean':
                     $f = ($f ? 'TRUE':'FALSE');
+                    $f = $this->db->quote($f);
+                    break;
+
+                default:
+                    $f = $this->db->quote($f);
                     break;
             }
-
-            $f = $this->db->quote($f);
 
             ++$field_idx;
         }
