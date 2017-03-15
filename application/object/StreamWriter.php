@@ -81,6 +81,7 @@ class StreamWriter
         // data being written should be either a string or an array;
         // get a representative string of the content so we can find
         // out the size of the data that was written
+        $content_str = '';
         if (is_string($data))
             $content_str = $data;
         if (is_array($data))
