@@ -1109,6 +1109,5 @@ class Test
         $reader->close();
         $expected = json_decode('{ "f1" : false}',true);
         TestCheck::assertArray('G.3', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
-
     }
 }
