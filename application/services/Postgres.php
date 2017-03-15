@@ -447,10 +447,10 @@ class Postgres implements \Flexio\Services\IConnection
 
     public function bulkInsert($table)
     {
-        $inserter = new PostgresInserter;
+        $inserter = new PostgresInserterMultiRow;
 
-        // TODO: experimental
-        // $inserter = new PostgresInserterMultiRow;
+        // TODO: old implementation
+        //$inserter = new PostgresInserter;
 
         if (!$inserter->init($this, $this->db, $table))
             return false;
@@ -1172,14 +1172,9 @@ class PostgresInserterMultiRow
 
         foreach ($row as &$f)
         {
-            if (false !== strpbrk($f, "\b\f\n\r\t\v"))
-            {
-                $f = strtr($f, array("\b" => "\\b", "\f" => "\\f", "\n" => "\\n", "\r" => "\\r", "\t" => "\\t", "\v" => "\\v"));
-            }
-
             if (is_null($f))
             {
-                $f = "\\N";
+                $f = "null";
                 ++$field_idx;
                 continue;
             }
@@ -1192,18 +1187,25 @@ class PostgresInserterMultiRow
             {
                 case 'date':
                     if (strlen($f) < 10)
-                        $f = "\\N";
+                        $f = "null";
+                         else
+                        $f = $this->db->quote($f);
                     break;
                 case 'datetime':
                     if (strlen($f) < 19)
-                        $f = "\\N";
+                        $f = "null";
+                         else
+                        $f = $this->db->quote($f);
                     break;
                 case 'boolean':
                     $f = ($f ? 'TRUE':'FALSE');
+                    $f = $this->db->quote($f);
+                    break;
+
+                default:
+                    $f = $this->db->quote($f);
                     break;
             }
-
-            $f = $this->db->quote($f);
 
             ++$field_idx;
         }
@@ -1214,7 +1216,7 @@ class PostgresInserterMultiRow
         {
             while ($rowcolcnt < $column_count)
             {
-                $row[] = "\\N";
+                $row[] = "null";
                 ++$rowcolcnt;
             }
 

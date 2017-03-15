@@ -888,7 +888,7 @@ class Util
     public static function getTempFilename($ext = null)
     {
         $temp_file = tempnam(sys_get_temp_dir(), 'fx_');
-        if (isset($ext))
+        if (isset($ext) && strlen($ext) > 0)
         {
             @unlink($temp_file);
             $temp_file .= ('.' . $ext);
