@@ -450,7 +450,7 @@ class Postgres implements \Flexio\Services\IConnection
         $inserter = new PostgresInserter;
 
         // TODO: experimental
-        // $inserter = new PostgresInserterMultiRow;
+        $inserter = new PostgresInserterMultiRow;
 
         if (!$inserter->init($this, $this->db, $table))
             return false;
@@ -1179,7 +1179,7 @@ class PostgresInserterMultiRow
 
             if (is_null($f))
             {
-                $f = "\\N";
+                $f = "null";
                 ++$field_idx;
                 continue;
             }
@@ -1192,11 +1192,11 @@ class PostgresInserterMultiRow
             {
                 case 'date':
                     if (strlen($f) < 10)
-                        $f = "\\N";
+                        $f = "null";
                     break;
                 case 'datetime':
                     if (strlen($f) < 19)
-                        $f = "\\N";
+                        $f = "null";
                     break;
                 case 'boolean':
                     $f = ($f ? 'TRUE':'FALSE');
@@ -1214,7 +1214,7 @@ class PostgresInserterMultiRow
         {
             while ($rowcolcnt < $column_count)
             {
-                $row[] = "\\N";
+                $row[] = "null";
                 ++$rowcolcnt;
             }
 
