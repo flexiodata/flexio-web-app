@@ -180,7 +180,7 @@ class Test
 
 
 
-        // TEST: test range of rows/values on numeric type
+        // TEST: test range of rows/values on double type
 
         // BEGIN TEST
         $stream_info = array();
@@ -254,5 +254,82 @@ class Test
         }
         ',true);
         TestCheck::assertArray('C.1', 'StreamReader/StreamWriter; test double type with multiple rows and combinations of values',  $actual, $expected, $results);
+
+
+
+        // TEST: test range of rows/values on integer type
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            {"name" : "num_3a", "type" : "integer", "width" : 4, "scale" : 0},
+            {"name" : "num_3b", "type" : "integer", "width" : 4, "scale" : 0},
+            {"name" : "num_3c", "type" : "integer", "width" : 4, "scale" : 0},
+            {"name" : "num_3d", "type" : "integer", "width" : 4, "scale" : 0},
+            {"name" : "num_3e", "type" : "integer", "width" : 4, "scale" : 0},
+            {"name" : "num_3f", "type" : "integer", "width" : 4, "scale" : 0},
+            {"name" : "num_3g", "type" : "integer", "width" : 4, "scale" : 0},
+            {"name" : "num_3h", "type" : "integer", "width" : 4, "scale" : 0}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $data = json_decode('
+        [
+            [1, 1, 0,     4,  400000000,  4,  400000000,  4],
+            [1, 0, 0,     4,  400000000,  4,  400000000,  4],
+            [1, 0, 0,     4,  400000000,  4,  400000000,  4],
+            [1, 0, 0,  null,  400000000,  4,  400000000,  4],
+            [1, 0, 0,  null,  400000000,  4,  400000000,  4],
+            [1, 0, 0,    -2, -200000000, -2, -200000000, -2],
+            [1, 0, 0,    -3, -300000000, -3, -300000000, -3],
+            [1, 0, 0,    -1, -100000000, -1, -100000000, -1],
+            [1, 0, 0,     2,  200000000,  2,  200000000,  2],
+            [1, 0, 0,     3,  300000000,  3,  300000000,  3],
+            [1, 0, 0,     1,  100000000,  1,  100000000,  1],
+            [1, 0, 0,    -4, -400000000, -4, -400000000, -4],
+            [1, 0, 0,    -4, -400000000, -4, -400000000, -4],
+            [1, 0, 0,    -4, -400000000, -4, -400000000, -4],
+            [1, 0, 0,  null, -400000000, -4, -400000000, -4],
+            [1, 0, 0,  null,  500000000,  5,  500000000,  5],
+            [1, 0, 0,  null,  500000000,  5,  500000000,  5],
+            [1, 0, 0,     5,  500000000,  5,  500000000,  5],
+            [1, 0, 0,     5,  500000000,  5,  500000000,  5],
+            [1, 0, 1,     5,  500000000,  5,  500000000,  5]
+        ]
+        ',true);
+        foreach ($data as $row)
+        {
+            $writer->write($row);
+        }
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $last_row = false;
+        while (true)
+        {
+            $row = $reader->readRow();
+            if ($row === false)
+                break;
+
+            $last_row = $row;
+        }
+        $reader->close();
+        $actual = $last_row;
+        $expected = json_decode('
+        {
+            "num_3a": 1,
+            "num_3b": 0,
+            "num_3c": 1,
+            "num_3d": 5,
+            "num_3e": 500000000,
+            "num_3f": 5,
+            "num_3g": 500000000,
+            "num_3h": 5
+        }
+        ',true);
+        TestCheck::assertArray('D.1', 'StreamReader/StreamWriter; test integer type with multiple rows and combinations of values',  $actual, $expected, $results);
     }
 }
