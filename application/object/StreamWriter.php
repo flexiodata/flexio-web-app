@@ -105,6 +105,7 @@ class StreamWriter
             return;
 
         $this->writer->close();
+        $this->writer = false;
     }
 
     private function isOk()

@@ -90,6 +90,7 @@ class StreamReader
             return;
 
         $this->reader->close();
+        $this->reader = false;
     }
 
     private function isOk()
