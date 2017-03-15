@@ -47,7 +47,7 @@ class User
                 'locale_dateformat'     => array('type' => 'string',  'required' => false, 'default' => 'm/d/Y'),
                 'timezone'              => array('type' => 'string',  'required' => false, 'default' => 'UTC'),
                 'verify_code'           => array('type' => 'string',  'required' => false, 'default' => ''),
-                'config'                => array('type' => 'string',  'required' => false, 'default' => '{}'),
+                'config'                => array('type' => 'object',  'required' => false, 'default' => []),
                 'send_email'            => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'create_sample_project' => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'require_verification'  => array('type' => 'boolean', 'required' => false, 'default' => false)
@@ -201,7 +201,7 @@ class User
                 'locale_thousands'  => array('type' => 'string', 'required' => false),
                 'locale_dateformat' => array('type' => 'string', 'required' => false),
                 'timezone'          => array('type' => 'string', 'required' => false),
-                'config'            => array('type' => 'string', 'required' => false)
+                'config'            => array('type' => 'object', 'required' => false)
             ))) === false)
             return $request->getValidator()->fail();
 
