@@ -331,5 +331,83 @@ class Test
         }
         ',true);
         TestCheck::assertArray('D.1', 'StreamReader/StreamWriter; test integer type with multiple rows and combinations of values',  $actual, $expected, $results);
+
+
+
+        // TEST: test range of rows/values on date type
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            {"name" : "date_1a", "type" : "date", "width" : 4, "scale" : 0},
+            {"name" : "date_1b", "type" : "date", "width" : 4, "scale" : 0},
+            {"name" : "date_1c", "type" : "date", "width" : 4, "scale" : 0},
+            {"name" : "date_1d", "type" : "date", "width" : 4, "scale" : 0},
+            {"name" : "date_1e", "type" : "date", "width" : 4, "scale" : 0},
+            {"name" : "date_1f", "type" : "date", "width" : 4, "scale" : 0},
+            {"name" : "date_1g", "type" : "date", "width" : 4, "scale" : 0},
+            {"name" : "date_1h", "type" : "date", "width" : 4, "scale" : 0}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $data = json_decode('
+        [
+            ["2001-01-01", "2001-01-01", "",           "2001-01-05", "2005-01-01", "2001-01-05", "2005-01-01", "2001-01-05"],
+            ["2001-01-01", "",           "",           "2001-01-05", "2005-01-01", "2001-01-05", "2005-01-01", "2001-01-05"],
+            ["2001-01-01", "",           "",           "2001-01-05", "2005-01-01", "2001-01-05", "2005-01-01", "2001-01-05"],
+            ["2001-01-01", "",           "",           null,         "2005-01-01", "2001-01-05", "2005-01-01", "2001-01-05"],
+            ["2001-01-01", "",           "",           null,         "2005-01-01", "2001-01-05", "2005-01-01", "2001-01-05"],
+            ["2001-01-01", "",           "",           "2000-12-30", "1970-12-31", "1999-12-31", "1970-12-31", "1999-12-31"],
+            ["2001-01-01", "",           "",           "2000-12-29", "1970-01-01", "1999-11-30", "1970-01-01", "1999-11-30"],
+            ["2001-01-01", "",           "",           "2000-12-31", "2000-01-01", "2000-01-01", "2000-01-01", "2000-01-01"],
+            ["2001-01-01", "",           "",           "2001-01-03", "2002-01-01", "2000-01-03", "2002-01-01", "2000-01-03"],
+            ["2001-01-01", "",           "",           "2001-01-04", "2003-01-01", "2000-02-03", "2003-01-01", "2000-02-03"],
+            ["2001-01-01", "",           "",           "2001-01-02", "2001-01-01", "2000-01-02", "2001-01-01", "2000-01-02"],
+            ["2001-01-01", "",           "",           "2000-12-28", "1969-12-31", "1998-12-28", "1969-12-31", "1998-12-28"],
+            ["2001-01-01", "",           "",           "2000-12-28", "1969-12-31", "1998-12-28", "1969-12-31", "1998-12-28"],
+            ["2001-01-01", "",           "",           "2000-12-28", "1969-12-31", "1998-12-28", "1969-12-31", "1998-12-28"],
+            ["2001-01-01", "",           "",           null,         "1969-12-31", "1998-12-28", "1969-12-31", "1998-12-28"],
+            ["2001-01-01", "",           "",           null,         "2006-01-01", "2001-01-06", "2006-01-01", "2001-01-06"],
+            ["2001-01-01", "",           "",           null,         "2006-01-01", "2001-01-06", "2006-01-01", "2001-01-06"],
+            ["2001-01-01", "",           "",           "2001-01-06", "2006-01-01", "2001-01-06", "2006-01-01", "2001-01-06"],
+            ["2001-01-01", "",           "",           "2001-01-06", "2006-01-01", "2001-01-06", "2006-01-01", "2001-01-06"],
+            ["2001-01-01", "",           "2001-01-01", "2001-01-06", "2006-01-01", "2001-01-06", "2006-01-01", "2001-01-06"]
+        ]
+        ',true);
+
+        foreach ($data as $row)
+        {
+            $writer->write($row);
+        }
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $last_row = false;
+        while (true)
+        {
+            $row = $reader->readRow();
+            if ($row === false)
+                break;
+
+            $last_row = $row;
+        }
+        $reader->close();
+        $actual = $last_row;
+        $expected = json_decode('
+        {
+            "date_1a": "2001-01-01",
+            "date_1b": null,
+            "date_1c": "2001-01-01",
+            "date_1d": "2001-01-06",
+            "date_1e": "2006-01-01",
+            "date_1f": "2001-01-06",
+            "date_1g": "2006-01-01",
+            "date_1h": "2001-01-06"
+        }
+        ',true);
+        TestCheck::assertArray('E.1', 'StreamReader/StreamWriter; test date type with multiple rows and combinations of values',  $actual, $expected, $results);
     }
 }
