@@ -30,7 +30,7 @@ export const createPipe = ({ commit }, { attrs }) => {
 
     // add custom info
     _.assign(analytics_payload, {
-      inputType: _.get(pipe, 'task[0].metadata.connection_type')
+      inputType: _.get(pipe, 'task[0].metadata.connection_type', '')
     })
 
     // add Segment-friendly keys

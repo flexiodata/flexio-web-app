@@ -27,6 +27,10 @@ class User extends \Flexio\Object\Base
 
     public static function create($properties = null)
     {
+        // config is stored as a json string, so it needs to be encoded
+        if (isset($properties) && isset($properties['config']))
+            $properties['config'] = json_encode($properties['config']);
+
 /*
         // TODO: find out what's wrong with this implementation
 
@@ -128,6 +132,10 @@ class User extends \Flexio\Object\Base
 
     public function set($properties)
     {
+        // config is stored as a json string, so these need to be encoded
+        if (isset($properties) && isset($properties['config']))
+            $properties['config'] = json_encode($properties['config']);
+
         // TODO: add properties check
         $this->clearCache();
         $user_model = $this->getModel()->user;
