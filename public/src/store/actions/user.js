@@ -3,7 +3,7 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchCurrentUser = ({ commit }) => {
+export const fetchCurrentUser = ({ commit, dispatch }) => {
   commit(types.FETCHING_USER, true)
 
   return api.fetchUser({ eid: 'me' }).then(response => {
@@ -13,23 +13,28 @@ export const fetchCurrentUser = ({ commit }) => {
     commit(types.FETCHED_USER, user)
     commit(types.FETCHING_USER, false)
 
-    api.fetchUserStatistics({ eid: 'me' }).then(stats_response => {
-      var stats_json = _.assign({},
-        _.pick(user, ['first_name','last_name','email']), {
-          username: _.get(user, 'user_name'),
-          createdAt: _.get(user, 'created')
-        },
-        stats_response.body
-      )
-
-      analytics.identify(_.get(user, 'eid'), stats_json)
-    })
+    dispatch('fetchUserStatistics', { user })
 
     return response
   }, response => {
     // error callback
     commit(types.FETCHING_USER, false)
     return response
+  })
+}
+
+export const fetchUserStatistics = ({ commit }, { user }) => {
+
+  return api.fetchUserStatistics({ eid: 'me' }).then(stats_response => {
+    var stats_json = _.assign({},
+      _.pick(user, ['first_name','last_name','email']), {
+        username: _.get(user, 'user_name'),
+        createdAt: _.get(user, 'created')
+      },
+      stats_response.body
+    )
+
+    analytics.identify(_.get(user, 'eid'), stats_json)
   })
 }
 
