@@ -13,7 +13,7 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
     commit(types.FETCHED_USER, user)
     commit(types.FETCHING_USER, false)
 
-    dispatch('fetchUserStatistics', { user })
+    dispatch('fetchCurrentUserStatistics')
 
     return response
   }, response => {
@@ -23,7 +23,8 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
   })
 }
 
-export const fetchUserStatistics = ({ commit }, { user }) => {
+export const fetchCurrentUserStatistics = ({ commit, state }) => {
+  var user = _.get(state, 'objects.'+state.active_user_eid)
 
   return api.fetchUserStatistics({ eid: 'me' }).then(stats_response => {
     var stats_json = _.assign({},

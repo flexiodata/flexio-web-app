@@ -44,18 +44,10 @@
         return false
       }
     },
-    mounted() {
-      // ref: http://stackoverflow.com/questions/35816118/vuejs-laravel-do-a-post-request-when-user-leaves-screen
-      window.onbeforeunload = this.leaving
-    },
     methods: {
       ...mapGetters([
         'getActiveUser'
-      ]),
-      leaving() {
-        this.$store.dispatch('fetchUserStatistics', { user: this.getActiveUser() })
-        return null
-      }
+      ])
     }
   }
 </script>

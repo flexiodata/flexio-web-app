@@ -20,7 +20,7 @@ export const fetchProjects = ({ commit }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const createProject = ({ commit }, { attrs }) => {
+export const createProject = ({ commit, dispatch }, { attrs }) => {
   commit(types.CREATING_PROJECT, { attrs })
 
   return api.createProject({ attrs }).then(response => {
@@ -34,6 +34,7 @@ export const createProject = ({ commit }, { attrs }) => {
     })
 
     analytics.track('Created Project', analytics_payload)
+    dispatch('fetchCurrentUserStatistics')
 
     commit(types.CREATED_PROJECT, { attrs, project })
 

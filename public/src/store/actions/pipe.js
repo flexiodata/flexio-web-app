@@ -20,7 +20,7 @@ export const fetchPipes = ({ commit }, project_eid) => {
 
 // ----------------------------------------------------------------------- //
 
-export const createPipe = ({ commit }, { attrs }) => {
+export const createPipe = ({ commit, dispatch }, { attrs }) => {
   commit(types.CREATING_PIPE, { attrs })
 
   return api.createPipe({ attrs }).then(response => {
@@ -39,6 +39,7 @@ export const createPipe = ({ commit }, { attrs }) => {
     })
 
     analytics.track('Created Pipe', analytics_payload)
+    dispatch('fetchCurrentUserStatistics')
 
     commit(types.CREATED_PIPE, { attrs, pipe })
 
