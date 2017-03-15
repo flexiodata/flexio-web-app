@@ -175,11 +175,10 @@ class StreamFileWriter
 
     public function close()
     {
-        $this->inserter = false;
-
         if ($this->service !== false)
             $this->service->close();
 
+        $this->inserter = false;
         $this->service = false;
     }
 
