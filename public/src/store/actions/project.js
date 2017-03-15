@@ -25,9 +25,17 @@ export const createProject = ({ commit }, { attrs }) => {
 
   return api.createProject({ attrs }).then(response => {
     // success callback
-    commit(types.CREATED_PROJECT, { attrs, project: response.body })
+    var project = response.body
+    var analytics_payload = _.pick(project, ['eid', 'name', 'description'])
 
-    analytics.track('Created Project', _.assign({}, response.body))
+    // add Segment-friendly keys
+    _.assign(analytics_payload, {
+      createdAt: _.get(project, 'created')
+    })
+
+    analytics.track('Created Project', analytics_payload)
+
+    commit(types.CREATED_PROJECT, { attrs, project })
 
     return response
   }, response => {
