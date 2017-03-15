@@ -487,5 +487,83 @@ class Test
         }
         ',true);
         TestCheck::assertArray('F.1', 'StreamReader/StreamWriter; test datetime type with multiple rows and combinations of values',  $actual, $expected, $results);
+
+
+
+        // TEST: test range of rows/values on boolean type
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            {"name" : "bool_1a", "type" : "boolean", "width" : 1, "scale" : 0},
+            {"name" : "bool_1b", "type" : "boolean", "width" : 1, "scale" : 0},
+            {"name" : "bool_1c", "type" : "boolean", "width" : 1, "scale" : 0},
+            {"name" : "bool_1d", "type" : "boolean", "width" : 1, "scale" : 0},
+            {"name" : "bool_1e", "type" : "boolean", "width" : 1, "scale" : 0},
+            {"name" : "bool_1f", "type" : "boolean", "width" : 1, "scale" : 0},
+            {"name" : "bool_1g", "type" : "boolean", "width" : 1, "scale" : 0},
+            {"name" : "bool_1h", "type" : "boolean", "width" : 1, "scale" : 0}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $data = json_decode('
+        [
+            [ true, true,  false, true,  true,  false, true,  false ],
+            [ true, false, false, true,  true,  false, true,  false ],
+            [ true, false, false, true,  true,  false, true,  false ],
+            [ true, false, false, null,  true,  false, true,  false ],
+            [ true, false, false, null,  true,  false, true,  false ],
+            [ true, false, false, false, false, true,  false, true  ],
+            [ true, false, false, false, false, true,  false, true  ],
+            [ true, false, false, false, false, true,  false, true  ],
+            [ true, false, false, true,  true,  false, true,  false ],
+            [ true, false, false, true,  true,  false, true,  false ],
+            [ true, false, false, true,  true,  false, true,  false ],
+            [ true, false, false, false, false, true,  false, true  ],
+            [ true, false, false, false, false, true,  false, true  ],
+            [ true, false, false, false, false, true,  false, true  ],
+            [ true, false, false, null,  false, true,  false, true  ],
+            [ true, false, false, null,  true,  false, true,  false ],
+            [ true, false, false, null,  true,  false, true,  false ],
+            [ true, false, false, true,  true,  false, true,  false ],
+            [ true, false, false, true,  true,  false, true,  false ],
+            [ true, false, true,  null,  true,  false, true,  false ]
+        ]
+        ',true);
+
+        foreach ($data as $row)
+        {
+            $writer->write($row);
+        }
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $last_row = false;
+        while (true)
+        {
+            $row = $reader->readRow();
+            if ($row === false)
+                break;
+
+            $last_row = $row;
+        }
+        $reader->close();
+        $actual = $last_row;
+        $expected = json_decode('
+        {
+            "bool_1a": true,
+            "bool_1b": false,
+            "bool_1c": true,
+            "bool_1d": null,
+            "bool_1e": true,
+            "bool_1f": false,
+            "bool_1g": true,
+            "bool_1h": false
+        }
+        ',true);
+        TestCheck::assertArray('G.1', 'StreamReader/StreamWriter; test boolean type with multiple rows and combinations of values',  $actual, $expected, $results);
     }
 }
