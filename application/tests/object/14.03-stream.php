@@ -99,7 +99,7 @@ class Test
             "char_1h": "00000E"
         }
         ',true);
-        TestCheck::assertArray('A.1', 'StreamReader/StreamWriter; test character types with multiple rows and combinations of values',  $actual, $expected, $results);
+        TestCheck::assertArray('A.1', 'StreamReader/StreamWriter; test character type with multiple rows and combinations of values',  $actual, $expected, $results);
 
 
 
@@ -176,6 +176,83 @@ class Test
             "num_1h": "0.000000000005"
         }
         ',true);
-        TestCheck::assertArray('B.1', 'StreamReader/StreamWriter; test character types with multiple rows and combinations of values',  $actual, $expected, $results);
+        TestCheck::assertArray('B.1', 'StreamReader/StreamWriter; test numeric type with multiple rows and combinations of values',  $actual, $expected, $results);
+
+
+
+        // TEST: test range of rows/values on numeric type
+
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        [
+            {"name" : "num_2a", "type" : "double", "width" : 8, "scale" : 0},
+            {"name" : "num_2b", "type" : "double", "width" : 8, "scale" : 0},
+            {"name" : "num_2c", "type" : "double", "width" : 8, "scale" : 0},
+            {"name" : "num_2d", "type" : "double", "width" : 8, "scale" : 0},
+            {"name" : "num_2e", "type" : "double", "width" : 8, "scale" : 0},
+            {"name" : "num_2f", "type" : "double", "width" : 8, "scale" : 12},
+            {"name" : "num_2g", "type" : "double", "width" : 8, "scale" : 0},
+            {"name" : "num_2h", "type" : "double", "width" : 8, "scale" : 12}
+        ]
+        ',true))->get();
+        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $data = json_decode('
+        [
+            [1, 1, 0,     4,  4000000000000,  0.000000000004,  4000000000000,  0.000000000004],
+            [1, 0, 0,     4,  4000000000000,  0.000000000004,  4000000000000,  0.000000000004],
+            [1, 0, 0,     4,  4000000000000,  0.000000000004,  4000000000000,  0.000000000004],
+            [1, 0, 0,  null,  4000000000000,  0.000000000004,  4000000000000,  0.000000000004],
+            [1, 0, 0,  null,  4000000000000,  0.000000000004,  4000000000000,  0.000000000004],
+            [1, 0, 0,    -2, -2000000000000, -0.000000000002, -2000000000000, -0.000000000002],
+            [1, 0, 0,    -3, -3000000000000, -0.000000000003, -3000000000000, -0.000000000003],
+            [1, 0, 0,    -1, -1000000000000, -0.000000000001, -1000000000000, -0.000000000001],
+            [1, 0, 0,     2,  2000000000000,  0.000000000002,  2000000000000,  0.000000000002],
+            [1, 0, 0,     3,  3000000000000,  0.000000000003,  3000000000000,  0.000000000003],
+            [1, 0, 0,     1,  1000000000000,  0.000000000001,  1000000000000,  0.000000000001],
+            [1, 0, 0,    -4, -4000000000000, -0.000000000004, -4000000000000, -0.000000000004],
+            [1, 0, 0,    -4, -4000000000000, -0.000000000004, -4000000000000, -0.000000000004],
+            [1, 0, 0,    -4, -4000000000000, -0.000000000004, -4000000000000, -0.000000000004],
+            [1, 0, 0,  null, -4000000000000, -0.000000000004, -4000000000000, -0.000000000004],
+            [1, 0, 0,  null,  5000000000000,  0.000000000005,  5000000000000,  0.000000000005],
+            [1, 0, 0,  null,  5000000000000,  0.000000000005,  5000000000000,  0.000000000005],
+            [1, 0, 0,     5,  5000000000000,  0.000000000005,  5000000000000,  0.000000000005],
+            [1, 0, 0,     5,  5000000000000,  0.000000000005,  5000000000000,  0.000000000005],
+            [1, 0, 1,     5,  5000000000000,  0.000000000005,  5000000000000,  0.000000000005]
+        ]
+        ',true);
+        foreach ($data as $row)
+        {
+            $writer->write($row);
+        }
+        $writer->close();
+        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $last_row = false;
+        while (true)
+        {
+            $row = $reader->readRow();
+            if ($row === false)
+                break;
+
+            $last_row = $row;
+        }
+        $reader->close();
+        $actual = $last_row;
+        $expected = json_decode('
+        {
+            "num_2a": "1",
+            "num_2b": "0",
+            "num_2c": "1",
+            "num_2d": "5",
+            "num_2e": "5000000000000",
+            "num_2f": "5e-12",
+            "num_2g": "5000000000000",
+            "num_2h": "5e-12"
+        }
+        ',true);
+        TestCheck::assertArray('C.1', 'StreamReader/StreamWriter; test double type with multiple rows and combinations of values',  $actual, $expected, $results);
     }
 }
