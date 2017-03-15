@@ -757,7 +757,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : null}]',true);
+        $expected = json_decode('{ "f1" : null}',true);
         TestCheck::assertArray('E.1', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -776,7 +776,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : ""}]',true);
+        $expected = json_decode('{ "f1" : ""}',true);
         TestCheck::assertArray('E.2', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -795,7 +795,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : "\t"}]',true);
+        $expected = json_decode('{ "f1" : "\t"}',true);
         TestCheck::assertArray('E.3', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -814,7 +814,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : "\r"}]',true);
+        $expected = json_decode('{ "f1" : "\r"}',true);
         TestCheck::assertArray('E.4', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -833,7 +833,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : "\n"}]',true);
+        $expected = json_decode('{ "f1" : "\n"}',true);
         TestCheck::assertArray('E.5', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -852,7 +852,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : "\0"}]',true);
+        $expected = json_decode('{ "f1" : "\0"}',true);
         TestCheck::assertArray('E.6', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -871,7 +871,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : "\'"}]',true);
+        $expected = json_decode('{ "f1" : "\'"}',true);
         TestCheck::assertArray('E.7', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -890,7 +890,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : "\""}]',true);
+        $expected = json_decode('{ "f1" : "\""}',true);
         TestCheck::assertArray('E.8', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -909,7 +909,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : "("}]',true);
+        $expected = json_decode('{ "f1" : "("}',true);
         TestCheck::assertArray('E.9', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -928,7 +928,7 @@ class Test
         $reader = \Flexio\Object\StreamReader::create($stream_info);
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('[{ "f1" : ")"}]',true);
+        $expected = json_decode('{ "f1" : ")"]',true);
         TestCheck::assertArray('E.10', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
     }
 }
