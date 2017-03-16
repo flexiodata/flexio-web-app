@@ -36,7 +36,7 @@ export const fetchCurrentUserStatistics = ({ commit, state }) => {
     }, stats_response.body)
 
 
-    analytics.identify(_.get(user, 'eid'), stats_json)
+    analytics.identify(_.get(user, 'eid'), stats_payload)
   })
 }
 
