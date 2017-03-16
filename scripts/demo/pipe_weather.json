@@ -1,5 +1,6 @@
 {
   "name": "Weather Data Merge",
+  "ename": "weather-data-merge",
   "description": "Historical weather from 538 repository on GitHub",
   "task": [
     {

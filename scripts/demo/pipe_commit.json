@@ -1,5 +1,6 @@
 {
     "name": "GitHub Commits",
+    "ename": "github-commits",
     "description": "Review commits across multiple repositories",
     "task": [
         {
