@@ -495,13 +495,13 @@ class User
 
         // create sample pipes
         $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
-        self::createSamplePipe($user_eid, $project->getEid(), '', '', $demo_dir .'pipe_commit.json');
-        self::createSamplePipe($user_eid, $project->getEid(), '', '', $demo_dir .'pipe_contact.json');
+        self::createSamplePipe($user_eid, $project->getEid(), $demo_dir .'pipe_commit.json');
+        self::createSamplePipe($user_eid, $project->getEid(), $demo_dir .'pipe_contact.json');
 
         return true;
     }
 
-    private static function createSamplePipe($user_eid, $project_eid, $name, $description, $file_name)
+    private static function createSamplePipe($user_eid, $project_eid, $file_name)
     {
         // STEP 1: read the pipe file and convert it to JSON
         $f = @fopen($file_name, 'rb');
@@ -521,8 +521,24 @@ class User
             return false;
 
         // STEP 2: create a pipe container and add it to the project
-        $call_params['name'] = isset_or($pipe_definition['name'], $name);
-        $call_params['description'] = isset_or($pipe_definition['description'], $description);
+        $user = \Flexio\Object\User::load($user_eid);
+        $user_info = $user->get();
+        $username = $user_info['user_name'];
+
+        $ename_suffix = \Flexio\Base\Util::generateRandomString(4);
+        $ename = isset_or($pipe_definition['ename'], $ename_suffix);
+        $ename = $username . '-' . $ename;
+
+        if (\Flexio\Base\Identifier::isValid($ename) === false)
+            $ename = '';
+
+        $object = \Flexio\Object\Store::load($ename); // see if the ename exists; if it doesn't don't set an ename
+        if ($object !== false)
+            $ename = '';
+
+        $call_params['name'] = isset_or($pipe_definition['name'], 'Sample Pipe');
+        $call_params['ename'] = $ename;
+        $call_params['description'] = isset_or($pipe_definition['description'], '');
         $call_params['task'] = array();
         if (isset($pipe_definition['task']))
             $call_params['task'] = $pipe_definition['task'];
