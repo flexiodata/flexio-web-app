@@ -1,5 +1,6 @@
 {
     "name": "Contact Refinement",
+    "ename": "contact-refinement",
     "description": "Select a subset of a list of contacts",
     "task": [
         {
