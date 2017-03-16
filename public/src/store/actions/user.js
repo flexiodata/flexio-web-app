@@ -26,15 +26,14 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
 export const fetchCurrentUserStatistics = ({ commit, state }) => {
   var user = _.get(state, 'objects.'+state.active_user_eid)
 
-  return api.fetchUserStatistics({ eid: 'me' }).then(stats_response => {
+  return api.fetchUserStatistics({ eid: 'me' }).then(response => {
     var stats_payload = _.pick(user, ['first_name','last_name','email'])
 
     // add Segment-friendly keys
     _.assign(stats_payload, {
       username: _.get(user, 'user_name'),
       createdAt: _.get(user, 'created')
-    }, stats_response.body)
-
+    }, response.body)
 
     analytics.identify(_.get(user, 'eid'), stats_payload)
   })
