@@ -15,7 +15,9 @@
       v-for="(project, index) in projects"
       :item="project"
       :index="index"
-      @activate="onItemActivate"
+      @edit="onItemEdit"
+      @leave="onItemLeave"
+      @delete="onItemDelete"
     >
     </project-item>
   </div>
@@ -49,8 +51,14 @@
       ...mapGetters([
         'getActiveUserProjects'
       ]),
-      onItemActivate(item) {
-        this.$emit('item-activate', item)
+      onItemEdit(item) {
+        this.$emit('item-edit', item)
+      },
+      onItemLeave(item) {
+        this.$emit('item-leave', item)
+      },
+      onItemDelete(item) {
+        this.$emit('item-delete', item)
       }
     }
   }
