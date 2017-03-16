@@ -270,6 +270,9 @@
         return _.kebabCase('username-my-alias')
       },
       ename_error() {
+        if (_.get(this.pipe, 'ename') === _.get(this.original_pipe, 'ename'))
+          return ''
+
         return _.get(this.ss_errors, 'ename.message', '')
       }
     },

@@ -193,6 +193,9 @@
         return _.kebabCase('username-my-alias')
       },
       ename_error() {
+        if (_.get(this.connection, 'ename') === _.get(this.original_connection, 'ename'))
+          return ''
+
         return _.get(this.ss_errors, 'ename.message', '')
       }
     },
