@@ -95,6 +95,8 @@
               label="Alias"
               help=" "
               :placeholder="alias_placeholder"
+              :error="ename_error"
+              :invalid="ename_error.length > 0"
               v-model="pipe.ename"
             ></ui-textbox>
           </div>
@@ -166,6 +168,7 @@
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
   import { mapGetters } from 'vuex'
+  import api from '../api'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
@@ -192,12 +195,16 @@
       FileChooserList,
       UrlInputList
     },
+    watch: {
+      'pipe.ename': function(val, old_val) { this.validate() }
+    },
     data() {
       return {
         mode: 'edit-pipe',
         connection: {},
         connection_path: '',
         items: [],
+        ss_errors: {},
         pipe: _.extend({}, defaultAttrs()),
         original_pipe: _.extend({}, defaultAttrs())
       }
@@ -261,6 +268,9 @@
       },
       alias_placeholder() {
         return _.kebabCase('username-my-alias')
+      },
+      ename_error() {
+        return _.get(this.ss_errors, 'ename.message', '')
       }
     },
     methods: {
@@ -327,6 +337,7 @@
         })
       },
       reset(attrs) {
+        this.ss_errors = {}
         this.connection = {}
         this.connection_path = ''
         this.pipe = _.extend({}, defaultAttrs(), attrs)
@@ -335,6 +346,20 @@
       onHide() {
         this.reset()
       },
+      validate: _.debounce(function(validate_key) {
+        var validate_attrs = [{
+          key: 'ename',
+          value: _.get(this.pipe, 'ename', ''),
+          type: 'ename'
+        }]
+
+        api.validate({ attrs: validate_attrs }).then((response) => {
+          var errors = _.keyBy(response.body, 'key')
+          this.ss_errors = _.get(this.pipe, 'ename', '').length > 0 && _.size(errors) > 0 ? _.assign({}, errors) : _.assign({})
+        }, (response) => {
+          // error callback
+        })
+      }, 300),
       addConnection() {
         this.$emit('add-connection')
       },

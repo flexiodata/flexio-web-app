@@ -12,7 +12,7 @@
         >
       </div>
       <div class="flex-none">
-        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openAddModal()">New pipe</btn>
+        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openPipeAddModal()">New pipe</btn>
       </div>
     </div>
 
@@ -21,20 +21,20 @@
       class="flex-fill overflow-auto"
       :filter="filter"
       :project-eid="projectEid"
-      @item-edit="openEditModal"
+      @item-edit="openPipeEditModal"
       @item-duplicate="duplicatePipe"
-      @item-share="openShareModal"
-      @item-schedule="openScheduleModal"
+      @item-share="openPipeShareModal"
+      @item-schedule="openPipeScheduleModal"
     ></pipe-list>
 
     <!-- add modal -->
     <pipe-props-modal
       ref="modal-add-pipe"
-      open-from=".btn-add"
-      close-to=".btn-add"
       :project-eid="projectEid"
-      @add-connection="openConnectionModal"
+      @add-connection="openConnectionAddModal"
       @submit="tryCreatePipe"
+      @hide="show_pipe_add_modal = false"
+      v-if="show_pipe_add_modal"
     ></pipe-props-modal>
 
     <!-- edit modal -->
@@ -42,21 +42,23 @@
       ref="modal-edit-pipe"
       :project-eid="projectEid"
       @submit="tryUpdatePipe"
+      @hide="show_pipe_edit_modal = false"
+      v-if="show_pipe_edit_modal"
     ></pipe-props-modal>
 
     <!-- share modal -->
     <pipe-share-modal
       ref="modal-share-pipe"
-      @hide="show_share_modal = false"
-      v-if="show_share_modal"
+      @hide="show_pipe_share_modal = false"
+      v-if="show_pipe_share_modal"
     ></pipe-share-modal>
 
     <!-- schedule modal -->
     <pipe-schedule-modal
       ref="modal-schedule-pipe"
       @submit="trySchedulePipe"
-      @hide="show_schedule_modal = false"
-      v-if="show_schedule_modal"
+      @hide="show_pipe_schedule_modal = false"
+      v-if="show_pipe_schedule_modal"
     ></pipe-schedule-modal>
 
     <!-- connection modal -->
@@ -64,6 +66,8 @@
       ref="modal-add-connection"
       :project-eid="projectEid"
       @submit="tryAddConnection"
+      @hide="show_connection_add_modal = false"
+      v-if="show_connection_add_modal"
     ></connection-props-modal>
   </div>
 </template>
@@ -93,8 +97,11 @@
     data() {
       return {
         filter: '',
-        show_share_modal: false,
-        show_schedule_modal: false
+        show_pipe_add_modal: false,
+        show_pipe_edit_modal: false,
+        show_pipe_share_modal: false,
+        show_pipe_schedule_modal: false,
+        show_connection_add_modal: false
       }
     },
     computed: {
@@ -115,23 +122,26 @@
       ...mapGetters([
         'getAllProjects'
       ]),
-      openAddModal(ref, attrs) {
-        this.$refs['modal-add-pipe'].open()
+      openPipeAddModal(ref, attrs) {
+        this.show_pipe_add_modal = true
+        this.$nextTick(() => { this.$refs['modal-add-pipe'].open() })
       },
-      openEditModal(item) {
-        this.$refs['modal-edit-pipe'].open(item)
+      openPipeEditModal(item) {
+        this.show_pipe_edit_modal = true
+        this.$nextTick(() => { this.$refs['modal-edit-pipe'].open(item) })
       },
-      openShareModal(item) {
-        this.show_share_modal = true
+      openPipeShareModal(item) {
+        this.show_pipe_share_modal = true
         this.$nextTick(() => { this.$refs['modal-share-pipe'].open(item) })
       },
-      openScheduleModal(item) {
-        this.show_schedule_modal = true
+      openPipeScheduleModal(item) {
+        this.show_pipe_schedule_modal = true
         this.$nextTick(() => { this.$refs['modal-schedule-pipe'].open(item) })
       },
-      openConnectionModal() {
+      openConnectionAddModal() {
+        this.show_connection_add_modal = true
         this.$refs['modal-add-pipe'].close()
-        this.$refs['modal-add-connection'].open()
+        this.$nextTick(() => { this.$refs['modal-add-connection'].open() })
       },
       duplicatePipe(item) {
         var attrs = {

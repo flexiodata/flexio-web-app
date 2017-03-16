@@ -99,7 +99,7 @@
         is_submitting: false,
         is_sent: false,
         error_msg: '',
-        errors: {},
+        ss_errors: {},
         invite_code: '',
         verify_code: '',
         input_cls: 'input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue lh-title ph3 pv2a w-100'
@@ -112,9 +112,9 @@
     },
     computed: {
       is_valid_invite_code() { return _.includes(INVITE_CODES, this.invite_code) },
-      email_error() { return _.get(this.errors, 'email.message', '') },
-      username_error() { return _.get(this.errors, 'user_name.message', '') },
-      password_error() { return _.get(this.errors, 'password.message', '') },
+      email_error() { return _.get(this.ss_errors, 'email.message', '') },
+      username_error() { return _.get(this.ss_errors, 'user_name.message', '') },
+      password_error() { return _.get(this.ss_errors, 'password.message', '') },
       has_email_error() { return this.email_error.length > 0 },
       has_username_error() { return this.username_error.length > 0 },
       has_password_error() { return this.password_error.length > 0 },
@@ -162,7 +162,7 @@
           validate_attrs = _.filter(validate_attrs, { key: validate_key })
 
         api.validate({ attrs: validate_attrs }).then((response) => {
-          this.errors = _.keyBy(response.body, 'key')
+          this.ss_errors = _.keyBy(response.body, 'key')
         }, (response) => {
           // error callback
         })
