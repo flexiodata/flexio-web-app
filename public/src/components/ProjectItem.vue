@@ -34,13 +34,15 @@
               },{
                 id: 'leave',
                 label: 'Leave this project',
-                icon: 'exit_to_app'
+                icon: 'exit_to_app',
+                disabled: this.is_owner ? true : false
               },{
                 type: 'divider'
               },{
                 id: 'delete',
                 label: 'Delete',
-                icon: 'delete'
+                icon: 'delete',
+                disabled: this.is_owner ? false : true
               }]"
 
               @select="onDropdownItemClick"
@@ -82,6 +84,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import moment from 'moment'
   import util from '../utils'
   import ConfirmModal from './ConfirmModal.vue'
@@ -97,6 +100,9 @@
       }
     },
     computed: {
+      ...mapState([
+        'active_user_eid'
+      ]),
       href() {
         return '/project/'+this.item.eid
       },
@@ -107,7 +113,7 @@
         return '@'+this.item.owned_by.user_name
       },
       is_owner() {
-        return _.toLower(_.get(this.item, 'user_group')) == 'owner'
+        return _.toLower(_.get(this.item, 'owned_by.eid')) == this.active_user_eid
       },
       members() {
         var cnt = this.item.follower_count
@@ -136,9 +142,19 @@
         this.$nextTick(() => { this.$refs['modal-leave-confirm'].open() })
       },
       onLeaveConfirmModalClose(modal) {
-        /*
-        TODO...
-        */
+        var project_eid = this.item.eid
+        var eid = this.active_user_eid
+
+        this.$store.dispatch('deleteMember', { project_eid, eid }).then(response => {
+          if (response.ok)
+          {
+            modal.close()
+          }
+           else
+          {
+            // TODO: add error handling
+          }
+        })
       }
     }
   }

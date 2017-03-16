@@ -37,7 +37,17 @@ export default {
   [types.DELETING_MEMBER] (state, { project_eid, eid }) {},
 
   [types.DELETED_MEMBER] (state, { project_eid, eid }) {
-    removeObject(state, eid)
+    if (eid == state.active_user_eid)
+    {
+      // if the user that is being removed is the active user, this is a user
+      // that is leaving a project, so remove the project from the store
+      removeObject(state, project_eid)
+    }
+     else
+    {
+      // otherwise, remove the user from the store
+      removeObject(state, eid)
+    }
   }
 
   // ----------------------------------------------------------------------- //
