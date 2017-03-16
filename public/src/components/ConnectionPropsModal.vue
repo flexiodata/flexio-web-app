@@ -68,6 +68,8 @@
                 label="Alias"
                 help=" "
                 :placeholder="alias_placeholder"
+                :error="ename_error"
+                :invalid="ename_error.length > 0"
                 v-model="connection.ename"
               ></ui-textbox>
             </div>
@@ -111,6 +113,7 @@
   import { HOSTNAME } from '../constants/common'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapGetters } from 'vuex'
+  import api from '../api'
   import Btn from './Btn.vue'
   import ServiceList from './ServiceList.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
@@ -134,10 +137,14 @@
       ConnectionIcon,
       ConnectionConfigurePanel
     },
+    watch: {
+      'connection.ename': function(val, old_val) { this.validate() }
+    },
     data() {
       return {
         is_open: false,
         mode: 'add',
+        ss_errors: {},
         connection: _.extend({}, DEFAULT_ATTRS),
         original_connection: _.extend({}, DEFAULT_ATTRS)
       }
@@ -184,6 +191,9 @@
       },
       alias_placeholder() {
         return _.kebabCase('username-my-alias')
+      },
+      ename_error() {
+        return _.get(this.ss_errors, 'ename.message', '')
       }
     },
     methods: {
@@ -212,6 +222,7 @@
         })
       },
       reset(attrs) {
+        this.ss_errors = {}
         this.connection = _.extend({}, DEFAULT_ATTRS, attrs)
         this.original_connection = _.extend({}, DEFAULT_ATTRS, attrs)
       },
@@ -219,6 +230,20 @@
         this.reset()
         this.is_open = false
       },
+      validate: _.debounce(function(validate_key) {
+        var validate_attrs = [{
+          key: 'ename',
+          value: _.get(this.connection, 'ename', ''),
+          type: 'ename'
+        }]
+
+        api.validate({ attrs: validate_attrs }).then((response) => {
+          var errors = _.keyBy(response.body, 'key')
+          this.ss_errors = _.get(this.connection, 'ename', '').length > 0 && _.size(errors) > 0 ? _.assign({}, errors) : _.assign({})
+        }, (response) => {
+          // error callback
+        })
+      }, 300),
       createPendingConnection(item) {
         var me = this
         var attrs = _.extend({}, this.connection, {
