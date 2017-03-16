@@ -87,7 +87,7 @@
         </div>
 
         <!-- v-else-if; process failed -->
-        <div v-else-if="is_process_failed" class="flex flex-column flex-fill justify-center tc mt3 dark-red ba b--black-10 overflow-y-auto">
+        <div v-else-if="is_subprocess_failed" class="flex flex-column flex-fill justify-center tc mt3 dark-red ba b--black-10 overflow-y-auto">
           <div>
             <i class="material-icons v-mid f1 db">error</i>
             <p>An error occured while running the pipe</p>
@@ -97,6 +97,7 @@
               btn-outline
               class="ttu b v-mid dib"
               @click="sendErrorReport"
+              v-if="false"
             >
               Send Error Report
             </btn>
@@ -288,7 +289,6 @@
 
       active_process()      { return _.last(this.getActiveDocumentProcesses()) },
       is_process_running()  { return _.get(this.active_process, 'process_status', '') == PROCESS_STATUS_RUNNING },
-      is_process_failed()   { return _.get(this.active_process, 'process_status', '') == PROCESS_STATUS_FAILED },
       is_process_run_mode() { return _.get(this.active_process, 'process_mode', '') == PROCESS_MODE_RUN },
 
       execute_code() {
@@ -317,6 +317,10 @@
           .get('subprocesses')
           .find(function(s) { return _.get(s, 'task.eid') == me.active_task_eid })
           .value()
+      },
+
+      is_subprocess_failed() {
+        return _.get(this.active_subprocess, 'process_status', '') == PROCESS_STATUS_FAILED
       },
 
       active_task_inputs() {
