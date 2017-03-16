@@ -282,7 +282,6 @@ class Api
                 return false;
 
             // system (public)
-            case 'POS /signup/check'                   : return '\Flexio\Api\System::signupcheck'; // TODO: deprecated; replaced by /validate
             case 'POS /validate'                       : return '\Flexio\Api\System::validate';
             case 'POS /login'                          : return '\Flexio\Api\System::login';
             case 'POS /logout'                         : return '\Flexio\Api\System::logout';
