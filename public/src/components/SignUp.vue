@@ -159,7 +159,11 @@
 
         // if a validation key is provided; only run validation on that key
         if (!_.isNil(validate_key))
-          validate_attrs = _.filter(validate_attrs, { key: validate_key })
+        {
+          validate_attrs = _.filter(validate_attrs, (attr) => {
+            return attr.key == validate_key || _.has(this.ss_errors, attr.key)
+          })
+        }
 
         api.validate({ attrs: validate_attrs }).then((response) => {
           this.ss_errors = _.keyBy(response.body, 'key')
