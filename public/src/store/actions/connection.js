@@ -25,7 +25,18 @@ export const createConnection = ({ commit }, { attrs }) => {
 
   return api.createConnection({ attrs }).then(response => {
     // success callback
-    commit(types.CREATED_CONNECTION, { attrs, connection: response.body })
+    var connection = response.body
+    var analytics_payload = _.pick(connection, ['eid', 'name', 'description', 'ename', 'connection_type'])
+
+    // add Segment-friendly keys
+    _.assign(analytics_payload, {
+      createdAt: _.get(connection, 'created')
+    })
+
+    analytics.track('Created Connection', analytics_payload)
+
+    commit(types.CREATED_CONNECTION, { attrs, connection })
+
     return response
   }, response => {
     // error callback

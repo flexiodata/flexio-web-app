@@ -43,6 +43,9 @@ export const createMembers = ({ commit }, { project_eid, attrs }) => {
 
     // success callback
     commit(types.CREATED_MEMBERS, { project_eid, attrs, members: members })
+
+    analytics.track('Invited members', { member_count: _.size(members) })
+
     return response
   }, response => {
     // error callback

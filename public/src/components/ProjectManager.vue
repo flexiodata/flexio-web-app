@@ -22,7 +22,8 @@
     <!-- list -->
     <project-list
       :filter="filter"
-      @item-activate="openEditModal"
+      @item-edit="openEditModal"
+      @item-delete="openDeleteModal"
       class="flex-fill"
     ></project-list>
 
@@ -38,8 +39,13 @@
     <project-props-modal
       ref="modal-edit"
       @submit="tryUpdateProject"
-      @submit-delete="tryDeleteProject"
     ></project-props-modal>
+
+    <!-- delete modal -->
+    <project-delete-modal
+      ref="modal-delete"
+      @submit-delete="tryDeleteProject"
+    ></project-delete-modal>
   </div>
 </template>
 
@@ -47,6 +53,8 @@
   import Spinner from './Spinner.vue'
   import ProjectList from './ProjectList.vue'
   import ProjectPropsModal from './ProjectPropsModal.vue'
+  import ProjectDeleteModal from './ProjectDeleteModal.vue'
+  import ConfirmModal from './ConfirmModal.vue'
   import Btn from './Btn.vue'
   import { mapState, mapGetters } from 'vuex'
 
@@ -55,6 +63,7 @@
       Spinner,
       ProjectList,
       ProjectPropsModal,
+      ProjectDeleteModal,
       Btn
     },
     data() {
@@ -79,6 +88,9 @@
       },
       openEditModal(item) {
         this.$refs['modal-edit'].open(item)
+      },
+      openDeleteModal(item) {
+        this.$refs['modal-delete'].open(item)
       },
       tryFetchProjects() {
         if (!this.hasProjects())

@@ -26,6 +26,9 @@ export const createUserToken = ({ commit }, { eid, attrs }) => {
   return api.createUserToken({ eid, attrs }).then(response => {
     // success callback
     commit(types.CREATED_TOKEN, { eid, attrs: response.body })
+
+    analytics.track('Created API Key')
+
     return response
   }, response => {
     // error callback
