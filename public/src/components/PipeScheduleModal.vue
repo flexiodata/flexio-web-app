@@ -105,7 +105,7 @@
   ]
 
   var frequency_options = [
-    { label: 'Every minute', val: schedule.SCHEDULE_FREQUENCY_ONE_MINUTE },
+    //{ label: 'Every minute', val: schedule.SCHEDULE_FREQUENCY_ONE_MINUTE },
     { label: 'Every hour',   val: schedule.SCHEDULE_FREQUENCY_HOURLY     },
     { label: 'Every day',    val: schedule.SCHEDULE_FREQUENCY_DAILY      },
     { label: 'Every week',   val: schedule.SCHEDULE_FREQUENCY_WEEKLY     },
