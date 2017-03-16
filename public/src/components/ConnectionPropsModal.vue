@@ -221,7 +221,10 @@
           if (!success)
             return
 
-          this.$emit('submit', this.connection, this)
+          this.validate(() => {
+            if (this.ename_error.length == 0)
+              this.$emit('submit', this.connection, this)
+          })
         })
       },
       reset(attrs) {
@@ -233,7 +236,7 @@
         this.reset()
         this.is_open = false
       },
-      validate: _.debounce(function(validate_key) {
+      validate: _.debounce(function(callback) {
         var validate_attrs = [{
           key: 'ename',
           value: _.get(this.connection, 'ename', ''),
@@ -243,6 +246,9 @@
         api.validate({ attrs: validate_attrs }).then((response) => {
           var errors = _.keyBy(response.body, 'key')
           this.ss_errors = _.get(this.connection, 'ename', '').length > 0 && _.size(errors) > 0 ? _.assign({}, errors) : _.assign({})
+
+          if (_.isFunction(callback))
+            callback()
         }, (response) => {
           // error callback
         })

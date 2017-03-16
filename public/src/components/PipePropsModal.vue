@@ -336,7 +336,10 @@
             _.set(pipe, 'task[0].metadata.connection_type', _.get(this.connection, 'connection_type', ''))
           }
 
-          this.$nextTick(() => { this.$emit('submit', _.omit(pipe, ['mode']), this) })
+          this.validate(() => {
+            if (this.ename_error.length == 0)
+              this.$nextTick(() => { this.$emit('submit', _.omit(pipe, ['mode']), this) })
+          })
         })
       },
       reset(attrs) {
@@ -349,7 +352,7 @@
       onHide() {
         this.reset()
       },
-      validate: _.debounce(function(validate_key) {
+      validate: _.debounce(function(callback) {
         var validate_attrs = [{
           key: 'ename',
           value: _.get(this.pipe, 'ename', ''),
@@ -359,6 +362,9 @@
         api.validate({ attrs: validate_attrs }).then((response) => {
           var errors = _.keyBy(response.body, 'key')
           this.ss_errors = _.get(this.pipe, 'ename', '').length > 0 && _.size(errors) > 0 ? _.assign({}, errors) : _.assign({})
+
+          if (_.isFunction(callback))
+            callback()
         }, (response) => {
           // error callback
         })
