@@ -34,6 +34,7 @@
                 icon: 'import_contacts'
               },{
                 id: 'support',
+                htmlId: 'open-intercom-inbox',
                 label: 'Contact Support',
                 icon: 'mail_outline'
               }]"
@@ -41,6 +42,12 @@
               @select="onHelpDropdownItemClick"
               @close="$refs.helpdropdown.close()"
             >
+              <template scope="props" slot="option">
+                <div class="ui-menu-option__content" :id="props.option.htmlId">
+                  <span class="ui-icon ui-menu-option__icon material-icons mail_outline">{{props.option.icon}}</span>
+                  <div class="ui-menu-option__text">{{props.option.label}}</div>
+                </div>
+              </template>
             </ui-menu>
           </ui-popover>
 
@@ -208,7 +215,7 @@
         switch (menu_item.id)
         {
           case 'docs':    return this.openHelpDocs()
-          case 'support': return this.openEmailSupportModal()
+          //case 'support': return this.openEmailSupportModal()
         }
       },
       onUserDropdownItemClick(menu_item) {
