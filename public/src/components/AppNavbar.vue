@@ -11,48 +11,7 @@
         <div v-if="user_fetching"></div>
         <div v-else-if="logged_in">
           <a
-            class="b dib pointer ml1 ml2-ns pv2 ph1 ph2-ns br1 hover-bg-light-gray popover-trigger"
-            ref="helpdropdowntrigger"
-            tabindex="0"
-          >
-            <i class="material-icons md-24 v-mid blue" style="margin: 0 -2px 0 -1px">help</i>
-            <i class="material-icons v-mid black-20" style="margin: 0 -6px">arrow_drop_down</i>
-          </a>
-
-          <ui-popover
-            trigger="helpdropdowntrigger"
-            ref="helpdropdown"
-            dropdown-position="bottom right"
-          >
-            <ui-menu
-              contain-focus
-              has-icons
-
-              :options="[{
-                id: 'docs',
-                label: 'Help Docs',
-                icon: 'import_contacts'
-              },{
-                id: 'support',
-                htmlId: 'open-intercom-inbox',
-                label: 'Contact Support',
-                icon: 'mail_outline'
-              }]"
-
-              @select="onHelpDropdownItemClick"
-              @close="$refs.helpdropdown.close()"
-            >
-              <template scope="props" slot="option">
-                <div class="ui-menu-option__content" :id="props.option.htmlId">
-                  <span class="ui-icon ui-menu-option__icon material-icons mail_outline">{{props.option.icon}}</span>
-                  <div class="ui-menu-option__text">{{props.option.label}}</div>
-                </div>
-              </template>
-            </ui-menu>
-          </ui-popover>
-
-          <a
-            class="no-underline f5 b dib pointer ml1 mr0 mr2-ns pv2 ph1 ph2-ns br1 hover-bg-light-gray popover-trigger"
+            class="no-underline f5 b dib pointer ml1 mr0 mr2-ns pv1 ph1 ph2-ns br1 hover-bg-light-gray popover-trigger"
             ref="userdropdowntrigger"
             tabindex="0"
           >
@@ -70,13 +29,13 @@
               has-icons
 
               :options="[{
-                id: 'projects',
-                label: 'Projects',
-                icon: 'home'
-              },{
                 id: 'account',
                 label: 'Account',
                 icon: 'account_circle'
+              },{
+                id: 'docs',
+                label: 'Documentation',
+                icon: 'import_contacts'
               },{
                 type: 'divider'
               },{
@@ -165,7 +124,7 @@
         return _.get(this.getActiveUser(), 'email_hash', '')
       },
       user_profile_src() {
-        return 'https://secure.gravatar.com/avatar/'+this.user_email_hash+'?d=mm&s=24'
+        return 'https://secure.gravatar.com/avatar/'+this.user_email_hash+'?d=mm&s=32'
       },
       logged_in() {
         return this.user_eid.length > 0
@@ -211,18 +170,12 @@
           }
         })
       },
-      onHelpDropdownItemClick(menu_item) {
-        switch (menu_item.id)
-        {
-          case 'docs':    return this.openHelpDocs()
-          //case 'support': return this.openEmailSupportModal()
-        }
-      },
       onUserDropdownItemClick(menu_item) {
         switch (menu_item.id)
         {
           case 'projects': return this.gotoProjects()
           case 'account':  return this.gotoAccount()
+          case 'docs':     return this.openHelpDocs()
           case 'sign-out': return this.signOut()
         }
       }
