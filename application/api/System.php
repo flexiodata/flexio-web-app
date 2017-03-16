@@ -302,9 +302,9 @@ class System
         // echo back the key and whether or not it's valid (note: don't echo
         // back the value to minimize transport of values like a password)
         $result = array();
-        $result[$key] = array();
-        $result[$key]['valid'] = $valid;
-        $result[$key]['message'] = $message;
+        $result['key'] = $key;
+        $result['valid'] = $valid;
+        $result['message'] = $message;
 
         return $result;
     }

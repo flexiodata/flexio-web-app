@@ -106,9 +106,9 @@
       }
     },
     watch: {
-      email: function(val, old_val) { this.checkSignup() },
-      user_name: function(val, old_val) { this.checkSignup() },
-      password: function(val, old_val) { this.checkSignup() }
+      email: function(val, old_val) { this.checkSignup('email') },
+      user_name: function(val, old_val) { this.checkSignup('user_name') },
+      password: function(val, old_val) { this.checkSignup('password') }
     },
     computed: {
       is_valid_invite_code() { return _.includes(INVITE_CODES, this.invite_code) },
@@ -125,7 +125,6 @@
         return _
           .chain(this.$data)
           .pick(['first_name', 'last_name', 'user_name', 'email', 'password', 'verify_code'])
-          .omitBy(_.isEmpty)
           .value()
       },
       getSignInAttrs() {
@@ -141,12 +140,29 @@
           })
           .value()
       },
-      checkSignup: _.debounce(function() {
+      checkSignup: _.debounce(function(validate_key) {
         var attrs = this.getAttrs()
 
-        api.checkSignup({ attrs }).then((response) => {
-          // success callback
-          this.errors = _.assign({}, response.body)
+        var validate_attrs = [{
+          key: 'email',
+          value: _.get(attrs, 'email', ''),
+          type: 'email'
+        },{
+          key: 'user_name',
+          value: _.get(attrs, 'user_name', ''),
+          type: 'username'
+        },{
+          key: 'password',
+          value: _.get(attrs, 'password', ''),
+          type: 'password'
+        }]
+
+        // if a validation key is provided; only run validation on that key
+        if (!_.isNil(validate_key))
+          validate_attrs = _.filter(validate_attrs, { key: validate_key })
+
+        api.validate({ attrs: validate_attrs }).then((response) => {
+          this.errors = _.keyBy(response.body, 'key')
         }, (response) => {
           // error callback
         })
