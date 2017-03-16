@@ -36,7 +36,10 @@ export const createProcess = ({ commit, dispatch }, { attrs }) => {
     // we've started the process; poll for the process
     var process = response.body
     if (attrs.run === true && process.eid)
+    {
+      analytics.track('Ran Pipe')
       dispatch('fetchProcess', { eid: process.eid, poll: true })
+    }
 
     return response
   }, response => {
