@@ -14,10 +14,10 @@
                         "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-web-app\/commits"
                     },
                     {
-                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-api\/commits"
+                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-getting-started\/commits"
                     },
                     {
-                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-getting-started\/commits"
+                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-api\/commits"
                     }
                 ]
             }
@@ -29,6 +29,10 @@
                     "format": "table"
                 }
             }
+        },
+        {
+            "type": "flexio.merge",
+            "params": []
         },
         {
             "type": "flexio.calc",
@@ -81,10 +85,6 @@
                     }
                 ]
             }
-        },
-        {
-            "type": "flexio.merge",
-            "params": []
         },
         {
             "type": "flexio.sort",
