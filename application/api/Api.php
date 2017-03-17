@@ -378,9 +378,6 @@ class Api
             // comments
             case 'POS /comments'                       : return '\Flexio\Api\Comment::create';
 
-            // help
-            case 'POS /help/conversation'              : return '\Flexio\Api\Help::createConversation';
-
             // test suite
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
             case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
