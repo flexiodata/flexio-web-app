@@ -15,24 +15,24 @@
           {{error_msg}}
         </div>
         <div v-if="email_provided" class="mv3">
-          <input v-model="email" :class="input_cls" class="bg-black-10" placeholder="Email" type="email" autocomplete=off disabled>
+          <input v-model="email" :class="input_cls" class="bg-black-10" placeholder="Email" type="email" autocomplete=off spellcheck="false" disabled>
         </div>
         <div class="mv3">
-          <input v-model="first_name" v-focus :class="input_cls" placeholder="First name" type="text" autocomplete=off>
+          <input v-model="first_name" v-focus :class="input_cls" placeholder="First name" type="text" autocomplete=off spellcheck="false">
         </div>
         <div class="mv3">
-          <input v-model="last_name" :class="input_cls" placeholder="Last name" type="text" autocomplete=off>
+          <input v-model="last_name" :class="input_cls" placeholder="Last name" type="text" autocomplete=off spellcheck="false">
         </div>
         <div class="mv3">
-          <input v-model="user_name" :class="input_cls" placeholder="Pick a username" type="text" autocomplete=off>
+          <input v-model="user_name" :class="input_cls" placeholder="Pick a username" type="text" autocomplete=off spellcheck="false">
           <span class="f8 dark-red" v-show="has_username_error">{{username_error}}</span>
         </div>
         <div v-if="!email_provided" class="mv3">
-          <input v-model="email" :class="input_cls" placeholder="Email" type="email" autocomplete=off>
+          <input v-model="email" :class="input_cls" placeholder="Email" type="email" autocomplete=off spellcheck="false">
           <span class="f8 dark-red" v-show="has_email_error">{{email_error}}</span>
         </div>
         <div class="mv3">
-          <input v-model="password" @keyup.enter="trySignUp" :class="input_cls" placeholder="Password" type="password" autocomplete=off>
+          <input v-model="password" @keyup.enter="trySignUp" :class="input_cls" placeholder="Password" type="password" autocomplete=off spellcheck="false">
           <span class="f8 dark-red" v-show="has_password_error">{{password_error}}</span>
         </div>
         <div class="mv3">

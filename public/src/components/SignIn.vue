@@ -14,8 +14,8 @@
           <input type="text" v-model="username" :class="input_cls" placeholder="Email or username" v-else v-focus>
         </div>
         <div class="mv3">
-          <input v-model="password" @keyup.enter="trySignIn" :class="input_cls" placeholder="Password" type="password" autocomplete=off v-if="username_provided" v-focus>
-          <input v-model="password" @keyup.enter="trySignIn" :class="input_cls" placeholder="Password" type="password" autocomplete=off v-else>
+          <input v-model="password" @keyup.enter="trySignIn" :class="input_cls" placeholder="Password" type="password" autocomplete=off spellcheck="false" v-if="username_provided" v-focus>
+          <input v-model="password" @keyup.enter="trySignIn" :class="input_cls" placeholder="Password" type="password" autocomplete=off spellcheck="false" v-else>
           <router-link to="/forgotpassword" class="f8 fw6 black-60 link underline-hover dib">Forgot your password?</router-link>
         </div>
         <div class="mv3">

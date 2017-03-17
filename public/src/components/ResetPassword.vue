@@ -23,10 +23,10 @@
           <input v-model="verify_code" type="hidden">
         </div>
         <div class="mv3">
-          <input v-model="password" v-focus :class="input_cls" placeholder="Password" type="password" autocomplete=off>
+          <input v-model="password" v-focus :class="input_cls" placeholder="Password" type="password" autocomplete=off spellcheck="false">
         </div>
         <div class="mv3">
-          <input v-model="password2" @keyup.enter="changePassword" :class="input_cls" placeholder="Retype Password" type="password" autocomplete=off>
+          <input v-model="password2" @keyup.enter="changePassword" :class="input_cls" placeholder="Retype Password" type="password" autocomplete=off spellcheck="false">
         </div>
         <div class="mv3">
           <btn btn-lg btn-primary :disabled="is_submitting" @click="changePassword" class="b ttu w-100">

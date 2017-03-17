@@ -21,7 +21,7 @@
           {{error_msg}}
         </div>
         <div class="mv3">
-          <input v-model="email" v-focus @keyup.enter="sendReset" :class="input_cls" placeholder="Email address" type="email" autocomplete=off>
+          <input v-model="email" v-focus @keyup.enter="sendReset" :class="input_cls" placeholder="Email address" type="email" autocomplete=off spellcheck="false">
         </div>
         <div class="mv3">
           <btn btn-lg btn-primary :disabled="is_submitting" @click="sendReset" class="b ttu w-100">
