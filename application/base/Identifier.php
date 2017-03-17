@@ -87,7 +87,7 @@ class Identifier
 
             // company related
             case 'flex':
-            case 'flexio':
+            // case 'flexio': // allow flexio, since we want to use it as our public account
             case 'flexible':
             case 'flexiodata':
             case 'goldprairie':
