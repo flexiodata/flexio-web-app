@@ -59,14 +59,6 @@
         </div>
       </div>
     </div>
-
-    <!-- email support modal -->
-    <email-support-modal
-      open-from=".btn-contact-support"
-      close-to=".btn-contact-support"
-      ref="modal-email-support"
-      @submit="trySendSupportEmail"
-    ></email-support-modal>
   </nav>
 </template>
 
@@ -83,12 +75,10 @@
   import { HOSTNAME } from '../constants/common'
   import { mapState, mapGetters } from 'vuex'
   import AppBreadcrumbs from './AppBreadcrumbs.vue'
-  import EmailSupportModal from './EmailSupportModal.vue'
 
   export default {
     components: {
-      AppBreadcrumbs,
-      EmailSupportModal
+      AppBreadcrumbs
     },
     computed: {
       ...mapState([
@@ -137,9 +127,6 @@
       openHelpDocs() {
         window.open('https://'+HOSTNAME+'/docs/web-app/', '_blank')
       },
-      openEmailSupportModal() {
-        this.$refs['modal-email-support'].open()
-      },
       gotoProjects() {
         this.$router.push({ name: ROUTE_HOME })
       },
@@ -151,18 +138,6 @@
           if (response.ok)
           {
             this.$router.push({ name: ROUTE_SIGNIN })
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-      trySendSupportEmail(attrs, modal) {
-        this.$store.dispatch('sendEmailSupport', { attrs }).then(response => {
-          if (response.ok)
-          {
-            modal.success()
           }
            else
           {
