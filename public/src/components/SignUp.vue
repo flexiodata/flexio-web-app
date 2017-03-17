@@ -140,7 +140,7 @@
           })
           .value()
       },
-      checkSignup: _.debounce(function(validate_key) {
+      checkSignup: _.debounce(function(validate_key, callback) {
         var attrs = this.getAttrs()
 
         var validate_attrs = [{
@@ -167,6 +167,9 @@
 
         api.validate({ attrs: validate_attrs }).then((response) => {
           this.ss_errors = _.keyBy(response.body, 'key')
+
+          if (_.isFunction(callback))
+            callback()
         }, (response) => {
           // error callback
         })
@@ -178,18 +181,19 @@
         this.is_submitting = true
 
         // this will show errors below each input
-        this.checkSignup()
-
-        this.$store.dispatch('signUp', { attrs }).then((response) => {
-          // success callback
-          me.is_submitting = false
-          me.trySignIn()
-        }, (response) => {
-          // error callback
-          me.is_submitting = false
-          me.password = ''
-          me.showErrors(_.get(response, 'data.errors'))
+        this.checkSignup(null, () => {
+          this.$store.dispatch('signUp', { attrs }).then((response) => {
+            // success callback
+            me.is_submitting = false
+            me.trySignIn()
+          }, (response) => {
+            // error callback
+            me.is_submitting = false
+            me.password = ''
+            me.showErrors(_.get(response, 'data.errors'))
+          })
         })
+
       },
       trySignIn() {
         var me = this
