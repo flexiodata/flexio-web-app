@@ -78,7 +78,7 @@
       @hide="show_leave_confirm_modal = false"
       v-if="show_leave_confirm_modal"
     >
-      <div class="lh-copy mb3">Are you sure you want to leave the <span class="b">{{item.name}}</span> project?</div>
+      <div class="lh-copy">Are you sure you want to leave the <span class="b">{{item.name}}</span> project?</div>
     </confirm-modal>
   </article>
 </template>
