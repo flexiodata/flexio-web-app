@@ -22,11 +22,10 @@
       </ui-textbox>
       <ui-textbox
         autocomplete="off"
-        disabled
         label="Username"
         floating-label
         help=" "
-        v-model="username"
+        v-model="user_name"
       >
       </ui-textbox>
       <ui-textbox
@@ -43,24 +42,41 @@
         btn-lg
         btn-primary
         class="b ttu"
-        @click="saveChanges"
+        @click="trySaveChanges"
       >Save Changes</btn>
     </form>
+
+    <!-- username confirm modal -->
+    <confirm-modal
+      ref="modal-confirm"
+      title="Really change your username?"
+      submit-label="Change my username"
+      cancel-label="Cancel"
+      @confirm="onConfirmModalClose"
+      @hide="show_confirm_modal = false"
+      v-if="show_confirm_modal"
+    >
+      <div class="lh-copy">Changing your username can have unintended effects. Are you sure you want to change your username?</div>
+    </confirm-modal>
   </div>
 </template>
 
 <script>
   import { mapState, mapGetters } from 'vuex'
   import Btn from './Btn.vue'
+  import ConfirmModal from './ConfirmModal.vue'
 
   export default {
     components: {
-      Btn
+      Btn,
+      ConfirmModal
     },
     data() {
       return {
         first_name: ' ',
-        last_name: ' '
+        last_name: ' ',
+        user_name: ' ',
+        show_confirm_modal: false
       }
     },
     watch: {
@@ -76,9 +92,6 @@
         var user = this.getActiveUser()
         return user ? user : {}
       },
-      username() {
-        return _.get(this.active_user, 'user_name', ' ')
-      },
       email() {
         return _.get(this.active_user, 'email', ' ')
       }
@@ -93,11 +106,29 @@
       initFromActiveUser() {
         this.first_name = _.get(this.active_user, 'first_name', ' ')
         this.last_name = _.get(this.active_user, 'last_name', ' ')
+        this.user_name = _.get(this.active_user, 'user_name', ' ')
+      },
+      trySaveChanges() {
+        var old_username = _.get(this.active_user, 'user_name', ' ')
+        var new_username = _.get(this.$data, 'user_name')
+
+        if (new_username == old_username)
+          this.saveChanges()
+           else
+          this.openConfirmModal()
       },
       saveChanges() {
         var eid = this.active_user_eid
-        var attrs = _.pick(this.$data, ['first_name', 'last_name'])
+        var attrs = _.pick(this.$data, ['first_name', 'last_name', 'user_name'])
         this.$store.dispatch('updateUser', { eid, attrs })
+      },
+      openConfirmModal() {
+        this.show_confirm_modal = true
+        this.$nextTick(() => { this.$refs['modal-confirm'].open() })
+      },
+      onConfirmModalClose(modal) {
+        this.saveChanges()
+        modal.close()
       }
     }
   }

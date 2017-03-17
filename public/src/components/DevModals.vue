@@ -20,7 +20,7 @@
       @hide="show_confirm_modal = false"
       v-if="show_confirm_modal"
     >
-      <div>Doing this might be a bad idea. Are you sure you want to continue?</div>
+      <div class="lh-copy">Doing this might be a bad idea. Are you sure you want to continue?</div>
     </confirm-modal>
 
     <project-props-modal
