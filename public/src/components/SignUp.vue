@@ -182,6 +182,13 @@
 
         // this will show errors below each input
         this.checkSignup(null, () => {
+          if (this.has_email_error() ||
+              this.has_username_error() ||
+              this.has_password_error())
+          {
+            return
+          }
+
           this.$store.dispatch('signUp', { attrs }).then((response) => {
             // success callback
             me.is_submitting = false
@@ -193,7 +200,6 @@
             me.showErrors(_.get(response, 'data.errors'))
           })
         })
-
       },
       trySignIn() {
         var me = this
