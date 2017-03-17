@@ -432,7 +432,7 @@ class User
         if ($user->getVerifyCode() !== $code)
             return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER, _('The credentials do not match'));
 
-        if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')))
+        if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
             return $request->getValidator()->fail(Api::ERROR_WRITE_FAILED, _('Could not update user at this time'));
 
         return true;
