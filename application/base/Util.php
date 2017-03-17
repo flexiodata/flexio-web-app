@@ -735,10 +735,15 @@ class Util
         if (!is_string($value))
             return false;
 
-        if (strlen($value) >= 8)
-            return true;
+        if (strlen($value) < 8)
+            return false;
 
-        return false;
+        // make sure we have at least one number
+        $regex = "/[0-9]/";
+        if (preg_match($regex, $value) === 0)
+            return false;
+
+        return true;
     }
 
     public static function generateRandomString($length)

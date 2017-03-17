@@ -197,7 +197,7 @@ class System
                     {
                         // invalid password
                         $valid = false;
-                        $message = _('A password must have at least 8 characters');
+                        $message = _('A password must have at least 8 characters with at least 1 number');
                     }
                     else
                     {
