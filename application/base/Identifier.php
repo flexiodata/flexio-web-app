@@ -78,7 +78,7 @@ class Identifier
         return false;
     }
 
-    public static function isReservedWord($word)
+    private static function isReservedWord($word)
     {
         switch ($word)
         {
@@ -937,7 +937,7 @@ class Identifier
         }
     }
 
-    public static function isIllegalWord($word)
+    private static function isIllegalWord($word)
     {
         switch ($word)
         {
