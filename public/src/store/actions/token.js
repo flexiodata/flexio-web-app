@@ -20,7 +20,7 @@ export const fetchUserTokens = ({ commit }, { eid }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const createUserToken = ({ commit }, { eid, attrs }) => {
+export const createUserToken = ({ commit, dispatch }, { eid, attrs }) => {
   commit(types.CREATING_TOKEN, { eid, attrs })
 
   return api.createUserToken({ eid, attrs }).then(response => {
@@ -28,6 +28,7 @@ export const createUserToken = ({ commit }, { eid, attrs }) => {
     commit(types.CREATED_TOKEN, { eid, attrs: response.body })
 
     analytics.track('Created API Key')
+    dispatch('fetchCurrentUserStatistics')
 
     return response
   }, response => {
