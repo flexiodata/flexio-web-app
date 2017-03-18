@@ -13,7 +13,7 @@
     <button
       id="open-intercom-inbox"
       class="fixed bottom-0 right-0 pointer darken-10 bn br-100 white bg-blue"
-      style="padding: 12px; margin: 20px"
+      style="z-index: 2147482000; padding: 12px; margin: 20px"
       v-if="show_intercom_button"
     ><i class="material-icons md-24 relative" style="top: 1px">chat</i>
     </button>
