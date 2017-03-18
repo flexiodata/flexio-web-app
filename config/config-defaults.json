@@ -43,7 +43,5 @@
     "googledrive_client_secret": "",
 
     "dropbox_client_id": "",
-    "dropbox_client_secret": "",
-
-    "helpscout_api_key": ""
+    "dropbox_client_secret": ""
 }
