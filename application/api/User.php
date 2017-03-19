@@ -271,12 +271,14 @@ class User
 
         $projects = $user->getProjects();
         $pipes = $user->getPipes();
+        $tokens = $user->getTokens();
 
         $properties = array();
         $properties['eid'] = $requesting_user_eid;
         $properties['eid_type'] = \Model::TYPE_USER;
         $properties['pipe_count'] = count($pipes);
         $properties['project_count'] = count($projects);
+        $properties['token_count'] = count($tokens);
         return $properties;
     }
 
