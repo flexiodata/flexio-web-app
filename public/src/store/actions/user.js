@@ -35,7 +35,9 @@ export const fetchCurrentUserStatistics = ({ commit, state }) => {
       createdAt: _.get(user, 'created')
     }, response.body)
 
-    analytics.identify(_.get(user, 'eid'), stats_payload)
+    setTimeout(() => {
+      analytics.identify(_.get(user, 'eid'), stats_payload)
+    }, 500)
   })
 }
 

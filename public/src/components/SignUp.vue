@@ -182,9 +182,9 @@
 
         // this will show errors below each input
         this.checkSignup(null, () => {
-          if (this.has_email_error() ||
-              this.has_username_error() ||
-              this.has_password_error())
+          if (this.has_email_error ||
+              this.has_username_error ||
+              this.has_password_error)
           {
             return
           }
