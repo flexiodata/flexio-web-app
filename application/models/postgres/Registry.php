@@ -143,7 +143,7 @@ class Registry extends ModelBase
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $result = $db->fetchOne('select name from tbl_registry where object_eid = ' . $db->quote($object_eid) . ' and name = '. $db->quote($name));
         return ($result === false) ? false : true;
@@ -156,7 +156,7 @@ class Registry extends ModelBase
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $result = $db->exec('delete from tbl_registry where object_eid = ' . $db->quote($object_eid) . ' and name = '. $db->quote($name));
         return ($result !== false && $result > 0) ? true : false;
@@ -171,7 +171,7 @@ class Registry extends ModelBase
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $qobject_eid = $db->quote($object_eid);
         $qname = $db->quote($name);
@@ -187,7 +187,7 @@ class Registry extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->exec('delete from tbl_registry where expires < now()');
         return true;
@@ -214,7 +214,7 @@ class Registry extends ModelBase
         if (!isset($db))
             $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         switch ($type)
         {
@@ -316,7 +316,7 @@ class Registry extends ModelBase
             if (!isset($db))
                 $db = $this->getDatabase();
             if ($db === false)
-                return $this->fail(Model::ERROR_NO_DATABASE);
+                return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
             $qobject_eid = $db->quote(isset_or($object_eid,''));
             $qname = $db->quote($name);

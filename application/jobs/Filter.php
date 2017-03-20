@@ -51,7 +51,7 @@ class Filter extends \Flexio\Jobs\Base
         else if (isset($job_definition['params']['on']))
             $filter_expression = $job_definition['params']['on'];
         else
-            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _('Missing where parameter'), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing where parameter'), __FILE__, __LINE__);
 
         if ($exclude)
         {
@@ -64,7 +64,7 @@ class Filter extends \Flexio\Jobs\Base
         $success = $expreval->prepare($filter_expression, $input_structure);
 
         if ($success === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // create the output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());

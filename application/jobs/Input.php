@@ -27,7 +27,7 @@ class Input extends \Flexio\Jobs\Base
         // make sure we have a params node
         $job_definition = $this->getProperties();
         if (!isset($job_definition['params']))
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
         $params = $job_definition['params'];
 
         // make fully qualified path, if necessary
@@ -54,7 +54,7 @@ class Input extends \Flexio\Jobs\Base
         // paths and determining the appropriate connection type/eid for each item
         $items = $this->resolveInputItems($params);
         if ($items === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // input job adds new streams; add streams onto inputs we've already received
         $this->getOutput()->merge($this->getInput());
@@ -118,13 +118,13 @@ class Input extends \Flexio\Jobs\Base
         // load the service
         $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
-            return $this->fail(\Model::ERROR_NO_SERVICE, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::NO_SERVICE, _(''), __FILE__, __LINE__);
 
         // route the request based on the connection type
         switch ($connection_type)
         {
             default:
-                return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
             // upload
             case \Model::CONNECTION_TYPE_UPLOAD:
@@ -173,7 +173,7 @@ class Input extends \Flexio\Jobs\Base
         $path = $file_info['path'];
         $structure = $service->describeTable($path);
         if (!$structure)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $stream_properties = $file_info;
@@ -181,17 +181,17 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // create the iterator
         $iter = $service->queryAll($path);
         if (!$iter)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // transfer the data
         while (true)
@@ -202,7 +202,7 @@ class Input extends \Flexio\Jobs\Base
 
             $result = $streamwriter->write(array_values($row));
             if ($result === false)
-                return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
         }
 
         $streamwriter->close();
@@ -215,7 +215,7 @@ class Input extends \Flexio\Jobs\Base
         $path = $file_info['path'];
         $structure = $service->describeTable($path);
         if (!$structure)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $stream_properties = $file_info;
@@ -223,12 +223,12 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // transfer the data
         $params = array();
@@ -248,12 +248,12 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $mime_data_sample = '';
         $params = array();
@@ -304,7 +304,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $this->getOutput()->push($outstream);
 

@@ -38,21 +38,21 @@ class Follower
         foreach ($users as $value)
         {
             if (!is_string($value))
-                return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+                return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
         // load the object
         $object = \Flexio\Object\Store::load($object_identifier);
         if ($object === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // make sure the object isn't a user
         if ($object->getType() === \Model::TYPE_USER)
-            return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // check the rights on the object
         if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the object properties
         $object_properties = $object->get();
@@ -195,20 +195,20 @@ class Follower
         // load the object
         $object = \Flexio\Object\Store::load($parent_identifier);
         if ($object === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // load the user
         $user = \Flexio\Object\Store::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // don't allow the owner to be deleted by anybody, including themselves
         if ($object->getOwner() === $user->getEid())
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // for all other users, check the rights on the object
         if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         \Flexio\System\System::getModel()->assoc_delete($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
         \Flexio\System\System::getModel()->assoc_delete($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
@@ -229,11 +229,11 @@ class Follower
         // load the object
         $object = \Flexio\Object\Store::load($object_identifier);
         if ($object === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get a list of the user eids associated with this object; this
         // is comprised of the owner, and the users that have had this

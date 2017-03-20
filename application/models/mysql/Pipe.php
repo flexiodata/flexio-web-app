@@ -18,7 +18,7 @@ class Pipe extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -58,7 +58,7 @@ class Pipe extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create pipe'));
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not create pipe'));
         }
     }
 
@@ -66,7 +66,7 @@ class Pipe extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -79,7 +79,7 @@ class Pipe extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete pipe'));
+            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete pipe'));
         }
     }
 
@@ -87,7 +87,7 @@ class Pipe extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -102,7 +102,7 @@ class Pipe extends ModelBase
                 'schedule'        => array('type' => 'string',  'required' => false),
                 'schedule_status' => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update pipe'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update pipe'));
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         $db->beginTransaction();
@@ -134,7 +134,7 @@ class Pipe extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update pipe'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update pipe'));
         }
     }
 
@@ -142,7 +142,7 @@ class Pipe extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -189,7 +189,7 @@ class Pipe extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $sql = "select tpi.eid as eid, ".
                "       tpi.schedule as schedule ".
@@ -207,7 +207,7 @@ class Pipe extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // see if we need to refresh our schedule table
         $sql = "select max(updated) as dt from tbl_pipe where length(schedule) > 0";

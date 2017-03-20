@@ -18,7 +18,7 @@ class Process extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction(); // needed to make sure eid generation is safe
         try
@@ -76,7 +76,7 @@ class Process extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create process'));
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not create process'));
         }
     }
 
@@ -84,7 +84,7 @@ class Process extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -100,7 +100,7 @@ class Process extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete process'));
+            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete process'));
         }
     }
 
@@ -108,7 +108,7 @@ class Process extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -133,7 +133,7 @@ class Process extends ModelBase
                 'process_status' => array('type' => 'string',  'required' => false),
                 'cache_used'     => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update process'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update process'));
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         $db->beginTransaction();
@@ -152,7 +152,7 @@ class Process extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update process'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update process'));
         }
     }
 
@@ -160,7 +160,7 @@ class Process extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -196,7 +196,7 @@ class Process extends ModelBase
          }
          catch (\Exception $e)
          {
-             return $this->fail(\Model::ERROR_READ_FAILED, _('Could not get the process'));
+             return $this->fail(\Flexio\Base\Error::READ_FAILED, _('Could not get the process'));
          }
 
         if (!$row)
@@ -233,7 +233,7 @@ class Process extends ModelBase
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -273,7 +273,7 @@ class Process extends ModelBase
          }
          catch (\Exception $e)
          {
-             return $this->fail(\Model::ERROR_READ_FAILED, _('Could not get the process'));
+             return $this->fail(\Flexio\Base\Error::READ_FAILED, _('Could not get the process'));
          }
 
         if (!$rows)
@@ -313,7 +313,7 @@ class Process extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         try
         {
@@ -338,7 +338,7 @@ class Process extends ModelBase
          }
          catch (\Exception $e)
          {
-             return $this->fail(Model::ERROR_READ_FAILED, _('Could not get the process'));
+             return $this->fail(\Flexio\Base\Error::READ_FAILED, _('Could not get the process'));
          }
 
         $output = array();

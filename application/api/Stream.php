@@ -72,11 +72,11 @@ class Stream
         // check the rights on the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //    return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //    return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $stream->get();
     }
@@ -104,15 +104,15 @@ class Stream
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //    return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //    return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream_info = $stream->get();
         if ($stream_info === false)
-            return $request->getValidator()->fail(Api::ERROR_READ_FAILED);
+            return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
         $content = $stream->content($start, $limit, $columns, $metadata, $handle);
@@ -150,7 +150,7 @@ class Stream
         // get the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         self::handleStreamUpload($params, $stream);
 
@@ -308,15 +308,15 @@ class Stream
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //    return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //    return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream_info = $stream->get();
         if ($stream_info === false)
-            return $request->getValidator()->fail(Api::ERROR_READ_FAILED);
+            return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
         $http_header_mime_type = ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE ? \Flexio\Base\ContentType::MIME_TYPE_CSV : $mime_type);

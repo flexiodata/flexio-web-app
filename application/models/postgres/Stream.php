@@ -18,7 +18,7 @@ class Stream extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -61,7 +61,7 @@ class Stream extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create stream'));
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not create stream'));
         }
     }
 
@@ -69,7 +69,7 @@ class Stream extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -82,7 +82,7 @@ class Stream extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete stream'));
+            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete stream'));
         }
     }
 
@@ -90,7 +90,7 @@ class Stream extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -108,7 +108,7 @@ class Stream extends ModelBase
                 'cache_path'           => array('type' => 'string',  'required' => false),
                 'cache_connection_eid' => array('type' => 'eid',     'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update stream'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update stream'));
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         $db->beginTransaction();
@@ -132,7 +132,7 @@ class Stream extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update stream'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update stream'));
         }
     }
 
@@ -140,7 +140,7 @@ class Stream extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist

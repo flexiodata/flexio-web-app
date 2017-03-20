@@ -18,7 +18,7 @@ class Connection extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // if the connection_status parameter is set, make sure the status is set
         // to a valid value
@@ -79,7 +79,7 @@ class Connection extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create connection'));
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not create connection'));
         }
     }
 
@@ -87,7 +87,7 @@ class Connection extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -100,7 +100,7 @@ class Connection extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete connection'));
+            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete connection'));
         }
     }
 
@@ -108,7 +108,7 @@ class Connection extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -128,7 +128,7 @@ class Connection extends ModelBase
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update connection'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update connection'));
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
 
@@ -171,7 +171,7 @@ class Connection extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update connection'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update connection'));
         }
     }
 
@@ -179,7 +179,7 @@ class Connection extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist

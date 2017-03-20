@@ -18,7 +18,7 @@ class Comment extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -46,7 +46,7 @@ class Comment extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create comment'));
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not create comment'));
         }
     }
 
@@ -54,7 +54,7 @@ class Comment extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -67,7 +67,7 @@ class Comment extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete comment'));
+            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete comment'));
         }
     }
 
@@ -75,7 +75,7 @@ class Comment extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -83,7 +83,7 @@ class Comment extends ModelBase
         if (($process_arr = \Model::check($params, array(
                 'comment' => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update comment'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update comment'));
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         $db->beginTransaction();
@@ -107,7 +107,7 @@ class Comment extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update comment'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update comment'));
         }
     }
 
@@ -115,7 +115,7 @@ class Comment extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist

@@ -32,7 +32,7 @@ class System
         if (!$result)
         {
             sleep(1);
-            return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER, $error_message);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER, $error_message);
         }
 
         return true;
@@ -72,10 +72,10 @@ class System
 
         // make sure params is an array
         if (!is_array($params))
-            return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         if (count($params) === 0 || count($params) > 10)
-            return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // make sure each of the items in the array has the required params
         foreach ($params as $p)
@@ -86,7 +86,7 @@ class System
                     'value' => array('type' => 'string', 'required' => true),
                     'type' => array('type' => 'string', 'required' => true)
                 ))) === false)
-                return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+                return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
         // build up the return object of results
@@ -98,7 +98,7 @@ class System
             // if the validation of an object fails, there's some kind of an invalid parameter
             // (e.g. type isn't specified)
             if ($r === false)
-                return $request->getValidator()->fail(Api::ERROR_INVALID_PARAMETER);
+                return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $result[] = $r;
         }

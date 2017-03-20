@@ -18,21 +18,21 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!isset($params['user_name']))
-            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _('Missing user_name parameter'));
+            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing user_name parameter'));
         if (!isset($params['email']))
-            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _('Missing email parameter'));
+            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing email parameter'));
 
         // convert username and email to lowercase
         $params['user_name'] = strtolower($params['user_name']);
         $params['email'] = strtolower($params['email']);
 
         if (!\Flexio\Base\Identifier::isValid($params['user_name']))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _('Invalid user_name parameter'));
         if (!\Flexio\Services\Email::isValid($params['email']))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _('Invalid email parameter'));
 
         // encode the password
         if (isset($params['password']) && strlen($params['password']) > 0)
@@ -92,7 +92,7 @@ class User extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create user'));
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not create user'));
         }
     }
 
@@ -100,7 +100,7 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -113,7 +113,7 @@ class User extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete user'));
+            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete user'));
         }
     }
 
@@ -121,7 +121,7 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -138,9 +138,9 @@ class User extends ModelBase
 
         // if user_name or email is specified, make sure it's not set to null
         if (is_array($params) && array_key_exists('user_name', $params) && !\Flexio\Base\Identifier::isValid($params['user_name']))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _('Invalid user_name parameter'));
         if (is_array($params) && array_key_exists('email', $params) && !\Flexio\Services\Email::isValid($params['email']))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _('Invalid email parameter'));
 
         // make sure the properties that are being updated are the correct type
         if (($process_arr = \Model::check($params, array(
@@ -165,7 +165,7 @@ class User extends ModelBase
                 'verify_code'            => array('type' => 'string',  'required' => false),
                 'config'                 => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
 
@@ -193,7 +193,7 @@ class User extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update user'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update user'));
         }
     }
 
@@ -201,7 +201,7 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -271,7 +271,7 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -287,7 +287,7 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -305,7 +305,7 @@ class User extends ModelBase
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // identifiers can be a username or an email, so only perform the
         // most basic string check
@@ -327,7 +327,7 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // make sure we have a string
         if (!is_string($identifier) || strlen($identifier) <= 0)
@@ -348,7 +348,7 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // make sure we have a string
         if (!is_string($identifier) || strlen($identifier) <= 0)
@@ -369,7 +369,7 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // identifiers can be a username or an email, so only perform the
         // most basic string check
@@ -394,7 +394,7 @@ class User extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $user_info = $db->fetchRow("select password from tbl_user where eid = ?", $eid);
         if ($user_info === false)

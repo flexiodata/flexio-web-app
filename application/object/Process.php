@@ -734,7 +734,7 @@ class Process extends \Flexio\Object\Base
             // unreliable; set an error so that the process fails
             $implementation_revision_update = \Flexio\System\System::getGitRevision();
             if ($implementation_revision !== $implementation_revision_update)
-                $this->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
+                $this->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
 
             // if there are errors, fail the job
             $process_status = \Model::PROCESS_STATUS_COMPLETED;
@@ -821,7 +821,7 @@ class Process extends \Flexio\Object\Base
         // create the job with the task
         $job = self::createJob($this, $task);
         if ($job === false)
-            return $process->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $process->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         try
         {
@@ -840,7 +840,7 @@ class Process extends \Flexio\Object\Base
                 file_put_contents($GLOBALS['g_config']->debug_error_log, "Job exception caught '$message'; json was $json\n\n", FILE_APPEND);
             }
 
-            return $process->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
+            return $process->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
         }
     }
 

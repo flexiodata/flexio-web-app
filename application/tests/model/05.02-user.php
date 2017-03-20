@@ -42,7 +42,7 @@ class Test
         $eid = $model->create(\Model::TYPE_USER, $info);
         $actual = $model->getErrors();
         $expected = array(array(
-            'code' => \Model::ERROR_MISSING_PARAMETER,
+            'code' => \Flexio\Base\Error::MISSING_PARAMETER,
             'message' => 'Missing user_name parameter'
         ));
         TestCheck::assertInArray('A.2', '\Model::create(); invalid input should set an error',  $actual, $expected, $results);

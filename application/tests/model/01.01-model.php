@@ -27,87 +27,87 @@ class Test
         // TEST: model constant tests
 
         // BEGIN TEST
-        $actual = \Model::ERROR_NONE;
+        $actual = \Flexio\Base\Error::NONE;
         $expected = 'none';
         TestCheck::assertString('A.1', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_UNDEFINED;
+        $actual = \Flexio\Base\Error::UNDEFINED;
         $expected = 'undefined';
         TestCheck::assertString('A.2', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_GENERAL;
+        $actual = \Flexio\Base\Error::GENERAL;
         $expected = 'general';
         TestCheck::assertString('A.3', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_UNIMPLEMENTED;
+        $actual = \Flexio\Base\Error::UNIMPLEMENTED;
         $expected = 'unimplemented';
         TestCheck::assertString('A.4', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_NO_DATABASE;
+        $actual = \Flexio\Base\Error::NO_DATABASE;
         $expected = 'no_database';
         TestCheck::assertString('A.5', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_NO_MODEL;
+        $actual = \Flexio\Base\Error::NO_MODEL;
         $expected = 'no_model';
         TestCheck::assertString('A.6', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_NO_SERVICE;
+        $actual = \Flexio\Base\Error::NO_SERVICE;
         $expected = 'no_service';
         TestCheck::assertString('A.7', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_NO_OBJECT;
+        $actual = \Flexio\Base\Error::NO_OBJECT;
         $expected = 'no_object';
         TestCheck::assertString('A.8', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_INVALID_SYNTAX;
+        $actual = \Flexio\Base\Error::INVALID_SYNTAX;
         $expected = 'invalid_syntax';
         TestCheck::assertString('A.9', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_MISSING_PARAMETER;
+        $actual = \Flexio\Base\Error::MISSING_PARAMETER;
         $expected = 'missing_parameter';
         TestCheck::assertString('A.10', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_INVALID_PARAMETER;
+        $actual = \Flexio\Base\Error::INVALID_PARAMETER;
         $expected = 'invalid_parameter';
         TestCheck::assertString('A.11', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_CREATE_FAILED;
+        $actual = \Flexio\Base\Error::CREATE_FAILED;
         $expected = 'create_failed';
         TestCheck::assertString('A.12', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_DELETE_FAILED;
+        $actual = \Flexio\Base\Error::DELETE_FAILED;
         $expected = 'delete_failed';
         TestCheck::assertString('A.13', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_WRITE_FAILED;
+        $actual = \Flexio\Base\Error::WRITE_FAILED;
         $expected = 'write_failed';
         TestCheck::assertString('A.14', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_READ_FAILED;
+        $actual = \Flexio\Base\Error::READ_FAILED;
         $expected = 'read_failed';
         TestCheck::assertString('A.15', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_INSUFFICIENT_RIGHTS;
+        $actual = \Flexio\Base\Error::INSUFFICIENT_RIGHTS;
         $expected = 'insufficient_rights';
         TestCheck::assertString('A.16', 'Model error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::ERROR_SIZE_LIMIT_EXCEEDED;
+        $actual = \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED;
         $expected = 'size_limit_exceeded';
         TestCheck::assertString('A.17', 'Model error constant',  $actual, $expected, $results);
 

@@ -18,24 +18,6 @@ require_once 'ModelBase.php';
 
 class Model
 {
-    const ERROR_NONE                   =  'none';
-    const ERROR_UNDEFINED              =  'undefined';
-    const ERROR_GENERAL                =  'general';
-    const ERROR_UNIMPLEMENTED          =  'unimplemented';
-    const ERROR_NO_DATABASE            =  'no_database';
-    const ERROR_NO_MODEL               =  'no_model';
-    const ERROR_NO_SERVICE             =  'no_service';
-    const ERROR_NO_OBJECT              =  'no_object';
-    const ERROR_INVALID_SYNTAX         =  'invalid_syntax';
-    const ERROR_MISSING_PARAMETER      =  'missing_parameter';
-    const ERROR_INVALID_PARAMETER      =  'invalid_parameter';
-    const ERROR_CREATE_FAILED          =  'create_failed';
-    const ERROR_DELETE_FAILED          =  'delete_failed';
-    const ERROR_WRITE_FAILED           =  'write_failed';
-    const ERROR_READ_FAILED            =  'read_failed';
-    const ERROR_INSUFFICIENT_RIGHTS    =  'insufficient_rights';
-    const ERROR_SIZE_LIMIT_EXCEEDED    =  'size_limit_exceeded';
-
     const TYPE_UNDEFINED      = '';
     const TYPE_OBJECT         = 'OBJ';
     const TYPE_USER           = 'USR';
@@ -169,7 +151,7 @@ class Model
 
         $model = $this->loadModel($type);
         if ($model === false)
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         return $model->create($params);
     }
@@ -233,7 +215,7 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::TYPE_UNDEFINED;
@@ -249,7 +231,7 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($identifier) && !\Flexio\Base\Identifier::isValid($identifier))
             return \Model::TYPE_UNDEFINED;
@@ -277,14 +259,14 @@ class Model
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         // make sure the status is set to a valid value
         if (!\Model::isValidStatus($status))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // make sure the object exists
         if ($this->getType($eid) === \Model::TYPE_UNDEFINED)
@@ -306,7 +288,7 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
@@ -327,12 +309,12 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // make sure we have a valid association type; flag an error
         // for an invalid edge
         if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // invalid eids can't be associated with each other
         if (!\Flexio\Base\Eid::isValid($source_eid))
@@ -361,7 +343,7 @@ class Model
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not associate objects'));
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not associate objects'));
         }
     }
 
@@ -369,11 +351,11 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // make sure we have a valid association type
         if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // nothing to delete; return false
         if (!\Flexio\Base\Eid::isValid($source_eid))
@@ -397,7 +379,7 @@ class Model
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete association'));
+            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete association'));
         }
     }
 
@@ -405,13 +387,13 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // make sure we have an association type and a new type
         if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
         if (!Model::isValidEdge($newtype))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // invalid eids can't be associated with each other
         if (!\Flexio\Base\Eid::isValid($source_eid))
@@ -461,7 +443,7 @@ class Model
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not change association type'));
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not change association type'));
         }
     }
 
@@ -469,10 +451,10 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // nothing went wrong, but an invalid eid doesn't exist so there's
         // nothing to find
@@ -545,7 +527,7 @@ class Model
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_READ_FAILED, _('Could not get associations'));
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _('Could not get associations'));
         }
     }
 
@@ -553,10 +535,10 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // nothing went wrong, but an invalid eid doesn't exist so there's
         // nothing to find
@@ -599,7 +581,7 @@ class Model
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_READ_FAILED, _('Could not get associations'));
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _('Could not get associations'));
         }
     }
 
@@ -607,10 +589,10 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // nothing went wrong, but an invalid eid doesn't exist so there's
         // nothing to find
@@ -640,7 +622,7 @@ class Model
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_READ_FAILED, _('Could not get association count'));
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _('Could not get association count'));
         }
     }
 
@@ -652,7 +634,7 @@ class Model
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // if the identifier isn't valid, there's no corresponding eid
         if (\Flexio\Base\Identifier::isValid($identifier) === false)
@@ -676,15 +658,15 @@ class Model
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // make sure we have a valid type
         if (!Model::isValidType($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $eid = $this->generateUniqueEid();
         if (!$eid)
-            return $this->fail(Model::ERROR_CREATE_FAILED);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED);
 
         // if the status parameter is set, make sure the status is set
         // to a valid value
@@ -693,7 +675,7 @@ class Model
         {
             $status = $params['eid_status'];
             if (!\Model::isValidStatus($status))
-                return $this->fail(Model::ERROR_INVALID_PARAMETER);
+                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
 
@@ -708,15 +690,15 @@ class Model
         if (strlen($ename) > 0)
         {
             if (\Flexio\Base\Identifier::isValid($ename) === false)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+                return $this->fail(\Flexio\Base\Error::CREATE_FAILED);
             if (\Flexio\Base\Eid::isValid($ename) === true)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+                return $this->fail(\Flexio\Base\Error::CREATE_FAILED);
 
             // make sure that the ename is unique
             $qename = $db->quote($ename);
             $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
             if ($existing_ename !== false)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+                return $this->fail(\Flexio\Base\Error::CREATE_FAILED);
         }
 
         $timestamp = \Flexio\System\System::getTimestamp();
@@ -730,7 +712,7 @@ class Model
         );
 
         if ($db->insert('tbl_object', $process_arr) === false)
-            return $this->fail(Model::ERROR_CREATE_FAILED);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED);
 
         return $eid;
     }
@@ -747,7 +729,7 @@ class Model
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // eid isn't valid; return false
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -783,7 +765,7 @@ class Model
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         // eid isn't valid
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -807,7 +789,7 @@ class Model
         {
             $status = $params['eid_status'];
             if (!Model::isValidStatus($status))
-                return $this->fail(Model::ERROR_INVALID_PARAMETER);
+                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $process_arr['eid_status'] = $status;
         }
@@ -823,15 +805,15 @@ class Model
         {
             $ename = $params['ename'];
             if ($ename !== '' && \Flexio\Base\Identifier::isValid($ename) === false)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+                return $this->fail(\Flexio\Base\Error::CREATE_FAILED);
             if (\Flexio\Base\Eid::isValid($ename) === true)
-                return $this->fail(\Model::ERROR_CREATE_FAILED);
+                return $this->fail(\Flexio\Base\Error::CREATE_FAILED);
 
             // make sure that the ename is unique
             $qename = $db->quote($ename);
             $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
             if ($existing_ename !== false)
-                return $this->fail(\Model::ERROR_CREATE_FAILED);
+                return $this->fail(\Flexio\Base\Error::CREATE_FAILED);
 
             $process_arr['ename'] = $ename;
         }
@@ -851,7 +833,7 @@ class Model
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -883,7 +865,7 @@ class Model
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         try
         {
@@ -934,7 +916,7 @@ class Model
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         try
         {
@@ -1020,10 +1002,10 @@ class Model
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!is_string($tz) || strlen($tz) == 0)
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
 
         try
         {
@@ -1032,14 +1014,14 @@ class Model
             else if ($this->dbtype == 'postgres')
                 $sql = 'SET SESSION TIME ZONE ' . $db->quote($tz);
             else
-                return $this->fail(Model::ERROR_INVALID_PARAMETER); // unsupported database
+                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER); // unsupported database
 
             $this->database->exec($sql);
             return true;
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_READ_FAILED, 'Unable to update database settings');
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, 'Unable to update database settings');
         }
     }
 
@@ -1050,22 +1032,22 @@ class Model
             switch ($code)
             {
                 default:                                  $message = _('Operation failed');            break;
-                case \Model::ERROR_UNDEFINED:              $message = _('Operation failed');            break;
-                case \Model::ERROR_GENERAL:                $message = _('General error');               break;
-                case \Model::ERROR_UNIMPLEMENTED:          $message = _('Unimplemented');               break;
-                case \Model::ERROR_NO_DATABASE:            $message = _('Database not available');      break;
-                case \Model::ERROR_NO_MODEL:               $message = _('Model not available');         break;
-                case \Model::ERROR_NO_SERVICE:             $message = _('Service not available');       break;
-                case \Model::ERROR_NO_OBJECT:              $message = _('Object not available');        break;
-                case \Model::ERROR_MISSING_PARAMETER:      $message = _('Missing parameter');           break;
-                case \Model::ERROR_INVALID_PARAMETER:      $message = _('Invalid parameter');           break;
-                case \Model::ERROR_INVALID_SYNTAX:         $message = _('Invalid syntax');              break;
-                case \Model::ERROR_CREATE_FAILED:          $message = _('Could not create object');     break;
-                case \Model::ERROR_DELETE_FAILED:          $message = _('Could not delete object');     break;
-                case \Model::ERROR_WRITE_FAILED:           $message = _('Could not write to object');   break;
-                case \Model::ERROR_READ_FAILED:            $message = _('Could not read from object');  break;
-                case \Model::ERROR_INSUFFICIENT_RIGHTS:    $message = _('Insufficient rights');         break;
-                case \Model::ERROR_SIZE_LIMIT_EXCEEDED:    $message = _('Size limit exceeded');         break;
+                case \Flexio\Base\Error::UNDEFINED:              $message = _('Operation failed');            break;
+                case \Flexio\Base\Error::GENERAL:                $message = _('General error');               break;
+                case \Flexio\Base\Error::UNIMPLEMENTED:          $message = _('Unimplemented');               break;
+                case \Flexio\Base\Error::NO_DATABASE:            $message = _('Database not available');      break;
+                case \Flexio\Base\Error::NO_MODEL:               $message = _('Model not available');         break;
+                case \Flexio\Base\Error::NO_SERVICE:             $message = _('Service not available');       break;
+                case \Flexio\Base\Error::NO_OBJECT:              $message = _('Object not available');        break;
+                case \Flexio\Base\Error::MISSING_PARAMETER:      $message = _('Missing parameter');           break;
+                case \Flexio\Base\Error::INVALID_PARAMETER:      $message = _('Invalid parameter');           break;
+                case \Flexio\Base\Error::INVALID_SYNTAX:         $message = _('Invalid syntax');              break;
+                case \Flexio\Base\Error::CREATE_FAILED:          $message = _('Could not create object');     break;
+                case \Flexio\Base\Error::DELETE_FAILED:          $message = _('Could not delete object');     break;
+                case \Flexio\Base\Error::WRITE_FAILED:           $message = _('Could not write to object');   break;
+                case \Flexio\Base\Error::READ_FAILED:            $message = _('Could not read from object');  break;
+                case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:    $message = _('Insufficient rights');         break;
+                case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:    $message = _('Size limit exceeded');         break;
             }
         }
 

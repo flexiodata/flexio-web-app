@@ -42,7 +42,7 @@ class Test
         $eid = $model->create('', $info);
         $actual = $model->getErrors();
         $expected = array(array(
-            'code' => \Model::ERROR_INVALID_PARAMETER,
+            'code' => \Flexio\Base\Error::INVALID_PARAMETER,
             'message' => 'Invalid parameter'
         ));
         TestCheck::assertInArray('A.2', '\Model::create(); invalid type should set an error',  $actual, $expected, $results);
@@ -63,7 +63,7 @@ class Test
         $eid = $model->create(\Model::TYPE_UNDEFINED, $info);
         $actual = $model->getErrors();
         $expected = array(array(
-            'code' => \Model::ERROR_INVALID_PARAMETER,
+            'code' => \Flexio\Base\Error::INVALID_PARAMETER,
             'message' => 'Invalid parameter'
         ));
         TestCheck::assertInArray('A.4', '\Model::create(); undefined type should set an error',  $actual, $expected, $results);

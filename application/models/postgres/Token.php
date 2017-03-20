@@ -18,7 +18,7 @@ class Token extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -48,7 +48,7 @@ class Token extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not add authentication codes'));
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not add authentication codes'));
         }
     }
 
@@ -56,7 +56,7 @@ class Token extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $db->beginTransaction();
         try
@@ -69,7 +69,7 @@ class Token extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete authentication code'));
+            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete authentication code'));
         }
     }
 
@@ -77,7 +77,7 @@ class Token extends ModelBase
     {
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -114,7 +114,7 @@ class Token extends ModelBase
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $row = $db->fetchRow("select tob.eid as eid,
                                      tob.eid_type as eid_type,
@@ -148,7 +148,7 @@ class Token extends ModelBase
 
         $db = $this->getDatabase();
         if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         $rows = $db->fetchAll("select tob.eid as eid,
                                      tob.eid_type as eid_type,

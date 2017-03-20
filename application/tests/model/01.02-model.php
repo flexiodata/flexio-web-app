@@ -34,14 +34,14 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'general failure');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'general failure');
         $actual = $model->hasErrors();
         $expected = true;
         TestCheck::assertBoolean('A.2', '\Model::hasErrors(); single error present',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'general failure');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'general failure');
         $model->clearErrors();
         $actual = $model->hasErrors();
         $expected = false;
@@ -49,18 +49,18 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'general failure');
-        $model->setError(\Model::ERROR_MISSING_PARAMETER,'missing parameter');
-        $model->setError(\Model::ERROR_INVALID_PARAMETER,'invalid parameter');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'general failure');
+        $model->setError(\Flexio\Base\Error::MISSING_PARAMETER,'missing parameter');
+        $model->setError(\Flexio\Base\Error::INVALID_PARAMETER,'invalid parameter');
         $actual = $model->hasErrors();
         $expected = true;
         TestCheck::assertBoolean('A.4', '\Model::hasErrors(); multiple errors present',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'general failure');
-        $model->setError(\Model::ERROR_MISSING_PARAMETER,'missing parameter');
-        $model->setError(\Model::ERROR_INVALID_PARAMETER,'invalid parameter');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'general failure');
+        $model->setError(\Flexio\Base\Error::MISSING_PARAMETER,'missing parameter');
+        $model->setError(\Flexio\Base\Error::INVALID_PARAMETER,'invalid parameter');
         $model->clearErrors();
         $actual = $model->hasErrors();
         $expected = false;
@@ -78,14 +78,14 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'general failure');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'general failure');
         $actual = $model->getErrors();
         $expected = '[{"code":"undefined","message":"general failure"}]';
         TestCheck::assertArray('B.2', '\Model::getErrors(); single error present',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'general failure');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'general failure');
         $model->clearErrors();
         $actual = $model->getErrors();
         $expected = '[]';
@@ -93,26 +93,26 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'general failure');
-        $model->setError(\Model::ERROR_MISSING_PARAMETER,'missing parameter');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'general failure');
+        $model->setError(\Flexio\Base\Error::MISSING_PARAMETER,'missing parameter');
         $actual = $model->getErrors();
         $expected = '[{"code":"undefined","message":"general failure"},{"code":"missing_parameter","message":"missing parameter"}]';
         TestCheck::assertArray('B.4', '\Model::getErrors(); multiple errors present',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'general failure');
-        $model->setError(\Model::ERROR_MISSING_PARAMETER,'missing parameter');
-        $model->setError(\Model::ERROR_INVALID_PARAMETER,'invalid parameter');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'general failure');
+        $model->setError(\Flexio\Base\Error::MISSING_PARAMETER,'missing parameter');
+        $model->setError(\Flexio\Base\Error::INVALID_PARAMETER,'invalid parameter');
         $actual = $model->getErrors();
         $expected = '[{"code":"undefined","message":"general failure"},{"code":"missing_parameter","message":"missing parameter"},{"code":"invalid_parameter","message":"invalid parameter"}]';
         TestCheck::assertArray('B.5', '\Model::getErrors(); multiple errors present',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'general failure');
-        $model->setError(\Model::ERROR_MISSING_PARAMETER,'missing parameter');
-        $model->setError(\Model::ERROR_INVALID_PARAMETER,'invalid parameter');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'general failure');
+        $model->setError(\Flexio\Base\Error::MISSING_PARAMETER,'missing parameter');
+        $model->setError(\Flexio\Base\Error::INVALID_PARAMETER,'invalid parameter');
         $model->clearErrors();
         $actual = $model->getErrors();
         $expected = '[]';
@@ -124,35 +124,35 @@ class Test
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_UNDEFINED,'');
+        $model->setError(\Flexio\Base\Error::UNDEFINED,'');
         $actual = $model->getErrors();
         $expected = '[{"code":"undefined","message":""}]';
         TestCheck::assertArray('C.1', '\Model::setError(); set error code',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_NO_DATABASE,'');
+        $model->setError(\Flexio\Base\Error::NO_DATABASE,'');
         $actual = $model->getErrors();
         $expected = '[{"code":"no_database","message":""}]';
         TestCheck::assertArray('C.2', '\Model::setError(); set error code',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_CREATE_FAILED,'');
+        $model->setError(\Flexio\Base\Error::CREATE_FAILED,'');
         $actual = $model->getErrors();
         $expected = '[{"code":"create_failed","message":""}]';
         TestCheck::assertArray('C.3', '\Model::setError(); set error code',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_DELETE_FAILED,'');
+        $model->setError(\Flexio\Base\Error::DELETE_FAILED,'');
         $actual = $model->getErrors();
         $expected = '[{"code":"delete_failed","message":""}]';
         TestCheck::assertArray('C.4', '\Model::setError(); set error code',  $actual, $expected, $results);
 
         // BEGIN TEST
         $model->clearErrors();
-        $model->setError(\Model::ERROR_WRITE_FAILED,'');
+        $model->setError(\Flexio\Base\Error::WRITE_FAILED,'');
         $actual = $model->getErrors();
         $expected = '[{"code":"write_failed","message":""}]';
         TestCheck::assertArray('C.5', '\Model::setError(); set error code',  $actual, $expected, $results);
