@@ -22,7 +22,6 @@
 
 <script>
   import {
-    ROUTE_ACCOUNT,
     ROUTE_EMBEDHOME,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
@@ -49,16 +48,6 @@
       ...mapState([
         'active_user_eid'
       ]),
-      show_onboarding_modal() {
-        if (this.active_user_eid.length == 0)
-          return false
-
-        var cfg = _.get(this.getActiveUser(), 'config')
-        if (_.get(cfg, 'app.prompt.tour.shown') !== true)
-          return true
-
-        return false
-      },
       show_intercom_button() {
         switch (this.$route.name)
         {
@@ -71,6 +60,16 @@
         }
 
         return true
+      },
+      show_onboarding_modal() {
+        if (this.active_user_eid.length == 0)
+          return false
+
+        var cfg = _.get(this.getActiveUser(), 'config')
+        if (this.show_intercom_button && _.get(cfg, 'app.prompt.tour.shown') !== true)
+          return true
+
+        return false
       }
     },
     methods: {
