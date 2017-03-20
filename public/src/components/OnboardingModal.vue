@@ -51,7 +51,10 @@
         this.$store.dispatch('updateUser', { eid: this.active_user_eid, attrs: { config: cfg } })
 
         analytics.track('Closed Onboarding Modal')
-        analytics.identify(this.active_user_eid, { closed_onboarding_modal: 1 })
+
+        setTimeout(() => {
+          analytics.identify(this.active_user_eid, { closed_onboarding_modal: 1 })
+        }, 500)
       }
     }
   }
