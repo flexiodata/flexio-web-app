@@ -147,9 +147,6 @@ class Registry extends ModelBase
             return false;
 
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $result = $db->fetchOne('select name from tbl_registry where object_eid = ' . $db->quote($object_eid) . ' and name = '. $db->quote($name));
         return ($result === false) ? false : true;
     }
@@ -160,9 +157,6 @@ class Registry extends ModelBase
             return false;
 
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $result = $db->exec('delete from tbl_registry where object_eid = ' . $db->quote($object_eid) . ' and name = '. $db->quote($name));
         return ($result !== false && $result > 0) ? true : false;
     }
@@ -175,9 +169,6 @@ class Registry extends ModelBase
             return false;
 
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $qobject_eid = $db->quote($object_eid);
         $qname = $db->quote($name);
         $qtimestamp = $db->quote(\Flexio\System\System::getTimestamp());
@@ -191,9 +182,6 @@ class Registry extends ModelBase
     public function cleanupExpiredEntries()
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $db->exec('delete from tbl_registry where expires < now()');
         return true;
     }
@@ -218,23 +206,21 @@ class Registry extends ModelBase
         // get the database
         if (!isset($db))
             $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
         switch ($type)
         {
             case 'STRING':
-                $qvalue_type = $db->quote(Model::REGISTRY_VALUE_STRING);
+                $qvalue_type = $db->quote(\Model::REGISTRY_VALUE_STRING);
                 $qvalue = $db->quote($value);
                 break;
 
             case 'NUMBER':
-                $qvalue_type = $db->quote(Model::REGISTRY_VALUE_NUMBER);
+                $qvalue_type = $db->quote(\Model::REGISTRY_VALUE_NUMBER);
                 $qvalue = $db->quote((double)$value);
                 break;
 
             case 'BOOLEAN':
-                $qvalue_type = $db->quote(Model::REGISTRY_VALUE_BOOLEAN);
+                $qvalue_type = $db->quote(\Model::REGISTRY_VALUE_BOOLEAN);
                 if (is_string($value))
                 {
                     if ($value == 'true')
@@ -246,17 +232,17 @@ class Registry extends ModelBase
                 break;
 
             case 'DATE':
-                $qvalue_type = $db->quote(Model::REGISTRY_VALUE_DATE);
+                $qvalue_type = $db->quote(\Model::REGISTRY_VALUE_DATE);
                 $qvalue = $db->quote($value);
                 break;
 
             case 'DATETIME':
-                $qvalue_type = $db->quote(Model::REGISTRY_VALUE_DATETIME);
+                $qvalue_type = $db->quote(\Model::REGISTRY_VALUE_DATETIME);
                 $qvalue = $db->quote($value);
                 break;
 
             case 'BINARY':
-                $qvalue_type = $db->quote(Model::REGISTRY_VALUE_BINARY);
+                $qvalue_type = $db->quote(\Model::REGISTRY_VALUE_BINARY);
                 $qvalue = "'" . base64_encode($value) . "'";
                 break;
         }
@@ -315,8 +301,6 @@ class Registry extends ModelBase
         {
             if (!isset($db))
                 $db = $this->getDatabase();
-            if ($db === false)
-                return $this->fail(\Flexio\Base\Error::NO_DATABASE);
 
             $qobject_eid = $db->quote(isset_or($object_eid,''));
             $qname = $db->quote($name);

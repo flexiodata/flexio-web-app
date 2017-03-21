@@ -40,12 +40,9 @@ class Tempdata extends ModelBase
 
     public function getArray($name)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return null;
-
         $registry_model = $this->getModel()->registry;
 
+        $db = $this->getDatabase();
         $db->beginTransaction();
         $values = $registry_model->getVariable('', "tempdata.$name", $db);
         $db->commit();
@@ -58,12 +55,9 @@ class Tempdata extends ModelBase
 
     public function updateArray($name, $changes, $expires = 86400)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return null;
-
         $registry_model = $this->getModel()->registry;
 
+        $db = $this->getDatabase();
         $db->beginTransaction();
 
         $values = $registry_model->getVariable('', "tempdata.$name", $db, true /* for update */);

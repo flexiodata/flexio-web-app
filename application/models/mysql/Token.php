@@ -17,17 +17,11 @@ class Token extends ModelBase
     public function create($params)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_TOKEN, $params);
-            if ($eid === false)
-                throw new \Exception();
-
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
@@ -48,16 +42,13 @@ class Token extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not add authentication codes'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
     public function delete($eid)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
@@ -69,31 +60,36 @@ class Token extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete authentication code'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
     }
 
     public function get($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = $db->fetchRow("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
-                                     tau.user_eid as user_eid,
-                                     tau.access_code as access_code,
-                                     tau.secret_code as secret_code,
-                                     tob.eid_status as eid_status,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_token tau on tob.eid = tau.eid
-                              where tob.eid = ?
-                             ", $eid);
+        $row = false;
+        $db = $this->getDatabase();
+        try
+        {
+            $row = $db->fetchRow("select tob.eid as eid,
+                                        tob.eid_type as eid_type,
+                                        tau.user_eid as user_eid,
+                                        tau.access_code as access_code,
+                                        tau.secret_code as secret_code,
+                                        tob.eid_status as eid_status,
+                                        tob.created as created,
+                                        tob.updated as updated
+                                from tbl_object tob
+                                inner join tbl_token tau on tob.eid = tau.eid
+                                where tob.eid = ?
+                                ", $eid);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
 
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -111,11 +107,7 @@ class Token extends ModelBase
     public function getInfoFromAccessCode($code)
     {
         // get the authentication information from the access code
-
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $row = $db->fetchRow("select tob.eid as eid,
                                      tob.eid_type as eid_type,
                                      tau.user_eid as user_eid,
@@ -145,11 +137,7 @@ class Token extends ModelBase
     public function getInfoFromUserEid($user_eid)
     {
         // get the all available authentication information for the user_eid
-
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $rows = $db->fetchAll("select tob.eid as eid,
                                      tob.eid_type as eid_type,
                                      tau.user_eid as user_eid,

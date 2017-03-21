@@ -17,60 +17,56 @@ class Stream extends ModelBase
     public function create($params)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
-            // create the stream object base
-            $stream_eid = $this->getModel()->createObjectBase(\Model::TYPE_STREAM, $params);
-            if ($stream_eid === false)
-                throw new \Exception();
-
             // make sure the size is an integer or null
             $size = null;
-            if (isset($params['size']) && is_numeric($params['size']))
-                $size = $params['size'];
+            if (isset($params['size']))
+            {
+                if (!is_numeric($params['size']))
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            // add the stream properties
+                $size = $params['size'];
+            }
+
+            // create the object base
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_STREAM, $params);
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
-                'eid'                   => $stream_eid,
-                'name'                  => isset_or($params['name'], ''),
-                'path'                  => isset_or($params['path'], ''),
-                'size'                  => $size,
-                'hash'                  => isset_or($params['hash'], ''),
-                'mime_type'             => isset_or($params['mime_type'], ''),
-                'structure'             => isset_or($params['structure'], '[]'),
-                'file_created'          => isset_or($params['file_created'], null),
-                'file_modified'         => isset_or($params['file_modified'], null),
-                'connection_eid'        => isset_or($params['connection_eid'], ''),
-                'cache_path'            => isset_or($params['cache_path'], ''),
-                'cache_connection_eid'  => isset_or($params['cache_connection_eid'], ''),
+                'eid'                  => $eid,
+                'name'                 => isset_or($params['name'], ''),
+                'path'                 => isset_or($params['path'], ''),
+                'size'                 => $size,
+                'hash'                 => isset_or($params['hash'], ''),
+                'mime_type'            => isset_or($params['mime_type'], ''),
+                'structure'            => isset_or($params['structure'], '[]'),
+                'file_created'         => isset_or($params['file_created'], null),
+                'file_modified'        => isset_or($params['file_modified'], null),
+                'connection_eid'       => isset_or($params['connection_eid'], ''),
+                'cache_path'           => isset_or($params['cache_path'], ''),
+                'cache_connection_eid' => isset_or($params['cache_connection_eid'], ''),
                 'created'              => $timestamp,
                 'updated'              => $timestamp
             );
 
+            // add the properties
             if ($db->insert('tbl_stream', $process_arr) === false) // insert stream info
                 throw new \Exception();
 
             $db->commit();
-            return $stream_eid;
+            return $eid;
         }
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _('Could not create stream'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
     public function delete($eid)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
@@ -82,16 +78,12 @@ class Stream extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Flexio\Base\Error::DELETE_FAILED, _('Could not delete stream'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
     }
 
     public function set($eid, $params)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
@@ -108,9 +100,10 @@ class Stream extends ModelBase
                 'cache_path'           => array('type' => 'string',  'required' => false),
                 'cache_connection_eid' => array('type' => 'eid',     'required' => false)
             ))) === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update stream'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
+        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
@@ -118,53 +111,57 @@ class Stream extends ModelBase
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
             {
-                // simply return false; no exception
+                // object doesn't exist or is deleted
                 $db->commit();
                 return false;
             }
 
-            // update the stream info
+            // set the properties
             $db->update('tbl_stream', $process_arr, 'eid = ' . $db->quote($eid));
-
             $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update stream'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
 
     public function get($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Flexio\Base\Error::NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = $db->fetchRow("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
-                                     tst.name as name,
-                                     tst.path as path,
-                                     tst.size as size,
-                                     tst.hash as hash,
-                                     tst.mime_type as mime_type,
-                                     tst.structure as structure,
-                                     tst.file_created as file_created,
-                                     tst.file_modified as file_modified,
-                                     tst.connection_eid as connection_eid,
-                                     tst.cache_path as cache_path,
-                                     tst.cache_connection_eid as cache_connection_eid,
-                                     tob.eid_status as eid_status,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_stream tst on tob.eid = tst.eid
-                              where tob.eid = ?
-                             ", $eid);
+        $row = false;
+        $db = $this->getDatabase();
+        try
+        {
+            $row = $db->fetchRow("select tob.eid as eid,
+                                        tob.eid_type as eid_type,
+                                        tst.name as name,
+                                        tst.path as path,
+                                        tst.size as size,
+                                        tst.hash as hash,
+                                        tst.mime_type as mime_type,
+                                        tst.structure as structure,
+                                        tst.file_created as file_created,
+                                        tst.file_modified as file_modified,
+                                        tst.connection_eid as connection_eid,
+                                        tst.cache_path as cache_path,
+                                        tst.cache_connection_eid as cache_connection_eid,
+                                        tob.eid_status as eid_status,
+                                        tob.created as created,
+                                        tob.updated as updated
+                                from tbl_object tob
+                                inner join tbl_stream tst on tob.eid = tst.eid
+                                where tob.eid = ?
+                                ", $eid);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
 
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
