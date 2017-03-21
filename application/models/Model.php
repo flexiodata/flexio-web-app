@@ -148,7 +148,7 @@ class Model
         if ($type === \Model::TYPE_OBJECT)
             return $this->createObjectBase($type, $params);
 
-        return $this->loadModel()->create($params);
+        return $this->loadModel($type)->create($params);
     }
 
     public function delete($eid)
@@ -161,7 +161,7 @@ class Model
         if ($type === \Model::TYPE_OBJECT)
             return $this->deleteObjectBase($eid);
 
-        return $this->loadModel()->delete($eid);
+        return $this->loadModel($type)->delete($eid);
     }
 
     public function set($eid, $params)
@@ -176,7 +176,7 @@ class Model
         if ($type === \Model::TYPE_OBJECT)
             return $this->setObjectBase($eid, $params);
 
-        return $this->loadModel()->set($eid, $params);
+        return $this->loadModel($type)->set($eid, $params);
     }
 
     public function get($eid, $type = \Model::TYPE_UNDEFINED)
@@ -191,7 +191,7 @@ class Model
         if ($type === \Model::TYPE_OBJECT)
             return $this->getObjectBase($eid);
 
-        return $this->loadModel()->get($eid);
+        return $this->loadModel($type)->get($eid);
     }
 
     public function getType($eid)
