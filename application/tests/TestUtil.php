@@ -17,6 +17,8 @@ namespace Flexio\Tests;
 
 class TestError
 {
+    const ERROR_EXCEPTION = 'ERROR_EXCEPTION';
+    const ERROR_NO_EXCEPTION = 'ERROR_NO_EXCEPTION';
     const ERROR_BAD_PARSE = 'ERROR_BAD_PARSE';
     const ERROR_EVAL_MISMATCH = 'ERROR_EVAL_MISMATCH';
 }
