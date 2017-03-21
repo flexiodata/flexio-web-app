@@ -37,7 +37,7 @@
     <code-editor
       class="flex-fill ba b--black-10"
       lang="python"
-      val=""
+      :val="command"
     ></code-editor>
     <div class="flex-fill ml4">
       <div class="overflow-auto">
@@ -91,6 +91,7 @@
 <script>
   import * as types from '../constants/task-type'
   import * as tasks from '../constants/task-info'
+  import parser from '../utils/parser'
   import CodeEditor from './CodeEditor.vue'
 
   export default {
@@ -100,6 +101,7 @@
     },
     data() {
       return {
+        command: this.getCommand(),
         editing_name: false,
         editing_description: false
       }
@@ -169,6 +171,9 @@
       },
       editDescription() {
         this.editing_description = true
+      },
+      getCommand() {
+        return _.defaultTo(parser.toCmdbar(this.item), '')
       }
     }
   }
