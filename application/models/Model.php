@@ -304,13 +304,13 @@ class Model
 
         // make sure we have a valid association type
         if (!\Model::isValidEdge($type))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALDI_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // invalid eids can't be associated with each other
         if (!\Flexio\Base\Eid::isValid($source_eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALDI_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         if (!\Flexio\Base\Eid::isValid($target_eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALDI_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         try
         {
