@@ -414,12 +414,35 @@ class Model
 
             $result = $db->fetchOne($sql);
             $result = (int)$result;
-            if ($result === 0)
+            if ($result === 0) // specified association doesn't exist
             {
                 $db->commit();
                 return false;
             }
 
+            // if the association we're going to already exists, use the one that's there
+            // and delete the one being changed
+            $sql = "select count(*) from tbl_association tas ".
+                   "    inner join tbl_object tobsrc on tas.source_eid = tobsrc.eid ".
+                   "    inner join tbl_object tobtar on tas.target_eid = tobtar.eid ".
+                   "    where tas.source_eid = $qsource_eid ".
+                   "        and tas.association_type = $qnewtype ";
+
+            $result = $db->fetchOne($sql);
+            $result = (int)$result;
+            if ($result === 1) // target association already exists; delete existing association
+            {
+                $sql = "delete from tbl_association ".
+                    "    where source_eid = $qsource_eid ".
+                    "        and target_eid = $qtarget_eid ".
+                    "        and association_type = $qtype";
+                $db->exec($sql);
+                $db->commit();
+
+                return true;
+            }
+
+            // association exists, and new association doesn't yet exist; change the association
             $sql = "update tbl_association ".
                    "    set association_type = $qnewtype ".
                    "    where source_eid = $qsource_eid ".
