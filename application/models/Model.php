@@ -380,9 +380,9 @@ class Model
 
         // make sure we have an association type and a new type
         if (!\Model::isValidEdge($type))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         if (!\Model::isValidEdge($newtype))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // invalid eids can't be associated with each other
         if (!\Flexio\Base\Eid::isValid($source_eid))
