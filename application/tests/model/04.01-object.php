@@ -27,68 +27,59 @@ class Test
         // TEST: \Model::create(); invalid type
 
         // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
+        $actual = array();
+        try
+        {
+            $info = array(
+            );
+            $eid = $model->create('', $info);
+        }
+        catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+            $actual = json_decode($message,true);
+        }
+        $expected = array(
+            'code' => \Flexio\Base\Error::NO_MODEL
         );
-        $eid = $model->create('', $info);
-        $actual = $eid;
-        $expected = false;
-        TestCheck::assertBoolean('A.1', '\Model::create(); invalid type should return false',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', '\Model::create(); invalid type should throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
+        $actual = array();
+        try
+        {
+            $info = array(
+            );
+            $eid = $model->create(\Model::TYPE_UNDEFINED, $info);
+        }
+        catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+            $actual = json_decode($message,true);
+        }
+        $expected = array(
+            'code' => \Flexio\Base\Error::NO_MODEL
         );
-        $eid = $model->create('', $info);
-        $actual = $model->getErrors();
-        $expected = array(array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER,
-            'message' => 'Invalid parameter'
-        ));
-        TestCheck::assertInArray('A.2', '\Model::create(); invalid type should set an error',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
-        );
-        $eid = $model->create(\Model::TYPE_UNDEFINED, $info);
-        $actual = $eid;
-        $expected = false;
-        TestCheck::assertBoolean('A.3', '\Model::create(); undefined type should return false',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
-        );
-        $eid = $model->create(\Model::TYPE_UNDEFINED, $info);
-        $actual = $model->getErrors();
-        $expected = array(array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER,
-            'message' => 'Invalid parameter'
-        ));
-        TestCheck::assertInArray('A.4', '\Model::create(); undefined type should set an error',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.2', '\Model::create(); undefined type should throw an exception',  $actual, $expected, $results);
 
 
 
         // TEST: \Model::create(); valid type
 
         // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
-        );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $actual = \Flexio\Base\Eid::isValid($eid);
+        $actual = false;
+        try
+        {
+            $info = array(
+            );
+            $eid = $model->create(\Model::TYPE_OBJECT, $info);
+            $actual = \Flexio\Base\Eid::isValid($eid);
+        }
+        catch (\Exception $e)
+        {
+            $actual = TestError::ERROR_EXCEPTION;
+        }
         $expected = true;
         TestCheck::assertBoolean('B.1', '\Model::create(); for object creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
-        );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $has_errors = $model->hasErrors();
-        $actual = $has_errors;
-        $expected = false;
-        TestCheck::assertBoolean('B.2', '\Model::create(); for object creation, don\'t require input parameters; don\'t flag any errors',  $actual, $expected, $results);
     }
 }
