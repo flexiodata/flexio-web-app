@@ -27,7 +27,6 @@ class Test
         // TEST: search tests for multi-level eid/association combinations
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -48,7 +47,6 @@ class Test
         TestCheck::assertArray('A.1', '\Model::search(); search eids multiple levels deep',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -69,7 +67,6 @@ class Test
         TestCheck::assertArray('A.2', '\Model::search(); search eids multiple levels deep',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
