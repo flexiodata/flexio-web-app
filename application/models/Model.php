@@ -145,7 +145,6 @@ class Model
 
     public function create($type, $params)
     {
-        $type = $this->getType($eid);
         if ($type === \Model::TYPE_UNDEFINED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
