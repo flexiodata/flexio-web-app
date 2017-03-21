@@ -40,7 +40,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::NO_MODEL
+            'code' => \Flexio\Base\Error::CREATE_FAILED
         );
         TestCheck::assertInArray('A.1', '\Model::create(); invalid type should throw an exception',  $actual, $expected, $results);
 
@@ -58,7 +58,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::NO_MODEL
+            'code' => \Flexio\Base\Error::CREATE_FAILED
         );
         TestCheck::assertInArray('A.2', '\Model::create(); undefined type should throw an exception',  $actual, $expected, $results);
 
