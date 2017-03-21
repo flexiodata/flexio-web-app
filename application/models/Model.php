@@ -706,10 +706,12 @@ class Model
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
+        $db = $this->getDatabase();
+
         // if an item is deleted, don't allow it to be redeleted (i.e., act
         // as if it's already been deleted and therefore can't be found;
         // preserve the old updated date as well)
-        $existing_status = $this->getDatabase()->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
+        $existing_status = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
         if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
             return false;
 
@@ -719,7 +721,7 @@ class Model
             'updated'       => $timestamp
         );
 
-        $updated = $this->getDatabase()->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+        $updated = $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
         return $updated;
     }
 
