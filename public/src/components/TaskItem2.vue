@@ -43,46 +43,46 @@
         :val="command"
       ></code-editor>
       <div class="flex-fill">
-        <div class="overflow-auto">
-            <table class="f6 w-100 mw8 center" cellspacing="0">
+        <div class="ba b--black-10 overflow-auto">
+            <table class="f7 w-100 mw8 center" cellspacing="0">
               <thead>
                 <tr>
-                  <th class="fw6 bb b--black-20 tl pb2 pr2 bg-white">Name</th>
-                  <th class="fw6 bb b--black-20 tl pb2 pr2 bg-white">Username</th>
-                  <th class="fw6 bb b--black-20 tl pb2 pr2 bg-white">Email</th>
-                  <th class="fw6 bb b--black-20 tl pb2 pr2 bg-white">ID</th>
+                  <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Name</th>
+                  <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Username</th>
+                  <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Email</th>
+                  <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">ID</th>
                 </tr>
               </thead>
               <tbody class="lh-copy">
                 <tr>
-                  <td class="pv2 pr2 bb b--black-20">Hassan Johnson</td>
-                  <td class="pv2 pr2 bb b--black-20">@hassan</td>
-                  <td class="pv2 pr2 bb b--black-20">hassan@companywithalongdomain.co</td>
-                  <td class="pv2 pr2 bb b--black-20">14419232532474</td>
+                  <td class="pv1 ph2 bb b--black-10">Hassan Johnson</td>
+                  <td class="pv1 ph2 bb b--black-10">@hassan</td>
+                  <td class="pv1 ph2 bb b--black-10">hassan@companywithalongdomain.co</td>
+                  <td class="pv1 ph2 bb b--black-10">14419232532474</td>
                 </tr>
                 <tr>
-                  <td class="pv2 pr2 bb b--black-20">Taral Hicks</td>
-                  <td class="pv2 pr2 bb b--black-20">@hicks</td>
-                  <td class="pv2 pr2 bb b--black-20">taral@companywithalongdomain.co</td>
-                  <td class="pv2 pr2 bb b--black-20">72326219423551</td>
+                  <td class="pv1 ph2 bb b--black-10">Taral Hicks</td>
+                  <td class="pv1 ph2 bb b--black-10">@hicks</td>
+                  <td class="pv1 ph2 bb b--black-10">taral@companywithalongdomain.co</td>
+                  <td class="pv1 ph2 bb b--black-10">72326219423551</td>
                 </tr>
                 <tr>
-                  <td class="pv2 pr2 bb b--black-20">Tyrin Turner</td>
-                  <td class="pv2 pr2 bb b--black-20">@tt</td>
-                  <td class="pv2 pr2 bb b--black-20">ty@companywithalongdomain.co</td>
-                  <td class="pv2 pr2 bb b--black-20">92325170324444</td>
+                  <td class="pv1 ph2 bb b--black-10">Tyrin Turner</td>
+                  <td class="pv1 ph2 bb b--black-10">@tt</td>
+                  <td class="pv1 ph2 bb b--black-10">ty@companywithalongdomain.co</td>
+                  <td class="pv1 ph2 bb b--black-10">92325170324444</td>
                 </tr>
                 <tr>
-                  <td class="pv2 pr2 bb b--black-20">Oliver Grant</td>
-                  <td class="pv2 pr2 bb b--black-20">@oli</td>
-                  <td class="pv2 pr2 bb b--black-20">oliverg@companywithalongdomain.co</td>
-                  <td class="pv2 pr2 bb b--black-20">71165170352909</td>
+                  <td class="pv1 ph2 bb b--black-10">Oliver Grant</td>
+                  <td class="pv1 ph2 bb b--black-10">@oli</td>
+                  <td class="pv1 ph2 bb b--black-10">oliverg@companywithalongdomain.co</td>
+                  <td class="pv1 ph2 bb b--black-10">71165170352909</td>
                 </tr>
                 <tr>
-                  <td class="pv2 pr2 bb b--black-20">Dean Blanc</td>
-                  <td class="pv2 pr2 bb b--black-20">@deanblanc</td>
-                  <td class="pv2 pr2 bb b--black-20">dean@companywithalongdomain.co</td>
-                  <td class="pv2 pr2 bb b--black-20">71865178111909</td>
+                  <td class="pv1 ph2 bb b--black-10">Dean Blanc</td>
+                  <td class="pv1 ph2 bb b--black-10">@deanblanc</td>
+                  <td class="pv1 ph2 bb b--black-10">dean@companywithalongdomain.co</td>
+                  <td class="pv1 ph2 bb b--black-10">71865178111909</td>
                 </tr>
               </tbody>
             </table>
