@@ -326,9 +326,7 @@ class Model
             // create the association; ignore duplicate key so that if the
             // association already exists, the query succeeds so that the
             // end result is the same: the association is established
-            if ($this->getDatabase()->insert('tbl_association', $process_arr, true /*ignore duplicate key*/) === false)
-                throw new \Exception();
-
+            $this->getDatabase()->insert('tbl_association', $process_arr, true /*ignore duplicate key*/);
             return true;
         }
         catch (\Exception $e)
@@ -449,6 +447,8 @@ class Model
         if (!\Flexio\Base\Eid::isValid($source_eid))
             return array();
 
+        $db = $this->getDatabase();
+
         // if the target_eid_set is something besides an array or a string,
         // it's an invalid input; return an empty list
         if (!is_array($target_eid_set) && !is_string($target_eid_set))
@@ -483,7 +483,6 @@ class Model
         if (strlen($qtarget_eids) === 0)
             return array();
 
-        $db = $this->getDatabase();
         try
         {
             // get the associations to the specified target for the source in
