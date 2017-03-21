@@ -1,92 +1,108 @@
 <template>
-  <div class="flex flex-row mt4 mb5 mh5">
-    <div class="flex-none f4 lh-title mid-gray mr2">{{index+1}}.</div>
-    <div class="flex-fill flex-l flex-row-l">
-      <div class="flex-none flex flex-row mb3 mb0-l mr2-l">
-        <div>
-          <div
-            class="cursor-default pa2 mr2 br1 white trans-wh tc"
-            style="margin-top: 2px"
-            :class="[ bg_color ]"
-          >
-            <i class="db material-icons f3">{{task_icon}}</i>
+  <div class="mh5 hide-child relative">
+    <div class="flex flex-row child absolute" style="top: -3rem">
+      <div class="flex-none f4 lh-title white w2 mr1">&nbsp;</div>
+      <div class="cursor-default pa2 br1 black-40 trans-wh tc bg-black-10 hint--right" aria-label="Insert task">
+        <i class="db material-icons f3">add_circle</i>
+      </div>
+    </div>
+
+    <div class="flex flex-row mv2">
+      <div class="flex-none f4 lh-title mid-gray w2 mr1">{{index+1}}.</div>
+      <div class="flex-fill flex-l flex-row-l">
+        <div class="flex-none flex flex-row mb3 mb0-l mr2-l">
+          <div>
+            <div
+              class="cursor-default pa2 mr2 br1 white trans-wh tc"
+              style="margin-top: 2px"
+              :class="[ bg_color ]"
+            >
+              <i class="db material-icons f3">{{task_icon}}</i>
+            </div>
+          </div>
+          <div class="dib relative hide-child" style="width: 240px">
+            <input
+              class="dib f4 lh-title mid-gray bn pa0"
+              autocomplete="off"
+              v-model="display_name"
+              v-if="editing_name"
+              v-focus
+            ></input>
+            <div class="dib f4 lh-title mid-gray" @click="editName" v-else>{{display_name}}</div>
+            <button class="absolute top-0 right-0 pa1 br1 hover-bg-black-10 hint--bottom-left child" aria-label="Edit name and description">
+              <i class="db material-icons md-18 mid-gray">edit</i>
+            </button>
+            <textarea
+              class="f6 fw6 lh-title bn"
+              autocomplete="off"
+              v-model="description"
+              v-if="editing_description"
+              v-focus
+            ></textarea>
+            <div class="f6 fw6 lh-title ba b--transparent" @click="editDescription" v-else>
+              <span v-if="description.length > 0">{{description}}</span>
+              <span class="black-20" v-else>Add a description</span>
+            </div>
           </div>
         </div>
-        <div class="dib relative hide-child" style="width: 240px">
-          <input
-            class="dib f4 lh-title mid-gray bn pa0"
-            autocomplete="off"
-            v-model="display_name"
-            v-if="editing_name"
-            v-focus
-          ></input>
-          <div class="dib f4 lh-title mid-gray" @click="editName" v-else>{{display_name}}</div>
-          <button class="absolute top-0 right-0 pa1 br1 hover-bg-black-10 hint--bottom-left child" aria-label="Edit name and description">
-            <i class="db material-icons md-18 mid-gray">edit</i>
-          </button>
-          <textarea
-            class="f6 fw6 lh-title bn"
-            autocomplete="off"
-            v-model="description"
-            v-if="editing_description"
-            v-focus
-          ></textarea>
-          <div class="f6 fw6 lh-title ba b--transparent" @click="editDescription" v-else>
-            <span v-if="description.length > 0">{{description}}</span>
-            <span class="black-20" v-else>Add a description</span>
-          </div>
+        <code-editor
+          class="flex-fill ba b--black-10 mb3 mb0-l mr4-l"
+          lang="python"
+          :val="command"
+        ></code-editor>
+        <div class="flex-fill">
+          <div class="ba b--black-10 overflow-auto">
+              <table class="f7 w-100 mw8 center" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Name</th>
+                    <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Username</th>
+                    <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Email</th>
+                    <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">ID</th>
+                  </tr>
+                </thead>
+                <tbody class="lh-copy">
+                  <tr>
+                    <td class="pv1 ph2 bb b--black-10">Hassan Johnson</td>
+                    <td class="pv1 ph2 bb b--black-10">@hassan</td>
+                    <td class="pv1 ph2 bb b--black-10">hassan@companywithalongdomain.co</td>
+                    <td class="pv1 ph2 bb b--black-10">14419232532474</td>
+                  </tr>
+                  <tr>
+                    <td class="pv1 ph2 bb b--black-10">Taral Hicks</td>
+                    <td class="pv1 ph2 bb b--black-10">@hicks</td>
+                    <td class="pv1 ph2 bb b--black-10">taral@companywithalongdomain.co</td>
+                    <td class="pv1 ph2 bb b--black-10">72326219423551</td>
+                  </tr>
+                  <tr>
+                    <td class="pv1 ph2 bb b--black-10">Tyrin Turner</td>
+                    <td class="pv1 ph2 bb b--black-10">@tt</td>
+                    <td class="pv1 ph2 bb b--black-10">ty@companywithalongdomain.co</td>
+                    <td class="pv1 ph2 bb b--black-10">92325170324444</td>
+                  </tr>
+                  <tr>
+                    <td class="pv1 ph2 bb b--black-10">Oliver Grant</td>
+                    <td class="pv1 ph2 bb b--black-10">@oli</td>
+                    <td class="pv1 ph2 bb b--black-10">oliverg@companywithalongdomain.co</td>
+                    <td class="pv1 ph2 bb b--black-10">71165170352909</td>
+                  </tr>
+                  <tr>
+                    <td class="pv1 ph2 bb b--black-10">Dean Blanc</td>
+                    <td class="pv1 ph2 bb b--black-10">@deanblanc</td>
+                    <td class="pv1 ph2 bb b--black-10">dean@companywithalongdomain.co</td>
+                    <td class="pv1 ph2 bb b--black-10">71865178111909</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
         </div>
       </div>
-      <code-editor
-        class="flex-fill ba b--black-10 mb3 mb0-l mr4-l"
-        lang="python"
-        :val="command"
-      ></code-editor>
-      <div class="flex-fill">
-        <div class="ba b--black-10 overflow-auto">
-            <table class="f7 w-100 mw8 center" cellspacing="0">
-              <thead>
-                <tr>
-                  <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Name</th>
-                  <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Username</th>
-                  <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Email</th>
-                  <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">ID</th>
-                </tr>
-              </thead>
-              <tbody class="lh-copy">
-                <tr>
-                  <td class="pv1 ph2 bb b--black-10">Hassan Johnson</td>
-                  <td class="pv1 ph2 bb b--black-10">@hassan</td>
-                  <td class="pv1 ph2 bb b--black-10">hassan@companywithalongdomain.co</td>
-                  <td class="pv1 ph2 bb b--black-10">14419232532474</td>
-                </tr>
-                <tr>
-                  <td class="pv1 ph2 bb b--black-10">Taral Hicks</td>
-                  <td class="pv1 ph2 bb b--black-10">@hicks</td>
-                  <td class="pv1 ph2 bb b--black-10">taral@companywithalongdomain.co</td>
-                  <td class="pv1 ph2 bb b--black-10">72326219423551</td>
-                </tr>
-                <tr>
-                  <td class="pv1 ph2 bb b--black-10">Tyrin Turner</td>
-                  <td class="pv1 ph2 bb b--black-10">@tt</td>
-                  <td class="pv1 ph2 bb b--black-10">ty@companywithalongdomain.co</td>
-                  <td class="pv1 ph2 bb b--black-10">92325170324444</td>
-                </tr>
-                <tr>
-                  <td class="pv1 ph2 bb b--black-10">Oliver Grant</td>
-                  <td class="pv1 ph2 bb b--black-10">@oli</td>
-                  <td class="pv1 ph2 bb b--black-10">oliverg@companywithalongdomain.co</td>
-                  <td class="pv1 ph2 bb b--black-10">71165170352909</td>
-                </tr>
-                <tr>
-                  <td class="pv1 ph2 bb b--black-10">Dean Blanc</td>
-                  <td class="pv1 ph2 bb b--black-10">@deanblanc</td>
-                  <td class="pv1 ph2 bb b--black-10">dean@companywithalongdomain.co</td>
-                  <td class="pv1 ph2 bb b--black-10">71865178111909</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+    </div>
+
+    <div class="flex flex-row child">
+      <div class="flex-none f4 lh-title white w2 mr1">&nbsp;</div>
+      <div class="cursor-default pa2 br1 black-40 trans-wh tc bg-black-10 hint--right" aria-label="Insert task">
+        <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
   </div>

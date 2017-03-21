@@ -3,7 +3,7 @@
     <spinner size="medium" show-text loading-text="Loading pipe..."></spinner>
   </div>
   <div v-else class="flex flex-column items-stretch">
-    <div class="mt3 pb2 mh5">
+    <div class="mt3 mh5">
       <div class="mb1">
         <div class="dib f3 li-title v-mid dark-gray mr2 v-mid">{{pipe.name}}</div>
         <div class="dib f7 li-title v-mid silver pv1 ph2 bg-black-05">
