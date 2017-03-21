@@ -145,6 +145,10 @@ class Model
 
     public function create($type, $params)
     {
+        $type = $this->getType($eid);
+        if ($type === \Model::TYPE_UNDEFINED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
         if ($type === \Model::TYPE_OBJECT)
             return $this->createObjectBase($type, $params);
 
@@ -154,10 +158,12 @@ class Model
     public function delete($eid)
     {
         // behavior for delete is to return true if the object is
-        // deleted and to return otherwise, so if we can't return
-        // the object return false
+        // deleted or can't be found
 
         $type = $this->getType($eid);
+        if ($type === \Model::TYPE_UNDEFINED)
+            return false;
+
         if ($type === \Model::TYPE_OBJECT)
             return $this->deleteObjectBase($eid);
 
@@ -173,6 +179,9 @@ class Model
         // as the eid exists)
 
         $type = $this->getType($eid);
+        if ($type === \Model::TYPE_UNDEFINED)
+            return false;
+
         if ($type === \Model::TYPE_OBJECT)
             return $this->setObjectBase($eid, $params);
 
@@ -186,7 +195,11 @@ class Model
         // we can't get the model
 
         if ($type === \Model::TYPE_UNDEFINED)
+        {
             $type = $this->getType($eid);
+            if ($type === \Model::TYPE_UNDEFINED)
+                return false;
+        }
 
         if ($type === \Model::TYPE_OBJECT)
             return $this->getObjectBase($eid);
@@ -687,7 +700,7 @@ class Model
         // that ensure that all the delete operations function as one unit
 
         // behavior for delete is to return true if the object is
-        // deleted and to return otherwise, so if we can't find the object,
+        // deleted and to return false otherwise, so if we can't find the object,
         // return false
 
         // if eid is invalid, the object doesn't exist, so behave as if it doesn't exist
