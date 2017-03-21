@@ -77,53 +77,58 @@ class Test
         TestCheck::assertString('A.11', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Flexio\Base\Error::CONNECTION_FAILED;
+        $expected = 'connection_failed';
+        TestCheck::assertString('A.12', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Flexio\Base\Error::CREATE_FAILED;
         $expected = 'create_failed';
-        TestCheck::assertString('A.12', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.13', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::DELETE_FAILED;
         $expected = 'delete_failed';
-        TestCheck::assertString('A.13', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.14', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::WRITE_FAILED;
         $expected = 'write_failed';
-        TestCheck::assertString('A.14', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.15', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::READ_FAILED;
         $expected = 'read_failed';
-        TestCheck::assertString('A.15', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.16', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::UNAUTHORIZED;
         $expected = 'unauthorized';
-        TestCheck::assertString('A.16', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.17', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INSUFFICIENT_RIGHTS;
         $expected = 'insufficient_rights';
-        TestCheck::assertString('A.17', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.18', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED;
         $expected = 'size_limit_exceeded';
-        TestCheck::assertString('A.18', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.19', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INVALID_METHOD;
         $expected = 'invalid_method';
-        TestCheck::assertString('A.19', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.20', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INVALID_VERSION;
         $expected = 'invalid_version';
-        TestCheck::assertString('A.20', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.21', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INVALID_REQUEST;
         $expected = 'invalid_request';
-        TestCheck::assertString('A.21', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.22', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
     }
 }

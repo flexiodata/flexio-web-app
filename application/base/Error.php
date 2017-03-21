@@ -28,6 +28,7 @@ class Error
     const INVALID_PARAMETER      =  'invalid_parameter';
     const INVALID_SYNTAX         =  'invalid_syntax';
     const NO_OBJECT              =  'no_object';
+    const CONNECTION_FAILED      =  'connection_failed';
     const CREATE_FAILED          =  'create_failed';
     const DELETE_FAILED          =  'delete_failed';
     const WRITE_FAILED           =  'write_failed';
