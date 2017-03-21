@@ -3,30 +3,23 @@
     <spinner size="medium" show-text loading-text="Loading pipe..."></spinner>
   </div>
   <div v-else class="flex flex-column items-stretch">
-    <div class="flex-fill flex flex-column">
-      <task-list2
-        :tasks="tasks"
-      >
-      </task-list2>
+    <div class="mt3 pb2 mh5">
+      <div class="mb1">
+        <div class="dib f3 li-title v-mid dark-gray mr2 v-mid">{{pipe.name}}</div>
+        <div class="dib f7 li-title v-mid silver pv1 ph2 bg-black-05">
+          <span v-if="pipe.ename.length > 0">{{pipe.ename}}</span>
+          <span v-else>Add an alias</span>
+        </div>
+      </div>
+      <div class="f6 lh-title mid-gray">
+        <span v-if="pipe.description.length > 0">{{pipe.description}}</span>
+        <span class="fw6 black-20" v-else>Add a description</span>
+      </div>
     </div>
 
-    <!-- choose input/output modal -->
-    <pipe-props-modal
-      ref="modal-choose-input-output"
-      :project-eid="project_eid"
-      @add-connection="openConnectionModal"
-      @submit="autofillTask"
-      @hide="show_input_output_modal = false"
-      v-if="show_input_output_modal"
-    ></pipe-props-modal>
-
-    <!-- connection modal -->
-    <connection-props-modal
-      ref="modal-add-connection"
-      :project-eid="project_eid"
-      @submit="tryAddConnection"
-    ></connection-props-modal>
-
+    <div class="flex-fill flex flex-column">
+      <task-list2 :tasks="tasks"></task-list2>
+    </div>
   </div>
 </template>
 
@@ -41,13 +34,6 @@
   import Btn from './Btn.vue'
   import Spinner from './Spinner.vue'
   import TaskList2 from './TaskList2.vue'
-  import CommandBar from './CommandBar.vue'
-  import InputList from './InputList.vue'
-  import CodeEditor from './CodeEditor.vue'
-  import PipeContent from './PipeContent.vue'
-  import ProcessProgressList from './ProcessProgressList.vue'
-  import PipePropsModal from './PipePropsModal.vue'
-  import ConnectionPropsModal from './ConnectionPropsModal.vue'
 
   const DEFAULT_INSERT_TASK = {
     inserting: true,
@@ -62,13 +48,6 @@
       Btn,
       Spinner,
       TaskList2,
-      CommandBar,
-      InputList,
-      CodeEditor,
-      PipeContent,
-      ProcessProgressList,
-      PipePropsModal,
-      ConnectionPropsModal
     },
     data() {
       return {
@@ -290,348 +269,6 @@
           this.$store.dispatch('fetchProcessTaskOutputInfo', { eid: process_eid, task_eid: this.active_task_eid })
       },
 
-      toggleFiles() {
-        this.show_files = !this.show_files
-      },
-
-      toggleContent() {
-        this.show_content = !this.show_content
-      },
-
-      openInputFileChooserModal() {
-        if (!this.inserting_task && !this.is_active_task_input)
-          this.insertTaskAtIndex(this.active_task)
-
-        this.show_input_output_modal = true
-        this.$nextTick(() => { this.$refs['modal-choose-input-output'].open({ mode: 'choose-input' }) })
-      },
-
-      openOutputFileChooserModal() {
-        if (!this.inserting_task && !this.is_active_task_output)
-          this.insertTaskAtIndex(this.active_task)
-
-        this.show_input_output_modal = true
-        this.$nextTick(() => { this.$refs['modal-choose-input-output'].open({ mode: 'choose-output' }) })
-      },
-
-      openConnectionModal() {
-        this.$refs['modal-choose-input-output'].close()
-        this.$refs['modal-add-connection'].open()
-      },
-
-      autofillTask(attrs, modal) {
-        if (this.inserting_task)
-          this.insert_task = _.assign({}, _.get(attrs, 'task[0]', {}))
-           else
-          this.edit_task = _.assign({}, _.get(attrs, 'task[0]', {}))
-
-        modal.close()
-
-        this.$refs['commandbar'].focus()
-      },
-
-      tryAddConnection(attrs, modal) {
-        var me = this
-        var eid = attrs.eid
-        attrs = _.pick(attrs, ['name', 'ename', 'description', 'token', 'host', 'port', 'username', 'password', 'database'])
-        _.extend(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
-
-        // update the connection and make it available
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            // close the connection modal
-            modal.close()
-
-            // try to connect to the connection
-            me.$store.dispatch('testConnection', { eid, attrs })
-
-            // re-open the input file chooser modal and set its connection
-            me.show_input_output_modal = true
-            me.$refs['modal-choose-input-output']
-              .open({ mode: me.is_active_task_input ? 'choose-input' : 'choose-output' })
-              .setConnection(response.body)
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-
-      startInputInsert(idx) {
-        if (_.isNil(idx) || idx == -1)
-          idx = 0
-
-        // if there are no inputs, this is a ghost item; show the input chooser
-        var input_idx = _.findIndex(this.tasks, (t) => { return _.get(t, 'type') == TASK_TYPE_INPUT })
-
-        this.inserting_task = true
-        this.insert_idx = idx
-        this.insert_task = _.extend({}, DEFAULT_INSERT_TASK, {
-          type: TASK_TYPE_INPUT,
-          params: {
-            connection: ''
-          },
-          metadata: {
-            name: 'New Input'
-          }
-        })
-
-        this.$refs['commandbar'].focus()
-
-        if (input_idx == -1)
-          this.openInputFileChooserModal()
-      },
-
-      startOutputInsert(idx) {
-        if (_.isNil(idx) || idx == -1)
-          idx = this.raw_tasks.length
-
-        // if there are no outputs, this is a ghost item; show the output chooser
-        var output_idx = _.findIndex(this.tasks, (t) => { return _.get(t, 'type') == TASK_TYPE_OUTPUT })
-
-        this.inserting_task = true
-        this.insert_idx = idx
-        this.insert_task = _.extend({}, DEFAULT_INSERT_TASK, {
-          type: TASK_TYPE_OUTPUT,
-          params: {
-            connection: ''
-          },
-          metadata: {
-            name: 'New Output'
-          }
-        })
-
-        this.$refs['commandbar'].focus()
-
-        if (output_idx == -1)
-          this.openOutputFileChooserModal()
-      },
-
-      startTaskInsert(idx) {
-        if (_.isNil(idx) || idx == -1)
-          idx = _.findLastIndex(this.raw_tasks, { type: TASK_TYPE_OUTPUT })
-
-        this.inserting_task = true
-        this.insert_idx = idx >= 0 ? idx : this.raw_tasks.length
-        this.insert_task = _.extend({}, DEFAULT_INSERT_TASK, {
-          metadata: {
-            name: 'New Task'
-          }
-        })
-
-        this.$refs['commandbar'].focus()
-      },
-
-      insertTaskAtIndex(item) {
-        var idx = _.findIndex(this.raw_tasks, { eid: _.get(item, 'eid') })
-        var task_type = _.get(item, 'type')
-
-        if (idx >= 0)
-        {
-          if (task_type == TASK_TYPE_INPUT)
-            this.startInputInsert(idx+1)
-             else if (task_type == TASK_TYPE_OUTPUT)
-            this.startOutputInsert(idx+1)
-             else
-            this.startTaskInsert(idx+1)
-        }
-         else
-        {
-          this.startTaskInsert(-1)
-        }
-      },
-
-      endTaskInsert() {
-        this.inserting_task = false
-        this.insert_idx = -1
-        this.insert_task = {}
-      },
-
-      revertTaskChanges() {
-        this.edit_task = _.cloneDeep(this.active_task)
-
-        var cm = this.$refs['code']
-        if (cm)
-          cm.setValue(this.execute_code)
-      },
-
-      updateExecuteJson(val) {
-        // encode as base64
-        if (val.length > 0)
-          val = btoa(val)
-
-        var tmp = _.assign({}, this.edit_task)
-        _.set(tmp, 'params.code', val)
-        this.edit_task = _.assign({}, tmp)
-      },
-
-      setActiveTask(item) {
-        this.active_task_eid = _.get(item, 'eid', '')
-      },
-
-      setActiveInput(item) {
-        this.active_stream_eid = _.get(item, 'eid', '')
-      },
-
-      deleteTask(item) {
-        var me = this
-        var item_idx = _.findIndex(this.raw_tasks, { eid: item.eid })
-        var eid = this.eid
-        var task_eid = item.eid
-
-        this.$store.dispatch('deletePipeTask', { eid, task_eid }).then(response => {
-          if (response.ok)
-          {
-            // we deleted the active task; set a new active task
-            if (item.eid == me.active_task_eid)
-            {
-              if (item_idx >= me.raw_tasks.length)
-                item_idx--
-
-              var task = _.get(this.raw_tasks, '['+item_idx+']', {})
-              me.active_task_eid = _.get(task, 'eid')
-            }
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-
-      saveTask(attrs) {
-        // add connection type to input task metadata
-        if (_.get(attrs, 'type') == TASK_TYPE_INPUT ||
-            _.get(attrs, 'type') == TASK_TYPE_OUTPUT)
-        {
-          var cidentifier = _.get(attrs, 'params.connection', '')
-
-          if (cidentifier.length > 0)
-          {
-            // lookup the related connection
-            var c = _.find(this.getOurConnections(), (c) => {
-              return _.get(c, 'eid') == cidentifier || _.get(c, 'ename') == cidentifier
-            })
-
-            var ctype = _.get(c, 'connection_type', '')
-
-            // set task metadata
-            _.set(attrs, 'metadata.connection_type', ctype)
-          }
-           else
-          {
-            // if we can't find the connection, default to web link (for now)
-            _.set(attrs, 'metadata.connection_type', CONNECTION_TYPE_HTTP)
-          }
-        }
-
-        if (this.inserting_task || this.raw_tasks.length == 0)
-          this.createTask(attrs)
-           else
-          this.updateTask(attrs)
-      },
-
-      createTask(attrs) {
-        var me = this
-
-        // make sure that our insert position is always a positive number
-        if (this.insert_idx == -1)
-          this.insert_idx = this.raw_tasks.length
-
-        // add the insert index to the JSON we'll send to the server
-        attrs.index = this.insert_idx
-
-        var eid = this.eid
-        var attrs = _.omit(attrs, 'eid')
-
-        // edit pipe task
-        this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            var is_execute = _.get(attrs, 'type') == TASK_TYPE_EXECUTE
-
-            // set the active task eid
-            var task_eid = _.get(response.body, 'eid', '')
-            if (task_eid.length > 0)
-              me.active_task_eid = task_eid
-
-            me.$store.dispatch('createProcess', {
-              attrs: {
-                parent_eid: me.eid,
-                process_mode: PROCESS_MODE_BUILD,
-                run: is_execute ? false : true // this will automatically run the process and start polling the process
-              }
-            })
-
-            me.endTaskInsert()
-
-            // TODO: this needs to be rethought -- this was a big usability issue
-            /*
-            // start another insert unless on an execute step
-            // which will go into edit mode for the code editor
-            if (is_execute)
-              me.endTaskInsert()
-               else
-              me.startTaskInsert(me.insert_idx+1)
-            */
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-
-      updateTask(attrs) {
-        var me = this
-
-        var eid = this.eid
-        var task_eid = attrs.eid
-        var attrs = _.omit(attrs, 'eid')
-
-        // edit pipe task
-        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            me.$store.dispatch('createProcess', {
-              attrs: {
-                parent_eid: me.eid,
-                process_mode: PROCESS_MODE_BUILD,
-                run: true // this will automatically run the process and start polling the process
-              }
-            })
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-
-      runPipe() {
-        var attrs = {
-          parent_eid: this.eid,
-          process_mode: PROCESS_MODE_RUN,
-          run: true // this will automatically run the process and start polling the process
-        }
-
-        this.$store.dispatch('createProcess', { attrs })
-      },
-
-      cancelProcess() {
-        if (this.is_process_running)
-        {
-          var eid = _.get(this.active_process, 'eid', '')
-          this.$store.dispatch('cancelProcess', { eid })
-        }
-      },
-
-      sendErrorReport() {
-        alert('TODO')
-      },
-
       getOurConnections() {
         var me = this
 
@@ -671,9 +308,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  .file-list + .pipe-content {
-    margin-left: 1rem;
-  }
-</style>
