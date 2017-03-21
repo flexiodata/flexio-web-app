@@ -243,6 +243,7 @@ class Model
         if ($this->getType($eid) === \Model::TYPE_UNDEFINED)
             return false;
 
+        $db = $this->getDatabase();
         try
         {
             // set the updated timestamp so it'll stay in sync with whatever
@@ -252,7 +253,7 @@ class Model
                 'eid_status'    => $status,
                 'updated'       => $timestamp
             );
-            $this->getDatabase()->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
             return true;
         }
         catch (\Exception $e)
