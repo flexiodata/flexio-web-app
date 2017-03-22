@@ -53,7 +53,7 @@
     </div>
 
     <pipe-transfer class="flex-fill mh5" :tasks="tasks" v-if="is_transfer_view"></pipe-transfer>
-    <task-list2 class="flex-fill" :tasks="tasks" v-else></task-list2>
+    <pipe-builder-list class="flex-fill" :tasks="tasks" v-else></pipe-builder-list>
   </div>
 </template>
 
@@ -68,7 +68,7 @@
   import Btn from './Btn.vue'
   import Spinner from './Spinner.vue'
   import PipeTransfer from './PipeTransfer.vue'
-  import TaskList2 from './TaskList2.vue'
+  import PipeBuilderList from './PipeBuilderList.vue'
 
   export default {
     mixins: [setActiveProject],
@@ -76,7 +76,7 @@
       Btn,
       Spinner,
       PipeTransfer,
-      TaskList2
+      PipeBuilderList
     },
     data() {
       return {
