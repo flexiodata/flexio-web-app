@@ -527,16 +527,36 @@ class User
         $user_info = $user->get();
         $username = $user_info['user_name'];
 
-        $ename_suffix = \Flexio\Base\Util::generateRandomString(4);
-        $ename = isset_or($pipe_definition['ename'], $ename_suffix);
+        $ename = isset_or($pipe_definition['ename'], '');
         $ename = $username . '-' . $ename;
 
         if (\Flexio\Base\Identifier::isValid($ename) === false)
             $ename = '';
 
-        $object = \Flexio\Object\Store::load($ename); // see if the ename exists; if it doesn't don't set an ename
-        if ($object !== false)
+        $object = \Flexio\Object\Store::load($ename); // see if the ename exists; if it does or nor no ename exists, we need to generate a unique ename
+        if ($object !== false || strlen($ename) === 0)
+        {
+            // reset the ename in case our efforts to find a suitable name fail
+            $enamebase = $ename;
             $ename = '';
+
+            // cycle through 10 random ename possibilies; after that, don't try anymore
+            for ($i = 0; $i < 10; ++$i)
+            {
+                $random_ename = '';
+                if (strlen($enamebase) === 0)
+                    $random_ename = 'pipe-' . \Flexio\Base\Util::generateRandomString(8); // long suffix
+                     else
+                    $random_ename = $enamebase . '-' . \Flexio\Base\Util::generateRandomString(4); // short suffix
+
+                $object = \Flexio\Object\Store::load($random_ename);
+                if ($object === false)
+                {
+                    $ename = $random_ename;
+                    break;
+                }
+            }
+        }
 
         $call_params['name'] = isset_or($pipe_definition['name'], 'Sample Pipe');
         $call_params['ename'] = $ename;
