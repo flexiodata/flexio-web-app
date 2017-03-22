@@ -27,7 +27,6 @@ class Test
         // TEST: set tests with non-eid input
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -37,7 +36,6 @@ class Test
         TestCheck::assertBoolean('A.1', '\Model::set(); return false with invalid input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -46,23 +44,11 @@ class Test
         $expected = false;
         TestCheck::assertBoolean('A.2', '\Model::set(); return false with invalid input',  $actual, $expected, $results);
 
-        // BEGIN TEST
-        $model->clearErrors();
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'name' => $handle
-        );
-        $result = $model->set('', $info);
-        $actual = $model->hasErrors();
-        $expected = false;
-        TestCheck::assertBoolean('A.3', '\Model::set(); don\'t flag an error with invalid input',  $actual, $expected, $results);
-
 
 
         // TEST: set tests with valid eid input, but object doesn't exist
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -73,19 +59,6 @@ class Test
         TestCheck::assertBoolean('B.1', '\Model::set(); return false after trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'name' => $handle
-        );
-        $eid = \Flexio\Base\Eid::generate();
-        $result = $model->set($eid, $info);
-        $actual = $model->hasErrors();
-        $expected = false;
-        TestCheck::assertBoolean('B.2', '\Model::set(); don\'t flag an error when trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -93,17 +66,15 @@ class Test
         $eid = $model->create(\Model::TYPE_PIPE, $info);
         $delete_result = $model->delete($eid);
         $set_result = $model->set($eid, $info);
-        $has_errors = $model->hasErrors();
-        $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === false && $has_errors === false;
+        $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === false;
         $expected = true;
-        TestCheck::assertBoolean('B.3', '\Model::set(); return false and don\'t flag an error when trying to set parameters on an object that\'s been deleted',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Model::set(); return false and don\'t flag an error when trying to set parameters on an object that\'s been deleted',  $actual, $expected, $results);
 
 
 
         // TEST: set tests on an object that exists
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $eid = $model->create(\Model::TYPE_PIPE, $info);
         $info = array(
@@ -113,7 +84,6 @@ class Test
         TestCheck::assertBoolean('C.1', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -127,7 +97,6 @@ class Test
         TestCheck::assertBoolean('C.2', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -141,7 +110,6 @@ class Test
         TestCheck::assertBoolean('C.3', '\Model::set(); return true when trying to set parameters that don\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -155,27 +123,34 @@ class Test
         TestCheck::assertBoolean('C.4', '\Model::set(); return true when parameters are set successfully',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'name' => $handle
+        $actual = array();
+        try
+        {
+            $handle = \Flexio\Base\Util::generateHandle();
+            $info = array(
+                'name' => $handle
+            );
+            $eid = $model->create(\Model::TYPE_PIPE, $info);
+            $info = array(
+                'description' => null
+            );
+            $result = $model->set($eid, $info);
+        }
+        catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+            $actual = json_decode($message,true);
+        }
+        $expected = array(
+            'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $info = array(
-            'description' => null
-        );
-        $result = $model->set($eid, $info);
-        $has_errors = $model->hasErrors();
-        $actual = $result === false && $has_errors === true;
-        $expected = true;
-        TestCheck::assertBoolean('C.5', '\Model::set(); return false and flag an error when a parameter is set to a bad value',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.5', '\Model::set(); return false and throw an exception when a parameter is set to a bad value',  $actual, $expected, $results);
 
 
 
         // TEST: \Model::set(); make sure that non-specified properties aren't changed
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
             'name' => 'Test pipe'
         );
