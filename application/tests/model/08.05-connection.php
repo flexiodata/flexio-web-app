@@ -27,7 +27,6 @@ class Test
         // TEST: when creating a connection, reject invalid parameters
 
         // BEGIN TEST
-        $model->clearErrors();
         $input_eid = 'xxxxxxxxxxxx';
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
@@ -40,7 +39,6 @@ class Test
         TestCheck::assertBoolean('A.1', '\Model::create(); in connection creation, don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $eid_type = \Model::TYPE_COMMENT;  // try something besides \Model::TYPE_UNDEFINED
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
@@ -54,7 +52,6 @@ class Test
         TestCheck::assertBoolean('A.2', '\Model::create(); in connection creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => $handle
@@ -71,7 +68,6 @@ class Test
         // and make sure these are set when specified in the input
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
@@ -82,7 +78,6 @@ class Test
         TestCheck::assertBoolean('B.1', '\Model::create(); in connection creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
@@ -106,7 +101,6 @@ class Test
 /*
 BIW: Jan, 2016: this test is no longer valid because connection model now does straight value storage
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
@@ -122,7 +116,6 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         // TEST: make sure fields that are specified are properly set
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
@@ -135,7 +128,6 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         TestCheck::assertInArray('C.1', '\Model::create(); in connection creation, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => 'Test Connection'
@@ -148,7 +140,6 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         TestCheck::assertInArray('C.2', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'description' => 'Test connection description'
@@ -161,7 +152,6 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         TestCheck::assertInArray('C.3', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'display_icon' => '<blank>'
@@ -174,7 +164,6 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         TestCheck::assertInArray('C.4', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'connection_status' => \Model::CONNECTION_STATUS_AVAILABLE
@@ -187,7 +176,6 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         TestCheck::assertInArray('C.5', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'port' => 3025
@@ -200,7 +188,6 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         TestCheck::assertInArray('C.6', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'database' => 'db'
@@ -213,7 +200,6 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         TestCheck::assertInArray('C.7', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'connection_type' => 'ct'
