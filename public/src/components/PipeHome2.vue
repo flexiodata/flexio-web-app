@@ -3,17 +3,19 @@
     <spinner size="medium" show-text loading-text="Loading pipe..."></spinner>
   </div>
   <div v-else class="flex flex-column items-stretch">
-    <div class="mv3 mh5">
-      <div class="mb1">
-        <div class="dib f3 li-title v-mid dark-gray mr2 v-mid">{{pipe_name}}</div>
-        <div class="dib f7 li-title v-mid silver pv1 ph2 bg-black-05">
-          <span v-if="pipe_ename.length > 0">{{pipe_ename}}</span>
-          <span v-else>Add an alias</span>
+    <div class="flex flex-row mv3 mh5">
+      <div class="flex-fill">
+        <div class="mb1">
+          <div class="dib f3 li-title v-mid dark-gray mr2 v-mid">{{pipe_name}}</div>
+          <div class="dib f7 li-title v-mid silver pv1 ph2 bg-black-05">
+            <span v-if="pipe_ename.length > 0">{{pipe_ename}}</span>
+            <span v-else>Add an alias</span>
+          </div>
         </div>
-      </div>
-      <div class="f6 lh-title gray">
-        <span v-if="pipe_description.length > 0">{{pipe_description}}</span>
-        <span class="fw6 black-20" v-else>Add a description</span>
+        <div class="f6 lh-title gray">
+          <span v-if="pipe_description.length > 0">{{pipe_description}}</span>
+          <span class="fw6 black-20" v-else>Add a description</span>
+        </div>
       </div>
     </div>
 
@@ -25,6 +27,10 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
+  import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
+  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT, TASK_TYPE_EXECUTE } from '../constants/task-type'
+  import { PROCESS_STATUS_RUNNING, PROCESS_STATUS_FAILED, PROCESS_MODE_BUILD, PROCESS_MODE_RUN } from '../constants/process'
   import setActiveProject from './mixins/set-active-project'
 
   import Btn from './Btn.vue'
@@ -36,7 +42,7 @@
     components: {
       Btn,
       Spinner,
-      TaskList2,
+      TaskList2
     },
     data() {
       return {
@@ -53,10 +59,20 @@
       processes_fetched() { return _.get(this.pipe, 'processes_fetched', false) },
       tasks()             { return _.get(this.pipe, 'task', []) },
       project_eid()       { return _.get(this.pipe, 'project.eid', '') },
+
+      active_process()       { return _.last(this.getActiveDocumentProcesses()) },
+      is_process_running()   { return _.get(this.active_process, 'process_status', '') == PROCESS_STATUS_RUNNING },
+      is_process_run_mode()  { return _.get(this.active_process, 'process_mode', '') == PROCESS_MODE_RUN }
+    },
+    watch: {
+      project_eid: function(val, old_val) {
+        this.tryFetchConnections()
+      }
     },
     created() {
       this.tryFetchPipe()
       this.tryFetchProcesses()
+      this.tryFetchConnections()
     },
     methods: {
       ...mapGetters([
@@ -88,6 +104,16 @@
         // will cause our component to update
         if (!this.processes_fetched)
           this.$store.dispatch('fetchProcesses', this.eid)
+      },
+
+      tryFetchConnections() {
+        if (this.project_eid.length == 0)
+          return
+
+        // if we haven't fetched the columns for the active process task, do so now
+        var is_fetched = _.get(this.$store, 'state.objects.'+this.project_eid+'.connections_fetched', false)
+        if (!is_fetched)
+          this.$store.dispatch('fetchConnections', this.project_eid)
       }
     }
   }
