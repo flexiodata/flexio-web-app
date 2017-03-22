@@ -19,7 +19,11 @@ class Test
 {
     public function run(&$results)
     {
+        // TODO: add tests for sample project pipes
+
+
         // TEST: demo video pipe
+        // Note: updated 20170322; use new data input path
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create('
@@ -30,7 +34,7 @@ class Test
                 "params": {
                     "items": [
                         {
-                            "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/sample-data\/master\/contacts-2016-11.csv"
+                            "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/data\/master\/contact-samples\/contacts-ltd2.csv"
                         }
                     ]
                 },
@@ -97,6 +101,9 @@ class Test
         // Pipe Description: Convert all text in a CSV file to upper case and filter rows
         // Pipe Link: https://www.flex.io/app/project?eid=f3zsl6lkgzdp
         // Blog Link: https://www.flex.io/blog/we-are-reinventing-the-query-builder-well-kinda/
+        // DEPRECATED: note, the following logic is the old logic, but is maintained here because
+        // it's a useful test; the new blog pipe at the same location follows the standard
+        // 'contact-refinement' example that's installed in the demo data
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create('
@@ -192,10 +199,12 @@ class Test
 
 
         // TEST: public blog entry pipe
-        // Pipe Name: Import information about the SaaStr podcast and filter it
-        // Pipe Link: https://www.flex.io/app/project?eid=fkw7c18kp544
-        // Pipe API Link: https://www.flex.io/api/v1/pipes/podcast-search-v1
+        // Pipe Name: Saastr Podcast Search
+        // Pipe Link: https://www.flex.io/app/pipe/fm11vqhlrljj
+        // Pipe API Link: https://www.flex.io/api/v1/pipes/flexio-saastr-podcast-search-v1
         // Blog Link: https://www.flex.io/blog/adding-dynamic-content-static-web-page/
+        // Repository: https://github.com/flexiodata/examples/tree/master/saastr-podcast-search
+        // Note: updated 20170322; use new data input path
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create('
@@ -205,7 +214,7 @@ class Test
                 "params": {
                     "items": [
                         {
-                            "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/sample-data\/master\/saastr-podcast-20170205.csv"
+                            "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/examples\/master\/saastr-podcast-search\/saastr-podcast-20170205.csv"
                         }
                     ]
                 },
