@@ -1,12 +1,12 @@
 <template>
   <div class="mh5 relative">
-    <div class="flex flex-row absolute" style="top: -2rem; left: -6px" v-if="index == 0">
+    <div class="flex flex-row absolute" style="top: -2rem" v-if="index == 0">
       <div class="cursor-default mr5 moon-gray hover-blue link tc hint--right" :aria-label="insert_before_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
 
-    <div class="flex flex-row mv2">
+    <div class="flex flex-row mv2" style="margin-left: 6px">
       <div class="flex-none f4 lh-title mid-gray w2 mr1">{{index+1}}.</div>
       <div class="flex-fill">
         <div class="flex-none flex flex-row mb3">
@@ -118,7 +118,7 @@
       </div>
     </div>
 
-    <div class="flex flex-row relative" style="left: -6px">
+    <div class="flex flex-row">
       <div class="cursor-default mr5 moon-gray hover-blue link tc hint--right" :aria-label="insert_after_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
