@@ -1,16 +1,15 @@
 <template>
   <div class="mh5 hide-child relative">
-    <div class="flex flex-row child absolute" style="top: -3rem">
-      <div class="flex-none f4 lh-title white w2 mr1">&nbsp;</div>
-      <div class="cursor-default pa2 mr5 br1 black-40 trans-wh tc bg-black-10 darken-10 hint--right" :aria-label="insert_before_tooltip">
+    <div class="flex flex-row absolute" style="top: -2rem; left: -6px" v-if="index == 0">
+      <div class="cursor-default mr5 silver hover-black tc hint--right" :aria-label="insert_before_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
 
     <div class="flex flex-row mv2">
       <div class="flex-none f4 lh-title mid-gray w2 mr1">{{index+1}}.</div>
-      <div class="flex-fill flex-l flex-row-l">
-        <div class="flex-none flex flex-row mb3 mb0-l mr2-l">
+      <div class="flex-fill">
+        <div class="flex-none flex flex-row mb3">
           <div>
             <div
               class="cursor-default pa2 mr2 br1 white trans-wh tc"
@@ -49,63 +48,65 @@
             </div>
           </div>
         </div>
-        <code-editor
-          class="flex-fill ba b--black-10 mb3 mb0-l mr4-l"
-          lang="python"
-          :val="command"
-        ></code-editor>
-        <div class="flex-fill">
-          <div class="ba b--black-10 overflow-auto">
-              <table class="f7 w-100 mw8 center" cellspacing="0">
-                <thead>
-                  <tr>
-                    <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Name</th>
-                    <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Username</th>
-                    <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Email</th>
-                    <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">ID</th>
-                  </tr>
-                </thead>
-                <tbody class="lh-copy">
-                  <tr>
-                    <td class="pv1 ph2 bb b--black-10">Hassan Johnson</td>
-                    <td class="pv1 ph2 bb b--black-10">@hassan</td>
-                    <td class="pv1 ph2 bb b--black-10">hassan@companywithalongdomain.co</td>
-                    <td class="pv1 ph2 bb b--black-10">14419232532474</td>
-                  </tr>
-                  <tr>
-                    <td class="pv1 ph2 bb b--black-10">Taral Hicks</td>
-                    <td class="pv1 ph2 bb b--black-10">@hicks</td>
-                    <td class="pv1 ph2 bb b--black-10">taral@companywithalongdomain.co</td>
-                    <td class="pv1 ph2 bb b--black-10">72326219423551</td>
-                  </tr>
-                  <tr>
-                    <td class="pv1 ph2 bb b--black-10">Tyrin Turner</td>
-                    <td class="pv1 ph2 bb b--black-10">@tt</td>
-                    <td class="pv1 ph2 bb b--black-10">ty@companywithalongdomain.co</td>
-                    <td class="pv1 ph2 bb b--black-10">92325170324444</td>
-                  </tr>
-                  <tr>
-                    <td class="pv1 ph2 bb b--black-10">Oliver Grant</td>
-                    <td class="pv1 ph2 bb b--black-10">@oli</td>
-                    <td class="pv1 ph2 bb b--black-10">oliverg@companywithalongdomain.co</td>
-                    <td class="pv1 ph2 bb b--black-10">71165170352909</td>
-                  </tr>
-                  <tr>
-                    <td class="pv1 ph2 bb b--black-10">Dean Blanc</td>
-                    <td class="pv1 ph2 bb b--black-10">@deanblanc</td>
-                    <td class="pv1 ph2 bb b--black-10">dean@companywithalongdomain.co</td>
-                    <td class="pv1 ph2 bb b--black-10">71865178111909</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+        <div class="bl b--black-10 pl3" style="margin: -1.875rem 0 0 -1.875rem; padding: 1.875rem 0 0 1.875rem">
+          <code-editor
+            class="flex-fill pa1 ba b--black-10 mb3"
+            lang="python"
+            :val="command"
+            :options="{ lineNumbers: false }"
+          ></code-editor>
+          <div class="flex-fill">
+            <div class="ba b--black-10 overflow-auto">
+                <table class="f7 w-100 mw8 center" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Name</th>
+                      <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Username</th>
+                      <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Email</th>
+                      <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">ID</th>
+                    </tr>
+                  </thead>
+                  <tbody class="lh-copy">
+                    <tr>
+                      <td class="pv1 ph2 bb b--black-10">Hassan Johnson</td>
+                      <td class="pv1 ph2 bb b--black-10">@hassan</td>
+                      <td class="pv1 ph2 bb b--black-10">hassan@companywithalongdomain.co</td>
+                      <td class="pv1 ph2 bb b--black-10">14419232532474</td>
+                    </tr>
+                    <tr>
+                      <td class="pv1 ph2 bb b--black-10">Taral Hicks</td>
+                      <td class="pv1 ph2 bb b--black-10">@hicks</td>
+                      <td class="pv1 ph2 bb b--black-10">taral@companywithalongdomain.co</td>
+                      <td class="pv1 ph2 bb b--black-10">72326219423551</td>
+                    </tr>
+                    <tr>
+                      <td class="pv1 ph2 bb b--black-10">Tyrin Turner</td>
+                      <td class="pv1 ph2 bb b--black-10">@tt</td>
+                      <td class="pv1 ph2 bb b--black-10">ty@companywithalongdomain.co</td>
+                      <td class="pv1 ph2 bb b--black-10">92325170324444</td>
+                    </tr>
+                    <tr>
+                      <td class="pv1 ph2 bb b--black-10">Oliver Grant</td>
+                      <td class="pv1 ph2 bb b--black-10">@oli</td>
+                      <td class="pv1 ph2 bb b--black-10">oliverg@companywithalongdomain.co</td>
+                      <td class="pv1 ph2 bb b--black-10">71165170352909</td>
+                    </tr>
+                    <tr>
+                      <td class="pv1 ph2 bb b--black-10">Dean Blanc</td>
+                      <td class="pv1 ph2 bb b--black-10">@deanblanc</td>
+                      <td class="pv1 ph2 bb b--black-10">dean@companywithalongdomain.co</td>
+                      <td class="pv1 ph2 bb b--black-10">71865178111909</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="flex flex-row child">
-      <div class="flex-none f4 lh-title white w2 mr1">&nbsp;</div>
-      <div class="cursor-default pa2 mr5 br1 black-40 trans-wh tc bg-black-10 darken-10 hint--right" :aria-label="insert_after_tooltip">
+    <div class="flex flex-row relative" style="left: -6px">
+      <div class="cursor-default mr5 silver hover-black tc hint--right" :aria-label="insert_after_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>

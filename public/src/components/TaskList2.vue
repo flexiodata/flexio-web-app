@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-y-auto" style="padding-top: 3rem">
+  <div class="overflow-y-auto pv4">
     <task-item2
       v-for="(task, index) in tasks"
       :item="task"
