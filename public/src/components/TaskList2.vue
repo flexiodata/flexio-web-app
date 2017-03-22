@@ -4,6 +4,7 @@
       v-for="(task, index) in tasks"
       :item="task"
       :index="index"
+      :active-stream-eid="active_stream_eid"
     >
     </task-item2>
   </div>
@@ -14,9 +15,14 @@
   import TaskItem2 from './TaskItem2.vue'
 
   export default {
-    props: ['tasks'],
+    props: ['tasks', 'active-subprocess'],
     components: {
       TaskItem2
+    },
+    computed: {
+      active_stream_eid() {
+        return ''
+      }
     }
   }
 </script>

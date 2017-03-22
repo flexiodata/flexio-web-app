@@ -2,7 +2,7 @@
   <div class="mh5 hide-child relative">
     <div class="flex flex-row child absolute" style="top: -3rem">
       <div class="flex-none f4 lh-title white w2 mr1">&nbsp;</div>
-      <div class="cursor-default pa2 br1 black-40 trans-wh tc bg-black-10 hint--right" aria-label="Insert task">
+      <div class="cursor-default pa2 mr5 br1 black-40 trans-wh tc bg-black-10 darken-10 hint--right" :aria-label="insert_before_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
@@ -21,16 +21,20 @@
             </div>
           </div>
           <div class="dib relative hide-child" style="width: 240px">
-            <input
-              class="dib f4 lh-title mid-gray bn pa0"
+            <textarea
+              class="f4 lh-title mid-gray pa1 ba b--black-10"
               autocomplete="off"
+              rows="1"
               v-model="display_name"
               v-if="editing_name"
               v-focus
-            ></input>
+            ></textarea>
             <div class="dib f4 lh-title mid-gray" @click="editName" v-else>{{display_name}}</div>
-            <button class="absolute top-0 right-0 pa1 br1 hover-bg-black-10 hint--bottom-left child" aria-label="Edit name and description">
-              <i class="db material-icons md-18 mid-gray">edit</i>
+            <button
+              class="absolute top-0 right-0 pa1 br1 hover-bg-black-10 hint--bottom-left child"
+              aria-label="Edit name and description"
+              v-if="!editing_name && !editing_description"
+            ><i class="db material-icons md-18 mid-gray">edit</i>
             </button>
             <textarea
               class="f6 fw6 lh-title bn"
@@ -101,7 +105,7 @@
 
     <div class="flex flex-row child">
       <div class="flex-none f4 lh-title white w2 mr1">&nbsp;</div>
-      <div class="cursor-default pa2 br1 black-40 trans-wh tc bg-black-10 hint--right" aria-label="Insert task">
+      <div class="cursor-default pa2 mr5 br1 black-40 trans-wh tc bg-black-10 darken-10 hint--right" :aria-label="insert_after_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
@@ -115,7 +119,7 @@
   import CodeEditor from './CodeEditor.vue'
 
   export default {
-    props: ['item', 'index'],
+    props: ['item', 'index', 'active-stream-eid'],
     components: {
       CodeEditor
     },
@@ -139,6 +143,12 @@
       },
       task_icon() {
         return this.icon ? this.icon : _.result(this, 'tinfo.icon', 'build')
+      },
+      insert_before_tooltip() {
+        return 'Insert a new task before task ' + (this.index+1)
+      },
+      insert_after_tooltip() {
+        return 'Insert a new task after task ' + (this.index+1)
       },
       bg_color() {
         switch (_.get(this.item, 'type'))

@@ -17,6 +17,7 @@
   import CodeMirror from 'codemirror'
   import {} from 'codemirror/mode/javascript/javascript'
   import {} from 'codemirror/mode/python/python'
+  import {} from 'codemirror/addon/wrap/hardwrap'
 
   export default {
     props: {
@@ -25,6 +26,10 @@
       },
       'lang': {
         default: 'python'
+      },
+      'options': {
+        type: Object,
+        default: {}
       }
     },
     data() {
@@ -38,11 +43,12 @@
     },
     mounted() {
       var me = this
-
-      this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], {
+      var opts = _.assign({
         lineNumbers: true,
         mode: this.lang
-      })
+      }, this.options)
+
+      this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
       this.editor.focus()
 
       this.editor.on('change', function(cm) {
