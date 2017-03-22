@@ -11,7 +11,7 @@
           <span v-else>Add an alias</span>
         </div>
       </div>
-      <div class="f6 lh-title mid-gray">
+      <div class="f6 lh-title gray">
         <span v-if="pipe_description.length > 0">{{pipe_description}}</span>
         <span class="fw6 black-20" v-else>Add a description</span>
       </div>
