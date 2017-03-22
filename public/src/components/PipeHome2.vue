@@ -17,11 +17,43 @@
           <span class="fw6 black-20" v-else>Add a description</span>
         </div>
       </div>
+      <div class="flex-none flex flex-row items-center">
+        <div
+          class="f6 fw6 blue pointer mr3"
+          @click="is_transfer_view = false"
+          v-if="is_transfer_view"
+        >
+          Use Builder View
+        </div>
+        <div
+          class="f6 fw6 blue pointer mr3"
+          @click="is_transfer_view = true"
+          v-else
+        >
+          Use Transfer View
+        </div>
+
+        <btn
+          btn-md
+          btn-primary
+          class="ttu b"
+          v-if="is_process_running && is_process_run_mode"
+        >
+          Cancel
+        </btn>
+        <btn
+          btn-md
+          btn-primary
+          class="ttu b"
+          v-else
+        >
+          Run
+        </btn>
+      </div>
     </div>
 
-    <div class="flex-fill flex flex-column">
-      <task-list2 :tasks="tasks"></task-list2>
-    </div>
+    <div class="flex-fill mh5" :tasks="tasks" v-if="is_transfer_view">Transer view goes here...</div>
+    <task-list2 class="flex-fill" :tasks="tasks" v-else></task-list2>
   </div>
 </template>
 
@@ -46,7 +78,8 @@
     },
     data() {
       return {
-        eid: this.$route.params.eid
+        eid: this.$route.params.eid,
+        is_transfer_view: true
       }
     },
     computed: {
