@@ -27,7 +27,6 @@ class Test
         // TEST: when creating a comment, reject invalid parameters
 
         // BEGIN TEST
-        $model->clearErrors();
         $input_eid = 'xxxxxxxxxxxx';
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
@@ -40,7 +39,6 @@ class Test
         TestCheck::assertBoolean('A.1', '\Model::create(); in comment creation, don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $eid_type = \Model::TYPE_USER;  // try something besides \Model::TYPE_UNDEFINED
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
@@ -54,7 +52,6 @@ class Test
         TestCheck::assertBoolean('A.2', '\Model::create(); in comment creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -71,7 +68,6 @@ class Test
         // make sure these are set when specified in the input
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
@@ -82,7 +78,6 @@ class Test
         TestCheck::assertBoolean('B.1', '\Model::create(); in comment creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
@@ -101,7 +96,6 @@ class Test
         // TEST: make sure fields that are specified are properly set
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
@@ -114,7 +108,6 @@ class Test
         TestCheck::assertInArray('C.1', '\Model::create(); in comment creation, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'comment' => 'Test comment'
