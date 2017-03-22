@@ -207,7 +207,6 @@
       },
       getDisplayName() {
         var name = _.get(this.item, 'name', '')
-        console.log(this.item)
         return name.length > 0 ? name : this.getDefaultName()
       },
       getDescription() {
