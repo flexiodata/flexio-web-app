@@ -1,5 +1,5 @@
 <template>
-  <div class="mh5 hide-child relative">
+  <div class="mh5 relative">
     <div class="flex flex-row absolute" style="top: -2rem; left: -6px" v-if="index == 0">
       <div class="cursor-default mr5 silver hover-black tc hint--right" :aria-label="insert_before_tooltip">
         <i class="db material-icons f3">add_circle</i>
@@ -13,38 +13,51 @@
           <div>
             <div
               class="cursor-default pa2 mr2 br1 white trans-wh tc"
-              style="margin-top: 2px"
+              style="margin-top: 3px"
               :class="[ bg_color ]"
             >
               <i class="db material-icons f3">{{task_icon}}</i>
             </div>
           </div>
-          <div class="dib relative hide-child" style="width: 240px">
+          <div>
             <textarea
               class="f4 lh-title mid-gray pa1 ba b--black-10"
               autocomplete="off"
               rows="1"
+              @keydown.esc="editing_name = false"
               v-model="display_name"
               v-if="editing_name"
               v-focus
             ></textarea>
-            <div class="dib f4 lh-title mid-gray" @click="editName" v-else>{{display_name}}</div>
-            <button
-              class="absolute top-0 right-0 pa1 br1 hover-bg-black-10 hint--bottom-left child"
-              aria-label="Edit name and description"
-              v-if="!editing_name && !editing_description"
-            ><i class="db material-icons md-18 mid-gray">edit</i>
+            <div class="hide-child mid-gray hover-black" v-else>
+              <div class="dib f4 lh-title" @click="editing_name = true">{{display_name}}</div>
+              <button
+                class="pa0 br1 lh-title hint--top child"
+                aria-label="Edit name and description"
+                v-if="!editing_name && !editing_description"
+              ><i class="db material-icons f6">edit</i>
+            </div>
             </button>
             <textarea
               class="f6 fw6 lh-title bn"
               autocomplete="off"
+              @keydown.esc="editing_description = false"
               v-model="description"
               v-if="editing_description"
               v-focus
             ></textarea>
+
+            <div class="f6 fw6 hide-child mid-gray hover-black" v-else>
+              <div class="dib" @click="editing_description = true" v-if="description.length > 0">{{description}}</div>
+              <div class="dib black-20" @click="editing_description = true" v-else>Add a description</div>
+              <button
+                class="pa0 br1 lh-title hint--top child"
+                aria-label="Edit name and description"
+                v-if="!editing_name && !editing_description"
+              ><i class="db material-icons f6">edit</i>
+            </div>
+
             <div class="f6 fw6 lh-title ba b--transparent" @click="editDescription" v-else>
-              <span v-if="description.length > 0">{{description}}</span>
-              <span class="black-20" v-else>Add a description</span>
             </div>
           </div>
         </div>
@@ -126,22 +139,14 @@
     },
     data() {
       return {
+        display_name: this.getDisplayName(),
+        description: this.getDescription(),
         command: this.getCommand(),
         editing_name: false,
         editing_description: false
       }
     },
     computed: {
-      name() {
-        return _.result(this, 'tinfo.name', 'New Task')
-      },
-      display_name() {
-        var name = _.get(this.item, 'name', '')
-        return name.length > 0 ? name : this.name
-      },
-      description() {
-        return _.get(this.item, 'description', '')
-      },
       task_icon() {
         return this.icon ? this.icon : _.result(this, 'tinfo.icon', 'build')
       },
@@ -197,11 +202,16 @@
       tinfo() {
         return _.find(tasks, { type: _.get(this.item, 'type') })
       },
-      editName() {
-        this.editing_name = true
+      getDefaultName() {
+        return _.result(this, 'tinfo.name', 'New Task')
       },
-      editDescription() {
-        this.editing_description = true
+      getDisplayName() {
+        var name = _.get(this.item, 'name', '')
+        console.log(this.item)
+        return name.length > 0 ? name : this.getDefaultName()
+      },
+      getDescription() {
+        return _.get(this.item, 'description', '')
       },
       getCommand() {
         return _.defaultTo(parser.toCmdbar(this.item), '')

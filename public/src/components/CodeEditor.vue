@@ -17,7 +17,6 @@
   import CodeMirror from 'codemirror'
   import {} from 'codemirror/mode/javascript/javascript'
   import {} from 'codemirror/mode/python/python'
-  import {} from 'codemirror/addon/wrap/hardwrap'
 
   export default {
     props: {
