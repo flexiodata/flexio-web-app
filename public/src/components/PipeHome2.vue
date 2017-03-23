@@ -58,7 +58,11 @@
       @open-builder="is_transfer_view = false"
       v-if="is_transfer_view">
     </pipe-transfer>
-    <pipe-builder-list class="flex-fill" :tasks="tasks" v-else></pipe-builder-list>
+    <pipe-builder-list
+      class="flex-fill"
+      :tasks="tasks"
+      v-else>
+    </pipe-builder-list>
   </div>
 </template>
 
