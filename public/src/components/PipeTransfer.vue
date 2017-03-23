@@ -1,5 +1,6 @@
 <template>
-  <div class="flex flex-row items-stretch bt b--black-10">
+  <div class="flex-l flex-row-l items-stretch bt b--black-10 overflow-y-auto">
+
     <div class="flex-fill flex flex-column">
       <div class="f4 pa4 tc" v-if="has_input">Inputs</div>
       <div class="f4 pa4 tc" v-else>1. Choose Input</div>
@@ -10,17 +11,31 @@
       ></pipe-transfer-input-list>
       <pipe-transfer-input-blankslate class="blankslate mh4" v-else></pipe-transfer-input-blankslate>
     </div>
-    <div class="flex-fill flex flex-column bl b--black-10">
+
+    <div class="flex-fill flex flex-column">
       <div class="f4 pa4 tc">2. Choose Output</div>
       <div v-if="has_output">Has Output</div>
       <pipe-transfer-output-blankslate class="blankslate mh4" v-else></pipe-transfer-output-blankslate>
     </div>
+
     <div class="flex-fill">
-      <div class="h-100 bl b--black-10">
+      <div class="h-100">
         <div class="f4 pa4 tc">3. Choose Transformations</div>
-        <div class="mh4">TODO; How do we want to expose these here?</div>
+        <div class="blankslate mh4">
+          <div class="lh-copy mid-gray f6 mb3">Transformations can be added in the builder view.</div>
+          <div class="mt3">
+            <btn
+              btn-md
+              btn-primary
+              class="ttu b"
+            >
+              Take me to the builder
+            </btn>
+          </div>
+        </div>
       </div>
     </div>
+
   </div>
 </template>
 

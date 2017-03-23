@@ -1,12 +1,12 @@
 <template>
   <article class="mb5">
-    <div class="flex flex-row items-center pa2 bg-black-05">
+    <div class="flex flex-row items-center pa2 bg-black-05 bb b--black-05">
       <connection-icon :type="ctype" class="v-mid br2 fx-square-2 mr2"></connection-icon>
       <div class="mid-gray fw6 cursor-default">{{service_name}}</div>
       <div class="flex-fill"></div>
       <i class="material-icons silver">menu</i>
     </div>
-    <div class="pa2 f6" v-for="(item, index) in items">
+    <div class="pa2 f6 truncate bb b--light-gray" v-for="(item, index) in items">
       {{item.path}}
     </div>
   </article>
