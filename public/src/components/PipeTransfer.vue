@@ -4,6 +4,7 @@
       <div class="f4 pa4 tc" v-if="has_input">Inputs</div>
       <div class="f4 pa4 tc" v-else>1. Choose Input</div>
       <pipe-transfer-input-list
+        class="flex-fill"
         :tasks="input_tasks"
         v-if="has_input"
       ></pipe-transfer-input-list>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow-y-auto">
     <pipe-transfer-input-item
       v-for="(task, index) in tasks"
       :item="task"

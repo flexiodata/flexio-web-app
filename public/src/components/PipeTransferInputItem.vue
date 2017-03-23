@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <article class="mb5">
     <div class="flex flex-row items-center pa2 bg-black-05">
       <connection-icon :type="ctype" class="v-mid br2 fx-square-2 mr2"></connection-icon>
       <div class="mid-gray fw6 cursor-default">{{service_name}}</div>
