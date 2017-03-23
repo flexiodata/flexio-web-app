@@ -11,11 +11,7 @@
       </btn>
     </div>
     <div v-if="false">
-      <div class="mv3">
-        <div class="v-mid dib bb b--black-10 w2"></div>
-        <div class="v-mid dib black-30 f6 fw6 ttu">or</div>
-        <div class="v-mid dib bb b--black-10 w2"></div>
-      </div>
+      <text-separator class="mv3 ttu"></text-separator>
       <div class="mv3">
         <btn
           btn-md

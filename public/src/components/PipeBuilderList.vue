@@ -1,12 +1,12 @@
 <template>
   <div>
     <pipe-transfer-input-blankslate
-      class="blankslate mh5 mb4"
+      class="blankslate mh5 mb3"
       v-if="tasks.length == 0">
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Input</div>
     </pipe-transfer-input-blankslate>
 
-    <div class="blankslate mh5 mb4" v-if="tasks.length == 0">
+    <div class="blankslate mh5 mb3" v-if="tasks.length == 0">
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Transform</div>
       <div class="lh-copy mid-gray f6 mb3">There are no transformation steps in this pipe.</div>
       <div class="mt3">
@@ -29,7 +29,7 @@
     </div>
 
     <pipe-transfer-output-blankslate
-      class="blankslate mh5 mb4"
+      class="blankslate mh5 mb3"
       v-if="tasks.length == 0">
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Output</div>
     </pipe-transfer-output-blankslate>
