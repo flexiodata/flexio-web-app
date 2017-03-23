@@ -14,16 +14,16 @@
 
     <div class="flex-fill flex flex-column mr4">
       <div class="f4 pa4 tc" v-if="has_output">Outputs</div>
-      <div class="f4 pa4 tc" v-else>1. Choose Output</div>
+      <div class="f4 pa4 tc" v-else>2. Choose Output</div>
       <div v-if="has_output"></div>
       <pipe-transfer-output-blankslate class="blankslate" v-else></pipe-transfer-output-blankslate>
     </div>
 
     <div class="flex-fill">
       <div class="h-100">
-        <div class="f4 pa4 tc">3. Choose Transformations</div>
+        <div class="f4 pa4 tc">3. Add Transformations</div>
         <div class="blankslate">
-          <div class="lh-copy mid-gray f6 mb3">Transformations can be added in the builder view.</div>
+          <div class="lh-copy mid-gray f6 mb3">Transformation steps can be added in the builder view.</div>
           <div class="mt3">
             <btn
               btn-md

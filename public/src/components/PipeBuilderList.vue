@@ -3,11 +3,11 @@
     <pipe-transfer-input-blankslate
       class="blankslate mh5 mb4"
       v-if="tasks.length == 0">
-      <div class="light-silver ttu absolute" style="top: 0.75rem; left: 1rem">Input</div>
+      <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Input</div>
     </pipe-transfer-input-blankslate>
 
     <div class="blankslate mh5 mb4" v-if="tasks.length == 0">
-      <div class="light-silver ttu absolute" style="top: 0.75rem; left: 1rem">Transform</div>
+      <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Transform</div>
       <div class="lh-copy mid-gray f6 mb3">There are no transformation steps in this pipe.</div>
       <div class="mt3">
         <btn
@@ -31,7 +31,7 @@
     <pipe-transfer-output-blankslate
       class="blankslate mh5 mb4"
       v-if="tasks.length == 0">
-      <div class="light-silver ttu absolute" style="top: 0.75rem; left: 1rem">Output</div>
+      <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Output</div>
     </pipe-transfer-output-blankslate>
   </div>
 </template>
@@ -58,3 +58,10 @@
     }
   }
 </script>
+
+<style>
+  .css-corner-title {
+    top: 0.5rem;
+    left: 0.625rem;
+  }
+</style>

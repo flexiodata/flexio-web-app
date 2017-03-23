@@ -2,6 +2,7 @@
 
 export default {
   methods: {
+    // ref. http://benhowdle.im/easy-peasy-equal-heights.html
     sameHeights: function(selector) {
       var selector = selector || '[data-key="sameheights"]'
       var query = document.querySelectorAll(selector)
