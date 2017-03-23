@@ -218,294 +218,42 @@ class Transform extends \Flexio\Jobs\Base
             $expr = $qname;
             $is_character = ($column['type'] == self::COLUMN_TYPE_TEXT || $column['type'] == self::COLUMN_TYPE_CHARACTER || $column['type'] == self::COLUMN_TYPE_WIDECHARACTER);
 
-/*
-            // certain types of operations, like substring, will force a conversion to
-            // the text type, if the field does not already have that type
-            if (!$is_character)
-            {
-                if (isset($params[self::OPERATION_SUBSTRING]) || isset($params[self::OPERATION_PAD_TEXT]))
-                    $params['type'] = self::COLUMN_TYPE_CHARACTER;
-            }
-*/
-
             foreach ($operations as $operation)
             {
                 $operation_type = isset_or($operation['operation'], self::OPERATION_NONE);
-
-                if ($operation_type == self::OPERATION_CHANGE_TYPE)   // change type operation
+                switch ($operation_type)
                 {
-                    $old_type = $column['type'];
-                    $new_type = isset_or($operation['type'], self::COLUMN_TYPE_NONE);
+                    default:
+                    case self::OPERATION_NONE:
+                        break;
 
-                    // make sure it's a valid type
-                    $column_types = array(
-                        self::COLUMN_TYPE_TEXT,
-                        self::COLUMN_TYPE_CHARACTER,
-                        self::COLUMN_TYPE_WIDECHARACTER,
-                        self::COLUMN_TYPE_NUMERIC,
-                        self::COLUMN_TYPE_DOUBLE,
-                        self::COLUMN_TYPE_INTEGER,
-                        self::COLUMN_TYPE_DATE,
-                        self::COLUMN_TYPE_DATETIME,
-                        self::COLUMN_TYPE_BOOLEAN
-                    );
+                    case self::OPERATION_CHANGE_CASE:
+                        $expr = self::getChangeCaseExpr($operation, $expr);
+                        break;
 
-                    if (!array_search($new_type, $column_types))
-                    {
-                        return false;
-                    }
+                    case self::OPERATION_SUBSTRING:
+                        $expr = self::getSubstrExpr($operation, $expr);
+                        break;
 
-                    if ($new_type == self::COLUMN_TYPE_CHARACTER)
-                    {
-                        if ($old_type == self::COLUMN_TYPE_DATE)
-                        {
-                            $new_width = 10; $width = $new_width;
-                        }
-                        else if ($old_type == self::COLUMN_TYPE_DATETIME)
-                        {
-                            $new_width = 20; $width = $new_width;
-                        }
-                        else if ($old_type == self::COLUMN_TYPE_NUMERIC || $old_type == self::COLUMN_TYPE_DOUBLE)
-                        {
-                            if ($width < 0)
-                            {
-                                $new_width = 20; $width = $new_width;
-                            }
-                            else
-                            {
-                                $new_width = $width+2; $width = $new_width;
-                            }
-                        }
-                        else if ($old_type == self::COLUMN_TYPE_INTEGER)
-                        {
-                            $new_width = 20; $width = $new_width;
-                        }
-                        else if ($old_type == self::COLUMN_TYPE_BOOLEAN)
-                        {
-                            $new_width = 5; $width = $new_width; // enough to hold "true"/"false"
-                        }
+                    case self::OPERATION_REMOVE_TEXT:
+                        $expr = self::getRemoveTextExpr($operation, $expr);
+                        break;
 
-                        $is_character = true;
-                    }
+                    case self::OPERATION_TRIM_TEXT:
+                        $expr = self::getTrimTextExpr($operation, $expr);
+                        break;
 
-                    if ($new_type == self::COLUMN_TYPE_NUMERIC)
-                    {
-                        if ($old_type == self::COLUMN_TYPE_DATE)
-                        {
-                            $new_width = 8; $width = $new_width;
-                        }
-                        else if ($old_type == self::COLUMN_TYPE_DATETIME)
-                        {
-                            $new_width = 14; $width = $new_width;
-                        }
-                    }
+                    case self::OPERATION_PAD_TEXT:
+                        $expr = self::getPadTextExpr($operation, $expr, $column);
+                        break;
 
-                    $expr = self::getTypeChangeExpression($column['name'], $old_type, $new_type, $width, $scale, $new_structure);
+                    case self::OPERATION_CHANGE_TYPE:
+                        $expr = self::getChangeTypeExpr($operation, $expr, $column, $new_structure);
+                        break;
                 }
 
-                if ($operation_type == self::OPERATION_CHANGE_CASE && $is_character)
-                {
-                    $new_case = isset_or($operation['case'], self::CAPITALIZE_NONE);
-
-                    if ($new_case == self::CAPITALIZE_UPPER)
-                        $expr = "upper(($expr))";
-                    else if ($new_case == self::CAPITALIZE_LOWER)
-                        $expr = "lower(($expr))";
-                    else if ($new_case == self::CAPITALIZE_PROPER)
-                        $expr = "initcap(($expr))";
-                    else if ($new_case == self::CAPITALIZE_FIRST_LETTER)
-                        $expr = "concat(upper(substr(($expr),1,1)) , lower(substr(($expr),2)))";
-                    else
-                        return false;
-                }
-
-                if ($operation_type == self::OPERATION_SUBSTRING)
-                {
-                    $location = isset_or($operation['location'], self::SUBSTRING_LOCATION_NONE);
-
-                    if ($location == self::SUBSTRING_LOCATION_LEFT)
-                    {
-                        if (!isset($operation['length']))
-                            return false;
-                        $length = (int)$operation['length'];
-                        $expr = "left(($expr),$length)";
-                    }
-                    else if ($location == self::SUBSTRING_LOCATION_RIGHT)
-                    {
-                        if (!isset($operation['length']))
-                            return false;
-                        $length = (int)$operation['length'];
-                        $expr = "right(($expr),$length)";
-                    }
-                    else if ($location == self::SUBSTRING_LOCATION_MID)
-                    {
-                        $offset = (int)isset_or($operation['offset'], 1);
-                        $length = (int)isset_or($operation['length'], null);
-
-                        if (is_null($length))
-                            $expr = "substr(($expr),$length)";
-                            else
-                            $expr = "substr(($expr),$offset,$length)";
-                    }
-                    else if ($location == self::SUBSTRING_LOCATION_PART)
-                    {
-                        if (!isset($operation['field']))
-                            return false;
-                        if (!isset($operation['delimiter']))
-                            return false;
-                        $field = (int)$params['substring']['field'];
-                        $delimiter = \Flexio\Base\ExprUtil::quote(''.$params['substring']['delimiter']);
-
-                        $expr = "strpart(($expr),$delimiter,$field)";
-                    }
-                    else
-                    {
-                        // invalid location value
-                        return false;
-                    }
-                }
-
-                if ($operation_type == self::OPERATION_REMOVE_TEXT)
-                {
-                    $characters_regex = '';
-
-                    if (isset($operation['character_class']))
-                    {
-                        $posix_character_classes = [
-                            CHARACTER_CLASS_ALNUM,
-                            CHARACTER_CLASS_ALPHA,
-                            CHARACTER_CLASS_ASCII,
-                            CHARACTER_CLASS_BLANK,
-                            CHARACTER_CLASS_CNTRL,
-                            CHARACTER_CLASS_DIGIT,
-                            CHARACTER_CLASS_GRAPH,
-                            CHARACTER_CLASS_LOWER,
-                            CHARACTER_CLASS_PRINT,
-                            CHARACTER_CLASS_PUNCT,
-                            CHARACTER_CLASS_SPACE,
-                            CHARACTER_CLASS_UPPER,
-                            CHARACTER_CLASS_WORD,
-                            CHARACTER_CLASS_XDIGIT
-                        ];
-
-                        if (!in_array($operation['character_class'], $posix_character_classes))
-                            return false;
-
-                        $characters_regex = '[:' . $operation['character_class'] . ':]';
-                    }
-
-                    if (isset($operation['characters']))
-                    {
-                        $characters = $operation['characters'];
-
-                        // we are going to build a regex character class, so we
-                        // need to put -, ^, and [] in the appropriate places
-
-                        $characters = str_replace("\\", "\\\\", $characters);
-                        $characters = str_replace("-", "\\-",   $characters);
-                        $characters = str_replace("^", "\\^",   $characters);
-                        $characters = str_replace(":", "\\:",   $characters);
-                        $characters_regex .= $characters;
-                    }
-
-                    if (isset($operation['character_class']) || isset($operation['characters']))
-                    {
-                        $value = $characters_regex;
-                        $location = isset_or($operation['location'],self::REMOVE_LOCATION_ANY);
-
-                        $flags = '';
-
-                        if ($location == self::REMOVE_LOCATION_ANY)
-                        {
-                            $regex = "[$value]";
-                            $flags = 'g';
-                        }
-                        else if ($location == self::REMOVE_LOCATION_LEADING)
-                            $regex = "^[$value]+";
-                        else if ($location == self::REMOVE_LOCATION_TRAILING)
-                            $regex = "[$value]+$";
-                        else if ($location == self::REMOVE_LOCATION_LEADING_TRAILING)
-                            $regex = "(^[$value]+)|([$value]+$)";
-
-                        $qregex = \Flexio\Base\ExprUtil::quote($regex);
-                        $expr = "regexp_replace(($expr),$qregex,'','$flags')";
-                    }
-                    else if (isset($operation['value']))
-                    {
-                        $value = preg_quote($operation['value']);
-                        $location = isset_or($operation['location'],self::REMOVE_LOCATION_ANY);
-
-                        $flags = '';
-
-                        if ($location == self::REMOVE_LOCATION_ANY)
-                        {
-                            $regex = "$value";
-                            $flags = 'g';
-                        }
-                        else if ($location == self::REMOVE_LOCATION_LEADING)
-                            $regex = "^$value";
-                        else if ($location == self::REMOVE_LOCATION_TRAILING)
-                            $regex = "$value$$";
-                        else if ($location == self::REMOVE_LOCATION_LEADING_TRAILING)
-                            $regex = "(^$value)|($value$$)";
-                        else
-                            return false;
-
-                        $qregex = \Flexio\Base\ExprUtil::quote($regex);
-                        $expr = "regexp_replace(($expr),$qregex,'','$flags')";
-                    }
-                    else if (isset($operation['regex']))
-                    {
-                        $qregex = \Flexio\Base\ExprUtil::quote($operation['regex']);
-                        $expr = "regexp_replace(($expr),$qregex,'','g')";
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-
-                if ($operation_type == self::OPERATION_TRIM_TEXT && $is_character)
-                {
-                    $location = isset_or($operation['location'], '');
-
-                    if ($location == self::TRIM_LOCATION_LEADING)
-                        $expr = "ltrim($expr)";
-                    else if ($location == self::TRIM_LOCATION_TRAILING)
-                        $expr = "rtrim($expr)";
-                    else if ($location == self::TRIM_LOCATION_LEADING_TRAILING)
-                        $expr = "trim($expr)";
-                    else
-                        return false;
-                }
-
-                if ($operation_type == self::OPERATION_PAD_TEXT)
-                {
-                    $location = isset_or($operation['location'],'');
-                    $length = isset_or($operation['length'],0);
-                    $value = isset_or($operation['value'],' ');
-
-                    if ($location != self::PAD_LOCATION_LEFT && $location != self::PAD_LOCATION_RIGHT)
-                        return false;
-
-                    if ($length >= 0 && $value != '')
-                    {
-                        if (is_string($value))
-                            $value = \Flexio\Base\ExprUtil::quote($value); // if we have a string, make sure to do quote replacement
-                             else
-                            $value = "'".$value."'";
-
-                        if ($location == self::PAD_LOCATION_LEFT)
-                            $expr = "lpad(($expr),$length,$value)";
-                        else if ($location == self::PAD_LOCATION_RIGHT)
-                            $expr = "rpad(($expr),$length,$value)";
-
-                        if ($width >= 0)
-                        {
-                            $expr = "substr($expr, 1, $width)";
-                        }
-                    }
-                }
+                if ($expr === false) // invalid parameter
+                    return false;
             }
 
             // map the column to the expression
@@ -525,7 +273,293 @@ class Transform extends \Flexio\Jobs\Base
         return $column_expression_map;
     }
 
-    public static function getTypeChangeExpression($name, $old_type, $new_type, $new_width, $new_scale, &$new_structure)
+    private static function getChangeCaseExpr($operation, $expr)
+    {
+        $new_case = isset_or($operation['case'], self::CAPITALIZE_NONE);
+
+        if ($new_case == self::CAPITALIZE_UPPER)
+            return "upper(($expr))";
+
+        if ($new_case == self::CAPITALIZE_LOWER)
+            return "lower(($expr))";
+
+        if ($new_case == self::CAPITALIZE_PROPER)
+            return "initcap(($expr))";
+
+        if ($new_case == self::CAPITALIZE_FIRST_LETTER)
+            return "concat(upper(substr(($expr),1,1)) , lower(substr(($expr),2)))";
+
+        return false;
+    }
+
+    private static function getSubstrExpr($operation, $expr)
+    {
+        $location = isset_or($operation['location'], self::SUBSTRING_LOCATION_NONE);
+
+        if ($location == self::SUBSTRING_LOCATION_LEFT)
+        {
+            if (!isset($operation['length']))
+                return false;
+
+            $length = (int)$operation['length'];
+            return "left(($expr),$length)";
+        }
+
+        if ($location == self::SUBSTRING_LOCATION_RIGHT)
+        {
+            if (!isset($operation['length']))
+                return false;
+
+            $length = (int)$operation['length'];
+            return "right(($expr),$length)";
+        }
+
+        if ($location == self::SUBSTRING_LOCATION_MID)
+        {
+            $offset = (int)isset_or($operation['offset'], 1);
+            $length = (int)isset_or($operation['length'], null);
+
+            if (is_null($length))
+                return "substr(($expr),$length)";
+                 else
+                return "substr(($expr),$offset,$length)";
+        }
+
+        if ($location == self::SUBSTRING_LOCATION_PART)
+        {
+            if (!isset($operation['field']))
+                return false;
+            if (!isset($operation['delimiter']))
+                return false;
+
+            $field = (int)$params['substring']['field'];
+            $delimiter = \Flexio\Base\ExprUtil::quote(''.$params['substring']['delimiter']);
+            return "strpart(($expr),$delimiter,$field)";
+        }
+
+        // invalid location value
+        return false;
+    }
+
+    private static function getRemoveTextExpr($operation, $expr)
+    {
+        $characters_regex = '';
+
+        if (isset($operation['character_class']))
+        {
+            $posix_character_classes = [
+                CHARACTER_CLASS_ALNUM,
+                CHARACTER_CLASS_ALPHA,
+                CHARACTER_CLASS_ASCII,
+                CHARACTER_CLASS_BLANK,
+                CHARACTER_CLASS_CNTRL,
+                CHARACTER_CLASS_DIGIT,
+                CHARACTER_CLASS_GRAPH,
+                CHARACTER_CLASS_LOWER,
+                CHARACTER_CLASS_PRINT,
+                CHARACTER_CLASS_PUNCT,
+                CHARACTER_CLASS_SPACE,
+                CHARACTER_CLASS_UPPER,
+                CHARACTER_CLASS_WORD,
+                CHARACTER_CLASS_XDIGIT
+            ];
+
+            if (!in_array($operation['character_class'], $posix_character_classes))
+                return false;
+
+            $characters_regex = '[:' . $operation['character_class'] . ':]';
+        }
+
+        if (isset($operation['characters']))
+        {
+            $characters = $operation['characters'];
+
+            // we are going to build a regex character class, so we
+            // need to put -, ^, and [] in the appropriate places
+
+            $characters = str_replace("\\", "\\\\", $characters);
+            $characters = str_replace("-", "\\-",   $characters);
+            $characters = str_replace("^", "\\^",   $characters);
+            $characters = str_replace(":", "\\:",   $characters);
+            $characters_regex .= $characters;
+        }
+
+        if (isset($operation['character_class']) || isset($operation['characters']))
+        {
+            $value = $characters_regex;
+            $location = isset_or($operation['location'],self::REMOVE_LOCATION_ANY);
+
+            $flags = '';
+
+            if ($location == self::REMOVE_LOCATION_ANY)
+            {
+                $regex = "[$value]";
+                $flags = 'g';
+            }
+            else if ($location == self::REMOVE_LOCATION_LEADING)
+                $regex = "^[$value]+";
+            else if ($location == self::REMOVE_LOCATION_TRAILING)
+                $regex = "[$value]+$";
+            else if ($location == self::REMOVE_LOCATION_LEADING_TRAILING)
+                $regex = "(^[$value]+)|([$value]+$)";
+
+            $qregex = \Flexio\Base\ExprUtil::quote($regex);
+            return "regexp_replace(($expr),$qregex,'','$flags')";
+        }
+        else if (isset($operation['value']))
+        {
+            $value = preg_quote($operation['value']);
+            $location = isset_or($operation['location'],self::REMOVE_LOCATION_ANY);
+
+            $flags = '';
+
+            if ($location == self::REMOVE_LOCATION_ANY)
+            {
+                $regex = "$value";
+                $flags = 'g';
+            }
+            else if ($location == self::REMOVE_LOCATION_LEADING)
+                $regex = "^$value";
+            else if ($location == self::REMOVE_LOCATION_TRAILING)
+                $regex = "$value$$";
+            else if ($location == self::REMOVE_LOCATION_LEADING_TRAILING)
+                $regex = "(^$value)|($value$$)";
+            else
+                return false;
+
+            $qregex = \Flexio\Base\ExprUtil::quote($regex);
+            return "regexp_replace(($expr),$qregex,'','$flags')";
+        }
+        else if (isset($operation['regex']))
+        {
+            $qregex = \Flexio\Base\ExprUtil::quote($operation['regex']);
+            return "regexp_replace(($expr),$qregex,'','g')";
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private static function getTrimTextExpr($operation, $expr)
+    {
+        $location = isset_or($operation['location'], '');
+
+        if ($location == self::TRIM_LOCATION_LEADING)
+            return "ltrim($expr)";
+
+        if ($location == self::TRIM_LOCATION_TRAILING)
+            return "rtrim($expr)";
+
+        if ($location == self::TRIM_LOCATION_LEADING_TRAILING)
+            return "trim($expr)";
+
+        return false;
+    }
+
+    private static function getPadTextExpr($operation, $expr, $columns)
+    {
+        $location = isset_or($operation['location'],'');
+        $length = isset_or($operation['length'],0);
+        $value = isset_or($operation['value'],' ');
+        $width = isset_or($columns['width'], -1);
+
+        if ($location != self::PAD_LOCATION_LEFT && $location != self::PAD_LOCATION_RIGHT)
+            return false;
+
+        if ($length < 0 || $value == '')
+            return $expr;
+
+        if (is_string($value))
+            $value = \Flexio\Base\ExprUtil::quote($value); // if we have a string, make sure to do quote replacement
+                else
+            $value = "'".$value."'";
+
+        $new_expr = $expr;
+
+        if ($location == self::PAD_LOCATION_LEFT)
+            $new_expr = "lpad(($expr),$length,$value)";
+
+        if ($location == self::PAD_LOCATION_RIGHT)
+            $new_expr = "rpad(($expr),$length,$value)";
+
+        if ($width >= 0)
+            $new_expr = "substr($new_expr, 1, $width)";
+
+        return $new_expr;
+    }
+
+    private static function getChangeTypeExpr($operation, $expr, $column, &$new_structure)
+    {
+        $old_type = $column['type'];
+        $new_type = isset_or($operation['type'], self::COLUMN_TYPE_NONE);
+
+        // make sure it's a valid type
+        $column_types = array(
+            self::COLUMN_TYPE_TEXT,
+            self::COLUMN_TYPE_CHARACTER,
+            self::COLUMN_TYPE_WIDECHARACTER,
+            self::COLUMN_TYPE_NUMERIC,
+            self::COLUMN_TYPE_DOUBLE,
+            self::COLUMN_TYPE_INTEGER,
+            self::COLUMN_TYPE_DATE,
+            self::COLUMN_TYPE_DATETIME,
+            self::COLUMN_TYPE_BOOLEAN
+        );
+
+        if (!array_search($new_type, $column_types))
+            return false;
+
+        if ($new_type == self::COLUMN_TYPE_CHARACTER)
+        {
+            if ($old_type == self::COLUMN_TYPE_DATE)
+            {
+                $new_width = 10; $width = $new_width;
+            }
+            else if ($old_type == self::COLUMN_TYPE_DATETIME)
+            {
+                $new_width = 20; $width = $new_width;
+            }
+            else if ($old_type == self::COLUMN_TYPE_NUMERIC || $old_type == self::COLUMN_TYPE_DOUBLE)
+            {
+                if ($width < 0)
+                {
+                    $new_width = 20; $width = $new_width;
+                }
+                else
+                {
+                    $new_width = $width+2; $width = $new_width;
+                }
+            }
+            else if ($old_type == self::COLUMN_TYPE_INTEGER)
+            {
+                $new_width = 20; $width = $new_width;
+            }
+            else if ($old_type == self::COLUMN_TYPE_BOOLEAN)
+            {
+                $new_width = 5; $width = $new_width; // enough to hold "true"/"false"
+            }
+
+            $is_character = true;
+        }
+
+        if ($new_type == self::COLUMN_TYPE_NUMERIC)
+        {
+            if ($old_type == self::COLUMN_TYPE_DATE)
+            {
+                $new_width = 8; $width = $new_width;
+            }
+            else if ($old_type == self::COLUMN_TYPE_DATETIME)
+            {
+                $new_width = 14; $width = $new_width;
+            }
+        }
+
+        $expr = self::getChangeTypeExprDetail($column['name'], $old_type, $new_type, $width, $scale, $new_structure);
+        return $expr;
+    }
+
+    private static function getChangeTypeExprDetail($name, $old_type, $new_type, $new_width, $new_scale, &$new_structure)
     {
         $width = $new_width;
         $scale = $new_scale;
