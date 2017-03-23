@@ -3,61 +3,21 @@
     <spinner size="medium" show-text loading-text="Loading pipe..."></spinner>
   </div>
   <div v-else class="flex flex-column items-stretch">
-    <div class="flex flex-row mv3 mh5">
-      <div class="flex-fill">
-        <div class="mb1">
-          <div class="dib f3 li-title v-mid dark-gray mr2 v-mid">{{pipe_name}}</div>
-          <div class="dib f7 li-title v-mid silver pv1 ph2 bg-black-05">
-            <span v-if="pipe_ename.length > 0">{{pipe_ename}}</span>
-            <span v-else>Add an alias</span>
-          </div>
-        </div>
-        <div class="f6 lh-title gray">
-          <span v-if="pipe_description.length > 0">{{pipe_description}}</span>
-          <span class="fw6 black-20" v-else>Add a description</span>
-        </div>
-      </div>
-      <div class="flex-none flex flex-row items-center">
-        <div
-          class="f6 fw6 blue pointer mr3"
-          @click="is_transfer_view = false"
-          v-if="is_transfer_view"
-        >
-          Use Builder View
-        </div>
-        <div
-          class="f6 fw6 blue pointer mr3"
-          @click="is_transfer_view = true"
-          v-else
-        >
-          Use Transfer View
-        </div>
-
-        <btn
-          btn-md
-          btn-primary
-          class="ttu b"
-          v-if="is_process_running && is_process_run_mode"
-        >
-          Cancel
-        </btn>
-        <btn
-          btn-md
-          btn-primary
-          class="ttu b"
-          v-else
-        >
-          Run
-        </btn>
-      </div>
-    </div>
+    <pipe-home-header
+      class="mv3 mh5"
+      :pipe-eid="eid"
+      :pipe-view="pipe_view"
+      :process-running="is_process_running"
+      @set-pipe-view="setPipeView">
+    </pipe-home-header>
 
     <pipe-transfer
       class="flex-fill mh5"
       :tasks="tasks"
-      @open-builder="is_transfer_view = false"
-      v-if="is_transfer_view">
+      @open-builder="pipe_view = 'builder'"
+      v-if="pipe_view == 'transfer'">
     </pipe-transfer>
+
     <pipe-builder-list
       class="flex-fill"
       :tasks="tasks"
@@ -68,14 +28,12 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
-  import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT, TASK_TYPE_EXECUTE } from '../constants/task-type'
-  import { PROCESS_STATUS_RUNNING, PROCESS_STATUS_FAILED, PROCESS_MODE_BUILD, PROCESS_MODE_RUN } from '../constants/process'
+  import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
   import setActiveProject from './mixins/set-active-project'
 
   import Btn from './Btn.vue'
   import Spinner from './Spinner.vue'
+  import PipeHomeHeader from './PipeHomeHeader.vue'
   import PipeTransfer from './PipeTransfer.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
 
@@ -84,13 +42,14 @@
     components: {
       Btn,
       Spinner,
+      PipeHomeHeader,
       PipeTransfer,
       PipeBuilderList
     },
     data() {
       return {
         eid: this.$route.params.eid,
-        is_transfer_view: true
+        pipe_view: 'transfer'
       }
     },
     computed: {
@@ -122,6 +81,11 @@
       ...mapGetters([
         'getActiveDocumentProcesses'
       ]),
+
+      setPipeView(view) {
+        if (_.includes(['transfer', 'builder'], view))
+          this.pipe_view = view
+      },
 
       tryFetchPipe() {
         if (!this.is_fetched)
