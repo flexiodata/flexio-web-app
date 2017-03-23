@@ -83,9 +83,6 @@
       },
       editPipeSingleton(attrs, input) {
         var eid = this.pipeEid
-        var attrs = {}
-        attrs[key] = val
-
         this.$store.dispatch('updatePipe', { eid , attrs })
         input.endEdit()
       }
