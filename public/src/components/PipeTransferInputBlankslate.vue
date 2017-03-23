@@ -1,5 +1,6 @@
 <template>
   <div>
+    <slot></slot>
     <div class="mb3">
       <btn
         btn-md

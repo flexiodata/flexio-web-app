@@ -3,9 +3,11 @@
     <pipe-transfer-input-blankslate
       class="blankslate mh5 mb4"
       v-if="tasks.length == 0">
+      <div class="light-silver ttu absolute" style="top: 0.75rem; left: 1rem">Input</div>
     </pipe-transfer-input-blankslate>
 
     <div class="blankslate mh5 mb4" v-if="tasks.length == 0">
+      <div class="light-silver ttu absolute" style="top: 0.75rem; left: 1rem">Transform</div>
       <div class="lh-copy mid-gray f6 mb3">There are no transformation steps in this pipe.</div>
       <div class="mt3">
         <btn
@@ -29,6 +31,7 @@
     <pipe-transfer-output-blankslate
       class="blankslate mh5 mb4"
       v-if="tasks.length == 0">
+      <div class="light-silver ttu absolute" style="top: 0.75rem; left: 1rem">Output</div>
     </pipe-transfer-output-blankslate>
   </div>
 </template>
