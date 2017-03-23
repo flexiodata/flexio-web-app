@@ -12,7 +12,7 @@
     </pipe-home-header>
 
     <pipe-transfer
-      class="flex-fill mh5"
+      class="flex-fill ph5-l ph3-m"
       :tasks="tasks"
       @open-builder="pipe_view = 'builder'"
       v-if="pipe_view == 'transfer'">

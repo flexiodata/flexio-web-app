@@ -1,7 +1,7 @@
 <template>
   <div class="mh5 relative">
     <div class="flex flex-row absolute" style="top: -2rem" v-if="index == 0">
-      <div class="cursor-default mr5 moon-gray hover-blue link tc hint--right" :aria-label="insert_before_tooltip">
+      <div class="pointer mr5 moon-gray hover-blue link tc hint--right" :aria-label="insert_before_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
@@ -119,7 +119,7 @@
     </div>
 
     <div class="flex flex-row">
-      <div class="cursor-default mr5 moon-gray hover-blue link tc hint--right" :aria-label="insert_after_tooltip">
+      <div class="pointer mr5 moon-gray hover-blue link tc hint--right" :aria-label="insert_after_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
