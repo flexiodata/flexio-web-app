@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="overflow-y-auto pt1">
     <pipe-transfer-input-blankslate
-      class="blankslate mh5 mb3"
-      v-if="tasks.length == 0">
+      class="blankslate mh5 mv3"
+      v-if="!has_input">
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Input</div>
     </pipe-transfer-input-blankslate>
 
-    <div class="blankslate mh5 mb3" v-if="tasks.length == 0">
+    <div class="blankslate mh5 mv3" v-if="tasks.length == 0">
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Transform</div>
       <div class="lh-copy mid-gray f6 mb3">There are no transformation steps in this pipe.</div>
       <div class="mt3">
@@ -19,7 +19,7 @@
         </btn>
       </div>
     </div>
-    <div class="overflow-y-auto pv4" v-else>
+    <div class="pv4" v-else>
       <pipe-builder-item
         v-for="(task, index) in tasks"
         :item="task"
@@ -29,8 +29,8 @@
     </div>
 
     <pipe-transfer-output-blankslate
-      class="blankslate mh5 mb3"
-      v-if="tasks.length == 0">
+      class="blankslate mh5 mv3"
+      v-if="!has_output">
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Output</div>
     </pipe-transfer-output-blankslate>
   </div>
@@ -52,6 +52,11 @@
       PipeBuilderItem
     },
     computed: {
+      input_tasks()  { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
+      output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
+      has_input()    { return this.input_tasks.length > 0 },
+      has_output()   { return this.output_tasks.length > 0 },
+
       active_stream_eid() {
         return ''
       }

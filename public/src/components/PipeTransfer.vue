@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-l flex-row-l items-stretch bt b--black-10 overflow-y-auto">
+  <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
     <div class="flex-fill flex flex-column mr4-l">
       <div class="dib f4 pa4 tc" v-if="has_input">

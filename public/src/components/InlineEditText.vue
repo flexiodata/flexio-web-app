@@ -10,11 +10,11 @@
       v-if="editing"
       v-focus
     ></textarea>
-    <div class="hide-child hover-black" v-else>
-      <div class="dib" @click="editing = true" v-if="edit_val.length > 0">{{edit_val}}</div>
-      <div class="dib pointer" :class="placeholderCls" @click="editing = true" v-else>{{placeholder}}</div>
+    <div class="flex flex-row items-center hide-child hover-black" v-else>
+      <div class="" @click="editing = true" v-if="edit_val.length > 0">{{edit_val}}</div>
+      <div class=" pointer" :class="placeholderCls" @click="editing = true" v-else>{{placeholder}}</div>
       <button
-        class="pa0 br1 hint--top child"
+        class="ml1 pa0 br1 hint--top child"
         :aria-label="editButtonLabel"
         @click="editing = true"
         v-if="!editing && showEditButton"

@@ -4,7 +4,7 @@
   </div>
   <div v-else class="flex flex-column items-stretch">
     <pipe-home-header
-      class="mv3 mh5"
+      class="pv3 mh5 bb b--black-10"
       :pipe-eid="eid"
       :pipe-view="pipe_view"
       :process-running="is_process_running"
