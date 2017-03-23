@@ -13,6 +13,7 @@
 
     <pipe-transfer
       class="flex-fill ph5-l ph3-m"
+      :project-eid="project_eid"
       :tasks="tasks"
       @choose-input-connection="openInputFileChooserModal"
       @open-builder="pipe_view = 'builder'"
