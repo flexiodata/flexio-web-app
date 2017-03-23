@@ -47,9 +47,11 @@
   import PipeTransferInputList from './PipeTransferInputList.vue'
   import PipeTransferInputBlankslate from './PipeTransferInputBlankslate.vue'
   import PipeTransferOutputBlankslate from './PipeTransferOutputBlankslate.vue'
+  import sameHeights from './mixins/same-heights'
 
   export default {
     props: ['tasks', 'active-subprocess'],
+    mixins: [sameHeights],
     components: {
       Btn,
       PipeTransferInputList,
@@ -68,30 +70,6 @@
     methods: {
       onOpenBuilderClick() {
         this.$emit('open-builder')
-      },
-      sameHeights(selector) {
-        var selector = selector || '[data-key="sameheights"]'
-        var query = document.querySelectorAll(selector)
-        var elements = query.length
-        var max = 0
-
-        if (elements)
-        {
-          while (elements--)
-          {
-            var element = query[elements]
-            if (element.clientHeight > max)
-              max = element.clientHeight
-          }
-
-          elements = query.length
-
-          while (elements--)
-          {
-            var element = query[elements]
-            element.style.height = max+'px'
-          }
-        }
       }
     }
   }
