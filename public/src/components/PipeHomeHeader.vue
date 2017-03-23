@@ -18,33 +18,25 @@
         class="f6 fw6 blue pointer mr3"
         @click="setPipeView('builder')"
         v-if="pipeView == 'transfer'"
-      >
-        Use Builder View
-      </div>
+      >Use Builder View</div>
       <div
         class="f6 fw6 blue pointer mr3"
         @click="setPipeView('transfer')"
         v-else
-      >
-        Use Transfer View
-      </div>
-
+      >Use Transfer View</div>
       <btn
         btn-md
         btn-primary
         class="ttu b"
         v-if="processRunning"
-      >
-        Cancel
-      </btn>
+      >Cancel</btn>
       <btn
         btn-md
         btn-primary
         class="ttu b"
+        :disabled="!is_run_allowed"
         v-else
-      >
-        Run
-      </btn>
+      >Run</btn>
     </div>
   </div>
 </template>
@@ -61,7 +53,14 @@
       pipe()              { return _.get(this.$store, 'state.objects.'+this.pipeEid, {}) },
       pipe_name()         { return _.get(this.pipe, 'name', '') },
       pipe_ename()        { return _.get(this.pipe, 'ename', '') },
-      pipe_description()  { return _.get(this.pipe, 'description', '') }
+      pipe_description()  { return _.get(this.pipe, 'description', '') },
+      tasks()             { return _.get(this.pipe, 'task', []) },
+
+      is_run_allowed() {
+        if (this.tasks.length == 0)
+          return false
+        return true
+      }
     },
     methods: {
       setPipeView(view) {
