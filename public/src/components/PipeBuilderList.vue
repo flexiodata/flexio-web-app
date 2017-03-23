@@ -5,8 +5,7 @@
       :item="task"
       :index="index"
       :active-stream-eid="active_stream_eid"
-    >
-    </pipe-builder-item>
+    ></pipe-builder-item>
   </div>
 </template>
 
