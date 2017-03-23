@@ -2,7 +2,12 @@
   <div class="flex-l flex-row-l items-stretch bt b--black-10 overflow-y-auto">
 
     <div class="flex-fill flex flex-column mr4">
-      <div class="f4 pa4 tc" v-if="has_input">Inputs</div>
+      <div class="dib f4 pa4 tc" v-if="has_input">
+        <span class="v-mid">Inputs</span>
+        <div class="v-mid cursor-default moon-gray hover-blue link hint--bottom" aria-label="Add another connection">
+          <i class="db material-icons f3">add_circle</i>
+        </div>
+      </div>
       <div class="f4 pa4 tc" v-else>1. Choose Input</div>
       <pipe-transfer-input-list
         class="flex-fill"
