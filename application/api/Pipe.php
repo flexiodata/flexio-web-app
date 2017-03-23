@@ -349,8 +349,11 @@ class Pipe
                 if ($stream)
                 {
                     // stream name will be the post variable name, not the multipart filename
-                    $stream->setName($name);
-
+                    $stream_info = array();
+                    $stream_info['name'] = $name;
+                    $stream_info['mime_type'] = $content_type;
+                    $stream->set($stream_info);
+                    
                     $streamwriter = \Flexio\Object\StreamWriter::create($stream);
                     if ($streamwriter === false)
                         $stream = false;
