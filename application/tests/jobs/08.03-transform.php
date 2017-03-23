@@ -221,7 +221,7 @@ class Test
                         "f"
                     ],
                     "operations": [
-                        { "operation": "case", "case": "first_letter" }
+                        { "operation": "case", "case": "first-letter" }
                     ]
                 }
             }
@@ -1017,7 +1017,7 @@ class Test
                         "f"
                     ],
                     "operations": [
-                        { "operation": "trim", "location": "leading_trailing" }
+                        { "operation": "trim", "location": "leading-trailing" }
                     ]
                 }
             }
@@ -1065,7 +1065,7 @@ class Test
                     ],
                     "operations": [
                         { "operation": "type", "type": "character" },
-                        { "operation": "trim", "location": "leading_trailing" }
+                        { "operation": "trim", "location": "leading-trailing" }
                     ]
                 }
             }
