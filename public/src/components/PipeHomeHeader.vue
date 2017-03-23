@@ -2,16 +2,29 @@
   <div class="flex flex-row">
     <div class="flex-fill">
       <div class="mb1">
-        <div class="dib f3 li-title v-mid dark-gray mr2 v-mid">{{pipe_name}}</div>
-        <div class="dib f7 li-title v-mid silver pv1 ph2 bg-black-05">
-          <span v-if="pipe_ename.length > 0">{{pipe_ename}}</span>
-          <span v-else>Add an alias</span>
-        </div>
+        <inline-edit-text
+          class="dib f3 li-title v-mid dark-gray"
+          input-key="name"
+          :val="pipe_name"
+          @save="editPipeSingleton">
+        </inline-edit-text>
+        <inline-edit-text
+          class="dib f7 li-title v-mid silver pv1 ph2 bg-black-05"
+          placeholder="Add an alias"
+          input-key="ename"
+          :val="pipe_ename"
+          :show-edit-button="false"
+          @save="editPipeSingleton">
+        </inline-edit-text>
       </div>
-      <div class="f6 lh-title gray">
-        <span v-if="pipe_description.length > 0">{{pipe_description}}</span>
-        <span class="fw6 black-20" v-else>Add a description</span>
-      </div>
+      <inline-edit-text
+        class="f6 lh-title gray"
+        placeholder="Add a description"
+        placeholder-cls="fw6 black-20 hover-black-40"
+        input-key="description"
+        :val="pipe_description"
+        @save="editPipeSingleton">
+      </inline-edit-text>
     </div>
     <div class="flex-none flex flex-row items-center">
       <div
@@ -43,11 +56,13 @@
 
 <script>
   import Btn from './Btn.vue'
+  import InlineEditText from './InlineEditText.vue'
 
   export default {
     props: ['pipe-eid', 'pipe-view', 'process-running'],
     components: {
-      Btn
+      Btn,
+      InlineEditText
     },
     computed: {
       pipe()              { return _.get(this.$store, 'state.objects.'+this.pipeEid, {}) },
@@ -65,6 +80,14 @@
     methods: {
       setPipeView(view) {
         this.$emit('set-pipe-view', view)
+      },
+      editPipeSingleton(attrs, input) {
+        var eid = this.pipeEid
+        var attrs = {}
+        attrs[key] = val
+
+        this.$store.dispatch('updatePipe', { eid , attrs })
+        input.endEdit()
       }
     }
   }
