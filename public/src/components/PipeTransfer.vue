@@ -1,7 +1,7 @@
 <template>
   <div class="flex-l flex-row-l items-stretch bt b--black-10 overflow-y-auto">
 
-    <div class="flex-fill flex flex-column">
+    <div class="flex-fill flex flex-column mr4">
       <div class="f4 pa4 tc" v-if="has_input">Inputs</div>
       <div class="f4 pa4 tc" v-else>1. Choose Input</div>
       <pipe-transfer-input-list
@@ -9,25 +9,27 @@
         :tasks="input_tasks"
         v-if="has_input"
       ></pipe-transfer-input-list>
-      <pipe-transfer-input-blankslate class="blankslate mh4" v-else></pipe-transfer-input-blankslate>
+      <pipe-transfer-input-blankslate class="blankslate" v-else></pipe-transfer-input-blankslate>
     </div>
 
-    <div class="flex-fill flex flex-column">
-      <div class="f4 pa4 tc">2. Choose Output</div>
-      <div v-if="has_output">Has Output</div>
-      <pipe-transfer-output-blankslate class="blankslate mh4" v-else></pipe-transfer-output-blankslate>
+    <div class="flex-fill flex flex-column mr4">
+      <div class="f4 pa4 tc" v-if="has_output">Outputs</div>
+      <div class="f4 pa4 tc" v-else>1. Choose Output</div>
+      <div v-if="has_output"></div>
+      <pipe-transfer-output-blankslate class="blankslate" v-else></pipe-transfer-output-blankslate>
     </div>
 
     <div class="flex-fill">
       <div class="h-100">
         <div class="f4 pa4 tc">3. Choose Transformations</div>
-        <div class="blankslate mh4">
+        <div class="blankslate">
           <div class="lh-copy mid-gray f6 mb3">Transformations can be added in the builder view.</div>
           <div class="mt3">
             <btn
               btn-md
               btn-primary
               class="ttu b"
+              @click="onOpenBuilderClick"
             >
               Take me to the builder
             </btn>
@@ -59,6 +61,11 @@
       output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
       has_input()    { return this.input_tasks.length > 0 },
       has_output()   { return this.output_tasks.length > 0 },
+    },
+    methods: {
+      onOpenBuilderClick() {
+        this.$emit('open-builder')
+      }
     }
   }
 </script>

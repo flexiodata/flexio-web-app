@@ -52,7 +52,12 @@
       </div>
     </div>
 
-    <pipe-transfer class="flex-fill mh5" :tasks="tasks" v-if="is_transfer_view"></pipe-transfer>
+    <pipe-transfer
+      class="flex-fill mh5"
+      :tasks="tasks"
+      @open-builder="is_transfer_view = false"
+      v-if="is_transfer_view">
+    </pipe-transfer>
     <pipe-builder-list class="flex-fill" :tasks="tasks" v-else></pipe-builder-list>
   </div>
 </template>
