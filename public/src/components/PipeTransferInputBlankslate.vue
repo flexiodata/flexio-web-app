@@ -26,11 +26,7 @@
         </btn>
       </div>
     </div>
-    <div class="mv3">
-      <div class="v-mid dib bb b--black-10 w2"></div>
-      <div class="v-mid dib black-30 f6 fw6 ttu">or</div>
-      <div class="v-mid dib bb b--black-10 w2"></div>
-    </div>
+    <text-separator class="mv3 ttu"></text-separator>
     <div class="mt3">
       <div class="f6 fw6 ttu">Use the command line (CLI)</div>
       <p class="lh-copy mb0 mid-gray f6">The Flex.io Command Line Interface (CLI) is a tool for managing and running your Flex.io services from the command line. <a href="https://www.flex.io/docs/api/#command-line-interface" class="blue" target="_blank">Learn more...</a></p>
@@ -40,10 +36,12 @@
 
 <script>
   import Btn from './Btn.vue'
+  import TextSeparator from './TextSeparator.vue'
 
   export default {
     components: {
-      Btn
+      Btn,
+      TextSeparator
     }
   }
 </script>
