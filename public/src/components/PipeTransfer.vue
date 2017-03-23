@@ -62,9 +62,36 @@
       has_input()    { return this.input_tasks.length > 0 },
       has_output()   { return this.output_tasks.length > 0 },
     },
+    mounted() {
+      this.sameHeights('.blankslate')
+    },
     methods: {
       onOpenBuilderClick() {
         this.$emit('open-builder')
+      },
+      sameHeights(selector) {
+        var selector = selector || '[data-key="sameheights"]'
+        var query = document.querySelectorAll(selector)
+        var elements = query.length
+        var max = 0
+
+        if (elements)
+        {
+          while (elements--)
+          {
+            var element = query[elements]
+            if (element.clientHeight > max)
+              max = element.clientHeight
+          }
+
+          elements = query.length
+
+          while (elements--)
+          {
+            var element = query[elements]
+            element.style.height = max+'px'
+          }
+        }
       }
     }
   }
