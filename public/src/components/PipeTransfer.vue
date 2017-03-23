@@ -1,10 +1,13 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
-
     <div class="flex-fill flex flex-column mr4-l">
       <div class="dib f4 pa4 tc" v-if="has_input">
         <span class="v-mid">Inputs</span>
-        <div class="v-mid cursor-default moon-gray hover-blue link hint--bottom" aria-label="Add another connection">
+        <div
+          class="v-mid cursor-default moon-gray hover-blue link hint--bottom"
+          aria-label="Add another connection"
+          @click="$emit('choose-input-connection')"
+        >
           <i class="db material-icons f3">add_circle</i>
         </div>
       </div>
@@ -14,13 +17,17 @@
         :tasks="input_tasks"
         v-if="has_input"
       ></pipe-transfer-input-list>
-      <pipe-transfer-input-blankslate class="blankslate" v-else></pipe-transfer-input-blankslate>
+      <pipe-transfer-input-blankslate
+        class="blankslate"
+        @choose-connection="$emit('choose-input-connection')"
+        v-else
+      ></pipe-transfer-input-blankslate>
     </div>
 
     <div class="flex-fill flex flex-column mr4-l">
       <div class="f4 pa4 tc" v-if="has_output">Outputs</div>
       <div class="f4 pa4 tc" v-else>2. Choose Output</div>
-      <div v-if="has_output"></div>
+      <div v-if="has_output">Output configuration goes here...</div>
       <pipe-transfer-output-blankslate class="blankslate" v-else></pipe-transfer-output-blankslate>
     </div>
 
@@ -34,7 +41,7 @@
               btn-md
               btn-primary
               class="ttu b"
-              @click="onOpenBuilderClick"
+              @click="$emit('open-builder')"
             >
               Take me to the builder
             </btn>
@@ -42,7 +49,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -71,11 +77,6 @@
     },
     mounted() {
       this.sameHeights('.blankslate')
-    },
-    methods: {
-      onOpenBuilderClick() {
-        this.$emit('open-builder')
-      }
     }
   }
 </script>

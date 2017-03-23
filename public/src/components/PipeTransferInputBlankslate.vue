@@ -5,7 +5,8 @@
       <btn
         btn-md
         btn-primary
-        class="ttu b v-mid"
+        class="ttu b"
+        @click="$emit('choose-connection')"
       >
         Choose a connection
       </btn>
@@ -16,7 +17,7 @@
         <btn
           btn-md
           btn-primary
-          class="ttu b v-mid"
+          class="ttu b"
         >
           Upload files
         </btn>

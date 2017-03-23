@@ -5,7 +5,7 @@
       <btn
         btn-md
         btn-primary
-        class="ttu b v-mid"
+        class="ttu b"
       >
         Choose a connection
       </btn>
