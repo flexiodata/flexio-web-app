@@ -114,13 +114,20 @@ class Transform extends \Flexio\Jobs\Base
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $this->createOutputFromTable($instream);
                     break;
+
+                // stream/text/csv input
+                case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
+                case \Flexio\Base\ContentType::MIME_TYPE_TXT:
+                case \Flexio\Base\ContentType::MIME_TYPE_CSV:
+                    $this->createOutputFromStream($instream);
+                    break;
             }
         }
     }
 
     private function createOutputFromTable($instream)
     {
-        $column_expression_map = $this->getColumnExpressionMap($instream);
+        $column_expression_map = $this->getTableExpressionMap($instream);
         if ($column_expression_map === false)
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
 
@@ -185,7 +192,52 @@ class Transform extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getColumnExpressionMap($instream)
+    private function createOutputFromStream($instream)
+    {
+        $column_expression_map = $this->getStreamExpressionMap($instream);
+        if ($column_expression_map === false)
+            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
+
+        // if there aren't any operations, simply create an output stream
+        // pointing to the original content
+        if (count($column_expression_map) === 0)
+        {
+            $this->getOutput()->push($instream->copy());
+            return;
+        }
+
+        // create the output with the replaced values
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        $this->getOutput()->push($outstream);
+
+        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+
+        while (true)
+        {
+            $input = $streamreader->read();
+            if ($input === false)
+                break;
+
+            // package the row in a field called 'xdrow'
+            $data = array(
+                'xdrow' => $input
+            );
+
+            $retval = null;
+            $expression_evaluator = $column_expression_map['expreval'];
+            $expression_evaluator->execute($data, $retval);
+            $output = $retval;
+
+            // write the output row
+            $streamwriter->write($output);
+        }
+
+        $streamwriter->close();
+        $outstream->setSize($streamwriter->getBytesWritten());
+    }
+
+    private function getTableExpressionMap($instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation
@@ -269,6 +321,77 @@ class Transform extends \Flexio\Jobs\Base
                 'structure' => $new_structure
             );
         }
+
+        return $column_expression_map;
+    }
+
+    private function getStreamExpressionMap($instream)
+    {
+        // returns an array mapping column names to an expression
+        // object that can be used for performing the transformation
+
+        // properties
+        $job_definition = $this->getProperties();
+        $params = $job_definition['params'];
+
+        $operations = isset_or($params['operations'], []);
+        if (count($operations) == 0)
+            return array(); // no operations
+
+        $column_expression_map = array();
+
+        $expr = 'xdrow'; // default field containing row data
+        foreach ($operations as $operation)
+        {
+            $operation_type = isset_or($operation['operation'], self::OPERATION_NONE);
+            switch ($operation_type)
+            {
+                default:
+                case self::OPERATION_NONE:
+                case self::OPERATION_PAD_TEXT: // not supported on text
+                case self::OPERATION_CHANGE_TYPE: // not supported on text
+                    break;
+
+                case self::OPERATION_CHANGE_CASE:
+                    $expr = self::getChangeCaseExpr($operation, $expr);
+                    break;
+
+                case self::OPERATION_SUBSTRING:
+                    $expr = self::getSubstrExpr($operation, $expr);
+                    break;
+
+                case self::OPERATION_REMOVE_TEXT:
+                    $expr = self::getRemoveTextExpr($operation, $expr);
+                    break;
+
+                case self::OPERATION_TRIM_TEXT:
+                    $expr = self::getTrimTextExpr($operation, $expr);
+                    break;
+            }
+
+            if ($expr === false) // invalid parameter
+                return false;
+        }
+
+        // map the column to the expression
+        $structure = array(
+            array(
+                'name' => 'xdrow',
+                'type' => 'text'
+            )
+        );
+
+        $exprtext = $expr;
+        $expreval = new \Flexio\Base\ExprEvaluate;
+        $parse_result = $expreval->prepare($expr, $structure);
+        if ($parse_result === false)
+            return false; // trouble building the expression
+
+        $column_expression_map = array(
+            'exprtext' => $exprtext,
+            'expreval' => $expreval,
+            'structure' => $structure
+        );
 
         return $column_expression_map;
     }
