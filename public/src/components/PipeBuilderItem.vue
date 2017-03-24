@@ -3,11 +3,12 @@
     <div class="flex flex-row mv2">
       <div class="flex-none">
         <div
-          class="cursor-default pa2 mr3 br1 white trans-wh tc"
+          class="cursor-default pa2 mr3 br1 white trans-wh tc relative swap-child"
           style="margin-top: 2px"
           :class="[ bg_color ]"
         >
-          <i class="db material-icons f3">{{task_icon}}</i>
+          <i class="db material-icons f3 child">{{task_icon}}</i>
+          <i class="db material-icons f3 other-child pointer hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
       </div>
       <div class="flex-fill">
