@@ -1,6 +1,6 @@
 <template>
   <div class="mh5 relative">
-    <div class="flex flex-row absolute" style="top: -2rem" v-if="index == 0">
+    <div class="flex flex-row absolute" style="top: -2rem" v-if="index == 0 && false">
       <div class="pointer mr5 moon-gray hover-blue link tc hint--right" :aria-label="insert_before_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
@@ -10,24 +10,22 @@
       <div class="flex-none f4 lh-title mid-gray w2 mr1">{{index+1}}.</div>
       <div class="flex-fill">
         <div class="flex-none flex flex-row mb2">
-          <div>
-            <div
-              class="cursor-default pa2 mr2 br1 white trans-wh tc"
-              style="margin-top: 3px"
-              :class="[ bg_color ]"
-            >
-              <i class="db material-icons f3">{{task_icon}}</i>
-            </div>
+          <div
+            class="cursor-default pa2 mr2 br1 white trans-wh tc"
+            style="margin-top: 2px"
+            :class="[ bg_color ]"
+          >
+            <i class="db material-icons f3">{{task_icon}}</i>
           </div>
           <div>
             <inline-edit-text
-              class="f4 lh-title"
+              class="f5 lh-copy"
               input-key="name"
               :val="display_name"
               @save="editTaskSingleton">
             </inline-edit-text>
             <inline-edit-text
-              class="f6 lh-title gray"
+              class="f7 lh-title gray"
               placeholder="Add a description"
               placeholder-cls="fw6 black-20 hover-black-40"
               input-key="description"
@@ -36,14 +34,16 @@
             </inline-edit-text>
           </div>
         </div>
-        <div class="bl b--black-10 pl3" style="margin: -1.875rem 0 0 -1.875rem; padding: 1.875rem 0 0 1.875rem">
-          <code-editor
-            class="flex-fill pa1 ba b--black-10"
-            lang="python"
-            :val="command"
-            :options="{ lineNumbers: false }"
-          ></code-editor>
-          <div class="flex-fill mt3" v-if="false">
+        <div class="bl b--black-10 pl3" style="margin: -1.375rem 0 0 -1.875rem; padding: 1.375rem 0 0 1.875rem">
+          <div class="pb2">
+            <code-editor
+              class="pa1 ba b--black-10"
+              lang="python"
+              :val="command"
+              :options="{ lineNumbers: false }"
+            ></code-editor>
+          </div>
+          <div v-if="false">
             &nbsp;
           </div>
         </div>
