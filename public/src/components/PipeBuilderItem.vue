@@ -7,7 +7,7 @@
     </div>
 
     <div class="flex flex-row mv2" style="margin-left: 6px">
-      <div class="flex-none f4 lh-title mid-gray w2 mr1">{{index+1}}.</div>
+      <div class="flex-none f5 lh-copy mid-gray w2 mr1">{{index+1}}.</div>
       <div class="flex-fill">
         <div class="flex-none flex flex-row mb2">
           <div
@@ -43,9 +43,13 @@
               :options="{ lineNumbers: false }"
             ></code-editor>
           </div>
-          <div v-if="false">
-            &nbsp;
-          </div>
+          <pipe-content
+            class="relative"
+            style="height: 400px"
+            :stream-eid="active_stream_eid"
+            :task-json="item"
+            v-if="active_stream_eid.length > 0"
+          ></pipe-content>
         </div>
       </div>
     </div>
@@ -64,12 +68,14 @@
   import parser from '../utils/parser'
   import CodeEditor from './CodeEditor.vue'
   import InlineEditText from './InlineEditText.vue'
+  import PipeContent from './PipeContent.vue'
 
   export default {
-    props: ['pipe-eid', 'item', 'index', 'active-stream-eid'],
+    props: ['pipe-eid', 'item', 'index', 'active-process'],
     components: {
       CodeEditor,
-      InlineEditText
+      InlineEditText,
+      PipeContent
     },
     data() {
       return {
@@ -81,17 +87,14 @@
       }
     },
     computed: {
-      task_icon() {
-        return _.result(this, 'tinfo.icon', 'build')
-      },
-      insert_before_tooltip() {
-        return 'Insert a new step before step ' + (this.index+1)
-      },
-      insert_after_tooltip() {
-        return 'Insert a new step after step ' + (this.index+1)
-      },
+      eid() { return _.get(this.item, 'eid', '') },
+      task_type() { return _.get(this.item, 'type') },
+      task_icon() { return _.result(this, 'tinfo.icon', 'build') },
+      insert_before_tooltip() { return 'Insert a new step before step ' + (this.index+1) },
+      insert_after_tooltip() { return 'Insert a new step after step ' + (this.index+1) },
+
       bg_color() {
-        switch (_.get(this.item, 'type'))
+        switch (this.task_type)
         {
           // blue tiles
           case types.TASK_TYPE_INPUT:
@@ -130,11 +133,36 @@
 
         // default
         return 'bg-task-gray'
+      },
+
+      // find the active subprocess by finding this task eid in the subprocess array
+      active_subprocess() {
+        return _
+          .chain(this.activeProcess)
+          .get('subprocesses')
+          .find((s) => { return _.get(s, 'task.eid') == this.eid })
+          .value()
+      },
+
+      our_inputs() {
+        var inputs = _.get(this.active_subprocess, 'output', [])
+
+        // use the inputs specified in the input task
+        if (inputs.length == 0 && this.task_type == types.TASK_TYPE_INPUT)
+          return _.get(this.item, 'params.items', [])
+
+        // ...otherwise, use the output array from the active subprocess
+        return inputs
+      },
+
+      active_stream_eid() {
+        var stream = _.head(this.our_inputs)
+        return _.get(stream, 'eid', '')
       }
     },
     methods: {
       tinfo() {
-        return _.find(tasks, { type: _.get(this.item, 'type') })
+        return _.find(tasks, { type: this.task_type })
       },
       getDefaultName() {
         return _.result(this, 'tinfo.name', 'New Task')
@@ -151,7 +179,7 @@
       },
       editTaskSingleton(attrs, input, task_attrs) {
         var eid = this.pipeEid
-        var task_eid = _.get(this.item, 'eid', '')
+        var task_eid = this.eid
         var attrs = _.assign({}, this.item, attrs)
         this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs })
         input.endEdit()

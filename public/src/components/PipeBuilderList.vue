@@ -25,7 +25,7 @@
         :pipe-eid="pipeEid"
         :item="task"
         :index="index"
-        :active-stream-eid="active_stream_eid"
+        :active-process="activeProcess"
       ></pipe-builder-item>
     </div>
 
@@ -45,7 +45,7 @@
   import PipeBuilderItem from './PipeBuilderItem.vue'
 
   export default {
-    props: ['pipe-eid', 'tasks', 'active-subprocess'],
+    props: ['pipe-eid', 'tasks', 'active-process'],
     components: {
       Btn,
       PipeTransferInputBlankslate,
@@ -56,11 +56,7 @@
       input_tasks()  { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
       output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
       has_input()    { return this.input_tasks.length > 0 },
-      has_output()   { return this.output_tasks.length > 0 },
-
-      active_stream_eid() {
-        return ''
-      }
+      has_output()   { return this.output_tasks.length > 0 }
     }
   }
 </script>

@@ -25,6 +25,7 @@
       class="flex-fill"
       :pipe-eid="eid"
       :tasks="tasks"
+      :active-process="active_process"
       v-else>
     </pipe-builder-list>
 
