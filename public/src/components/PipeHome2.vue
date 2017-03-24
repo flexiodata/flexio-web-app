@@ -26,6 +26,7 @@
       :pipe-eid="eid"
       :tasks="tasks"
       :active-process="active_process"
+      :project-connections="project_connections"
       v-else>
     </pipe-builder-list>
 
@@ -92,7 +93,9 @@
 
       active_process()       { return _.last(this.getActiveDocumentProcesses()) },
       is_process_running()   { return _.get(this.active_process, 'process_status', '') == PROCESS_STATUS_RUNNING },
-      is_process_run_mode()  { return _.get(this.active_process, 'process_mode', '') == PROCESS_MODE_RUN }
+      is_process_run_mode()  { return _.get(this.active_process, 'process_mode', '') == PROCESS_MODE_RUN },
+
+      project_connections() { return this.getOurConnections() }
     },
     watch: {
       project_eid: function(val, old_val) {
@@ -106,6 +109,7 @@
     },
     methods: {
       ...mapGetters([
+        'getAllConnections',
         'getActiveDocumentProcesses'
       ]),
 
@@ -151,6 +155,17 @@
         this.show_add_connection_modal = true
         this.$refs['modal-choose-input'].close()
         this.$nextTick(() => { this.$refs['modal-add-connection'].open() })
+      },
+
+      getOurConnections() {
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        return _
+          .chain(this.getAllConnections())
+          .filter((p) => { return _.get(p, 'project.eid') == this.project_eid })
+          .sortBy([ function(p) { return new Date(p.created) } ])
+          .reverse()
+          .value()
       },
 
       tryFetchPipe() {

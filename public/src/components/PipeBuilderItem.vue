@@ -30,12 +30,28 @@
             </inline-edit-text>
             <div class="bl bw1 b--black-10 pl3 relative" style="margin: 0 0 -4px -37px; padding: 0 0 4px 37px">
               <div class="mv2">
-                <code-editor
-                  class="pa1 ba b--black-10"
-                  lang="python"
-                  :val="command"
-                  :options="{ lineNumbers: false }"
-                ></code-editor>
+                <!-- command bar -->
+                <div v-if="false">
+                  <code-editor
+                    class="pa1 ba b--black-10"
+                    lang="python"
+                    :val="command"
+                    :options="{ lineNumbers: false }"
+                  ></code-editor>
+                </div>
+                <command-bar2
+                  ref="commandbar"
+                  :orig-json="item"
+                  :task-json="item"
+                  :connections="projectConnections"
+                  :input-columns="input_columns"
+                  :output-columns="output_columns"
+                  :show-plus-button="false"
+                  :show-examples="false"
+                  :show-cancel-save-buttons="false"
+                  @save="saveCommandChanges"
+                  v-else
+                ></command-bar2>
               </div>
               <pipe-content
                 class="mv2 relative"
@@ -63,13 +79,15 @@
   import * as tasks from '../constants/task-info'
   import parser from '../utils/parser'
   import CodeEditor from './CodeEditor.vue'
+  import CommandBar2 from './CommandBar2.vue'
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
 
   export default {
-    props: ['pipe-eid', 'item', 'index', 'active-process'],
+    props: ['pipe-eid', 'item', 'index', 'active-process', 'project-connections'],
     components: {
       CodeEditor,
+      CommandBar2,
       InlineEditText,
       PipeContent
     },
@@ -77,7 +95,7 @@
       return {
         display_name: this.getDisplayName(),
         description: this.getDescription(),
-        command: this.getCommand(),
+        command: this.getParserCommand(),
         editing_name: false,
         editing_description: false
       }
@@ -129,6 +147,13 @@
         return 'bg-task-gray'
       },
 
+      process_task_id() {
+        var process_eid = _.get(this.activeProcess, 'eid', '')
+        if (process_eid.length == 0)
+          return ''
+        return process_eid + '--' + this.eid
+      },
+
       // find the active subprocess by finding this task eid in the subprocess array
       active_subprocess() {
         return _
@@ -149,6 +174,9 @@
         return inputs
       },
 
+      input_columns()  { return this.getOurInputColumns() },
+      output_columns() { return this.getOurOutputColumns() },
+
       active_stream_eid() {
         var stream = _.head(this.our_inputs)
         return _.get(stream, 'eid', '')
@@ -168,15 +196,42 @@
       getDescription() {
         return _.get(this.item, 'description', '')
       },
-      getCommand() {
+      getParserCommand() {
         return _.defaultTo(parser.toCmdbar(this.item), '')
       },
-      editTaskSingleton(attrs, input, task_attrs) {
+      getOurInputColumns() {
+        var columns = _.get(this.$store, 'state.objects.'+this.process_task_id+'.input_columns', [])
+
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        return _
+          .chain(columns)
+          .sortBy([ function(c) { return c.name } ])
+          .reverse()
+          .value()
+      },
+      getOurOutputColumns() {
+        var columns = _.get(this.$store, 'state.objects.'+this.process_task_id+'.output_columns', [])
+
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        return _
+          .chain(columns)
+          .sortBy([ function(c) { return c.name } ])
+          .reverse()
+          .value()
+      },
+      editTaskSingleton(attrs, input) {
         var eid = this.pipeEid
         var task_eid = this.eid
         var attrs = _.assign({}, this.item, attrs)
         this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs })
-        input.endEdit()
+
+        if (!_.isNil(input))
+          input.endEdit()
+      },
+      saveCommandChanges(attrs) {
+        this.editTaskSingleton(_.pick(attrs, ['type', 'params']))
       },
       insertNewTask() {
         this.$emit('insert-task', this.index+1)

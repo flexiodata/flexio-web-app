@@ -27,12 +27,13 @@
         :item="task"
         :index="index"
         :active-process="activeProcess"
+        :project-connections="projectConnections"
         @insert-task="insertNewTask"
       ></pipe-builder-item>
     </div>
 
     <pipe-transfer-output-blankslate
-      class="blankslate mh5 mv3"
+      class="blankslate mh5 mt3 mb5"
       v-if="!has_output">
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Output</div>
     </pipe-transfer-output-blankslate>
@@ -47,7 +48,7 @@
   import PipeBuilderItem from './PipeBuilderItem.vue'
 
   export default {
-    props: ['pipe-eid', 'tasks', 'active-process'],
+    props: ['pipe-eid', 'tasks', 'active-process', 'project-connections'],
     components: {
       Btn,
       PipeTransferInputBlankslate,
