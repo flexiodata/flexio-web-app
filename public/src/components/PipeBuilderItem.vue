@@ -12,7 +12,6 @@
       </div>
       <div class="flex-fill">
         <div class="flex flex-row">
-          <div class="flex-none f5 lh-copy w2" v-if="false">{{index+1}}.</div>
           <div class="flex-fill">
             <div class="v-top dib f5 lh-copy">{{index+1}}.</div>
             <inline-edit-text
