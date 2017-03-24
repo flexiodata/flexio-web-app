@@ -1,21 +1,28 @@
 <template>
   <div class="flex flex-row">
     <div class="flex-fill">
-      <div class="mb1">
+      <div class="flex flex-row items-center mb1">
         <inline-edit-text
-          class="dib f3 li-title v-mid dark-gray"
+          class="dib f3 li-title v-mid dark-gray mr1"
           input-key="name"
           :val="pipe_name"
           @save="editPipeSingleton">
         </inline-edit-text>
         <inline-edit-text
-          class="dib f7 li-title v-mid silver pv1 ph2 bg-black-05"
+          class="dib f7 li-title v-mid silver pv1 ph2 mr1 bg-black-05"
           placeholder="Add an alias"
           input-key="ename"
           :val="pipe_ename"
           :show-edit-button="false"
           @save="editPipeSingleton">
         </inline-edit-text>
+        <div
+          class="hint--bottom hint--large cursor-default"
+          aria-label="When using the Flex.io command line interface (CLI) or API, pipes may be referenced either via their object ID or via an alias created here. Aliases are unique across the app, so we recommend prefixing your username to the alias (e.g., username-foo)."
+          v-if="pipe_ename.length == 0"
+        >
+          <i class="material-icons blue md-18">info</i>
+        </div>
       </div>
       <inline-edit-text
         class="f6 lh-title gray"
