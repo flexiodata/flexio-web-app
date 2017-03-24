@@ -1,25 +1,22 @@
 <template>
   <div class="mh5 relative">
-    <div class="flex flex-row absolute" style="top: -2rem" v-if="index == 0 && false">
-      <div class="pointer mr5 moon-gray hover-blue link tc hint--right" :aria-label="insert_before_tooltip">
-        <i class="db material-icons f3">add_circle</i>
+    <div class="flex flex-row mv2">
+      <div class="flex-none">
+        <div
+          class="cursor-default pa2 mr3 br1 white trans-wh tc"
+          style="margin-top: 2px"
+          :class="[ bg_color ]"
+        >
+          <i class="db material-icons f3">{{task_icon}}</i>
+        </div>
       </div>
-    </div>
-
-    <div class="flex flex-row mv2" style="margin-left: 6px">
-      <div class="flex-none f5 lh-copy mid-gray w2 mr1">{{index+1}}.</div>
       <div class="flex-fill">
-        <div class="flex-none flex flex-row mb2">
-          <div
-            class="cursor-default pa2 mr2 br1 white trans-wh tc"
-            style="margin-top: 2px"
-            :class="[ bg_color ]"
-          >
-            <i class="db material-icons f3">{{task_icon}}</i>
-          </div>
-          <div>
+        <div class="flex flex-row">
+          <div class="flex-none f5 lh-copy w2" v-if="false">{{index+1}}.</div>
+          <div class="flex-fill">
+            <div class="v-top dib f5 lh-copy">{{index+1}}.</div>
             <inline-edit-text
-              class="f5 lh-copy"
+              class="v-top dib f5 lh-copy"
               input-key="name"
               :val="display_name"
               @save="editTaskSingleton">
@@ -32,30 +29,30 @@
               :val="description"
               @save="editTaskSingleton">
             </inline-edit-text>
+            <div class="bl bw1 b--black-10 pl3 relative" style="margin: 0 0 -4px -37px; padding: 0 0 4px 37px; z-index: -1">
+              <div class="mv2">
+                <code-editor
+                  class="pa1 ba b--black-10"
+                  lang="python"
+                  :val="command"
+                  :options="{ lineNumbers: false }"
+                ></code-editor>
+              </div>
+              <pipe-content
+                class="mv2 relative"
+                style="height: 400px"
+                :stream-eid="active_stream_eid"
+                :task-json="item"
+                v-if="active_stream_eid.length > 0"
+              ></pipe-content>
+            </div>
           </div>
-        </div>
-        <div class="bl b--black-10 pl3" style="margin: -1.375rem 0 0 -1.875rem; padding: 1.375rem 0 0 1.875rem">
-          <div class="pb2">
-            <code-editor
-              class="pa1 ba b--black-10"
-              lang="python"
-              :val="command"
-              :options="{ lineNumbers: false }"
-            ></code-editor>
-          </div>
-          <pipe-content
-            class="relative"
-            style="height: 400px"
-            :stream-eid="active_stream_eid"
-            :task-json="item"
-            v-if="active_stream_eid.length > 0"
-          ></pipe-content>
         </div>
       </div>
     </div>
 
     <div class="flex flex-row">
-      <div class="pointer mr5 moon-gray hover-blue link tc hint--right" :aria-label="insert_after_tooltip">
+      <div class="pointer moon-gray hover-blue link tc hint--right" style="margin-left: 8px" :aria-label="insert_after_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
