@@ -58,7 +58,13 @@ class Create extends \Flexio\Jobs\Base
         // get the content and decode it
         $content = '';
         if (isset($job_definition['params']['content']))
-            $content = base64_decode($job_definition['params']['content']);
+        {
+            $content = $job_definition['params']['content'];
+            if (!is_string($content))
+                return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+
+            $content = base64_decode($content);
+        }
 
         // create the output stream
         $outstream_properties = array(
@@ -96,9 +102,13 @@ class Create extends \Flexio\Jobs\Base
         if ($streamwriter === false)
             return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
 
-        if (isset($job_definition['params']['rows']))
+        if (isset($job_definition['params']['content']))
         {
-            foreach ($job_definition['params']['rows'] as $row)
+            $rows = $job_definition['params']['content'];
+            if (!is_array($rows))
+                return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+
+            foreach ($rows as $row)
             {
                 // if the row array is non-associative, then insert them
                 // based on the index of the field compared to the structure
@@ -136,9 +146,9 @@ class Create extends \Flexio\Jobs\Base
     {
         "type": "flexio.create",
         "params": {
-            "columns": [
-                { "name": "myfield", "type": "character", "width": 40, "scale": 0 }
-            ]
+            "name": "test",
+            "mime_type": "text/csv",
+            "content": ""
         }
     }
 EOD;
@@ -161,10 +171,7 @@ EOD;
                     "mime_type": {
                         "type": "string"
                     },
-                    "content": {
-                        "type": "string"
-                    },
-                    "columns": {
+                    "structure": {
                         "type": "array",
                         "minItems": 1,
                         "items": {
@@ -192,11 +199,8 @@ EOD;
                             }
                         }
                     },
-                    "rows" : {
-                        "type": "array",
-                        "items": {
-                            "type": ["array","object"]
-                        }
+                    "content": {
+                        "type": ["string", "array"]
                     }
                 }
             }
