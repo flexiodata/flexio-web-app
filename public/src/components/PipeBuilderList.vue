@@ -63,7 +63,10 @@
     methods: {
       insertNewTask(idx) {
         var eid = this.pipeEid
-        var attrs = { index: _.defaultTo(idx, -1) }
+        var attrs = {
+          index: _.defaultTo(idx, -1),
+          params: {}
+        }
         this.$store.dispatch('createPipeTask', { eid, attrs })
       }
     }

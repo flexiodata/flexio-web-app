@@ -28,7 +28,7 @@
               :val="description"
               @save="editTaskSingleton">
             </inline-edit-text>
-            <div class="bl bw1 b--black-10 pl3 relative" style="margin: 0 0 -4px -37px; padding: 0 0 4px 37px; z-index: -1">
+            <div class="bl bw1 b--black-10 pl3 relative" style="margin: 0 0 -4px -37px; padding: 0 0 4px 37px">
               <div class="mv2">
                 <code-editor
                   class="pa1 ba b--black-10"
