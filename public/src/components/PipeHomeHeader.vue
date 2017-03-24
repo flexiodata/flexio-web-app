@@ -48,6 +48,7 @@
         btn-primary
         class="ttu b"
         :disabled="!is_run_allowed"
+        @click="runPipe"
         v-else
       >Run</btn>
     </div>
@@ -85,6 +86,9 @@
         var eid = this.pipeEid
         this.$store.dispatch('updatePipe', { eid , attrs })
         input.endEdit()
+      },
+      runPipe() {
+        this.$emit('run-pipe')
       }
     }
   }

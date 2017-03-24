@@ -8,7 +8,8 @@
       :pipe-eid="eid"
       :pipe-view="pipe_view"
       :process-running="is_process_running"
-      @set-pipe-view="setPipeView">
+      @set-pipe-view="setPipeView"
+      @run-pipe="runPipe">
     </pipe-home-header>
 
     <pipe-transfer
@@ -112,8 +113,17 @@
           this.pipe_view = view
       },
 
-      addInput(attrs, modal) {
+      runPipe() {
+        var attrs = {
+          parent_eid: this.eid,
+          process_mode: PROCESS_MODE_RUN,
+          run: true // this will automatically run the process and start polling the process
+        }
 
+        this.$store.dispatch('createProcess', { attrs })
+      },
+
+      addInput(attrs, modal) {
         // insert input after any existing inputs
         var input_idx = _.findIndex(this.tasks, (t) => { return _.get(t, 'type') == TASK_TYPE_INPUT })
 
