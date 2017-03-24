@@ -263,12 +263,7 @@ class Transform extends \Flexio\Jobs\Base
             $new_structure = $column;
 
             $qname = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($column['name']);
-            $width = isset_or($column['width'], -1);
-            if ($width == 1024) $width = -1; // \Flexio\Services\Postgres is returning us huge columns of indeterminate width
-            $scale = $column['scale'];
-
             $expr = $qname;
-            $is_character = ($column['type'] == self::COLUMN_TYPE_TEXT || $column['type'] == self::COLUMN_TYPE_CHARACTER || $column['type'] == self::COLUMN_TYPE_WIDECHARACTER);
 
             foreach ($operations as $operation)
             {
@@ -662,8 +657,6 @@ class Transform extends \Flexio\Jobs\Base
             {
                 $new_width = 5; $width = $new_width; // enough to hold "true"/"false"
             }
-
-            $is_character = true;
         }
 
         if ($new_type == self::COLUMN_TYPE_NUMERIC)
