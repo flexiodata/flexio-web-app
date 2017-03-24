@@ -41,8 +41,8 @@
                 </div>
                 <command-bar2
                   ref="commandbar"
-                  :orig-json="item"
-                  :task-json="item"
+                  :orig-json="task"
+                  :task-json="task"
                   :connections="projectConnections"
                   :input-columns="input_columns"
                   :output-columns="output_columns"
@@ -57,7 +57,7 @@
                 class="mv2 relative"
                 style="height: 400px"
                 :stream-eid="active_stream_eid"
-                :task-json="item"
+                :task-json="task"
                 v-if="active_stream_eid.length > 0"
               ></pipe-content>
             </div>
@@ -93,18 +93,24 @@
     },
     data() {
       return {
-        display_name: this.getDisplayName(),
         description: this.getDescription(),
         command: this.getParserCommand()
       }
     },
     computed: {
-      eid() { return _.get(this.item, 'eid', '') },
+      task() { return this.item },
+      eid() { return _.get(this.task, 'eid', '') },
       task_icon() { return _.result(this, 'tinfo.icon', 'build') },
       insert_tooltip() { return 'Insert a new step after step ' + (this.index+1) },
 
+      display_name() {
+        var name = _.get(this.task, 'name', '')
+        var default_name = _.result(this, 'tinfo.name', 'New Task')
+        return name.length > 0 ? name : default_name
+      },
+
       bg_color() {
-        switch (_.get(this.item, 'type'))
+        switch (_.get(this.task, 'type'))
         {
           // blue tiles
           case types.TASK_TYPE_INPUT:
@@ -166,7 +172,7 @@
 
         // use the inputs specified in the input task
         if (inputs.length == 0 && this.task_type == types.TASK_TYPE_INPUT)
-          return _.get(this.item, 'params.items', [])
+          return _.get(this.task, 'params.items', [])
 
         // ...otherwise, use the output array from the active subprocess
         return inputs
@@ -182,20 +188,13 @@
     },
     methods: {
       tinfo() {
-        return _.find(tasks, { type: _.get(this.item, 'type') })
-      },
-      getDefaultName() {
-        return _.result(this, 'tinfo.name', 'New Task')
-      },
-      getDisplayName() {
-        var name = _.get(this.item, 'name', '')
-        return name.length > 0 ? name : this.getDefaultName()
+        return _.find(tasks, { type: _.get(this.task, 'type') })
       },
       getDescription() {
-        return _.get(this.item, 'description', '')
+        return _.get(this.task, 'description', '')
       },
       getParserCommand() {
-        return _.defaultTo(parser.toCmdbar(this.item), '')
+        return _.defaultTo(parser.toCmdbar(this.task), '')
       },
       getOurInputColumns() {
         var columns = _.get(this.$store, 'state.objects.'+this.process_task_id+'.input_columns', [])
@@ -222,7 +221,7 @@
       editTaskSingleton(attrs, input) {
         var eid = this.pipeEid
         var task_eid = this.eid
-        var attrs = _.assign({}, this.item, attrs)
+        var attrs = _.assign({}, this.task, attrs)
         this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs })
 
         if (!_.isNil(input))

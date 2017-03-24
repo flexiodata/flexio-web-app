@@ -58,6 +58,11 @@
         editing: false
       }
     },
+    watch: {
+      val(val, old_val) {
+        this.edit_val = val
+      }
+    },
     methods: {
       save() {
         this.$emit('save', { [this.inputKey]: this.edit_val }, this)
