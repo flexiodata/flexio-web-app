@@ -11,8 +11,8 @@
       v-focus
     ></textarea>
     <div class="flex flex-row items-center hide-child hover-black" v-else>
-      <div class="" @click="editing = true" v-if="edit_val.length > 0">{{edit_val}}</div>
-      <div class=" pointer" :class="placeholderCls" @click="editing = true" v-else>{{placeholder}}</div>
+      <div @click="editing = true" v-if="edit_val.length > 0">{{edit_val}}</div>
+      <div :class="placeholderCls" @click="editing = true" v-else>{{placeholder}}</div>
       <button
         class="ml1 pa0 br1 hint--top child"
         :aria-label="editButtonLabel"
