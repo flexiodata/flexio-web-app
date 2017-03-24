@@ -69,50 +69,6 @@
             :options="{ lineNumbers: false }"
           ></code-editor>
           <div class="flex-fill">
-            <div class="ba b--black-10 overflow-auto">
-                <table class="f7 w-100 mw8 center" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Name</th>
-                      <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Username</th>
-                      <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">Email</th>
-                      <th class="fw6 bb b--black-10 tl pv1 ph2 bg-white">ID</th>
-                    </tr>
-                  </thead>
-                  <tbody class="lh-copy">
-                    <tr>
-                      <td class="pv1 ph2 bb b--black-10">Hassan Johnson</td>
-                      <td class="pv1 ph2 bb b--black-10">@hassan</td>
-                      <td class="pv1 ph2 bb b--black-10">hassan@companywithalongdomain.co</td>
-                      <td class="pv1 ph2 bb b--black-10">14419232532474</td>
-                    </tr>
-                    <tr>
-                      <td class="pv1 ph2 bb b--black-10">Taral Hicks</td>
-                      <td class="pv1 ph2 bb b--black-10">@hicks</td>
-                      <td class="pv1 ph2 bb b--black-10">taral@companywithalongdomain.co</td>
-                      <td class="pv1 ph2 bb b--black-10">72326219423551</td>
-                    </tr>
-                    <tr>
-                      <td class="pv1 ph2 bb b--black-10">Tyrin Turner</td>
-                      <td class="pv1 ph2 bb b--black-10">@tt</td>
-                      <td class="pv1 ph2 bb b--black-10">ty@companywithalongdomain.co</td>
-                      <td class="pv1 ph2 bb b--black-10">92325170324444</td>
-                    </tr>
-                    <tr>
-                      <td class="pv1 ph2 bb b--black-10">Oliver Grant</td>
-                      <td class="pv1 ph2 bb b--black-10">@oli</td>
-                      <td class="pv1 ph2 bb b--black-10">oliverg@companywithalongdomain.co</td>
-                      <td class="pv1 ph2 bb b--black-10">71165170352909</td>
-                    </tr>
-                    <tr>
-                      <td class="pv1 ph2 bb b--black-10">Dean Blanc</td>
-                      <td class="pv1 ph2 bb b--black-10">@deanblanc</td>
-                      <td class="pv1 ph2 bb b--black-10">dean@companywithalongdomain.co</td>
-                      <td class="pv1 ph2 bb b--black-10">71865178111909</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
           </div>
         </div>
       </div>
@@ -151,10 +107,10 @@
         return this.icon ? this.icon : _.result(this, 'tinfo.icon', 'build')
       },
       insert_before_tooltip() {
-        return 'Insert a new task before task ' + (this.index+1)
+        return 'Insert a new step before step ' + (this.index+1)
       },
       insert_after_tooltip() {
-        return 'Insert a new task after task ' + (this.index+1)
+        return 'Insert a new step after step ' + (this.index+1)
       },
       bg_color() {
         switch (_.get(this.item, 'type'))
