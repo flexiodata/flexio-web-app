@@ -22,6 +22,7 @@
     <div class="pv4" v-else>
       <pipe-builder-item
         v-for="(task, index) in tasks"
+        :pipe-eid="pipeEid"
         :item="task"
         :index="index"
         :active-stream-eid="active_stream_eid"
@@ -44,7 +45,7 @@
   import PipeBuilderItem from './PipeBuilderItem.vue'
 
   export default {
-    props: ['tasks', 'active-subprocess'],
+    props: ['pipe-eid', 'tasks', 'active-subprocess'],
     components: {
       Btn,
       PipeTransferInputBlankslate,

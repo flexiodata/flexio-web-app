@@ -22,6 +22,7 @@
 
     <pipe-builder-list
       class="flex-fill"
+      :pipe-eid="eid"
       :tasks="tasks"
       v-else>
     </pipe-builder-list>

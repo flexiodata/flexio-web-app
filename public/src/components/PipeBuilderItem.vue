@@ -9,7 +9,7 @@
     <div class="flex flex-row mv2" style="margin-left: 6px">
       <div class="flex-none f4 lh-title mid-gray w2 mr1">{{index+1}}.</div>
       <div class="flex-fill">
-        <div class="flex-none flex flex-row mb3">
+        <div class="flex-none flex flex-row mb2">
           <div>
             <div
               class="cursor-default pa2 mr2 br1 white trans-wh tc"
@@ -20,45 +20,20 @@
             </div>
           </div>
           <div>
-            <textarea
-              class="f4 lh-title mid-gray pa1 ba b--black-10"
-              autocomplete="off"
-              rows="1"
-              @keydown.esc="editing_name = false"
-              v-model="display_name"
-              v-if="editing_name"
-              v-focus
-            ></textarea>
-            <div class="hide-child mid-gray hover-black" v-else>
-              <div class="dib f4 lh-title" @click="editing_name = true">{{display_name}}</div>
-              <button
-                class="pa0 br1 lh-title hint--top child"
-                aria-label="Edit name and description"
-                v-if="!editing_name && !editing_description"
-              ><i class="db material-icons f6">edit</i>
-            </div>
-            </button>
-            <textarea
-              class="f6 fw6 lh-title bn"
-              autocomplete="off"
-              @keydown.esc="editing_description = false"
-              v-model="description"
-              v-if="editing_description"
-              v-focus
-            ></textarea>
-
-            <div class="f6 fw6 hide-child mid-gray hover-black" v-else>
-              <div class="dib" @click="editing_description = true" v-if="description.length > 0">{{description}}</div>
-              <div class="dib black-20" @click="editing_description = true" v-else>Add a description</div>
-              <button
-                class="pa0 br1 lh-title hint--top child"
-                aria-label="Edit name and description"
-                v-if="!editing_name && !editing_description"
-              ><i class="db material-icons f6">edit</i>
-            </div>
-
-            <div class="f6 fw6 lh-title ba b--transparent" @click="editDescription" v-else>
-            </div>
+            <inline-edit-text
+              class="f4 lh-title"
+              input-key="name"
+              :val="display_name"
+              @save="editTaskSingleton">
+            </inline-edit-text>
+            <inline-edit-text
+              class="f6 lh-title gray"
+              placeholder="Add a description"
+              placeholder-cls="fw6 black-20 hover-black-40"
+              input-key="description"
+              :val="description"
+              @save="editTaskSingleton">
+            </inline-edit-text>
           </div>
         </div>
         <div class="bl b--black-10 pl3" style="margin: -1.875rem 0 0 -1.875rem; padding: 1.875rem 0 0 1.875rem">
@@ -88,11 +63,13 @@
   import * as tasks from '../constants/task-info'
   import parser from '../utils/parser'
   import CodeEditor from './CodeEditor.vue'
+  import InlineEditText from './InlineEditText.vue'
 
   export default {
-    props: ['item', 'index', 'active-stream-eid'],
+    props: ['pipe-eid', 'item', 'index', 'active-stream-eid'],
     components: {
-      CodeEditor
+      CodeEditor,
+      InlineEditText
     },
     data() {
       return {
@@ -105,7 +82,7 @@
     },
     computed: {
       task_icon() {
-        return this.icon ? this.icon : _.result(this, 'tinfo.icon', 'build')
+        return _.result(this, 'tinfo.icon', 'build')
       },
       insert_before_tooltip() {
         return 'Insert a new step before step ' + (this.index+1)
@@ -171,6 +148,13 @@
       },
       getCommand() {
         return _.defaultTo(parser.toCmdbar(this.item), '')
+      },
+      editTaskSingleton(attrs, input, task_attrs) {
+        var eid = this.pipeEid
+        var task_eid = _.get(this.item, 'eid', '')
+        var attrs = _.assign({}, this.item, attrs)
+        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs })
+        input.endEdit()
       }
     }
   }
