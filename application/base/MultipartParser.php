@@ -168,7 +168,7 @@ class MultipartParser
             if (preg_match('/filename="(.*?)"/i', $header, $matches))
                 $filename = trim($matches[1]);
             $matches = array();
-            if (preg_match('/Content-Type:\s*(.*?)/i', $header, $matches))
+            if (preg_match('/Content-Type:\s*([^;\s]+)/i', $header, $matches))
                 $mimetype = trim($matches[1]);
 
             $current_name = $name;
