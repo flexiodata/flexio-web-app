@@ -30,19 +30,22 @@ class Create extends \Flexio\Jobs\Base
         if ($validator->hasErrors() === true)
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
-        if (isset($job_definition['params']['content']))
+        // get the content type
+        $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        switch ($mime_type)
         {
-            $this->createStreamOutput();
-            return;
+            default:
+            case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
+            case \Flexio\Base\ContentType::MIME_TYPE_TXT:
+            case \Flexio\Base\ContentType::MIME_TYPE_CSV:
+            case \Flexio\Base\ContentType::MIME_TYPE_JSON:
+                return $this->createStreamOutput();
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                return $this->createTableOutput();
         }
 
-        if (isset($job_definition['params']['columns']))
-        {
-            $this->createTableOutput();
-            return;
-        }
-
-        // default fall through
+        // default fall through; shouldn't happen
         $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
     }
 
@@ -50,13 +53,12 @@ class Create extends \Flexio\Jobs\Base
     {
         $job_definition = $this->getProperties();
         $name = isset_or($job_definition['params']['name'], 'New File');
+        $mime_type = $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
 
         // get the content and decode it
         $content = '';
         if (isset($job_definition['params']['content']))
             $content = base64_decode($job_definition['params']['content']);
-
-        $mime_type = \Flexio\Base\ContentType::getMimeType($name, $content);
 
         // create the output stream
         $outstream_properties = array(
@@ -80,6 +82,7 @@ class Create extends \Flexio\Jobs\Base
     {
         $job_definition = $this->getProperties();
         $name = isset_or($job_definition['params']['name'], 'New Table');
+        $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $structure = isset_or($job_definition['params']['columns'], '[]');
         $outstream_properties = array(
             'name' => $name,
@@ -154,6 +157,9 @@ EOD;
                     "name": {
                         "type": "string",
                         "minLength": 1
+                    },
+                    "mime_type": {
+                        "type": "string"
                     },
                     "content": {
                         "type": "string"
