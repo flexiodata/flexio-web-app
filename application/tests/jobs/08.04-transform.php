@@ -19,42 +19,40 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $task = \Flexio\Object\Task::create('
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                    "content": "${data}"
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "operations": [
-                        { "operation": "case", "case": "${case}" }
-                    ]
-                }
-            }
-        ]
-        ')->get();
+        // TODO: fill out
 
-
-
-        // TEST: Transform Job: standardize text with capitalization (none, lowercase, uppercase, proper, first letter)
-
-        // BEGIN TEST
-        $data = <<<EOD
-some content
-EOD;
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "case" => "upper"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $result = TestUtil::getProcessResult($process);
-        $actual = isset_or($result[0], false);
-        $expected = 'SOME CONTENT';
-        TestCheck::assertString('A.1', 'Transform Job; basic transformation on stream content',  $actual, $expected, $results);
+        // TEST: Transform Job; missing or bad parameters (e.g. type specified but something besides
+        //       text or not any of the allowed types)
+        // TEST: Transform Job: update values with select part (left, right, middle, part)
+        // TEST: Transform Job: update values with remove text (none, selected text, selected characters, symbols, breaks, letters, numbers, regular expression)
+        // TEST: combinations of operations
+        // TEST: Transform Job; conversion to numeric type from character type
+        // TEST: Transform Job; conversion to numeric type from numeric type (identity)
+        // TEST: Transform Job; conversion to numeric type from double type
+        // TEST: Transform Job; conversion to numeric type from integer type
+        // TEST: Transform Job; conversion to numeric type from date type
+        // TEST: Transform Job; conversion to numeric type from datetime type
+        // TEST: Transform Job; conversion to numeric type from boolean type
+        // TEST: Transform Job; conversion to integer type from character type
+        // TEST: Transform Job; conversion to integer type from numeric type
+        // TEST: Transform Job; conversion to integer type from double type
+        // TEST: Transform Job; conversion to integer type from integer type (identity)
+        // TEST: Transform Job; conversion to integer type from date type
+        // TEST: Transform Job; conversion to integer type from datetime type
+        // TEST: Transform Job; conversion to integer type from boolean type
+        // TEST: Transform Job; conversion to date type from character type
+        // TEST: Transform Job; conversion to date type from numeric type
+        // TEST: Transform Job; conversion to date type from double type
+        // TEST: Transform Job; conversion to date type from integer type
+        // TEST: Transform Job; conversion to date type from date type (identity)
+        // TEST: Transform Job; conversion to date type from datetime type
+        // TEST: Transform Job; conversion to date type from boolean type
+        // TEST: Transform Job; conversion to datetime type from character type
+        // TEST: Transform Job; conversion to datetime type from numeric type
+        // TEST: Transform Job; conversion to datetime type from double type
+        // TEST: Transform Job; conversion to datetime type from integer type
+        // TEST: Transform Job; conversion to datetime type from date type
+        // TEST: Transform Job; conversion to datetime type from datetime type (identity)
+        // TEST: Transform Job; conversion to datetime type from boolean type
     }
 }
