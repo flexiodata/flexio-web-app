@@ -95,9 +95,7 @@
       return {
         display_name: this.getDisplayName(),
         description: this.getDescription(),
-        command: this.getParserCommand(),
-        editing_name: false,
-        editing_description: false
+        command: this.getParserCommand()
       }
     },
     computed: {
