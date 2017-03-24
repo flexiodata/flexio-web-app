@@ -27,7 +27,7 @@
         v-if="has_input"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
-        class="flex-fill"
+        class="flex-fill overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         v-else-if="show_input_chooser"
@@ -37,6 +37,7 @@
         @choose-connection="show_input_chooser = true"
         v-else
       ></pipe-transfer-input-blankslate>
+      <!--@choose-connection="$emit('choose-input-connection')"-->
     </div>
 
     <div class="flex-fill flex flex-column mr4-l">
