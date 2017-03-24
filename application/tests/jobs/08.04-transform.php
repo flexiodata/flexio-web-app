@@ -31,7 +31,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["A"],
@@ -67,7 +67,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["A"],
@@ -95,7 +95,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["A"],
         		[null],
         		["A"],
@@ -115,7 +115,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["A"],
@@ -143,7 +143,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["a"],
         		[null],
         		["a"],
@@ -163,7 +163,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["A"],
@@ -191,7 +191,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["A"],
         		[null],
         		["A"],
@@ -211,7 +211,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["A"],
@@ -239,7 +239,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["A"],
         		[null],
         		["A"],
@@ -263,7 +263,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["Abc"],
@@ -299,7 +299,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["Abc"],
@@ -327,7 +327,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["000000a"],
         		[null],
         		["0000Abc"],
@@ -347,7 +347,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["Abc"],
@@ -375,7 +375,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["a"],
         		[null],
         		["A"],
@@ -395,7 +395,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["Abc"],
@@ -423,7 +423,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["0000000000"],
         		[null],
         		["000000000A"],
@@ -443,7 +443,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["Abc"],
@@ -471,7 +471,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["******a"],
         		[null],
         		["****Abc"],
@@ -491,7 +491,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["1"],
                         [null],
                 		["0"],
@@ -521,7 +521,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["00001"],
                 [null],
         		["00000"],
@@ -542,7 +542,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":10,"scale":2}
                 	],
-                	"rows": [
+                	"content": [
                 		["1.23"],
                         [null],
                 		["0"],
@@ -573,7 +573,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["00001.23"],
                 [null],
         		["00000.00"],
@@ -594,7 +594,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["Abc"],
@@ -622,7 +622,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["a000000"],
         		[null],
         		["Abc0000"],
@@ -642,7 +642,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["Abc"],
@@ -670,7 +670,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["a"],
         		[null],
         		["A"],
@@ -690,7 +690,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["Abc"],
@@ -718,7 +718,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["a000000000"],
         		[null],
         		["Abc0000000"],
@@ -738,7 +738,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["Abc"],
@@ -766,7 +766,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["a******"],
         		[null],
         		["Abc****"],
@@ -786,7 +786,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":10,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["1"],
                         [null],
                 		["0"],
@@ -816,7 +816,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["10000"],
                 [null],
         		["00000"],
@@ -837,7 +837,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":10,"scale":2}
                 	],
-                	"rows": [
+                	"content": [
                 		["1.23"],
                         [null],
                 		["0"],
@@ -867,7 +867,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["1.230000"],
                 [null],
         		["0.000000"],
@@ -892,7 +892,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":15,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[" a"],
                 		[null],
                 		["A "],
@@ -928,7 +928,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":15,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[" a"],
                 		[null],
                 		["A "],
@@ -956,7 +956,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["a"],
         		[null],
         		["A "],
@@ -976,7 +976,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":15,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[" a"],
                 		[null],
                 		["A "],
@@ -1004,7 +1004,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		[" a"],
         		[null],
         		["A"],
@@ -1024,7 +1024,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":15,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[" a"],
                 		[null],
                 		["A "],
@@ -1052,7 +1052,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["a"],
         		[null],
         		["A"],
@@ -1072,7 +1072,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":5,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["1"],
                 		[null],
                 		["2"],
@@ -1101,7 +1101,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["1"],
         		[null],
         		["2"],

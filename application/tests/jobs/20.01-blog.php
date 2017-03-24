@@ -169,7 +169,7 @@ class Test
 
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $result = TestUtil::getProcessSingleOutputResult($process,true,1535,1); // 1536 rows in output; get the last one
-        $actual = isset_or($result['rows'][0],array());
+        $actual = isset_or($result['content'][0],array());
         $expected = json_decode('
         {
             "number": "3000",

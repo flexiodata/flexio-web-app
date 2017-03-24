@@ -229,7 +229,7 @@ class Test
                 { "name": "char_1b_1", "type": "character", "width": 10 },
                 { "name": "char_1b_2", "type": "character", "width": 10 }
             ],
-            "rows": [
+            "content": [
                 ["A","",""],
                 ["A","A","A"]
             ]

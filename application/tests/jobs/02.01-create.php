@@ -54,7 +54,8 @@ class Test
                     "name": "Test Table",
                     "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                     "columns": [
-                    ]
+                    ],
+                    "content": "bad content"
                 }
             }
         ')->get();

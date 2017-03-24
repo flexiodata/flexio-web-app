@@ -30,7 +30,7 @@ class Test
                     "columns": [
                         { "name": "c1", "type": "character", "width": 3 }
                     ],
-                    "rows": [
+                    "content": [
                         {"c1" : ""},
                         {"c1" : null}
                     ]
@@ -44,7 +44,7 @@ class Test
             "columns": [
                 { "name": "c1", "type": "character", "width": 3 }
             ],
-            "rows": [
+            "content": [
                 {"c1" : ""},
                 {"c1" : null}
             ]
@@ -61,7 +61,7 @@ class Test
                     "columns": [
                         { "name": "c1", "type": "character", "width": 3 }
                     ],
-                    "rows": [
+                    "content": [
                         {"c1" : "aBC"},
                         {"c1" : "c a"},
                         {"c1" : " -1"},
@@ -78,7 +78,7 @@ class Test
             "columns": [
                 { "name": "c1", "type": "character", "width": 3 }
             ],
-            "rows": [
+            "content": [
                 {"c1" : "aBC"},
                 {"c1" : "c a"},
                 {"c1" : " -1"},
@@ -98,7 +98,7 @@ class Test
                     "columns": [
                         { "name": "c2", "type": "character", "width": 20 }
                     ],
-                    "rows": [
+                    "content": [
                         {"c2" : "()[]{}<>"},
                         {"c2" : "| \\/"},
                         {"c2" : " -1"},
@@ -115,7 +115,7 @@ class Test
             "columns": [
                 { "name": "c2", "type": "character", "width": 20 }
             ],
-            "rows": [
+            "content": [
                 {"c2" : "()[]{}<>"},
                 {"c2" : "| \\/"},
                 {"c2" : " -1"},
@@ -135,7 +135,7 @@ class Test
                     "columns": [
                         { "name": "n1", "type": "numeric", "width": 2, "scale": 0 }
                     ],
-                    "rows": [
+                    "content": [
                         {"n1" : "-1"},
                         {"n1" : null},
                         {"n1" : "0"},
@@ -152,7 +152,7 @@ class Test
             "columns": [
                 { "name": "n1", "type": "numeric", "width": 2, "scale": 0 }
             ],
-            "rows": [
+            "content": [
                 {"n1" : "-1"},
                 {"n1" : null},
                 {"n1" : "0"},
@@ -172,7 +172,7 @@ class Test
                     "columns": [
                         { "name": "n2", "type": "numeric", "width": 10, "scale": 2 }
                     ],
-                    "rows": [
+                    "content": [
                         {"n2" : "-1.23"},
                         {"n2" : "0.00"},
                         {"n2" : "0.99"},
@@ -189,7 +189,7 @@ class Test
             "columns": [
                 { "name": "n2", "type": "numeric", "width": 10, "scale": 2 }
             ],
-            "rows": [
+            "content": [
                 {"n2" : "-1.23"},
                 {"n2" : "0.00"},
                 {"n2" : "0.99"},
@@ -209,7 +209,7 @@ class Test
                     "columns": [
                         { "name": "d1", "type": "date" }
                     ],
-                    "rows": [
+                    "content": [
                         {"d1" : "1776-07-04"},
                         {"d1" : "1970-11-22"},
                         {"d1" : "1999-12-31"},
@@ -226,7 +226,7 @@ class Test
             "columns": [
                 { "name": "d1", "type": "date" }
             ],
-            "rows": [
+            "content": [
                 {"d1" : "1776-07-04"},
                 {"d1" : "1970-11-22"},
                 {"d1" : "1999-12-31"},
@@ -246,7 +246,7 @@ class Test
                     "columns": [
                         { "name": "b1", "type": "boolean" }
                     ],
-                    "rows": [
+                    "content": [
                         {"b1" : true},
                         {"b1" : false},
                         {"b1" : null},
@@ -263,7 +263,7 @@ class Test
             "columns": [
                 { "name": "b1", "type": "boolean" }
             ],
-            "rows": [
+            "content": [
                 {"b1" : true},
                 {"b1" : false},
                 {"b1" : null},
@@ -292,7 +292,7 @@ class Test
                         { "name": "d1", "type": "date" },
                         { "name": "b1", "type": "boolean" }
                     ],
-                    "rows": [
+                    "content": [
                         { "c1" : "aBC", "c2": "()[]{}<>", "n1" : "-1", "n2" : "-1.23", "d1" : "1776-07-04", "b1" : true },
                         { "c1" : "c a", "c2": "| \\/", "n1" : null, "n2" : "0.00", "d1" : "1970-11-22", "b1" : null },
                         { "c1" : " -1", "c2": ":;\"\'", "n1" : "0", "n2" : "0.99", "d1" : "1999-12-31", "b1" : false },
@@ -314,7 +314,7 @@ class Test
                 { "name": "d1", "type": "date" },
                 { "name": "b1", "type": "boolean" }
             ],
-            "rows": [
+            "content": [
                 { "c1" : "aBC", "c2": "()[]{}<>", "n1" : "-1", "n2" : "-1.23", "d1" : "1776-07-04", "b1" : true },
                 { "c1" : "c a", "c2": "| \\/", "n1" : null, "n2" : "0.00", "d1" : "1970-11-22", "b1" : null },
                 { "c1" : " -1", "c2": ":;\"\'", "n1" : "0", "n2" : "0.99", "d1" : "1999-12-31", "b1" : false },

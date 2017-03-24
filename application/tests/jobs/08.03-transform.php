@@ -66,7 +66,7 @@ class Test
                 	"columns": [
                 		{"name":"f1","type":"character","width":"10","scale":"0"}
                 	],
-                	"rows": [
+                	"content": [
                         ["a"],
                         [null],
                         ["A"],
@@ -105,7 +105,7 @@ class Test
 		$expected = '
         {
         	"columns": [{"name":"f1","type":"character","width":10,"scale":0}],
-        	"rows": [["a"],[null],["A"],["a B C"]]
+        	"content": [["a"],[null],["A"],["a B C"]]
         }
         ';
 		TestCheck::assertArray('A.1', 'Transform Job; conversion from character to character (identity)',  $actual, $expected, $results);
@@ -123,7 +123,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":6,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["a"],
                 		[null],
                 		["A"],
@@ -149,7 +149,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["a"],
         		[null],
         		["A"],
@@ -173,7 +173,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":2,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["0"],
                 		[null],
                 		["1"],
@@ -203,7 +203,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["0"],
         		[null],
         		["1"],
@@ -225,7 +225,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":14,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["0"],
                 		[null],
                 		["99999999999999"],
@@ -253,7 +253,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["0"],
         		[null],
         		["99999999999999"],
@@ -273,7 +273,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":4,"scale":2}
                 	],
-                	"rows": [
+                	"content": [
                 		["0.00"],
                 		[null],
                 		["1.23"],
@@ -302,7 +302,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["0.00"],
         		[null],
         		["1.23"],
@@ -327,7 +327,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"double","width":2,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["0"],
                 		[null],
                 		["1"],
@@ -357,7 +357,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["0"],
         		[null],
         		["1"],
@@ -379,7 +379,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"double","width":4,"scale":2}
                 	],
-                	"rows": [
+                	"content": [
                 		["0.00"],
                 		[null],
                 		["1.23"],
@@ -408,7 +408,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["0"],
         		[null],
         		["1.23"],
@@ -433,7 +433,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"integer","width":2,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["0"],
                 		[null],
                 		["1"],
@@ -463,7 +463,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["0"],
         		[null],
         		["1"],
@@ -489,7 +489,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"date","width":8,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["2001-02-03"],
                 		[null],
                 		["1970-01-01"],
@@ -517,7 +517,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["2001-02-03"],
         		[null],
         		["1970-01-01"],
@@ -541,7 +541,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"datetime","width":8,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["2001-02-03 00:00:00"],
                 		[null],
                 		["1970-01-01 01:02:03"],
@@ -569,7 +569,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["2001-02-03 00:00:00"],
         		[null],
         		["1970-01-01 01:02:03"],
@@ -593,7 +593,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"boolean","width":1,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[true],
                 		[null],
                 		[false]
@@ -620,7 +620,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
+        	"content": [
         		["true"],
         		[null],
         		["false"]
@@ -642,7 +642,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"character","width":5,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[null],
                         ["a"],
                 		["0"],
@@ -680,7 +680,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"boolean"}
         	],
-        	"rows": [
+        	"content": [
                 [null],
                 [null],
                 [false],
@@ -714,7 +714,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":8,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[null],
                 		["0"],
                 		["1"],
@@ -743,7 +743,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"boolean"}
         	],
-        	"rows": [
+        	"content": [
         		[null],
         		[false],
         		[true],
@@ -764,7 +764,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"numeric","width":8,"scale":2}
                 	],
-                	"rows": [
+                	"content": [
                 		[null],
                 		["0"],
                 		["1.1"],
@@ -793,7 +793,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"boolean"}
         	],
-        	"rows": [
+        	"content": [
         		[null],
         		[false],
         		[true],
@@ -818,7 +818,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"double","width":4,"scale":2}
                 	],
-                	"rows": [
+                	"content": [
                 		[null],
                 		["0"],
                 		["1.1"],
@@ -847,7 +847,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"boolean"}
         	],
-        	"rows": [
+        	"content": [
         		[null],
         		[false],
         		[true],
@@ -872,7 +872,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"integer","width":4,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[null],
                 		["0"],
                 		["1"],
@@ -901,7 +901,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"boolean"}
         	],
-        	"rows": [
+        	"content": [
         		[null],
         		[false],
         		[true],
@@ -926,7 +926,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"date","width":4,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[null],
                 		["2001-01-01"],
                 		["1999-12-31"]
@@ -953,7 +953,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"boolean"}
         	],
-        	"rows": [
+        	"content": [
         		[false],
         		[true],
         		[true]
@@ -976,7 +976,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"datetime","width":8,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[null],
                 		["2001-01-01 01:02:03"],
                 		["1999-12-31 23:59:59"]
@@ -1003,7 +1003,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"boolean"}
         	],
-        	"rows": [
+        	"content": [
         		[false],
         		[true],
         		[true]
@@ -1026,7 +1026,7 @@ class Test
                 	"columns": [
                 		{"name":"f","type":"boolean","width":1,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		[null],
                 		[true],
                 		[false]
@@ -1053,7 +1053,7 @@ class Test
         	"columns": [
         		{"name":"f","type":"boolean"}
         	],
-        	"rows": [
+        	"content": [
         		[null],
         		[true],
         		[false]

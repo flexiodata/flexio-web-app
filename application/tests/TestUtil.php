@@ -345,13 +345,13 @@ class TestUtil
 
         $result = array();
         $result['columns'] = $columns;
-        $result['rows'] = array();
+        $result['content'] = array();
 
         if (is_array($rows))
         {
             foreach ($rows as $r)
             {
-                $result['rows'][] = ($with_keys === true ? $r : array_values($r));
+                $result['content'][] = ($with_keys === true ? $r : array_values($r));
             }
         }
 

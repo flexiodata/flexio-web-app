@@ -33,7 +33,7 @@ class Test
                         { "name": "field1", "type": "character", "width": 3, "scale": 0 },
                         { "name": "field2", "type": "character", "width": 3, "scale": 0 }
                     ],
-                    "rows": [
+                    "content": [
                         ["a","b"],
                         ["b","B"],
                         ["c","b"]
@@ -48,7 +48,7 @@ class Test
                         { "name": "field1", "type": "character", "width": 3, "scale": 0 },
                         { "name": "field3", "type": "character", "width": 3, "scale": 0 }
                     ],
-                    "rows": [
+                    "content": [
                         ["d","e"]
                     ]
                 }

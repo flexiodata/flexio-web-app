@@ -29,7 +29,7 @@ class Test
                     "columns": [
                         { "name": "field1", "type": "character", "width": 3, "scale": 0 }
                     ],
-                    "rows": [
+                    "content": [
                         ["a"],
                         ["b"],
                         ["c"]
