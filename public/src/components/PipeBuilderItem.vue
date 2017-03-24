@@ -158,10 +158,10 @@
     },
     methods: {
       tinfo() {
-        return _.find(tasks, { type: this.task_type })
+        return _.find(tasks, { type: _.get(this.item, 'type') })
       },
       getDefaultName() {
-        return _.result(this, 'tinfo.name', 'New Task')
+        return _.result(this, 'tinfo.name', 'Task')
       },
       getDisplayName() {
         var name = _.get(this.item, 'name', '')
