@@ -63,12 +63,13 @@
         </div>
         <div class="bl b--black-10 pl3" style="margin: -1.875rem 0 0 -1.875rem; padding: 1.875rem 0 0 1.875rem">
           <code-editor
-            class="flex-fill pa1 ba b--black-10 mb3"
+            class="flex-fill pa1 ba b--black-10"
             lang="python"
             :val="command"
             :options="{ lineNumbers: false }"
           ></code-editor>
-          <div class="flex-fill">
+          <div class="flex-fill mt3" v-if="false">
+            &nbsp;
           </div>
         </div>
       </div>
