@@ -14,6 +14,7 @@
           btn-md
           btn-primary
           class="ttu b"
+          @click="insertNewTask(-1)"
         >
           Add a step
         </btn>
@@ -26,6 +27,7 @@
         :item="task"
         :index="index"
         :active-process="activeProcess"
+        @insert-task="insertNewTask"
       ></pipe-builder-item>
     </div>
 
@@ -57,6 +59,13 @@
       output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
       has_input()    { return this.input_tasks.length > 0 },
       has_output()   { return this.output_tasks.length > 0 }
+    },
+    methods: {
+      insertNewTask(idx) {
+        var eid = this.pipeEid
+        var attrs = { index: _.defaultTo(idx, -1) }
+        this.$store.dispatch('createPipeTask', { eid, attrs })
+      }
     }
   }
 </script>

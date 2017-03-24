@@ -51,7 +51,7 @@
     </div>
 
     <div class="flex flex-row">
-      <div class="pointer moon-gray hover-blue link tc hint--right" style="margin-left: 8px" :aria-label="insert_tooltip">
+      <div class="pointer moon-gray hover-blue link tc hint--right" style="margin-left: 8px" :aria-label="insert_tooltip" @click="insertNewTask">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
@@ -159,7 +159,7 @@
         return _.find(tasks, { type: _.get(this.item, 'type') })
       },
       getDefaultName() {
-        return _.result(this, 'tinfo.name', 'Task')
+        return _.result(this, 'tinfo.name', 'New Task')
       },
       getDisplayName() {
         var name = _.get(this.item, 'name', '')
@@ -177,6 +177,9 @@
         var attrs = _.assign({}, this.item, attrs)
         this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs })
         input.endEdit()
+      },
+      insertNewTask() {
+        this.$emit('insert-task', this.index+1)
       }
     }
   }
