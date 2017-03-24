@@ -51,7 +51,7 @@
     </div>
 
     <div class="flex flex-row">
-      <div class="pointer moon-gray hover-blue link tc hint--right" style="margin-left: 8px" :aria-label="insert_after_tooltip">
+      <div class="pointer moon-gray hover-blue link tc hint--right" style="margin-left: 8px" :aria-label="insert_tooltip">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>
@@ -84,13 +84,11 @@
     },
     computed: {
       eid() { return _.get(this.item, 'eid', '') },
-      task_type() { return _.get(this.item, 'type') },
       task_icon() { return _.result(this, 'tinfo.icon', 'build') },
-      insert_before_tooltip() { return 'Insert a new step before step ' + (this.index+1) },
-      insert_after_tooltip() { return 'Insert a new step after step ' + (this.index+1) },
+      insert_tooltip() { return 'Insert a new step after step ' + (this.index+1) },
 
       bg_color() {
-        switch (this.task_type)
+        switch (_.get(this.item, 'type'))
         {
           // blue tiles
           case types.TASK_TYPE_INPUT:
