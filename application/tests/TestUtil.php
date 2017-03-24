@@ -320,7 +320,7 @@ class TestUtil
         if ($process->getProcessStatus() !== \Model::PROCESS_STATUS_COMPLETED)
             return false;
 
-        $streams = $process->getTaskOutputStreams();
+        $streams = $process->getOutput()->enum();
 
         $result = array();
         foreach ($streams as $s)

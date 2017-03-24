@@ -26,13 +26,12 @@ class Collection
 
     public static function create()
     {
-        $objects = (new self);
-        return $objects;
+        return (new static);
     }
 
     public function copy()
     {
-        // note: creates a new collection with new objects for each of the
+        // creates a new collection with new objects for each of the
         // original objects (i.e., we'll have a collection with new objects
         // and eids but with the same data as the copied objects)
 
@@ -56,8 +55,7 @@ class Collection
 
     public function set($collection)
     {
-        // note: sets the collection to the input collection
-
+        // sets the collection to the input collection
         if (!($collection instanceof \Flexio\Object\Collection))
             return false;
 
@@ -67,8 +65,7 @@ class Collection
 
     public function merge($collection)
     {
-        // note: adds the items in the collection to the existing collection
-
+        // adds the items in the collection to the existing collection
         if (!($collection instanceof \Flexio\Object\Collection))
             return false;
 
@@ -83,14 +80,16 @@ class Collection
 
     public function push($object)
     {
-        // note: adds an object onto the end of the collection
+        // adds an object onto the end of the collection
 
+        // if we have an object, add it
         if (is_object($object) && is_subclass_of($object,'\Flexio\Object\Base'))
         {
             $this->objects[] = $object;
             return $this;
         }
 
+        // if we have an eid, try to load it and then add it
         if (\Flexio\Base\Eid::isValid($object))
         {
             $object_eid = $object;
@@ -109,23 +108,36 @@ class Collection
 
     public function pop()
     {
-        // note: removes an item from the end of the collection
-
+        // removes an item from the end of the collection
         array_pop($this->objects);
         return $this;
     }
 
     public function enum()
     {
-        // note: returns the object in the collection
-
+        // returns the items in the collection
         return $this->objects;
+    }
+
+    public function find($name)
+    {
+        // returns the first object with a given name; if no object are found, returns false
+        foreach ($this->objects as $object)
+        {
+            $properties = $object->get();
+            if (isset($properties['name']))
+            {
+                if ($properties['name'] === $name)
+                    return $object;
+            }
+        }
+
+        return false;
     }
 
     public function clear()
     {
-        // note: removes all objects from the collection
-
+        // removes all items from the collection
         $this->initialize();
         return $this;
     }

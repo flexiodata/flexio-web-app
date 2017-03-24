@@ -351,7 +351,7 @@ class Process
         if ($process === false)
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
-        $process_streams = $process->getInput();
+        $process_streams = $process->getInput()->enum();
         return self::echoStreamInfo($process_streams, $params);
     }
 
@@ -377,7 +377,7 @@ class Process
         if ($process === false)
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
-        $process_streams = $process->getOutput();
+        $process_streams = $process->getOutput()->enum();
         return self::echoStreamInfo($process_streams, $params);
     }
 
@@ -397,13 +397,14 @@ class Process
         if ($process === false)
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
-        $streams = $process->getTaskInputStreams($task_identifier);
-        if (!is_array($streams))
-            return array(); // return an empty array if we don't have any streams
+        $input_collection = \Flexio\Object\Collection::create();
+        $output_collection = \Flexio\Object\Collection::create();
+        $process->getTaskStreams($input_collection, $output_collection, $task_identifier);
+        $input_streams = $input_collection->enum();
 
         // get the structures
         $structures = array();
-        foreach ($streams as $s)
+        foreach ($input_streams as $s)
         {
             $structures[] = $s->getStructure();
         }
@@ -429,13 +430,14 @@ class Process
         if ($process === false)
             return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
 
-        $streams = $process->getTaskOutputStreams($task_identifier);
-        if (!is_array($streams))
-            return array(); // return an empty array if we don't have any streams
+        $input_collection = \Flexio\Object\Collection::create();
+        $output_collection = \Flexio\Object\Collection::create();
+        $process->getTaskStreams($input_collection, $output_collection, $task_identifier);
+        $output_streams = $output_collection->enum();
 
         // get the structures
         $structures = array();
-        foreach ($streams as $s)
+        foreach ($output_streams as $s)
         {
             $structures[] = $s->getStructure();
         }
