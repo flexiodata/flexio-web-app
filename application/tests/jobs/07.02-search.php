@@ -25,6 +25,7 @@ class Test
             {
                 "type": "flexio.create",
                 "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                 	"columns": [
                 		{"name":"c1","type":"character","width":3,"scale":0},
                 		{"name":"c2","type":"character","width":20,"scale":0},
@@ -33,7 +34,7 @@ class Test
                 		{"name":"d1","type":"date","width":4,"scale":0},
                 		{"name":"b1","type":"boolean","width":1,"scale":0}
                 	],
-                	"rows": [
+                	"content": [
                 		["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true],
                 		["c a","| \/",null,"0.00","1970-11-22",null],
                 		[" -1",":;\"\'","0","0.99","1999-12-31",false],

@@ -30,19 +30,22 @@ class Create extends \Flexio\Jobs\Base
         if ($validator->hasErrors() === true)
             return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
-        if (isset($job_definition['params']['content']))
+        // get the content type
+        $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        switch ($mime_type)
         {
-            $this->createStreamOutput();
-            return;
+            default:
+            case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
+            case \Flexio\Base\ContentType::MIME_TYPE_TXT:
+            case \Flexio\Base\ContentType::MIME_TYPE_CSV:
+            case \Flexio\Base\ContentType::MIME_TYPE_JSON:
+                return $this->createStreamOutput();
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                return $this->createTableOutput();
         }
 
-        if (isset($job_definition['params']['columns']))
-        {
-            $this->createTableOutput();
-            return;
-        }
-
-        // default fall through
+        // default fall through; shouldn't happen
         $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
     }
 
@@ -50,13 +53,18 @@ class Create extends \Flexio\Jobs\Base
     {
         $job_definition = $this->getProperties();
         $name = isset_or($job_definition['params']['name'], 'New File');
+        $mime_type = $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
 
         // get the content and decode it
         $content = '';
         if (isset($job_definition['params']['content']))
-            $content = base64_decode($job_definition['params']['content']);
+        {
+            $content = $job_definition['params']['content'];
+            if (!is_string($content))
+                return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
-        $mime_type = \Flexio\Base\ContentType::getMimeType($name, $content);
+            $content = base64_decode($content);
+        }
 
         // create the output stream
         $outstream_properties = array(
@@ -80,6 +88,7 @@ class Create extends \Flexio\Jobs\Base
     {
         $job_definition = $this->getProperties();
         $name = isset_or($job_definition['params']['name'], 'New Table');
+        $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $structure = isset_or($job_definition['params']['columns'], '[]');
         $outstream_properties = array(
             'name' => $name,
@@ -93,9 +102,13 @@ class Create extends \Flexio\Jobs\Base
         if ($streamwriter === false)
             return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
 
-        if (isset($job_definition['params']['rows']))
+        if (isset($job_definition['params']['content']))
         {
-            foreach ($job_definition['params']['rows'] as $row)
+            $rows = $job_definition['params']['content'];
+            if (!is_array($rows))
+                return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+
+            foreach ($rows as $row)
             {
                 // if the row array is non-associative, then insert them
                 // based on the index of the field compared to the structure
@@ -133,9 +146,9 @@ class Create extends \Flexio\Jobs\Base
     {
         "type": "flexio.create",
         "params": {
-            "columns": [
-                { "name": "myfield", "type": "character", "width": 40, "scale": 0 }
-            ]
+            "name": "test",
+            "mime_type": "text/csv",
+            "content": ""
         }
     }
 EOD;
@@ -155,10 +168,10 @@ EOD;
                         "type": "string",
                         "minLength": 1
                     },
-                    "content": {
+                    "mime_type": {
                         "type": "string"
                     },
-                    "columns": {
+                    "structure": {
                         "type": "array",
                         "minItems": 1,
                         "items": {
@@ -186,11 +199,8 @@ EOD;
                             }
                         }
                     },
-                    "rows" : {
-                        "type": "array",
-                        "items": {
-                            "type": ["array","object"]
-                        }
+                    "content": {
+                        "type": ["string", "array"]
                     }
                 }
             }

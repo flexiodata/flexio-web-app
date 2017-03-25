@@ -347,44 +347,49 @@ class Process extends \Flexio\Object\Base
 
     public function getInput()
     {
+        // TODO: implement similarly to self::getOutput(), using getTaskStreams();
+        // need better way of working with subprocesses
+
         // get whatever is in the input of the initial process step
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
         $input_collection = self::unstringifyCollectionEids($input);
 
-        $result = array();
+        $input_collection = \Flexio\Object\Collection::create();
         foreach ($input_collection as $input)
         {
-            $stream = \Flexio\Object\Stream::load($input['eid']);
-            if ($stream === false)
-                continue;
-
-            $result[] = $stream;
+            $input_collection->push($input['eid']);
         }
 
-        return $result;
+        return $input_collection;
     }
 
     public function getOutput()
     {
-        // same as getting the output from the last task
-        return $this->getTaskOutputStreams();
+        $task_identifier = false; // last task
+        $input_collection = \Flexio\Object\Collection::create();
+        $output_collection = \Flexio\Object\Collection::create();
+        $this->getTaskStreams($input_collection, $output_collection, $task_identifier);
+
+        return $output_collection;
     }
 
-    public function getTaskInputStreams($task_eid = false)
+    public function getTaskStreams(&$input_collection, &$output_collection, $task_eid = false)
     {
-        // returns the input streams for the specified task of a process;
-        // if no task is specified, the last subprocess is used
-        $result = array();
+        // returns a collection of input streams for the specified task of a
+        // process; if no task is specified, the streams from the last subprocess
+        // are used
+        $input_collection = \Flexio\Object\Collection::create();
+        $output_collection = \Flexio\Object\Collection::create();
 
         // get the suprocesses
         $process_info = $this->get();
         $subprocesses = $process_info['subprocesses'];
         $subprocess_count = count($subprocesses);
-        if ($subprocess_count < 1) // if there isn't any subprocess, there's no output
-            return $result;
+        if ($subprocess_count < 1) // if there isn't any subprocess, there's no items
+            return;
 
-        // find the subprocess with the relevant output
+        // find the subprocess with the relevant items
         $specified_subprocess = false;
         if ($task_eid === false)
         {
@@ -404,71 +409,21 @@ class Process extends \Flexio\Object\Base
             }
 
             if ($specified_subprocess === false)
-                return $result;
+                return;
         }
 
-        // get the input streams
-        $specified_output = $specified_subprocess['input'];
-        foreach ($specified_output as $output)
+        // get the streams
+        $input_stream_list = $specified_subprocess['input'];
+        foreach ($input_stream_list as $item)
         {
-            $stream = \Flexio\Object\Stream::load($output['eid']);
-            if ($stream === false)
-                continue;
-
-            $result[] = $stream;
+            $input_collection->push($item['eid']);
         }
 
-        return $result;
-    }
-
-    public function getTaskOutputStreams($task_eid = false)
-    {
-        // returns the output streams for the specified task of a process;
-        // if no task is specified, the last subprocess is used
-        $result = array();
-
-        // get the suprocesses
-        $process_info = $this->get();
-        $subprocesses = $process_info['subprocesses'];
-        $subprocess_count = count($subprocesses);
-        if ($subprocess_count < 1) // if there isn't any subprocess, there's no output
-            return $result;
-
-        // find the subprocess with the relevant output
-        $specified_subprocess = false;
-        if ($task_eid === false)
+        $output_stream_list = $specified_subprocess['output'];
+        foreach ($output_stream_list as $item)
         {
-            // if no task is specified, use the last subprocess as the default
-            $specified_subprocess = $subprocesses[$subprocess_count-1];
+            $output_collection->push($item['eid']);
         }
-         else
-        {
-            foreach ($subprocesses as $sp)
-            {
-                $task = $sp['task'];
-                if (isset($task['eid']) && $task['eid'] === $task_eid)
-                {
-                    $specified_subprocess = $sp;
-                    break;
-                }
-            }
-
-            if ($specified_subprocess === false)
-                return false;
-        }
-
-        // get the output streams
-        $specified_output = $specified_subprocess['output'];
-        foreach ($specified_output as $output)
-        {
-            $stream = \Flexio\Object\Stream::load($output['eid']);
-            if ($stream === false)
-                continue;
-
-            $result[] = $stream;
-        }
-
-        return $result;
     }
 
     public function isBuildMode()

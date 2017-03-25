@@ -353,7 +353,7 @@ class Pipe
                     $stream_info['name'] = $name;
                     $stream_info['mime_type'] = $content_type;
                     $stream->set($stream_info);
-                    
+
                     $streamwriter = \Flexio\Object\StreamWriter::create($stream);
                     if ($streamwriter === false)
                         $stream = false;
@@ -391,7 +391,7 @@ class Pipe
         {
             $desired_stream = $_GET['stream'];
 
-            $output_streams = $process->getTaskOutputStreams();
+            $output_streams = $process->getOutput()->enum();
             for ($i = 0; $i < count($output_streams); ++$i)
             {
                 if ($output_streams[$i]->getName() == $desired_stream || (is_numeric($desired_stream) && $i == $desired_stream))

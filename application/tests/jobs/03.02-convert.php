@@ -25,6 +25,7 @@ class Test
             {
                 "type": "flexio.create",
                 "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
                     "content": "${data}"
                 }
             },

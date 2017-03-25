@@ -19,523 +19,115 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: Transform Job: standardize text with capitalization (none, lowercase, uppercase, proper, first letter)
+        // TODO: fill out
 
-		// BEGIN TEST
+        // TEST: Transform Job; missing or bad parameters (e.g. type specified but something besides
+        //       text or not any of the allowed types)
+        // TEST: Transform Job: update values with select part (left, right, middle, part)
+        // TEST: Transform Job: update values with remove text (none, selected text, selected characters, symbols, breaks, letters, numbers, regular expression)
+        // TEST: combinations of operations
+        // TEST: Transform Job; conversion to numeric type from character type
+        // TEST: Transform Job; conversion to numeric type from numeric type (identity)
+        // TEST: Transform Job; conversion to numeric type from double type
+        // TEST: Transform Job; conversion to numeric type from integer type
+        // TEST: Transform Job; conversion to numeric type from date type
+        // TEST: Transform Job; conversion to numeric type from datetime type
+        // TEST: Transform Job; conversion to numeric type from boolean type
+        // TEST: Transform Job; conversion to integer type from character type
+        // TEST: Transform Job; conversion to integer type from numeric type
+        // TEST: Transform Job; conversion to integer type from double type
+        // TEST: Transform Job; conversion to integer type from integer type (identity)
+        // TEST: Transform Job; conversion to integer type from date type
+        // TEST: Transform Job; conversion to integer type from datetime type
+        // TEST: Transform Job; conversion to integer type from boolean type
+        // TEST: Transform Job; conversion to date type from character type
+        // TEST: Transform Job; conversion to date type from numeric type
+        // TEST: Transform Job; conversion to date type from double type
+        // TEST: Transform Job; conversion to date type from integer type
+        // TEST: Transform Job; conversion to date type from date type (identity)
+        // TEST: Transform Job; conversion to date type from datetime type
+        // TEST: Transform Job; conversion to date type from boolean type
+        // TEST: Transform Job; conversion to datetime type from character type
+        // TEST: Transform Job; conversion to datetime type from numeric type
+        // TEST: Transform Job; conversion to datetime type from double type
+        // TEST: Transform Job; conversion to datetime type from integer type
+        // TEST: Transform Job; conversion to datetime type from date type
+        // TEST: Transform Job; conversion to datetime type from datetime type (identity)
+        // TEST: Transform Job; conversion to datetime type from boolean type
+
+
+        // SETUP
 		$task = '
         [
             {
                 "type": "flexio.create",
                 "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                 	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
+                		{"name":"f1","type":"character","width":"10","scale":"0"}
                 	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "unknown" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getProcessStatus();
-        $expected = \Model::PROCESS_STATUS_FAILED;
-		TestCheck::assertString('A.1', 'Transform Job; if capitalization mode is set to bad parameter, job should fail',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "upper" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["A"],
-        		[null],
-        		["A"],
-        		["AA BB CC"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('A.2', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "lower" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["a"],
-        		[null],
-        		["a"],
-        		["aa bb cc"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('A.3', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "proper" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["A"],
-        		[null],
-        		["A"],
-        		["Aa Bb Cc"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('A.4', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "first-letter" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["A"],
-        		[null],
-        		["A"],
-        		["Aa bb cc"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('A.5', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
-
-
-
-        // TEST: Transform Job; standardize text with pad (left, right)
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "unknown", "length": 7, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getProcessStatus();
-        $expected = \Model::PROCESS_STATUS_FAILED;
-		TestCheck::assertString('B.1', 'Transform Job; standardize text with pad; don\'t do anything if the location isn\'t recognized',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "left", "length": 7, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["000000a"],
-        		[null],
-        		["0000Abc"],
-        		["aa Bb C"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.2', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "left", "length": 1, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["a"],
-        		[null],
-        		["A"],
-        		["a"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.3', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "left", "length": 12, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["0000000000"],
-        		[null],
-        		["000000000A"],
-        		["0000aa Bb "]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.4', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "left", "length": 7, "value": "*" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["******a"],
-        		[null],
-        		["****Abc"],
-        		["aa Bb C"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.5', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"numeric","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["1"],
+                	"content": [
+                        ["a"],
                         [null],
-                		["0"],
-                		["-1"],
-                		["987"]
-                	]
+                        ["A"],
+                        ["a B C"]
+                    ]
                 }
             },
             {
                 "type": "flexio.transform",
                 "params": {
                     "columns": [
-                        "f"
+                        "{input.fieldname}"
                     ],
-                    "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "pad", "location": "left", "length": 5, "value": "0" }
-                    ]
+                    "type": "${output.type}",
+                    "width": "${output.width}",
+                    "scale": "${output.scale}"
                 }
             }
         ]
         ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+
+
+
+        // TEST: Transform Job; conversion to character type from character type (identity)
+/*
+		// BEGIN TEST
+
+        $params = [
+            "input.fieldname" => "f1",
+            "output.type" => "character",
+            "output.width" => null,
+            "output.scale" => null
+        ];
+        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
         {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["00001"],
-                [null],
-        		["00000"],
-        		["000-1"],
-        		["00987"]
-        	]
+        	"columns": [{"name":"f1","type":"character","width":10,"scale":0}],
+        	"content": [["a"],[null],["A"],["a B C"]]
         }
         ';
-		TestCheck::assertInArray('B.6', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		TestCheck::assertArray('A.1', 'Transform Job; conversion from character to character (identity)',  $actual, $expected, $results);
+*/
 
-		// BEGIN TEST
+
+
+        // BEGIN TEST
 		$task = '
         [
             {
                 "type": "flexio.create",
                 "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                 	"columns": [
-                		{"name":"f","type":"numeric","width":10,"scale":2}
+                		{"name":"f","type":"character","width":6,"scale":0}
                 	],
-                	"rows": [
-                		["1.23"],
-                        [null],
-                		["0"],
-                		["-1.0"],
-                		["987.6"]
+                	"content": [
+                		["a"],
+                		[null],
+                		["A"],
+                		["a B C"]
                 	]
                 }
             },
@@ -545,10 +137,6 @@ class Test
                     "type": "character",
                     "columns": [
                         "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "pad", "location": "left", "length": 8, "value": "0" }
                     ]
                 }
             }
@@ -561,110 +149,19 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
-        		["00001.23"],
-                [null],
-        		["00000.00"],
-        		["000-1.00"],
-        		["00987.60"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.7', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "right", "length": 7, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["a000000"],
-        		[null],
-        		["Abc0000"],
-        		["aa Bb C"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.8', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "right", "length": 1, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
+        	"content": [
         		["a"],
         		[null],
         		["A"],
-        		["a"]
+        		["a B C"]
         	]
         }
         ';
-		TestCheck::assertInArray('B.9', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		TestCheck::assertInArray('A.1', 'Transform Job; conversion from character to character (identity)',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to character type from numeric type
 
 		// BEGIN TEST
 		$task = '
@@ -672,109 +169,17 @@ class Test
             {
                 "type": "flexio.create",
                 "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                 	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
+                		{"name":"f","type":"numeric","width":2,"scale":0}
                 	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "right", "length": 12, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["a000000000"],
-        		[null],
-        		["Abc0000000"],
-        		["aa Bb CC00"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.10', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "right", "length": 7, "value": "*" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["a******"],
-        		[null],
-        		["Abc****"],
-        		["aa Bb C"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.11', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"numeric","width":10,"scale":0}
-                	],
-                	"rows": [
-                		["1"],
-                        [null],
+                	"content": [
                 		["0"],
+                		[null],
+                		["1"],
                 		["-1"],
-                		["987"]
+                		["21"],
+                		["-23"]
                 	]
                 }
             },
@@ -785,8 +190,7 @@ class Test
                         "f"
                     ],
                     "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "pad", "location": "right", "length": 5, "value": "0" }
+                        { "operation": "type", "type": "character" }
                     ]
                 }
             }
@@ -799,293 +203,863 @@ class Test
         	"columns": [
         		{"name":"f","type":"character"}
         	],
-        	"rows": [
-        		["10000"],
-                [null],
-        		["00000"],
-        		["-1000"],
-        		["98700"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.12', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"numeric","width":10,"scale":2}
-                	],
-                	"rows": [
-                		["1.23"],
-                        [null],
-                		["0"],
-                		["-1.0"],
-                		["987.6"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "pad", "location": "right", "length": 8, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["1.230000"],
-                [null],
-        		["0.000000"],
-        		["-1.00000"],
-        		["987.6000"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('B.13', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
-
-
-
-        // TEST: Transform Job; standardize text with trim spaces (leading, trailing, leading and trailing)
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":15,"scale":0}
-                	],
-                	"rows": [
-                		[" a"],
-                		[null],
-                		["A "],
-                		["  aa Bb CC  "]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "trim", "location": "unknown" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getProcessStatus();
-        $expected = \Model::PROCESS_STATUS_FAILED;
-		TestCheck::assertString('C.1', 'Transform Job; standardize text with trim spaces; don\'t do anything if the type isn\'t recognized',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":15,"scale":0}
-                	],
-                	"rows": [
-                		[" a"],
-                		[null],
-                		["A "],
-                		["  aa Bb CC  "]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "trim", "location": "leading" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["a"],
+        	"content": [
+        		["0"],
         		[null],
-        		["A "],
-        		["aa Bb CC  "]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('C.2', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":15,"scale":0}
-                	],
-                	"rows": [
-                		[" a"],
-                		[null],
-                		["A "],
-                		["  aa Bb CC  "]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "trim", "location": "trailing" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		[" a"],
-        		[null],
-        		["A"],
-        		["  aa Bb CC"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('C.3', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"character","width":15,"scale":0}
-                	],
-                	"rows": [
-                		[" a"],
-                		[null],
-                		["A "],
-                		["  aa Bb CC  "]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "trim", "location": "leading-trailing" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
-        		["a"],
-        		[null],
-        		["A"],
-        		["aa Bb CC"]
-        	]
-        }
-        ';
-		TestCheck::assertInArray('C.4', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
-
-		// BEGIN TEST
-		$task = '
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                	"columns": [
-                		{"name":"f","type":"numeric","width":5,"scale":0}
-                	],
-                	"rows": [
-                		["1"],
-                		[null],
-                		["2"],
-                		["123"]
-                	]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "trim", "location": "leading-trailing" }
-                    ]
-                }
-            }
-        ]
-        ';
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [
-        		{"name":"f","type":"character"}
-        	],
-        	"rows": [
         		["1"],
-        		[null],
-        		["2"],
-        		["123"]
+        		["-1"],
+        		["21"],
+                ["-23"]
         	]
         }
         ';
-		TestCheck::assertInArray('C.5', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
+		TestCheck::assertInArray('B.1', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"numeric","width":14,"scale":0}
+                	],
+                	"content": [
+                		["0"],
+                		[null],
+                		["99999999999999"],
+                		["-99999999999999"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "character" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"character"}
+        	],
+        	"content": [
+        		["0"],
+        		[null],
+        		["99999999999999"],
+        		["-99999999999999"]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('B.2', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"numeric","width":4,"scale":2}
+                	],
+                	"content": [
+                		["0.00"],
+                		[null],
+                		["1.23"],
+                		["-1.0"],
+                		["21.99"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "character" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"character"}
+        	],
+        	"content": [
+        		["0.00"],
+        		[null],
+        		["1.23"],
+        		["-1.00"],
+        		["21.99"]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('B.3', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to character type from double type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"double","width":2,"scale":0}
+                	],
+                	"content": [
+                		["0"],
+                		[null],
+                		["1"],
+                		["-1"],
+                		["21"],
+                		["-23"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "character" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"character"}
+        	],
+        	"content": [
+        		["0"],
+        		[null],
+        		["1"],
+        		["-1"],
+        		["21"],
+                ["-23"]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('C.1', 'Transform Job; conversion from double to character',  $actual, $expected, $results);
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"double","width":4,"scale":2}
+                	],
+                	"content": [
+                		["0.00"],
+                		[null],
+                		["1.23"],
+                		["-1.0"],
+                		["21.99"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "character" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"character"}
+        	],
+        	"content": [
+        		["0"],
+        		[null],
+        		["1.23"],
+        		["-1"],
+        		["21.99"]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('C.2', 'Transform Job; conversion from double to character',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to character type from integer type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"integer","width":2,"scale":0}
+                	],
+                	"content": [
+                		["0"],
+                		[null],
+                		["1"],
+                		["-1"],
+                		["21"],
+                		["-23"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "character" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"character"}
+        	],
+        	"content": [
+        		["0"],
+        		[null],
+        		["1"],
+        		["-1"],
+        		["21"],
+                ["-23"]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('D.1', 'Transform Job; conversion from integer to character',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to character type from date type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"date","width":8,"scale":0}
+                	],
+                	"content": [
+                		["2001-02-03"],
+                		[null],
+                		["1970-01-01"],
+                		["1999-12-31"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "character" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"character"}
+        	],
+        	"content": [
+        		["2001-02-03"],
+        		[null],
+        		["1970-01-01"],
+        		["1999-12-31"]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('E.1', 'Transform Job; conversion from date to character',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to character type from datetime type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"datetime","width":8,"scale":0}
+                	],
+                	"content": [
+                		["2001-02-03 00:00:00"],
+                		[null],
+                		["1970-01-01 01:02:03"],
+                		["1999-12-31 23:59:59"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "character" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"character"}
+        	],
+        	"content": [
+        		["2001-02-03 00:00:00"],
+        		[null],
+        		["1970-01-01 01:02:03"],
+        		["1999-12-31 23:59:59"]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('F.1', 'Transform Job; conversion from datetime to character',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to character type from boolean type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"boolean","width":1,"scale":0}
+                	],
+                	"content": [
+                		[true],
+                		[null],
+                		[false]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "character" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"character"}
+        	],
+        	"content": [
+        		["true"],
+        		[null],
+        		["false"]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('G.1', 'Transform Job; conversion from boolean to character',  $actual, $expected, $results);
+
+
+        // TEST: Transform Job; conversion to boolean type from character type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"character","width":5,"scale":0}
+                	],
+                	"content": [
+                		[null],
+                        ["a"],
+                		["0"],
+                		["1"],
+                		["-1"],
+                		["2.1"],
+                		["true"],
+                		["false"],
+                		["True"],
+                		["False"],
+                		["TRUE"],
+                		["FALSE"],
+                		["T"],
+                        ["F"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "boolean" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"boolean"}
+        	],
+        	"content": [
+                [null],
+                [null],
+                [false],
+                [true],
+                [null],
+                [null],
+                [true],
+                [false],
+                [true],
+                [false],
+                [true],
+                [false],
+                [true],
+                [false]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('H.1', 'Transform Job; conversion from character to boolean',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to boolean type from numeric type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"numeric","width":8,"scale":0}
+                	],
+                	"content": [
+                		[null],
+                		["0"],
+                		["1"],
+                		["-1"],
+                		["2"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "boolean" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"boolean"}
+        	],
+        	"content": [
+        		[null],
+        		[false],
+        		[true],
+        		[true],
+        		[true]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('I.1', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results);
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"numeric","width":8,"scale":2}
+                	],
+                	"content": [
+                		[null],
+                		["0"],
+                		["1.1"],
+                		["-1"],
+                		["2.1"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "boolean" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"boolean"}
+        	],
+        	"content": [
+        		[null],
+        		[false],
+        		[true],
+        		[true],
+        		[true]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('I.2', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to boolean type from double type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"double","width":4,"scale":2}
+                	],
+                	"content": [
+                		[null],
+                		["0"],
+                		["1.1"],
+                		["-1"],
+                		["2.1"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "boolean" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"boolean"}
+        	],
+        	"content": [
+        		[null],
+        		[false],
+        		[true],
+        		[true],
+        		[true]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('J.1', 'Transform Job; conversion from double to boolean',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to boolean type from integer type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"integer","width":4,"scale":0}
+                	],
+                	"content": [
+                		[null],
+                		["0"],
+                		["1"],
+                		["-1"],
+                		["2"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "boolean" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"boolean"}
+        	],
+        	"content": [
+        		[null],
+        		[false],
+        		[true],
+        		[true],
+        		[true]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('K.1', 'Transform Job; conversion from integer to boolean',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to boolean type from date type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"date","width":4,"scale":0}
+                	],
+                	"content": [
+                		[null],
+                		["2001-01-01"],
+                		["1999-12-31"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "boolean" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"boolean"}
+        	],
+        	"content": [
+        		[false],
+        		[true],
+        		[true]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('L.1', 'Transform Job; conversion from date to boolean.  Non-null values are true, null-values false',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to boolean type from datetime type
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"datetime","width":8,"scale":0}
+                	],
+                	"content": [
+                		[null],
+                		["2001-01-01 01:02:03"],
+                		["1999-12-31 23:59:59"]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "boolean" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"boolean"}
+        	],
+        	"content": [
+        		[false],
+        		[true],
+        		[true]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('M.1', 'Transform Job; conversion from datetime to boolean.  Non-null values are true, null-values false',  $actual, $expected, $results);
+
+
+
+        // TEST: Transform Job; conversion to boolean type from boolean type (identity)
+
+		// BEGIN TEST
+		$task = '
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                	"columns": [
+                		{"name":"f","type":"boolean","width":1,"scale":0}
+                	],
+                	"content": [
+                		[null],
+                		[true],
+                		[false]
+                	]
+                }
+            },
+            {
+                "type": "flexio.transform",
+                "params": {
+                    "columns": [
+                        "f"
+                    ],
+                    "operations": [
+                        { "operation": "type", "type": "boolean" }
+                    ]
+                }
+            }
+        ]
+        ';
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = TestUtil::getProcessSingleOutputResult($process);
+		$expected = '
+        {
+        	"columns": [
+        		{"name":"f","type":"boolean"}
+        	],
+        	"content": [
+        		[null],
+        		[true],
+        		[false]
+        	]
+        }
+        ';
+		TestCheck::assertInArray('N.1', 'Transform Job; conversion from boolean to boolean (identity)',  $actual, $expected, $results);
     }
 }
