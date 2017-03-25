@@ -237,10 +237,7 @@ class Stream
             if ($part_data_snippet === false)
                 $part_data_snippet = '';
 
-            if (strlen($declared_mime_type) > 0)
-                $mime_type = $declared_mime_type;
-                else
-                $mime_type = \Flexio\Base\ContentType::getMimeType($filename, $part_data_snippet);
+            $filename_hint = isset_or($params['filename_hint'], $filename);
         }
          else
         {
@@ -266,10 +263,24 @@ class Stream
 
             $filename = isset_or($_GET['name'], \Flexio\Base\Util::generateHandle() . '.dat');
 
-            if (strlen($declared_mime_type) > 0)
+            $filename_hint = isset_or($params['filename_hint'], $filename);
+        }
+
+        if (isset($params['filename_hint']))
+        {
+            // a hint filename was passed -- use that to try to determine the content type
+            $mime_type = \Flexio\Base\ContentType::getMimeType($filename_hint, $part_data_snippet);
+        }
+        else
+        {
+            // use the Content-Type header passed to us
+            if ($declared_mime_type == "application/x-www-form-urlencoded")
+                $declared_mime_type = "application/octet-stream";
+
+            if (strlen($declared_mime_type) == 0 || $declared_mime_type == "autosense")
+                $mime_type = \Flexio\Base\ContentType::getMimeType($filename_hint, $part_data_snippet);
+                    else
                 $mime_type = $declared_mime_type;
-                else
-                $mime_type = \Flexio\Base\ContentType::getMimeType($filename, $part_data_snippet);
         }
 
 

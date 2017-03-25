@@ -32,6 +32,7 @@ class ContentType
     const MIME_TYPE_JPG     = 'image/jpeg';
     const MIME_TYPE_JS      = 'application/javascript';
     const MIME_TYPE_JSON    = 'application/json';
+    const MIME_TYPE_MD      = 'text/markdown';
     const MIME_TYPE_PDF     = 'application/pdf';
     const MIME_TYPE_PNG     = 'image/png';
     const MIME_TYPE_STREAM  = 'application/octet-stream';
@@ -159,6 +160,7 @@ class ContentType
             case "jpg":   return self::MIME_TYPE_JPG;
             case "js":    return self::MIME_TYPE_JS;
             case "json":  return self::MIME_TYPE_JSON;
+            case "md":    return self::MIME_TYPE_MD;
             case "pdf":   return self::MIME_TYPE_PDF;
             case "png":   return self::MIME_TYPE_PNG;
             case "svg":   return self::MIME_TYPE_SVG;
