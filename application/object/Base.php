@@ -211,18 +211,21 @@ class Base implements IObject
     {
         // TODO: remove previous owner, if any
 
+        // TODO: do we want to do more checking? have to be careful because
+        // system and public users don't follow normal eid convention
         if ($user_eid === false)
             return false;
 
-        // TODO: do we want to do more checking? have to be careful because
-        // system and public users don't follow normal eid convention
-
-        $object_eid = $this->getEid();
-        $result1 = $this->getModel()->assoc_add($user_eid, \Model::EDGE_OWNS, $object_eid);
-        $result2 = $this->getModel()->assoc_add($object_eid, \Model::EDGE_OWNED_BY, $user_eid);
-
-        if ($result1 === false || $result2 === false)
+        try
+        {
+            $object_eid = $this->getEid();
+            $this->getModel()->assoc_add($user_eid, \Model::EDGE_OWNS, $object_eid);
+            $this->getModel()->assoc_add($object_eid, \Model::EDGE_OWNED_BY, $user_eid);
+        }
+        catch (\Exception $e)
+        {
             return false;
+        }
 
         return true;
     }
@@ -242,18 +245,20 @@ class Base implements IObject
     {
         // TODO: remove previous created by, if any
 
+        // TODO: do we want to do more checking? have to be careful because
+        // system and public users don't follow normal eid convention
         if ($user_eid === false)
             return false;
 
-        // TODO: do we want to do more checking? have to be careful because
-        // system and public users don't follow normal eid convention
-
-        $object_eid = $this->getEid();
-        $result1 = $this->getModel()->assoc_add($user_eid, \Model::EDGE_CREATED, $object_eid);
-        $result2 = $this->getModel()->assoc_add($object_eid, \Model::EDGE_CREATED_BY, $user_eid);
-
-        if ($result1 === false || $result2 === false)
-            return false;
+        try
+        {
+            $object_eid = $this->getEid();
+            $this->getModel()->assoc_add($user_eid, \Model::EDGE_CREATED, $object_eid);
+            $this->getModel()->assoc_add($object_eid, \Model::EDGE_CREATED_BY, $user_eid);
+        }
+        catch (\Exception $e)
+        {
+        }
 
         return true;
     }
