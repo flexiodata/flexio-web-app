@@ -61,7 +61,7 @@ class Create extends \Flexio\Jobs\Base
         {
             $content = $job_definition['params']['content'];
             if (!is_string($content))
-                return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
             $content = base64_decode($content);
         }
@@ -106,7 +106,7 @@ class Create extends \Flexio\Jobs\Base
         {
             $rows = $job_definition['params']['content'];
             if (!is_array($rows))
-                return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
             foreach ($rows as $row)
             {
