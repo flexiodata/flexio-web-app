@@ -27,7 +27,6 @@ class Test
         // TEST: search tests when results can't be found
 
         // BEGIN TEST
-        $model->clearErrors();
         $eid = \Flexio\Base\Eid::generate();
         $path = "$eid";
         $result = $model->search($path);
@@ -37,7 +36,6 @@ class Test
         TestCheck::assertArray('A.1', '\Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $eid = \Flexio\Base\Eid::generate();
         $edge_owns = \Model::EDGE_OWNS;
         $edge_following = \Model::EDGE_FOLLOWING;
@@ -50,7 +48,6 @@ class Test
         TestCheck::assertArray('A.2', '\Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);

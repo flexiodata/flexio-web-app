@@ -20,9 +20,6 @@ class Action extends ModelBase
         // need to fail the whole action; simply return false
 
         $db = $this->getDatabase();
-        if ($db === false)
-            return false;
-
         try
         {
             $timestamp = \Flexio\System\System::getTimestamp();
@@ -43,7 +40,7 @@ class Action extends ModelBase
         }
         catch (\Exception $e)
         {
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 }

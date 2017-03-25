@@ -24,10 +24,9 @@ class Test
 
 
 
-        // TEST: when creating a container, reject invalid parameters
+        // TEST: when creating a pipe, reject invalid parameters
 
         // BEGIN TEST
-        $model->clearErrors();
         $input_eid = 'xxxxxxxxxxxx';
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
@@ -37,10 +36,9 @@ class Test
         $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $eid !== $input_eid;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); in container creation, don\'t allow the eid to be set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::create(); in pipe creation, don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $eid_type = \Model::TYPE_PROJECT;  // try something besides \Model::TYPE_UNDEFINED
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
@@ -51,10 +49,9 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_PIPE;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Model::create(); in container creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::create(); in pipe creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'xxx' => $handle
@@ -63,15 +60,14 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['xxx']);
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Model::create(); in container creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.3', '\Model::create(); in pipe creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
 
-        // TEST: when creating a container, make sure it has the essential fields
+        // TEST: when creating a pipe, make sure it has the essential fields
         // and make sure these are set when specified in the input
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
@@ -79,10 +75,9 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::create(); in container creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Model::create(); in pipe creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
@@ -108,7 +103,6 @@ class Test
         // TEST: make sure fields that are specified are properly set
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
@@ -118,49 +112,45 @@ class Test
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        TestCheck::assertInArray('C.1', '\Model::create(); in container creation, allow eid_status to be set',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.1', '\Model::create(); in pipe creation, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'name' => 'Test container name'
+            'name' => 'Test pipe name'
         );
         $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'name' => 'Test container name'
+            'name' => 'Test pipe name'
         );
-        TestCheck::assertInArray('C.2', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.2', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'description' => 'Test container description'
+            'description' => 'Test pipe description'
         );
         $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'description' => 'Test container description'
+            'description' => 'Test pipe description'
         );
-        TestCheck::assertInArray('C.3', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.3', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'display_icon' => 'Test container display icon data'
+            'display_icon' => 'Test pipe display icon data'
         );
         $eid = $model->create(\Model::TYPE_PIPE, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'display_icon' => 'Test container display icon data'
+            'display_icon' => 'Test pipe display icon data'
         );
-        TestCheck::assertInArray('C.4', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.4', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'input' => '{}'
@@ -170,10 +160,9 @@ class Test
         $expected = array(
             'input' => '{}'
         );
-        TestCheck::assertInArray('C.5', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.5', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'output' => '{}'
@@ -183,10 +172,9 @@ class Test
         $expected = array(
             'output' => '{}'
         );
-        TestCheck::assertInArray('C.6', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.6', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'task' => '{}'
@@ -196,11 +184,9 @@ class Test
         $expected = array(
             'task' => '{}'
         );
-        TestCheck::assertInArray('C.7', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
+        TestCheck::assertInArray('C.7', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'schedule' => '{}'
@@ -210,10 +196,9 @@ class Test
         $expected = array(
             'schedule' => '{}'
         );
-        TestCheck::assertInArray('C.8', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.8', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'schedule_status' => 'A'
@@ -223,19 +208,26 @@ class Test
         $expected = array(
             'schedule_status' => \Model::PIPE_STATUS_ACTIVE
         );
-        TestCheck::assertInArray('C.9', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.9', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'schedule_status' => 'D' // valid inputs are A and I
-        );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $actual = array();
+        try
+        {
+            $handle = \Flexio\Base\Util::generateHandle();
+            $info = array(
+                'schedule_status' => 'D' // valid inputs are A and I
+            );
+            $eid = $model->create(\Model::TYPE_PIPE, $info);
+        }
+        catch (\Exception $e)
+        {
+            $message = $e->getMessage();
+            $actual = json_decode($message,true);
+        }
         $expected = array(
-            'schedule_status' => \Model::PIPE_STATUS_INACTIVE
+            'code' => \Flexio\Base\Error::CREATE_FAILED
         );
-        TestCheck::assertInArray('C.10', '\Model::create(); in container creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        TestCheck::assertInArray('C.10', '\Model::create(); in pipe creation, make sure parameters are valid',  $actual, $expected, $results);
     }
 }

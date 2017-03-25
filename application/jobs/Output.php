@@ -30,7 +30,7 @@ class Output extends \Flexio\Jobs\Base
         // make sure we have a params node
         $job_definition = $this->getProperties();
         if (!isset($job_definition['params']))
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
         $params = $job_definition['params'];
 
         // get an array of stream objects
@@ -43,7 +43,7 @@ class Output extends \Flexio\Jobs\Base
 
         $items = $this->resolveOutputItems($params);
         if ($items === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         $this->getOutput()->merge($this->getInput());
 
@@ -202,10 +202,10 @@ class Output extends \Flexio\Jobs\Base
     {
         // STEP 1: make sure we have a destination connection and path
         if (!isset($connection_info['connection_type']))
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         if (!isset($file_info['stream_idx']))
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         $instream = $this->streams[ $file_info['stream_idx'] ];
 
@@ -213,7 +213,7 @@ class Output extends \Flexio\Jobs\Base
         $connection_type = isset_or($connection_info['connection_type'], false);
         $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
-            return $this->fail(\Model::ERROR_NO_SERVICE, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::NO_SERVICE, _(''), __FILE__, __LINE__);
 
         // make sure we have a good output filename
         $output_filename = $file_info['path'];
@@ -275,11 +275,11 @@ class Output extends \Flexio\Jobs\Base
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         $structure = $instream->getStructure()->enum();
         if (!$structure)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // get field names from structure
         $field_names = array_column($structure, 'name');
@@ -287,11 +287,11 @@ class Output extends \Flexio\Jobs\Base
         $table_name = $output_info['name'];
 
         if (!$service->createTable($table_name, $structure))
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $inserter = $service->bulkInsert($table_name);
         if (!$inserter)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $result = $inserter->startInsert($field_names);
 
@@ -305,7 +305,7 @@ class Output extends \Flexio\Jobs\Base
             if ($result === false)
             {
                 $inserter->finishInsert();
-                return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
             }
         }
 
@@ -315,18 +315,18 @@ class Output extends \Flexio\Jobs\Base
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $outstream = self::createOutputStream($instream, $output_info);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // note: don't add to the output stream since the input was passed on
         // $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // transfer the data
         while (true)
@@ -337,7 +337,7 @@ class Output extends \Flexio\Jobs\Base
 
             $result = $streamwriter->write($row);
             if ($result === false)
-                return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
         }
 
         $streamwriter->close();
@@ -350,7 +350,7 @@ class Output extends \Flexio\Jobs\Base
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         $params = array();
         $params['path'] = $output_info['name'];
@@ -364,19 +364,19 @@ class Output extends \Flexio\Jobs\Base
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $outstream = self::createOutputStream($instream, $output_info);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // note: don't add to the output stream since the input was passed on
         // $this->getOutput()->push($outstream);
 
         $service = $outstream->getService();
         if ($service === false)
-            return $this->fail(\Model::ERROR_NO_SERVICE, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::NO_SERVICE, _(''), __FILE__, __LINE__);
 
         // create an appropriate output name
         $mime_type = $outstream->getMimeType();
@@ -412,7 +412,7 @@ class Output extends \Flexio\Jobs\Base
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $outstream = self::createOutputStream($instream, $service, $output_info);
@@ -421,7 +421,7 @@ class Output extends \Flexio\Jobs\Base
 
         $service = $outstream->getService();
         if ($service === false)
-            return $this->fail(\Model::ERROR_NO_SERVICE, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::NO_SERVICE, _(''), __FILE__, __LINE__);
 
         $foldername = $outstream->getPath();
         $filename = $outstream->getName();
@@ -430,10 +430,10 @@ class Output extends \Flexio\Jobs\Base
 
         $spreadsheet = $service->createFile($filename);
         if (!$spreadsheet)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         if (count($spreadsheet->worksheets) == 0)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         $inserter = $spreadsheet->worksheets[0];
         $flds = $instream->getStructure()->getNames();
@@ -441,7 +441,7 @@ class Output extends \Flexio\Jobs\Base
         if (!$inserter->startInsert($flds))
         {
             // could not initialize inserter
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
         }
 
         // transfer the data
@@ -463,7 +463,7 @@ class Output extends \Flexio\Jobs\Base
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $outstream = self::createOutputStream($instream, $output_info);
@@ -472,7 +472,7 @@ class Output extends \Flexio\Jobs\Base
 
         $service = $outstream->getService();
         if ($service === false)
-            return $this->fail(\Model::ERROR_NO_SERVICE, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::NO_SERVICE, _(''), __FILE__, __LINE__);
 
         $input_structure = $instream->getStructure();
 
@@ -484,15 +484,15 @@ class Output extends \Flexio\Jobs\Base
 /*
         $filename = $outstream->getName();
         if (!$service->createTable($filename, $input_structure->enum()))
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         $inserter = $service->bulkInsert($filename);
         if (!$inserter)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         $flds = $input_structure->getNames();
         if (!$inserter->startInsert($flds))
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 */
 
         // transfer the data

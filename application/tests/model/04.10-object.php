@@ -27,61 +27,32 @@ class Test
         // TEST: Model:assoc_get(); tests for bad edge type input
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
         $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $get_result = $model->assoc_get($eid1, 'x', $eid2);
-        $actual = $add_result === true && $get_result === false;
+        $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::assoc_get(); return false when an invalid edge is specified',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Model::assoc_get(); return an empty array() when an invalid edge is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
-        );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $get_result = $model->assoc_get($eid1, 'x', $eid2);
-        $has_errors = $model->hasErrors();
-        $actual = $has_errors;
-        $expected = true;
-        TestCheck::assertBoolean('A.2', '\Model::assoc_get(); flag an error when an undefined edge is specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
         $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $get_result = $model->assoc_get($eid1, \Model::EDGE_UNDEFINED, $eid2);
-        $actual = $add_result === true && $get_result === false;
+        $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('A.3', '\Model::assoc_get(); return false when an undefined edge is specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
-        );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $get_result = $model->assoc_get($eid1, \Model::EDGE_UNDEFINED, $eid2);
-        $has_errors = $model->hasErrors();
-        $actual = $has_errors;
-        $expected = true;
-        TestCheck::assertBoolean('A.4', '\Model::assoc_get(); flag an error when an undefined edge is specified',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Model::assoc_get(); return an empty array() when an undefined edge is specified',  $actual, $expected, $results);
 
 
 
         // TEST: Model:assoc_get(); tests for bad eid input
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -90,23 +61,9 @@ class Test
         $get_result = $model->assoc_get('x', \Model::EDGE_LINKED_TO, $eid2);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::assoc_get(); return empty array() when an invalid eid is specified',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Model::assoc_get(); return an empty array() when an invalid eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
-        );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $get_result = $model->assoc_get('x', \Model::EDGE_LINKED_TO, $eid2);
-        $has_errors = $model->hasErrors();
-        $actual = $has_errors;
-        $expected = false;
-        TestCheck::assertBoolean('B.2', '\Model::assoc_get(); don\'t flag an error when an invalid eid is specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -115,23 +72,9 @@ class Test
         $get_result = $model->assoc_get($eid1, \Model::EDGE_LINKED_TO, 'x');
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.3', '\Model::assoc_get(); return empty array() when an invalid eid is specified',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Model::assoc_get(); return an empty array() when an invalid eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
-        );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $add_result = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $get_result = $model->assoc_get($eid1, \Model::EDGE_LINKED_TO, 'x');
-        $has_errors = $model->hasErrors();
-        $actual = $has_errors;
-        $expected = false;
-        TestCheck::assertBoolean('B.4', '\Model::assoc_get(); don\'t flag an error when an invalid eid is specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -141,10 +84,9 @@ class Test
         $get_result = $model->assoc_get($eid3, \Model::EDGE_LINKED_TO, $eid2);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.5', '\Model::assoc_get(); return empty array() when a non-existing eid is specified',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', '\Model::assoc_get(); return an empty array() when a non-existing eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -154,10 +96,9 @@ class Test
         $get_result = $model->assoc_get($eid1, \Model::EDGE_LINKED_TO, $eid3);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.6', '\Model::assoc_get(); return empty array() when a non-existing eid is specified',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.4', '\Model::assoc_get(); return an empty array() when a non-existing eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -167,14 +108,13 @@ class Test
         $get_result = $model->assoc_get($eid1, \Model::EDGE_LINKED_TO, "$eid3,$eid3");
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.7', '\Model::assoc_get(); return empty array() when a non-existing eid is specified',  $actual, $expected, $results);
+        TestCheck::assertBoolean('B.5', '\Model::assoc_get(); return an empty array() when a non-existing eid is specified',  $actual, $expected, $results);
 
 
 
         // TEST: Model:assoc_get(); tests for valid eid input
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -188,7 +128,6 @@ class Test
         TestCheck::assertInArray('C.1', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -204,7 +143,6 @@ class Test
         TestCheck::assertInArray('C.2', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -224,7 +162,6 @@ class Test
         // TEST: Model:assoc_get(); tests to make sure function is sensitive to various types of deletion
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -238,7 +175,6 @@ class Test
         TestCheck::assertInArray('D.1', '\Model::assoc_get(); return array() of eids that have the specified association; don\'t return deleted associations',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -252,7 +188,6 @@ class Test
         TestCheck::assertInArray('D.2', '\Model::assoc_get(); return array() of eids that have the specified association; don\'t return associations for deleted objects',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -270,7 +205,6 @@ class Test
         // TEST: Model:assoc_get(); tests for delimited eid string for second parameter
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -287,7 +221,6 @@ class Test
         TestCheck::assertInArray('E.1', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -304,7 +237,6 @@ class Test
         TestCheck::assertInArray('E.2', '\Model::assoc_get(); in return array(), order eids in order they were created',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -322,7 +254,6 @@ class Test
         TestCheck::assertInArray('E.3', '\Model::assoc_get(); when getting associated eids, only return eids that have that association',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -340,7 +271,6 @@ class Test
         TestCheck::assertInArray('E.4', '\Model::assoc_get(); when getting associated eids, only return eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -357,7 +287,6 @@ class Test
         TestCheck::assertInArray('E.5', '\Model::assoc_get(); when getting associated eids, only return eids that have that association',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -378,7 +307,6 @@ class Test
         // TEST: Model:assoc_get(); tests for array of eids for second parameter
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
@@ -394,7 +322,6 @@ class Test
         TestCheck::assertInArray('F.1', '\Model::assoc_get(); allow second parameter to be array of eids; return array() of target eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid1 = $model->create(\Model::TYPE_OBJECT, $info);

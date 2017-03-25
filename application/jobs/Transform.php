@@ -129,7 +129,7 @@ class Transform extends \Flexio\Jobs\Base
     {
         $column_expression_map = $this->getTableExpressionMap($instream);
         if ($column_expression_map === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
 
         // if there aren't any operations, simply create an output stream
         // pointing to the original content

@@ -28,7 +28,7 @@ class Create extends \Flexio\Jobs\Base
 
         $validator = \Flexio\Base\ValidatorSchema::check($job_definition, \Flexio\Jobs\Create::SCHEMA);
         if ($validator->hasErrors() === true)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // get the content type
         $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
@@ -46,7 +46,7 @@ class Create extends \Flexio\Jobs\Base
         }
 
         // default fall through; shouldn't happen
-        $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+        $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
     }
 
     private function createStreamOutput()
@@ -76,7 +76,7 @@ class Create extends \Flexio\Jobs\Base
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         // write the content
         $streamwriter->write($content);
@@ -100,7 +100,7 @@ class Create extends \Flexio\Jobs\Base
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         if (isset($job_definition['params']['content']))
         {
@@ -128,13 +128,13 @@ class Create extends \Flexio\Jobs\Base
 
                 $result = $streamwriter->write($row);
                 if ($result === false)
-                    $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                    $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
             }
         }
 
         $result = $streamwriter->close();
         if ($result === false)
-            $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $outstream->setSize($streamwriter->getBytesWritten());
     }

@@ -87,16 +87,16 @@ class Execute extends \Flexio\Jobs\Base
         }
 
         if ($program_type === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         $program_path = \Flexio\System\System::getBinaryPath($program_type);
         if (!isset($program_path))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // get the code from the template
         $code = isset_or($job_definition['params']['code'], '');
         if (strlen($code) == 0)
-            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _(''), __FILE__, __LINE__);
 
         // the code is base64 encoded, so decode it and write it out
         // to a temporary file
@@ -120,7 +120,7 @@ class Execute extends \Flexio\Jobs\Base
         if (!is_resource($process))
         {
             @unlink($filename);
-            return $this->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
         }
 
         if ($instream->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
@@ -175,7 +175,7 @@ class Execute extends \Flexio\Jobs\Base
         // write to the output
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         // $pipes now looks like this:
         // 0 => writeable handle connected to child stdin

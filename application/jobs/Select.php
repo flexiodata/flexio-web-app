@@ -50,7 +50,7 @@ class Select extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
         if (!isset($params['columns']) || !is_array($params['columns']))
-            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _(''), __FILE__, __LINE__);
 
         $output_structure = $instream->getStructure()->enum($params['columns']);
         $outstream->setStructure($output_structure);

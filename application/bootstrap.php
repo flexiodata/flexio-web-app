@@ -404,7 +404,7 @@ class Flexio
             if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')
             {
                 // TODO: send error response code through api:
-                // (Api::ERROR_INSUFFICIENT_RIGHTS, _('Session expired'));
+                // (\Flexio\Base\Error::INSUFFICIENT_RIGHTS, _('Session expired'));
             }
              else
             {

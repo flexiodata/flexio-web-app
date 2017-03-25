@@ -234,7 +234,7 @@ class Search extends ModelBase
             }
 
             // if the item is an eid type, add it to the list of types
-            if (Model::isValidType($i))
+            if (\Model::isValidType($i))
             {
                 if ($search_term->node_types === false)
                     $search_term->node_types = array();
@@ -268,7 +268,7 @@ class Search extends ModelBase
         {
             // trim away leading/trailing whitespace
             $i = self::trim_spaces($i);
-            if (Model::isValidEdge($i))
+            if (\Model::isValidEdge($i))
             {
                 if ($search_term->edge_types === false)
                     $search_term->edge_types = array();

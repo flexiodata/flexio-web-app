@@ -16,34 +16,30 @@ class Connection extends ModelBase
 {
     public function create($params)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         // if the connection_status parameter is set, make sure the status is set
         // to a valid value
         if (isset($params['connection_status']))
         {
             $status = $params['connection_status'];
-            if ($status != \Model::CONNECTION_STATUS_INVALID && $status != \Model::CONNECTION_STATUS_UNAVAILABLE &&
-                $status != \Model::CONNECTION_STATUS_AVAILABLE && $status != \Model::CONNECTION_STATUS_ERROR)
+            switch ($status)
             {
-                $params['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;  // default status
+                default:
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+                case \Model::CONNECTION_STATUS_INVALID:
+                case \Model::CONNECTION_STATUS_UNAVAILABLE:
+                case \Model::CONNECTION_STATUS_AVAILABLE:
+                case \Model::CONNECTION_STATUS_ERROR:
+                    break;
             }
         }
 
+        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_CONNECTION, $params);
-            if ($eid === false)
-                throw new \Exception();
-
-            $default_database = '';
-            if ($default_database == '%eid%')
-                $default_database = $eid;
-
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'               => $eid,
@@ -57,7 +53,7 @@ class Connection extends ModelBase
                 'token'             => isset_or($params['token'], ''),
                 'refresh_token'     => isset_or($params['refresh_token'], ''),
                 'token_expires'     => isset_or($params['token_expires'], null),
-                'database'          => isset_or($params['database'], $default_database),
+                'database'          => isset_or($params['database'], ''),
                 'connection_type'   => isset_or($params['connection_type'], ''),
                 'connection_status' => isset_or($params['connection_status'], \Model::CONNECTION_STATUS_UNAVAILABLE),
                 'created'           => $timestamp,
@@ -79,16 +75,13 @@ class Connection extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create connection'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
     public function delete($eid)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
@@ -100,16 +93,12 @@ class Connection extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete connection'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
     }
 
     public function set($eid, $params)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
@@ -128,9 +117,8 @@ class Connection extends ModelBase
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update connection'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
-
 
         if (isset($process_arr['username'])) $process_arr['username'] = \Flexio\Base\Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
         if (isset($process_arr['password'])) $process_arr['password'] = \Flexio\Base\Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
@@ -139,17 +127,23 @@ class Connection extends ModelBase
 
         // if the connection_status parameter is set, make sure the status is set
         // to a valid value
-        if (isset($process_arr['connection_status']))
+        if (isset($params['connection_status']))
         {
             $status = $process_arr['connection_status'];
-            if ($status != \Model::CONNECTION_STATUS_INVALID && $status != \Model::CONNECTION_STATUS_UNAVAILABLE &&
-                $status != \Model::CONNECTION_STATUS_AVAILABLE && $status != \Model::CONNECTION_STATUS_ERROR)
+            switch ($status)
             {
-                $process_arr['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;  // default status
+                default:
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+                case \Model::CONNECTION_STATUS_INVALID:
+                case \Model::CONNECTION_STATUS_UNAVAILABLE:
+                case \Model::CONNECTION_STATUS_AVAILABLE:
+                case \Model::CONNECTION_STATUS_ERROR:
+                    break;
             }
         }
 
-
+        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
@@ -157,56 +151,60 @@ class Connection extends ModelBase
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
             {
-                // simply return false; no exception
+                // object doesn't exist or is deleted
                 $db->commit();
                 return false;
             }
 
             // set the properties
             $db->update('tbl_connection', $process_arr, 'eid = ' . $db->quote($eid));
-
             $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update connection'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
 
     public function get($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = $db->fetchRow("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
-                                     tob.ename as ename,
-                                     tco.name as name,
-                                     tco.description as description,
-                                     tco.display_icon as display_icon,
-                                     tco.host as host,
-                                     tco.port as port,
-                                     tco.username as username,
-                                     tco.password as password,
-                                     tco.token as token,
-                                     tco.refresh_token as refresh_token,
-                                     tco.token_expires as token_expires,
-                                     tco.database as database,
-                                     tco.connection_type as connection_type,
-                                     tco.connection_status as connection_status,
-                                     tob.eid_status as eid_status,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_connection tco on tob.eid = tco.eid
-                              where tob.eid = ?
-                             ", $eid);
+        $row = false;
+        $db = $this->getDatabase();
+        try
+        {
+            $row = $db->fetchRow("select tob.eid as eid,
+                                        tob.eid_type as eid_type,
+                                        tob.ename as ename,
+                                        tco.name as name,
+                                        tco.description as description,
+                                        tco.display_icon as display_icon,
+                                        tco.host as host,
+                                        tco.port as port,
+                                        tco.username as username,
+                                        tco.password as password,
+                                        tco.token as token,
+                                        tco.refresh_token as refresh_token,
+                                        tco.token_expires as token_expires,
+                                        tco.database as database,
+                                        tco.connection_type as connection_type,
+                                        tco.connection_status as connection_status,
+                                        tob.eid_status as eid_status,
+                                        tob.created as created,
+                                        tob.updated as updated
+                                from tbl_object tob
+                                inner join tbl_connection tco on tob.eid = tco.eid
+                                where tob.eid = ?
+                                ", $eid);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
 
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -215,7 +213,6 @@ class Connection extends ModelBase
         $row['password'] = \Flexio\Base\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
         $row['token'] = \Flexio\Base\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
         $row['refresh_token'] = \Flexio\Base\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
-
 
         return array('eid'               => $row['eid'],
                      'eid_type'          => $row['eid_type'],

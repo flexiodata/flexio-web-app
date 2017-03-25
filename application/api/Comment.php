@@ -31,16 +31,16 @@ class Comment
         // load the parent
         $parent = \Flexio\Object\Store::load($parent_identifier);
         if ($parent === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the parent
         if ($parent->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the comment
         $comment = \Flexio\Object\Comment::create($params);
         if ($comment === false)
-            return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED);
+            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
 
         // set the owner and creator
         $comment->setOwner($requesting_user_eid);
@@ -66,11 +66,11 @@ class Comment
         // load the object
         $comment = \Flexio\Object\Comment::load($comment_identifier);
         if ($comment === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($comment->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // delete the object
         $comment->delete();
@@ -91,11 +91,11 @@ class Comment
         // load the object
         $comment = \Flexio\Object\Comment::load($comment_identifier);
         if ($comment === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($comment->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // update the object
         $comment->set($params);
@@ -115,11 +115,11 @@ class Comment
         // load the object
         $comment = \Flexio\Object\Comment::load($comment_identifier);
         if ($comment === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($comment->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the object
         return $comment->get();

@@ -30,9 +30,4 @@ class ModelBase
     {
         return $this->model->getDatabase();
     }
-
-    public function fail($code, $message = null, $exception_message = null)
-    {
-        return $this->model->fail($code, $message, $exception_message);
-    }
 }

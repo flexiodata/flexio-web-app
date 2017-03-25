@@ -27,49 +27,30 @@ class Test
         // TEST: delete tests with non-eid input
 
         // BEGIN TEST
-        $model->clearErrors();
         $actual = $model->delete(null);
         $expected = false;
         TestCheck::assertBoolean('A.1', '\Model::delete(); return false with invalid input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $actual = $model->delete('');
         $expected = false;
         TestCheck::assertBoolean('A.2', '\Model::delete(); return false with invalid input',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
-        $result = $model->delete('');
-        $actual = $model->hasErrors();
-        $expected = false;
-        TestCheck::assertBoolean('A.3', '\Model::delete(); don\'t flag an error with invalid input',  $actual, $expected, $results);
 
 
 
         // TEST: delete tests with valid eid input, but object doesn't exist
 
         // BEGIN TEST
-        $model->clearErrors();
         $eid = \Flexio\Base\Eid::generate();
         $actual = $model->delete($eid);
         $expected = false;
         TestCheck::assertBoolean('B.1', '\Model::delete(); return false after trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
-        $eid = \Flexio\Base\Eid::generate();
-        $result = $model->delete($eid);
-        $actual = $model->hasErrors();
-        $expected = false;
-        TestCheck::assertBoolean('B.2', '\Model::delete(); don\'t flag an error when trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
 
 
 
         // TEST: delete tests with valid eid input, and object exists
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -80,19 +61,6 @@ class Test
         TestCheck::assertBoolean('C.1', '\Model::delete(); return true when deleting an object that exists',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'name' => $handle
-        );
-        $eid = $model->create(\Model::TYPE_CONNECTION, $info);
-        $result = $model->delete($eid);
-        $actual = $model->hasErrors();
-        $expected = false;
-        TestCheck::assertBoolean('C.2', '\Model::delete(); there shouldn\'t be any errors when deleting an object that exists',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -103,10 +71,9 @@ class Test
         $status_after_deletion = $model->getStatus($eid);
         $actual = $delete_result === true && $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED;
         $expected = true;
-        TestCheck::assertBoolean('C.3', '\Model::delete(); when deleting, make sure object is deleted',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.2', '\Model::delete(); when deleting, make sure object is deleted',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'name' => $handle
@@ -116,9 +83,8 @@ class Test
         $first_deletion = $model->delete($eid);
         $second_deletion = $model->delete($eid);
         $status_after_deletion = $model->getStatus($eid);
-        $has_errors = $model->hasErrors();
-        $actual = $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED && $first_deletion === true && $second_deletion === false && $has_errors === false;
+        $actual = $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED && $first_deletion === true && $second_deletion === false;
         $expected = true;
-        TestCheck::assertBoolean('C.4', '\Model::delete(); multiple deletion should succeed',  $actual, $expected, $results);
+        TestCheck::assertBoolean('C.3', '\Model::delete(); multiple deletion should succeed',  $actual, $expected, $results);
     }
 }

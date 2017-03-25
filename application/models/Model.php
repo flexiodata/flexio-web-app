@@ -18,24 +18,6 @@ require_once 'ModelBase.php';
 
 class Model
 {
-    const ERROR_NONE                   =  'none';
-    const ERROR_UNDEFINED              =  'undefined';
-    const ERROR_GENERAL                =  'general';
-    const ERROR_UNIMPLEMENTED          =  'unimplemented';
-    const ERROR_NO_DATABASE            =  'no_database';
-    const ERROR_NO_MODEL               =  'no_model';
-    const ERROR_NO_SERVICE             =  'no_service';
-    const ERROR_NO_OBJECT              =  'no_object';
-    const ERROR_INVALID_SYNTAX         =  'invalid_syntax';
-    const ERROR_MISSING_PARAMETER      =  'missing_parameter';
-    const ERROR_INVALID_PARAMETER      =  'invalid_parameter';
-    const ERROR_CREATE_FAILED          =  'create_failed';
-    const ERROR_DELETE_FAILED          =  'delete_failed';
-    const ERROR_WRITE_FAILED           =  'write_failed';
-    const ERROR_READ_FAILED            =  'read_failed';
-    const ERROR_INSUFFICIENT_RIGHTS    =  'insufficient_rights';
-    const ERROR_SIZE_LIMIT_EXCEEDED    =  'size_limit_exceeded';
-
     const TYPE_UNDEFINED      = '';
     const TYPE_OBJECT         = 'OBJ';
     const TYPE_USER           = 'USR';
@@ -127,7 +109,6 @@ class Model
 
     private $objs = array();
     private $database = null;
-    private $errors = array();  // use array to allow tracing stack of errors
     private $dbtype = '';
 
 
@@ -164,31 +145,28 @@ class Model
 
     public function create($type, $params)
     {
+        if ($type === \Model::TYPE_UNDEFINED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
         if ($type === \Model::TYPE_OBJECT)
             return $this->createObjectBase($type, $params);
 
-        $model = $this->loadModel($type);
-        if ($model === false)
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
-
-        return $model->create($params);
+        return $this->loadModel($type)->create($params);
     }
 
     public function delete($eid)
     {
         // behavior for delete is to return true if the object is
-        // deleted and to return otherwise, so if we can't return
-        // the object return false
+        // deleted or can't be found
 
         $type = $this->getType($eid);
+        if ($type === \Model::TYPE_UNDEFINED)
+            return false;
+
         if ($type === \Model::TYPE_OBJECT)
             return $this->deleteObjectBase($eid);
 
-        $model = $this->loadModel($type);
-        if ($model === false)
-            return false;
-
-        return $model->delete($eid);
+        return $this->loadModel($type)->delete($eid);
     }
 
     public function set($eid, $params)
@@ -200,14 +178,13 @@ class Model
         // as the eid exists)
 
         $type = $this->getType($eid);
+        if ($type === \Model::TYPE_UNDEFINED)
+            return false;
+
         if ($type === \Model::TYPE_OBJECT)
             return $this->setObjectBase($eid, $params);
 
-        $model = $this->loadModel($type);
-        if ($model === false)
-            return false;
-
-        return $model->set($eid, $params);
+        return $this->loadModel($type)->set($eid, $params);
     }
 
     public function get($eid, $type = \Model::TYPE_UNDEFINED)
@@ -217,28 +194,24 @@ class Model
         // we can't get the model
 
         if ($type === \Model::TYPE_UNDEFINED)
+        {
             $type = $this->getType($eid);
+            if ($type === \Model::TYPE_UNDEFINED)
+                return false;
+        }
 
         if ($type === \Model::TYPE_OBJECT)
             return $this->getObjectBase($eid);
 
-        $model = $this->loadModel($type);
-        if ($model === false)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        return $model->get($eid);
+        return $this->loadModel($type)->get($eid);
     }
 
     public function getType($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::TYPE_UNDEFINED;
 
-        $result = $db->fetchOne("select eid_type from tbl_object where eid = ?", $eid);
+        $result = $this->getDatabase()->fetchOne("select eid_type from tbl_object where eid = ?", $eid);
         if ($result === false)
             return \Model::TYPE_UNDEFINED;
 
@@ -247,13 +220,10 @@ class Model
 
     public function getTypeByIdentifier($identifier)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($identifier) && !\Flexio\Base\Identifier::isValid($identifier))
             return \Model::TYPE_UNDEFINED;
 
+        $db = $this->getDatabase();
         $qidentifier = $db->quote($identifier);
         $result = $db->fetchOne("select eid_type from tbl_object where eid = $qidentifier or ename = $qidentifier");
         if ($result === false)
@@ -275,43 +245,43 @@ class Model
         // that isn't restricted (right now, changes through \Model::set() are
         // only applied for items that aren't deleted)
 
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
-
         // make sure the status is set to a valid value
         if (!\Model::isValidStatus($status))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\ERROR::INVALID_PARAMETER);
 
         // make sure the object exists
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
         if ($this->getType($eid) === \Model::TYPE_UNDEFINED)
             return false;
 
-        // set the updated timestamp so it'll stay in sync with whatever
-        // object is being edited
-        $timestamp = \Flexio\System\System::getTimestamp();
-        $process_arr = array(
-            'eid_status'    => $status,
-            'updated'       => $timestamp
-        );
+        $db = $this->getDatabase();
+        try
+        {
+            // set the updated timestamp so it'll stay in sync with whatever
+            // object is being edited
+            $timestamp = \Flexio\System\System::getTimestamp();
+            $process_arr = array(
+                'eid_status'    => $status,
+                'updated'       => $timestamp
+            );
+            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
 
-        $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
         return true; // established object exists, which is enough for returning true
     }
 
     public function getStatus($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
 
-        $result = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
+        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
         if ($result === false)
             return \Model::STATUS_UNDEFINED;
 
@@ -325,20 +295,22 @@ class Model
 
     public function assoc_add($source_eid, $type, $target_eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+        // note: similar to a set operation; make sure the parameters
+        // are valid, and if they aren't, throw an Exception (note: this
+        // could be similar to create operation also, but we're returning
+        // true and we don't care if the association is already set as
+        // long as it goes through, so in this sense, it may be closer
+        // to a set operation)
 
-        // make sure we have a valid association type; flag an error
-        // for an invalid edge
-        if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+        // make sure we have a valid association type
+        if (!\Model::isValidEdge($type))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // invalid eids can't be associated with each other
         if (!\Flexio\Base\Eid::isValid($source_eid))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         if (!\Flexio\Base\Eid::isValid($target_eid))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         try
         {
@@ -354,26 +326,24 @@ class Model
             // create the association; ignore duplicate key so that if the
             // association already exists, the query succeeds so that the
             // end result is the same: the association is established
-            if ($db->insert('tbl_association', $process_arr, true /*ignore duplicate key*/) === false)
-                throw new \Exception();
-
+            $this->getDatabase()->insert('tbl_association', $process_arr, true /*ignore duplicate key*/);
             return true;
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not associate objects'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
     public function assoc_delete($source_eid, $type, $target_eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+        // TODO: behavior is slightly different than a delete operation on an
+        // object in that if the association isn't found, the function
+        // returns false; make this consistent?
 
         // make sure we have a valid association type
-        if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+        if (!\Model::isValidEdge($type))
+            return false;
 
         // nothing to delete; return false
         if (!\Flexio\Base\Eid::isValid($source_eid))
@@ -381,6 +351,7 @@ class Model
         if (!\Flexio\Base\Eid::isValid($target_eid))
             return false;
 
+        $db = $this->getDatabase();
         try
         {
             $qsource_eid = $db->quote($source_eid);
@@ -397,21 +368,21 @@ class Model
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_DELETE_FAILED, _('Could not delete association'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
     }
 
     public function assoc_change_type($source_eid, $type, $target_eid, $newtype)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+        // TODO: behavior is slightly different than a set operation on an
+        // object in that if the association isn't changed, the function
+        // returns false; make this consistent?
 
         // make sure we have an association type and a new type
-        if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
-        if (!Model::isValidEdge($newtype))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+        if (!\Model::isValidEdge($type))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        if (!\Model::isValidEdge($newtype))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // invalid eids can't be associated with each other
         if (!\Flexio\Base\Eid::isValid($source_eid))
@@ -419,6 +390,7 @@ class Model
         if (!\Flexio\Base\Eid::isValid($target_eid))
             return false;
 
+        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
@@ -442,12 +414,35 @@ class Model
 
             $result = $db->fetchOne($sql);
             $result = (int)$result;
-            if ($result === 0)
+            if ($result === 0) // specified association doesn't exist
             {
                 $db->commit();
                 return false;
             }
 
+            // if the association we're going to already exists, use the one that's there
+            // and delete the one being changed
+            $sql = "select count(*) from tbl_association tas ".
+                   "    inner join tbl_object tobsrc on tas.source_eid = tobsrc.eid ".
+                   "    inner join tbl_object tobtar on tas.target_eid = tobtar.eid ".
+                   "    where tas.source_eid = $qsource_eid ".
+                   "        and tas.association_type = $qnewtype ";
+
+            $result = $db->fetchOne($sql);
+            $result = (int)$result;
+            if ($result === 1) // target association already exists; delete existing association
+            {
+                $sql = "delete from tbl_association ".
+                    "    where source_eid = $qsource_eid ".
+                    "        and target_eid = $qtarget_eid ".
+                    "        and association_type = $qtype";
+                $db->exec($sql);
+                $db->commit();
+
+                return true;
+            }
+
+            // association exists, and new association doesn't yet exist; change the association
             $sql = "update tbl_association ".
                    "    set association_type = $qnewtype ".
                    "    where source_eid = $qsource_eid ".
@@ -461,23 +456,21 @@ class Model
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not change association type'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
 
     public function assoc_get($source_eid, $type, $target_eid_set)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
-        if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+        if (!\Model::isValidEdge($type))
+            return array();
 
         // nothing went wrong, but an invalid eid doesn't exist so there's
         // nothing to find
         if (!\Flexio\Base\Eid::isValid($source_eid))
             return array();
+
+        $db = $this->getDatabase();
 
         // if the target_eid_set is something besides an array or a string,
         // it's an invalid input; return an empty list
@@ -545,24 +538,21 @@ class Model
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_READ_FAILED, _('Could not get associations'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
     }
 
     public function assoc_range($source_eid, $type, $status_filter = false)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
-        if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+        if (!\Model::isValidEdge($type))
+            return array();
 
         // nothing went wrong, but an invalid eid doesn't exist so there's
         // nothing to find
         if (!\Flexio\Base\Eid::isValid($source_eid))
             return array();
 
+        $db = $this->getDatabase();
         try
         {
             // get the associations for the object in question; make sure that
@@ -574,7 +564,7 @@ class Model
 
             $status_condition = '';
             if ($status_filter !== false)
-                $status_condition = " and tobtar.eid_status in (".Model::buildStatusString($status_filter).")";
+                $status_condition = " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
 
             $sql = "select ".
                    "        target_eid as eid, ".
@@ -599,24 +589,21 @@ class Model
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_READ_FAILED, _('Could not get associations'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
     }
 
     public function assoc_count($source_eid, $type, $status_filter = false)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
-        if (!Model::isValidEdge($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+        if (!\Model::isValidEdge($type))
+            return 0;
 
         // nothing went wrong, but an invalid eid doesn't exist so there's
         // nothing to find
         if (!\Flexio\Base\Eid::isValid($source_eid))
             return 0;
 
+        $db = $this->getDatabase();
         try
         {
             // get the association count for the object in question; make sure
@@ -626,7 +613,7 @@ class Model
 
             $status_condition = '';
             if ($status_filter !== false)
-                $status_condition = " and tobtar.eid_status in (".Model::buildStatusString($status_filter).")";
+                $status_condition = " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
 
             $sql = "select count(*) from tbl_association tas ".
                    "    inner join tbl_object tobsrc on tas.source_eid = tobsrc.eid ".
@@ -640,7 +627,7 @@ class Model
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_READ_FAILED, _('Could not get association count'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
     }
 
@@ -650,15 +637,12 @@ class Model
         // to the way we get the eid from the username or the email in
         // the user model; should consolidate these notions
 
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         // if the identifier isn't valid, there's no corresponding eid
         if (\Flexio\Base\Identifier::isValid($identifier) === false)
             return false;
 
         // look for the eid
+        $db = $this->getDatabase();
         $qidentifier = $db->quote($identifier);
         $eid = $db->fetchOne("select eid from tbl_object where ename = $qidentifier");
         if ($eid === false)
@@ -674,17 +658,12 @@ class Model
         // that ensure that all the create operations function as one unit
         // as well as ensure that the eid is unique
 
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
+        // behavior is to make sure valid parameters are supplied and an object is
+        // created, and to throw an exception otherwise
 
         // make sure we have a valid type
-        if (!Model::isValidType($type))
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
-
-        $eid = $this->generateUniqueEid();
-        if (!$eid)
-            return $this->fail(Model::ERROR_CREATE_FAILED);
+        if (!\Model::isValidType($type))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // if the status parameter is set, make sure the status is set
         // to a valid value
@@ -693,9 +672,8 @@ class Model
         {
             $status = $params['eid_status'];
             if (!\Model::isValidStatus($status))
-                return $this->fail(Model::ERROR_INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
-
 
         // if a non-zero-length identifier is set, make sure that is a is
         // a valid and unique identifier; note: also make sure ename is not in
@@ -708,17 +686,18 @@ class Model
         if (strlen($ename) > 0)
         {
             if (\Flexio\Base\Identifier::isValid($ename) === false)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
             if (\Flexio\Base\Eid::isValid($ename) === true)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             // make sure that the ename is unique
             $qename = $db->quote($ename);
             $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
             if ($existing_ename !== false)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
+        $eid = $this->generateUniqueEid();
         $timestamp = \Flexio\System\System::getTimestamp();
         $process_arr = array(
             'eid'           => $eid,
@@ -729,8 +708,8 @@ class Model
             'updated'       => $timestamp
         );
 
-        if ($db->insert('tbl_object', $process_arr) === false)
-            return $this->fail(Model::ERROR_CREATE_FAILED);
+        if ($this->getDatabase()->insert('tbl_object', $process_arr) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         return $eid;
     }
@@ -742,16 +721,14 @@ class Model
         // that ensure that all the delete operations function as one unit
 
         // behavior for delete is to return true if the object is
-        // deleted and to return otherwise, so if we can't return
-        // the object return false
+        // deleted and to return false otherwise, so if we can't find the object,
+        // return false
 
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
-        // eid isn't valid; return false
+        // if eid is invalid, the object doesn't exist, so behave as if it doesn't exist
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
+
+        $db = $this->getDatabase();
 
         // if an item is deleted, don't allow it to be redeleted (i.e., act
         // as if it's already been deleted and therefore can't be found;
@@ -776,18 +753,16 @@ class Model
         // be used in other set functions that also include transactions
         // that ensure that all the set operations function as one unit
 
-        // behavior for set is to return true if the eid exists and there
-        // aren't any invalid parameters that are attempting to be set
-        // (so true if parameters that are being set are the same values
-        // already there, as long as the eid exists)
+        // behavior is to return true if an object that isn't deleted is set with
+        // valid parameters, to return false if the object can't be found (paralleling delete)
+        // or is deleted, and to throw an Exception if the parameters that are attempting to
+        // be set are invalid
 
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
-        // eid isn't valid
+        // if the eid isn't valid, the object doesn't exist
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
+
+        $db = $this->getDatabase();
 
         // if an item is deleted, don't allow it to be edited
         $existing_status = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
@@ -806,8 +781,8 @@ class Model
         if (isset($params['eid_status']))
         {
             $status = $params['eid_status'];
-            if (!Model::isValidStatus($status))
-                return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            if (!\Model::isValidStatus($status))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $process_arr['eid_status'] = $status;
         }
@@ -823,15 +798,15 @@ class Model
         {
             $ename = $params['ename'];
             if ($ename !== '' && \Flexio\Base\Identifier::isValid($ename) === false)
-                return $this->fail(Model::ERROR_CREATE_FAILED);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
             if (\Flexio\Base\Eid::isValid($ename) === true)
-                return $this->fail(\Model::ERROR_CREATE_FAILED);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             // make sure that the ename is unique
             $qename = $db->quote($ename);
             $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
             if ($existing_ename !== false)
-                return $this->fail(\Model::ERROR_CREATE_FAILED);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             $process_arr['ename'] = $ename;
         }
@@ -849,22 +824,26 @@ class Model
         // behavior for get is to return the object info if the eid exists
         // and false if the eid doesn't exist
 
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = $db->fetchRow("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
-                                     tob.ename as ename,
-                                     tob.eid_status as eid_status,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              where tob.eid = ?
-                             ", $eid);
+        $row = false;
+        try
+        {
+            $row = $this->getDatabase()->fetchRow("select tob.eid as eid,
+                                                        tob.eid_type as eid_type,
+                                                        tob.ename as ename,
+                                                        tob.eid_status as eid_status,
+                                                        tob.created as created,
+                                                        tob.updated as updated
+                                                from tbl_object tob
+                                                where tob.eid = ?
+                                                ", $eid);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
 
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -879,12 +858,10 @@ class Model
 
     public function setDbVersionNumber($version)
     {
-        // TODO: use model to abstract out custom SQL
+        if (!is_string($version) || strlen($version) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         try
         {
             $version = (string)$version;
@@ -900,55 +877,29 @@ class Model
         }
         catch (\Exception $e)
         {
-            syslog(LOG_ERR, 'Exception in setDbVersionNumber(): ' . $e->getMessage());
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
-
-        /*
-        // mysql implementation alternative:
-
-        try
-        {
-            $qversion = $db->quote($version);
-
-            $sql = "insert into tbl_system ".
-                   "    (name, value, created, updated) ".
-                   "values ".
-                   "    ('version', $qversion, now(), now()) ".
-                   "on duplicate key update ".
-                   "    value = $qversion, updated = now()";
-
-            $db->exec($sql);
-        }
-        catch (\Exception $e)
-        {
-            return false;
-        }
-
-        */
     }
 
     public function getDbVersionNumber()
     {
-        // TODO: use model to abstract out custom SQL
-
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         try
         {
             $result = $db->query("select value from tbl_system where name = 'version'");
-
             $row = $result->fetch();
+
+            // make sure we have a valid database version
             if (!$row)
-                return false;
+                throw new \Exception;
+            if (!isset($row['value']))
+                throw new \Exception;
 
             return $row['value'];
         }
         catch (\Exception $e)
         {
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
     }
 
@@ -966,7 +917,7 @@ class Model
             else if ($this->dbtype == 'postgres')
                 $pdo_database_type = 'PDO_POSTGRES';
             else
-                return null; // unsupported database
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
 
             $params = array();
             $params['host'] = $dbconfig['directory_host'];
@@ -987,13 +938,7 @@ class Model
         }
         catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->debug_error_log))
-            {
-                $data = $e->getMessage();
-                file_put_contents($GLOBALS['g_config']->debug_error_log, "Connection error $data\n\n", FILE_APPEND);
-            }
-
-            return false; // can't connect
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_DATABASE);
         }
     }
 
@@ -1018,13 +963,10 @@ class Model
 
     public function setTimezone($tz)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!is_string($tz) || strlen($tz) == 0)
-            return $this->fail(Model::ERROR_INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        $db = $this->getDatabase();
         try
         {
             if ($this->dbtype == 'mysql')
@@ -1032,81 +974,15 @@ class Model
             else if ($this->dbtype == 'postgres')
                 $sql = 'SET SESSION TIME ZONE ' . $db->quote($tz);
             else
-                return $this->fail(Model::ERROR_INVALID_PARAMETER); // unsupported database
+                throw new \Exception; // unsupported database
 
-            $this->database->exec($sql);
+            $db->exec($sql);
             return true;
         }
         catch (\Exception $e)
         {
-            return $this->fail(Model::ERROR_READ_FAILED, 'Unable to update database settings');
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
-    }
-
-    public function setError($code, $message = null, $exception_message = null)
-    {
-        if (is_null($message))
-        {
-            switch ($code)
-            {
-                default:                                  $message = _('Operation failed');            break;
-                case \Model::ERROR_UNDEFINED:              $message = _('Operation failed');            break;
-                case \Model::ERROR_GENERAL:                $message = _('General error');               break;
-                case \Model::ERROR_UNIMPLEMENTED:          $message = _('Unimplemented');               break;
-                case \Model::ERROR_NO_DATABASE:            $message = _('Database not available');      break;
-                case \Model::ERROR_NO_MODEL:               $message = _('Model not available');         break;
-                case \Model::ERROR_NO_SERVICE:             $message = _('Service not available');       break;
-                case \Model::ERROR_NO_OBJECT:              $message = _('Object not available');        break;
-                case \Model::ERROR_MISSING_PARAMETER:      $message = _('Missing parameter');           break;
-                case \Model::ERROR_INVALID_PARAMETER:      $message = _('Invalid parameter');           break;
-                case \Model::ERROR_INVALID_SYNTAX:         $message = _('Invalid syntax');              break;
-                case \Model::ERROR_CREATE_FAILED:          $message = _('Could not create object');     break;
-                case \Model::ERROR_DELETE_FAILED:          $message = _('Could not delete object');     break;
-                case \Model::ERROR_WRITE_FAILED:           $message = _('Could not write to object');   break;
-                case \Model::ERROR_READ_FAILED:            $message = _('Could not read from object');  break;
-                case \Model::ERROR_INSUFFICIENT_RIGHTS:    $message = _('Insufficient rights');         break;
-                case \Model::ERROR_SIZE_LIMIT_EXCEEDED:    $message = _('Size limit exceeded');         break;
-            }
-        }
-
-        if (isset($GLOBALS['g_config']->debug_error_log))
-        {
-            ob_start();
-            debug_print_backtrace();
-            $data = ob_get_clean();
-
-            $excp = '';
-            if ($exception_message)
-                $excp = ' Exception message: ' . $exception_message;
-
-            file_put_contents($GLOBALS['g_config']->debug_error_log, "Model error '$message' set!$excp\n$data\n\n", FILE_APPEND);
-        }
-
-        $this->errors[] = array('code' => $code, 'message' => $message);
-    }
-
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
-    public function hasErrors()
-    {
-        if (empty($this->errors))
-            return false;
-
-        return true;
-    }
-
-    public function clearErrors()
-    {
-        $this->errors = array();
-    }
-
-    public function fail($code, $message = null, $exception_message = null)
-    {
-        $this->setError($code, $message, $exception_message);
-        return false;
     }
 
     private function loadModel($type)
@@ -1114,9 +990,9 @@ class Model
         switch ($type)
         {
             default:
-                return false;
+            case \Model::TYPE_UNDEFINED:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
 
-            // note: undefined type isn't a valid model, so it's not included
             case \Model::TYPE_USER           : return $this->user;
             case \Model::TYPE_PROJECT        : return $this->project;
             case \Model::TYPE_PIPE           : return $this->pipe;
@@ -1131,13 +1007,10 @@ class Model
     private function generateUniqueEid()
     {
         // generate an eid that doesn't already exists in tbl_object
-        $db = $this->getDatabase();
-        if ($db === false)
-            return false; // internal function, so don't flag an error
-
         $eid = \Flexio\Base\Eid::generate();
-        $qeid = $db->quote($eid);
 
+        $db = $this->getDatabase();
+        $qeid = $db->quote($eid);
         $result = $db->fetchOne("select eid from tbl_object where eid = $qeid");
 
         if ($result === false)
@@ -1283,7 +1156,7 @@ class Model
         $status_str = '';
         foreach ($status_arr as $key => $value)
         {
-            if (Model::isValidStatus($value) === false)
+            if (self::isValidStatus($value) === false)
                 continue;
 
             if (strlen($status_str) > 0)

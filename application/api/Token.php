@@ -30,10 +30,10 @@ class Token
         // load the object and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the token object
         $token_properties = $params;
@@ -42,7 +42,7 @@ class Token
 
         $token = \Flexio\Object\Token::create($token_properties);
         if ($token === false)
-            return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED);
+            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
 
         // get the token properties
         return $token->get();
@@ -64,10 +64,10 @@ class Token
         // load the user and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 */
         $token = \Flexio\Object\Token::load($user_identifier);
         if ($token !== false)
@@ -89,14 +89,14 @@ class Token
         // load the user and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $token = \Flexio\Object\Token::load($user_identifier);
         if ($token === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // get the properties; double check to make sure that secret code isn't returned
         $properties = $token->get();
@@ -117,10 +117,10 @@ class Token
         // load the user and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $user->getTokens();
     }

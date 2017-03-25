@@ -27,7 +27,6 @@ class Test
         // TEST: make sure that duplicate edges and eids are removed in search
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_OBJECT, $info);
@@ -40,7 +39,6 @@ class Test
         TestCheck::assertArray('A.1', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_OBJECT, $info);
@@ -53,7 +51,6 @@ class Test
         TestCheck::assertArray('A.2', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_OBJECT, $info);

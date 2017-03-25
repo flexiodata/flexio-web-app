@@ -16,28 +16,25 @@ class User extends ModelBase
 {
     public function create($params)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         if (!isset($params['user_name']))
-            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _('Missing user_name parameter'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
         if (!isset($params['email']))
-            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _('Missing email parameter'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         // convert username and email to lowercase
         $params['user_name'] = strtolower($params['user_name']);
         $params['email'] = strtolower($params['email']);
 
         if (!\Flexio\Base\Identifier::isValid($params['user_name']))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         if (!\Flexio\Services\Email::isValid($params['email']))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // encode the password
         if (isset($params['password']) && strlen($params['password']) > 0)
             $params['password'] = \Model::encodePassword($params['password']);
 
+        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
@@ -52,9 +49,6 @@ class User extends ModelBase
 
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $params);
-            if ($eid === false)
-                throw new \Exception();
-
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'                    => $eid,
@@ -92,16 +86,13 @@ class User extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_CREATE_FAILED, _('Could not create user'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
     public function delete($eid)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
@@ -113,16 +104,12 @@ class User extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete user'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
     }
 
     public function set($eid, $params)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
@@ -138,9 +125,9 @@ class User extends ModelBase
 
         // if user_name or email is specified, make sure it's not set to null
         if (is_array($params) && array_key_exists('user_name', $params) && !\Flexio\Base\Identifier::isValid($params['user_name']))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid user_name parameter'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         if (is_array($params) && array_key_exists('email', $params) && !\Flexio\Services\Email::isValid($params['email']))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _('Invalid email parameter'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // make sure the properties that are being updated are the correct type
         if (($process_arr = \Model::check($params, array(
@@ -165,10 +152,10 @@ class User extends ModelBase
                 'verify_code'            => array('type' => 'string',  'required' => false),
                 'config'                 => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
-
+        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
@@ -179,62 +166,66 @@ class User extends ModelBase
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
             {
-                // simply return false; no exception
+                // object doesn't exist or is deleted
                 $db->commit();
                 return false;
             }
 
             // set the properties
             $db->update('tbl_user', $process_arr, 'eid = ' . $db->quote($eid));
-
             $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update user'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
 
     public function get($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = $db->fetchRow("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
-                                     tob.ename as ename,
-                                     tus.user_name as user_name,
-                                     tus.description as description,
-                                     tus.full_name as full_name,
-                                     tus.first_name as first_name,
-                                     tus.last_name as last_name,
-                                     tus.email as email,
-                                     tus.phone as phone,
-                                     tus.location_city as location_city,
-                                     tus.location_state as location_state,
-                                     tus.location_country as location_country,
-                                     tus.company_name as company_name,
-                                     tus.company_url as company_url,
-                                     tus.locale_language as locale_language,
-                                     tus.locale_decimal as locale_decimal,
-                                     tus.locale_thousands as locale_thousands,
-                                     tus.locale_dateformat as locale_dateformat,
-                                     tus.timezone as timezone,
-                                     tus.verify_code as verify_code,
-                                     tus.config as config,
-                                     tob.eid_status as eid_status,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_user tus on tob.eid = tus.eid
-                              where tob.eid = ?
-                             ", $eid);
+        $row = false;
+        $db = $this->getDatabase();
+        try
+        {
+            $row = $db->fetchRow("select tob.eid as eid,
+                                        tob.eid_type as eid_type,
+                                        tob.ename as ename,
+                                        tus.user_name as user_name,
+                                        tus.description as description,
+                                        tus.full_name as full_name,
+                                        tus.first_name as first_name,
+                                        tus.last_name as last_name,
+                                        tus.email as email,
+                                        tus.phone as phone,
+                                        tus.location_city as location_city,
+                                        tus.location_state as location_state,
+                                        tus.location_country as location_country,
+                                        tus.company_name as company_name,
+                                        tus.company_url as company_url,
+                                        tus.locale_language as locale_language,
+                                        tus.locale_decimal as locale_decimal,
+                                        tus.locale_thousands as locale_thousands,
+                                        tus.locale_dateformat as locale_dateformat,
+                                        tus.timezone as timezone,
+                                        tus.verify_code as verify_code,
+                                        tus.config as config,
+                                        tob.eid_status as eid_status,
+                                        tob.created as created,
+                                        tob.updated as updated
+                                from tbl_object tob
+                                inner join tbl_user tus on tob.eid = tus.eid
+                                where tob.eid = ?
+                                ", $eid);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
 
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -269,13 +260,10 @@ class User extends ModelBase
 
     public function getUsernameFromEid($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
+        $db = $this->getDatabase();
         $user_name = $db->fetchOne('select user_name from tbl_user where eid = ?', $eid);
         if ($user_name === false)
             return false;
@@ -285,13 +273,10 @@ class User extends ModelBase
 
     public function getEmailFromEid($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
+        $db = $this->getDatabase();
         $email = $db->fetchOne('select email from tbl_user where eid = ?', $eid);
         if ($email === false)
             return false;
@@ -303,19 +288,14 @@ class User extends ModelBase
     {
         // gets the eid from either the user_name or the email
 
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         // identifiers can be a username or an email, so only perform the
         // most basic string check
         if (!is_string($identifier) || strlen($identifier) <= 0)
             return false;
 
-        // identifiers are case insensitive
+        // the identifier is either the user_name or the email; identifiers are case insensitive
+        $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
-
-        // the identifier is either the user_name or the email
         $eid = $db->fetchOne("select eid from tbl_user where user_name = $qidentifier or email = $qidentifier");
         if ($eid === false)
             return false;
@@ -325,18 +305,13 @@ class User extends ModelBase
 
     public function getEidFromUsername($identifier)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         // make sure we have a string
         if (!is_string($identifier) || strlen($identifier) <= 0)
             return false;
 
-        // identifiers are case insensitive
+        // get the eid; identifiers are case insensitive
+        $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
-
-        // try to find the eid
         $eid = $db->fetchOne("select eid from tbl_user where user_name = $qidentifier");
         if ($eid === false)
             return false;
@@ -346,18 +321,13 @@ class User extends ModelBase
 
     public function getEidFromEmail($identifier)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         // make sure we have a string
         if (!is_string($identifier) || strlen($identifier) <= 0)
             return false;
 
-        // identifiers are case insensitive
+        // get the eid; identifiers are case insensitive
+        $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
-
-        // try to find the eid
         $eid = $db->fetchOne("select eid from tbl_user where email = $qidentifier");
         if ($eid === false)
             return false;
@@ -367,10 +337,6 @@ class User extends ModelBase
 
     public function checkUserPassword($identifier, $password)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         // identifiers can be a username or an email, so only perform the
         // most basic string check
         if (!is_string($identifier))
@@ -378,10 +344,9 @@ class User extends ModelBase
         if (!is_string($password))
             return false;
 
-        // identifiers are case insensitive
+        // get the password; identifiers are case insensitive
+        $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
-
-        // the identifier is either the user_name or the email
         $user_info = $db->fetchRow("select password from tbl_user where user_name = $qidentifier or email = $qidentifier");
         if ($user_info === false)
             return false;
@@ -393,9 +358,6 @@ class User extends ModelBase
     public function checkUserPasswordByEid($eid, $password)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         $user_info = $db->fetchRow("select password from tbl_user where eid = ?", $eid);
         if ($user_info === false)
             return false;

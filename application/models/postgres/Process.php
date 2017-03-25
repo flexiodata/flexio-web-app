@@ -17,17 +17,15 @@ class Process extends ModelBase
     public function create($params, $primary_process = true)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         $db->beginTransaction(); // needed to make sure eid generation is safe
         try
         {
             // if it's a primary process, create the object base; otherwise, create
             // a table-specific eid to track the subprocess
+            $eid = false;
             if ($primary_process === true)
             {
-                $eid = $this->getModel()->createObjectBase(Model::TYPE_PROCESS, $params);
+                $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROCESS, $params);
                 $params['process_eid'] = $eid;
             }
              else
@@ -35,11 +33,8 @@ class Process extends ModelBase
                 $eid = $this->generateChildProcessEid();
             }
 
-            if ($eid === false)
-                throw new \Exception();
-
             // make sure the process eid doesn't exist as a child process eid
-            if ($this->processExists($eid))
+            if ($this->processExists($eid) === true)
                 throw new \Exception();
 
             $timestamp = \Flexio\System\System::getTimestamp();
@@ -76,40 +71,30 @@ class Process extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create process'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
     public function delete($eid)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
             // delete the object
             $result = $this->getModel()->deleteObjectBase($eid);
-            if ($result === false)
-                throw new \Exception();
-
             $db->commit();
-            return true;
+            return $result;
         }
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete process'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
     }
 
     public function set($eid, $params)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
@@ -133,38 +118,36 @@ class Process extends ModelBase
                 'process_status' => array('type' => 'string',  'required' => false),
                 'cache_used'     => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update process'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
+        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
-            // try to set the status; if the eid doesn't exist (subprocess, then
-            // the following will fail silently, and additional properties will
-            // have a chance to be set, which is what we want); after trying the
-            // status, set the other properties
+            // try to set the status; unlike other types of set operations, a valid
+            // subprocess eid may exist even if an object eid doesn't exist, so don't
+            // return before giving the subprocess properties a chance to be set if
+            // the initial setting of properties returns false
             $result = $this->getModel()->setObjectBase($eid, $params);
             $db->update('tbl_process', $process_arr, 'eid = ' . $db->quote($eid));
-
             $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update process'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
 
     public function get($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
+        $row = false;
+        $db = $this->getDatabase();
         try
         {
             // note: some sub process records don't have an eid in the main
@@ -196,7 +179,7 @@ class Process extends ModelBase
          }
          catch (\Exception $e)
          {
-             return $this->fail(\Model::ERROR_READ_FAILED, _('Could not get the process'));
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
          }
 
         if (!$row)
@@ -231,13 +214,10 @@ class Process extends ModelBase
         // using the process_eid as an additional node on the primary
         // process object
 
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
+        $db = $this->getDatabase();
         $rows = array();
         try
         {
@@ -273,7 +253,7 @@ class Process extends ModelBase
          }
          catch (\Exception $e)
          {
-             return $this->fail(\Model::ERROR_READ_FAILED, _('Could not get the process'));
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
          }
 
         if (!$rows)
@@ -312,9 +292,6 @@ class Process extends ModelBase
     public function getProcessStatistics()
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         try
         {
             // note: get the process statistics by looking at all the subprocesses
@@ -338,7 +315,7 @@ class Process extends ModelBase
          }
          catch (\Exception $e)
          {
-             return $this->fail(Model::ERROR_READ_FAILED, _('Could not get the process'));
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
          }
 
         $output = array();
@@ -378,13 +355,10 @@ class Process extends ModelBase
 
     public function getOutputByHash($hash)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return false;
-
         try
         {
             // see if a process output exists for the existing hash
+            $db = $this->getDatabase();
             $rows = $db->fetchAll("select tpr.eid as eid,
                                           tpr.output as output
                                    from tbl_process tpr
@@ -412,15 +386,19 @@ class Process extends ModelBase
 
     private function processExists($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return false; // internal function, so don't flag an error
+        try
+        {
+            $db = $this->getDatabase();
+            $result = $db->fetchOne("select eid from tbl_process where eid= ?", $eid);
+            if ($result !== false)
+                return true;
 
-        $result = $db->fetchOne("select eid from tbl_process where eid= ?", $eid);
-        if ($result !== false)
-            return true;
-
-        return false;
+            return false;
+        }
+        catch (\Exception $e)
+        {
+            return false;
+        }
     }
 
     private function generateChildProcessEid()
@@ -435,12 +413,8 @@ class Process extends ModelBase
         // for a process is created, so this is checked in the process object
         // creation
 
-        $db = $this->getDatabase();
-        if ($db === false)
-            return false; // internal function, so don't flag an error
-
         $eid = \Flexio\Base\Eid::generate();
-        $result = $db->fetchOne("select eid from tbl_process where eid= ?", $eid);
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_process where eid= ?", $eid);
 
         if ($result === false)
             return $eid;

@@ -17,17 +17,11 @@ class Project extends ModelBase
     public function create($params)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
             // create the object base
-            $eid = $this->getModel()->createObjectBase(Model::TYPE_PROJECT, $params);
-            if ($eid === false)
-                throw new \Exception();
-
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROJECT, $params);
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
@@ -48,16 +42,13 @@ class Project extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create project'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
     public function delete($eid)
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
@@ -69,16 +60,12 @@ class Project extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete project'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
     }
 
     public function set($eid, $params)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
@@ -87,9 +74,10 @@ class Project extends ModelBase
                 'description'   => array('type' => 'string', 'required' => false),
                 'display_icon'  => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update project'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
+        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
@@ -97,46 +85,50 @@ class Project extends ModelBase
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
             {
-                // simply return false; no exception
+                // object doesn't exist or is deleted
                 $db->commit();
                 return false;
             }
 
             // set the properties
             $db->update('tbl_project', $process_arr, 'eid = ' . $db->quote($eid));
-
             $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update project'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
 
     public function get($eid)
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = $db->fetchRow("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
-                                     tob.ename as ename,
-                                     tpr.name as name,
-                                     tpr.description as description,
-                                     tpr.display_icon as display_icon,
-                                     tob.eid_status as eid_status,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_project tpr on tob.eid = tpr.eid
-                              where tob.eid = ?
-                             ", $eid);
+        $row = false;
+        $db = $this->getDatabase();
+        try
+        {
+            $row = $db->fetchRow("select tob.eid as eid,
+                                        tob.eid_type as eid_type,
+                                        tob.ename as ename,
+                                        tpr.name as name,
+                                        tpr.description as description,
+                                        tpr.display_icon as display_icon,
+                                        tob.eid_status as eid_status,
+                                        tob.created as created,
+                                        tob.updated as updated
+                                from tbl_object tob
+                                inner join tbl_project tpr on tob.eid = tpr.eid
+                                where tob.eid = ?
+                                ", $eid);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
 
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
