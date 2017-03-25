@@ -302,7 +302,7 @@ class User extends \Flexio\Object\Base
         $mime_type = 'text/plain';
         $data = $this->getModel()->registry->getBinary($eid, 'profile.picture', $mime_type);
         if (is_null($data))
-            return $this->fail(\Flexio\Base\Error::NO_OBJECT);
+            return false;
 
         header('Content-Type: ' . $mime_type);
         if (!is_null($etag))
@@ -315,10 +315,10 @@ class User extends \Flexio\Object\Base
         $eid = $this->getEid();
         $size = @filesize($filename);
         if ($size === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
+            return false;
 
         if ($size > 2097152) // 2MB
-            return $this->fail(\Flexio\Base\Error::SIZE_LIMIT_EXCEEDED);
+            return false;
 
         $contents = file_get_contents($filename);
         $result = $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
@@ -340,7 +340,7 @@ class User extends \Flexio\Object\Base
         $mime_type = 'text/plain';
         $data = $this->getModel()->registry->getBinary($eid, 'profile.background', $mime_type);
         if (is_null($data))
-            return $this->fail(\Flexio\Base\Error::NO_OBJECT);
+            return false;
 
         header('Content-Type: ' . $mime_type);
         if (!is_null($etag))
@@ -353,10 +353,10 @@ class User extends \Flexio\Object\Base
         $eid = $this->getEid();
         $size = @filesize($filename);
         if ($size === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
+            return false;
 
         if ($size > 2097152) // 2MB
-            return $this->fail(\Flexio\Base\Error::SIZE_LIMIT_EXCEEDED);
+            return false;
 
         $contents = file_get_contents($filename);
         $result = $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
@@ -382,16 +382,16 @@ class User extends \Flexio\Object\Base
         }
          else
         {
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
+            return false;
         }
 
         $data = $this->getModel()->registry->getBinary($eid, $type, $mime_type);
         if (is_null($data))
-            return $this->fail(\Flexio\Base\Error::NO_OBJECT);
+            return false;
 
         $src_img = @imagecreatefromstring($data);
         if ($src_img === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER);
+            return false;
 
         // create a 24-bit PNG
         $dest_img = imagecreatetruecolor($dest_w, $dest_h);
