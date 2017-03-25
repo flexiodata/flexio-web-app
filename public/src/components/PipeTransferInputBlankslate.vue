@@ -8,7 +8,7 @@
         class="ttu b"
         @click="$emit('choose-connection')"
       >
-        Choose a connection
+        Choose an input
       </btn>
     </div>
     <div v-if="false">

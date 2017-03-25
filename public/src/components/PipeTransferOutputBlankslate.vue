@@ -7,7 +7,7 @@
         btn-primary
         class="ttu b"
       >
-        Choose a connection
+        Choose an output
       </btn>
     </div>
     <text-separator class="mv3 ttu"></text-separator>

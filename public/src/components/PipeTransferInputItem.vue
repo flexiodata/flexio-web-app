@@ -6,8 +6,9 @@
       <div class="flex-fill"></div>
       <i class="material-icons silver">menu</i>
     </div>
-    <div class="pa2 f6 truncate bb b--light-gray" v-for="(item, index) in items">
-      {{item.path}}
+    <div class="flex flex-row items-center pa2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
+      <div class="flex-fill">{{item.path}}</div>
+      <div class="flex-none f4 pointer silver hover-black child">&times;</div>
     </div>
   </article>
 </template>

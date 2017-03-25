@@ -51,8 +51,7 @@
       <div class="h-100">
         <div class="f4 pa4 tc">3. Add Transformations</div>
         <div class="blankslate">
-          <div class="lh-copy mid-gray f6 mb3">Transformation steps can be added in the builder view.</div>
-          <div class="mt3">
+          <div class="mb3">
             <btn
               btn-md
               btn-primary
@@ -61,6 +60,7 @@
             >
               Take me to the builder
             </btn>
+            <div class="lh-copy mid-gray f6 mt3 i">Transformation steps can be added in the builder view.</div>
           </div>
         </div>
       </div>
