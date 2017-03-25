@@ -135,13 +135,17 @@ class Stream
 
     public static function upload($params, $request)
     {
+        var_dump($params);
+        die();
+
         if (($params = $request->getValidator()->check($params, array(
                 'eid'           => array('type' => 'identifier', 'required' => true),
                 'name'          => array('type' => 'string',  'required' => false),
                 'size'          => array('type' => 'integer', 'required' => false),
                 'mime_type'     => array('type' => 'string',  'required' => false),
                 'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
-                'file_modified' => array('type' => 'string',  'required' => false)  // TODO: date type?
+                'file_modified' => array('type' => 'string',  'required' => false), // TODO: date type?
+                'filename_hint' => array('type' => 'string',  'required' => false)
             ))) === false)
             return $request->getValidator()->fail();
 
@@ -237,7 +241,7 @@ class Stream
             if ($part_data_snippet === false)
                 $part_data_snippet = '';
 
-            $filename_hint = isset_or($params['filename_hint'], $filename);
+            $filename_hint = $params['filename_hint'] ?? $filename;
         }
          else
         {
@@ -261,12 +265,13 @@ class Stream
             if ($part_data_snippet === false)
                 $part_data_snippet = '';
 
-            $filename = isset_or($_GET['name'], \Flexio\Base\Util::generateHandle() . '.dat');
+            $filename = $_GET['name'] ?? \Flexio\Base\Util::generateHandle() . '.dat';
 
-            $filename_hint = isset_or($params['filename_hint'], $filename);
+            $filename_hint = $_GET['filename_hint'] ?? $filename;
         }
 
-        if (isset($params['filename_hint']))
+
+        if (isset($_GET['filename_hint']))
         {
             // a hint filename was passed -- use that to try to determine the content type
             $mime_type = \Flexio\Base\ContentType::getMimeType($filename_hint, $part_data_snippet);
