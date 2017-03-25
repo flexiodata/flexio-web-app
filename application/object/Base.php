@@ -183,8 +183,16 @@ class Base implements IObject
 
     public function setStatus($status)
     {
-        $this->clearCache();
-        $result = $this->getModel()->setStatus($this->getEid(), $status);
+        // TODO: for now, don't forward model exception
+        try
+        {
+            $this->clearCache();
+            $result = $this->getModel()->setStatus($this->getEid(), $status);
+        }
+        catch (\Exception $e)
+        {
+        }
+
         return $this;
     }
 

@@ -79,9 +79,18 @@ class Process extends \Flexio\Object\Base
         if (isset($properties) && isset($properties['task']))
             $properties['task'] = json_encode($properties['task']);
 
-        $this->clearCache();
-        $process_model = $this->getModel()->process;
-        $process_model->set($this->getEid(), $properties);
+
+        // TODO: for now, don't forward model exception
+        try
+        {
+            $this->clearCache();
+            $process_model = $this->getModel()->process;
+            $process_model->set($this->getEid(), $properties);
+        }
+        catch (\Exception $e)
+        {
+        }
+
         return $this;
     }
 

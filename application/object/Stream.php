@@ -89,9 +89,17 @@ class Stream extends \Flexio\Object\Base
         }
 
         // TODO: add properties check
-        $this->clearCache();
-        $stream_model = $this->getModel()->stream;
-        $stream_model->set($this->getEid(), $properties);
+
+        // TODO: for now, don't forward model exception
+        try
+        {
+            $this->clearCache();
+            $stream_model = $this->getModel()->stream;
+            $stream_model->set($this->getEid(), $properties);
+        }
+        catch (\Exception $e)
+        {
+        }
 
         return $this;
     }

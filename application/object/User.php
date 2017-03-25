@@ -132,14 +132,22 @@ class User extends \Flexio\Object\Base
 
     public function set($properties)
     {
-        // config is stored as a json string, so these need to be encoded
-        if (isset($properties) && isset($properties['config']))
-            $properties['config'] = json_encode($properties['config']);
+        // TODO: for now, don't forward model exception
+        try
+        {
+            // config is stored as a json string, so these need to be encoded
+            if (isset($properties) && isset($properties['config']))
+                $properties['config'] = json_encode($properties['config']);
 
-        // TODO: add properties check
-        $this->clearCache();
-        $user_model = $this->getModel()->user;
-        $user_model->set($this->getEid(), $properties);
+            // TODO: add properties check
+            $this->clearCache();
+            $user_model = $this->getModel()->user;
+            $user_model->set($this->getEid(), $properties);
+        }
+        catch (\Exception $e)
+        {
+        }
+
         return $this;
     }
 
