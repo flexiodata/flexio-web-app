@@ -1,6 +1,6 @@
 <template>
-  <div class="mh5 relative">
-    <div class="flex flex-row mv2">
+  <div class="relative center" style="max-width: 1400px">
+    <div class="flex flex-row mv2 pl3 pr4 pl0-l pr5-l">
       <div class="flex-none">
         <div
           class="cursor-default pa2 mr3 br1 white trans-wh tc relative swap-child"
@@ -55,8 +55,8 @@
                 ></command-bar2>
               </div>
               <pipe-content
-                class="mv2 relative"
-                style="height: 400px"
+                class="mv2 relative bg-white"
+                style="height: 300px"
                 :stream-eid="active_stream_eid"
                 :task-json="task"
                 v-if="active_stream_eid.length > 0"
@@ -67,8 +67,8 @@
       </div>
     </div>
 
-    <div class="flex flex-row">
-      <div class="pointer moon-gray hover-blue link tc hint--right" style="margin-left: 8px" :aria-label="insert_tooltip" @click="insertNewTask">
+    <div class="flex flex-row pl3 pr4 pl0-l pr5-l">
+      <div class="pointer moon-gray hover-blue link hint--right" style="margin-left: 8px" :aria-label="insert_tooltip" @click="insertNewTask">
         <i class="db material-icons f3">add_circle</i>
       </div>
     </div>

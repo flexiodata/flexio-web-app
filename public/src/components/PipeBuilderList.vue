@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-y-auto pt1">
+  <div class="overflow-y-auto">
     <pipe-transfer-input-blankslate
       class="blankslate mh5 mv3"
       v-if="!has_input">

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-row items-stretch relative">
+    <div class="flex flex-row items-stretch relative bg-white">
       <div class="flex-none flex flex-row items-stretch" v-if="show_plus_button">
         <a
           class="flex flex-row items-center fw6 f6 pv1 ph2 ba bw1 b--black-10 bg-black-10 black-60 br2 br--left pointer h-100 no-underline"
