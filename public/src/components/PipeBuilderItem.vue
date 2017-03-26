@@ -3,12 +3,13 @@
     <div class="flex flex-row mv2 pl3 pr4 pl0-l pr5-l">
       <div class="flex-none">
         <div
-          class="cursor-default pa2 mr3 br1 white trans-wh tc relative swap-child"
+          class="pointer pa2 mr3 br1 white trans-wh tc relative swap-child"
           style="margin-top: 2px"
           :class="[ bg_color ]"
+          @click="deleteTask"
         >
           <i class="db material-icons f3 child">{{task_icon}}</i>
-          <i class="db material-icons f3 other-child pointer hint--bottom-right" aria-label="Remove this step">close</i>
+          <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
       </div>
       <div class="flex-fill">
@@ -233,6 +234,11 @@
       },
       insertNewTask() {
         this.$emit('insert-task', this.index+1)
+      },
+      deleteTask() {
+        var eid = this.pipeEid
+        var task_eid = this.eid
+        this.$store.dispatch('deletePipeTask', { eid, task_eid })
       }
     }
   }
