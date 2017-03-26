@@ -481,8 +481,8 @@ class User
     {
         // TODO: convert over to using API functions?
 
-        $project_params['name'] = isset_or($name, _('Sample Project'));
-        $project_params['description'] = isset_or($description, _('Sample project to demonstrate functionality.'));
+        $project_params['name'] = $name ?? _('Sample Project');
+        $project_params['description'] = $description ?? _('Sample project to demonstrate functionality.');
 
         $project = \Flexio\Object\Project::create($project_params);
         if ($project === false)
@@ -527,7 +527,7 @@ class User
         $user_info = $user->get();
         $username = $user_info['user_name'];
 
-        $ename = isset_or($pipe_definition['ename'], '');
+        $ename = $pipe_definition['ename'] ?? '';
         $ename = $username . '-' . $ename;
 
         if (\Flexio\Base\Identifier::isValid($ename) === false)
@@ -558,9 +558,9 @@ class User
             }
         }
 
-        $call_params['name'] = isset_or($pipe_definition['name'], 'Sample Pipe');
+        $call_params['name'] = $pipe_definition['name'] ?? 'Sample Pipe';
         $call_params['ename'] = $ename;
-        $call_params['description'] = isset_or($pipe_definition['description'], '');
+        $call_params['description'] = $pipe_definition['description'] ?? '';
         $call_params['task'] = array();
         if (isset($pipe_definition['task']))
             $call_params['task'] = $pipe_definition['task'];

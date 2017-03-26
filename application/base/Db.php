@@ -71,11 +71,11 @@ class Db extends DbBase
         $modeldb = new Db;
 
         $modeldb->connection_type = $type;
-        $modeldb->db_host = isset_or($params['host'], '');
-        $modeldb->db_port = isset_or($params['port'], '');
-        $modeldb->db_dbname = isset_or($params['dbname'], '');
-        $modeldb->db_username = isset_or($params['username'], '');
-        $modeldb->db_password = isset_or($params['password'], '');
+        $modeldb->db_host = $params['host'] ?? '';
+        $modeldb->db_port = $params['port'] ?? '';
+        $modeldb->db_dbname = $params['dbname'] ?? '';
+        $modeldb->db_username = $params['username'] ?? '';
+        $modeldb->db_password = $params['password'] ?? '';
 
         return $modeldb;
     }

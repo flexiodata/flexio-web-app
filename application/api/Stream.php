@@ -178,7 +178,7 @@ class Stream
             return false;
 
         // get the information the parser needs to parse the content
-        $post_content_type = isset_or($_SERVER['CONTENT_TYPE'], '');
+        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
 
 
         if (strpos($post_content_type, 'multipart/form-data') !== false)
@@ -245,7 +245,7 @@ class Stream
         }
          else
         {
-            $declared_mime_type = isset_or($_SERVER["CONTENT_TYPE"], '');
+            $declared_mime_type = $_SERVER["CONTENT_TYPE"] ?? '';
 
             $php_stream_handle = fopen('php://input', 'rb');
             $part_data_snippet = false;

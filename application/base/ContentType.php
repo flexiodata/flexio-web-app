@@ -189,8 +189,8 @@ class ContentType
 
         // TODO: set values here
         $parts = explode(';', $result);
-        $local_mime_type = isset_or($parts[0],'');
-        $local_content_type = isset_or($parts[1],'');
+        $local_mime_type = $parts[0] ?? '';
+        $local_content_type = $parts[1] ?? '';
 
         $mime_type = trim($local_mime_type);
         $content_type = trim($local_content_type);

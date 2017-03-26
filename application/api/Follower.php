@@ -31,7 +31,7 @@ class Follower
 
         $object_identifier = $params['eid'];
         $users = $params['users'];
-        $message = isset_or($params['message'], '');
+        $message = $params['message'] ?? '';
         $requesting_user_eid = $request->getRequestingUser();
 
         // make sure the users values are all strings

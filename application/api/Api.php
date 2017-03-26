@@ -64,7 +64,7 @@ class Api
 
         // set the api version; make sure we have a valid api endpoint;
         // convert api version over to a number
-        $apiversion_param = isset_or($params['apiversion'], '');
+        $apiversion_param = $params['apiversion'] ?? '';
         unset($params['apiversion']);
 
         $apiversion = 0;
@@ -219,12 +219,12 @@ class Api
     {
         // get the api params from the url params
         $api_params = array();
-        $api_params['apiparam1'] = isset_or($url_params['apiparam1'], '');
-        $api_params['apiparam2'] = isset_or($url_params['apiparam2'], '');
-        $api_params['apiparam3'] = isset_or($url_params['apiparam3'], '');
-        $api_params['apiparam4'] = isset_or($url_params['apiparam4'], '');
-        $api_params['apiparam5'] = isset_or($url_params['apiparam5'], '');
-        $api_params['apiparam6'] = isset_or($url_params['apiparam6'], '');
+        $api_params['apiparam1'] = $url_params['apiparam1'] ?? '';
+        $api_params['apiparam2'] = $url_params['apiparam2'] ?? '';
+        $api_params['apiparam3'] = $url_params['apiparam3'] ?? '';
+        $api_params['apiparam4'] = $url_params['apiparam4'] ?? '';
+        $api_params['apiparam5'] = $url_params['apiparam5'] ?? '';
+        $api_params['apiparam6'] = $url_params['apiparam6'] ?? '';
         return $api_params;
     }
 

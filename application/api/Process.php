@@ -32,7 +32,7 @@ class Process
             return false;
 
         // run the specified job in blocking mode
-        $params['background'] = isset_or($params['background'], false);
+        $params['background'] = $params['background'] ?? false;
         $process = self::create_internal($params, $request);
         if ($process === false)
             return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
@@ -521,10 +521,10 @@ class Process
     {
         // return the stream info the user requests
         $flags = array();
-        $flags['content-limit'] = isset_or($params['content-limit'], false);
-        $flags['fields'] = isset_or($params['fields'], false);
-        $flags['streams'] = isset_or($params['streams'], false);
-        $mime_type = isset_or($params['format'], false);
+        $flags['content-limit'] = $params['content-limit'] ?? false;
+        $flags['fields'] = $params['fields'] ?? false;
+        $flags['streams'] = $params['streams'] ?? false;
+        $mime_type = $params['format'] ?? false;
 
         // determine the output format
         switch ($mime_type)

@@ -163,7 +163,7 @@ class Project
             return $request->getValidator()->fail();
 
         $project_identifier = $params['eid'];
-        $filter_list = isset_or($params['pipe_eid'], false);
+        $filter_list = $params['pipe_eid'] ?? false;
         $requesting_user_eid = $request->getRequestingUser();
 
         // load the project
@@ -188,7 +188,7 @@ class Project
             return $request->getValidator()->fail();
 
         $project_identifier = $params['eid'];
-        $filter_list = isset_or($params['connection_eid'], false);
+        $filter_list = $params['connection_eid'] ?? false;
         $requesting_user_eid = $request->getRequestingUser();
 
         // load the project

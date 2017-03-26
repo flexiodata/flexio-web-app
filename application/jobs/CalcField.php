@@ -45,10 +45,10 @@ class CalcField extends \Flexio\Jobs\Base
         // get the job properties
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'];
-        $type = isset_or($job_definition['params']['type'],'character');
-        $width = isset_or($job_definition['params']['width'],null);
-        $scale = isset_or($job_definition['params']['decimals'],null);
-        $expression = isset_or($job_definition['params']['expression'],null);
+        $type = $job_definition['params']['type'] ?? 'character';
+        $width = $job_definition['params']['width'] ?? null;
+        $scale = $job_definition['params']['decimals'] ?? null;
+        $expression = $job_definition['params']['expression'] ?? null;
 
         if (isset($width) && !is_integer($width))
             $width = (int)$width;

@@ -413,7 +413,7 @@ class Util
         $result = array();
         foreach ($arr1 as $key => $value)
         {
-            $result[$key] = isset_or($arr2[$key], $value);
+            $result[$key] = $arr2[$key] ?? $value;
         }
 
         return $result;
@@ -996,7 +996,7 @@ class Util
     {
         switch ($code) {
             default:
-            case 400: isset_or($text, 'Bad Request'); break;
+            case 400: $text = $text ?? 'Bad Request'; break;
         }
 
         $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');

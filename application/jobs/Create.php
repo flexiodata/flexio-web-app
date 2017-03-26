@@ -31,7 +31,7 @@ class Create extends \Flexio\Jobs\Base
             return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // get the content type
-        $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $mime_type = $job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
         switch ($mime_type)
         {
             default:
@@ -52,8 +52,8 @@ class Create extends \Flexio\Jobs\Base
     private function createStreamOutput()
     {
         $job_definition = $this->getProperties();
-        $name = isset_or($job_definition['params']['name'], 'New File');
-        $mime_type = $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $name = $job_definition['params']['name'] ?? _('New File');
+        $mime_type = ($job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM);
 
         // get the content and decode it
         $content = '';
@@ -87,9 +87,9 @@ class Create extends \Flexio\Jobs\Base
     private function createTableOutput()
     {
         $job_definition = $this->getProperties();
-        $name = isset_or($job_definition['params']['name'], 'New Table');
-        $mime_type = isset_or($job_definition['params']['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
-        $structure = isset_or($job_definition['params']['columns'], '[]');
+        $name = $job_definition['params']['name'] ?? _('New Table');
+        $mime_type = $job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $structure = $job_definition['params']['columns'] ?? '[]';
         $outstream_properties = array(
             'name' => $name,
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,

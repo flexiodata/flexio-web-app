@@ -198,7 +198,7 @@ echo "<pre>";
             return;
 
         // pass any encode parameter to the output
-        $encode = isset_or($_GET['encode'], 'false');
+        $encode = $_GET['encode'] ?? 'false';
         $encode = (string)$encode;
         $this->renderRaw();
 
@@ -265,7 +265,7 @@ EOD;
         if (!IS_TESTING())
             return;
 
-        $encode = isset_or($_GET['encode'], false);
+        $encode = $_GET['encode'] ?? false;
         $encode = toboolean($encode);
         $this->renderRaw();
 

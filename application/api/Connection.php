@@ -213,7 +213,7 @@ class Connection
         if (!$service->isOk())
             return $request->getValidator()->fail(\Flexio\Base\Error::NO_SERVICE);
 
-        $path = isset_or($params['q'], '');
+        $path = $params['q'] ?? '';
         $result = $service->listObjects($path);
 
         if (!is_array($result))

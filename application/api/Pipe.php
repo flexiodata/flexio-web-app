@@ -334,7 +334,7 @@ class Pipe
 
         // STEP 2: parse the content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');
-        $post_content_type = isset_or($_SERVER['CONTENT_TYPE'], '');
+        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
 
         $stream = false;
         $streamwriter = false;
@@ -479,7 +479,7 @@ class Pipe
             return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // add the task
-        $index = isset_or($params['index'], null);
+        $index = $params['index'] ?? null;
         if (isset($index))
             $index = (int)$index;
 

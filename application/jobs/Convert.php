@@ -241,7 +241,7 @@ class Convert extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $streamwriter = null;
 
-        $delimiter = isset_or($job_definition['params']['input']['delimiter'], self::DELIMITER_COMMA);
+        $delimiter = $job_definition['params']['input']['delimiter'] ?? self::DELIMITER_COMMA;
         $is_output_json = ($output_mime_type == \Flexio\Base\ContentType::MIME_TYPE_JSON ? true : false);
 
         if (isset($job_definition['params']['input']['header']))
@@ -529,10 +529,10 @@ class Convert extends \Flexio\Jobs\Base
         // parameters
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
-        $start_offset = isset_or($params['start_offset'], 0);
-        $row_width = isset_or($params['row_width'], 100);
-        $line_delimiter = isset_or($params['line_delimiter'], false);
-        $columns = isset_or($params['columns'], []);
+        $start_offset = $params['start_offset'] ?? 0;
+        $row_width = $params['row_width'] ?? 100;
+        $line_delimiter = $params['line_delimiter'] ?? false;
+        $columns = $params['columns'] ?? [];
 
         if ($row_width == 0)
             return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
@@ -573,10 +573,10 @@ class Convert extends \Flexio\Jobs\Base
                     $c['type'] = 'character';
                 case 'widecharacter':
                 case 'character':
-                    $c['width'] = isset_or($col['width'], null);
+                    $c['width'] = $col['width'] ?? null;
                 case 'numeric':
-                    $c['numeric'] = isset_or($col['width'], null);
-                    $c['scale'] = isset_or($col['scale'], null);
+                    $c['numeric'] = $col['width'] ?? null;
+                    $c['scale'] = $col['scale'] ?? null;
                 case 'date':
                     break;
                 case 'datetime':
@@ -623,7 +623,7 @@ class Convert extends \Flexio\Jobs\Base
                     $value = trim(substr($buf, $buf_offset + $col['source_offset'], $col['source_width']));
 
                     // handle ebcdic encoding
-                    if (isset_or($col['source_encoding'],'') == 'ebcdic')
+                    if (($col['source_encoding'] ?? '') == 'ebcdic')
                     {
                         $ebcdicvalue = $value;
                         $len = strlen($ebcdicvalue);
@@ -900,14 +900,14 @@ class Convert extends \Flexio\Jobs\Base
             $width = 80;
             $scale = 0;
 
-            switch (isset_or($parts[0],''))
+            switch ($parts[0] ?? '')
             {
                 default:
-                case 'C':   $type = 'character'; $width = isset_or($parts[1],80); break;
-                case 'N':   $type = 'numeric';   $width = isset_or($parts[1],12); $scale = isset_or($parts[2],0); break;
-                case 'D':   $type = 'date';      $width = isset_or($parts[1],8);  break;
-                case 'T':   $type = 'datetime';  $width = isset_or($parts[1],16); break;
-                case 'B':   $type = 'boolean';   $width = isset_or($parts[1],1);  break;
+                case 'C':   $type = 'character'; $width = $parts[1] ?? 80; break;
+                case 'N':   $type = 'numeric';   $width = $parts[1] ?? 12; $scale = $parts[2] ?? 0; break;
+                case 'D':   $type = 'date';      $width = $parts[1] ??  8; break;
+                case 'T':   $type = 'datetime';  $width = $parts[1] ?? 16; break;
+                case 'B':   $type = 'boolean';   $width = $parts[1] ??  1; break;
             }
 
 
