@@ -14,7 +14,7 @@
 
 class User extends ModelBase
 {
-    public function create($params)
+    public function create($params) : string
     {
         if (!isset($params['user_name']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
@@ -90,7 +90,7 @@ class User extends ModelBase
         }
     }
 
-    public function delete($eid)
+    public function delete($eid) : bool
     {
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -108,7 +108,7 @@ class User extends ModelBase
         }
     }
 
-    public function set($eid, $params)
+    public function set($eid, $params) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -183,7 +183,7 @@ class User extends ModelBase
         }
     }
 
-    public function get($eid)
+    public function get($eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -258,7 +258,7 @@ class User extends ModelBase
                      'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function getUsernameFromEid($eid)
+    public function getUsernameFromEid($eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -271,7 +271,7 @@ class User extends ModelBase
         return $user_name;
     }
 
-    public function getEmailFromEid($eid)
+    public function getEmailFromEid($eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -284,7 +284,7 @@ class User extends ModelBase
         return $email;
     }
 
-    public function getEidFromIdentifier($identifier)
+    public function getEidFromIdentifier($identifier) // TODO: add return type
     {
         // gets the eid from either the user_name or the email
 
@@ -303,7 +303,7 @@ class User extends ModelBase
         return $eid;
     }
 
-    public function getEidFromUsername($identifier)
+    public function getEidFromUsername($identifier) // TODO: add return type
     {
         // make sure we have a string
         if (!is_string($identifier) || strlen($identifier) <= 0)
@@ -319,7 +319,7 @@ class User extends ModelBase
         return $eid;
     }
 
-    public function getEidFromEmail($identifier)
+    public function getEidFromEmail($identifier) // TODO: add return type
     {
         // make sure we have a string
         if (!is_string($identifier) || strlen($identifier) <= 0)
@@ -335,7 +335,7 @@ class User extends ModelBase
         return $eid;
     }
 
-    public function checkUserPassword($identifier, $password)
+    public function checkUserPassword($identifier, $password) : bool
     {
         // identifiers can be a username or an email, so only perform the
         // most basic string check
@@ -355,7 +355,7 @@ class User extends ModelBase
         return \Model::checkPasswordHash($hashpw, $password);
     }
 
-    public function checkUserPasswordByEid($eid, $password)
+    public function checkUserPasswordByEid($eid, $password) : bool
     {
         $db = $this->getDatabase();
         $user_info = $db->fetchRow("select password from tbl_user where eid = ?", $eid);

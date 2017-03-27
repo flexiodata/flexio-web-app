@@ -23,7 +23,7 @@ class Registry extends ModelBase
      *
      * @return {string}; The value of the variable
      */
-    public function getString($object_eid, $name, $default_value = null)
+    public function getString($object_eid, $name, $default_value = null) // TODO: add return type
     {
         $res = $this->getVariable($object_eid, $name);
         if (is_null($res))
@@ -32,7 +32,7 @@ class Registry extends ModelBase
             return $res;
     }
 
-    public function getNumber($object_eid, $name, $default_value = null)
+    public function getNumber($object_eid, $name, $default_value = null) // TODO: add return type
     {
         $res = $this->getVariable($object_eid, $name);
         if (is_null($res))
@@ -40,7 +40,7 @@ class Registry extends ModelBase
         return 0 + $res;
     }
 
-    public function getBoolean($object_eid, $name, $default_value = null)
+    public function getBoolean($object_eid, $name, $default_value = null) // TODO: add return type
     {
         $res = $this->getVariable($object_eid, $name);
         if (is_null($res))
@@ -55,7 +55,7 @@ class Registry extends ModelBase
             return false;
     }
 
-    public function getBinary($object_eid, $name, &$mime_type)
+    public function getBinary($object_eid, $name, &$mime_type) // TODO: add return type
     {
         try
         {
@@ -84,7 +84,7 @@ class Registry extends ModelBase
         return null;
     }
 
-    public function getUpdateTime($object_eid, $name)
+    public function getUpdateTime($object_eid, $name) // TODO: add return type
     {
         try
         {
@@ -107,22 +107,22 @@ class Registry extends ModelBase
         return null;
     }
 
-    public function setString($object_eid, $name, $value, $expire = null)
+    public function setString($object_eid, $name, $value, $expire = null) : bool
     {
         return $this->setVariable($object_eid, $name, $value, 'STRING', $expire, '');
     }
 
-    public function setNumber($object_eid, $name, $value, $expire = null)
+    public function setNumber($object_eid, $name, $value, $expire = null) : bool
     {
         return $this->setVariable($object_eid, $name, $value, 'NUMBER', $expire, '');
     }
 
-    public function setBoolean($object_eid, $name, $value, $expire = null)
+    public function setBoolean($object_eid, $name, $value, $expire = null) : bool
     {
         return $this->setVariable($object_eid, $name, $value, 'BOOLEAN', $expire, '');
     }
 
-    public function setBinary($object_eid, $name, $value, $expire = null, $mime_type = '')
+    public function setBinary($object_eid, $name, $value, $expire = null, $mime_type = '') : bool
     {
         return $this->setVariable($object_eid, $name, $value, 'BINARY', $expire, $mime_type);
     }
@@ -136,7 +136,7 @@ class Registry extends ModelBase
      * @return {boolean}; True if the registry entry with the given
      *                     name exists, and false otherwise
      */
-    public function entryExists($object_eid, $name)
+    public function entryExists($object_eid, $name) : bool
     {
         if (!self::checkInput($object_eid, $name))
             return false;
@@ -146,7 +146,7 @@ class Registry extends ModelBase
         return ($result === false) ? false : true;
     }
 
-    public function deleteEntryByName($object_eid, $name)
+    public function deleteEntryByName($object_eid, $name) : bool
     {
         if (!self::checkInput($object_eid, $name))
             return false;
@@ -156,7 +156,7 @@ class Registry extends ModelBase
         return ($result !== false && $result > 0) ? true : false;
     }
 
-    public function expireKey($object_eid, $name, $seconds_from_now = 0)
+    public function expireKey($object_eid, $name, $seconds_from_now = 0) : bool
     {
         if (!self::checkInput($object_eid, $name))
             return false;
@@ -174,7 +174,7 @@ class Registry extends ModelBase
         return true;
     }
 
-    public function cleanupExpiredEntries()
+    public function cleanupExpiredEntries() : bool
     {
         $db = $this->getDatabase();
         $db->exec('delete from tbl_registry where expires < now()');
@@ -191,7 +191,7 @@ class Registry extends ModelBase
      *
      * @return {void}
      */
-    public function setVariable($object_eid, $name, $value, $type = 'STRING', $expires = null, $mime_type = '', $db = null)
+    public function setVariable($object_eid, $name, $value, $type = 'STRING', $expires = null, $mime_type = '', $db = null) : bool
     {
         if (!self::checkInput($object_eid, $name))
             return false;
@@ -292,7 +292,7 @@ class Registry extends ModelBase
      *
      * @return {string}; The value of the variable
      */
-    public function getVariable($object_eid, $name, $db = null, $for_update = false)
+    public function getVariable($object_eid, $name, $db = null, $for_update = false) // TODO: add return type
     {
         if (!self::checkInput($object_eid, $name))
             return null;
@@ -327,7 +327,7 @@ class Registry extends ModelBase
         }
     }
 
-    private static function checkInput($object_eid, $name)
+    private static function checkInput($object_eid, $name) : bool
     {
         // registry names should always be non-empty strings;
         // registry objects may be specified; if they are, they should
@@ -345,7 +345,7 @@ class Registry extends ModelBase
         return true;
     }
 
-    private static function checkExpiresValue($expires)
+    private static function checkExpiresValue($expires) : bool
     {
         // expiration value should be a non-negative integer
         if (!is_int($expires))

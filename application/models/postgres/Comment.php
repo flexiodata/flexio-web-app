@@ -14,7 +14,7 @@
 
 class Comment extends ModelBase
 {
-    public function create($params)
+    public function create($params) : string
     {
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -44,7 +44,7 @@ class Comment extends ModelBase
         }
     }
 
-    public function delete($eid)
+    public function delete($eid) : bool
     {
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -62,7 +62,7 @@ class Comment extends ModelBase
         }
     }
 
-    public function set($eid, $params)
+    public function set($eid, $params) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -98,7 +98,7 @@ class Comment extends ModelBase
         }
     }
 
-    public function get($eid)
+    public function get($eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist

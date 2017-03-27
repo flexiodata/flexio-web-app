@@ -14,31 +14,31 @@
 
 class Tempdata extends ModelBase
 {
-    public function entryExists($name)
+    public function entryExists($name) : bool
     {
         $registry_model = $this->getModel()->registry;
         return $registry_model->entryExists('', "tempdata.$name");
     }
 
-    public function cleanupExpiredEntries()
+    public function cleanupExpiredEntries() : bool
     {
         $registry_model = $this->getModel()->registry;
         return $registry_model->cleanupExpiredEntries();
     }
 
-    public function setValue($name, $value, $expires = 86400)
+    public function setValue($name, $value, $expires = 86400) : bool
     {
         $registry_model = $this->getModel()->registry;
         return $registry_model->setString('', "tempdata.$name", $value, $expires);
     }
 
-    public function getValue($name)
+    public function getValue($name) // TODO: add return type
     {
         $registry_model = $this->getModel()->registry;
         return $registry_model->getString('', "tempdata.$name");
     }
 
-    public function getArray($name)
+    public function getArray($name) // TODO: add return type
     {
         $registry_model = $this->getModel()->registry;
 
@@ -53,7 +53,7 @@ class Tempdata extends ModelBase
         return @json_decode($values, true);
     }
 
-    public function updateArray($name, $changes, $expires = 86400)
+    public function updateArray($name, $changes, $expires = 86400) : bool
     {
         $registry_model = $this->getModel()->registry;
 

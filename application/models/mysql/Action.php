@@ -14,7 +14,7 @@
 
 class Action extends ModelBase
 {
-    public function record($params)
+    public function record($params) : bool
     {
         // TODO: this function is for recording actions; if it fails, no
         // need to fail the whole action; simply return false

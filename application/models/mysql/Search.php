@@ -21,7 +21,7 @@ class SearchTerm
 
 class Search extends ModelBase
 {
-    public function exec($search_path)
+    public function exec($search_path) // TODO: add return type
     {
         // parse the search path; if the path doesn't parse correctly,
         // return false
@@ -57,7 +57,7 @@ class Search extends ModelBase
         return $results;
     }
 
-    public function recursive_search($search_path)
+    public function recursive_search($search_path) // TODO: add return type
     {
         // use the output of one search as the input for the next search;
         // return a list of all objects that are found in the order in
@@ -88,7 +88,7 @@ class Search extends ModelBase
         return $results;
     }
 
-    private function evaluate($input_eids, $search_term, $is_last_term)
+    private function evaluate($input_eids, $search_term, $is_last_term) // TODO: add return type
     {
         // takes the list of input eids and finds the corresponding
         // output eids based on the search terms
@@ -161,7 +161,7 @@ class Search extends ModelBase
         return $result_eids;
     }
 
-    private static function parse($search_path, &$search_terms)
+    private static function parse($search_path, &$search_terms) // TODO: add return type
     {
         // the search path must be a string
         if (!is_string($search_path))
@@ -211,7 +211,7 @@ class Search extends ModelBase
         return true;
     }
 
-    private static function parse_nodepart($part, &$search_term)
+    private static function parse_nodepart($part, &$search_term) // TODO: add return type
     {
         // trim away leading/trailing whitespace and parenthesis
         $part = self::trim_spaces($part);
@@ -257,7 +257,7 @@ class Search extends ModelBase
         return true;
     }
 
-    private static function parse_edgepart($part, &$search_term)
+    private static function parse_edgepart($part, &$search_term) // TODO: add return type
     {
         // trim away leading/trailing whitespace and parenthesis
         $part = self::trim_spaces($part);
@@ -288,7 +288,7 @@ class Search extends ModelBase
         return true;
     }
 
-    private static function filterInputEidsByListedEids($search_term, &$input_eids)
+    private static function filterInputEidsByListedEids($search_term, &$input_eids) // TODO: add return type
     {
         // if no eids have been specified, let everything through
         if ($search_term->node_eids === false)
@@ -306,7 +306,7 @@ class Search extends ModelBase
         $input_eids = $filtered_input_eids;
     }
 
-    private static function filterInputEidsByListedEidType($search_term, &$input_eids)
+    private static function filterInputEidsByListedEidType($search_term, &$input_eids) // TODO: add return type
     {
         // if no eid types have been specified, let everything through
         if ($search_term->node_types === false)
@@ -325,12 +325,12 @@ class Search extends ModelBase
         $input_eids = $filtered_input_eids;
     }
 
-    private static function trim_spaces($str)
+    private static function trim_spaces($str) // TODO: add return type
     {
         return trim($str, " \t\n\r\0\x0B");
     }
 
-    private static function trim_groupchars($str)
+    private static function trim_groupchars($str) // TODO: add return type
     {
         return trim($str, "()");
     }
