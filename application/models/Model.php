@@ -691,6 +691,7 @@ class Model
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             // make sure that the ename is unique
+            $db = $this->getDatabase();
             $qename = $db->quote($ename);
             $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
             if ($existing_ename !== false)
