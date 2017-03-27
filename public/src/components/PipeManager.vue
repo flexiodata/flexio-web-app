@@ -28,23 +28,23 @@
     ></pipe-list>
 
     <!-- add modal -->
-    <pipe-props-modal
+    <pipe-props-modal2
       ref="modal-add-pipe"
       :project-eid="projectEid"
       @add-connection="openConnectionAddModal"
       @submit="tryCreatePipe"
       @hide="show_pipe_add_modal = false"
       v-if="show_pipe_add_modal"
-    ></pipe-props-modal>
+    ></pipe-props-modal2>
 
     <!-- edit modal -->
-    <pipe-props-modal
+    <pipe-props-modal2
       ref="modal-edit-pipe"
       :project-eid="projectEid"
       @submit="tryUpdatePipe"
       @hide="show_pipe_edit_modal = false"
       v-if="show_pipe_edit_modal"
-    ></pipe-props-modal>
+    ></pipe-props-modal2>
 
     <!-- share modal -->
     <pipe-share-modal
@@ -77,7 +77,7 @@
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import Spinner from './Spinner.vue'
   import PipeList from './PipeList.vue'
-  import PipePropsModal from './PipePropsModal.vue'
+  import PipePropsModal2 from './PipePropsModal2.vue'
   import PipeShareModal from './PipeShareModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
@@ -88,7 +88,7 @@
     components: {
       Spinner,
       PipeList,
-      PipePropsModal,
+      PipePropsModal2,
       PipeShareModal,
       PipeScheduleModal,
       ConnectionPropsModal,

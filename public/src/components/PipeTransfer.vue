@@ -2,7 +2,7 @@
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
     <div class="flex-fill flex flex-column mr4-l">
       <div class="dib f4 pa4 tc" v-if="has_input">
-        <span class="v-mid">Inputs</span>
+        <span class="v-mid">Input</span>
         <div
           class="v-mid cursor-default moon-gray hover-blue link hint--bottom"
           aria-label="Add another connection"
@@ -38,7 +38,7 @@
 
     <div class="flex-fill flex flex-column mr4-l">
       <div class="dib f4 pa4 tc" v-if="has_output">
-        <span class="v-mid">Outputs</span>
+        <span class="v-mid">Output</span>
         <div
           class="v-mid cursor-default moon-gray hover-blue link hint--bottom"
           aria-label="Add another connection"

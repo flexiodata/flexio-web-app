@@ -29,24 +29,6 @@
       :project-connections="project_connections"
       v-else>
     </pipe-builder-list>
-
-    <!-- choose input modal -->
-    <pipe-props-modal
-      ref="modal-choose-input"
-      :project-eid="project_eid"
-      @add-connection="openAddConnectionModal"
-      @submit="addInput"
-      @hide="show_choose_input_modal = false"
-      v-if="show_choose_input_modal"
-    ></pipe-props-modal>
-
-    <!-- add connection modal -->
-    <connection-props-modal
-      ref="modal-add-connection"
-      :project-eid="project_eid"
-      @hide="show_add_connection_modal = false"
-      v-if="show_add_connection_modal"
-    ></connection-props-modal>
   </div>
 </template>
 
@@ -61,8 +43,6 @@
   import PipeHomeHeader from './PipeHomeHeader.vue'
   import PipeTransfer from './PipeTransfer.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
-  import PipePropsModal from './PipePropsModal.vue'
-  import ConnectionPropsModal from './ConnectionPropsModal.vue'
 
   export default {
     mixins: [setActiveProject],
@@ -71,9 +51,7 @@
       Spinner,
       PipeHomeHeader,
       PipeTransfer,
-      PipeBuilderList,
-      PipePropsModal,
-      ConnectionPropsModal
+      PipeBuilderList
     },
     data() {
       return {
