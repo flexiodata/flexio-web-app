@@ -25,9 +25,9 @@ class Token extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
-                'user_eid'      => isset_or($params['user_eid'], ''),
-                'access_code'   => isset_or($params['access_code'], ''),
-                'secret_code'   => isset_or($params['secret_code'], ''),
+                'user_eid'      => $params['user_eid'] ?? '',
+                'access_code'   => $params['access_code'] ?? '',
+                'secret_code'   => $params['secret_code'] ?? '',
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );

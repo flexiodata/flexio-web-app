@@ -25,14 +25,14 @@ class Pipe extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'             => $eid,
-                'name'            => isset_or($params['name'], ''),
-                'description'     => isset_or($params['description'], ''),
-                'display_icon'    => isset_or($params['display_icon'], ''),
-                'input'           => isset_or($params['input'], '[]'),
-                'output'          => isset_or($params['output'], '[]'),
-                'task'            => isset_or($params['task'], '[]'),
-                'schedule'        => isset_or($params['schedule'], ''),
-                'schedule_status' => isset_or($params['schedule_status'], \Model::PIPE_STATUS_INACTIVE),
+                'name'            => $params['name'] ?? '',
+                'description'     => $params['description'] ?? '',
+                'display_icon'    => $params['display_icon'] ?? '',
+                'input'           => $params['input'] ?? '[]',
+                'output'          => $params['output'] ?? '[]',
+                'task'            => $params['task'] ?? '[]',
+                'schedule'        => $params['schedule'] ?? '',
+                'schedule_status' => $params['schedule_status'] ?? \Model::PIPE_STATUS_INACTIVE,
                 'created'         => $timestamp,
                 'updated'         => $timestamp
             );

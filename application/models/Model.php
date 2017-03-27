@@ -682,7 +682,7 @@ class Model
         // for an name to be created that could be masked in the lookup by an eid;
         // rather than check in the database for matches between the two values,
         // simply don't let names be eids
-        $ename = isset_or($params['ename'], '');
+        $ename = $params['ename'] ?? '';
         if (strlen($ename) > 0)
         {
             if (\Flexio\Base\Identifier::isValid($ename) === false)

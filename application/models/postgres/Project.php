@@ -25,9 +25,9 @@ class Project extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
-                'name'           => isset_or($params['name'], ''),
-                'description'    => isset_or($params['description'], ''),
-                'display_icon'   => isset_or($params['display_icon'], ''),
+                'name'           => $params['name'] ?? '',
+                'description'    => $params['description'] ?? '',
+                'display_icon'   => $params['display_icon'] ?? '',
                 'created'        => $timestamp,
                 'updated'        => $timestamp
             );

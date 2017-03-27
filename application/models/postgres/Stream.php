@@ -35,17 +35,17 @@ class Stream extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'                  => $eid,
-                'name'                 => isset_or($params['name'], ''),
-                'path'                 => isset_or($params['path'], ''),
+                'name'                 => $params['name'] ?? '',
+                'path'                 => $params['path'] ?? '',
                 'size'                 => $size,
-                'hash'                 => isset_or($params['hash'], ''),
-                'mime_type'            => isset_or($params['mime_type'], ''),
-                'structure'            => isset_or($params['structure'], '[]'),
-                'file_created'         => isset_or($params['file_created'], null),
-                'file_modified'        => isset_or($params['file_modified'], null),
-                'connection_eid'       => isset_or($params['connection_eid'], ''),
-                'cache_path'           => isset_or($params['cache_path'], ''),
-                'cache_connection_eid' => isset_or($params['cache_connection_eid'], ''),
+                'hash'                 => $params['hash'] ?? '',
+                'mime_type'            => $params['mime_type'] ?? '',
+                'structure'            => $params['structure'] ?? '[]',
+                'file_created'         => $params['file_created'] ?? null,
+                'file_modified'        => $params['file_modified'] ?? null,
+                'connection_eid'       => $params['connection_eid'] ?? '',
+                'cache_path'           => $params['cache_path'] ?? '',
+                'cache_connection_eid' => $params['cache_connection_eid'] ?? '',
                 'created'              => $timestamp,
                 'updated'              => $timestamp
             );

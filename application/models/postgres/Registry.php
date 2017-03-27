@@ -63,7 +63,7 @@ class Registry extends ModelBase
             if (!$db)
                 return false;
 
-            $qobject_eid = $db->quote(isset_or($object_eid,''));
+            $qobject_eid = $db->quote(($object_eid ?? ''));
             $qname = $db->quote($name);
             $sql = "select value, mime_type from tbl_registry where object_eid = $qobject_eid and name = $qname";
             $result = $db->fetchRow($sql);
@@ -92,7 +92,7 @@ class Registry extends ModelBase
             if (!$db)
                 return false;
 
-            $qobject_eid = $db->quote(isset_or($object_eid,''));
+            $qobject_eid = $db->quote(($object_eid ?? ''));
             $qname = $db->quote($name);
             $sql = "select updated from tbl_registry where object_eid = $qobject_eid and name = $qname";
             $result = $db->fetchRow($sql);
@@ -302,7 +302,7 @@ class Registry extends ModelBase
             if (!isset($db))
                 $db = $this->getDatabase();
 
-            $qobject_eid = $db->quote(isset_or($object_eid,''));
+            $qobject_eid = $db->quote(($object_eid ?? ''));
             $qname = $db->quote($name);
 
             $sql = "select value, value_type from tbl_registry where object_eid = $qobject_eid and name = $qname";

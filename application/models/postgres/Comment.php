@@ -25,7 +25,7 @@ class Comment extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
-                'comment'       => isset_or($params['comment'], ''),
+                'comment'       => $params['comment'] ?? '',
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );
