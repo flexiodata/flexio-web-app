@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-l flex-row-l items-stretch">
+  <div class="flex-l flex-row-l items-stretch overflow-y-auto">
     <div class="flex-fill flex flex-column mr4-l">
       <div class="dib f4 pa4 tc" v-if="has_input">
         <span class="v-mid">Inputs</span>
@@ -7,7 +7,7 @@
           class="v-mid cursor-default moon-gray hover-blue link hint--bottom"
           aria-label="Add another connection"
           @click="$emit('choose-input-connection')"
-          v-if="allow_multiple"
+          v-if="allow_multiple_inputs"
         >
           <i class="db material-icons f3">add_circle</i>
         </div>
@@ -35,31 +35,55 @@
       ></pipe-transfer-input-chooser>
     </div>
 
+
     <div class="flex-fill flex flex-column mr4-l">
-      <div class="f4 pa4 tc" v-if="has_output">Outputs</div>
-      <div class="f4 pa4 tc" v-else>2. Choose Output</div>
-      <div v-if="has_output">Output configuration goes here...</div>
-      <pipe-transfer-output-blankslate class="blankslate" v-else></pipe-transfer-output-blankslate>
+      <div class="dib f4 pa4 tc" v-if="has_output">
+        <span class="v-mid">Outputs</span>
+        <div
+          class="v-mid cursor-default moon-gray hover-blue link hint--bottom"
+          aria-label="Add another connection"
+          @click="$emit('choose-output-connection')"
+          v-if="allow_multiple_outputs"
+        >
+          <i class="db material-icons f3">add_circle</i>
+        </div>
+      </div>
+      <div class="f4 pa4 tc" v-else>
+        <div class="dib v-mid">1. Choose Output</div>
+        <btn
+          btn-sm
+          btn-outline
+          class="ttu b light-silver b--black-20 hover-black dib v-mid ml2"
+          @click="show_output_chooser = false"
+          v-if="show_output_chooser"
+        >Cancel</btn>
+      </div>
+      <pipe-transfer-output-chooser
+        class="flex-fill overflow-y-auto"
+        :project-eid="projectEid"
+        @cancel="show_output_chooser = false"
+      ></pipe-transfer-output-chooser>
     </div>
+
 
     <div class="flex-fill">
       <div class="h-100">
         <div class="f4 pa4 tc">3. Add Transformations</div>
-        <div class="blankslate">
-          <div class="mb3">
-            <btn
-              btn-md
-              btn-primary
-              class="ttu b"
-              @click="$emit('open-builder')"
-            >
-              Take me to the builder
-            </btn>
-            <div class="lh-copy mid-gray f6 mt3 i">Transformation steps can be added in the builder view.</div>
-          </div>
+        <div class="blankslate mb5">
+          <div class="lh-copy mid-gray f6 mb4 tl-l i">There are no transformations steps in this pipe. Transformation steps can be added in the builder view.</div>
+          <btn
+            btn-md
+            btn-primary
+            class="ttu b"
+            @click="$emit('open-builder')"
+          >
+            Take me to the builder
+          </btn>
         </div>
       </div>
     </div>
+
+
   </div>
 </template>
 
@@ -69,23 +93,25 @@
   import PipeTransferInputList from './PipeTransferInputList.vue'
   import PipeTransferInputChooser from './PipeTransferInputChooser.vue'
   import PipeTransferInputBlankslate from './PipeTransferInputBlankslate.vue'
+  import PipeTransferOutputChooser from './PipeTransferOutputChooser.vue'
   import PipeTransferOutputBlankslate from './PipeTransferOutputBlankslate.vue'
-  import sameHeights from './mixins/same-heights'
 
   export default {
     props: ['tasks', 'project-eid', 'active-subprocess'],
-    mixins: [sameHeights],
     components: {
       Btn,
       PipeTransferInputList,
       PipeTransferInputChooser,
       PipeTransferInputBlankslate,
+      PipeTransferOutputChooser,
       PipeTransferOutputBlankslate
     },
     data() {
       return {
         show_input_chooser: false,
-        allow_multiple: false
+        show_output_chooser: false,
+        allow_multiple_inputs: false,
+        allow_multiple_outputs: false
       }
     },
     computed: {
@@ -93,9 +119,6 @@
       output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
       has_input()    { return this.input_tasks.length > 0 },
       has_output()   { return this.output_tasks.length > 0 }
-    },
-    mounted() {
-      this.sameHeights('.blankslate')
     }
   }
 </script>
