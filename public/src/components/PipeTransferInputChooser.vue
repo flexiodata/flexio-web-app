@@ -5,7 +5,6 @@
     </div>
     <div class="relative">
       <connection-chooser-list
-        class="mb5"
         list-type="input"
         item-layout="list"
         :project-eid="projectEid"

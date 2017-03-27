@@ -13,7 +13,7 @@
     </pipe-home-header>
 
     <pipe-transfer
-      class="flex-fill ph5-l ph3-m"
+      class="flex-fill ph5-l"
       :project-eid="project_eid"
       :tasks="tasks"
       @open-builder="pipe_view = 'builder'"
