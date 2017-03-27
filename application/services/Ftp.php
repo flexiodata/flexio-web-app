@@ -106,7 +106,7 @@ class Ftp implements \Flexio\Services\IConnection
             $entry = array(
                 'name' => $file,
                 'path' => $full_path,
-                'size' => isset_or($info['size'],''),
+                'size' => $info['size'] ?? '',
                 'modified' => '',
                 'is_dir' => '',
                 'root' => '/ftp'
@@ -132,7 +132,7 @@ class Ftp implements \Flexio\Services\IConnection
 
     public function read($params, $callback)
     {
-        $path = isset_or($params['path'],'');
+        $path = $params['path'] ?? '';
 
         if (!$this->isOk())
         {
@@ -147,8 +147,8 @@ class Ftp implements \Flexio\Services\IConnection
 
     public function write($params, $callback)
     {
-        $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $path = $params['path'] ?? '';
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
         if (!$this->isOk())
         {

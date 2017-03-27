@@ -96,11 +96,11 @@ class Dropbox implements \Flexio\Services\IConnection
                     $fullpath .= '/';
                 $fullpath .= $entry['name'];
 
-                $files[] = array('id'=> isset_or($entry['id'], null),
+                $files[] = array('id'=> $entry['id'] ?? null,
                                  'name' => $entry['name'],
                                  'path' => $fullpath,
-                                 'size' => isset_or($entry['size'],''),
-                                 'modified' => isset_or($entry['client_modified'],''),
+                                 'size' => $entry['size'] ?? '',
+                                 'modified' => $entry['client_modified'] ?? '',
                                  'is_dir' => ($entry['.tag'] == 'folder' ? true : false));
             }
         }
@@ -122,7 +122,7 @@ class Dropbox implements \Flexio\Services\IConnection
 
     public function read($params, $callback)
     {
-        $path = isset_or($params['path'],'');
+        $path = $params['path'] ?? '';
 
         // download the file
         $ch = curl_init();
@@ -144,8 +144,8 @@ class Dropbox implements \Flexio\Services\IConnection
 
     public function write($params, $callback)
     {
-        $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $path = $params['path'] ?? '';
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
         // put the file
         $ch = curl_init();
@@ -188,8 +188,8 @@ class Dropbox implements \Flexio\Services\IConnection
 
     private static function initialize($params)
     {
-        $client_id = isset_or($GLOBALS['g_config']->dropbox_client_id, '');
-        $client_secret = isset_or($GLOBALS['g_config']->dropbox_client_secret, '');
+        $client_id = $GLOBALS['g_config']->dropbox_client_id ?? '';
+        $client_secret = $GLOBALS['g_config']->dropbox_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
             return null;
@@ -252,7 +252,7 @@ class Dropbox implements \Flexio\Services\IConnection
         // we have state info, return the state information so we can
         // get a code and complete the process
         $additional_params = array(
-            'state' => isset_or($params['state'],'')
+            'state' => $params['state'] ?? ''
         );
 
         return $service->getAuthorizationUri($additional_params)->getAbsoluteUri();
