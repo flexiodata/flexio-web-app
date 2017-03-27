@@ -21,7 +21,7 @@ class SearchTerm
 
 class Search extends ModelBase
 {
-    public function exec($search_path) // TODO: add return type
+    public function exec(string $search_path) // TODO: add return type
     {
         // parse the search path; if the path doesn't parse correctly,
         // return false
@@ -57,7 +57,7 @@ class Search extends ModelBase
         return $results;
     }
 
-    public function recursive_search($search_path) // TODO: add return type
+    public function recursive_search(string $search_path) // TODO: add return type
     {
         // use the output of one search as the input for the next search;
         // return a list of all objects that are found in the order in

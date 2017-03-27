@@ -14,7 +14,7 @@
 
 class Token extends ModelBase
 {
-    public function create($params) : string
+    public function create(array $params) : string
     {
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -46,7 +46,7 @@ class Token extends ModelBase
         }
     }
 
-    public function delete($eid) : bool
+    public function delete(string $eid) : bool
     {
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -64,7 +64,7 @@ class Token extends ModelBase
         }
     }
 
-    public function get($eid) // TODO: add return type
+    public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -104,7 +104,7 @@ class Token extends ModelBase
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function getInfoFromAccessCode($code) // TODO: add return type
+    public function getInfoFromAccessCode(string $code) // TODO: add return type
     {
         // get the authentication information from the access code
         $db = $this->getDatabase();
@@ -134,7 +134,7 @@ class Token extends ModelBase
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function getInfoFromUserEid($user_eid) : array
+    public function getInfoFromUserEid(string $user_eid) : array
     {
         // get the all available authentication information for the user_eid
         $db = $this->getDatabase();
