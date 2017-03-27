@@ -31,7 +31,6 @@
     <pipe-props-modal2
       ref="modal-add-pipe"
       :project-eid="projectEid"
-      @add-connection="openConnectionAddModal"
       @submit="tryCreatePipe"
       @hide="show_pipe_add_modal = false"
       v-if="show_pipe_add_modal"
@@ -60,15 +59,6 @@
       @hide="show_pipe_schedule_modal = false"
       v-if="show_pipe_schedule_modal"
     ></pipe-schedule-modal>
-
-    <!-- connection modal -->
-    <connection-props-modal
-      ref="modal-add-connection"
-      :project-eid="projectEid"
-      @submit="tryAddConnection"
-      @hide="show_connection_add_modal = false"
-      v-if="show_connection_add_modal"
-    ></connection-props-modal>
   </div>
 </template>
 
@@ -80,7 +70,6 @@
   import PipePropsModal2 from './PipePropsModal2.vue'
   import PipeShareModal from './PipeShareModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
-  import ConnectionPropsModal from './ConnectionPropsModal.vue'
   import Btn from './Btn.vue'
 
   export default {
@@ -91,7 +80,6 @@
       PipePropsModal2,
       PipeShareModal,
       PipeScheduleModal,
-      ConnectionPropsModal,
       Btn
     },
     data() {
@@ -137,11 +125,6 @@
       openPipeScheduleModal(item) {
         this.show_pipe_schedule_modal = true
         this.$nextTick(() => { this.$refs['modal-schedule-pipe'].open(item) })
-      },
-      openConnectionAddModal() {
-        this.show_connection_add_modal = true
-        this.$refs['modal-add-pipe'].close()
-        this.$nextTick(() => { this.$refs['modal-add-connection'].open() })
       },
       duplicatePipe(item) {
         var attrs = {
@@ -192,32 +175,6 @@
           if (response.ok)
           {
             modal.close()
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-      tryAddConnection(attrs, modal) {
-        var me = this
-        var eid = attrs.eid
-        attrs = _.pick(attrs, ['name', 'ename', 'description', 'token', 'host', 'port', 'username', 'password', 'database'])
-        _.extend(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
-
-        // update the connection and make it available
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            modal.close()
-
-            // try to connect to the connection
-            me.$store.dispatch('testConnection', { eid, attrs })
-
-            // re-open the add pipe modal and set its connection
-            me.$refs['modal-add-pipe']
-              .open()
-              .setConnection(response.body)
           }
            else
           {
