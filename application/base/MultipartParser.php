@@ -17,7 +17,7 @@ namespace Flexio\Base;
 
 class MultipartParser
 {
-    public static function create($params = false)
+    public static function create($params = false) : \Flexio\Base\MultipartParser
     {
         $parser = new self;
         return $parser;
@@ -35,7 +35,7 @@ class MultipartParser
     //                  TYPE_FILE_END   - file finished
     //                  TYPE_KEY_VALUE  - simple key/value (in $name/$data)
 
-    public function parse($resource, $header_content_type, $callback)
+    public function parse($resource, $header_content_type, $callback) : bool
     {
         if (is_resource($resource) === false)
             return false;

@@ -17,7 +17,7 @@ namespace Flexio\Base;
 
 class Eid
 {
-    public static function generate()
+    public static function generate() : string
     {
         // note: valid eids are 12 character alphanumeric strings
         // without vowels; if this definition changes, make sure
@@ -66,7 +66,7 @@ class Eid
         return $value;
     }
 
-    public static function isValid($eid)
+    public static function isValid($eid) : bool
     {
         // eids are 12 digit character strings
         $eid_length = 12;

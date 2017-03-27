@@ -49,7 +49,7 @@ class ContentType
     const MIME_TYPE_FLEXIO_TABLE = 'application/vnd.flexio.table';
 
 
-    public static function getMimeType($extension, $buffer, $content_length = false)
+    public static function getMimeType($extension, $buffer, $content_length = false) : string
     {
         // takes a filename/extension, a buffer, and an option length of content;
         // if a specific mime type is available from the buffer (e.g. from using)
@@ -135,7 +135,7 @@ class ContentType
         }
     }
 
-    public static function getMimeTypeFromExtension($ext, $def_return = self::MIME_TYPE_STREAM)
+    public static function getMimeTypeFromExtension($ext, $def_return = self::MIME_TYPE_STREAM) : string
     {
         if (strpos($ext, '.') !== false)
             $ext = \Flexio\Base\Util::getFileExtension($ext);
@@ -174,7 +174,7 @@ class ContentType
         }
     }
 
-    public static function getMimeAndContentType($buffer, &$mime_type, &$content_type)
+    public static function getMimeAndContentType($buffer, &$mime_type, &$content_type) : bool
     {
         // gets the mime and content type from a string; returns true on success
         // and false otherwise

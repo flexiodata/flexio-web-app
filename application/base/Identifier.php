@@ -17,7 +17,7 @@ namespace Flexio\Base;
 
 class Identifier
 {
-    public static function isValid($identifier, &$message = '')
+    public static function isValid($identifier, &$message = '') : bool
     {
         // identifiers (e.g. usernames, or other 'named handles') must
         // follow the following rules:
@@ -67,7 +67,7 @@ class Identifier
         return true;
     }
 
-    public static function isKeyWord($word)
+    public static function isKeyWord($word) : bool
     {
         if (self::isReservedWord($word))
             return true;
@@ -78,7 +78,7 @@ class Identifier
         return false;
     }
 
-    private static function isReservedWord($word)
+    private static function isReservedWord($word) : bool
     {
         switch ($word)
         {
@@ -937,7 +937,7 @@ class Identifier
         }
     }
 
-    private static function isIllegalWord($word)
+    private static function isIllegalWord($word) : bool
     {
         switch ($word)
         {
