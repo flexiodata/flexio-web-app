@@ -548,7 +548,7 @@ class Process extends \Flexio\Object\Base
         $subprocess_properties['process_status'] = \Model::PROCESS_STATUS_PENDING;
         $subprocess_properties['process_eid'] = $main_process_eid;
         $subprocess_properties['parent_eid'] = $sub_process_eid;
-        $subprocess_properties['task_type'] = isset_or($step['type'], '');
+        $subprocess_properties['task_type'] = $step['type'] ?? '';
         $subprocess_properties['parent_eid'] = $sub_process_eid;
         $subprocess_properties['task'] = json_encode($step);
         $subprocess_properties['input'] = json_encode("[]"); // set by the loop
@@ -1041,8 +1041,8 @@ class Process extends \Flexio\Object\Base
         // the task eid; if we can't find one of these, don't generate
         // the hash
 
-        $task_type = isset_or($task['type'], false);
-        $task_parameters = isset_or($task['params'], false);
+        $task_type = $task['type'] ?? false;
+        $task_parameters = $task['params'] ?? false;
 
         if ($task_type === false || $task_parameters === false)
             return false;
@@ -1153,7 +1153,7 @@ class Process extends \Flexio\Object\Base
     private static function formatProcessInfo($params, $task_type, $finished = true)
     {
         $status_text = "";
-        $filename = isset_or($params['name'],'');
+        $filename = $params['name'] ?? '';
 
         if ($finished === true)
         {
@@ -1176,7 +1176,7 @@ class Process extends \Flexio\Object\Base
 
         // configure the output
         $result = array();
-        $result['name'] = isset_or($params['name'],'');
+        $result['name'] = $params['name'] ?? '';
         $result['description'] = $status_text;
 
         return $result;

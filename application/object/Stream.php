@@ -271,7 +271,7 @@ class Stream extends \Flexio\Object\Base
             {
                 $data_to_write = array();
                 foreach ($structure as $col)
-                    $data_to_write[$col['name']] = isset_or($data[$col['store_name']], null);
+                    $data_to_write[$col['name']] = $data[$col['store_name']] ?? null;
             }
 
             $callback($data_to_write);
@@ -297,7 +297,7 @@ class Stream extends \Flexio\Object\Base
         {
             $data_to_write = array();
             foreach ($structure as $col)
-                $data_to_write[$col['name']] = isset_or($data[$col['store_name']], null);
+                $data_to_write[$col['name']] = $data[$col['store_name']] ?? null;
         }
 
         // TODO: this looks like a problem, since the service write function takes
@@ -511,7 +511,7 @@ class Stream extends \Flexio\Object\Base
     {
         $mapped_row = array();
         foreach ($structure as $col)
-            $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
+            $mapped_row[$col['name']] = $row[$col['store_name']] ?? null;
 
         return $mapped_row;
     }
@@ -520,7 +520,7 @@ class Stream extends \Flexio\Object\Base
     {
         $mapped_row = array();
         foreach ($structure as $col)
-            $mapped_row[$col['store_name']] = isset_or($row[$col['name']], null);
+            $mapped_row[$col['store_name']] = $row[$col['name']] ?? null;
 
         return $mapped_row;
     }

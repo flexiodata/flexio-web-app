@@ -113,9 +113,9 @@ class Connection extends \Flexio\Object\Base
         // now that this has been moved to the object, is there anyway to save some of
         // these in the object so we can make successive calls without sending everything?
 
-        $service = isset_or($params['service'], '');
-        $code = isset_or($params['code'], false);
-        $state = isset_or($params['state'], false);
+        $service = $params['service'] ?? '';
+        $code = $params['code'] ?? false;
+        $state = $params['state'] ?? false;
 
         // if we have a state variable, then unpack it
         if ($state !== false)
@@ -124,7 +124,7 @@ class Connection extends \Flexio\Object\Base
         // set the service, based on either the supplied parameter or the
         // state variable if it exists
         if ($service === '')
-            $service = isset_or($state['service'],'');
+            $service = $state['service'] ?? '';
 
         // if the state param isn't initialized, pack up the service and eid
         if ($state === false)
@@ -211,7 +211,7 @@ class Connection extends \Flexio\Object\Base
             return false;
 
         // for some of the connections, refresh the token
-        $connection_type = isset_or($connection_info['connection_type'],'');
+        $connection_type = $connection_info['connection_type'] ?? '';
         switch ($connection_type)
         {
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:

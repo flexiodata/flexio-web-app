@@ -43,10 +43,10 @@ class StreamReader
 
         if (is_array($stream))
         {
-            $stream_info['connection_eid'] = isset_or($stream['connection_eid'], false);
-            $stream_info['path'] = isset_or($stream['path'], false);
-            $stream_info['mime_type'] = isset_or($stream['mime_type'], false);
-            $stream_info['structure'] = isset_or($stream['structure'], false);
+            $stream_info['connection_eid'] = $stream['connection_eid'] ?? false;
+            $stream_info['path'] = $stream['path'] ?? false;
+            $stream_info['mime_type'] = $stream['mime_type'] ?? false;
+            $stream_info['structure'] = $stream['structure'] ?? false;
         }
 
         // create an appropriate reader based on the mime type
@@ -288,7 +288,7 @@ class StreamFileReader
         if ($this->service !== false)
             return $this->service;
 
-        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
+        $connection_eid = $this->stream_info['connection_eid'] ?? false;
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
             return false;
@@ -377,7 +377,7 @@ class StreamTableReader
 
             $mapped_row = array();
             foreach ($structure as $col)
-                $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
+                $mapped_row[$col['name']] = $row[$col['store_name']] ?? null;
 
             $this->read_buffer .= (self::arrayToCsv(array_values($mapped_row)));
         }
@@ -421,7 +421,7 @@ class StreamTableReader
 
         $mapped_row = array();
         foreach ($structure as $col)
-            $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
+            $mapped_row[$col['name']] = $row[$col['store_name']] ?? null;
 
         return $mapped_row;
     }
@@ -431,7 +431,7 @@ class StreamTableReader
         if ($this->service !== false)
             return $this->service;
 
-        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
+        $connection_eid = $this->stream_info['connection_eid'] ?? false;
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
             return false;
@@ -535,7 +535,7 @@ class StreamTableJsonReader
             // map the stored name to the name
             $mapped_row = array();
             foreach ($structure as $col)
-                $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
+                $mapped_row[$col['name']] = $row[$col['store_name']] ?? null;
 
             $this->read_buffer .= (self::arrayToCsv(array_values($mapped_row)));
         }
@@ -583,7 +583,7 @@ class StreamTableJsonReader
         // map the stored name to the name
         $mapped_row = array();
         foreach ($structure as $col)
-            $mapped_row[$col['name']] = isset_or($row[$col['store_name']], null);
+            $mapped_row[$col['name']] = $row[$col['store_name']] ?? null;
 
         return $mapped_row;
     }
@@ -593,7 +593,7 @@ class StreamTableJsonReader
         if ($this->service !== false)
             return $this->service;
 
-        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
+        $connection_eid = $this->stream_info['connection_eid'] ?? false;
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
             return false;

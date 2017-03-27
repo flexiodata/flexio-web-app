@@ -150,7 +150,7 @@ class Message
         $from_email = $params['from_email'];
         $object_name = $params['object_name'];
         $object_eid = $params['object_eid'];
-        $message = isset_or($params['message'], '');
+        $message = $params['message'] ?? '';
         $verify_code_str = isset($params['verify_code']) ? '&verify_code='.$params['verify_code'] : '';
         $share_link = self::getBaseUrl() . '/a/shareauth?ref=share_email&email='.urlencode($to).'&object_eid='. $object_eid . $verify_code_str;
 
@@ -197,7 +197,7 @@ class Message
         $from_name = $params['from_name'];
         $object_name = $params['object_name'];
         $object_eid = $params['object_eid'];
-        $message = isset_or($params['message'], '');
+        $message = $params['message'] ?? '';
         $share_link = self::getBaseUrl() . "/app/pipe/$object_eid";
 
         // get text template from the application res directory
