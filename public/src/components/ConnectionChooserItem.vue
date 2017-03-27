@@ -4,7 +4,7 @@
     @click="onClick"
   >
     <div class="flex flex-row items-center" v-if="layout == 'list'">
-      <connection-icon :type="item.connection_type" class="fx-square-3 mr3"></connection-icon>
+      <connection-icon :type="item.connection_type" class="br1 fx-square-3 mr3"></connection-icon>
       <div class="mid-gray f5 fw6 cursor-default">{{item.name}}</div>
     </div>
     <div class="tc css-valign" v-else>
