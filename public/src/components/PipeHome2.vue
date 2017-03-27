@@ -16,7 +16,6 @@
       class="flex-fill ph5-l ph3-m"
       :project-eid="project_eid"
       :tasks="tasks"
-      @choose-input-connection="openInputFileChooserModal"
       @open-builder="pipe_view = 'builder'"
       v-if="pipe_view == 'transfer'">
     </pipe-transfer>
@@ -122,17 +121,6 @@
         this.$store.dispatch('createPipeTask', { eid, attrs })
 
         modal.close()
-      },
-
-      openInputFileChooserModal() {
-        this.show_choose_input_modal = true
-        this.$nextTick(() => { this.$refs['modal-choose-input'].open({ mode: 'choose-input' }) })
-      },
-
-      openAddConnectionModal() {
-        this.show_add_connection_modal = true
-        this.$refs['modal-choose-input'].close()
-        this.$nextTick(() => { this.$refs['modal-add-connection'].open() })
       },
 
       getOurConnections() {
