@@ -5,18 +5,22 @@
     </div>
     <div class="relative">
       <connection-chooser-list
+        class="mb5"
+        mode="input"
+        item-layout="list"
         :project-eid="projectEid"
         :show-add="false"
         :show-blank-pipe="false"
-        mode="input"
         @item-activate="chooseConnection"
-      >
-      </connection-chooser-list>
+      ></connection-chooser-list>
     </div>
     <div class="pa2 bg-black-05 bb b--black-05">
       <div class="f6 fw6 ttu silver">Available Connections</div>
     </div>
-    <service-list class="mb4" @item-activate="setupConnection"></service-list>
+    <service-list
+      item-layout="list"
+      @item-activate="setupConnection"
+    ></service-list>
   </div>
 </template>
 

@@ -7,6 +7,7 @@
       v-for="(input_service, index) in input_services"
       :item="input_service"
       :index="index"
+      :layout="itemLayout"
       :connection-type="connectionType"
       @activate="onItemActivate"
     >
@@ -57,6 +58,8 @@
         default: 'input',
         type: String,
         required: false
+      },
+      'item-layout': {
       }
     },
     components: {

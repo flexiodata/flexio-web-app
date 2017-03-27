@@ -7,6 +7,7 @@
           class="v-mid cursor-default moon-gray hover-blue link hint--bottom"
           aria-label="Add another connection"
           @click="$emit('choose-input-connection')"
+          v-if="allow_multiple"
         >
           <i class="db material-icons f3">add_circle</i>
         </div>
@@ -30,14 +31,8 @@
         class="flex-fill overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
-        v-else-if="show_input_chooser"
-      ></pipe-transfer-input-chooser>
-      <pipe-transfer-input-blankslate
-        class="blankslate"
-        @choose-connection="show_input_chooser = true"
         v-else
-      ></pipe-transfer-input-blankslate>
-      <!--@choose-connection="$emit('choose-input-connection')"-->
+      ></pipe-transfer-input-chooser>
     </div>
 
     <div class="flex-fill flex flex-column mr4-l">
@@ -89,7 +84,8 @@
     },
     data() {
       return {
-        show_input_chooser: false
+        show_input_chooser: false,
+        allow_multiple: false
       }
     },
     computed: {
