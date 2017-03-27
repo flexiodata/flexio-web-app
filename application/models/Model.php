@@ -563,7 +563,7 @@ class Model
             $qtype = $db->quote($type);
 
             $status_condition = '';
-            if (!$status_filter)
+            if (isset($status_filter))
                 $status_condition = " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
 
             $sql = "select ".
@@ -612,7 +612,7 @@ class Model
             $qtype = $db->quote($type);
 
             $status_condition = '';
-            if (!$status_filter)
+            if (isset($status_filter))
                 $status_condition = " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
 
             $sql = "select count(*) from tbl_association tas ".
