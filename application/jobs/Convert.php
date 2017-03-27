@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class Convert extends \Flexio\Jobs\Base
 {
     // token delimiters; other types of delimiters are allowed as well
@@ -152,7 +150,6 @@ class Convert extends \Flexio\Jobs\Base
         }
 
         require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'tcpdf-6.2.12'. DIRECTORY_SEPARATOR . 'tcpdf_parser.php';
-        require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
 
         // input/output

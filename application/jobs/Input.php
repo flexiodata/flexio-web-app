@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class Input extends \Flexio\Jobs\Base
 {
     // job-global connection properties
