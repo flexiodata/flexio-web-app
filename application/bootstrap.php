@@ -119,11 +119,6 @@ function isset_and_true($v)
     return (isset($v) && ($v === true));
 }
 
-function isset_or(&$v, $def = false)
-{
-    return isset($v) ? $v : $def;
-}
-
 function array_key_exists_or($k, $arr, $def = '')
 {
     return array_key_exists($k, $arr) ? $arr[$k] : $def;
