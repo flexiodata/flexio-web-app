@@ -64,6 +64,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import { ROUTE_PIPEHOME } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import Spinner from './Spinner.vue'
   import PipeList from './PipeList.vue'
@@ -110,6 +111,9 @@
       ...mapGetters([
         'getAllProjects'
       ]),
+      openPipe(eid) {
+        this.$router.push({ name: ROUTE_PIPEHOME, params: { eid }})
+      },
       openPipeAddModal(ref, attrs) {
         this.show_pipe_add_modal = true
         this.$nextTick(() => { this.$refs['modal-add-pipe'].open() })
@@ -146,6 +150,7 @@
           if (response.ok)
           {
             modal.close()
+            this.openPipe(response.body.eid)
           }
            else
           {
