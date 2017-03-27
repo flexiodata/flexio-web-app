@@ -1,27 +1,29 @@
 <template>
-  <div class="flex flex-row">
+  <div class="flex flex-row min-w5">
     <div class="flex-fill">
-      <div class="flex flex-row items-center mb1">
+      <div class="flex flex-column flex-row-ns items-center-ns mb1">
         <inline-edit-text
-          class="dib f3 li-title v-mid dark-gray mr1"
+          class="dib f3 lh-title v-mid dark-gray mb1 mb0-ns mr1-ns"
           input-key="name"
           :val="pipe_name"
           @save="editPipeSingleton">
         </inline-edit-text>
-        <inline-edit-text
-          class="dib f7 li-title v-mid silver pv1 ph2 mr1 bg-black-05"
-          placeholder="Add an alias"
-          input-key="ename"
-          :val="pipe_ename"
-          :show-edit-button="false"
-          @save="editPipeSingleton">
-        </inline-edit-text>
-        <div
-          class="hint--bottom hint--large cursor-default"
-          aria-label="When using the Flex.io command line interface (CLI) or API, pipes may be referenced either via their object ID or via an alias created here. Aliases are unique across the app, so we recommend prefixing your username to the alias (e.g., username-foo)."
-          v-if="pipe_ename.length == 0"
-        >
-          <i class="material-icons blue md-18">info</i>
+        <div class="flex flex-row">
+          <inline-edit-text
+            class="dib f7 v-mid silver bg-black-05 pv1 ph2 mr1"
+            placeholder="Add an alias"
+            input-key="ename"
+            :val="pipe_ename"
+            :show-edit-button="false"
+            @save="editPipeSingleton">
+          </inline-edit-text>
+          <div
+            class="hint--bottom hint--large cursor-default"
+            aria-label="When using the Flex.io command line interface (CLI) or API, pipes may be referenced either via their object ID or via an alias created here. Aliases are unique across the app, so we recommend prefixing your username to the alias (e.g., username-foo)."
+            v-if="pipe_ename.length == 0"
+          >
+            <i class="material-icons blue md-18">info</i>
+          </div>
         </div>
       </div>
       <inline-edit-text
@@ -33,14 +35,14 @@
         @save="editPipeSingleton">
       </inline-edit-text>
     </div>
-    <div class="flex-none flex flex-row items-center">
+    <div class="flex-none flex flex-column flex-row-ns items-center-ns">
       <div
-        class="f6 fw6 blue pointer mr3"
+        class="f6 fw6 blue pointer mr3-ns dn db-ns"
         @click="setPipeView('builder')"
         v-if="pipeView == 'transfer'"
       >Use Builder View</div>
       <div
-        class="f6 fw6 blue pointer mr3"
+        class="f6 fw6 blue pointer mr3-ns dn db-ns"
         @click="setPipeView('transfer')"
         v-else
       >Use Transfer View</div>
@@ -58,6 +60,16 @@
         @click="runPipe"
         v-else
       >Run</btn>
+      <div
+        class="f7 fw6 blue pointer mt2 db dn-ns"
+        @click="setPipeView('builder')"
+        v-if="pipeView == 'transfer'"
+      >Builder View</div>
+      <div
+        class="f7 fw6 blue pointer mt2 db dn-ns"
+        @click="setPipeView('transfer')"
+        v-else
+      >Transfer View</div>
     </div>
   </div>
 </template>

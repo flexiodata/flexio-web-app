@@ -72,7 +72,7 @@
       </div>
       <div class="flex-fill br-l b--black-10">
         <div class="blankslate ma4">
-          <div class="lh-copy mid-gray f6 mb4 tl-l i">There are no transformations steps in this pipe. Transformation steps can be added in the builder view.</div>
+          <div class="lh-copy mid-gray f6 mb4 tl tc-m i">There are no transformations steps in this pipe. Transformation steps can be added in the builder view.</div>
           <btn
             btn-md
             btn-primary
