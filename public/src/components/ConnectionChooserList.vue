@@ -54,7 +54,7 @@
         type: Boolean,
         required: false
       },
-      'mode': {
+      'list-type': {
         default: 'input',
         type: String,
         required: false
@@ -74,7 +74,7 @@
         var items = _
           .chain(connections)
           .filter({ is_service: false })
-          .filter({ [me.mode==='output'?'is_output':'is_input']: true })
+          .filter({ [me.listType==='output'?'is_output':'is_input']: true })
           .map((c) => {
             return _.assign({}, c, {
               name: c.service_name

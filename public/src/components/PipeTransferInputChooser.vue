@@ -6,7 +6,7 @@
     <div class="relative">
       <connection-chooser-list
         class="mb5"
-        mode="input"
+        list-type="input"
         item-layout="list"
         :project-eid="projectEid"
         :show-add="false"
