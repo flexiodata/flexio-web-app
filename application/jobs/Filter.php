@@ -44,7 +44,7 @@ class Filter extends \Flexio\Jobs\Base
     {
         // get the job properties
         $job_definition = $this->getProperties();
-        $exclude = isset_or($job_definition['params']['exclude'],false);
+        $exclude = $job_definition['params']['exclude'] ?? false;
 
         if (isset($job_definition['params']['where']))
             $filter_expression = $job_definition['params']['where'];

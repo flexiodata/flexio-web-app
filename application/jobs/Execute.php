@@ -94,7 +94,7 @@ class Execute extends \Flexio\Jobs\Base
             return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // get the code from the template
-        $code = isset_or($job_definition['params']['code'], '');
+        $code = $job_definition['params']['code'] ?? '';
         if (strlen($code) == 0)
             return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _(''), __FILE__, __LINE__);
 

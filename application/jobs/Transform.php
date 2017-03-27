@@ -246,7 +246,7 @@ class Transform extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
 
-        $operations = isset_or($params['operations'], []);
+        $operations = $params['operations'] ?? [];
         if (count($operations) == 0)
             return array(); // no operations
 
@@ -267,7 +267,7 @@ class Transform extends \Flexio\Jobs\Base
 
             foreach ($operations as $operation)
             {
-                $operation_type = isset_or($operation['operation'], self::OPERATION_NONE);
+                $operation_type = $operation['operation'] ?? self::OPERATION_NONE;
                 switch ($operation_type)
                 {
                     default:
@@ -329,7 +329,7 @@ class Transform extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
 
-        $operations = isset_or($params['operations'], []);
+        $operations = $params['operations'] ?? [];
         if (count($operations) == 0)
             return array(); // no operations
 
@@ -338,7 +338,7 @@ class Transform extends \Flexio\Jobs\Base
         $expr = 'xdrow'; // default field containing row data
         foreach ($operations as $operation)
         {
-            $operation_type = isset_or($operation['operation'], self::OPERATION_NONE);
+            $operation_type = $operation['operation'] ?? self::OPERATION_NONE;
             switch ($operation_type)
             {
                 default:
@@ -393,7 +393,7 @@ class Transform extends \Flexio\Jobs\Base
 
     private static function getChangeCaseExpr($operation, $expr)
     {
-        $new_case = isset_or($operation['case'], self::CAPITALIZE_NONE);
+        $new_case = $operation['case'] ?? self::CAPITALIZE_NONE;
 
         if ($new_case == self::CAPITALIZE_UPPER)
             return "upper(($expr))";
@@ -412,7 +412,7 @@ class Transform extends \Flexio\Jobs\Base
 
     private static function getSubstrExpr($operation, $expr)
     {
-        $location = isset_or($operation['location'], self::SUBSTRING_LOCATION_NONE);
+        $location = $operation['location'] ?? self::SUBSTRING_LOCATION_NONE;
 
         if ($location == self::SUBSTRING_LOCATION_LEFT)
         {
@@ -434,8 +434,8 @@ class Transform extends \Flexio\Jobs\Base
 
         if ($location == self::SUBSTRING_LOCATION_MID)
         {
-            $offset = (int)isset_or($operation['offset'], 1);
-            $length = (int)isset_or($operation['length'], null);
+            $offset = (int)($operation['offset'] ?? 1);
+            $length = (int)($operation['length'] ?? null);
 
             if (is_null($length))
                 return "substr(($expr),$length)";
@@ -505,7 +505,7 @@ class Transform extends \Flexio\Jobs\Base
         if (isset($operation['character_class']) || isset($operation['characters']))
         {
             $value = $characters_regex;
-            $location = isset_or($operation['location'],self::REMOVE_LOCATION_ANY);
+            $location = $operation['location'] ?? self::REMOVE_LOCATION_ANY;
 
             $flags = '';
 
@@ -527,7 +527,7 @@ class Transform extends \Flexio\Jobs\Base
         else if (isset($operation['value']))
         {
             $value = preg_quote($operation['value']);
-            $location = isset_or($operation['location'],self::REMOVE_LOCATION_ANY);
+            $location = $operation['location'] ?? self::REMOVE_LOCATION_ANY;
 
             $flags = '';
 
@@ -561,7 +561,7 @@ class Transform extends \Flexio\Jobs\Base
 
     private static function getTrimTextExpr($operation, $expr)
     {
-        $location = isset_or($operation['location'], '');
+        $location = $operation['location'] ?? '';
 
         if ($location == self::TRIM_LOCATION_LEADING)
             return "ltrim($expr)";
@@ -577,10 +577,10 @@ class Transform extends \Flexio\Jobs\Base
 
     private static function getPadTextExpr($operation, $expr, $columns)
     {
-        $location = isset_or($operation['location'],'');
-        $length = isset_or($operation['length'],0);
-        $value = isset_or($operation['value'],' ');
-        $width = isset_or($columns['width'], -1);
+        $location = $operation['location'] ?? '';
+        $length = $operation['length'] ?? 0;
+        $value = $operation['value'] ?? ' ';
+        $width = $columns['width'] ?? -1;
 
         if ($location != self::PAD_LOCATION_LEFT && $location != self::PAD_LOCATION_RIGHT)
             return false;
@@ -610,7 +610,7 @@ class Transform extends \Flexio\Jobs\Base
     private static function getChangeTypeExpr($operation, $expr, $column, &$new_structure)
     {
         $old_type = $column['type'];
-        $new_type = isset_or($operation['type'], self::COLUMN_TYPE_NONE);
+        $new_type = $operation['type'] ?? self::COLUMN_TYPE_NONE;
 
         // make sure it's a valid type
         $column_types = array(

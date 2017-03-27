@@ -46,7 +46,7 @@ class Grep extends \Flexio\Jobs\Base
 
         // get the code from the template
         $job_definition = $this->getProperties();
-        $grepexpr = isset_or($job_definition['params']['expression'], '');
+        $grepexpr = $job_definition['params']['expression'] ?? '';
         if (strlen($grepexpr) == 0)
             return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _(''), __FILE__, __LINE__);
 

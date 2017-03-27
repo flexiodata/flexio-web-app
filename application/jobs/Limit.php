@@ -55,7 +55,7 @@ class Limit extends \Flexio\Jobs\Base
 
         // get the number of rows to return
         $job_definition = $this->getProperties();
-        $rows = intval(isset_or($job_definition['params']['value'],0));
+        $rows = intval(($job_definition['params']['value'] ?? 0));
         $rows_to_output = ($rows > 0 ? $rows : 0);
 
         // create the reader

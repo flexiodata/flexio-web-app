@@ -115,7 +115,7 @@ class Replace extends \Flexio\Jobs\Base
             $qfind = preg_quote($params['find'],'/');
             $qreplace = \Flexio\Base\ExprUtil::quote($params['replace']);
 
-            $location = isset_or($params['location'],'any');
+            $location = $params['location'] ?? 'any';
             if ($location == 'any') {}
             else if ($location == 'leading')
                 $qfind = '^' . $qfind;

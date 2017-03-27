@@ -90,7 +90,7 @@ class Output extends \Flexio\Jobs\Base
     private function resolveOutputItems($params)
     {
         // if the items parameter isn't an array, the format is invalid
-        $items = isset_or($params['items'], false);
+        $items = $params['items'] ?? false;
 
         if (!isset($params['items']))
         {
@@ -180,7 +180,7 @@ class Output extends \Flexio\Jobs\Base
             return $expanded_items;
 
         $pattern = $item['name'];
-        $path = isset_or($item['path'], null);
+        $path = $item['path'] ?? null;
 
         $stream_idx = 0;
         foreach ($this->streams as $stream)
@@ -210,7 +210,7 @@ class Output extends \Flexio\Jobs\Base
         $instream = $this->streams[ $file_info['stream_idx'] ];
 
         // load the service
-        $connection_type = isset_or($connection_info['connection_type'], false);
+        $connection_type = $connection_info['connection_type'] ?? false;
         $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
             return $this->fail(\Flexio\Base\Error::NO_SERVICE, _(''), __FILE__, __LINE__);
@@ -223,7 +223,7 @@ class Output extends \Flexio\Jobs\Base
         }
 
         // make fully qualified path, if necessary
-        $full_path = isset_or($params['location'], '');
+        $full_path = $params['location'] ?? '';
         if (strlen($full_path) > 0)
             $full_path .= '/';
 

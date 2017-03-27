@@ -75,7 +75,7 @@ class Search extends \Flexio\Jobs\Base
 
         // get the columns and search criteria
         $columns = $job_definition['params']['columns'];
-        $search_criteria = isset_or($job_definition['params']['search'], '');
+        $search_criteria = $job_definition['params']['search'] ?? '';
 
         // build a filter expression from the search criteria
         if (is_string($columns))
@@ -127,7 +127,7 @@ class Search extends \Flexio\Jobs\Base
         if (!isset($job_definition['params']['condition']['items']) || !is_array($job_definition['params']['condition']['items']) || count($job_definition['params']['condition']['items']) == 0)
             return false;
 
-        $logical = isset_or($job_definition['params']['condition']['operator'], 'and');
+        $logical = $job_definition['params']['condition']['operator'] ?? 'and';
         $conditions = $job_definition['params']['condition']['items'];
 
         // properties
@@ -179,7 +179,7 @@ class Search extends \Flexio\Jobs\Base
             $operator = $item['operator'];
             $value = $item['right'];
 
-            $date_format = isset_or($item['date_format'], 'MM/DD/YYYY');
+            $date_format = $item['date_format'] ?? 'MM/DD/YYYY';
             $date_format = str_replace('YYYY','YY', $date_format);
             $date_format = str_replace('YY','YYYY', $date_format);  // allows user to specify YY or YYYY in date values
 

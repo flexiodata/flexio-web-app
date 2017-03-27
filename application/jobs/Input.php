@@ -31,7 +31,7 @@ class Input extends \Flexio\Jobs\Base
         $params = $job_definition['params'];
 
         // make fully qualified path, if necessary
-        $location = isset_or($params['location'], '');
+        $location = $params['location'] ?? '';
         if (strlen($location) > 0 && isset($params['items']))
         {
             $location .= '/';
@@ -69,7 +69,7 @@ class Input extends \Flexio\Jobs\Base
     private function resolveInputItems($params)
     {
         // if the items parameter isn't an array, the format is invalid
-        $items = isset_or($params['items'], false);
+        $items = $params['items'] ?? false;
         if (!is_array($items))
             return false;
 
@@ -100,8 +100,8 @@ class Input extends \Flexio\Jobs\Base
 
     private function runImport($connection_info, $file_info)
     {
-        $connection_eid = isset_or($connection_info['eid'], false);
-        $connection_type = isset_or($connection_info['connection_type'], false);
+        $connection_eid = $connection_info['eid'] ?? false;
+        $connection_type = $connection_info['connection_type'] ?? false;
 
         // handle cases where data is already imported; if the input
         // connection is the default connection, then the data is internal, so
@@ -424,7 +424,7 @@ class Input extends \Flexio\Jobs\Base
         // simply return; TODO: we should use some check on the service to see if the
         // notion of directory lookup is included so we don't have to keep adding these
         // types for other connections that may not support wildcard lookup
-        $connection_type = isset_or($connection_info['connection_type'], false);
+        $connection_type = $connection_info['connection_type'] ?? false;
         if ($connection_type == \Model::CONNECTION_TYPE_HTTP || $connection_type == \Model::CONNECTION_TYPE_RSS)
         {
             $matching_paths[] = $file_info;

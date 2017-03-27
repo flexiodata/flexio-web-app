@@ -74,9 +74,9 @@ class Group extends \Flexio\Jobs\Base
             return false;
 
         $group_parts = isset($job_definition['params']['group']) ? $job_definition['params']['group'] : array();
-        $where = isset_or($job_definition['params']['where'], '');
-        $having = isset_or($job_definition['params']['having'], '');
-        $detail = isset_or($job_definition['params']['detail'], false);
+        $where = $job_definition['params']['where'] ?? '';
+        $having = $job_definition['params']['having'] ?? '';
+        $detail = $job_definition['params']['detail'] ?? false;
 
         $input_columns = $instream->getStructure()->enum();
 
@@ -148,7 +148,7 @@ class Group extends \Flexio\Jobs\Base
 
             // find out the store_name for the specified field
             $specified_fieldname = $col['name'];
-            $store_fieldinfo = isset_or($output_columns_indexed[$specified_fieldname], false);
+            $store_fieldinfo = $output_columns_indexed[$specified_fieldname] ?? false;
             if ($store_fieldinfo === false)
                 return false;
 
@@ -250,9 +250,9 @@ class Group extends \Flexio\Jobs\Base
         {
             $lookup_name = strtolower($c['store_name']);
 
-            $type = isset_or($store_columns_indexed[$lookup_name]['type'],false);
-            $width = isset_or($store_columns_indexed[$lookup_name]['width'],false);
-            $scale = isset_or($store_columns_indexed[$lookup_name]['scale'],false);
+            $type = $store_columns_indexed[$lookup_name]['type'] ?? false;
+            $width = $store_columns_indexed[$lookup_name]['width'] ?? false;
+            $scale = $store_columns_indexed[$lookup_name]['scale'] ?? false;
 
             $output_column = array();
             $output_column['name'] = $c['name'];
