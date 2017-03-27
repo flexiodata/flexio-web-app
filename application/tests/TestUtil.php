@@ -277,8 +277,8 @@ class TestUtil
 
     public static function createTestProject($user_eid, $name = null, $description = null)
     {
-        $properties['name'] = isset_or($name, _('Test Project'));
-        $properties['description'] = isset_or($description, _('Test project with test data.'));
+        $properties['name'] = $name ?? 'Test Project';
+        $properties['description'] = $description ?? 'Test project with test data.';
 
         $project = \Flexio\Object\Project::create($properties);
         if ($project === false)

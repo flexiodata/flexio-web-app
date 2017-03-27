@@ -54,7 +54,7 @@ EOD;
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $result = TestUtil::getProcessResult($process);
-        $actual = isset_or($result[0], false);
+        $actual = $result[0] ?? false;
         $expected = 'SOME CONTENT';
         TestCheck::assertString('A.1', 'Transform Job; basic transformation on stream content',  $actual, $expected, $results);
     }

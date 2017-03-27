@@ -91,7 +91,7 @@ class Test
 
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $result = TestUtil::getProcessResult($process,0,50);
-        $actual = is_array($result) ? isset_or($result[0],'') : '';
+        $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
         $expected = 'GIVENNAME,SURNAME,STREETADDRESS,CITY,STATE,ZIPCODE';
         TestCheck::assertString('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results);
 
@@ -169,7 +169,7 @@ class Test
 
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $result = TestUtil::getProcessSingleOutputResult($process,true,1535,1); // 1536 rows in output; get the last one
-        $actual = isset_or($result['content'][0],array());
+        $actual = $result['content'][0] ?? array();
         $expected = json_decode('
         {
             "number": "3000",
@@ -280,7 +280,7 @@ class Test
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $result = TestUtil::getProcessResult($process,10,122);
-        $actual = is_array($result) ? isset_or($result[0],'') : '';
+        $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
         $expected = 'http:\\/\\/saastr.libsyn.com\\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-laura-roeder-founder-ceo-edgar';
         TestCheck::assertString('A.3', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
     }
