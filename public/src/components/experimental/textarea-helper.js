@@ -1,4 +1,6 @@
 
+// NOTE: don't use this file (for now) as it doesn't scope properly when used on multiple textareas on the same page
+
 var mirror_el = null
 var char_el = null
 

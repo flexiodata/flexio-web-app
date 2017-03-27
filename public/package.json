@@ -11,6 +11,7 @@
     "build-production": "cross-env NODE_ENV=production webpack --config webpack.config.build.js --progress --hide-modules"
   },
   "dependencies": {
+    "autosize": "^3.0.20",
     "awesomplete": "^1.1.1",
     "clipboard": "^1.5.16",
     "codemirror": "^5.23.0",
