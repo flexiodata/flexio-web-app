@@ -22,7 +22,7 @@ class Pipe extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_PIPE);
     }
 
-    public static function create($properties = null)
+    public static function create(array $properties = null)
     {
         // if a task parameter is set, we need to assign a client id to each element
         if (isset($properties) && isset($properties['task']))
@@ -52,7 +52,7 @@ class Pipe extends \Flexio\Object\Base
         return $object;
     }
 
-    public function set($properties)
+    public function set(array $properties)
     {
         // TODO: add properties check
 
@@ -79,7 +79,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setTask($task)
+    public function setTask(array $task)
     {
         // shorthand for setting task info
         $properties = array();
@@ -97,7 +97,7 @@ class Pipe extends \Flexio\Object\Base
         return $local_properties['task'];
     }
 
-    public function addTaskStep($task_step, $index)
+    public function addTaskStep($task_step, $index) // TODO: add parameter types
     {
         // get the current task array
         $task_array = $this->getTask();
@@ -109,7 +109,7 @@ class Pipe extends \Flexio\Object\Base
         return $task_eid;
     }
 
-    public function deleteTaskStep($task_eid)
+    public function deleteTaskStep(string $task_eid)
     {
         $task_array = $this->getTask();
         $task = \Flexio\Object\Task::load($task_array);
@@ -118,7 +118,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setTaskStep($task_eid, $task_step)
+    public function setTaskStep($task_eid, $task_step) // TODO: add parameter types
     {
         // get the current task array
         $task_array = $this->getTask();
@@ -128,14 +128,14 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getTaskStep($task_eid)
+    public function getTaskStep(string $task_eid)
     {
         $task_array = $this->getTask();
         $task = \Flexio\Object\Task::load($task_array);
         return $task->getTaskStep($task_eid);
     }
 
-    public function setSchedule($schedule)
+    public function setSchedule(array $schedule)
     {
         // make sure the schedule format is valid
         if (\Flexio\Base\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
@@ -157,7 +157,7 @@ class Pipe extends \Flexio\Object\Base
         return $local_properties['schedule'];
     }
 
-    public function addProcess($process)
+    public function addProcess(\Flexio\Object\Process $process)
     {
         $result = $this->getModel()->assoc_add($this->getEid(), \Model::EDGE_HAS_PROCESS, $process->getEid());
         $this->getModel()->assoc_add($process->getEid(), \Model::EDGE_PROCESS_OF, $this->getEid());

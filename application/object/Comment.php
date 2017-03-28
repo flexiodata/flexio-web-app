@@ -22,7 +22,7 @@ class Comment extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_COMMENT);
     }
 
-    public function set($properties)
+    public function set(array $properties)
     {
         // TODO: add properties check
 

@@ -22,7 +22,7 @@ class Token extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_TOKEN);
     }
 
-    public static function create($properties = null)
+    public static function create(array $properties = null)
     {
         // the user_eid needs to be set and be a valid user
         if (!isset($properties['user_eid']))
@@ -47,7 +47,7 @@ class Token extends \Flexio\Object\Base
         return $object;
     }
 
-    public function set($properties)
+    public function set(array $properties)
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }

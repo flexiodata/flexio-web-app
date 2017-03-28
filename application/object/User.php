@@ -25,7 +25,7 @@ class User extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_USER);
     }
 
-    public static function create($properties = null)
+    public static function create(array $properties = null)
     {
         // config is stored as a json string, so it needs to be encoded
         if (isset($properties) && isset($properties['config']))
@@ -58,7 +58,7 @@ class User extends \Flexio\Object\Base
         return $object;
     }
 
-    public static function load($identifier)
+    public static function load(string $identifier)
     {
         // note: \User::load() differs from other load implementations
         // in that a user can be loaded either by a unique eid, by
@@ -104,7 +104,7 @@ class User extends \Flexio\Object\Base
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
     }
 
-    public function set($properties)
+    public function set(array $properties)
     {
         // TODO: add properties check
 
@@ -245,7 +245,7 @@ class User extends \Flexio\Object\Base
         return $properties['verify_code'];
     }
 
-    public function checkPassword($password)
+    public function checkPassword(string $password)
     {
         return $this->getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
     }
@@ -285,7 +285,7 @@ class User extends \Flexio\Object\Base
         echo $data;
     }
 
-    public function changeProfilePicture($filename, $mime_type)
+    public function changeProfilePicture(string $filename, string $mime_type)
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -323,7 +323,7 @@ class User extends \Flexio\Object\Base
         echo $data;
     }
 
-    public function changeProfileBackground($filename, $mime_type)
+    public function changeProfileBackground(string $filename, string $mime_type)
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -338,7 +338,7 @@ class User extends \Flexio\Object\Base
         return $result;
     }
 
-    public function cropPicture($type, $src_x, $src_y, $src_w, $src_h)
+    public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h)
     {
         $eid = $this->getEid();
         $mime_type = 'text/plain';

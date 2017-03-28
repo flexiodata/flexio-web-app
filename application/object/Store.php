@@ -17,7 +17,7 @@ namespace Flexio\Object;
 
 class Store
 {
-    public static function create($eid_type, $properties)
+    public static function create(string $eid_type, array $properties)
     {
         switch ($eid_type)
         {
@@ -53,7 +53,7 @@ class Store
         }
     }
 
-    public static function load($identifier)
+    public static function load(string $identifier)
     {
         $eid_type = self::getModel()->getTypeByIdentifier($identifier);
         switch ($eid_type)

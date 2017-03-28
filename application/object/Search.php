@@ -17,7 +17,7 @@ namespace Flexio\Object;
 
 class Search
 {
-    public static function exec($query)
+    public static function exec(string $query)
     {
         return Store::getModel()->search($query);
     }

@@ -117,7 +117,7 @@ class StreamFileReader
         $this->close();
     }
 
-    public static function create($stream_info)
+    public static function create(array $stream_info)
     {
         $object = new static;
         $object->stream_info = $stream_info;
@@ -139,7 +139,7 @@ class StreamFileReader
         $this->read_buffer = '';
     }
 
-    public function read($length)
+    public function read(int $length = 1024)
     {
         if ($this->iterator === false)
         {
@@ -217,7 +217,7 @@ class StreamFileReader
         }
     }
 
-    private static function getRowFromBuffer(&$buffer)
+    private static function getRowFromBuffer(&$buffer) // TODO: add input parameter types
     {
         $pos = strpos($buffer, "\n");
         if ($pos !== false)
@@ -321,7 +321,7 @@ class StreamTableReader
         $this->close();
     }
 
-    public static function create($stream_info)
+    public static function create(array $stream_info)
     {
         $object = new static;
         $object->stream_info = $stream_info;
@@ -343,7 +343,7 @@ class StreamTableReader
         $this->read_buffer = '';
     }
 
-    public function read($length)
+    public function read(int $length)
     {
         if (!isset($this->stream_info['path']))
             return false;
@@ -448,7 +448,7 @@ class StreamTableReader
         return $this->service;
     }
 
-    private static function arrayToCsv($arr)
+    private static function arrayToCsv(array $arr)
     {
         $buffer = fopen('php://temp', 'r+');
         fputcsv($buffer, $arr, ',', '"', "\\");
@@ -475,7 +475,7 @@ class StreamTableJsonReader
         $this->close();
     }
 
-    public static function create($stream_info)
+    public static function create(array $stream_info)
     {
         $object = new static;
         $object->stream_info = $stream_info;
@@ -497,7 +497,7 @@ class StreamTableJsonReader
         $this->read_buffer = '';
     }
 
-    public function read($length)
+    public function read(int $length)
     {
         if (!isset($this->stream_info['path']))
             return false;
@@ -610,7 +610,7 @@ class StreamTableJsonReader
         return $this->service;
     }
 
-    private static function arrayToCsv($arr)
+    private static function arrayToCsv(array $arr)
     {
         $buffer = fopen('php://temp', 'r+');
         fputcsv($buffer, $arr, ',', '"', "\\");

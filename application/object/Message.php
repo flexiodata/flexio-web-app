@@ -30,11 +30,8 @@ class Message
         $this->initialize();
     }
 
-    public static function create($type, $params)
+    public static function create(string $type, array $params)
     {
-        if (!is_string($type) || !is_array($params))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
         switch ($type)
         {
             default:
@@ -81,7 +78,7 @@ class Message
         $this->message_params = false;
     }
 
-    private static function createWelcomeEmail($params)
+    private static function createWelcomeEmail(array $params)
     {
         if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
@@ -109,7 +106,7 @@ class Message
         return $email->send();
     }
 
-    private static function createResetPasswordEmail($params)
+    private static function createResetPasswordEmail(array $params)
     {
         if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
@@ -138,7 +135,7 @@ class Message
         return $email->send();
     }
 
-    private static function createShareProjectEmail($params)
+    private static function createShareProjectEmail(array $params)
     {
         if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
@@ -188,7 +185,7 @@ class Message
         return $email->send();
     }
 
-    private static function createSharePipeEmail($params)
+    private static function createSharePipeEmail(array $params)
     {
         if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
@@ -232,7 +229,7 @@ class Message
         return $email->send();
     }
 
-    private static function getHtmlEmail($template_file, $replacement_strs)
+    private static function getHtmlEmail(string $template_file, array $replacement_strs)
     {
         $res_dir = \Flexio\System\System::getResDirectory();
 
@@ -255,7 +252,7 @@ class Message
         return $msg;
     }
 
-    private static function getTextEmail($template_file, $replacement_strs)
+    private static function getTextEmail(string$template_file, array $replacement_strs)
     {
         $res_dir = \Flexio\System\System::getResDirectory();
 

@@ -50,22 +50,16 @@ class Collection
         return $collection_copy;
     }
 
-    public function set($collection)
+    public function set(\Flexio\Object\Collection $collection)
     {
         // sets the collection to the input collection
-        if (!($collection instanceof \Flexio\Object\Collection))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
         $this->objects = $collection->enum();
         return $this;
     }
 
-    public function merge($collection)
+    public function merge(\Flexio\Object\Collection $collection)
     {
         // adds the items in the collection to the existing collection
-        if (!($collection instanceof \Flexio\Object\Collection))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
         $collection_objects = $collection->enum();
         foreach ($collection_objects as $object)
         {
@@ -75,7 +69,7 @@ class Collection
         return $this;
     }
 
-    public function push($object)
+    public function push($object) // TODO: only accept one type of input?
     {
         // adds an object onto the end of the collection
 
@@ -116,7 +110,7 @@ class Collection
         return $this->objects;
     }
 
-    public function find($name)
+    public function find(string $name)
     {
         // returns the first object with a given name; if no object are found, returns false
         foreach ($this->objects as $object)

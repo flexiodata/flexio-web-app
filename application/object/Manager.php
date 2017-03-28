@@ -17,7 +17,7 @@ namespace Flexio\Object;
 
 class Manager
 {
-    public static function handleEmail($stream, $pipe_eid = false)
+    public static function handleEmail(string $stream, string $pipe_eid = null)
     {
         // if eid is specified, the pipe with the given eid will be
         // run, otherwise, the first part of the email subject will
@@ -43,7 +43,7 @@ class Manager
         // STEP 3: determine where to route the email; the pipe to launch
         // is the first part of the email; e.g. <pipe_eid>@email.flex.io
 
-        if ($pipe_eid === false)
+        if (!isset($pipe_eid))
         {
             $email_to_addresses = $parser->getTo();
             if (count($email_to_addresses) > 0)
@@ -85,7 +85,7 @@ class Manager
         return $process->get();
     }
 
-    private static function saveAttachmentsToStreams($email_parser)
+    private static function saveAttachmentsToStreams($email_parser) // TODO: set parameter type
     {
         // create a new stream for each attachment; return an array of stream eids
         $streams = array();

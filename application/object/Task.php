@@ -181,7 +181,7 @@ class Task
         return $manifest;
     }
 
-    public static function create($properties = null)
+    public static function create(array $properties = null)
     {
         $object = new static();
         $object->task = array();
@@ -202,7 +202,7 @@ class Task
         return $object;
     }
 
-    public static function load($task)
+    public static function load($task) // TODO: add input parameter type
     {
         // similar to create (we don't have eids for tasks yet),
         // but assumes a valid task array has already been created
@@ -231,7 +231,7 @@ class Task
         return $this->task;
     }
 
-    public function push($command)
+    public function push($command) // TODO: add input parameter types
     {
         // note: adds a raw command to the end of the task array
         $this->addTaskStep($command, null);
@@ -245,7 +245,7 @@ class Task
         return $this;
     }
 
-    public function addTaskStep($command, $index = null)
+    public function addTaskStep($command, $index = null) // TODO: add input parameter types
     {
         // make sure the command is in the proper format
         $task_step = self::convertCommand($command);
@@ -305,7 +305,7 @@ class Task
         return $task_step['eid'];
     }
 
-    public function deleteTaskStep($task_eid)
+    public function deleteTaskStep(string $task_eid)
     {
         if (!\Flexio\Base\Eid::isValid($task_eid))
             return $this;
@@ -327,7 +327,7 @@ class Task
         return $this;
     }
 
-    public function setTaskStep($task_eid, $command)
+    public function setTaskStep($task_eid, $command) // TODO: add input parameter types
     {
         if (!\Flexio\Base\Eid::isValid($task_eid))
             return $this;
@@ -356,7 +356,7 @@ class Task
         return $this;
     }
 
-    public function getTaskStep($task_eid)
+    public function getTaskStep(string $task_eid)
     {
         // iterate through the tasks; if the eid of the task step
         // matches the existing task, return the task
@@ -369,9 +369,9 @@ class Task
         return false;
     }
 
-    public function setParams($variables)
+    public function setParams(array $variables)
     {
-        if (!is_array($variables) || count($variables) === 0)
+        if (count($variables) === 0)
             return $this;
 
         $new_task = array();
@@ -384,7 +384,7 @@ class Task
         return $this;
     }
 
-    private static function updateVariables($task, $variables)
+    private static function updateVariables($task, $variables) // TODO: add input parameter types
     {
         $updated_task = (array)$task;
         if (isset($updated_task['params']))
@@ -399,7 +399,7 @@ class Task
         return $updated_task;
     }
 
-    private static function updateTaskItemWithVariable($variables, $original_item, &$updated_item)
+    private static function updateTaskItemWithVariable($variables, $original_item, &$updated_item) // TODO: add input parameter types
     {
         // set the initial output to the input
         $updated_item = $original_item;
@@ -443,7 +443,7 @@ class Task
         return false;
     }
 
-    private static function replaceValueWithVariable($variables, $old_value, &$new_value)
+    private static function replaceValueWithVariable($variables, $old_value, &$new_value) // TODO: add input parameter types
     {
         // returns true if value was updated; false otherwise
 
@@ -488,7 +488,7 @@ class Task
         return $updated;
     }
 
-    private static function addEidToTaskStep($step)
+    private static function addEidToTaskStep($step) // TODO: add input parameter types
     {
         // if a task eid isn't set, then add one
 
@@ -505,7 +505,7 @@ class Task
         return $step;
     }
 
-    private static function convertCommand($command)
+    private static function convertCommand($command) // TODO: add input parameter types
     {
         $task_step = false;
 

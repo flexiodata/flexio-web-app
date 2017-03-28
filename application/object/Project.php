@@ -22,7 +22,7 @@ class Project extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_PROJECT);
     }
 
-    public function set($properties)
+    public function set(array $properties)
     {
         // TODO: add properties check
 
@@ -43,7 +43,7 @@ class Project extends \Flexio\Object\Base
         return false;
     }
 
-    public function addMember($object_eid)
+    public function addMember(string $object_eid)
     {
         if (!\Flexio\Base\Eid::isValid($object_eid))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);

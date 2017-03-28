@@ -42,7 +42,7 @@ class Connection extends \Flexio\Object\Base
         return $connection_eid;
     }
 
-    public function set($properties)
+    public function set(array $properties)
     {
         // TODO: add properties check
 
@@ -98,7 +98,7 @@ class Connection extends \Flexio\Object\Base
         return $this;
     }
 
-    public function authenticate($params)
+    public function authenticate(array $params)
     {
         // TODO: this was moved from \Flexio\Api\Connection::authenticate() which functioned
         // somewhat like a static method so that everything was passed to the function;
@@ -335,7 +335,7 @@ class Connection extends \Flexio\Object\Base
         return $connection_eid;
     }
 
-    private static function createDatastore($host, $port, $database, $username, $password)
+    private static function createDatastore(string $host, int $port, string $database, string $username, string $password)
     {
         // note: this function isn't used right now, but is here for reference
 
