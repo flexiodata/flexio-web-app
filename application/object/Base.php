@@ -258,7 +258,7 @@ class Base implements IObject
         return false;
     }
 
-    public function setRights(array $rights)
+    public function setRights(array $rights = null)
     {
         // TODO: set the rights
 
