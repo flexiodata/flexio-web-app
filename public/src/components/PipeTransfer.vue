@@ -78,13 +78,13 @@
         class="flex-fill overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_output_chooser = false"
+        @choose-output="addOutput"
+        v-else
       ></pipe-transfer-output-chooser>
     </div>
 
     <div class="flex-none flex flex-column css-pipe-transfer-column-transform">
       <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
-
-
         <div class="flex flex-row items-center justify-center relative">
           <div v-if="has_tasks">Transformations</div>
           <div v-else>3. Add Transformations</div>
@@ -129,6 +129,7 @@
   import Btn from './Btn.vue'
   import PipeTransferInputList from './PipeTransferInputList.vue'
   import PipeTransferInputChooser from './PipeTransferInputChooser.vue'
+  import PipeTransferOutputList from './PipeTransferOutputList.vue'
   import PipeTransferOutputChooser from './PipeTransferOutputChooser.vue'
   import PipeTransferTransformList from './PipeTransferTransformList.vue'
 
@@ -138,6 +139,7 @@
       Btn,
       PipeTransferInputList,
       PipeTransferInputChooser,
+      PipeTransferOutputList,
       PipeTransferOutputChooser,
       PipeTransferTransformList
     },
@@ -202,6 +204,26 @@
           _.set(attrs, 'params.connection', conn_identifier)
 
         // add input task
+        this.$store.dispatch('createPipeTask', { eid, attrs })
+      },
+      addOutput(connection) {
+        // always insert at the end of the pipe
+        var conn_identifier = _.get(connection, 'ename', '')
+        conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(connection, 'eid', '')
+
+        var eid = this.pipeEid
+        var attrs = {
+          metadata: {
+            connection_type: _.get(connection, 'connection_type', '')
+          },
+          type: TASK_TYPE_OUTPUT,
+          params: {}
+        }
+
+        if (conn_identifier.length > 0)
+          _.set(attrs, 'params.connection', conn_identifier)
+
+        // add output task
         this.$store.dispatch('createPipeTask', { eid, attrs })
       }
     }
