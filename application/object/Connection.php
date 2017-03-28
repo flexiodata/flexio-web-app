@@ -46,17 +46,9 @@ class Connection extends \Flexio\Object\Base
     {
         // TODO: add properties check
 
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $connection_model = $this->getModel()->connection;
-            $connection_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $connection_model = $this->getModel()->connection;
+        $connection_model->set($this->getEid(), $properties);
         return $this;
     }
 

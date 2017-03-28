@@ -54,6 +54,8 @@ class Pipe extends \Flexio\Object\Base
 
     public function set($properties)
     {
+        // TODO: add properties check
+
         // if a task parameter is set, we need to assign a client id to each element
         if (isset($properties) && isset($properties['task']))
             $properties['task'] = \Flexio\Object\Task::create($properties['task'])->get();
@@ -71,19 +73,9 @@ class Pipe extends \Flexio\Object\Base
             $properties['schedule'] = json_encode($schedule);
         }
 
-        // TODO: add properties check
-
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $pipe_model = $this->getModel()->pipe;
-            $pipe_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $pipe_model = $this->getModel()->pipe;
+        $pipe_model->set($this->getEid(), $properties);
         return $this;
     }
 

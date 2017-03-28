@@ -26,17 +26,9 @@ class Project extends \Flexio\Object\Base
     {
         // TODO: add properties check
 
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $project_model = $this->getModel()->project;
-            $project_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $project_model = $this->getModel()->project;
+        $project_model->set($this->getEid(), $properties);
         return $this;
     }
 

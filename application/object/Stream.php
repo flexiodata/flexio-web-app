@@ -70,6 +70,8 @@ class Stream extends \Flexio\Object\Base
 
     public function set($properties)
     {
+        // TODO: add properties check
+
         // structure is stored as json string; it needs to be validated
         // and encoded
         if (isset($properties) && isset($properties['structure']))
@@ -85,19 +87,9 @@ class Stream extends \Flexio\Object\Base
             $properties['structure'] = json_encode($structure);
         }
 
-        // TODO: add properties check
-
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $stream_model = $this->getModel()->stream;
-            $stream_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $stream_model = $this->getModel()->stream;
+        $stream_model->set($this->getEid(), $properties);
         return $this;
     }
 

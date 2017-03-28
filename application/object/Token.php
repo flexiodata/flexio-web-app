@@ -49,8 +49,7 @@ class Token extends \Flexio\Object\Base
 
     public function set($properties)
     {
-        // don't allow anything to be set once it's been created
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }
 
     public function get()

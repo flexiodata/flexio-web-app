@@ -29,7 +29,7 @@ class Object extends \Flexio\Object\Base
         if (isset($properties['eid_status']))
         {
             $status = $properties['eid_status'];
-            $result = $this->getModel()->setStatus($this->getEid(), $status);
+            $this->getModel()->setStatus($this->getEid(), $status);
         }
 
         return $this;
