@@ -100,9 +100,8 @@ class User extends \Flexio\Object\Base
 
     public function copy()
     {
-        // TODO: disable copying of user objects for now, since users can't
-        // have the same username or email
-        return false;
+        // user info is unique; don't allow users to be copied
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
     }
 
     public function set($properties)

@@ -42,12 +42,9 @@ class Collection
             // a collection contains one of these objects, don't allow the collection
             // to be copied
             $object_copy = $object->copy();
-            if ($object_copy === false)
-                return false;
-
             $result = $collection_copy->push($object_copy);
             if ($result === false)
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
 
         return $collection_copy;
