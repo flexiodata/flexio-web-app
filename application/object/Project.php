@@ -53,11 +53,7 @@ class Project extends \Flexio\Object\Base
         $project_eid = $this->getEid();
         $result1 = $this->getModel()->assoc_add($project_eid, \Model::EDGE_HAS_MEMBER, $object_eid);
         $result2 = $this->getModel()->assoc_add($object_eid, \Model::EDGE_MEMBER_OF, $project_eid);
-
-        if ($result1 === false || $result2 === false)
-            return false;
-
-        return true;
+        return $this;
     }
 
     public function getMembers()

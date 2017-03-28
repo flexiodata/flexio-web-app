@@ -50,6 +50,7 @@ class Token extends \Flexio\Object\Base
     public function set(array $properties)
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        return $this;
     }
 
     public function get()

@@ -191,7 +191,7 @@ class Process extends \Flexio\Object\Base
         // get the executing subprocess; if we don't have any, we're done
         $executing_subprocess_eid = $this->getCurrentExecutingSubProcess();
         if ($executing_subprocess_eid === false)
-            return;
+            return $this;
 
         $pct = intval($pct);
         if ($pct < 0)
@@ -203,12 +203,13 @@ class Process extends \Flexio\Object\Base
         // the function to be called in tight loops without worrying about the
         // overhead of database writes
         if ($this->last_percentage_saved === $pct)
-            return;
+            return $this;
 
         $process_info = array();
         $process_info['pct'] = $pct;
         $process_params['process_info'] = json_encode($process_info);
         $this->getModel()->process->set($executing_subprocess_eid, $process_params);
+        return $this;
     }
 
     public function setProcessStatus(string $status)
