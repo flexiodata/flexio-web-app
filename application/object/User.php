@@ -31,28 +31,6 @@ class User extends \Flexio\Object\Base
         if (isset($properties) && isset($properties['config']))
             $properties['config'] = json_encode($properties['config']);
 
-/*
-        // TODO: find out what's wrong with this implementation
-
-        // a unique username is required for users; if a username
-        // isn't specified, then supply a default
-        $username = \Flexio\Base\Util::generateHandle();
-        $email= $username.'@flex.io';
-        if (!isset($properties))
-        {
-            $properties = array('user_name' => $username, 'email' => $email);
-        }
-        if (is_array($properties) && !isset($properties['user_name']))
-        {
-            if (!isset($properties['user_name']))
-                $properties['user_name'] = $username;
-            if (!isset($properties['email']))
-                $properties['email'] = $email;
-        }
-
-        parent::create($properties);
-*/
-
         // a unique username is required for users; if a username
         // isn't specified, then supply a default
         $username = \Flexio\Base\Util::generateHandle();
