@@ -38,8 +38,8 @@ class Grep extends \Flexio\Jobs\Base
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
-        $streamreader = \Flexio\Object\StreamReader($instream);
-        $streamwriter = \Flexio\Object\StreamWriter($outstream);
+        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
 
         // get the code from the template
@@ -73,7 +73,7 @@ class Grep extends \Flexio\Jobs\Base
         */
 
         $cwd = sys_get_temp_dir();
-        $external_process = new \PhpPipe;
+        $external_process = new \Flexio\Base\ProcessPipe;
         if (!$external_process->exec($cmd, $cwd))
         {
             @unlink($filename);
@@ -140,7 +140,7 @@ class Grep extends \Flexio\Jobs\Base
                 }
                  else
                 {
-                    $buf = $streamreader->readRow();
+                    $buf = $streamreader->read(1024);
                     if ($buf === false)
                         break;
 
@@ -301,109 +301,4 @@ class WindowsPipe
         return $this->exec->Stdout->AtEndOfStream ? false : true;
     }
 
-}
-
-
-
-
-class PhpPipe
-{
-    public $pipes = [null,null,null];
-    public $process = null;
-
-    function __destruct()
-    {
-        $this->closeWrite();
-        $this->closeRead();
-        $this->closeError();
-        if ($this->process)
-            proc_close($this->process);
-    }
-
-    public function exec($cmd, $cwd)
-    {
-        $descriptor_spec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
-        );
-
-        $this->process = proc_open($cmd, $descriptor_spec, $this->pipes, $cwd, NULL);
-
-        if (!is_resource($this->process))
-        {
-            $this->process = null;
-            return false;
-        }
-
-        return true;
-    }
-
-    public function isRunning()
-    {
-        $status = proc_get_status($this->process);
-        if ($status['running'])
-            return true;
-             else
-            return false;
-    }
-
-
-    public function closeWrite()
-    {
-        if ($this->pipes[0])
-        {
-            fclose($this->pipes[0]);
-            $this->pipes[0] = null;
-        }
-    }
-
-    public function closeRead()
-    {
-        if ($this->pipes[1])
-        {
-            fclose($this->pipes[1]);
-            $this->pipes[1] = null;
-        }
-    }
-
-    public function closeError()
-    {
-        if ($this->pipes[2])
-        {
-            fclose($this->pipes[2]);
-            $this->pipes[2] = null;
-        }
-    }
-
-
-
-    public function write($buf)
-    {
-        fwrite($this->pipes[0], $buf);
-    }
-
-    public function read($size)
-    {
-        //return stream_get_contents($this->pipes[1]);
-        return fread($this->pipes[1], $size);
-        //fgets($this->pipes[1]);
-    }
-
-
-    public function canRead()
-    {
-        $read = array($this->pipes[1]);
-        $write = array();
-        $except = array();
-        $res = stream_select($read, $write, $except, 1);
-        if ($res === false || $res == 0)
-            return false;
-
-        $s = fstat($this->pipes[1]);
-        if (isset($s['size']) && $s['size'] > 0)
-            return true;
-             else
-            return false;
-    }
 }

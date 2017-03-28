@@ -51,8 +51,12 @@ class Execute extends \Flexio\Jobs\Base
         $this->getOutput()->push($outstream);
 
         // if the input mime type is a table, set the output type to text
+        $is_table = false;
         if ($instream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        {
+            $is_table = true;
             $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
+        }
 
         // properties
         $job_definition = $this->getProperties();
@@ -96,124 +100,111 @@ class Execute extends \Flexio\Jobs\Base
         if (strlen($code) == 0)
             return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _(''), __FILE__, __LINE__);
 
+
+
+        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+
         // the code is base64 encoded, so decode it and write it out
         // to a temporary file
         $code = base64_decode($code);
         $filename = \Flexio\Base\Util::createTempFile('fxscript', $program_extension);
         file_put_contents($filename, $code);
 
-        // initiate the program process
         $cmd = $program_path . ' ' . "\"$filename\"";
         $cwd = sys_get_temp_dir();
-        $env = array('some_option' => 'aeiou');
 
-        $descriptorspec = array(
-           0 => array("pipe", "r"),
-           1 => array("pipe", "w"),
-           2 => array("pipe", "w")
-        );
-
-        $process = proc_open($cmd, $descriptorspec, $pipes, $cwd, NULL);
-
-        if (!is_resource($process))
+        $process = new \Flexio\Base\ProcessPipe;
+        if (!$process->exec($cmd, $cwd))
         {
             @unlink($filename);
-            return $this->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, _(''), __FILE__, __LINE__);
         }
 
-        if ($instream->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        $done_writing = false;
+
+        do
         {
-            $instream->read(function ($data) use (&$pipes) {
-                fputs($pipes[0], $data);
-            });
-        }
-         else
-        {
-            $count = 0;
-            $structure = $instream->getStructure();
-            $structure_fields = implode(',', $structure->getNames()) . "\r\n";
+            $is_running = $process->isRunning();
 
-            $instream->read(function ($data) use (&$pipes, &$count, $structure_fields) {
+            // write a chunk to the stdin
 
-                if ($count === 0)
-                    fputs($pipes[0], $structure_fields);
-
-                if (is_array($data))
-                    $data = implode(',', $data) . "\r\n"; // TODO: better CSV output?
-                fputs($pipes[0], $data);
-
-                $count++;
-            });
-        }
-
-        fclose($pipes[0]);
-        fclose($pipes[2]);
-
-        // note: here, we're writing out all the input to stdin before reading it from stdout;
-        // this causes a deadlock when programs write to stdout and fill it up before finishing
-        // reading it from stdin; see the comments here: http://php.net/manual/en/function.proc-open.php
-        // for example, script #1 below will cause a deadlock if the input is sufficiently large
-        // whereas script #2 will work fine; TODO: need to figure out a solution for arbitrarily
-        // sized inputs
-
-        // script #1:
-        //
-        // import sys
-        // for line in sys.stdin:
-        //     sys.stdout.write(line)
-
-        // script #2:
-        //
-        // import sys
-        // input = '';
-        // for line in sys.stdin:
-        //     input += line;
-        // sys.stdout.write(line)
-
-        // write to the output
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
-
-        // $pipes now looks like this:
-        // 0 => writeable handle connected to child stdin
-        // 1 => readable handle connected to child stdout
-        // Any error output will be appended to /tmp/error-output.txt
-
-        $idx = 0;
-        while (true)
-        {
-            $status = proc_get_status($process);
-            $read = array($pipes[1]);
-            $write = array();
-            $except = array();
-            if (stream_select($read, $write, $except, 1) > 0)
+            if (!$done_writing)
             {
-                $content = fread($pipes[1], 1024);
-                if (!$content)
-                    break;
+                if ($is_table)
+                {
+                    // write data
 
-                $streamwriter->write($content);
+                    $row = $streamreader->readRow();
+                    if ($row)
+                    {
+                        $str = join(',', array_values($row)) . "\n";
+                        $process->write($str);
+
+                        ++$rowcnt;
+                        /*
+                        if ($maxrows != -1 && ++$rowcnt >= $maxrows)
+                        {
+                            $process->closeWrite();
+                            $done_writing = true;
+                        }
+                        */
+                    }
+                     else
+                    {
+                        $process->closeWrite();
+                        $done_writing = true;
+                    }
+                }
+                 else
+                {
+
+                    $buf = $streamreader->read(1024);
+
+ob_start();
+var_dump($buf);
+$s = ob_get_clean();
+
+fxdebug("\n\n\n\nStream Reader: ".$s."***");
+
+
+                    if ($buf === false)
+                        break;
+
+                    $len = strlen($buf);
+
+                    if ($len > 0)
+                        $process->write($buf);
+fxdebug("Write Done\n");
+
+                    if ($len != 1024)
+                    {
+                        $process->closeWrite();
+                        $done_writing = true;
+                        fxdebug("Closed Writing\n");
+                    }
+                }
             }
 
-            //if (!$status['running'])
-            //    break;
-        }
 
-        if ($streamwriter !== false)
-        {
-            $streamwriter->close();
-            $outstream->setSize($streamwriter->getBytesWritten());
-        }
 
-        // TODO: set appropriate mime type based on content?
+            if ($process->canRead())
+            {
+                fxdebug("Reading...\n");
+                $chunk = $process->read(1024);
 
-        fclose($pipes[1]);
-        @unlink($filename);
+                ob_start();
+                var_dump($chunk);
+                $s = ob_get_clean();
 
-        // It is important that you close any pipes before calling
-        // proc_close in order to avoid a deadlock
-        $return_value = proc_close($process);
+                fxdebug("From process: ".$s."***\n\n\n\n");
+
+                $streamwriter->write($chunk);
+            }
+
+
+        } while ($is_running);
+
     }
 
 
