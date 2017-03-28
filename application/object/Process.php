@@ -812,7 +812,7 @@ class Process extends \Flexio\Object\Base
         // return true;
     }
 
-    private function clearCache() : \Flexio\Object\Process
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
