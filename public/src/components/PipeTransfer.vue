@@ -31,6 +31,8 @@
         class="flex-fill"
         :tasks="input_tasks"
         v-if="has_input && !show_input_chooser"
+        @input-add-items="addInputItems"
+        @input-delete="deleteInput"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
         class="flex-fill overflow-y-auto"
@@ -150,6 +152,14 @@
       has_tasks()  { return this.transform_tasks.length > 0 }
     },
     methods: {
+      addInputItems(input) {
+
+      },
+      deleteInput(input) {
+        var eid = this.pipeEid
+        var task_eid = _.get(input, 'eid', '')
+        this.$store.dispatch('deletePipeTask', { eid, task_eid })
+      },
       addInput(connection) {
         // insert input after any existing inputs
         var input_idx = _.findLastIndex(this.tasks, (t) => { return _.get(t, 'type') == TASK_TYPE_INPUT })
@@ -163,10 +173,7 @@
         var conn_identifier = _.get(connection, 'ename', '')
         conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(connection, 'eid', '')
 
-        // pipe eid
         var eid = this.pipeEid
-
-        // task attributes
         var attrs = {
           index: input_idx,
           metadata: {
