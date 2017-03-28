@@ -122,7 +122,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $object = $object->set(null);
+        $object = $object->set([]);
         $actual =  'Flexio\Object\Process';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Process::set(); return the object',  $actual, $expected, $results);
@@ -130,7 +130,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
         $eid1 = $object->getEid();
-        $eid2 = $object->set(null)->getEid();
+        $eid2 = $object->set([])->getEid();
         $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.2', 'Process::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
@@ -145,7 +145,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $object = $object->set(null);
+        $object = $object->set([]);
         $actual =  $object->getType();
         $expected = \Model::TYPE_PROCESS;
         TestCheck::assertString('D.4', 'Process::set(); don\'t allow the type to be changed',  $actual, $expected, $results);

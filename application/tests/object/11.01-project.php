@@ -122,7 +122,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Project::create();
-        $object = $object->set(null);
+        $object = $object->set([]);
         $actual =  'Flexio\Object\Project';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'Project::set(); return the object',  $actual, $expected, $results);
@@ -130,7 +130,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Project::create();
         $eid1 = $object->getEid();
-        $eid2 = $object->set(null)->getEid();
+        $eid2 = $object->set([])->getEid();
         $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.2', 'Project::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
@@ -145,7 +145,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Project::create();
-        $object = $object->set(null);
+        $object = $object->set([]);
         $actual =  $object->getType();
         $expected = \Model::TYPE_PROJECT;
         TestCheck::assertString('D.4', 'Project::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
