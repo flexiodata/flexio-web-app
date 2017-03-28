@@ -45,7 +45,7 @@
       </div>
     </div>
     <div class="ma3 tc" v-else>
-      <div class=" lh-copy mid-gray f6 mb3 tc i">No files have been selected from this connection.</div>
+      <div class=" lh-copy mid-gray f6 mb3 tc i">There are no files that have been selected from this connection.</div>
       <div class="">
         <btn
           btn-md
