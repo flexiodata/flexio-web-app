@@ -18,6 +18,7 @@
             <div class="v-top dib f5 lh-copy">{{index+1}}.</div>
             <inline-edit-text
               class="v-top dib f5 lh-copy"
+              edit-button-tooltip-cls="hint--top-left"
               input-key="name"
               :val="display_name"
               @save="editTaskSingleton">
@@ -26,6 +27,7 @@
               class="f7 lh-title gray"
               placeholder="Add a description"
               placeholder-cls="fw6 black-20 hover-black-40"
+              edit-button-tooltip-cls="hint--top-left"
               input-key="description"
               :val="description"
               @save="editTaskSingleton">

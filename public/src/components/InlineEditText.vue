@@ -14,7 +14,8 @@
       <div @click="editing = true" v-if="edit_val.length > 0">{{edit_val}}</div>
       <div :class="placeholderCls" @click="editing = true" v-else>{{placeholder}}</div>
       <button
-        class="ml1 pa0 br1 hint--top child"
+        class="ml1 pa0 br1 child"
+        :class="editButtonTooltipCls"
         :aria-label="editButtonLabel"
         @click="editing = true"
         v-if="!editing && showEditButton"
@@ -45,6 +46,10 @@
       },
       'edit-button-label': {
         default: 'Click to edit',
+        type: String
+      },
+      'edit-button-tooltip-cls': {
+        default: 'hint--top',
         type: String
       },
       'show-edit-button': {
