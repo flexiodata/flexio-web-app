@@ -2,7 +2,7 @@
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
     <div class="flex-fill flex flex-column mr3-l">
-      <div class="f4 pa2 mt3-l bg-blue white tc css-pipe-transfer-header">
+      <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
         <div class="flex flex-row items-center justify-center relative" v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
           <div v-else>Input</div>
@@ -44,7 +44,7 @@
     </div>
 
     <div class="flex-fill flex flex-column mr3-l">
-      <div class="f4 pa2 mt3-l bg-blue white tc css-pipe-transfer-header">
+      <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
         <div class="flex flex-row items-center justify-center relative" v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
@@ -82,7 +82,7 @@
     </div>
 
     <div class="flex-none flex flex-column css-pipe-transfer-column-transform">
-      <div class="f4 pa2 mt3-l bg-blue white tc css-pipe-transfer-header">
+      <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
         <div v-if="has_tasks">Transformations</div>
         <div v-else>3. Add Transformations</div>
       </div>

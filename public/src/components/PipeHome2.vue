@@ -4,7 +4,7 @@
   </div>
   <div v-else class="flex flex-column items-stretch">
     <pipe-home-header
-      class="pv3 ph3 ph0-l mh5-l bb b--black-10"
+      class="pv3 ph3 ph0-l mh5-l"
       :pipe-eid="eid"
       :pipe-view="pipe_view"
       :process-running="is_process_running"
@@ -22,7 +22,7 @@
     </pipe-transfer>
 
     <pipe-builder-list
-      class="flex-fill mh5-l"
+      class="flex-fill mh5-l bt b--black-10"
       :pipe-eid="eid"
       :tasks="tasks"
       :active-process="active_process"
