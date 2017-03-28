@@ -303,7 +303,7 @@ class Base implements IObject
 
     protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type
     {
-        return $this->model = $model;
+        $this->model = $model;
         return $this;
     }
 

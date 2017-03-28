@@ -129,6 +129,8 @@ class Rights
         // the system user has rights to everything
         if ($user_eid === \Flexio\Object\User::USER_SYSTEM)
             return true;
+
+        return false;
     }
 
     public static function isowned(string $object_eid, string $user_eid) : bool
