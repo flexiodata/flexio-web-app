@@ -34,8 +34,8 @@
       ServiceList
     },
     methods: {
-      chooseConnection() {
-        alert('My connection item clicked!')
+      chooseConnection(item) {
+        this.$emit('choose-input', item)
       },
       setupConnection() {
         alert('Available connection item clicked!')

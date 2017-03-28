@@ -1,5 +1,6 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
+
     <div class="flex-fill flex flex-column mr3-l">
       <div class="f4 pa2 mt3-l tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2)">
         <div class="flex flex-row items-center justify-center" v-if="has_input">
@@ -25,10 +26,10 @@
         class="flex-fill overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
+        @choose-input="addInput"
         v-else
       ></pipe-transfer-input-chooser>
     </div>
-
 
     <div class="flex-fill flex flex-column mr3-l">
       <div class="f4 pa2 mt3-l tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2)">
@@ -57,7 +58,6 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-
     <div class="flex-none flex flex-column css-column-transform">
       <div class="f4 pa2 mt3-l tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2)">
         <div v-if="has_tasks">Transformations</div>
@@ -85,7 +85,6 @@
       </div>
     </div>
 
-
   </div>
 </template>
 
@@ -98,7 +97,7 @@
   import PipeTransferTransformList from './PipeTransferTransformList.vue'
 
   export default {
-    props: ['tasks', 'project-eid', 'active-subprocess'],
+    props: ['tasks', 'pipe-eid', 'project-eid', 'active-subprocess'],
     components: {
       Btn,
       PipeTransferInputList,
@@ -127,7 +126,43 @@
 
       has_input()  { return this.input_tasks.length > 0 },
       has_output() { return this.output_tasks.length > 0 },
-      has_tasks()  { return this.transform_tasks.length > 0 },
+      has_tasks()  { return this.transform_tasks.length > 0 }
+    },
+    methods: {
+      addInput(connection) {
+        // insert input after any existing inputs
+        var input_idx = _.findLastIndex(this.tasks, (t) => { return _.get(t, 'type') == TASK_TYPE_INPUT })
+
+        // if there are no inputs, insert at the beginning of the pipe
+        if (input_idx == -1)
+          input_idx = 0
+           else
+          input_idx++
+
+        var conn_identifier = _.get(connection, 'ename', '')
+        conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(connection, 'eid', '')
+
+        // pipe eid
+        var eid = this.pipeEid
+
+        // task attributes
+        var attrs = {
+          index: input_idx,
+          metadata: {
+            connection_type: _.get(connection, 'connection_type', '')
+          },
+          type: TASK_TYPE_INPUT,
+          params: {
+            items: []
+          }
+        }
+
+        if (conn_identifier.length > 0)
+          _.set(attrs, 'params.connection', conn_identifier)
+
+        // add input task
+        this.$store.dispatch('createPipeTask', { eid, attrs })
+      }
     }
   }
 </script>

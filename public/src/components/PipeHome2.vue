@@ -15,6 +15,7 @@
     <pipe-transfer
       class="flex-fill ph5-l"
       :project-eid="project_eid"
+      :pipe-eid="eid"
       :tasks="tasks"
       @open-builder="pipe_view = 'builder'"
       v-if="pipe_view == 'transfer'">
