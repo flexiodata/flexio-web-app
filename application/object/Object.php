@@ -22,6 +22,19 @@ class Object extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_OBJECT);
     }
 
+    public static function create(array $properties = null) : \Flexio\Object\Object
+    {
+        $object = new static();
+        $model = \Flexio\Object\Store::getModel();
+        $local_eid = $model->create($object->getType(), $properties);
+
+        $object->setModel($model);
+        $object->setEid($local_eid);
+        $object->setRights();
+        $object->clearCache();
+        return $object;
+    }
+
     public function set(array $properties) : \Flexio\Object\Object
     {
         $this->clearCache();
