@@ -460,7 +460,7 @@ class Model
         }
     }
 
-    public function assoc_get(string $source_eid, string $type, string $target_eid_set) : array
+    public function assoc_get(string $source_eid, string $type, array $target_eid_set) : array
     {
         if (!\Model::isValidEdge($type))
             return array();
@@ -471,20 +471,6 @@ class Model
             return array();
 
         $db = $this->getDatabase();
-
-        // if the target_eid_set is something besides an array or a string,
-        // it's an invalid input; return an empty list
-        if (!is_array($target_eid_set) && !is_string($target_eid_set))
-            return array();
-
-        // if the target_eid_set is a string, convert it over to an array
-        // of one element
-        $set = array();
-        if (is_string($target_eid_set))
-        {
-            $set = explode(',',$target_eid_set);
-            $target_eid_set = $set;
-        }
 
         // make sure the set of target eids are comprised of valid eids
         $qtarget_eids = '';
@@ -964,7 +950,7 @@ class Model
 
     public function setTimezone(string $tz) : bool
     {
-        if (strlen($tz) == 0)
+        if (strlen($tz) <= 1)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $db = $this->getDatabase();
