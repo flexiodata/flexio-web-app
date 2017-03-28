@@ -21,10 +21,8 @@ class Store
     {
         switch ($eid_type)
         {
-            // TODO: fill out with appropriate classes when finished
-
             default:
-                return false; // unknown eid type
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
             case \Model::TYPE_OBJECT:
                 return \Flexio\Object\Object::create($properties);
@@ -60,8 +58,6 @@ class Store
         $eid_type = self::getModel()->getTypeByIdentifier($identifier);
         switch ($eid_type)
         {
-            // TODO: fill out with appropriate classes when finished
-
             default:
                 return false; // unknown eid type
 

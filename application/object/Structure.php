@@ -61,14 +61,14 @@ class Structure
             $columns = json_decode($columns, true);
 
         if (!is_array($columns))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $object = (new self);
         foreach ($columns as $c)
         {
             $result = $object->push($c);
             if ($result === false)
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
 
         return $object;

@@ -38,7 +38,7 @@ class Stream extends \Flexio\Object\Base
             $structure_object = \Flexio\Object\Structure::create($structure);
 
             if ($structure_object === false)
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
             $structure = $structure_object->enum();
             $properties['structure'] = json_encode($structure);
@@ -59,10 +59,7 @@ class Stream extends \Flexio\Object\Base
 
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
-
         $local_eid = $model->create($object->getType(), $properties);
-        if ($local_eid === false)
-            return false;
 
         $object->setModel($model);
         $object->setEid($local_eid);

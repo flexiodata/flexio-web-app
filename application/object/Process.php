@@ -48,14 +48,9 @@ class Process extends \Flexio\Object\Base
         if (!isset($properties['process_mode']))
             $properties['process_mode'] = \Model::PROCESS_MODE_RUN;
 
-        // TODO: use parent create?
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
-
-        // TODO: add properties check
         $local_eid = $model->create($object->getType(), $properties);
-        if ($local_eid === false)
-            return false;
 
         $object->setModel($model);
         $object->setEid($local_eid);

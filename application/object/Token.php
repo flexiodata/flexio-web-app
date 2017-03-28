@@ -26,12 +26,12 @@ class Token extends \Flexio\Object\Base
     {
         // the user_eid needs to be set and be a valid user
         if (!isset($properties['user_eid']))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $user_eid = $properties['user_eid'];
         $user = \Flexio\Object\User::load($user_eid);
         if ($user === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // generate an access code and a secret code
         $properties['access_code'] = \Flexio\Base\Util::generateHandle();
@@ -39,10 +39,7 @@ class Token extends \Flexio\Object\Base
 
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
-
         $local_eid = $model->create($object->getType(), $properties);
-        if ($local_eid === false)
-            return false;
 
         $object->setModel($model);
         $object->setEid($local_eid);
