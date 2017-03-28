@@ -47,7 +47,7 @@ class Structure
         $this->initialize();
     }
 
-    public static function create($columns = null)
+    public static function create($columns = null) : \Flexio\Object\Structure
     {
         // TODO: \Structure::union() allows Structure type input; allow
         // \Structure::create() to take structure input; in general, we may
@@ -77,7 +77,7 @@ class Structure
         return $object;
     }
 
-    public static function union(array $structures)
+    public static function union(array $structures) : \Flexio\Object\Structure
     {
         // TODO: make sure that union of structures handles column names
         // that are equivalent, differing only by case (e.g. Field1 vs. field1;
@@ -138,7 +138,7 @@ class Structure
         return false;
     }
 
-    public function copy()
+    public function copy() : \Flexio\Object\Structure
     {
         $object_copy = self::create();
         $object_copy->columns = $this->columns;
@@ -305,18 +305,18 @@ class Structure
         return $removed_element;
     }
 
-    public function get()
+    public function get() : array
     {
         // return the structure "as is"
         return $this->getColumns(false);
     }
 
-    public function enum(array $columns = null)
+    public function enum(array $columns = null) : array
     {
         return $this->getColumns($columns);
     }
 
-    public function getNames(array $columns = null)
+    public function getNames(array $columns = null) : array
     {
         $columns =  $this->getColumns($columns);
 
@@ -327,7 +327,7 @@ class Structure
         return $column_names;
     }
 
-    public function clear()
+    public function clear() : bool
     {
         $this->initialize();
         return true;
@@ -340,7 +340,7 @@ class Structure
         $this->column_store_index_lookup = array();
     }
 
-    private function getColumns(array $specified_columns = null, string $filter_type = null)
+    private function getColumns(array $specified_columns = null, string $filter_type = null) : array
     {
         // takes an optional list of specified column names and returns a unique list of
         // output columns (structure) composed of: 1) any available column that satisfies

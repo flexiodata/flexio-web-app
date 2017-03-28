@@ -22,7 +22,7 @@ class Pipe extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_PIPE);
     }
 
-    public static function create(array $properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\Pipe
     {
         // if a task parameter is set, we need to assign a client id to each element
         if (isset($properties) && isset($properties['task']))
@@ -52,7 +52,7 @@ class Pipe extends \Flexio\Object\Base
         return $object;
     }
 
-    public function set(array $properties)
+    public function set(array $properties) : \Flexio\Object\Pipe
     {
         // TODO: add properties check
 
@@ -79,7 +79,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setTask(array $task)
+    public function setTask(array $task) : \Flexio\Object\Pipe
     {
         // shorthand for setting task info
         $properties = array();
@@ -109,7 +109,7 @@ class Pipe extends \Flexio\Object\Base
         return $task_eid;
     }
 
-    public function deleteTaskStep(string $task_eid)
+    public function deleteTaskStep(string $task_eid) : \Flexio\Object\Pipe
     {
         $task_array = $this->getTask();
         $task = \Flexio\Object\Task::load($task_array);
@@ -118,7 +118,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setTaskStep($task_eid, $task_step) // TODO: add parameter types
+    public function setTaskStep($task_eid, $task_step) : \Flexio\Object\Pipe // TODO: add parameter types
     {
         // get the current task array
         $task_array = $this->getTask();
@@ -135,7 +135,7 @@ class Pipe extends \Flexio\Object\Base
         return $task->getTaskStep($task_eid);
     }
 
-    public function setSchedule(array $schedule)
+    public function setSchedule(array $schedule) : \Flexio\Object\Pipe
     {
         // make sure the schedule format is valid
         if (\Flexio\Base\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
@@ -157,14 +157,14 @@ class Pipe extends \Flexio\Object\Base
         return $local_properties['schedule'];
     }
 
-    public function addProcess(\Flexio\Object\Process $process)
+    public function addProcess(\Flexio\Object\Process $process) : \Flexio\Object\Pipe
     {
         $result = $this->getModel()->assoc_add($this->getEid(), \Model::EDGE_HAS_PROCESS, $process->getEid());
         $this->getModel()->assoc_add($process->getEid(), \Model::EDGE_PROCESS_OF, $this->getEid());
         return $this;
     }
 
-    public function getProcesses()
+    public function getProcesses() : array
     {
         $result = array();
 
@@ -195,7 +195,7 @@ class Pipe extends \Flexio\Object\Base
         return false;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -203,13 +203,14 @@ class Pipe extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         // get the properties
         $local_properties = $this->getProperties();

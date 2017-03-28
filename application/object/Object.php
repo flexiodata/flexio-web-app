@@ -22,7 +22,7 @@ class Object extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_OBJECT);
     }
 
-    public function set(array $properties)
+    public function set(array $properties) : \Flexio\Object\Object
     {
         $this->clearCache();
 
@@ -46,7 +46,7 @@ class Object extends \Flexio\Object\Base
         return false;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -54,13 +54,14 @@ class Object extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
         if ($local_properties === false)

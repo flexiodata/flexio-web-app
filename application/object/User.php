@@ -25,7 +25,7 @@ class User extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_USER);
     }
 
-    public static function create(array $properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\User
     {
         // config is stored as a json string, so it needs to be encoded
         if (isset($properties) && isset($properties['config']))
@@ -104,7 +104,7 @@ class User extends \Flexio\Object\Base
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
     }
 
-    public function set(array $properties)
+    public function set(array $properties) : \Flexio\Object\User
     {
         // TODO: add properties check
 
@@ -129,7 +129,7 @@ class User extends \Flexio\Object\Base
         return false;
     }
 
-    public function getProjects()
+    public function getProjects() : array
     {
         $eid = $this->getEid();
 
@@ -155,7 +155,7 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getPipes()
+    public function getPipes() : array
     {
         // note: we need to query the pipes for active projects only; because we don't have the ability to specify
         // properties in the graph query, we have to do two operations to get the pipes; first get the active projects,
@@ -216,7 +216,7 @@ class User extends \Flexio\Object\Base
 */
     }
 
-    public function getTokens()
+    public function getTokens() : array
     {
         $res = array();
         $token_items = $this->getModel()->token->getInfoFromUserEid($this->getEid());
@@ -239,18 +239,18 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getVerifyCode()
+    public function getVerifyCode() : string
     {
         $properties = $this->get();
         return $properties['verify_code'];
     }
 
-    public function checkPassword(string $password)
+    public function checkPassword(string $password) : bool
     {
         return $this->getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
     }
 
-    public function isAdministrator()
+    public function isAdministrator() : bool
     {
         // TODO: for now, administrators is any user with an email address for flexio
 
@@ -396,7 +396,7 @@ class User extends \Flexio\Object\Base
         return true;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -404,13 +404,14 @@ class User extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         // get the properties
         $local_properties = $this->getProperties();

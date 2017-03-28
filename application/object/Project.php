@@ -22,7 +22,7 @@ class Project extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_PROJECT);
     }
 
-    public function set(array $properties)
+    public function set(array $properties) : \Flexio\Object\Project
     {
         // TODO: add properties check
 
@@ -43,7 +43,7 @@ class Project extends \Flexio\Object\Base
         return false;
     }
 
-    public function addMember(string $object_eid)
+    public function addMember(string $object_eid) : \Flexio\Object\Project
     {
         if (!\Flexio\Base\Eid::isValid($object_eid))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -56,7 +56,7 @@ class Project extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getMembers()
+    public function getMembers() : array
     {
         $result = array();
 
@@ -76,7 +76,7 @@ class Project extends \Flexio\Object\Base
         return $result;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -84,13 +84,14 @@ class Project extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         // get the properties
         $local_properties = $this->getProperties();

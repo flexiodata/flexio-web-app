@@ -181,7 +181,7 @@ class Task
         return $manifest;
     }
 
-    public static function create(array $properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\Task
     {
         $object = new static();
         $object->task = array();
@@ -231,14 +231,14 @@ class Task
         return $this->task;
     }
 
-    public function push($command) // TODO: add input parameter types
+    public function push($command) : \Flexio\Object\Task // TODO: add input parameter types
     {
         // note: adds a raw command to the end of the task array
         $this->addTaskStep($command, null);
         return $this;
     }
 
-    public function pop()
+    public function pop() : \Flexio\Object\Task
     {
         // removes a command from the end of the task array
         array_pop($this->task);
@@ -305,7 +305,7 @@ class Task
         return $task_step['eid'];
     }
 
-    public function deleteTaskStep(string $task_eid)
+    public function deleteTaskStep(string $task_eid) : \Flexio\Object\Task
     {
         if (!\Flexio\Base\Eid::isValid($task_eid))
             return $this;
@@ -327,7 +327,7 @@ class Task
         return $this;
     }
 
-    public function setTaskStep($task_eid, $command) // TODO: add input parameter types
+    public function setTaskStep($task_eid, $command) : \Flexio\Object\Task // TODO: add input parameter types
     {
         if (!\Flexio\Base\Eid::isValid($task_eid))
             return $this;
@@ -369,7 +369,7 @@ class Task
         return false;
     }
 
-    public function setParams(array $variables)
+    public function setParams(array $variables) : \Flexio\Object\Task
     {
         if (count($variables) === 0)
             return $this;

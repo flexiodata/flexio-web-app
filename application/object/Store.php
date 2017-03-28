@@ -17,7 +17,7 @@ namespace Flexio\Object;
 
 class Store
 {
-    public static function create(string $eid_type, array $properties)
+    public static function create(string $eid_type, array $properties) : \Flexio\Object\Base
     {
         switch ($eid_type)
         {

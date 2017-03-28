@@ -35,7 +35,7 @@ class Process extends \Flexio\Object\Base
         $this->last_percentage_saved = false;
     }
 
-    public static function create(array $properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\Process
     {
         if (isset($properties) && isset($properties['task']))
             $properties['task'] = \Flexio\Object\Task::create($properties['task'])->get();
@@ -59,7 +59,7 @@ class Process extends \Flexio\Object\Base
         return $object;
     }
 
-    public function set(array $properties)
+    public function set(array $properties) : \Flexio\Object\Process
     {
         // TODO: add properties check
 
@@ -91,7 +91,7 @@ class Process extends \Flexio\Object\Base
         return false;
     }
 
-    public function run(bool $background = true)
+    public function run(bool $background = true) : \Flexio\Object\Process
     {
         // STEP 1: check the status; don't run the job in certain circumstances
         $this->clearCache();
@@ -136,7 +136,7 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public static function run_internal(string $eid)
+    public static function run_internal(string $eid) : bool
     {
         // this is a non-blocking internal static run function called that's
         // run in the background by \Flexio\Objects\Process::run($background) when $background
@@ -148,9 +148,10 @@ class Process extends \Flexio\Object\Base
         // run the job
         $object->prepare();
         $object->execute();
+        return true;
     }
 
-    public function pause()
+    public function pause() : \Flexio\Object\Process
     {
         $this->clearCache();
         $process_model = $this->getModel()->process;
@@ -167,7 +168,7 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function cancel()
+    public function cancel() : \Flexio\Object\Process
     {
         $this->clearCache();
         $process_model = $this->getModel()->process;
@@ -186,7 +187,7 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setProgress(float $pct)
+    public function setProgress(float $pct) : \Flexio\Object\Process
     {
         // get the executing subprocess; if we don't have any, we're done
         $executing_subprocess_eid = $this->getCurrentExecutingSubProcess();
@@ -212,7 +213,7 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setProcessStatus(string $status)
+    public function setProcessStatus(string $status) : \Flexio\Object\Process
     {
         if (self::isValidProcessStatus($status) === false)
             return $this;
@@ -223,7 +224,7 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getProcessStatus()
+    public function getProcessStatus() : string
     {
         if ($this->isCached() === true)
             return $this->properties['process_status'];
@@ -234,7 +235,7 @@ class Process extends \Flexio\Object\Base
         return \Model::PROCESS_STATUS_UNDEFINED;
     }
 
-    public function setProcessInfo(array $info)
+    public function setProcessInfo(array $info) : \Flexio\Object\Process
     {
         // pack the process info
         $params = array();
@@ -259,7 +260,7 @@ class Process extends \Flexio\Object\Base
         return array();
     }
 
-    public function setParams(array $params)
+    public function setParams(array $params) : \Flexio\Object\Process
     {
         // TODO: make sure the params are a set of key/value pairs;
         // we have params coming in from the api that need to be
@@ -288,7 +289,7 @@ class Process extends \Flexio\Object\Base
         return $input;
     }
 
-    public function getEnvironmentParams()
+    public function getEnvironmentParams() : array
     {
         // return a list of environment parameters;
         // TODO: determine list; for now, include current user information and time
@@ -305,20 +306,20 @@ class Process extends \Flexio\Object\Base
         return $environment_params;
     }
 
-    public function setTask(array $task)
+    public function setTask(array $task) : \Flexio\Object\Process
     {
         $properties = array();
         $properties['task'] = $task;
         return $this->set($properties);
     }
 
-    public function getTask()
+    public function getTask() : array
     {
         $properties = $this->get();
         return $properties['task'];
     }
 
-    public function addInput($stream) // TODO: add input parameter type
+    public function addInput($stream) : \Flexio\Object\Process // TODO: add input parameter type
     {
         // TODO: only allow input to be added before a job is run
 
@@ -341,7 +342,7 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getInput()
+    public function getInput() : \Flexio\Object\Collection
     {
         // TODO: implement similarly to self::getOutput(), using getTaskStreams();
         // need better way of working with subprocesses
@@ -360,7 +361,7 @@ class Process extends \Flexio\Object\Base
         return $input_collection;
     }
 
-    public function getOutput()
+    public function getOutput() : \Flexio\Object\Collection
     {
         $task_identifier = false; // last task
         $input_collection = \Flexio\Object\Collection::create();
@@ -422,7 +423,7 @@ class Process extends \Flexio\Object\Base
         }
     }
 
-    public function isBuildMode()
+    public function isBuildMode() : bool
     {
         if ($this->isCached() === false)
             $this->populateCache();
@@ -433,7 +434,7 @@ class Process extends \Flexio\Object\Base
         return false;
     }
 
-    public function isRunMode()
+    public function isRunMode() : bool
     {
         if ($this->isCached() === false)
             $this->populateCache();
@@ -444,9 +445,10 @@ class Process extends \Flexio\Object\Base
         return false;
     }
 
-    public function setError($code, $message = null, $file = null, $line = null) // TODO: add input parameter types
+    public function setError($code, $message = null, $file = null, $line = null) : \Flexio\Object\Process // TODO: add input parameter types
     {
         $this->errors[] = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line);
+        return $this;
     }
 
     public function getErrors()
@@ -454,7 +456,7 @@ class Process extends \Flexio\Object\Base
         return $this->errors;
     }
 
-    public function hasErrors()
+    public function hasErrors() : bool
     {
         if (empty($this->errors))
             return false;
@@ -462,9 +464,10 @@ class Process extends \Flexio\Object\Base
         return true;
     }
 
-    public function clearErrors()
+    public function clearErrors() : \Flexio\Object\Process
     {
         $this->errors = array();
+        return $this;
     }
 
     public function failValidation($validator, $file = null, $line = null) // TODO: add input parameter types
@@ -795,7 +798,7 @@ class Process extends \Flexio\Object\Base
         }
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         // a process may be run in the background and update values
         // in the model; never cache process data so an object always
@@ -809,10 +812,11 @@ class Process extends \Flexio\Object\Base
         // return true;
     }
 
-    private function clearCache()
+    private function clearCache() : \Flexio\Object\Process
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
     private function populateCache()
@@ -975,7 +979,7 @@ class Process extends \Flexio\Object\Base
         return $result;
     }
 
-    private function findCachedResult($implementation_revision, $task, $input, &$output) // TODO: add input parameter types
+    private function findCachedResult($implementation_revision, $task, $input, &$output) : bool // TODO: add input parameter types
     {
         // find the hash for the input and the task
         $hash = self::generateTaskHash($implementation_revision, $task, $input);
@@ -1100,7 +1104,7 @@ class Process extends \Flexio\Object\Base
         return $job;
     }
 
-    private static function stringifyCollectionEids($collection) // TODO: add input parameter types
+    private static function stringifyCollectionEids($collection) : string // TODO: add input parameter types
     {
         $result = array();
         if (!($collection instanceof \Flexio\Object\Collection))
@@ -1119,7 +1123,7 @@ class Process extends \Flexio\Object\Base
         return json_encode($result);
     }
 
-    private static function unstringifyCollectionEids(string $string)
+    private static function unstringifyCollectionEids(string $string) : \Flexio\Object\Collection
     {
         $collection = \Flexio\Object\Collection::create();
         $items = json_decode($string,true);
@@ -1134,7 +1138,7 @@ class Process extends \Flexio\Object\Base
         return $collection;
     }
 
-    private static function formatProcessInfo($params, $task_type, $finished = true) // TODO: add input parameter types
+    private static function formatProcessInfo($params, $task_type, $finished = true) : array // TODO: add input parameter types
     {
         $status_text = "";
         $filename = $params['name'] ?? '';
@@ -1166,7 +1170,7 @@ class Process extends \Flexio\Object\Base
         return $result;
     }
 
-    private static function isValidProcessStatus(string $status)
+    private static function isValidProcessStatus(string $status) : bool
     {
         switch ($status)
         {
@@ -1185,7 +1189,7 @@ class Process extends \Flexio\Object\Base
         }
     }
 
-    private static function getProcessTimestamp()
+    private static function getProcessTimestamp() : string
     {
         // return the timestamp as accurately as we can determine
         $time = microtime(true);

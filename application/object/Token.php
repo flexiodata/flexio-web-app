@@ -22,7 +22,7 @@ class Token extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_TOKEN);
     }
 
-    public static function create(array $properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\Token
     {
         // the user_eid needs to be set and be a valid user
         if (!isset($properties['user_eid']))
@@ -47,7 +47,7 @@ class Token extends \Flexio\Object\Base
         return $object;
     }
 
-    public function set(array $properties)
+    public function set(array $properties) : \Flexio\Object\Token
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         return $this;
@@ -64,7 +64,7 @@ class Token extends \Flexio\Object\Base
         return false;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -72,13 +72,14 @@ class Token extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
         if ($local_properties === false)

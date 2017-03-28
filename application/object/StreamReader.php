@@ -25,7 +25,7 @@ class StreamReader
         $this->close();
     }
 
-    public static function create($stream)
+    public static function create($stream) : \Flexio\Object\StreamReader
     {
         // TODO: StreamReader is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service
@@ -84,16 +84,17 @@ class StreamReader
         return $this->reader->readRow();
     }
 
-    public function close()
+    public function close() : bool
     {
         if ($this->isOk() === false)
-            return;
+            return true;
 
         $this->reader->close();
         $this->reader = false;
+        return true;
     }
 
-    private function isOk()
+    private function isOk() : bool
     {
         if ($this->reader === false)
             return false;

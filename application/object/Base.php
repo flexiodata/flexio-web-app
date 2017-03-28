@@ -57,7 +57,7 @@ class Base implements IObject
         $this->setType(\Model::TYPE_UNDEFINED);
     }
 
-    public static function create(array $properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\Base
     {
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
@@ -105,7 +105,7 @@ class Base implements IObject
         return $object;
     }
 
-    public function copy()
+    public function copy() : \Flexio\Object\Base
     {
         // get the parameters, reset the ename so the create doesn't
         // fail on account of a duplicate name
@@ -117,14 +117,14 @@ class Base implements IObject
         return $object;
     }
 
-    public function delete()
+    public function delete() : \Flexio\Object\Base
     {
         $this->clearCache();
         $this->getModel()->delete($this->getEid());
         return $this;
     }
 
-    public function set(array $properties)
+    public function set(array $properties) : \Flexio\Object\Base
     {
         $this->clearCache();
 
@@ -148,7 +148,7 @@ class Base implements IObject
         return false;
     }
 
-    public function setEid(string $eid)
+    public function setEid(string $eid) : \Flexio\Object\Base
     {
         // only allow the eid to be set once
         if (!is_null($this->eid))
@@ -163,7 +163,7 @@ class Base implements IObject
         return $this->eid;
     }
 
-    public function setType(string $eid_type)
+    public function setType(string $eid_type) : \Flexio\Object\Base
     {
         // only allow the eid_type to be set once
         if (!is_null($this->eid_type))
@@ -178,7 +178,7 @@ class Base implements IObject
         return $this->eid_type;
     }
 
-    public function setStatus(string $status)
+    public function setStatus(string $status) : \Flexio\Object\Base
     {
         $this->clearCache();
         $result = $this->getModel()->setStatus($this->getEid(), $status);
@@ -196,7 +196,7 @@ class Base implements IObject
         return $status;
     }
 
-    public function setOwner(string $user_eid)
+    public function setOwner(string $user_eid) : \Flexio\Object\Base
     {
         // TODO: remove previous owner, if any
 
@@ -220,7 +220,7 @@ class Base implements IObject
         return $result[0]['eid'];
     }
 
-    public function setCreatedBy(string $user_eid)
+    public function setCreatedBy(string $user_eid) : \Flexio\Object\Base
     {
         // TODO: remove previous created by, if any
 
@@ -244,7 +244,7 @@ class Base implements IObject
         return $result[0]['eid'];
     }
 
-    public function allows(string $user_eid, string $action_type)
+    public function allows(string $user_eid, string $action_type) : bool
     {
         // find out all operations the specified user can take on the
         // object in question
@@ -258,7 +258,7 @@ class Base implements IObject
         return false;
     }
 
-    public function setRights(array $rights = null)
+    public function setRights(array $rights = null) : \Flexio\Object\Base
     {
         // TODO: set the rights
 
@@ -267,7 +267,7 @@ class Base implements IObject
         return $this;
     }
 
-    public function addComment(string $comment_eid)
+    public function addComment(string $comment_eid) : \Flexio\Object\Base
     {
         // make sure we have a comment
         $comment = \Flexio\Object\Comment::load($comment_eid);
@@ -301,7 +301,7 @@ class Base implements IObject
         return $result;
     }
 
-    protected function setModel($model) // TODO: set parameter type
+    protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type
     {
         return $this->model = $model;
         return $this;
@@ -312,7 +312,7 @@ class Base implements IObject
         return $this->model;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -320,13 +320,14 @@ class Base implements IObject
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
         if ($local_properties === false)

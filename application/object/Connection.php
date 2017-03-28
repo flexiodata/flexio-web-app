@@ -42,7 +42,7 @@ class Connection extends \Flexio\Object\Base
         return $connection_eid;
     }
 
-    public function set(array $properties)
+    public function set(array $properties) : \Flexio\Object\Connection
     {
         // TODO: add properties check
 
@@ -63,7 +63,7 @@ class Connection extends \Flexio\Object\Base
         return false;
     }
 
-    public function connect()
+    public function connect() : \Flexio\Object\Connection
     {
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
@@ -82,7 +82,7 @@ class Connection extends \Flexio\Object\Base
         return $this;
     }
 
-    public function disconnect()
+    public function disconnect() : \Flexio\Object\Connection
     {
         $this->clearCache();
 
@@ -230,7 +230,7 @@ class Connection extends \Flexio\Object\Base
         return $service;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -238,13 +238,14 @@ class Connection extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         // get the properties
         $local_properties = $this->getProperties();
@@ -313,7 +314,7 @@ class Connection extends \Flexio\Object\Base
         return $properties;
     }
 
-    private static function createDatastoreConnection()
+    private static function createDatastoreConnection() : string
     {
         $dbconfig = \Model::getDatabaseConfig();
 
@@ -335,7 +336,7 @@ class Connection extends \Flexio\Object\Base
         return $connection_eid;
     }
 
-    private static function createDatastore(string $host, int $port, string $database, string $username, string $password)
+    private static function createDatastore(string $host, int $port, string $database, string $username, string $password) : \Flexio\Services\Postgres
     {
         // note: this function isn't used right now, but is here for reference
 
