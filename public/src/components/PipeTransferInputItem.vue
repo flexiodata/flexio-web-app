@@ -1,5 +1,5 @@
 <template>
-  <article class="mb5">
+  <article class="mb3">
     <div class="flex flex-row items-center pa2 bg-black-05 bb b--black-05">
       <connection-icon :type="ctype" class="v-mid br1 fx-square-2 mr2"></connection-icon>
       <div class="f6 fw6 ttu silver">{{service_name}}</div>
@@ -22,8 +22,7 @@
           :options="menu_options"
           @select="onMenuItemClick"
           @close="$refs.menu.close()"
-        >
-        </ui-menu>
+        ></ui-menu>
       </ui-popover>
     </div>
     <div v-if="items.length > 0">
@@ -35,7 +34,7 @@
     <div class="ma3 tc" v-else>
       <div class="tl" v-if="is_stdin">
         <div class="lh-copy mid-gray f6 mb3 i">Input files from the command line.</div>
-        <div class="pv1 ph2 bg-black-10">
+        <div class="pv1 ph2 bg-black-05">
           <code class="f6">$ flexio pipes run pipe-name file.txt *.csv</code>
         </div>
       </div>

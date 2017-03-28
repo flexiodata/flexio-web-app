@@ -1,5 +1,5 @@
 <template>
-  <article class="mb5">
+  <article class="mb3">
     <div class="flex flex-row items-center pa2 bg-black-05 bb b--black-05">
       <connection-icon :type="ctype" class="v-mid br1 fx-square-2 mr2"></connection-icon>
       <div class="f6 fw6 ttu silver">{{service_name}}</div>
@@ -19,27 +19,25 @@
         <ui-menu
           contain-focus
           has-icons
-
-          :options="[{
-            id: 'delete',
-            label: 'Remove this output',
-            icon: 'delete'
-          }]"
-
+          :options="menu_options"
           @select="onMenuItemClick"
           @close="$refs.menu.close()"
-        >
-        </ui-menu>
+        ></ui-menu>
       </ui-popover>
     </div>
-    <div class="flex flex-row items-center pa2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
-      <div class="flex-fill">{{item.path}}</div>
-      <div class="flex-none f4 pointer silver hover-black child">&times;</div>
+    <div class="ma3 tc">
+      <div class="tl" v-if="is_stdout">
+        <div class="lh-copy mid-gray f6 mb3 i">Output files from the command line.</div>
+        <div class="pv1 ph2 bg-black-05">
+          <code class="f6">flexio pipes run pipe-name > output.txt</code>
+        </div>
+      </div>
     </div>
   </article>
 </template>
 
 <script>
+  import { CONNECTION_TYPE_STDOUT } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import ConnectionIcon from './ConnectionIcon.vue'
 
@@ -57,6 +55,16 @@
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
+      },
+      is_stdout() {
+        return this.ctype == CONNECTION_TYPE_STDOUT
+      },
+      menu_options() {
+        return [{
+          id: 'delete',
+          label: 'Remove this output',
+          icon: 'delete'
+        }]
       }
     },
     methods: {
