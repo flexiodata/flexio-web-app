@@ -161,12 +161,10 @@ class Execute extends \Flexio\Jobs\Base
 
                     $buf = $streamreader->read(1024);
 
-ob_start();
-var_dump($buf);
-$s = ob_get_clean();
-
-fxdebug("\n\n\n\nStream Reader: ".$s."***");
-
+                    //ob_start();
+                    //var_dump($buf);
+                    //$s = ob_get_clean();
+                    //fxdebug("\n\n\n\nStream Reader: ".$s."***");
 
                     if ($buf === false)
                         break;
@@ -175,7 +173,8 @@ fxdebug("\n\n\n\nStream Reader: ".$s."***");
 
                     if ($len > 0)
                         $process->write($buf);
-fxdebug("Write Done\n");
+
+                    //fxdebug("Write Done\n");
 
                     if ($len != 1024)
                     {
@@ -190,14 +189,13 @@ fxdebug("Write Done\n");
 
             if ($process->canRead())
             {
-                fxdebug("Reading...\n");
+                //fxdebug("Reading...\n");
                 $chunk = $process->read(1024);
 
-                ob_start();
-                var_dump($chunk);
-                $s = ob_get_clean();
-
-                fxdebug("From process: ".$s."***\n\n\n\n");
+                //ob_start();
+                //var_dump($chunk);
+                //$s = ob_get_clean();
+                //fxdebug("From process: ".$s."***\n\n\n\n");
 
                 $streamwriter->write($chunk);
             }
