@@ -45,10 +45,10 @@
       </div>
     </div>
     <div class="ma3 tc" v-else>
-      <div class="dib lh-copy mid-gray f6 mr1 mb2 tc i">There are no files to show.</div>
-      <div class="dib">
+      <div class=" lh-copy mid-gray f6 mb3 tc i">No files have been selected from this connection.</div>
+      <div class="">
         <btn
-          btn-sm
+          btn-md
           btn-primary
           class="ttu b"
         >
