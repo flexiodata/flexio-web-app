@@ -1,9 +1,13 @@
 <template>
   <article
-    class="dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10"
+    :class="cls"
     @click="onClick"
   >
-    <div class="tc css-valign">
+    <div class="flex flex-row items-center" v-if="layout == 'list'">
+      <connection-icon :type="item.connection_type" class="br1 fx-square-3 mr3"></connection-icon>
+      <div class="mid-gray f5 fw6 cursor-default">{{item.service_name}}</div>
+    </div>
+    <div class="tc css-valign" v-else>
       <connection-icon :type="item.connection_type" class="dib v-mid br2 fx-square-5"></connection-icon>
       <div class="mid-gray f6 fw6 mt2 cursor-default">{{item.service_name}}</div>
     </div>
@@ -14,9 +18,17 @@
   import ConnectionIcon from './ConnectionIcon.vue'
 
   export default {
-    props: ['item'],
+    props: ['item', 'layout'],
     components: {
       ConnectionIcon
+    },
+    computed: {
+      cls() {
+        if (_.get(this, 'layout', '') == 'list')
+          return 'bg-white pa3 bb b--light-gray darken-05'
+           else
+          return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10'
+      }
     },
     methods: {
       onClick() {

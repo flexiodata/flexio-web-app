@@ -81,7 +81,7 @@
       <a
         target="_blank"
         rel="noopener noreferrer"
-        class="ml2 pointer blue hint--top"
+        class="ml2 pointer hint--top blue no-underline underline-hover"
         aria-label="Visit help docs"
         :href="code_more_link"
       >More...</a>

@@ -35,12 +35,12 @@
       v-if="show_connection_props_modal"
     ></connection-props-modal>
 
-    <pipe-props-modal
+    <pipe-props-modal2
       ref="modal-pipe-props"
       project-eid="test-project"
       @hide="show_pipe_props_modal = false"
       v-if="show_pipe_props_modal"
-    ></pipe-props-modal>
+    ></pipe-props-modal2>
 
     <pipe-schedule-modal
       ref="modal-pipe-schedule"
@@ -74,7 +74,7 @@
   import ConfirmModal from './ConfirmModal.vue'
   import ProjectPropsModal from './ProjectPropsModal.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
-  import PipePropsModal from './PipePropsModal.vue'
+  import PipePropsModal2 from './PipePropsModal2.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
   import PipeShareModal from './PipeShareModal.vue'
   import EmailSupportModal from './EmailSupportModal.vue'
@@ -108,7 +108,7 @@
       ConfirmModal,
       ProjectPropsModal,
       ConnectionPropsModal,
-      PipePropsModal,
+      PipePropsModal2,
       PipeScheduleModal,
       PipeShareModal,
       EmailSupportModal,
