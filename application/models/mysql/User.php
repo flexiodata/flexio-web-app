@@ -14,7 +14,7 @@
 
 class User extends ModelBase
 {
-    public function create(array $params) : string
+    public function create(array $params = null) : string
     {
         if (!isset($params['user_name']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);

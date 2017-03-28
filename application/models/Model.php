@@ -143,7 +143,7 @@ class Model
         return $obj;
     }
 
-    public function create(string $type, array $params) : string
+    public function create(string $type, array $params = null) : string
     {
         if ($type === \Model::TYPE_UNDEFINED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
@@ -637,7 +637,7 @@ class Model
         return $eid;
     }
 
-    public function createObjectBase(string $type, array $params) : string
+    public function createObjectBase(string $type, array $params = null) : string
     {
         // note: this function shouldn't be used directly; it's meant to
         // be used in other create functions that also include transactions

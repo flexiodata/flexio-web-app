@@ -14,7 +14,7 @@
 
 class Connection extends ModelBase
 {
-    public function create(array $params) : string
+    public function create(array $params = null) : string
     {
         // if the connection_status parameter is set, make sure the status is set
         // to a valid value

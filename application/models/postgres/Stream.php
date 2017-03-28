@@ -14,7 +14,7 @@
 
 class Stream extends ModelBase
 {
-    public function create(array $params) : string
+    public function create(array $params = null) : string
     {
         $db = $this->getDatabase();
         $db->beginTransaction();

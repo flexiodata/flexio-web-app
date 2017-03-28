@@ -14,7 +14,7 @@
 
 class Process extends ModelBase
 {
-    public function create(array $params, bool $primary_process = true) : string
+    public function create(array $params = null, bool $primary_process = true) : string
     {
         $db = $this->getDatabase();
         $db->beginTransaction(); // needed to make sure eid generation is safe
