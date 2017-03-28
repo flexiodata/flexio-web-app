@@ -180,16 +180,8 @@ class Base implements IObject
 
     public function setStatus($status)
     {
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $result = $this->getModel()->setStatus($this->getEid(), $status);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $result = $this->getModel()->setStatus($this->getEid(), $status);
         return $this;
     }
 
@@ -211,19 +203,11 @@ class Base implements IObject
         // TODO: do we want to do more checking? have to be careful because
         // system and public users don't follow normal eid convention
         if ($user_eid === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        try
-        {
-            $object_eid = $this->getEid();
-            $this->getModel()->assoc_add($user_eid, \Model::EDGE_OWNS, $object_eid);
-            $this->getModel()->assoc_add($object_eid, \Model::EDGE_OWNED_BY, $user_eid);
-        }
-        catch (\Exception $e)
-        {
-            return false;
-        }
-
+        $object_eid = $this->getEid();
+        $this->getModel()->assoc_add($user_eid, \Model::EDGE_OWNS, $object_eid);
+        $this->getModel()->assoc_add($object_eid, \Model::EDGE_OWNED_BY, $user_eid);
         return true;
     }
 
@@ -245,18 +229,11 @@ class Base implements IObject
         // TODO: do we want to do more checking? have to be careful because
         // system and public users don't follow normal eid convention
         if ($user_eid === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        try
-        {
-            $object_eid = $this->getEid();
-            $this->getModel()->assoc_add($user_eid, \Model::EDGE_CREATED, $object_eid);
-            $this->getModel()->assoc_add($object_eid, \Model::EDGE_CREATED_BY, $user_eid);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $object_eid = $this->getEid();
+        $this->getModel()->assoc_add($user_eid, \Model::EDGE_CREATED, $object_eid);
+        $this->getModel()->assoc_add($object_eid, \Model::EDGE_CREATED_BY, $user_eid);
         return true;
     }
 
@@ -298,7 +275,7 @@ class Base implements IObject
         // make sure we have a comment
         $comment = \Flexio\Object\Comment::load($comment_eid);
         if ($comment === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // add the comment association
         $object_eid = $this->getEid();
