@@ -81,7 +81,7 @@ class Stream extends \Flexio\Object\Base
             $structure_object = \Flexio\Object\Structure::create($structure);
 
             if ($structure_object === false)
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $structure = $structure_object->enum();
             $properties['structure'] = json_encode($structure);

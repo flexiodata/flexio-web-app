@@ -46,7 +46,7 @@ class Project extends \Flexio\Object\Base
     public function addMember($object_eid)
     {
         if (!\Flexio\Base\Eid::isValid($object_eid))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $this->clearCache();
 

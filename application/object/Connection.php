@@ -321,7 +321,7 @@ class Connection extends \Flexio\Object\Base
         // TODO: we'll want to add some ability to pull from a pool of available datastore
         // so we can have multiple servers; but right now, we just have one
         if (!isset($dbconfig['datastore_dbname']) || strlen($dbconfig['datastore_dbname']) === 0)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $params = array('host'            => $dbconfig['datastore_host'],
                         'port'            => $dbconfig['datastore_port'],
@@ -332,9 +332,6 @@ class Connection extends \Flexio\Object\Base
                         );
 
         $connection_eid = \Flexio\Object\Store::getModel()->create(\Model::TYPE_CONNECTION, $params);
-        if ($connection_eid === false)
-            return false;
-
         return $connection_eid;
     }
 
@@ -351,7 +348,7 @@ class Connection extends \Flexio\Object\Base
 
         $db = \Flexio\Services\Postgres::create($params);
         if (!$db)
-            return false;   // service not available
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         try
         {
@@ -360,9 +357,9 @@ class Connection extends \Flexio\Object\Base
         }
         catch (\Exception $e)
         {
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
 
-        return true;
+        return $db;
     }
 }

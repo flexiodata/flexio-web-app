@@ -68,7 +68,7 @@ class Pipe extends \Flexio\Object\Base
         {
             $schedule = $properties['schedule'];
             if (\Flexio\Base\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $properties['schedule'] = json_encode($schedule);
         }

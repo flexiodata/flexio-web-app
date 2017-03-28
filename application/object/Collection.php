@@ -64,7 +64,7 @@ class Collection
     {
         // adds the items in the collection to the existing collection
         if (!($collection instanceof \Flexio\Object\Collection))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $collection_objects = $collection->enum();
         foreach ($collection_objects as $object)
@@ -100,7 +100,7 @@ class Collection
         }
 
         // input is invalid
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
     }
 
     public function pop()

@@ -32,14 +32,20 @@ class Message
 
     public static function create($type, $params)
     {
-        if (!is_string($type))
-            return false;
+        if (!is_string($type) || !is_array($params))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        if (is_string($params))
-            $params = json_decode($params, true);
+        switch ($type)
+        {
+            default:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        if (!is_array($params))
-            return false;
+            case self::TYPE_EMAIL_WELCOME:
+            case self::TYPE_EMAIL_RESET_PASSWORD:
+            case self::TYPE_EMAIL_SHARE:
+            case self::TYPE_EMAIL_PIPE:
+                break;
+        }
 
         $object = (new self);
         $object->message_type = $type;
