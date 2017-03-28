@@ -83,8 +83,21 @@
 
     <div class="flex-none flex flex-column css-pipe-transfer-column-transform">
       <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
-        <div v-if="has_tasks">Transformations</div>
-        <div v-else>3. Add Transformations</div>
+
+
+        <div class="flex flex-row items-center justify-center relative">
+          <div v-if="has_tasks">Transformations</div>
+          <div v-else>3. Add Transformations</div>
+          <button
+            type="button"
+            class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
+            aria-label="Take me to the builder"
+            @click="$emit('open-builder')"
+            v-if="has_tasks"
+          >
+            <i class="db material-icons f4">edit</i>
+          </button>
+        </div>
       </div>
       <pipe-transfer-transform-list
         class="flex-fill pa3"
