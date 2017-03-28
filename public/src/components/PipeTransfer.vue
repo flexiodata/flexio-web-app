@@ -1,7 +1,7 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
-    <div class="flex-fill flex flex-column">
-      <div class="f4 pa3 tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.15)">
+    <div class="flex-fill flex flex-column mr3-l">
+      <div class="f4 pa2 mt3-l tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2)">
         <div class="flex flex-row items-center justify-center" v-if="has_input">
           <div>Input</div>
           <button
@@ -17,12 +17,12 @@
         <div v-else>1. Choose Input</div>
       </div>
       <pipe-transfer-input-list
-        class="flex-fill bl-l br-l b--black-10"
+        class="flex-fill"
         :tasks="input_tasks"
         v-if="has_input"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
-        class="flex-fill overflow-y-auto bl-l br-l b--black-10"
+        class="flex-fill overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         v-else
@@ -30,8 +30,8 @@
     </div>
 
 
-    <div class="flex-fill flex flex-column">
-      <div class="f4 pa3 tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.15)">
+    <div class="flex-fill flex flex-column mr3-l">
+      <div class="f4 pa2 mt3-l tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2)">
         <div v-if="has_output">
           <span class="v-mid">Output</span>
           <div
@@ -46,24 +46,24 @@
         <div v-else>2. Choose Output</div>
       </div>
       <pipe-transfer-output-chooser
-        class="flex-fill overflow-y-auto br-l b--black-10"
+        class="flex-fill overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_output_chooser = false"
       ></pipe-transfer-output-chooser>
     </div>
 
 
-    <div class="flex-none flex flex-column" style="width: 30%; max-width: 350px">
-      <div class="f4 pa3 tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.15)">
+    <div class="flex-none flex flex-column css-column-transform">
+      <div class="f4 pa2 mt3-l tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2)">
         <div v-if="has_tasks">Transformations</div>
         <div v-else>3. Add Transformations</div>
       </div>
       <pipe-transfer-transform-list
-        class="flex-fill br-l b--black-10 pa3"
+        class="flex-fill pa3"
         :tasks="transform_tasks"
         v-if="has_tasks"
       ></pipe-transfer-transform-list>
-      <div class="flex-fill br-l b--black-10" v-else>
+      <div class="flex-fill" v-else>
         <div class="ma3">
           <div class="lh-copy mid-gray f6 mb3 tl tc-m i">There are no transformation steps in this pipe. Transformation steps can be added in the builder view.</div>
           <div class="tc">
@@ -126,3 +126,14 @@
     }
   }
 </script>
+
+<style lang="less">
+  @import "../stylesheets/variables.less";
+
+  @media @breakpoint-large {
+    .css-column-transform {
+      width: 32%;
+      max-width: 320px;
+    }
+  }
+</style>
