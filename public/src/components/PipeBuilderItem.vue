@@ -78,15 +78,16 @@
 
 <script>
   import * as types from '../constants/task-type'
-  import * as tasks from '../constants/task-info'
   import parser from '../utils/parser'
   import CodeEditor from './CodeEditor.vue'
   import CommandBar2 from './CommandBar2.vue'
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
+  import taskItemHelper from './mixins/task-item-helper'
 
   export default {
     props: ['pipe-eid', 'item', 'index', 'active-process', 'project-connections'],
+    mixins: [taskItemHelper],
     components: {
       CodeEditor,
       CommandBar2,
@@ -101,57 +102,8 @@
     },
     computed: {
       task() { return this.item },
-      eid() { return _.get(this.task, 'eid', '') },
-      task_icon() { return _.result(this, 'tinfo.icon', 'build') },
+      eid() { return _.get(this, 'task.eid', '') },
       insert_tooltip() { return 'Insert a new step after step ' + (this.index+1) },
-
-      display_name() {
-        var name = _.get(this.task, 'name', '')
-        var default_name = _.result(this, 'tinfo.name', 'New Task')
-        return name.length > 0 ? name : default_name
-      },
-
-      bg_color() {
-        switch (_.get(this.task, 'type'))
-        {
-          // blue tiles
-          case types.TASK_TYPE_INPUT:
-          case types.TASK_TYPE_CONVERT:
-          case types.TASK_TYPE_EMAIL_SEND:
-          case types.TASK_TYPE_OUTPUT:
-          case types.TASK_TYPE_PROMPT:
-          case types.TASK_TYPE_RENAME:
-            return 'bg-task-blue'
-
-          case types.TASK_TYPE_EXECUTE:
-            return 'bg-task-purple'
-
-          // green tiles
-          case types.TASK_TYPE_CALC:
-          case types.TASK_TYPE_DISTINCT:
-          case types.TASK_TYPE_DUPLICATE:
-          case types.TASK_TYPE_FILTER:
-          case types.TASK_TYPE_GROUP:
-          case types.TASK_TYPE_LIMIT:
-          case types.TASK_TYPE_MERGE:
-          case types.TASK_TYPE_SEARCH:
-          case types.TASK_TYPE_SORT:
-            return 'bg-task-green'
-
-          // orange tiles
-          case types.TASK_TYPE_COPY:
-          case types.TASK_TYPE_CUSTOM:
-          case types.TASK_TYPE_FIND_REPLACE:
-          case types.TASK_TYPE_NOP:
-          case types.TASK_TYPE_RENAME_COLUMN:
-          case types.TASK_TYPE_SELECT:
-          case types.TASK_TYPE_TRANSFORM:
-            return 'bg-task-orange'
-        }
-
-        // default
-        return 'bg-task-gray'
-      },
 
       process_task_id() {
         var process_eid = _.get(this.activeProcess, 'eid', '')
@@ -189,11 +141,8 @@
       }
     },
     methods: {
-      tinfo() {
-        return _.find(tasks, { type: _.get(this.task, 'type') })
-      },
       getDescription() {
-        return _.get(this.task, 'description', '')
+        return _.get(this, 'item.description', '')
       },
       getParserCommand() {
         return _.defaultTo(parser.toCmdbar(this.task), '')
