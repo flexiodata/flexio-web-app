@@ -45,6 +45,11 @@
         </div>
         <div v-else>2. Choose Output</div>
       </div>
+      <pipe-transfer-output-list
+        class="flex-fill"
+        :tasks="output_tasks"
+        v-if="has_output"
+      ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
         class="flex-fill overflow-y-auto"
         :project-eid="projectEid"
