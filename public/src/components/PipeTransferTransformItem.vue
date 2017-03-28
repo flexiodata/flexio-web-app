@@ -1,5 +1,5 @@
 <template>
-  <article class="flex flex-row pb3">
+  <article class="flex flex-row pt1 pb3">
     <div class="flex-none">
       <div
         class="pa1 mr2 br1 white trans-wh tc relative"
@@ -9,8 +9,8 @@
       </div>
     </div>
     <div class="flex-fill">
-      <div class="mid-gray f5 cursor-default lh-title" style="margin-top: 2px">{{index+1}}. {{display_name}}</div>
-      <div class="mid-gray f7 cursor-default mt1" v-if="description.length > 0">{{description}}</div>
+      <div class="mid-gray f5 cursor-default lh-title relative" :style="title_style">{{index+1}}. {{display_name}}</div>
+      <div class="mid-gray f7 cursor-default" v-if="description.length > 0">{{description}}</div>
     </div>
   </article>
 </template>
@@ -23,7 +23,8 @@
     mixins: [taskItemHelper],
     computed: {
       task() { return this.item },
-      description() { return _.get(this, 'task.description', '') }
+      description() { return _.get(this, 'task.description', '') },
+      title_style() { return this.description.length > 0 ? 'top: -3px' : 'top: 2px' }
     }
   }
 </script>

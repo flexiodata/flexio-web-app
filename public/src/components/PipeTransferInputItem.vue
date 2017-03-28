@@ -22,7 +22,7 @@
 
           :options="[{
             id: 'add-items',
-            label: 'Add items',
+            label: 'Add files',
             icon: 'add_circle'
           },{
             type: 'divider'
@@ -38,20 +38,36 @@
         </ui-menu>
       </ui-popover>
     </div>
-    <div class="flex flex-row items-center pa2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
-      <div class="flex-fill">{{item.path}}</div>
-      <div class="flex-none f4 pointer silver hover-black child">&times;</div>
+    <div v-if="items.length > 0">
+      <div class="flex flex-row items-center pa2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
+        <div class="flex-fill">{{item.path}}</div>
+        <div class="flex-none f4 pointer silver hover-black child">&times;</div>
+      </div>
+    </div>
+    <div class="ma3 tc" v-else>
+      <div class="dib lh-copy mid-gray f6 mr1 mb2 tc i">There are no files to show.</div>
+      <div class="dib">
+        <btn
+          btn-sm
+          btn-primary
+          class="ttu b"
+        >
+          Add files
+        </btn>
+      </div>
     </div>
   </article>
 </template>
 
 <script>
   import * as connections from '../constants/connection-info'
+  import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
 
   export default {
     props: ['item', 'connection-type'],
     components: {
+      Btn,
       ConnectionIcon
     },
     computed: {
