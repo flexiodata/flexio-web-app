@@ -152,10 +152,10 @@ class Base implements IObject
     {
         // only allow the eid to be set once
         if (!is_null($this->eid))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $this->eid = $eid;
-        return true;
+        return $this;
     }
 
     public function getEid()
@@ -167,7 +167,7 @@ class Base implements IObject
     {
         // only allow the eid_type to be set once
         if (!is_null($this->eid_type))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $this->eid_type = $eid_type;
         return $this;
@@ -206,7 +206,7 @@ class Base implements IObject
         $object_eid = $this->getEid();
         $this->getModel()->assoc_add($user_eid, \Model::EDGE_OWNS, $object_eid);
         $this->getModel()->assoc_add($object_eid, \Model::EDGE_OWNED_BY, $user_eid);
-        return true;
+        return $this;
     }
 
     public function getOwner()
@@ -230,7 +230,7 @@ class Base implements IObject
         $object_eid = $this->getEid();
         $this->getModel()->assoc_add($user_eid, \Model::EDGE_CREATED, $object_eid);
         $this->getModel()->assoc_add($object_eid, \Model::EDGE_CREATED_BY, $user_eid);
-        return true;
+        return $this;
     }
 
     public function getCreatedBy()
@@ -264,6 +264,7 @@ class Base implements IObject
 
         // reset the rights cache
         $this->rights = false;
+        return $this;
     }
 
     public function addComment(string $comment_eid)
@@ -277,11 +278,7 @@ class Base implements IObject
         $object_eid = $this->getEid();
         $result1 = $this->getModel()->assoc_add($object_eid, \Model::EDGE_HAS_COMMENT, $comment_eid);
         $result2 = $this->getModel()->assoc_add($comment_eid, \Model::EDGE_COMMENT_ON, $object_eid);
-
-        if ($result1 === false || $result2 === false)
-            return false;
-
-        return true;
+        return $this;
     }
 
     public function getComments()
@@ -307,6 +304,7 @@ class Base implements IObject
     protected function setModel($model) // TODO: set parameter type
     {
         return $this->model = $model;
+        return $this;
     }
 
     protected function getModel()
