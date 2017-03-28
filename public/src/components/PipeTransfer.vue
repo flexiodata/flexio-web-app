@@ -2,17 +2,27 @@
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
     <div class="flex-fill flex flex-column mr3-l">
-      <div class="f4 pa2 mt3-l tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2)">
-        <div class="flex flex-row items-center justify-center" v-if="has_input">
-          <div>Input</div>
+      <div class="f4 pa2 mt3-l bg-blue white css-pipe-transfer-header">
+        <div class="flex flex-row items-center justify-center relative" v-if="has_input">
+          <div v-if="show_input_chooser">Add Input</div>
+          <div v-else>Input</div>
           <button
             type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom"
+            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
             aria-label="Add another connection"
-            @click="$emit('choose-input-connection')"
-            v-if="allow_multiple_inputs"
+            @click="show_input_chooser = true"
+            v-if="allow_multiple_inputs && !show_input_chooser"
           >
             <i class="db material-icons f4">add_circle</i>
+          </button>
+          <button
+            type="button"
+            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            aria-label="Cancel add connection"
+            @click="show_input_chooser = false"
+            v-if="allow_multiple_inputs && show_input_chooser"
+          >
+            <i class="db material-icons f4">cancel</i>
           </button>
         </div>
         <div v-else>1. Choose Input</div>
@@ -20,7 +30,7 @@
       <pipe-transfer-input-list
         class="flex-fill"
         :tasks="input_tasks"
-        v-if="has_input"
+        v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
         class="flex-fill overflow-y-auto"
@@ -32,17 +42,28 @@
     </div>
 
     <div class="flex-fill flex flex-column mr3-l">
-      <div class="f4 pa2 mt3-l tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2)">
-        <div v-if="has_output">
-          <span class="v-mid">Output</span>
-          <div
-            class="v-mid cursor-default moon-gray hover-blue link hint--bottom"
+      <div class="f4 pa2 mt3-l tc bg-blue white css-pipe-transfer-header">
+        <div class="flex flex-row items-center justify-center relative" v-if="!has_output">
+          <div v-if="show_output_chooser">Add Output</div>
+          <div v-else>Output</div>
+          <button
+            type="button"
+            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
             aria-label="Add another connection"
-            @click="$emit('choose-output-connection')"
-            v-if="allow_multiple_outputs"
+            @click="show_output_chooser = true"
+            v-if="allow_multiple_outputs && !show_output_chooser"
           >
-            <i class="db material-icons f3">add_circle</i>
-          </div>
+            <i class="db material-icons f4">add_circle</i>
+          </button>
+          <button
+            type="button"
+            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            aria-label="Cancel add connection"
+            @click="show_output_chooser = false"
+            v-if="allow_multiple_outputs && show_output_chooser"
+          >
+            <i class="db material-icons f4">cancel</i>
+          </button>
         </div>
         <div v-else>2. Choose Output</div>
       </div>
@@ -58,8 +79,8 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex-none flex flex-column css-column-transform">
-      <div class="f4 pa2 mt3-l tc bg-blue white" style="box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2)">
+    <div class="flex-none flex flex-column css-pipe-transfer-column-transform">
+      <div class="f4 pa2 mt3-l tc bg-blue white css-pipe-transfer-header">
         <div v-if="has_tasks">Transformations</div>
         <div v-else>3. Add Transformations</div>
       </div>
@@ -170,8 +191,14 @@
 <style lang="less">
   @import "../stylesheets/variables.less";
 
+  /*
+  .css-pipe-transfer-header {
+    box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2);
+  }
+  */
+
   @media @breakpoint-large {
-    .css-column-transform {
+    .css-pipe-transfer-column-transform {
       width: 32%;
       max-width: 320px;
     }
