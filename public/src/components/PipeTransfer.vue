@@ -30,9 +30,9 @@
       <pipe-transfer-input-list
         class="flex-fill"
         :tasks="input_tasks"
-        v-if="has_input && !show_input_chooser"
         @input-add-items="addInputItems"
         @input-delete="deleteInput"
+        v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
         class="flex-fill overflow-y-auto"
@@ -72,6 +72,7 @@
       <pipe-transfer-output-list
         class="flex-fill"
         :tasks="output_tasks"
+        @output-delete="deleteOutput"
         v-if="has_output"
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
@@ -173,6 +174,11 @@
       deleteInput(input) {
         var eid = this.pipeEid
         var task_eid = _.get(input, 'eid', '')
+        this.$store.dispatch('deletePipeTask', { eid, task_eid })
+      },
+      deleteOutput(output) {
+        var eid = this.pipeEid
+        var task_eid = _.get(output, 'eid', '')
         this.$store.dispatch('deletePipeTask', { eid, task_eid })
       },
       addInput(connection) {

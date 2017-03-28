@@ -4,6 +4,7 @@
       v-for="(task, index) in tasks"
       :item="task"
       :index="index"
+      @delete="deleteOutput"
     >
     </pipe-transfer-output-item>
   </div>
@@ -16,6 +17,11 @@
     props: ['tasks'],
     components: {
       PipeTransferOutputItem
+    },
+    methods: {
+      deleteOutput(input) {
+        this.$emit('output-delete', input)
+      }
     }
   }
 </script>
