@@ -58,7 +58,7 @@
                 ></command-bar2>
               </div>
               <pipe-content
-                class="mv2 relative bg-white"
+                class="mt2 mb3 relative bg-white"
                 style="height: 300px"
                 :stream-eid="active_stream_eid"
                 :task-json="task"
