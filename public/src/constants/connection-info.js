@@ -132,6 +132,26 @@ const SOCRATA = {
   service_description: 'Open data portal for government data'
 }
 
+const STDIN = {
+  is_service: false,
+  is_input: true,
+  is_output: false,
+  connection_type: types.CONNECTION_TYPE_STDIN,
+  icon: require('../assets/icon/icon-console-128.png'),
+  service_name: 'StdIn',
+  service_description: 'Standard In'
+}
+
+const STDOUT = {
+  is_service: false,
+  is_input: false,
+  is_output: true,
+  connection_type: types.CONNECTION_TYPE_STDOUT,
+  icon: require('../assets/icon/icon-console-128.png'),
+  service_name: 'StdOut',
+  service_description: 'Standard Out'
+}
+
 const PIPELINEDEALS = {
   is_service: true,
   is_input: true,
@@ -169,4 +189,6 @@ export const CONNECTION_INFO_POSTGRES      = POSTGRES
 export const CONNECTION_INFO_RSS           = RSS
 export const CONNECTION_INFO_SFTP          = SFTP
 //export const CONNECTION_INFO_SOCRATA       = SOCRATA
+export const CONNECTION_INFO_STDIN         = STDIN
+export const CONNECTION_INFO_STDOUT        = STDOUT
 //export const CONNECTION_INFO_PIPELINEDEALS = PIPELINEDEALS
