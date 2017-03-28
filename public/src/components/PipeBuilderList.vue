@@ -2,11 +2,12 @@
   <div class="overflow-y-auto">
     <pipe-transfer-input-blankslate
       class="blankslate mh5 mv3"
-      v-if="!has_input">
+      v-if="!has_input && false"
+    >
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Input</div>
     </pipe-transfer-input-blankslate>
 
-    <div class="blankslate mh5 mv3" v-if="tasks.length == 0">
+    <div class="blankslate mh5 mv4" v-if="tasks.length == 0">
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Transform</div>
       <div class="lh-copy mid-gray f6 mb3">There are no transformation steps in this pipe.</div>
       <div class="mt3">
@@ -34,7 +35,8 @@
 
     <pipe-transfer-output-blankslate
       class="blankslate mh5 mt3 mb5"
-      v-if="!has_output">
+      v-if="!has_output && false"
+    >
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Output</div>
     </pipe-transfer-output-blankslate>
   </div>
