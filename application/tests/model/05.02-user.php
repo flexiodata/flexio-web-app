@@ -159,10 +159,18 @@ class Test
         // TEST: \Model::getUsernameFromEid(); test ability to get the username from the eid
 
         // BEGIN TEST
-        $username = $model->user->getUsernameFromEid(null);
-        $actual = $username === false;
-        $expected = true;
-        TestCheck::assertBoolean('C.1', 'User\Model::getUsernameFromEid(); check null input; return false with invalid eid input',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $username = $model->user->getUsernameFromEid(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('C.1', 'User\Model::getUsernameFromEid(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $username = $model->user->getUsernameFromEid('xxxxxxxxxxxx');
@@ -199,10 +207,18 @@ class Test
         // TEST: \Model::getEmailFromEid(); test ability to get the user email from the eid
 
         // BEGIN TEST
-        $email = $model->user->getEmailFromEid(null);
-        $actual = $email === false;
-        $expected = true;
-        TestCheck::assertBoolean('D.1', 'User\Model::getEmailFromEid(); check null input; return false with invalid eid input',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $email = $model->user->getEmailFromEid(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('D.1', 'User\Model::getEmailFromEid(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $email = $model->user->getEmailFromEid('xxxxxxxxxxxx');
@@ -239,10 +255,18 @@ class Test
         // TEST: \Model::getEidFromIdentifier(); test ability to get the eid from the user_name or email
 
         // BEGIN TEST
-        $eid = $model->user->getEidFromIdentifier(null);
-        $actual = $eid === false;
-        $expected = true;
-        TestCheck::assertBoolean('E.1', 'User\Model::getEidFromIdentifier(); check null input; return false when eid can\'t be found',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $eid = $model->user->getEidFromIdentifier(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('E.1', 'User\Model::getEidFromIdentifier(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -292,9 +316,18 @@ class Test
         // TEST: \Model::checkUserPassword; tests to check password validation
 
         // BEGIN TEST
-        $actual = $model->user->checkUserPassword(null, null);
-        $expected = false;
-        TestCheck::assertBoolean('F.1', 'User\Model::checkUserPassword(); return false with a null input',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $actual = $model->user->checkUserPassword(null, null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('F.1', 'User\Model::checkUserPassword(); throw an error with a null input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();

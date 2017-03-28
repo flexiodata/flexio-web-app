@@ -47,9 +47,18 @@ class Test
         TestCheck::assertBoolean('A.4', '\Model::isValidType(); return false for invalid types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(array());
-        $expected = false;
-        TestCheck::assertBoolean('A.5', '\Model::isValidType(); return false for invalid types',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $result = \Model::isValidType(array());
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.5', '\Model::isValidType(); throw exception for bad input parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::isValidType('a');
@@ -131,9 +140,18 @@ class Test
         TestCheck::assertBoolean('B.4', '\Model::isValidEdge(); return false for invalid edges',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidEdge(array());
-        $expected = false;
-        TestCheck::assertBoolean('B.5', '\Model::isValidEdge(); return false for invalid edges',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $result = \Model::isValidEdge(array());
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.5', '\Model::isValidEdge(); throw exception for bad input parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::isValidEdge('a');
@@ -270,9 +288,18 @@ class Test
         TestCheck::assertBoolean('C.4', '\Model::isValidStatus(); return false for an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidStatus(array());
-        $expected = false;
-        TestCheck::assertBoolean('C.5', '\Model::isValidStatus(); return false for an invalid status',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $result = \Model::isValidStatus(array());
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('C.5', '\Model::isValidStatus(); throw exception for bad input parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::isValidStatus('a');

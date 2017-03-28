@@ -27,22 +27,40 @@ class Test
         // TEST: basic entry deletion tests
 
         // BEGIN TEST
-        $object_eid = null;
-        $name = null;
-        $value = '';
-        $creation = $model->registry->setString($object_eid, $name, $value);
-        $actual = $model->registry->deleteEntryByName($object_eid, $name);
-        $expected = false;
-        TestCheck::assertBoolean('A.1', 'Registry\Model::deleteEntryByName(); null or blank entries aren\'t allowed', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = null;
+            $name = null;
+            $value = '';
+            $creation = $model->registry->setString($object_eid, $name, $value);
+            $model->registry->deleteEntryByName($object_eid, $name);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', 'Registry\Model::deleteEntryByName(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = null;
-        $name = null;
-        $value = '';
-        $creation = $model->registry->setString($object_eid, $name, $value);
-        $actual = $model->registry->deleteEntryByName($object_eid, $name);
-        $expected = false;
-        TestCheck::assertBoolean('A.2', 'Registry\Model::deleteEntryByName(); null or blank entries aren\'t allowed', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = null;
+            $name = null;
+            $value = '';
+            $creation = $model->registry->setString($object_eid, $name, $value);
+            $model->registry->deleteEntryByName($object_eid, $name);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.2', 'Registry\Model::deleteEntryByName(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();

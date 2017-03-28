@@ -153,8 +153,8 @@ class Test
         $add_operation1 = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $add_operation2 = $model->assoc_add($eid1, \Model::EDGE_LINKED_FROM, $eid2);
         $change_operation = $model->assoc_change_type($eid1, \Model::EDGE_LINKED_TO, $eid2, \Model::EDGE_LINKED_FROM);
-        $assoc_count1 = count($model->assoc_get($eid1, \Model::EDGE_LINKED_TO, $eid2));
-        $assoc_count2 = count($model->assoc_get($eid1, \Model::EDGE_LINKED_FROM, $eid2));
+        $assoc_count1 = count($model->assoc_get($eid1, \Model::EDGE_LINKED_TO, [$eid2]));
+        $assoc_count2 = count($model->assoc_get($eid1, \Model::EDGE_LINKED_FROM, [$eid2]));
         $actual = $add_operation1 === true && $add_operation2 === true && $change_operation === true && $assoc_count1 === 0 && $assoc_count2 === 1;
         $expected = true;
         TestCheck::assertBoolean('C.3', '\Model::assoc_change_type(); return true when trying to change to an association that already exists, but make sure to not add a new association',  $actual, $expected, $results);
