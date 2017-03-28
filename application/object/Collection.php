@@ -54,7 +54,7 @@ class Collection
     {
         // sets the collection to the input collection
         if (!($collection instanceof \Flexio\Object\Collection))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $this->objects = $collection->enum();
         return $this;
