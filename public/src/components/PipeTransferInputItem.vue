@@ -19,19 +19,7 @@
         <ui-menu
           contain-focus
           has-icons
-
-          :options="[{
-            id: 'add-items',
-            label: 'Add files',
-            icon: 'add_circle'
-          },{
-            type: 'divider'
-          },{
-            id: 'delete',
-            label: 'Remove this input',
-            icon: 'delete'
-          }]"
-
+          :options="menu_options"
           @select="onMenuItemClick"
           @close="$refs.menu.close()"
         >
@@ -45,21 +33,30 @@
       </div>
     </div>
     <div class="ma3 tc" v-else>
-      <div class=" lh-copy mid-gray f6 mb3 tc i">There are no files that have been selected from this connection.</div>
-      <div class="">
-        <btn
-          btn-md
-          btn-primary
-          class="ttu b"
-        >
-          Add files
-        </btn>
+      <div class="tl" v-if="is_stdin">
+        <div class="lh-copy mid-gray f6 mb3 i">Input files from the command line.</div>
+        <div class="pv1 ph2 bg-black-10">
+          <code class="f6">$ flexio pipes run pipe-name file.txt *.csv</code>
+        </div>
+      </div>
+      <div v-else>
+        <div class="lh-copy mid-gray f6 mb3 tc i">There are no files that have been selected from this connection.</div>
+        <div>
+          <btn
+            btn-md
+            btn-primary
+            class="ttu b"
+          >
+            Add files
+          </btn>
+        </div>
       </div>
     </div>
   </article>
 </template>
 
 <script>
+  import { CONNECTION_TYPE_STDIN } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
@@ -79,6 +76,31 @@
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
+      },
+      is_stdin() {
+        return this.ctype == CONNECTION_TYPE_STDIN
+      },
+      menu_options() {
+        var items = []
+
+        if (!this.is_stdin)
+        {
+          items = [{
+            id: 'add-items',
+            label: 'Add files',
+            icon: 'add_circle'
+          },{
+            type: 'divider'
+          }]
+        }
+
+        items.push({
+          id: 'delete',
+          label: 'Remove this input',
+          icon: 'delete'
+        })
+
+        return items
       }
     },
     methods: {
