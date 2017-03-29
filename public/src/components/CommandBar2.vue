@@ -1,55 +1,16 @@
 <template>
   <div>
     <div class="flex flex-row items-stretch relative bg-white">
-      <div class="flex-none flex flex-row items-stretch" v-if="show_plus_button">
-        <a
-          class="flex flex-row items-center fw6 f6 pv1 ph2 ba bw1 b--black-10 bg-black-10 black-60 br2 br--left pointer h-100 no-underline"
-          ref="dropdownTrigger"
-          tabindex="0"
-        ><i class="material-icons v-mid">add</i></a>
-
-        <ui-popover
-          trigger="dropdownTrigger"
-          ref="dropdown"
-        >
-          <ui-menu
-            class="mw-none"
-            contain-focus
-            has-icons
-
-            :options="[{
-              id: 'input-file-chooser',
-              label: 'Open input file chooser',
-              icon: 'input'
-            },{
-              id: 'output-file-chooser',
-              label: 'Open output file chooser',
-              icon: 'input'
-            },{
-              type: 'divider'
-            },{
-              id: 'toggle-file-list',
-              label: 'Toggle file list',
-              icon: 'list'
-            }]"
-
-            @select="onDropdownItemClick"
-            @close="$refs.dropdown.close()"
-          ></ui-menu>
-        </ui-popover>
-      </div>
       <div
         class="flex-fill flex flex-row items-stretch"
         @click="focus"
       >
         <autocomplete
           ref="input"
-          class="flex-fill pv1 ph1 ba b--black-10"
+          class="flex-fill pv1 ph2 ba b--black-10"
           placeholder="Type a command..."
           input-class="db input-reset border-box outline-0 bn pv1 mh0 max-h3 f6 code w-100"
           :val="cmd_text"
-          :connections="connections"
-          :columns="columns"
           @change="onCommandChange"
           @revert="onCommandRevert"
           @save="onCommandSave"
@@ -66,7 +27,7 @@
         class="ttu f6 b bt bb bl bw1 b--black-20 bg-black-10 black-60 pv2 ph2"
         :disabled="!isInserting && !is_changed"
         @click.stop="revertChanges"
-        v-if="show_cancel_save_buttons"
+        v-if="show_cancel_save_buttons && is_changed"
       >Cancel</btn>
       <btn
         btn-square
@@ -74,19 +35,8 @@
         class="ttu f6 b pv2 ph3 ba bw1 br2 br--right"
         :disabled="!isInserting && !is_changed"
         @click.stop="saveChanges"
-        v-if="show_cancel_save_buttons"
+        v-if="show_cancel_save_buttons && is_changed"
       >Save</btn>
-    </div>
-    <div v-if="show_examples" class="black-50 f7 mt1 ml1">
-      <span class="code">Example:</span>
-      <span class="code">{{code_example}}</span>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        class="ml2 pointer hint--top blue no-underline underline-hover"
-        aria-label="Visit help docs"
-        :href="code_more_link"
-      >More...</a>
     </div>
   </div>
 </template>
@@ -99,7 +49,20 @@
   import Autocomplete from './Autocomplete.vue'
 
   export default {
-    props: ['is-inserting', 'orig-json', 'task-json', 'show-plus-button', 'show-cancel-save-buttons', 'show-examples', 'connections', 'input-columns', 'output-columns'],
+    props: {
+      'orig-json': {
+        default: () => { return {} },
+        type: Object
+      },
+      'task-json': {
+        default: () => { return {} },
+        type: Object
+      },
+      'show-cancel-save-buttons': {
+        default: false,
+        type: Boolean
+      }
+    },
     components: {
       Btn,
       Autocomplete
@@ -121,82 +84,13 @@
     },
     computed: {
       is_changed() {
-        return this.isInserting
-         || this.cmd_text != this.orig_cmd_text
-         || !_.isEqual(this.taskJson, this.origJson)
+        return this.cmd_text != this.orig_cmd_text
       },
       cmd_json() {
-        return this.is_changed
-          ? parser.toJSON(_.defaultTo(this.cmd_text), '') : this.isInserting
-          ? {} : this.origJson
+        return this.is_changed ? parser.toJSON(_.defaultTo(this.cmd_text), '') : this.origJson
       },
       task_type() {
         return _.get(this.cmd_json, 'type', '')
-      },
-      columns() {
-        return this.isInserting ? this.outputColumns : this.inputColumns
-      },
-      code_example() {
-        switch (this.task_type)
-        {
-          default                            : return 'input from: my-connection file: /path/to/file1, /path/to/file2'
-          case types.TASK_TYPE_CALC          : return 'calc value: curdate() as: myfld type: date decimals: 0'
-          case types.TASK_TYPE_CONVERT       : return 'convert from: delimited to: table'
-          case types.TASK_TYPE_COPY          : return ''
-          case types.TASK_TYPE_CUSTOM        : return ''
-          case types.TASK_TYPE_DISTINCT      : return ''
-          case types.TASK_TYPE_DUPLICATE     : return ''
-          case types.TASK_TYPE_EMAIL_SEND    : return ''
-          case types.TASK_TYPE_EXECUTE       : return 'execute lang: python code: <use code editor>'
-          case types.TASK_TYPE_FIND_REPLACE  : return ''
-          case types.TASK_TYPE_FILTER        : return 'filter where: gross_amt > 100'
-          case types.TASK_TYPE_GROUP         : return ''
-          case types.TASK_TYPE_INPUT         : return 'input from: my-connection file: /path/to/file1, /path/to/file2'
-          case types.TASK_TYPE_LIMIT         : return 'limit sample: top value: 50054'
-          case types.TASK_TYPE_MERGE         : return 'merge'
-          case types.TASK_TYPE_NOP           : return ''
-          case types.TASK_TYPE_OUTPUT        : return 'output to: my-connection location: /path/to/folder'
-          case types.TASK_TYPE_PROMPT        : return ''
-          case types.TASK_TYPE_R             : return ''
-          case types.TASK_TYPE_RENAME        : return ''
-          case types.TASK_TYPE_RENAME_COLUMN : return 'rename col: first_name => firstname, last_name => lastname'
-          case types.TASK_TYPE_SEARCH        : return ''
-          case types.TASK_TYPE_SELECT        : return 'select col: [vendor name], trans_date, gross_amt'
-          case types.TASK_TYPE_SORT          : return 'sort col: [vendor name]'
-          case types.TASK_TYPE_TRANSFORM     : return 'transform col: vend_no, [vendor name] delimiter: ',' case: lower trim: leading'
-        }
-      },
-      code_more_link() {
-        var base_url = 'https://'+HOSTNAME+'/docs/web-app/'
-
-        switch (this.task_type)
-        {
-          default                            : return base_url
-          case types.TASK_TYPE_CALC          : return base_url+'#calc'
-          case types.TASK_TYPE_CONVERT       : return base_url+'#convert'
-          case types.TASK_TYPE_COPY          : return base_url
-          case types.TASK_TYPE_CUSTOM        : return base_url
-          case types.TASK_TYPE_DISTINCT      : return base_url
-          case types.TASK_TYPE_DUPLICATE     : return base_url
-          case types.TASK_TYPE_EMAIL_SEND    : return base_url
-          case types.TASK_TYPE_EXECUTE       : return base_url+'#execute'
-          case types.TASK_TYPE_FIND_REPLACE  : return base_url
-          case types.TASK_TYPE_FILTER        : return base_url+'#filter'
-          case types.TASK_TYPE_GROUP         : return base_url
-          case types.TASK_TYPE_INPUT         : return base_url+'#input'
-          case types.TASK_TYPE_LIMIT         : return base_url+'#limit'
-          case types.TASK_TYPE_MERGE         : return base_url+'#merge'
-          case types.TASK_TYPE_NOP           : return base_url
-          case types.TASK_TYPE_OUTPUT        : return base_url+'#output'
-          case types.TASK_TYPE_PROMPT        : return base_url
-          case types.TASK_TYPE_R             : return base_url
-          case types.TASK_TYPE_RENAME        : return base_url+'#rename'
-          case types.TASK_TYPE_RENAME_COLUMN : return base_url+'#rename'
-          case types.TASK_TYPE_SEARCH        : return base_url
-          case types.TASK_TYPE_SELECT        : return base_url+'#select'
-          case types.TASK_TYPE_SORT          : return base_url+'#sort'
-          case types.TASK_TYPE_TRANSFORM     : return base_url+'#transform'
-        }
       }
     },
     mounted() {
@@ -215,16 +109,12 @@
         this.show_json = !this.show_json
       },
 
-      openHelpDocs() {
-        window.open('https://docs.flex.io', '_blank')
-      },
-
       initFromTaskJson(json) {
         var parser_json = parser.toCmdbar(json)
         var cmd_text = _.defaultTo(parser_json, '')
 
         this.orig_cmd_text = cmd_text
-        this.cmd_text = cmd_text
+        this.setCmdText(cmd_text)
       },
 
       revertChanges() {
@@ -234,15 +124,23 @@
 
       saveChanges() {
         var attrs = _.assign({}, this.cmd_json)
-
-        if (!this.isInserting)
-          attrs.eid = _.get(this.origJson, 'eid')
-
+        attrs.eid = _.get(this.origJson, 'eid')
         this.$emit('save', attrs)
       },
 
+      setCmdText(cmd_text) {
+        if (!_.isString(cmd_text))
+          return
+
+        var end_idx = cmd_text.indexOf(' code:')
+        if (this.task_type == types.TASK_TYPE_EXECUTE && end_idx != -1)
+          this.cmd_text = cmd_text.substring(0, end_idx)
+           else
+          this.cmd_text = cmd_text
+      },
+
       onCommandChange(val) {
-        this.cmd_text = val
+        this.setCmdText(val)
       },
 
       onCommandRevert(val) {
@@ -252,17 +150,6 @@
       onCommandSave(val) {
         if (this.is_changed)
           this.saveChanges()
-      },
-
-      onDropdownItemClick(menu_item) {
-        switch (menu_item.id)
-        {
-          case 'input-file-chooser':  return this.$emit('show-input-file-chooser')
-          case 'output-file-chooser': return this.$emit('show-output-file-chooser')
-          case 'toggle-file-list':    return this.$emit('toggle-file-list')
-          case 'docs':                return this.openHelpDocs()
-          case 'examples':            return this.toggleExamples()
-        }
       }
     }
   }

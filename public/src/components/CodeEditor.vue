@@ -57,6 +57,7 @@
     },
     methods: {
       setValue(val) {
+        this.code_text = val
         this.editor.setValue(val)
       }
     }

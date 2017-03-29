@@ -33,35 +33,20 @@
           :val="description"
           @save="editTaskSingleton">
         </inline-edit-text>
-        <div class="mv2">
-          <!-- command bar -->
-          <div v-if="false">
-            <code-editor
-              class="pa1 ba b--black-10"
-              lang="python"
-              :val="command"
-              :options="{ lineNumbers: false }"
-            ></code-editor>
-          </div>
-          <command-bar2
-            ref="commandbar"
-            :orig-json="task"
-            :task-json="task"
-            :connections="projectConnections"
-            :input-columns="input_columns"
-            :output-columns="output_columns"
-            :show-plus-button="false"
-            :show-examples="false"
-            :show-cancel-save-buttons="false"
-            @save="saveCommandChanges"
-            v-else
-          ></command-bar2>
-        </div>
+        <command-bar2
+          ref="commandbar"
+          class="mv2"
+          :orig-json="task"
+          :task-json="task"
+          @cancel="cancelEdit"
+          @save="saveEdit"
+        ></command-bar2>
         <code-editor
           ref="code"
           class="mv2 ba b--black-10"
           :val="execute_code"
           :lang="execute_lang"
+          @change="updateCode"
           v-if="is_task_execute"
         ></code-editor>
         <pipe-content
@@ -101,10 +86,16 @@
       InlineEditText,
       PipeContent
     },
+    watch: {
+      'item'(val, old_val) {
+        this.execute_code = this.getReadableCode()
+      }
+    },
     data() {
       return {
         description: this.getDescription(),
-        command: this.getParserCommand()
+        command: this.getParserCommand(),
+        execute_code: this.getReadableCode()
       }
     },
     computed: {
@@ -113,11 +104,6 @@
       task_type() { return _.get(this, 'task.type', '') },
       is_task_execute() { return this.task_type == TASK_TYPE_EXECUTE },
       insert_tooltip() { return 'Insert a new step after step ' + (this.index+1) },
-
-      execute_code() {
-        var code = _.get(this, 'task.params.code', '')
-        try { return atob(code) } catch(e) { return '' }
-      },
 
       execute_lang() {
         return _.get(this, 'task.params.lang', 'python')
@@ -150,8 +136,13 @@
         return inputs
       },
 
-      input_columns()  { return this.getOurInputColumns() },
-      output_columns() { return this.getOurOutputColumns() },
+      input_columns()  {
+        return this.getOurInputColumns()
+      },
+
+      output_columns() {
+        return this.getOurOutputColumns()
+      },
 
       active_stream_eid() {
         var stream = _.head(this.our_inputs)
@@ -164,6 +155,13 @@
       },
       getParserCommand() {
         return _.defaultTo(parser.toCmdbar(this.task), '')
+      },
+      getReadableCode() {
+        var code = _.get(this, 'item.params.code', '')
+        try { return atob(code) } catch(e) { return '' }
+      },
+      getBase64Code(code) {
+        try { return btoa(code) } catch(e) { return '' }
       },
       getOurInputColumns() {
         var columns = _.get(this.$store, 'state.objects.'+this.process_task_id+'.input_columns', [])
@@ -196,8 +194,25 @@
         if (!_.isNil(input))
           input.endEdit()
       },
-      saveCommandChanges(attrs) {
-        this.editTaskSingleton(_.pick(attrs, ['type', 'params']))
+      cancelEdit() {
+        this.execute_code = this.getReadableCode()
+
+        // reset the code in the code editor
+        var code_editor = this.$refs['code']
+        if (!_.isNil(code_editor))
+          code_editor.setValue(this.execute_code)
+      },
+      saveEdit(attrs) {
+        var edit_attrs = _.pick(attrs, ['metadata', 'type', 'params'])
+
+        // sync up the changes from the code editor if we're on an execute step
+        if (this.is_task_execute)
+          _.set(edit_attrs, 'params.code', this.getBase64Code(this.execute_code))
+
+        this.editTaskSingleton(edit_attrs)
+      },
+      updateCode(code) {
+        this.execute_code = code
       },
       insertNewTask() {
         this.$emit('insert-task', this.index+1)
