@@ -32,7 +32,7 @@
 
     <div class="relative">
       <file-chooser-list
-        ref="filechooser"
+        ref="file-chooser"
         class="min-h5 max-h5"
         :connection="connection"
         :path="connection_path"
@@ -41,7 +41,7 @@
         v-if="file_chooser_mode == 'filechooser'"
       ></file-chooser-list>
       <url-input-list
-        ref="urlinputlist"
+        ref="url-input-list"
         class="ba b--black-20 pa1 min-h5 max-h5"
         @selection-change="updateItems"
         v-if="file_chooser_mode == 'textentry'"
@@ -138,6 +138,7 @@
         this.items = []
       },
       onHide() {
+        this.$refs['url-input-list'].reset()
         this.reset()
       },
       openFolder(path) {
