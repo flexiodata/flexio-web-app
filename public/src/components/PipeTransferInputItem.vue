@@ -26,9 +26,9 @@
       </ui-popover>
     </div>
     <div v-if="items.length > 0">
-      <div class="flex flex-row items-center pa2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
+      <div class="flex flex-row items-center pv1 ph2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
         <div class="flex-fill">{{item.path}}</div>
-        <div class="flex-none f4 pointer silver hover-black child">&times;</div>
+        <div class="flex-none f3 pointer moon-gray hover-black child" @click="deleteFile(item)">&times;</div>
       </div>
     </div>
     <div class="ma3 tc" v-else>
@@ -130,25 +130,36 @@
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },
-      addFiles(items, modal) {
+      updateFiles(items, modal) {
         var eid = this.pipeEid
         var task_eid = _.get(this.item, 'eid', '')
-        var existing_items = _.get(this.item, 'params.items', [])
         var attrs = _.cloneDeep(_.omit(this.item, 'eid'))
 
-        // add the chosen files to the existing files
-        _.set(attrs, 'params.items', existing_items.concat(items))
+        _.set(attrs, 'params.items', items)
 
         // edit pipe task
         this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {
           if (response.ok)
           {
-            modal.close()
+            if (!_.isNil(modal))
+              modal.close()
           }
            else
           {
           }
         })
+      },
+      addFiles(items, modal) {
+        var existing_items = _.get(this.item, 'params.items', [])
+        var new_items = existing_items.concat(items)
+        this.updateFiles(new_items, modal)
+      },
+      deleteFile(item) {
+        var existing_items = _.get(this.item, 'params.items', [])
+        var new_items = _.reject(existing_items, (i) => {
+          return _.get(i, 'path') == _.get(item, 'path')
+        })
+        this.updateFiles(new_items)
       },
       openFileChooser() {
         if (!_.isNil(this.connection))
