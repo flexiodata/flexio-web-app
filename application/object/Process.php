@@ -990,7 +990,7 @@ class Process extends \Flexio\Object\Base
         return $result;
     }
 
-    private function findCachedResult($implementation_revision, $task, $input, &$output)
+    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Collection $input, &$output) : bool
     {
         // find the hash for the input and the task
         $hash = self::generateTaskHash($implementation_revision, $task, $input);
@@ -1014,7 +1014,7 @@ class Process extends \Flexio\Object\Base
         return true;
     }
 
-    private function generateTaskHash($implementation_version, $task, $input)
+    private static function generateTaskHash(string $implementation_version, array $task, \Flexio\Object\Collection $input) : string
     {
         // if we dont' have an implementation version or an invalid implementation
         // version (git revision), don't cache anything
@@ -1115,12 +1115,9 @@ class Process extends \Flexio\Object\Base
         return $job;
     }
 
-    private static function stringifyCollectionEids($collection)
+    private static function stringifyCollectionEids(\Flexio\Object\Collection $collection) : string
     {
         $result = array();
-        if (!($collection instanceof \Flexio\Object\Collection))
-            return json_encode($result);
-
         $stream_objects = $collection->enum();
         foreach ($stream_objects as $stream)
         {
@@ -1134,12 +1131,9 @@ class Process extends \Flexio\Object\Base
         return json_encode($result);
     }
 
-    private static function unstringifyCollectionEids($string)
+    private static function unstringifyCollectionEids(string $string) : \Flexio\Object\Collection
     {
         $collection = \Flexio\Object\Collection::create();
-        if (!is_string($string))
-            return $collection;
-
         $items = json_decode($string,true);
         if (!is_array($items))
             return $collection;
