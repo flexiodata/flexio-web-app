@@ -52,14 +52,19 @@
         class="ttu b"
         v-if="processRunning"
       >Cancel</btn>
-      <btn
-        btn-md
-        btn-primary
-        class="ttu b"
-        :disabled="!is_run_allowed"
-        @click="runPipe"
+      <div
+        class="hint--bottom-left"
+        :aria-label="run_button_tooltip"
         v-else
-      >Run</btn>
+      >
+        <btn
+          btn-md
+          btn-primary
+          class="ttu b"
+          :disabled="!is_run_allowed"
+          @click="runPipe"
+        >Run</btn>
+      </div>
       <div
         class="f7 fw6 blue pointer mt2 db dn-ns"
         @click="setPipeView('builder')"
@@ -75,6 +80,7 @@
 </template>
 
 <script>
+  import { TASK_TYPE_INPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
 
@@ -90,11 +96,16 @@
       pipe_ename()        { return _.get(this.pipe, 'ename', '') },
       pipe_description()  { return _.get(this.pipe, 'description', '') },
       tasks()             { return _.get(this.pipe, 'task', []) },
+      input_tasks()       { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
 
       is_run_allowed() {
-        if (this.tasks.length == 0)
+        if (this.input_tasks.length == 0)
           return false
         return true
+      },
+
+      run_button_tooltip() {
+        return this.is_run_allowed ? '' : 'Pipes must have an input to be run'
       }
     },
     methods: {
