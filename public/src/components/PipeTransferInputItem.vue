@@ -85,15 +85,17 @@
       }
     },
     computed: {
-      connection() {
-        var connection_eid = _.get(this.item, 'params.connection', '')
-        return _.get(this.$store, 'state.objects.'+connection_eid)
-      },
       ctype() {
         return _.get(this.item, 'metadata.connection_type', '')
       },
       items() {
         return _.get(this.item, 'params.items', '')
+      },
+      connection() {
+        var connection_eid = _.get(this.item, 'params.connection', '')
+        return _.get(this.$store, 'state.objects.'+connection_eid, {
+          connection_type: this.ctype
+        })
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
