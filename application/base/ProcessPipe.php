@@ -27,7 +27,7 @@ class ProcessPipe
             proc_close($this->process);
     }
 
-    public function exec($cmd, $cwd)
+    public function exec($cmd, $cwd, $env = null)
     {
         $descriptor_spec = array(
             0 => array("pipe", "r"),
@@ -35,7 +35,7 @@ class ProcessPipe
             2 => array("pipe", "w")
         );
 
-        $this->process = proc_open($cmd, $descriptor_spec, $this->pipes, $cwd, NULL);
+        $this->process = proc_open($cmd, $descriptor_spec, $this->pipes, $cwd, $env);
 
         if (!is_resource($this->process))
         {
@@ -118,5 +118,13 @@ class ProcessPipe
              else
             return false;
         */
+    }
+
+    public function getError()
+    {
+        $str = fread($this->pipes[2], 8192);
+        if (strlen($str) == 0)
+            return null;
+        return $str;
     }
 }

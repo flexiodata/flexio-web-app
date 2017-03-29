@@ -550,6 +550,7 @@ class Process extends \Flexio\Object\Base
 
     private function execute()
     {
+        /*
         global $g_procerr_info;
 
         // this shutdown function should only be registered once
@@ -588,6 +589,7 @@ class Process extends \Flexio\Object\Base
                 }
             });
         }
+        */
 
 
         // TODO: set appropriate status for failures

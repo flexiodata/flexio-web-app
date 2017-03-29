@@ -159,7 +159,7 @@ class Stream extends \Flexio\Object\Base
         if ($local_file_info === false)
             return false;
 
-        return $info['size'];
+        return $local_file_info['size'];
     }
 
     public function setMimeType(string $mime_type) : \Flexio\Object\Stream

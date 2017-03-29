@@ -135,9 +135,6 @@ class Stream
 
     public static function upload($params, $request)
     {
-        var_dump($params);
-        die();
-
         if (($params = $request->getValidator()->check($params, array(
                 'eid'           => array('type' => 'identifier', 'required' => true),
                 'name'          => array('type' => 'string',  'required' => false),

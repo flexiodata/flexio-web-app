@@ -114,14 +114,34 @@ class Execute extends \Flexio\Jobs\Base
         $cmd = $program_path . ' ' . "\"$filename\"";
         $cwd = sys_get_temp_dir();
 
+
+        $env = array('PYTHONPATH' => dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'python_include');
+
+
         $process = new \Flexio\Base\ProcessPipe;
-        if (!$process->exec($cmd, $cwd))
+        if (!$process->exec($cmd, $cwd, $env))
         {
             @unlink($filename);
             return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, _(''), __FILE__, __LINE__);
         }
 
+
+        // first, write a json header record to the process, followed by \r\n\r\n
+        $header = array(
+            'name' => $instream->getName(),
+            'size' => $instream->getSize(),
+            'content_type' => $instream->getMimeType(),
+            'structure' => ($is_table ? $instream->getStructure() : null)
+        );
+        $header_json = json_encode($header);
+        $process->write($header_json . "\r\n\r\n");
+
+
+
+
         $done_writing = false;
+        $first_chunk = true;
+        $chunk = '';
 
         do
         {
@@ -180,7 +200,7 @@ class Execute extends \Flexio\Jobs\Base
                     {
                         $process->closeWrite();
                         $done_writing = true;
-                        fxdebug("Closed Writing\n");
+                        //fxdebug("Closed Writing\n");
                     }
                 }
             }
@@ -190,19 +210,56 @@ class Execute extends \Flexio\Jobs\Base
             if ($process->canRead())
             {
                 //fxdebug("Reading...\n");
-                $chunk = $process->read(1024);
+                $chunk .= $process->read(1024);
 
-                //ob_start();
-                //var_dump($chunk);
-                //$s = ob_get_clean();
-                //fxdebug("From process: ".$s."***\n\n\n\n");
+                if (strlen($chunk) > 0)
+                {
+                    if ($first_chunk)
+                    {
+                        $content_type = 'application/octet-stream';
 
-                $streamwriter->write($chunk);
+                        $end = strpos($chunk, "\r\n\r\n");
+                        
+                        if ($chunk[0] == '{' && $end !== false)
+                        {
+                            $header = @json_decode(substr($chunk, 0, $end), true);
+                            if (!is_null($header))
+                            {
+                                if (isset($header['content_type']))
+                                {
+                                    $content_type = $header['content_type'];
+                                }
+                            }
+                            $chunk = substr($chunk, $end+4);
+                        }
+
+                        $outstream->setMimeType($content_type);
+                        $first_chunk = false;
+                    }
+
+                   // var_dump($chunk);
+
+                    //ob_start();
+                    //var_dump($chunk);
+                    //$s = ob_get_clean();
+                    //fxdebug("From process: ".$s."***\n\n\n\n");
+
+                    $streamwriter->write($chunk);
+                    $chunk = '';
+                }
+                
             }
 
 
         } while ($is_running);
 
+
+        $err = $process->getError();
+       // var_dump($err);
+        if (isset($err))
+        {
+            return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, $err, __FILE__, __LINE__);
+        }
     }
 
 
