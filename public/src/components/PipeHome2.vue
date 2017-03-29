@@ -53,6 +53,11 @@
       PipeTransfer,
       PipeBuilderList
     },
+    provide() {
+      return {
+        pipeEid: this.eid
+      }
+    },
     data() {
       return {
         eid: this.$route.params.eid,

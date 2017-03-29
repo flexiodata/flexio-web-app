@@ -5,9 +5,7 @@
     @hide="onHide"
   >
     <div slot="header" class="w-100">
-      <div class="flex flex-row items-center">
-        <span class="f4">{{title}}</span>
-      </div>
+      <span class="f4">{{title}}</span>
     </div>
 
     <div>

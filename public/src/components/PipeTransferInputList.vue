@@ -4,7 +4,6 @@
       v-for="(task, index) in tasks"
       :item="task"
       :index="index"
-      @add-items="addItems"
       @delete="deleteInput"
     >
     </pipe-transfer-input-item>
@@ -20,9 +19,6 @@
       PipeTransferInputItem
     },
     methods: {
-      addItems(input) {
-        this.$emit('input-add-items', input)
-      },
       deleteInput(input) {
         this.$emit('input-delete', input)
       }

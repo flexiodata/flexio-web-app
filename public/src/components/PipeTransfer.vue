@@ -30,7 +30,6 @@
       <pipe-transfer-input-list
         class="flex-fill"
         :tasks="input_tasks"
-        @input-add-items="addInputItems"
         @input-delete="deleteInput"
         v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
@@ -168,9 +167,6 @@
       has_tasks()  { return this.transform_tasks.length > 0 }
     },
     methods: {
-      addInputItems(input) {
-
-      },
       deleteInput(input) {
         var eid = this.pipeEid
         var task_eid = _.get(input, 'eid', '')

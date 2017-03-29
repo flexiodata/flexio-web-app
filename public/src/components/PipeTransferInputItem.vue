@@ -45,12 +45,22 @@
             btn-md
             btn-primary
             class="ttu b"
+            @click="openFileChooser"
           >
             Add files
           </btn>
         </div>
       </div>
     </div>
+
+    <!-- file chooser modal -->
+    <file-chooser-modal
+      ref="modal-file-chooser"
+      :connection="connection"
+      @submit="addFiles"
+      @hide="show_file_chooser_modal = false"
+      v-if="show_file_chooser_modal"
+    ></file-chooser-modal>
   </article>
 </template>
 
@@ -59,14 +69,26 @@
   import * as connections from '../constants/connection-info'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
+  import FileChooserModal from './FileChooserModal.vue'
 
   export default {
-    props: ['item', 'connection-type'],
+    props: ['item'],
     components: {
       Btn,
-      ConnectionIcon
+      ConnectionIcon,
+      FileChooserModal
+    },
+    inject: ['pipeEid'],
+    data() {
+      return {
+        show_file_chooser_modal: false
+      }
     },
     computed: {
+      connection() {
+        var connection_eid = _.get(this.item, 'params.connection', '')
+        return _.get(this.$store, 'state.objects.'+connection_eid)
+      },
       ctype() {
         return _.get(this.item, 'metadata.connection_type', '')
       },
@@ -106,11 +128,38 @@
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },
+      addFiles(items, modal) {
+        var eid = this.pipeEid
+        var task_eid = _.get(this.item, 'eid', '')
+        var existing_items = _.get(this.item, 'params.items', [])
+        var attrs = _.cloneDeep(_.omit(this.item, 'eid'))
+
+        // add the chosen files to the existing files
+        _.set(attrs, 'params.items', existing_items.concat(items))
+
+        // edit pipe task
+        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {
+          if (response.ok)
+          {
+            modal.close()
+          }
+           else
+          {
+          }
+        })
+      },
+      openFileChooser() {
+        if (!_.isNil(this.connection))
+        {
+          this.show_file_chooser_modal = true
+          this.$nextTick(() => { this.$refs['modal-file-chooser'].open() })
+        }
+      },
       onMenuItemClick(menu_item) {
         switch (menu_item.id)
         {
-          case 'add-items': return this.$emit('add-items', this.item)
-          case 'delete':  return this.$emit('delete', this.item)
+          case 'add-items': return this.openFileChooser()
+          case 'delete':    return this.$emit('delete', this.item)
         }
       }
     }
