@@ -31,9 +31,9 @@
       }
     },
     methods: {
-      onClick() {
+      onClick: _.debounce(function() {
         this.$emit('activate', this.item)
-      }
+      }, 500, { 'leading': true, 'trailing': false })
     }
   }
 </script>
