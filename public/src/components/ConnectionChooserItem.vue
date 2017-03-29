@@ -14,10 +14,6 @@
   </article>
 </template>
 
-
-
-
-
 <script>
   import ConnectionIcon from './ConnectionIcon.vue'
 
