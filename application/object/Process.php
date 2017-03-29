@@ -994,7 +994,7 @@ class Process extends \Flexio\Object\Base
     {
         // find the hash for the input and the task
         $hash = self::generateTaskHash($implementation_revision, $task, $input);
-        if ($hash === false)
+        if (strlen($hash) === 0)
             return false;
 
         $process_output = $this->getModel()->process->getOutputByHash($hash);
@@ -1018,18 +1018,8 @@ class Process extends \Flexio\Object\Base
     {
         // if we dont' have an implementation version or an invalid implementation
         // version (git revision), don't cache anything
-        if (!is_string($implementation_version) && strlen($implementation_version) < 40)
-            return false;
-
-        // generate an md5 hash the uniquely identifies the combination
-        // of the task and the input
-        if (!is_array($task) || !($input instanceof \Flexio\Object\Collection))
-            return false;
-
-        // require something more than an empty task and input
-        $task_input = $input->enum();
-        if (count($task) === 0 && count($task_input) === 0)
-            return false;
+        if (strlen($implementation_version) < 40)
+            return '';
 
         // task hash should uniquely identify the result; use
         // a hash of:
@@ -1043,19 +1033,24 @@ class Process extends \Flexio\Object\Base
         // the task eid; if we can't find one of these, don't generate
         // the hash
 
+        // make sure have a valid task
         $task_type = $task['type'] ?? false;
         $task_parameters = $task['params'] ?? false;
 
-        if ($task_type === false || $task_parameters === false)
-            return false;
+        if (is_string($task_type) === false || is_array($task_parameters) === false)
+            return '';
 
-        $encoded_task_type = json_encode($task_type);
+        // require an input
+        $task_input = $input->enum();
+        if (count($task_input) === 0)
+            return '';
+
         $encoded_task_parameters = json_encode($task_parameters);
-        $encoded_task_input = json_encode($task_input);
+        $encoded_task_input = self::stringifyCollectionEids($input);
 
         $hash = md5(
             $implementation_version .
-            $encoded_task_type .
+            $task_type .
             $encoded_task_parameters .
             $encoded_task_input
         );
