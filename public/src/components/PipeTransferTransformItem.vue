@@ -2,15 +2,19 @@
   <article class="flex flex-row pt1 pb3">
     <div class="flex-none">
       <div
-        class="pa1 mr2 br1 white trans-wh tc relative"
+        class="pointer pa1 mr3 br1 white trans-wh tc relative"
         :class="[ bg_color ]"
       >
-        <i class="db material-icons f5">{{task_icon}}</i>
+        <i class="db material-icons f4">{{task_icon}}</i>
       </div>
     </div>
-    <div class="flex-fill">
-      <div class="mid-gray f5 cursor-default lh-title relative" :style="title_style">{{index+1}}. {{display_name}}</div>
-      <div class="mid-gray f7 cursor-default" v-if="description.length > 0">{{description}}</div>
+    <div class="flex-fill relative" :style="title_style">
+      <div class="flex flex-row">
+        <div class="f5 lh-title mr1">{{index+1}}.</div>
+        <div class="flex-fill f5 lh-title">{{display_name}}</div>
+      </div>
+      <div class="f7 lh-title gray mt1" v-if="description.length > 0">{{description}}</div>
+      </div>
     </div>
   </article>
 </template>
@@ -24,7 +28,7 @@
     computed: {
       task() { return this.item },
       description() { return _.get(this, 'task.description', '') },
-      title_style() { return this.description.length > 0 ? 'top: -3px' : 'top: 2px' }
+      title_style() { return this.description.length > 0 ? 'top: -3px' : 'top: 3px' }
     }
   }
 </script>

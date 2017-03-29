@@ -4,7 +4,7 @@
       <div class="flex-none">
         <div
           class="pointer pa2 mr3 br1 white trans-wh tc relative swap-child"
-          style="margin-top: 2px"
+          style="margin-top: 1px"
           :class="[ bg_color ]"
           @click="deleteTask"
         >
@@ -14,66 +14,64 @@
       </div>
       <div class="flex-fill">
         <div class="flex flex-row">
-          <div class="flex-fill">
-            <div class="v-top dib f5 lh-copy">{{index+1}}.</div>
-            <inline-edit-text
-              class="v-top dib f5 lh-copy"
-              edit-button-tooltip-cls="hint--top-left"
-              input-key="name"
-              :val="display_name"
-              @save="editTaskSingleton">
-            </inline-edit-text>
-            <inline-edit-text
-              class="f7 lh-title gray"
-              placeholder="Add a description"
-              placeholder-cls="fw6 black-20 hover-black-40"
-              edit-button-tooltip-cls="hint--top-left"
-              input-key="description"
-              :val="description"
-              @save="editTaskSingleton">
-            </inline-edit-text>
-            <div class="bl bw1 b--black-10 pl3 relative" style="margin: 0 0 -4px -37px; padding: 0 0 4px 37px">
-              <div class="mv2">
-                <!-- command bar -->
-                <div v-if="false">
-                  <code-editor
-                    class="pa1 ba b--black-10"
-                    lang="python"
-                    :val="command"
-                    :options="{ lineNumbers: false }"
-                  ></code-editor>
-                </div>
-                <command-bar2
-                  ref="commandbar"
-                  :orig-json="task"
-                  :task-json="task"
-                  :connections="projectConnections"
-                  :input-columns="input_columns"
-                  :output-columns="output_columns"
-                  :show-plus-button="false"
-                  :show-examples="false"
-                  :show-cancel-save-buttons="false"
-                  @save="saveCommandChanges"
-                  v-else
-                ></command-bar2>
-              </div>
+          <div class="f5 lh-title mr1">{{index+1}}.</div>
+          <inline-edit-text
+            class="flex-fill f5 lh-title"
+            edit-button-tooltip-cls="hint--top-left"
+            input-key="name"
+            :val="display_name"
+            @save="editTaskSingleton">
+          </inline-edit-text>
+        </div>
+
+        <inline-edit-text
+          class="f7 lh-title gray mt1"
+          placeholder="Add a description"
+          placeholder-cls="fw6 black-20 hover-black-40"
+          edit-button-tooltip-cls="hint--top-left"
+          input-key="description"
+          :val="description"
+          @save="editTaskSingleton">
+        </inline-edit-text>
+        <div class="bl bw1 b--black-10 pl3 relative" style="margin: 0 0 -4px -37px; padding: 0 0 4px 37px">
+          <div class="mv2">
+            <!-- command bar -->
+            <div v-if="false">
               <code-editor
-                ref="code"
-                class="mv2 ba b--black-10"
-                style="height: 300px"
-                :val="execute_code"
-                :lang="execute_lang"
-                v-if="is_task_execute"
+                class="pa1 ba b--black-10"
+                lang="python"
+                :val="command"
+                :options="{ lineNumbers: false }"
               ></code-editor>
-              <pipe-content
-                class="mt2 mb3 relative bg-white"
-                style="height: 300px"
-                :stream-eid="active_stream_eid"
-                :task-json="task"
-                v-if="active_stream_eid.length > 0"
-              ></pipe-content>
             </div>
+            <command-bar2
+              ref="commandbar"
+              :orig-json="task"
+              :task-json="task"
+              :connections="projectConnections"
+              :input-columns="input_columns"
+              :output-columns="output_columns"
+              :show-plus-button="false"
+              :show-examples="false"
+              :show-cancel-save-buttons="false"
+              @save="saveCommandChanges"
+              v-else
+            ></command-bar2>
           </div>
+          <code-editor
+            ref="code"
+            class="mv2 ba b--black-10"
+            :val="execute_code"
+            :lang="execute_lang"
+            v-if="is_task_execute"
+          ></code-editor>
+          <pipe-content
+            class="mt2 mb3 relative bg-white"
+            style="height: 300px"
+            :stream-eid="active_stream_eid"
+            :task-json="task"
+            v-if="active_stream_eid.length > 0"
+          ></pipe-content>
         </div>
       </div>
     </div>
