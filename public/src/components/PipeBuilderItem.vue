@@ -57,6 +57,14 @@
                   v-else
                 ></command-bar2>
               </div>
+              <code-editor
+                ref="code"
+                class="mv2 ba b--black-10"
+                style="height: 300px"
+                :val="execute_code"
+                :lang="execute_lang"
+                v-if="is_task_execute"
+              ></code-editor>
               <pipe-content
                 class="mt2 mb3 relative bg-white"
                 style="height: 300px"
@@ -80,6 +88,7 @@
 
 <script>
   import * as types from '../constants/task-type'
+  import { TASK_TYPE_EXECUTE } from '../constants/task-type'
   import parser from '../utils/parser'
   import CodeEditor from './CodeEditor.vue'
   import CommandBar2 from './CommandBar2.vue'
@@ -88,7 +97,7 @@
   import taskItemHelper from './mixins/task-item-helper'
 
   export default {
-    props: ['pipe-eid', 'item', 'index', 'active-process', 'project-connections'],
+    props: ['item', 'index', 'pipe-eid', 'active-process', 'project-connections'],
     mixins: [taskItemHelper],
     components: {
       CodeEditor,
@@ -105,7 +114,18 @@
     computed: {
       task() { return this.item },
       eid() { return _.get(this, 'task.eid', '') },
+      task_type() { return _.get(this, 'task.type', '') },
+      is_task_execute() { return this.task_type == TASK_TYPE_EXECUTE },
       insert_tooltip() { return 'Insert a new step after step ' + (this.index+1) },
+
+      execute_code() {
+        var code = _.get(this, 'task.params.code', '')
+        try { return atob(code) } catch(e) { return '' }
+      },
+
+      execute_lang() {
+        return _.get(this, 'task.params.lang', 'python')
+      },
 
       process_task_id() {
         var process_eid = _.get(this.activeProcess, 'eid', '')
