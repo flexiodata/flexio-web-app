@@ -12,7 +12,8 @@
           <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
       </div>
-      <div class="flex-fill">
+      <div class="flex-fill relative">
+        <div class="bl bw1 b--black-10 pl3 absolute" style="top: 46px; bottom: -5px; left: -37px"></div>
         <div class="flex flex-row">
           <div class="f5 lh-title mr1">{{index+1}}.</div>
           <inline-edit-text
@@ -23,7 +24,6 @@
             @save="editTaskSingleton">
           </inline-edit-text>
         </div>
-
         <inline-edit-text
           class="f7 lh-title gray mt1"
           placeholder="Add a description"
@@ -33,46 +33,44 @@
           :val="description"
           @save="editTaskSingleton">
         </inline-edit-text>
-        <div class="bl bw1 b--black-10 pl3 relative" style="margin: 0 0 -4px -37px; padding: 0 0 4px 37px">
-          <div class="mv2">
-            <!-- command bar -->
-            <div v-if="false">
-              <code-editor
-                class="pa1 ba b--black-10"
-                lang="python"
-                :val="command"
-                :options="{ lineNumbers: false }"
-              ></code-editor>
-            </div>
-            <command-bar2
-              ref="commandbar"
-              :orig-json="task"
-              :task-json="task"
-              :connections="projectConnections"
-              :input-columns="input_columns"
-              :output-columns="output_columns"
-              :show-plus-button="false"
-              :show-examples="false"
-              :show-cancel-save-buttons="false"
-              @save="saveCommandChanges"
-              v-else
-            ></command-bar2>
+        <div class="mv2">
+          <!-- command bar -->
+          <div v-if="false">
+            <code-editor
+              class="pa1 ba b--black-10"
+              lang="python"
+              :val="command"
+              :options="{ lineNumbers: false }"
+            ></code-editor>
           </div>
-          <code-editor
-            ref="code"
-            class="mv2 ba b--black-10"
-            :val="execute_code"
-            :lang="execute_lang"
-            v-if="is_task_execute"
-          ></code-editor>
-          <pipe-content
-            class="mt2 mb3 relative bg-white"
-            style="height: 300px"
-            :stream-eid="active_stream_eid"
+          <command-bar2
+            ref="commandbar"
+            :orig-json="task"
             :task-json="task"
-            v-if="active_stream_eid.length > 0"
-          ></pipe-content>
+            :connections="projectConnections"
+            :input-columns="input_columns"
+            :output-columns="output_columns"
+            :show-plus-button="false"
+            :show-examples="false"
+            :show-cancel-save-buttons="false"
+            @save="saveCommandChanges"
+            v-else
+          ></command-bar2>
         </div>
+        <code-editor
+          ref="code"
+          class="mv2 ba b--black-10"
+          :val="execute_code"
+          :lang="execute_lang"
+          v-if="is_task_execute"
+        ></code-editor>
+        <pipe-content
+          class="mt2 mb3 relative bg-white"
+          style="height: 300px"
+          :stream-eid="active_stream_eid"
+          :task-json="task"
+          v-if="active_stream_eid.length > 0"
+        ></pipe-content>
       </div>
     </div>
 
