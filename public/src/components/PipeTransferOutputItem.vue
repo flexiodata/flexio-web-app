@@ -5,7 +5,7 @@
       <div class="f6 fw6 ttu silver">{{service_name}}</div>
       <div class="flex-fill"></div>
       <a
-        class="no-underline f5 b dib pointer pa0 link silver hover-black popover-trigger"
+        class="no-underline f5 b dib pointer pa0 link black-30 hover-black-60 popover-trigger"
         ref="menutrigger"
         tabindex="0"
       >

@@ -5,7 +5,7 @@
       <div class="f6 fw6 ttu silver">{{service_name}}</div>
       <div class="flex-fill"></div>
       <a
-        class="no-underline f5 b dib pointer pa0 link silver hover-black popover-trigger"
+        class="no-underline f5 b dib pointer pa0 link black-30 hover-black-60 popover-trigger"
         ref="menutrigger"
         tabindex="0"
       >
@@ -28,7 +28,7 @@
     <div v-if="items.length > 0">
       <div class="flex flex-row items-center pv1 ph2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
         <div class="flex-fill">{{item.path}}</div>
-        <div class="flex-none f3 pointer moon-gray hover-black child" @click="deleteFile(item)">&times;</div>
+        <div class="flex-none pointer f3 lh-solid b child black-30 hover-black-60" @click="deleteFile(item)">&times;</div>
       </div>
     </div>
     <div class="ma3 tc" v-else>
