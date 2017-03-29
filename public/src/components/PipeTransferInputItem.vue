@@ -150,8 +150,15 @@
         })
       },
       addFiles(items, modal) {
+        // add wildcards for folders
+        var new_items = _.map(items, (f) => {
+          return _.get(f, 'is_dir', false)
+            ? { path: _.get(f, 'path') + '/*.*' }
+            : _.pick(f, ['path'])
+        })
+
         var existing_items = _.get(this.item, 'params.items', [])
-        var new_items = existing_items.concat(items)
+        var new_items = existing_items.concat(new_items)
         this.updateFiles(new_items, modal)
       },
       deleteFile(item) {

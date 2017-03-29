@@ -34,13 +34,15 @@
       'path': {},
       'folders-only': {
         default: false,
-        type: Boolean,
-        required: false
+        type: Boolean
       },
       'allow-multiple': {
         default: true,
-        type: Boolean,
-        required: false
+        type: Boolean
+      },
+      'allow-folders': {
+        default: true,
+        type: Boolean
       }
     },
     components: {
@@ -61,9 +63,11 @@
     },
     computed: {
       selected_items() {
-        return this.allowMultiple
+        var items = this.allowMultiple
           ? _.filter(this.items, { is_selected: true })
           : this.last_selected_item
+
+        return this.allowFolders ? items : _.reject(items, { is_dir: true })
       }
     },
     mounted() {
