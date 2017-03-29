@@ -136,7 +136,7 @@ class Test
         $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
         $association1 = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $association2 = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $assoc_count = count($model->assoc_get($eid1, \Model::EDGE_LINKED_TO, $eid2));
+        $assoc_count = count($model->assoc_get($eid1, \Model::EDGE_LINKED_TO, [$eid2]));
         $actual = $association1 === true && $association2 === true && $assoc_count === 1;
         $expected = true;
         TestCheck::assertBoolean('D.1', '\Model::assoc_add(); if the same association is created twice, don\'t create it twice but succeed',  $actual, $expected, $results);

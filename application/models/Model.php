@@ -143,7 +143,7 @@ class Model
         return $obj;
     }
 
-    public function create($type, $params) : string
+    public function create(string $type, array $params = null) : string
     {
         if ($type === \Model::TYPE_UNDEFINED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
@@ -154,7 +154,7 @@ class Model
         return $this->loadModel($type)->create($params);
     }
 
-    public function delete($eid) : bool
+    public function delete(string $eid) : bool
     {
         // behavior for delete is to return true if the object is
         // deleted or can't be found
@@ -169,7 +169,7 @@ class Model
         return $this->loadModel($type)->delete($eid);
     }
 
-    public function set($eid, $params) : bool
+    public function set(string $eid, array $params) : bool
     {
         // behavior for set is to return true if the eid exists
         // and there aren't any invalid parameters that are
@@ -187,7 +187,7 @@ class Model
         return $this->loadModel($type)->set($eid, $params);
     }
 
-    public function get($eid, $type = \Model::TYPE_UNDEFINED) // TODO: add return type
+    public function get(string $eid, string $type = \Model::TYPE_UNDEFINED) // TODO: add return type
     {
         // behavior for get is to return false for eids that
         // don't exist; so don't do any error reporting if
@@ -206,7 +206,7 @@ class Model
         return $this->loadModel($type)->get($eid);
     }
 
-    public function getType($eid) : string
+    public function getType(string $eid) : string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::TYPE_UNDEFINED;
@@ -218,7 +218,7 @@ class Model
         return $result;
     }
 
-    public function getTypeByIdentifier($identifier) : string
+    public function getTypeByIdentifier(string $identifier) : string
     {
         if (!\Flexio\Base\Eid::isValid($identifier) && !\Flexio\Base\Identifier::isValid($identifier))
             return \Model::TYPE_UNDEFINED;
@@ -232,13 +232,13 @@ class Model
         return $result;
     }
 
-    public function getInfo($eid) // TODO: add return type
+    public function getInfo(string $eid) // TODO: add return type
     {
         // function for returning all the basic object info
         return $this->getObjectBase($eid);
     }
 
-    public function setStatus($eid, $status) : bool
+    public function setStatus(string $eid, string $status) : bool
     {
         // note: it's possible to set the status through the \Model::set()
         // function on the model, but this provides a lightweight alternative
@@ -276,7 +276,7 @@ class Model
         return true; // established object exists, which is enough for returning true
     }
 
-    public function getStatus($eid) : string
+    public function getStatus(string $eid) : string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
@@ -288,12 +288,12 @@ class Model
         return $result;
     }
 
-    public function search($path) // TODO: add return type
+    public function search(string $path) // TODO: add return type
     {
         return $this->search->exec($path);
     }
 
-    public function assoc_add($source_eid, $type, $target_eid) : bool
+    public function assoc_add(string $source_eid, string $type, string $target_eid) : bool
     {
         // note: similar to a set operation; make sure the parameters
         // are valid, and if they aren't, throw an Exception (note: this
@@ -335,7 +335,7 @@ class Model
         }
     }
 
-    public function assoc_delete($source_eid, $type, $target_eid) : bool
+    public function assoc_delete(string $source_eid, string $type, string $target_eid) : bool
     {
         // TODO: behavior is slightly different than a delete operation on an
         // object in that if the association isn't found, the function
@@ -372,7 +372,7 @@ class Model
         }
     }
 
-    public function assoc_change_type($source_eid, $type, $target_eid, $newtype) : bool
+    public function assoc_change_type(string $source_eid, string $type, string $target_eid, string $newtype) : bool
     {
         // TODO: behavior is slightly different than a set operation on an
         // object in that if the association isn't changed, the function
@@ -460,7 +460,7 @@ class Model
         }
     }
 
-    public function assoc_get($source_eid, $type, $target_eid_set) : array
+    public function assoc_get(string $source_eid, string $type, array $target_eid_set) : array
     {
         if (!\Model::isValidEdge($type))
             return array();
@@ -471,20 +471,6 @@ class Model
             return array();
 
         $db = $this->getDatabase();
-
-        // if the target_eid_set is something besides an array or a string,
-        // it's an invalid input; return an empty list
-        if (!is_array($target_eid_set) && !is_string($target_eid_set))
-            return array();
-
-        // if the target_eid_set is a string, convert it over to an array
-        // of one element
-        $set = array();
-        if (is_string($target_eid_set))
-        {
-            $set = explode(',',$target_eid_set);
-            $target_eid_set = $set;
-        }
 
         // make sure the set of target eids are comprised of valid eids
         $qtarget_eids = '';
@@ -542,7 +528,7 @@ class Model
         }
     }
 
-    public function assoc_range($source_eid, $type, $status_filter = false) : array
+    public function assoc_range(string $source_eid, string $type, array $status_filter = null) : array
     {
         if (!\Model::isValidEdge($type))
             return array();
@@ -563,7 +549,7 @@ class Model
             $qtype = $db->quote($type);
 
             $status_condition = '';
-            if ($status_filter !== false)
+            if (isset($status_filter))
                 $status_condition = " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
 
             $sql = "select ".
@@ -593,7 +579,7 @@ class Model
         }
     }
 
-    public function assoc_count($source_eid, $type, $status_filter = false) : int
+    public function assoc_count(string $source_eid, string $type, array $status_filter = null) : int
     {
         if (!\Model::isValidEdge($type))
             return 0;
@@ -612,7 +598,7 @@ class Model
             $qtype = $db->quote($type);
 
             $status_condition = '';
-            if ($status_filter !== false)
+            if (isset($status_filter))
                 $status_condition = " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
 
             $sql = "select count(*) from tbl_association tas ".
@@ -631,7 +617,7 @@ class Model
         }
     }
 
-    public function getEidFromEname($identifier) // TODO: add return type
+    public function getEidFromEname(string $identifier) // TODO: add return type
     {
         // gets the eid from either the ename; TODO: this is very similar
         // to the way we get the eid from the username or the email in
@@ -651,7 +637,7 @@ class Model
         return $eid;
     }
 
-    public function createObjectBase($type, $params) : string
+    public function createObjectBase(string $type, array $params = null) : string
     {
         // note: this function shouldn't be used directly; it's meant to
         // be used in other create functions that also include transactions
@@ -715,7 +701,7 @@ class Model
         return $eid;
     }
 
-    public function deleteObjectBase($eid) : bool
+    public function deleteObjectBase(string $eid) : bool
     {
         // note: this function shouldn't be used directly; it's meant to
         // be used in other delete functions that also include transactions
@@ -748,7 +734,7 @@ class Model
         return $updated;
     }
 
-    public function setObjectBase($eid, $params) : bool
+    public function setObjectBase(string $eid, array $params) : bool
     {
         // note: this function shouldn't be used directly; it's meant to
         // be used in other set functions that also include transactions
@@ -816,7 +802,7 @@ class Model
         return true; // established object exists, which is enough for returning true
     }
 
-    public function getObjectBase($eid) // TODO: add return type
+    public function getObjectBase(string $eid) // TODO: add return type
     {
         // note: this function shouldn't be used directly; it's meant to
         // be used in other functions that also include transactions
@@ -857,9 +843,9 @@ class Model
                      'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function setDbVersionNumber($version) : bool
+    public function setDbVersionNumber(string $version) : bool
     {
-        if (!is_string($version) || strlen($version) == 0)
+        if (strlen($version) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $db = $this->getDatabase();
@@ -963,9 +949,9 @@ class Model
         return $dbconfig;
     }
 
-    public function setTimezone($tz) : bool
+    public function setTimezone(string $tz) : bool
     {
-        if (!is_string($tz) || strlen($tz) == 0)
+        if (strlen($tz) <= 1)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $db = $this->getDatabase();
@@ -987,7 +973,7 @@ class Model
         }
     }
 
-    private function loadModel($type) // TODO: add return type
+    private function loadModel(string $type) // TODO: add return type
     {
         switch ($type)
         {
@@ -1021,7 +1007,7 @@ class Model
         return $this->generateUniqueEid();
     }
 
-    public static function check($params, $checks) // TODO: add return type
+    public static function check(array $params, array $checks) // TODO: add return type
     {
         // validate the parameters; if they check out, then return
         // the cleaned parameters
@@ -1032,11 +1018,8 @@ class Model
         return false;
     }
 
-    public static function isValidType($type) : bool
+    public static function isValidType(string $type) : bool
     {
-        if (!is_string($type))
-            return false;
-
         switch ($type)
         {
             default:
@@ -1058,11 +1041,8 @@ class Model
         }
     }
 
-    public static function isValidEdge($edge) : bool
+    public static function isValidEdge(string $edge) : bool
     {
-        if (!is_string($edge))
-            return false;
-
         switch ($edge)
         {
             default:
@@ -1095,11 +1075,8 @@ class Model
         }
     }
 
-    public static function isValidStatus($status) : bool
+    public static function isValidStatus(string $status) : bool
     {
-        if (!is_string($status))
-            return false;
-
         switch ($status)
         {
             default:
@@ -1116,24 +1093,18 @@ class Model
         }
     }
 
-    public static function encodePassword($password) : string
+    public static function encodePassword(string $password) : string
     {
         return '{SSHA}' . self::hashPasswordSHA1($password);
     }
 
-    public static function hashPasswordSHA1($password) : string
+    public static function hashPasswordSHA1(string $password) : string
     {
         return sha1('wecRucaceuhZucrea9UzARujUph5cf8Z' . $password);
     }
 
-    public static function checkPasswordHash($hashpw, $password) : bool
+    public static function checkPasswordHash(string $hashpw, string $password) : bool
     {
-        // input should be strings
-        if (!is_string($hashpw))
-            return false;
-        if (!is_string($password))
-            return false;
-
         $hashpw = trim($hashpw);
 
         // empty or short hashed password entries are invalid
@@ -1150,7 +1121,7 @@ class Model
         }
     }
 
-    private static function buildStatusString($status_arr) : string
+    private static function buildStatusString(array $status_arr) : string
     {
         if (!is_array($status_arr))
             return '';

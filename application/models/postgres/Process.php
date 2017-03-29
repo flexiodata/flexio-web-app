@@ -14,7 +14,7 @@
 
 class Process extends ModelBase
 {
-    public function create($params, $primary_process = true) : string
+    public function create(array $params = null, bool $primary_process = true) : string
     {
         $db = $this->getDatabase();
         $db->beginTransaction(); // needed to make sure eid generation is safe
@@ -75,7 +75,7 @@ class Process extends ModelBase
         }
     }
 
-    public function delete($eid) : bool
+    public function delete(string $eid) : bool
     {
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -93,7 +93,7 @@ class Process extends ModelBase
         }
     }
 
-    public function set($eid, $params) : bool
+    public function set(string $eid, array $params) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
@@ -141,7 +141,7 @@ class Process extends ModelBase
         }
     }
 
-    public function get($eid) // TODO: add return type
+    public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
@@ -207,7 +207,7 @@ class Process extends ModelBase
                      'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function getProcessTree($eid) // TODO: add return type
+    public function getProcessTree(string $eid) // TODO: add return type
     {
         // this function is almost identical to get(), except that it
         // returns both the parent process as well as all the subprocesses
@@ -338,13 +338,13 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function setProcessStatus($eid, $status) : bool
+    public function setProcessStatus(string $eid, string $status) : bool
     {
         $params['process_status'] = $status;
         return $this->set($eid, $params);
     }
 
-    public function getProcessStatus($eid) : string
+    public function getProcessStatus(string $eid) : string
     {
         $process_info = $this->get($eid);
         if ($process_info === false)
@@ -353,7 +353,7 @@ class Process extends ModelBase
         return $process_info['process_status'];
     }
 
-    public function getOutputByHash($hash) // TODO: add return type
+    public function getOutputByHash(string $hash) // TODO: add return type
     {
         try
         {
@@ -384,7 +384,7 @@ class Process extends ModelBase
          }
     }
 
-    private function processExists($eid) : bool
+    private function processExists(string $eid) : bool
     {
         try
         {

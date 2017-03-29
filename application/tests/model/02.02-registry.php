@@ -27,49 +27,94 @@ class Test
         // TEST: number entry creation tests
 
         // BEGIN TEST
-        $object_eid = \Flexio\Base\Eid::generate();
-        $name = null;
-        $value = null;
-        $actual = $model->registry->setNumber($object_eid, $name, $value);
-        $expected = false;
-        TestCheck::assertBoolean('A.1', 'Registry\Model::setNumber(); return false when no name is specified', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = \Flexio\Base\Eid::generate();
+            $name = null;
+            $value = null;
+            $model->registry->setNumber($object_eid, $name, $value);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', 'Registry\Model::setNumber(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = \Flexio\Base\Eid::generate();
-        $name = '';
-        $value = '';
-        $actual = $model->registry->setNumber($object_eid, $name, $value);
-        $expected = false;
-        TestCheck::assertBoolean('A.2', 'Registry\Model::setNumber(); return false when no name is specified', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = \Flexio\Base\Eid::generate();
+            $name = '';
+            $value = '';
+            $model->registry->setNumber($object_eid, $name, $value);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.2', 'Registry\Model::setNumber(); throw an error with an invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = null;
-        $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
-        $actual = $model->registry->setNumber($object_eid, $name, $value);
-        $expected = false;
-        TestCheck::assertBoolean('A.3', 'Registry\Model::setNumber(); if object isn\'t specified, it should be an empty string', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = null;
+            $name = \Flexio\Base\Util::generateHandle();
+            $value = '';
+            $model->registry->setNumber($object_eid, $name, $value);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.3', 'Registry\Model::setNumber(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = true;
-        $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
-        $actual = $model->registry->setNumber($object_eid, $name, $value);
-        $expected = false;
-        TestCheck::assertBoolean('A.4', 'Registry\Model::setNumber(); if object is specified, it should be an eid', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = true;
+            $name = \Flexio\Base\Util::generateHandle();
+            $value = '';
+            $model->registry->setNumber($object_eid, $name, $value);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.4', 'Registry\Model::setNumber(); throw an error with invalid input', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = '';
+        try
+        {
+            $object_eid = '';
+            $name = \Flexio\Base\Util::generateHandle();
+            $value = '';
+            $model->registry->setNumber($object_eid, $name, $value);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.5', 'Registry\Model::setNumber(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
-        $actual = $model->registry->setNumber($object_eid, $name, $value);
-        $expected = true;
-        TestCheck::assertBoolean('A.5', 'Registry\Model::setNumber(); don\'t require an object to be specified', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $object_eid = '';
-        $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = 1;
         $expires = false;
         $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
         $expected = false;
@@ -78,7 +123,7 @@ class Test
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = 1;
         $expires = 0;
         $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
         $expected = true;
@@ -87,7 +132,7 @@ class Test
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = 1.1;
         $expires = null;
         $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
         $expected = true;
@@ -96,7 +141,7 @@ class Test
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = 1.1;
         $expires = 3600;
         $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
         $expected = true;
@@ -107,11 +152,20 @@ class Test
         // TEST: test for existence of created values
 
         // BEGIN TEST
-        $object_eid = null;
-        $name = null;
-        $actual = $model->registry->entryExists($object_eid, $name);
-        $expected = false;
-        TestCheck::assertBoolean('B.1', 'Registry\Model::entryExists(); handle null input', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = null;
+            $name = null;
+            $model->registry->entryExists($object_eid, $name);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.1', 'Registry\Model::entryExists(); throw error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -123,7 +177,7 @@ class Test
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = 0;
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->entryExists($object_eid, $name);
         $expected = true;
@@ -132,7 +186,7 @@ class Test
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = 1.1;
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->entryExists($object_eid, 'a');
         $expected = false;
@@ -141,7 +195,7 @@ class Test
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = 1.1;
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->entryExists('', $name);
         $expected = false;
@@ -152,18 +206,26 @@ class Test
         // TEST: test for readability of created entries
 
         // BEGIN TEST
-        $object_eid = null;
-        $name = null;
-        $entry = $model->registry->getNumber($object_eid, $name);
-        $actual = !isset($entry);
-        $expected = true;
-        TestCheck::assertBoolean('C.1', 'Registry\Model::getNumber(); handle null input; default output is null', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = null;
+            $name = null;
+            $entry = $model->registry->getNumber($object_eid, $name);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('C.1', 'Registry\Model::getNumber(); handle null input; default output is null', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\Base\Util::generateHandle();
         $actual = $model->registry->getNumber($object_eid, $name, 0);
-        $expected = 0;
+        $expected = (double)0;
         TestCheck::assertNumber('C.2', 'Registry\Model::getNumber(); with no entry', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -178,16 +240,16 @@ class Test
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\Base\Util::generateHandle();
-        $value = \Flexio\Base\Util::generateHandle();
+        $value = 1.1;
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->getNumber($object_eid, 'a', -1);
-        $expected = -1;
+        $expected = (double)-1;
         TestCheck::assertNumber('C.4', 'Registry\Model::getNumber(); should be sensitive to the name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\Base\Util::generateHandle();
-        $value = \Flexio\Base\Util::generateHandle();
+        $value = 0;
         $result = $model->registry->setNumber($object_eid, $name, $value);
         $actual = $model->registry->getNumber('', $name, 2.71);
         $expected = 2.71;

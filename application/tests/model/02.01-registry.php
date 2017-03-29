@@ -27,12 +27,21 @@ class Test
         // TEST: string entry creation tests
 
         // BEGIN TEST
-        $object_eid = \Flexio\Base\Eid::generate();
-        $name = null;
-        $value = null;
-        $actual = $model->registry->setString($object_eid, $name, $value);
-        $expected = false;
-        TestCheck::assertBoolean('A.1', 'Registry\Model::setString(); return false when no name is specified', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = \Flexio\Base\Eid::generate();
+            $name = null;
+            $value = null;
+            $result = $model->registry->setString($object_eid, $name, $value);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', 'Registry\Model::setString(); throw error when no name is specified', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -43,12 +52,21 @@ class Test
         TestCheck::assertBoolean('A.2', 'Registry\Model::setString(); return false when no name is specified', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = null;
-        $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
-        $actual = $model->registry->setString($object_eid, $name, $value);
-        $expected = false;
-        TestCheck::assertBoolean('A.3', 'Registry\Model::setString(); if object isn\'t specified, it should be an empty string', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = null;
+            $name = \Flexio\Base\Util::generateHandle();
+            $value = '';
+            $result = $model->registry->setString($object_eid, $name, $value);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.3', 'Registry\Model::setString(); throw an error if the object_eid isn\'t a string', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = 'a';
@@ -67,13 +85,22 @@ class Test
         TestCheck::assertBoolean('A.5', 'Registry\Model::setString(); don\'t require object to be specified', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = '';
-        $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
-        $expires = 'a';
-        $actual = $model->registry->setString($object_eid, $name, $value, $expires);
-        $expected = false;
-        TestCheck::assertBoolean('A.6', 'Registry\Model::setString(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = '';
+            $name = \Flexio\Base\Util::generateHandle();
+            $value = '';
+            $expires = 'a';
+            $model->registry->setString($object_eid, $name, $value, $expires);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.6', 'Registry\Model::setString(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
@@ -106,11 +133,20 @@ class Test
         // TEST: test for existence of created values
 
         // BEGIN TEST
-        $object_eid = null;
-        $name = null;
-        $actual = $model->registry->entryExists($object_eid, $name);
-        $expected = false;
-        TestCheck::assertBoolean('B.1', 'Registry\Model::entryExists(); handle null input', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = null;
+            $name = null;
+            $model->registry->entryExists($object_eid, $name);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.1', 'Registry\Model::entryExists(); throw an error with null object input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -151,12 +187,20 @@ class Test
         // TEST: test for readability of created entries
 
         // BEGIN TEST
-        $object_eid = null;
-        $name = null;
-        $entry = $model->registry->getString($object_eid, $name);
-        $actual = !isset($entry);
-        $expected = true;
-        TestCheck::assertBoolean('C.1', 'Registry\Model::getString(); handle null input; default output is null', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = null;
+            $name = null;
+            $entry = $model->registry->getString($object_eid, $name);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('C.1', 'Registry\Model::getString(); handle null input; default output is null', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();

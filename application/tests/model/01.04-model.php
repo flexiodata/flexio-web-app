@@ -32,7 +32,7 @@ class Test
         {
             $result = $model->setTimezone(null);
         }
-        catch (\Exception $e)
+        catch (\Error $e)
         {
             $actual = TestError::ERROR_EXCEPTION;
         }

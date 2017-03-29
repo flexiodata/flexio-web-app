@@ -27,9 +27,18 @@ class Test
         // TEST: delete tests with non-eid input
 
         // BEGIN TEST
-        $actual = $model->delete(null);
-        $expected = false;
-        TestCheck::assertBoolean('A.1', '\Model::delete(); return false with invalid input',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $model->delete(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', '\Model::delete(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = $model->delete('');

@@ -27,13 +27,22 @@ class Test
         // TEST: set tests with non-eid input
 
         // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'user_name' => $handle
-        );
-        $actual = $model->set(null, $info);
-        $expected = false;
-        TestCheck::assertBoolean('A.1', '\Model::set(); return false with invalid input',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $handle = \Flexio\Base\Util::generateHandle();
+            $info = array(
+                'user_name' => $handle
+            );
+            $model->set(null, $info);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', '\Model::set(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
