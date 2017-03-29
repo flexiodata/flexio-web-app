@@ -43,10 +43,10 @@ class StreamWriter
 
         if (is_array($stream))
         {
-            $stream_info['connection_eid'] = isset_or($stream['connection_eid'], false);
-            $stream_info['path'] = isset_or($stream['path'], false);
-            $stream_info['mime_type'] = isset_or($stream['mime_type'], false);
-            $stream_info['structure'] = isset_or($stream['structure'], false);
+            $stream_info['connection_eid'] = $stream['connection_eid'] ?? false;
+            $stream_info['path'] = $stream['path'] ?? false;
+            $stream_info['mime_type'] = $stream['mime_type'] ?? false;
+            $stream_info['structure'] = $stream['structure'] ?? false;
         }
 
         // write out data using datastore conventions by default (included a
@@ -136,7 +136,7 @@ class StreamFileWriter
             return false;
 
         $path = $object->stream_info['path'];
-        $mime_type = isset_or($object->stream_info['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_NONE);
+        $mime_type = $object->stream_info['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_NONE;
 
         $service = $object->getService();
         if ($service === false)
@@ -189,7 +189,7 @@ class StreamFileWriter
         if ($this->service !== false)
             return $this->service;
 
-        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
+        $connection_eid = $this->stream_info['connection_eid'] ?? false;
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
             return false;
@@ -225,8 +225,8 @@ class StreamTableWriter
             return false;
 
         $path = $object->stream_info['path'];
-        $mime_type = isset_or($object->stream_info['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_NONE);
-        $structure = isset_or($object->stream_info['structure'], false);
+        $mime_type = $object->stream_info['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_NONE;
+        $structure = $object->stream_info['structure'] ?? false;
 
         $store_structure = array();
         if ($object->getDatastoreMode() === true)
@@ -320,7 +320,7 @@ class StreamTableWriter
                 $mapped_row = array();
                 foreach ($structure as $fields)
                 {
-                    $data_value_to_insert = isset_or($data[$fields['name']], null);
+                    $data_value_to_insert = $data[$fields['name']] ?? null;
                     $mapped_row[] = $data_value_to_insert;
                 }
 
@@ -350,7 +350,7 @@ class StreamTableWriter
         if ($this->service !== false)
             return $this->service;
 
-        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
+        $connection_eid = $this->stream_info['connection_eid'] ?? false;
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
             return false;
@@ -399,7 +399,7 @@ class StreamTableJsonWriter
             return false;
 
         $path = $object->stream_info['path'];
-        $mime_type = isset_or($object->stream_info['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_NONE);
+        $mime_type = $object->stream_info['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_NONE;
 
         $store_structure = array();
         if ($object->getDatastoreMode() === true)
@@ -531,7 +531,7 @@ class StreamTableJsonWriter
         if ($this->service !== false)
             return $this->service;
 
-        $connection_eid = isset_or($this->stream_info['connection_eid'], false);
+        $connection_eid = $this->stream_info['connection_eid'] ?? false;
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
             return false;

@@ -25,9 +25,18 @@ class Project extends \Flexio\Object\Base
     public function set($properties)
     {
         // TODO: add properties check
-        $this->clearCache();
-        $project_model = $this->getModel()->project;
-        $project_model->set($this->getEid(), $properties);
+
+        // TODO: for now, don't forward model exception
+        try
+        {
+            $this->clearCache();
+            $project_model = $this->getModel()->project;
+            $project_model->set($this->getEid(), $properties);
+        }
+        catch (\Exception $e)
+        {
+        }
+
         return $this;
     }
 
@@ -148,7 +157,7 @@ class Project extends \Flexio\Object\Base
         // populate the follower count
         $follower_count = $this->getModel()->assoc_count($this->getEid(),
                                                          \Model::EDGE_FOLLOWED_BY,
-                                                         \Model::STATUS_AVAILABLE) + 1; // plus 1 to include owner
+                                                         [\Model::STATUS_AVAILABLE]) + 1; // plus 1 to include owner
         $properties['follower_count'] = $follower_count;
 
         // populate the pipe count

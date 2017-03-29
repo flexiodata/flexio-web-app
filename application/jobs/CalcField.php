@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class CalcField extends \Flexio\Jobs\Base
 {
     public function run()
@@ -45,10 +43,10 @@ class CalcField extends \Flexio\Jobs\Base
         // get the job properties
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'];
-        $type = isset_or($job_definition['params']['type'],'character');
-        $width = isset_or($job_definition['params']['width'],null);
-        $scale = isset_or($job_definition['params']['decimals'],null);
-        $expression = isset_or($job_definition['params']['expression'],null);
+        $type = $job_definition['params']['type'] ?? 'character';
+        $width = $job_definition['params']['width'] ?? null;
+        $scale = $job_definition['params']['decimals'] ?? null;
+        $expression = $job_definition['params']['expression'] ?? null;
 
         if (isset($width) && !is_integer($width))
             $width = (int)$width;
@@ -61,7 +59,7 @@ class CalcField extends \Flexio\Jobs\Base
         $success = $expreval->prepare($expression, $input_structure);
 
         if ($success === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // create the output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
@@ -75,7 +73,7 @@ class CalcField extends \Flexio\Jobs\Base
             'scale' => $scale
         ));
         if ($added_field === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         $name = $added_field['name']; // get the name of the field that was added (in case it was adjusted for duplicate, for example)
         $outstream->setStructure($output_structure);

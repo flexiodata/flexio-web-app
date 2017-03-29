@@ -17,6 +17,8 @@ namespace Flexio\Tests;
 
 class TestError
 {
+    const ERROR_EXCEPTION = 'ERROR_EXCEPTION';
+    const ERROR_NO_EXCEPTION = 'ERROR_NO_EXCEPTION';
     const ERROR_BAD_PARSE = 'ERROR_BAD_PARSE';
     const ERROR_EVAL_MISMATCH = 'ERROR_EVAL_MISMATCH';
 }
@@ -275,8 +277,8 @@ class TestUtil
 
     public static function createTestProject($user_eid, $name = null, $description = null)
     {
-        $properties['name'] = isset_or($name, _('Test Project'));
-        $properties['description'] = isset_or($description, _('Test project with test data.'));
+        $properties['name'] = $name ?? 'Test Project';
+        $properties['description'] = $description ?? 'Test project with test data.';
 
         $project = \Flexio\Object\Project::create($properties);
         if ($project === false)
@@ -320,7 +322,7 @@ class TestUtil
         if ($process->getProcessStatus() !== \Model::PROCESS_STATUS_COMPLETED)
             return false;
 
-        $streams = $process->getTaskOutputStreams();
+        $streams = $process->getOutput()->enum();
 
         $result = array();
         foreach ($streams as $s)
@@ -345,13 +347,13 @@ class TestUtil
 
         $result = array();
         $result['columns'] = $columns;
-        $result['rows'] = array();
+        $result['content'] = array();
 
         if (is_array($rows))
         {
             foreach ($rows as $r)
             {
-                $result['rows'][] = ($with_keys === true ? $r : array_values($r));
+                $result['content'][] = ($with_keys === true ? $r : array_values($r));
             }
         }
 

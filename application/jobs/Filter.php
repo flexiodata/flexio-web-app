@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class Filter extends \Flexio\Jobs\Base
 {
     public function run()
@@ -44,14 +42,14 @@ class Filter extends \Flexio\Jobs\Base
     {
         // get the job properties
         $job_definition = $this->getProperties();
-        $exclude = isset_or($job_definition['params']['exclude'],false);
+        $exclude = $job_definition['params']['exclude'] ?? false;
 
         if (isset($job_definition['params']['where']))
             $filter_expression = $job_definition['params']['where'];
         else if (isset($job_definition['params']['on']))
             $filter_expression = $job_definition['params']['on'];
         else
-            return $this->fail(\Model::ERROR_MISSING_PARAMETER, _('Missing where parameter'), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing where parameter'), __FILE__, __LINE__);
 
         if ($exclude)
         {
@@ -64,7 +62,7 @@ class Filter extends \Flexio\Jobs\Base
         $success = $expreval->prepare($filter_expression, $input_structure);
 
         if ($success === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // create the output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());

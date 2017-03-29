@@ -45,16 +45,16 @@ class Connection
         {
             $project = \Flexio\Object\Project::load($project_identifier);
             if ($project === false)
-                return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+                return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
             if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-                return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
         // create the object; associate it with the user who created it
         $connection = \Flexio\Object\Connection::create($params);
         if ($connection === false)
-            return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED);
+            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
 
         // set the owner and creator
         $connection->setOwner($requesting_user_eid);
@@ -82,11 +82,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection->delete();
         return true;
@@ -117,11 +117,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the properties
         $connection->set($params);
@@ -144,11 +144,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the connection properties
         $properties = self::filterProperties($connection->get());
@@ -168,11 +168,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the comments
         $result = array();
@@ -199,25 +199,25 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the connection items
         $service = $connection->getService();
         if (!$service)
-            return $request->getValidator()->fail(Api::ERROR_NO_SERVICE);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_SERVICE);
 
         if (!$service->isOk())
-            return $request->getValidator()->fail(Api::ERROR_NO_SERVICE);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_SERVICE);
 
-        $path = isset_or($params['q'], '');
+        $path = $params['q'] ?? '';
         $result = $service->listObjects($path);
 
         if (!is_array($result))
-            return $request->getValidator()->fail(Api::ERROR_READ_FAILED);
+            return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
 
         return $result;
     }
@@ -235,13 +235,13 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // try to connect
         $connection->connect();
@@ -262,11 +262,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // disconnect
         $connection->disconnect();

@@ -119,11 +119,6 @@ function isset_and_true($v)
     return (isset($v) && ($v === true));
 }
 
-function isset_or(&$v, $def = false)
-{
-    return isset($v) ? $v : $def;
-}
-
 function array_key_exists_or($k, $arr, $def = '')
 {
     return array_key_exists($k, $arr) ? $arr[$k] : $def;
@@ -232,7 +227,7 @@ if (isset($_SERVER['REQUEST_URI']))
 
     // some configurations will proxy through a (marketing) website homepage
     // if the user is not logged in
-    if ($_SERVER['REQUEST_URI'] == '/' && strlen(isset_or($g_config->homepage_proxy,'')) > 0 && (!isset($_COOKIE['FXSESSID'])))
+    if ($_SERVER['REQUEST_URI'] == '/' && strlen($g_config->homepage_proxy ?? '') > 0 && (!isset($_COOKIE['FXSESSID'])))
     {
         homeProxy();
     }
@@ -318,8 +313,8 @@ if ($g_session_handler == 'database')
 }
  else if ($g_session_handler == 'memcache')
 {
-    $session_memcached_host = isset_or($g_config->session_memcached_host, '');
-    $session_memcached_port = isset_or($g_config->session_memcached_port, '');
+    $session_memcached_host = $g_config->session_memcached_host ?? '';
+    $session_memcached_port = $g_config->session_memcached_port ?? '';
 
     if (strlen($session_memcached_host) == 0) die('session_memcached_host not set');
     if (strlen($session_memcached_port) == 0) die('session_memcached_port not set');
@@ -329,8 +324,8 @@ if ($g_session_handler == 'database')
 }
  else if ($g_session_handler == 'memcached')
 {
-    $session_memcached_host = isset_or($g_config->session_memcached_host, '');
-    $session_memcached_port = isset_or($g_config->session_memcached_port, '');
+    $session_memcached_host = $g_config->session_memcached_host ?? '';
+    $session_memcached_port = $g_config->session_memcached_port ?? '';
 
     if (strlen($session_memcached_host) == 0) die('session_memcached_host not set');
     if (strlen($session_memcached_port) == 0) die('session_memcached_port not set');
@@ -340,8 +335,8 @@ if ($g_session_handler == 'database')
 }
  else if ($g_session_handler == 'redis')
 {
-    $session_redis_host = isset_or($g_config->session_redis_host, '');
-    $session_redis_port = isset_or($g_config->session_redis_port, '');
+    $session_redis_host = $g_config->session_redis_host ?? '';
+    $session_redis_port = $g_config->session_redis_port ?? '';
 
     if (strlen($session_redis_host) == 0) die('session_redis_host not set');
     if (strlen($session_redis_port) == 0) die('session_redis_port not set');
@@ -383,9 +378,9 @@ class Flexio
             }
         }
 
-        if ($uri == '/' && strlen(isset_or($GLOBALS['g_config']->homepage_proxy,''))>0 && session_status() == PHP_SESSION_ACTIVE)
+        if ($uri == '/' && strlen($GLOBALS['g_config']->homepage_proxy ?? '')>0 && session_status() == PHP_SESSION_ACTIVE)
         {
-            $user_eid = isset_or($_SESSION['env']['user_eid'], '');
+            $user_eid = $_SESSION['env']['user_eid'] ?? '';
             if (strlen($user_eid) == 0)
             {
                 @session_write_close();
@@ -404,7 +399,7 @@ class Flexio
             if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')
             {
                 // TODO: send error response code through api:
-                // (Api::ERROR_INSUFFICIENT_RIGHTS, _('Session expired'));
+                // (\Flexio\Base\Error::INSUFFICIENT_RIGHTS, _('Session expired'));
             }
              else
             {

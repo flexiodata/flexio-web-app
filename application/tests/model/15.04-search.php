@@ -27,7 +27,6 @@ class Test
         // TEST: search tests for basic paths
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -45,7 +44,6 @@ class Test
         TestCheck::assertArray('A.1', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -69,7 +67,6 @@ class Test
         TestCheck::assertArray('A.2', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -91,7 +88,6 @@ class Test
         TestCheck::assertArray('A.3', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -114,7 +110,6 @@ class Test
         TestCheck::assertArray('A.4', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -137,7 +132,6 @@ class Test
         TestCheck::assertArray('A.5', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -159,7 +153,6 @@ class Test
         TestCheck::assertArray('A.6', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -181,7 +174,6 @@ class Test
         TestCheck::assertArray('A.7', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
@@ -206,7 +198,6 @@ class Test
         TestCheck::assertArray('A.8', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;

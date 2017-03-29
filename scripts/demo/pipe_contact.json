@@ -1,10 +1,9 @@
 {
     "name": "Contact Refinement",
     "ename": "contact-refinement",
-    "description": "Select a subset of a list of contacts",
+    "description": "Standardize contact information",
     "task": [
         {
-            "eid": "ddvwfjzwblc2",
             "type": "flexio.input",
             "metadata": {
                 "connection_type": "http.api"
@@ -12,13 +11,12 @@
             "params": {
                 "items": [
                     {
-                        "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/sample-data\/master\/contacts-2016-11.csv"
+                        "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/examples\/master\/contact-refinement\/contacts-ltd1.csv"
                     }
                 ]
             }
         },
         {
-            "eid": "kg0lb3l7vq14",
             "type": "flexio.convert",
             "params": {
                 "input": {
@@ -42,8 +40,7 @@
                     "state",
                     "zipcode"
                 ]
-            },
-            "eid": "dnmtdvx566j6"
+            }
         },
         {
             "type": "flexio.transform",

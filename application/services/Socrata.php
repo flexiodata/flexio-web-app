@@ -190,7 +190,7 @@ class Socrata implements \Flexio\Services\IConnection
 
     public function read($params, $callback)
     {
-        $path = isset_or($params['path'],'');
+        $path = $params['path'] ?? '';
 
         // url qualified with table name? if so, find out the real base path
         $baseurl = $this->base_url;
@@ -281,8 +281,8 @@ class Socrata implements \Flexio\Services\IConnection
 
     public function write($params, $callback)
     {
-        $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $path = $params['path'] ?? '';
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
         // TODO: implement
     }
@@ -332,7 +332,7 @@ class Socrata implements \Flexio\Services\IConnection
 
         $table_schema = @json_decode($table_schema_json,true);
         if (!isset($table_schema['columns']) || !is_array($table_schema['columns']))
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // generate output structure
         $structure = \Flexio\Object\Structure::create();

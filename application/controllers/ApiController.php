@@ -32,7 +32,7 @@ class ApiController extends \Flexio\System\FxControllerAction
 
 
 
-        if (IS_DEBUG() && strpos(isset_or($_SERVER['HTTP_ORIGIN'],''),"://localhost:808") !== false)
+        if (IS_DEBUG() && strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:808") !== false)
         {
             header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
             header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);

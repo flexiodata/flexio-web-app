@@ -155,11 +155,11 @@ class Structure
 
         // get the column info from the input
         $column_entry = array(
-            "name" => isset_or($column['name'], ""),
-            "store_name" => isset_or($column['store_name'], ""),
-            "type" => isset_or($column['type'], self::TYPE_TEXT), // text is the default type
-            "width" => isset_or($column['width'], null),
-            "scale" => isset_or($column['scale'], null)
+            "name" => $column['name'] ?? '',
+            "store_name" => $column['store_name'] ?? '',
+            "type" => $column['type'] ?? self::TYPE_TEXT, // text is the default type
+            "width" => $column['width'] ?? null,
+            "scale" => $column['scale'] ?? null
         );
 
         if (isset($column['expression']))

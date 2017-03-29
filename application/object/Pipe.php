@@ -75,9 +75,18 @@ class Pipe extends \Flexio\Object\Base
         }
 
         // TODO: add properties check
-        $this->clearCache();
-        $pipe_model = $this->getModel()->pipe;
-        $pipe_model->set($this->getEid(), $properties);
+
+        // TODO: for now, don't forward model exception
+        try
+        {
+            $this->clearCache();
+            $pipe_model = $this->getModel()->pipe;
+            $pipe_model->set($this->getEid(), $properties);
+        }
+        catch (\Exception $e)
+        {
+        }
+
         return $this;
     }
 

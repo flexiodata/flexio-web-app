@@ -14,24 +14,18 @@
 
 class Comment extends ModelBase
 {
-    public function create($params)
+    public function create(array $params = null) : string
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_COMMENT, $params);
-            if ($eid === false)
-                throw new \Exception();
-
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
-                'comment'       => isset_or($params['comment'], ''),
+                'comment'       => $params['comment'] ?? '',
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );
@@ -46,16 +40,13 @@ class Comment extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _('Could not create comment'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
-    public function delete($eid)
+    public function delete(string $eid) : bool
     {
         $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         $db->beginTransaction();
         try
         {
@@ -67,25 +58,22 @@ class Comment extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(\Model::ERROR_DELETE_FAILED, _('Could not delete comment'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
         }
     }
 
-    public function set($eid, $params)
+    public function set(string $eid, array $params) : bool
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(\Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
         if (($process_arr = \Model::check($params, array(
                 'comment' => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _('Could not update comment'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
+        $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
@@ -93,43 +81,47 @@ class Comment extends ModelBase
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
             {
-                // simply return false; no exception
+                // object doesn't exist or is deleted
                 $db->commit();
                 return false;
             }
 
             // set the properties
             $db->update('tbl_comment', $process_arr, 'eid = ' . $db->quote($eid));
-
             $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
             $db->rollback();
-            return $this->fail(Model::ERROR_WRITE_FAILED, _('Could not update comment'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
 
-    public function get($eid)
+    public function get(string $eid) // TODO: add return type
     {
-        $db = $this->getDatabase();
-        if ($db === false)
-            return $this->fail(Model::ERROR_NO_DATABASE);
-
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = $db->fetchRow("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
-                                     tco.comment as comment,
-                                     tob.eid_status as eid_status,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_comment tco on tob.eid = tco.eid
-                              where tob.eid = ?
-                             ", $eid);
+        $row = false;
+        $db = $this->getDatabase();
+        try
+        {
+            $row = $db->fetchRow("select tob.eid as eid,
+                                        tob.eid_type as eid_type,
+                                        tco.comment as comment,
+                                        tob.eid_status as eid_status,
+                                        tob.created as created,
+                                        tob.updated as updated
+                                from tbl_object tob
+                                inner join tbl_comment tco on tob.eid = tco.eid
+                                where tob.eid = ?
+                                ", $eid);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
 
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist

@@ -72,11 +72,11 @@ class Stream
         // check the rights on the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //    return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //    return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $stream->get();
     }
@@ -104,15 +104,15 @@ class Stream
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //    return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //    return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream_info = $stream->get();
         if ($stream_info === false)
-            return $request->getValidator()->fail(Api::ERROR_READ_FAILED);
+            return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
         $content = $stream->content($start, $limit, $columns, $metadata, $handle);
@@ -141,7 +141,8 @@ class Stream
                 'size'          => array('type' => 'integer', 'required' => false),
                 'mime_type'     => array('type' => 'string',  'required' => false),
                 'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
-                'file_modified' => array('type' => 'string',  'required' => false)  // TODO: date type?
+                'file_modified' => array('type' => 'string',  'required' => false), // TODO: date type?
+                'filename_hint' => array('type' => 'string',  'required' => false)
             ))) === false)
             return $request->getValidator()->fail();
 
@@ -150,7 +151,7 @@ class Stream
         // get the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         self::handleStreamUpload($params, $stream);
 
@@ -174,7 +175,7 @@ class Stream
             return false;
 
         // get the information the parser needs to parse the content
-        $post_content_type = isset_or($_SERVER['CONTENT_TYPE'], '');
+        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
 
 
         if (strpos($post_content_type, 'multipart/form-data') !== false)
@@ -237,14 +238,11 @@ class Stream
             if ($part_data_snippet === false)
                 $part_data_snippet = '';
 
-            if (strlen($declared_mime_type) > 0)
-                $mime_type = $declared_mime_type;
-                else
-                $mime_type = \Flexio\Base\ContentType::getMimeType($filename, $part_data_snippet);
+            $filename_hint = $params['filename_hint'] ?? $filename;
         }
          else
         {
-            $declared_mime_type = isset_or($_SERVER["CONTENT_TYPE"], '');
+            $declared_mime_type = $_SERVER["CONTENT_TYPE"] ?? '';
 
             $php_stream_handle = fopen('php://input', 'rb');
             $part_data_snippet = false;
@@ -264,12 +262,27 @@ class Stream
             if ($part_data_snippet === false)
                 $part_data_snippet = '';
 
-            $filename = isset_or($_GET['name'], \Flexio\Base\Util::generateHandle() . '.dat');
+            $filename = $_GET['name'] ?? \Flexio\Base\Util::generateHandle() . '.dat';
 
-            if (strlen($declared_mime_type) > 0)
+            $filename_hint = $_GET['filename_hint'] ?? $filename;
+        }
+
+
+        if (isset($_GET['filename_hint']))
+        {
+            // a hint filename was passed -- use that to try to determine the content type
+            $mime_type = \Flexio\Base\ContentType::getMimeType($filename_hint, $part_data_snippet);
+        }
+        else
+        {
+            // use the Content-Type header passed to us
+            if ($declared_mime_type == "application/x-www-form-urlencoded")
+                $declared_mime_type = "application/octet-stream";
+
+            if (strlen($declared_mime_type) == 0 || $declared_mime_type == "autosense")
+                $mime_type = \Flexio\Base\ContentType::getMimeType($filename_hint, $part_data_snippet);
+                    else
                 $mime_type = $declared_mime_type;
-                else
-                $mime_type = \Flexio\Base\ContentType::getMimeType($filename, $part_data_snippet);
         }
 
 
@@ -308,15 +321,15 @@ class Stream
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //    return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //    return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream_info = $stream->get();
         if ($stream_info === false)
-            return $request->getValidator()->fail(Api::ERROR_READ_FAILED);
+            return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
         $http_header_mime_type = ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE ? \Flexio\Base\ContentType::MIME_TYPE_CSV : $mime_type);

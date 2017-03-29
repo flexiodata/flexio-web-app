@@ -346,10 +346,10 @@ class Email
             $this->attachments = array();
 
         $a = array();
-        $a['name'] = isset_or($attachment['name'],'');
-        $a['file'] = isset_or($attachment['file'],'');
-        $a['mime_type'] = isset_or($attachment['mime_type'], \Flexio\Base\ContentType::MIME_TYPE_NONE);
-        $a['content'] = isset_or($attachment['content'],'');
+        $a['name'] = $attachment['name'] ?? '';
+        $a['file'] = $attachment['file'] ?? '';
+        $a['mime_type'] = $attachment['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_NONE;
+        $a['content'] = $attachment['content'] ?? '';
 
         $this->attachments[] = $a;
         return $this;

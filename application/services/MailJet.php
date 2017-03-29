@@ -104,7 +104,7 @@ class MailJet implements \Flexio\Services\IConnection
 
     public function read($params, $callback)
     {
-        $path = isset_or($params['path'],'');
+        $path = $params['path'] ?? '';
 
         if (!$this->isOk())
             return false;
@@ -134,8 +134,8 @@ class MailJet implements \Flexio\Services\IConnection
 
     public function write($params, $callback)
     {
-        $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $path = $params['path'] ?? '';
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
         // TODO: implement
     }
@@ -229,7 +229,7 @@ class MailJet implements \Flexio\Services\IConnection
 
         $data_to_upload = array();
         $data_to_upload['Email'] = $row['email'];
-        $data_to_upload['Name'] = isset_or($row['name'],'');
+        $data_to_upload['Name'] = $row['name'] ?? '';
 
         $location = $definition['location'];
         $request = $location;
@@ -298,8 +298,8 @@ class MailJet implements \Flexio\Services\IConnection
         // TODO: test api key
 
         $this->close();
-        $this->username = isset_or($params['username'],'');
-        $this->password = isset_or($params['password'],'');
+        $this->username = $params['username'] ?? '';
+        $this->password = $params['password'] ?? '';
         $this->is_ok = true;
     }
 

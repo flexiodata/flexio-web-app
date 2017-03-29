@@ -27,7 +27,6 @@ class Test
         // TEST: search tests when results for single eid
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_OBJECT, $info);

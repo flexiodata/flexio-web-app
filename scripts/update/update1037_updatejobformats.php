@@ -173,7 +173,7 @@ function writeProcess($db, $process_eid, $task)
 function convertFormat($task)
 {
     // get the task type
-    $type = isset_or($task['type'], '');
+    $type = $task['type'] ?? '';
 
     switch ($task)
     {

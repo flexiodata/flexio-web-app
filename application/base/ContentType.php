@@ -32,6 +32,7 @@ class ContentType
     const MIME_TYPE_JPG     = 'image/jpeg';
     const MIME_TYPE_JS      = 'application/javascript';
     const MIME_TYPE_JSON    = 'application/json';
+    const MIME_TYPE_MD      = 'text/markdown';
     const MIME_TYPE_PDF     = 'application/pdf';
     const MIME_TYPE_PNG     = 'image/png';
     const MIME_TYPE_STREAM  = 'application/octet-stream';
@@ -48,7 +49,7 @@ class ContentType
     const MIME_TYPE_FLEXIO_TABLE = 'application/vnd.flexio.table';
 
 
-    public static function getMimeType($extension, $buffer, $content_length = false)
+    public static function getMimeType($extension, $buffer, $content_length = false) : string
     {
         // takes a filename/extension, a buffer, and an option length of content;
         // if a specific mime type is available from the buffer (e.g. from using)
@@ -134,7 +135,7 @@ class ContentType
         }
     }
 
-    public static function getMimeTypeFromExtension($ext, $def_return = self::MIME_TYPE_STREAM)
+    public static function getMimeTypeFromExtension($ext, $def_return = self::MIME_TYPE_STREAM) : string
     {
         if (strpos($ext, '.') !== false)
             $ext = \Flexio\Base\Util::getFileExtension($ext);
@@ -159,6 +160,7 @@ class ContentType
             case "jpg":   return self::MIME_TYPE_JPG;
             case "js":    return self::MIME_TYPE_JS;
             case "json":  return self::MIME_TYPE_JSON;
+            case "md":    return self::MIME_TYPE_MD;
             case "pdf":   return self::MIME_TYPE_PDF;
             case "png":   return self::MIME_TYPE_PNG;
             case "svg":   return self::MIME_TYPE_SVG;
@@ -172,7 +174,7 @@ class ContentType
         }
     }
 
-    public static function getMimeAndContentType($buffer, &$mime_type, &$content_type)
+    public static function getMimeAndContentType($buffer, &$mime_type, &$content_type) : bool
     {
         // gets the mime and content type from a string; returns true on success
         // and false otherwise
@@ -187,8 +189,8 @@ class ContentType
 
         // TODO: set values here
         $parts = explode(';', $result);
-        $local_mime_type = isset_or($parts[0],'');
-        $local_content_type = isset_or($parts[1],'');
+        $local_mime_type = $parts[0] ?? '';
+        $local_content_type = $parts[1] ?? '';
 
         $mime_type = trim($local_mime_type);
         $content_type = trim($local_content_type);

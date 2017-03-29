@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class Search extends \Flexio\Jobs\Base
 {
     public function run()
@@ -55,14 +53,14 @@ class Search extends \Flexio\Jobs\Base
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
         if ($job_statement === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         if ($outstream->getService()->exec($job_statement) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
     }
 
     private static function prepareOutput($job_definition, $instream, &$outstream)
@@ -75,7 +73,7 @@ class Search extends \Flexio\Jobs\Base
 
         // get the columns and search criteria
         $columns = $job_definition['params']['columns'];
-        $search_criteria = isset_or($job_definition['params']['search'], '');
+        $search_criteria = $job_definition['params']['search'] ?? '';
 
         // build a filter expression from the search criteria
         if (is_string($columns))
@@ -127,7 +125,7 @@ class Search extends \Flexio\Jobs\Base
         if (!isset($job_definition['params']['condition']['items']) || !is_array($job_definition['params']['condition']['items']) || count($job_definition['params']['condition']['items']) == 0)
             return false;
 
-        $logical = isset_or($job_definition['params']['condition']['operator'], 'and');
+        $logical = $job_definition['params']['condition']['operator'] ?? 'and';
         $conditions = $job_definition['params']['condition']['items'];
 
         // properties
@@ -179,7 +177,7 @@ class Search extends \Flexio\Jobs\Base
             $operator = $item['operator'];
             $value = $item['right'];
 
-            $date_format = isset_or($item['date_format'], 'MM/DD/YYYY');
+            $date_format = $item['date_format'] ?? 'MM/DD/YYYY';
             $date_format = str_replace('YYYY','YY', $date_format);
             $date_format = str_replace('YY','YYYY', $date_format);  // allows user to specify YY or YYYY in date values
 

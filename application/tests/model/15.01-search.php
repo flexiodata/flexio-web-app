@@ -27,22 +27,28 @@ class Test
         // TEST: search tests with invalid search path
 
         // BEGIN TEST
-        $model->clearErrors();
-        $path = null;
-        $result = $model->search($path);
-        $actual = $result;
-        $expected = false;
-        TestCheck::assertBoolean('A.1', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $path = null;
+            $result = $model->search($path);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', '\Model::search(); throw an error with and invalid search parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $path = true;
         $result = $model->search($path);
         $actual = $result;
         $expected = false;
         TestCheck::assertBoolean('A.2', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
-        $model->clearErrors();
+        // BEGIN TEST
         $path = "";
         $result = $model->search($path);
         $actual = $result;
@@ -50,7 +56,6 @@ class Test
         TestCheck::assertBoolean('A.3', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $path = "->";
         $result = $model->search($path);
         $actual = $result;
@@ -58,7 +63,6 @@ class Test
         TestCheck::assertBoolean('A.4', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $eid = \Flexio\Base\Eid::generate();
         $path = "$eid->";
         $result = $model->search($path);
@@ -67,7 +71,6 @@ class Test
         TestCheck::assertBoolean('A.5', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $eid = \Flexio\Base\Eid::generate();
         $path = "->$eid";
         $result = $model->search($path);
@@ -80,7 +83,6 @@ class Test
         // TEST: search tests with text parameters that aren't valid eids or edges in appropriate places
 
         // BEGIN TEST
-        $model->clearErrors();
         $path = "abc";
         $result = $model->search($path);
         $actual = $result;
@@ -89,7 +91,6 @@ class Test
         TestCheck::assertArray('B.1', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $edge_owns = \Model::EDGE_OWNS;
         $path = "$edge_owns";
         $result = $model->search($path);
@@ -99,7 +100,6 @@ class Test
         TestCheck::assertArray('B.2', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
         $edge_owns = \Model::EDGE_OWNS;
         $path = "($edge_owns)";
         $result = $model->search($path);

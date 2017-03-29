@@ -27,47 +27,72 @@ class Test
         // TEST: \Model::setTimezone(); invalid input
 
         // BEGIN TEST
-        $model->clearErrors();
-        $result = $model->setTimezone(null);
-        $has_errors = $model->hasErrors();
-        $actual = $result === false && $has_errors === true;
-        $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::setTimezone(); return false and set an error when input is null',  $actual, $expected, $results);
+        $actual = TestError::ERROR_NO_EXCEPTION;
+        try
+        {
+            $result = $model->setTimezone(null);
+        }
+        catch (\Error $e)
+        {
+            $actual = TestError::ERROR_EXCEPTION;
+        }
+        $expected = TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $result = $model->setTimezone(true);
-        $has_errors = $model->hasErrors();
-        $actual = $result === false && $has_errors === true;
-        $expected = true;
-        TestCheck::assertBoolean('A.2', '\Model::setTimezone(); return false and set an error when input is a boolean value',  $actual, $expected, $results);
+        $actual = TestError::ERROR_NO_EXCEPTION;
+        try
+        {
+            $result = $model->setTimezone(true);
+        }
+        catch (\Exception $e)
+        {
+            $actual = TestError::ERROR_EXCEPTION;
+        }
+        $expected = TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.2', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $result = $model->setTimezone('');
-        $has_errors = $model->hasErrors();
-        $actual = $result === false && $has_errors === true;
-        $expected = true;
-        TestCheck::assertBoolean('A.3', '\Model::setTimezone(); return false and set an error when input is empty string',  $actual, $expected, $results);
+        $actual = TestError::ERROR_NO_EXCEPTION;
+        try
+        {
+            $result = $model->setTimezone('');
+        }
+        catch (\Exception $e)
+        {
+            $actual = TestError::ERROR_EXCEPTION;
+        }
+        $expected = TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $model->clearErrors();
-        $result = $model->setTimezone('\\');
-        $has_errors = $model->hasErrors();
-        $actual = $result === false && $has_errors === true;
-        $expected = true;
-        TestCheck::assertBoolean('A.4', '\Model::setTimezone(); return false and set an error when input is an invalid timezone',  $actual, $expected, $results);
+        $actual = TestError::ERROR_NO_EXCEPTION;
+        try
+        {
+            $result = $model->setTimezone('\\');
+        }
+        catch (\Exception $e)
+        {
+            $actual = TestError::ERROR_EXCEPTION;
+        }
+        $expected = TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
 
 
 
         // TEST: \Model::setTimezone(); valid input
 
         // BEGIN TEST
-        $model->clearErrors();
-        $result = $model->setTimezone('UTC');
-        $has_errors = $model->hasErrors();
-        $actual = $result === true && $has_errors === false;
-        $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::setTimezone(); return true when input is valid',  $actual, $expected, $results);
+        $actual = TestError::ERROR_NO_EXCEPTION;
+        try
+        {
+            $result = $model->setTimezone('UTC');
+        }
+        catch (\Exception $e)
+        {
+            $actual = TestError::ERROR_EXCEPTION;
+        }
+        $expected = TestError::ERROR_NO_EXCEPTION;
+        TestCheck::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
     }
 }

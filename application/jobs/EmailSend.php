@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class EmailSend extends \Flexio\Jobs\Base
 {
     const DATA_MODE_NONE       = 'none';

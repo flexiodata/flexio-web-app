@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class Distinct extends \Flexio\Jobs\Base
 {
     public function run()
@@ -49,14 +47,14 @@ class Distinct extends \Flexio\Jobs\Base
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
         if ($job_statement === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         if ($outstream->getService()->exec($job_statement) === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
     }
 
     private static function prepareOutput($job_definition, $instream, $outstream)
@@ -66,12 +64,12 @@ class Distinct extends \Flexio\Jobs\Base
         $output_path = $outstream->getPath();
 
         // get the list of output columns
-        $selected_columns_list = isset_or($job_definition['params']['columns'], false);
+        $selected_columns_list = $job_definition['params']['columns'] ?? false;
         if (!is_array($selected_columns_list))
             $selected_columns_list = array(\Flexio\Object\Structure::WILDCARD_ALL);
 
         // get the list of columns to use for determining distinctness
-        $distinct_columns_list = isset_or($job_definition['params']['distinct'], false);
+        $distinct_columns_list = $job_definition['params']['distinct'] ?? false;
         if (!is_array($distinct_columns_list))
             $distinct_columns_list = array(\Flexio\Object\Structure::WILDCARD_ALL);
 

@@ -37,7 +37,7 @@ class Store
         }
 
         // get the connection type and the corresponding service
-        $connection_type = isset_or($connection_info['connection_type'],'');
+        $connection_type = $connection_info['connection_type'] ?? '';
         switch ($connection_type)
         {
             default:
@@ -59,110 +59,110 @@ class Store
 
             case \Model::CONNECTION_TYPE_FTP:
                     $auth_params = array(
-                        'host' => isset_or($connection_info['host'],''),
-                        'port' => isset_or($connection_info['port'],''),
-                        'username' => isset_or($connection_info['username'],''),
-                        'password' => isset_or($connection_info['password'],'')
+                        'host' => $connection_info['host'] ?? '',
+                        'port' => $connection_info['port'] ?? '',
+                        'username' => $connection_info['username'] ?? '',
+                        'password' => $connection_info['password'] ?? ''
                     );
                     $service = \Flexio\Services\Ftp::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_SFTP:
                     $auth_params = array(
-                        'host' => isset_or($connection_info['host'],''),
-                        'port' => isset_or($connection_info['port'],''),
-                        'username' => isset_or($connection_info['username'],''),
-                        'password' => isset_or($connection_info['password'],'')
+                        'host' => $connection_info['host'] ?? '',
+                        'port' => $connection_info['port'] ?? '',
+                        'username' => $connection_info['username'] ?? '',
+                        'password' => $connection_info['password'] ?? ''
                     );
                     $service = \Flexio\Services\Sftp::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_MYSQL:
                     $auth_params = array(
-                        'host' => isset_or($connection_info['host'],''),
-                        'port' => isset_or($connection_info['port'],''),
-                        'username' => isset_or($connection_info['username'],''),
-                        'password' => isset_or($connection_info['password'],''),
-                        'database' => isset_or($connection_info['database'],'')
+                        'host' => $connection_info['host'] ?? '',
+                        'port' => $connection_info['port'] ?? '',
+                        'username' => $connection_info['username'] ?? '',
+                        'password' => $connection_info['password'] ?? '',
+                        'database' => $connection_info['database'] ?? ''
                     );
                     $service = \Flexio\Services\MySql::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_POSTGRES:
                     $auth_params = array(
-                        'host' => isset_or($connection_info['host'],''),
-                        'port' => isset_or($connection_info['port'],''),
-                        'username' => isset_or($connection_info['username'],''),
-                        'password' => isset_or($connection_info['password'],''),
-                        'database' => isset_or($connection_info['database'],'')
+                        'host' => $connection_info['host'] ?? '',
+                        'port' => $connection_info['port'] ?? '',
+                        'username' => $connection_info['username'] ?? '',
+                        'password' => $connection_info['password'] ?? '',
+                        'database' => $connection_info['database'] ?? ''
                     );
                     $service = \Flexio\Services\Postgres::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_DROPBOX:
                     $auth_params = array(
-                        'access_token' => isset_or($connection_info['token'],'')
+                        'access_token' => $connection_info['token'] ?? ''
                     );
                     $service = \Flexio\Services\Dropbox::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
                     $auth_params = array(
-                        'access_token' => isset_or($connection_info['token'],''),
-                        'refresh_token' => isset_or($connection_info['refresh_token'],''),
-                        'expires' => isset_or($connection_info['token_expires'],0)
+                        'access_token' => $connection_info['token'] ?? '',
+                        'refresh_token' => $connection_info['refresh_token'] ?? '',
+                        'expires' => $connection_info['token_expires'] ?? 0
                     );
                     $service = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_GOOGLESHEETS:
                     $auth_params = array(
-                        'access_token' => isset_or($connection_info['token'],''),
-                        'refresh_token' => isset_or($connection_info['refresh_token'],''),
-                        'expires' => isset_or($connection_info['token_expires'],0)
+                        'access_token' => $connection_info['token'] ?? '',
+                        'refresh_token' => $connection_info['refresh_token'] ?? '',
+                        'expires' => $connection_info['token_expires'] ?? 0
                     );
                     $service = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_AMAZONS3:
                     $auth_params = array(
-                        'region' => isset_or($connection_info['host'],''),
-                        'bucket' => isset_or($connection_info['database'],''),
-                        'accesskey' => isset_or($connection_info['username'],''),
-                        'secretkey' => isset_or($connection_info['password'],'')
+                        'region' => $connection_info['host'] ?? '',
+                        'bucket' => $connection_info['database'] ?? '',
+                        'accesskey' => $connection_info['username'] ?? '',
+                        'secretkey' => $connection_info['password'] ?? ''
                     );
                     $service = \Flexio\Services\AmazonS3::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_SOCRATA:
                    $auth_params = array(
-                        'host' => isset_or($connection_info['host'],''),
-                        'port' => isset_or($connection_info['port'],''),
-                        'username' => isset_or($connection_info['username'],''),
-                        'password' => isset_or($connection_info['password'],'')
+                        'host' => $connection_info['host'] ?? '',
+                        'port' => $connection_info['port'] ?? '',
+                        'username' => $connection_info['username'] ?? '',
+                        'password' => $connection_info['password'] ?? ''
                     );
                     $service = \Flexio\Services\Socrata::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_PIPELINEDEALS:
                    $auth_params = array(
-                        'token' => isset_or($connection_info['token'],'')
+                        'token' => $connection_info['token'] ?? ''
                     );
                     $service = \Flexio\Services\PipelineDeals::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_MAILJET:
                    $auth_params = array(
-                        'username' => isset_or($connection_info['username'],''),
-                        'password' => isset_or($connection_info['password'],'')
+                        'username' => $connection_info['username'] ?? '',
+                        'password' => $connection_info['password'] ?? ''
                     );
                     $service = \Flexio\Services\MailJet::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_TWILIO:
                     $auth_params = array(
-                        'key' => isset_or($connection_info['username'],''),
-                        'token' => isset_or($connection_info['token'],'')
+                        'key' => $connection_info['username'] ?? '',
+                        'token' => $connection_info['token'] ?? ''
                     );
                     $service = \Flexio\Services\Twilio::create($auth_params);
                 break;

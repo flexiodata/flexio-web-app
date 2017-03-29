@@ -32,10 +32,10 @@ class Process
             return false;
 
         // run the specified job in blocking mode
-        $params['background'] = isset_or($params['background'], false);
+        $params['background'] = $params['background'] ?? false;
         $process = self::create_internal($params, $request);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         $properties = $process->get();
         return $properties;
@@ -64,7 +64,7 @@ class Process
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
             if ($pipe === false)
-                return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+                return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
             // make sure to set the parent_eid to the eid since this is what objects
             // downstream are expecting
@@ -75,9 +75,9 @@ class Process
             // we're getting the logic from the pipe, and we're associating the process with
             // the pipe, so we should have both read/write access to the pipe;
             if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-                return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
             if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-                return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
         // STEP 1: create a new process job with the default task
@@ -89,7 +89,7 @@ class Process
             $process->setParams($params['params']);
 
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_CREATE_FAILED);
+            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
 
         $process->setOwner($requesting_user_eid);
         $process->setCreatedBy($requesting_user_eid);
@@ -123,11 +123,11 @@ class Process
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $process->delete();
         return true;
@@ -148,11 +148,11 @@ class Process
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // TODO: we shouldn't allow the task to be set if the process is anything
         // past the initial pending state
@@ -184,11 +184,11 @@ class Process
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // if no wait period is specified, return the information immediately
         if (!isset($params['wait']))
@@ -212,7 +212,7 @@ class Process
         self::waitforchangewhilerunning($process->getEid(), $wait_for_change);
         $process = \Flexio\Object\Process::load($process->getEid());
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         $process_info = $process->get();
 
@@ -243,11 +243,11 @@ class Process
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-        //     return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //     return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->run($background)->get();
     }
@@ -265,11 +265,11 @@ class Process
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-        //     return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //     return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->cancel()->get();
     }
@@ -287,11 +287,11 @@ class Process
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-        //     return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //     return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->pause()->get();
     }
@@ -313,11 +313,11 @@ class Process
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-        //     return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+        //     return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream = \Flexio\Object\Stream::create();
 
@@ -349,9 +349,9 @@ class Process
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
-        $process_streams = $process->getInput();
+        $process_streams = $process->getInput()->enum();
         return self::echoStreamInfo($process_streams, $params);
     }
 
@@ -375,9 +375,9 @@ class Process
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
-        $process_streams = $process->getOutput();
+        $process_streams = $process->getOutput()->enum();
         return self::echoStreamInfo($process_streams, $params);
     }
 
@@ -395,15 +395,16 @@ class Process
 
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
-        $streams = $process->getTaskInputStreams($task_identifier);
-        if (!is_array($streams))
-            return array(); // return an empty array if we don't have any streams
+        $input_collection = \Flexio\Object\Collection::create();
+        $output_collection = \Flexio\Object\Collection::create();
+        $process->getTaskStreams($input_collection, $output_collection, $task_identifier);
+        $input_streams = $input_collection->enum();
 
         // get the structures
         $structures = array();
-        foreach ($streams as $s)
+        foreach ($input_streams as $s)
         {
             $structures[] = $s->getStructure();
         }
@@ -427,15 +428,16 @@ class Process
 
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
-            return $request->getValidator()->fail(Api::ERROR_NO_OBJECT);
+            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
 
-        $streams = $process->getTaskOutputStreams($task_identifier);
-        if (!is_array($streams))
-            return array(); // return an empty array if we don't have any streams
+        $input_collection = \Flexio\Object\Collection::create();
+        $output_collection = \Flexio\Object\Collection::create();
+        $process->getTaskStreams($input_collection, $output_collection, $task_identifier);
+        $output_streams = $output_collection->enum();
 
         // get the structures
         $structures = array();
-        foreach ($streams as $s)
+        foreach ($output_streams as $s)
         {
             $structures[] = $s->getStructure();
         }
@@ -452,10 +454,10 @@ class Process
         $requesting_user_eid = $request->getRequestingUser();
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($user->isAdministrator() !== true)
-            return $request->getValidator()->fail(Api::ERROR_INSUFFICIENT_RIGHTS);
+            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return \Flexio\System\System::getModel()->process->getProcessStatistics();
     }
@@ -519,10 +521,10 @@ class Process
     {
         // return the stream info the user requests
         $flags = array();
-        $flags['content-limit'] = isset_or($params['content-limit'], false);
-        $flags['fields'] = isset_or($params['fields'], false);
-        $flags['streams'] = isset_or($params['streams'], false);
-        $mime_type = isset_or($params['format'], false);
+        $flags['content-limit'] = $params['content-limit'] ?? false;
+        $flags['fields'] = $params['fields'] ?? false;
+        $flags['streams'] = $params['streams'] ?? false;
+        $mime_type = $params['format'] ?? false;
 
         // determine the output format
         switch ($mime_type)

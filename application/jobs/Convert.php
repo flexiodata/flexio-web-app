@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class Convert extends \Flexio\Jobs\Base
 {
     // token delimiters; other types of delimiters are allowed as well
@@ -113,12 +111,12 @@ class Convert extends \Flexio\Jobs\Base
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         $rown = 0;
 
@@ -152,20 +150,19 @@ class Convert extends \Flexio\Jobs\Base
         }
 
         require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'tcpdf-6.2.12'. DIRECTORY_SEPARATOR . 'tcpdf_parser.php';
-        require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
 
 
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
         $this->getOutput()->push($outstream);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // read the pdf into a buffer
         $buffer = '';
@@ -189,7 +186,7 @@ class Convert extends \Flexio\Jobs\Base
         }
         catch (\Exception $e)
         {
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
         }
 
         $streamwriter->close();
@@ -201,7 +198,7 @@ class Convert extends \Flexio\Jobs\Base
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
@@ -218,13 +215,13 @@ class Convert extends \Flexio\Jobs\Base
         // set the output structure and write the rows
         $structure = self::determineStructureFromJsonArray($items);
         if ($structure === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $outstream->setStructure($structure);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         foreach($items as $i)
         {
@@ -241,7 +238,7 @@ class Convert extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $streamwriter = null;
 
-        $delimiter = isset_or($job_definition['params']['input']['delimiter'], self::DELIMITER_COMMA);
+        $delimiter = $job_definition['params']['input']['delimiter'] ?? self::DELIMITER_COMMA;
         $is_output_json = ($output_mime_type == \Flexio\Base\ContentType::MIME_TYPE_JSON ? true : false);
 
         if (isset($job_definition['params']['input']['header']))
@@ -296,12 +293,12 @@ class Convert extends \Flexio\Jobs\Base
         // get the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
 
         $outstream->setMimeType($is_output_json ? \Flexio\Base\ContentType::MIME_TYPE_JSON : \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
@@ -313,7 +310,7 @@ class Convert extends \Flexio\Jobs\Base
             // is created below, because header row must be collected in advance
             $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
             if ($streamwriter === false)
-                return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
             $streamwriter->write("[");
         }
 
@@ -402,7 +399,7 @@ class Convert extends \Flexio\Jobs\Base
                     $outstream->setStructure($structure);
                     $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
                     if ($streamwriter === false)
-                        return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+                        return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
                     $structure = $outstream->getStructure()->enum();
                 }
 
@@ -433,7 +430,7 @@ class Convert extends \Flexio\Jobs\Base
             }
 
             if ($result === false)
-                $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
             ++$rown;
         }
@@ -448,7 +445,7 @@ class Convert extends \Flexio\Jobs\Base
 
             $result = $streamwriter->close();
             if ($result === false)
-                $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
             $outstream->setSize($streamwriter->getBytesWritten());
         }
@@ -459,7 +456,7 @@ class Convert extends \Flexio\Jobs\Base
         {
             $result = self::alterStructure($outstream, $structure);
             if ($result === false)
-                return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
         }
 */
 
@@ -529,23 +526,23 @@ class Convert extends \Flexio\Jobs\Base
         // parameters
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
-        $start_offset = isset_or($params['start_offset'], 0);
-        $row_width = isset_or($params['row_width'], 100);
-        $line_delimiter = isset_or($params['line_delimiter'], false);
-        $columns = isset_or($params['columns'], []);
+        $start_offset = $params['start_offset'] ?? 0;
+        $row_width = $params['row_width'] ?? 100;
+        $line_delimiter = $params['line_delimiter'] ?? false;
+        $columns = $params['columns'] ?? [];
 
         if ($row_width == 0)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         // get the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
@@ -573,10 +570,10 @@ class Convert extends \Flexio\Jobs\Base
                     $c['type'] = 'character';
                 case 'widecharacter':
                 case 'character':
-                    $c['width'] = isset_or($col['width'], null);
+                    $c['width'] = $col['width'] ?? null;
                 case 'numeric':
-                    $c['numeric'] = isset_or($col['width'], null);
-                    $c['scale'] = isset_or($col['scale'], null);
+                    $c['numeric'] = $col['width'] ?? null;
+                    $c['scale'] = $col['scale'] ?? null;
                 case 'date':
                     break;
                 case 'datetime':
@@ -594,7 +591,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setStructure($structure);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
 
         $bufsize = 65536;
@@ -623,7 +620,7 @@ class Convert extends \Flexio\Jobs\Base
                     $value = trim(substr($buf, $buf_offset + $col['source_offset'], $col['source_width']));
 
                     // handle ebcdic encoding
-                    if (isset_or($col['source_encoding'],'') == 'ebcdic')
+                    if (($col['source_encoding'] ?? '') == 'ebcdic')
                     {
                         $ebcdicvalue = $value;
                         $len = strlen($ebcdicvalue);
@@ -680,7 +677,7 @@ class Convert extends \Flexio\Jobs\Base
 
                 $result = $streamwriter->write($row);
                 if ($result === false)
-                    $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                    $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
                 $buf_offset += $row_width;
             }
@@ -900,14 +897,14 @@ class Convert extends \Flexio\Jobs\Base
             $width = 80;
             $scale = 0;
 
-            switch (isset_or($parts[0],''))
+            switch ($parts[0] ?? '')
             {
                 default:
-                case 'C':   $type = 'character'; $width = isset_or($parts[1],80); break;
-                case 'N':   $type = 'numeric';   $width = isset_or($parts[1],12); $scale = isset_or($parts[2],0); break;
-                case 'D':   $type = 'date';      $width = isset_or($parts[1],8);  break;
-                case 'T':   $type = 'datetime';  $width = isset_or($parts[1],16); break;
-                case 'B':   $type = 'boolean';   $width = isset_or($parts[1],1);  break;
+                case 'C':   $type = 'character'; $width = $parts[1] ?? 80; break;
+                case 'N':   $type = 'numeric';   $width = $parts[1] ?? 12; $scale = $parts[2] ?? 0; break;
+                case 'D':   $type = 'date';      $width = $parts[1] ??  8; break;
+                case 'T':   $type = 'datetime';  $width = $parts[1] ?? 16; break;
+                case 'B':   $type = 'boolean';   $width = $parts[1] ??  1; break;
             }
 
 

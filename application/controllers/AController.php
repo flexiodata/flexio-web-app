@@ -73,19 +73,19 @@ class AController extends \Flexio\System\FxControllerAction
             $auth_params['state'] = $params['state'];
 
         // check for empty
-        if (isset_or($params['service'], '') == 'dropbox')
+        if (($params['service'] ?? '') == 'dropbox')
         {
-            if (strlen(''.isset_or($GLOBALS['g_config']->dropbox_client_id, '')) == 0 ||
-                strlen(''.isset_or($GLOBALS['g_config']->dropbox_client_secret, '')) == 0)
+            if (strlen(''.($GLOBALS['g_config']->dropbox_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->dropbox_client_secret ?? '')) == 0)
             {
                 die('This function is presently not available.');
             }
         }
 
-        if (isset_or($params['service'], '') == 'googledrive' || isset_or($params['service'], '') == 'googlesheets')
+        if (($params['service'] ?? '') == 'googledrive' || ($params['service'] ?? '') == 'googlesheets')
         {
-            if (strlen(''.isset_or($GLOBALS['g_config']->googledrive_client_id, '')) == 0 ||
-                strlen(''.isset_or($GLOBALS['g_config']->googledrive_client_secret, '')) == 0)
+            if (strlen(''.($GLOBALS['g_config']->googledrive_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->googledrive_client_secret ?? '')) == 0)
             {
                 die('This function is presently not available.');
             }
@@ -93,7 +93,7 @@ class AController extends \Flexio\System\FxControllerAction
 
         $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/a/connectionauthcallback';
 
-        $eid = isset_or($params['eid'], false);
+        $eid = $params['eid'] ?? false;
         $connection = \Flexio\Object\Connection::load($eid);
         if ($connection === false)
         {
@@ -135,12 +135,12 @@ class AController extends \Flexio\System\FxControllerAction
         if (isset($auth_params['state']))
         {
             $state = json_decode(base64_decode($auth_params['state']),true);
-            $eid = isset_or($state['eid'], false);
+            $eid = $state['eid'] ?? false;
             $connection = \Flexio\Object\Connection::load($eid);
         }
         else
         {
-            $eid = isset_or($params['eid'], false);
+            $eid = $params['eid'] ?? false;
             $connection = \Flexio\Object\Connection::load($eid);
         }
 

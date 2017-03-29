@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class Replace extends \Flexio\Jobs\Base
 {
     public function run()
@@ -44,7 +42,7 @@ class Replace extends \Flexio\Jobs\Base
     {
         $column_expression_map = $this->getColumnExpressionMap($instream);
         if ($column_expression_map === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
+            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
 
         // if there aren't any operations, simply create an output stream
         // pointing to the origina content
@@ -115,7 +113,7 @@ class Replace extends \Flexio\Jobs\Base
             $qfind = preg_quote($params['find'],'/');
             $qreplace = \Flexio\Base\ExprUtil::quote($params['replace']);
 
-            $location = isset_or($params['location'],'any');
+            $location = $params['location'] ?? 'any';
             if ($location == 'any') {}
             else if ($location == 'leading')
                 $qfind = '^' . $qfind;

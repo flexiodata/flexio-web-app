@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class RenameFile extends \Flexio\Jobs\Base
 {
     public function run()
@@ -51,7 +49,7 @@ class RenameFile extends \Flexio\Jobs\Base
         $instream_info = $instream->get();
         $outstream_info = $instream_info;
 
-        $filename = isset_or($outstream_info['name'], false);
+        $filename = $outstream_info['name'] ?? false;
         if ($filename !== false && $append_timestamp === true)
         {
             // TODO: generalize wildcard replacement; for now, just add a datestamp

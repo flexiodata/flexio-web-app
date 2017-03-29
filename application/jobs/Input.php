@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class Input extends \Flexio\Jobs\Base
 {
     // job-global connection properties
@@ -27,11 +25,11 @@ class Input extends \Flexio\Jobs\Base
         // make sure we have a params node
         $job_definition = $this->getProperties();
         if (!isset($job_definition['params']))
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
         $params = $job_definition['params'];
 
         // make fully qualified path, if necessary
-        $location = isset_or($params['location'], '');
+        $location = $params['location'] ?? '';
         if (strlen($location) > 0 && isset($params['items']))
         {
             $location .= '/';
@@ -54,7 +52,7 @@ class Input extends \Flexio\Jobs\Base
         // paths and determining the appropriate connection type/eid for each item
         $items = $this->resolveInputItems($params);
         if ($items === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // input job adds new streams; add streams onto inputs we've already received
         $this->getOutput()->merge($this->getInput());
@@ -69,7 +67,7 @@ class Input extends \Flexio\Jobs\Base
     private function resolveInputItems($params)
     {
         // if the items parameter isn't an array, the format is invalid
-        $items = isset_or($params['items'], false);
+        $items = $params['items'] ?? false;
         if (!is_array($items))
             return false;
 
@@ -100,8 +98,8 @@ class Input extends \Flexio\Jobs\Base
 
     private function runImport($connection_info, $file_info)
     {
-        $connection_eid = isset_or($connection_info['eid'], false);
-        $connection_type = isset_or($connection_info['connection_type'], false);
+        $connection_eid = $connection_info['eid'] ?? false;
+        $connection_type = $connection_info['connection_type'] ?? false;
 
         // handle cases where data is already imported; if the input
         // connection is the default connection, then the data is internal, so
@@ -118,13 +116,13 @@ class Input extends \Flexio\Jobs\Base
         // load the service
         $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
-            return $this->fail(\Model::ERROR_NO_SERVICE, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::NO_SERVICE, _(''), __FILE__, __LINE__);
 
         // route the request based on the connection type
         switch ($connection_type)
         {
             default:
-                return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
             // upload
             case \Model::CONNECTION_TYPE_UPLOAD:
@@ -173,7 +171,7 @@ class Input extends \Flexio\Jobs\Base
         $path = $file_info['path'];
         $structure = $service->describeTable($path);
         if (!$structure)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $stream_properties = $file_info;
@@ -181,17 +179,17 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // create the iterator
         $iter = $service->queryAll($path);
         if (!$iter)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // transfer the data
         while (true)
@@ -202,7 +200,7 @@ class Input extends \Flexio\Jobs\Base
 
             $result = $streamwriter->write(array_values($row));
             if ($result === false)
-                return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
         }
 
         $streamwriter->close();
@@ -215,7 +213,7 @@ class Input extends \Flexio\Jobs\Base
         $path = $file_info['path'];
         $structure = $service->describeTable($path);
         if (!$structure)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // create the output
         $stream_properties = $file_info;
@@ -223,12 +221,12 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // transfer the data
         $params = array();
@@ -248,12 +246,12 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $mime_data_sample = '';
         $params = array();
@@ -304,7 +302,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $outstream = self::createDatastoreStream($stream_properties);
         if ($outstream === false)
-            return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $this->getOutput()->push($outstream);
 
@@ -424,7 +422,7 @@ class Input extends \Flexio\Jobs\Base
         // simply return; TODO: we should use some check on the service to see if the
         // notion of directory lookup is included so we don't have to keep adding these
         // types for other connections that may not support wildcard lookup
-        $connection_type = isset_or($connection_info['connection_type'], false);
+        $connection_type = $connection_info['connection_type'] ?? false;
         if ($connection_type == \Model::CONNECTION_TYPE_HTTP || $connection_type == \Model::CONNECTION_TYPE_RSS)
         {
             $matching_paths[] = $file_info;

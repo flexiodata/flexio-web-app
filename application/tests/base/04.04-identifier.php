@@ -22,7 +22,7 @@ class Test
         // TEST: identifiers can't use a reserved or illegal words
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Identifier::isValid('flexio');
+        $actual = \Flexio\Base\Identifier::isValid('flexiodata');
         $expected = false;
         TestCheck::assertBoolean('A.1', '\Flexio\Base\Identifier::isValid(); identifiers can\'t use reserved or illegal words', $actual, $expected, $results);
 

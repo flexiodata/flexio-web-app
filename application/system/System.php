@@ -786,7 +786,7 @@ class System
             $GLOBALS['query_log_first_write'] = true;
             $GLOBALS['query_log_count'] = 0;
             $GLOBALS['query_log_lines'] = [];
-            $GLOBALS['query_log_lines'][] = "\r\n--------------------------------------------\r\n".isset_or($_SERVER['REQUEST_URI'],'(no request)')."\r\n\r\n";
+            $GLOBALS['query_log_lines'][] = "\r\n--------------------------------------------\r\n".($_SERVER['REQUEST_URI'] ?? '(no request)')."\r\n\r\n";
 
             register_shutdown_function(function () {
                 $lines = join('', $GLOBALS['query_log_lines']);

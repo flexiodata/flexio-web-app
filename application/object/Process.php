@@ -79,9 +79,18 @@ class Process extends \Flexio\Object\Base
         if (isset($properties) && isset($properties['task']))
             $properties['task'] = json_encode($properties['task']);
 
-        $this->clearCache();
-        $process_model = $this->getModel()->process;
-        $process_model->set($this->getEid(), $properties);
+
+        // TODO: for now, don't forward model exception
+        try
+        {
+            $this->clearCache();
+            $process_model = $this->getModel()->process;
+            $process_model->set($this->getEid(), $properties);
+        }
+        catch (\Exception $e)
+        {
+        }
+
         return $this;
     }
 
@@ -347,44 +356,49 @@ class Process extends \Flexio\Object\Base
 
     public function getInput()
     {
+        // TODO: implement similarly to self::getOutput(), using getTaskStreams();
+        // need better way of working with subprocesses
+
         // get whatever is in the input of the initial process step
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
         $input_collection = self::unstringifyCollectionEids($input);
 
-        $result = array();
+        $input_collection = \Flexio\Object\Collection::create();
         foreach ($input_collection as $input)
         {
-            $stream = \Flexio\Object\Stream::load($input['eid']);
-            if ($stream === false)
-                continue;
-
-            $result[] = $stream;
+            $input_collection->push($input['eid']);
         }
 
-        return $result;
+        return $input_collection;
     }
 
     public function getOutput()
     {
-        // same as getting the output from the last task
-        return $this->getTaskOutputStreams();
+        $task_identifier = false; // last task
+        $input_collection = \Flexio\Object\Collection::create();
+        $output_collection = \Flexio\Object\Collection::create();
+        $this->getTaskStreams($input_collection, $output_collection, $task_identifier);
+
+        return $output_collection;
     }
 
-    public function getTaskInputStreams($task_eid = false)
+    public function getTaskStreams(&$input_collection, &$output_collection, $task_eid = false)
     {
-        // returns the input streams for the specified task of a process;
-        // if no task is specified, the last subprocess is used
-        $result = array();
+        // returns a collection of input streams for the specified task of a
+        // process; if no task is specified, the streams from the last subprocess
+        // are used
+        $input_collection = \Flexio\Object\Collection::create();
+        $output_collection = \Flexio\Object\Collection::create();
 
         // get the suprocesses
         $process_info = $this->get();
         $subprocesses = $process_info['subprocesses'];
         $subprocess_count = count($subprocesses);
-        if ($subprocess_count < 1) // if there isn't any subprocess, there's no output
-            return $result;
+        if ($subprocess_count < 1) // if there isn't any subprocess, there's no items
+            return;
 
-        // find the subprocess with the relevant output
+        // find the subprocess with the relevant items
         $specified_subprocess = false;
         if ($task_eid === false)
         {
@@ -404,71 +418,21 @@ class Process extends \Flexio\Object\Base
             }
 
             if ($specified_subprocess === false)
-                return $result;
+                return;
         }
 
-        // get the input streams
-        $specified_output = $specified_subprocess['input'];
-        foreach ($specified_output as $output)
+        // get the streams
+        $input_stream_list = $specified_subprocess['input'];
+        foreach ($input_stream_list as $item)
         {
-            $stream = \Flexio\Object\Stream::load($output['eid']);
-            if ($stream === false)
-                continue;
-
-            $result[] = $stream;
+            $input_collection->push($item['eid']);
         }
 
-        return $result;
-    }
-
-    public function getTaskOutputStreams($task_eid = false)
-    {
-        // returns the output streams for the specified task of a process;
-        // if no task is specified, the last subprocess is used
-        $result = array();
-
-        // get the suprocesses
-        $process_info = $this->get();
-        $subprocesses = $process_info['subprocesses'];
-        $subprocess_count = count($subprocesses);
-        if ($subprocess_count < 1) // if there isn't any subprocess, there's no output
-            return $result;
-
-        // find the subprocess with the relevant output
-        $specified_subprocess = false;
-        if ($task_eid === false)
+        $output_stream_list = $specified_subprocess['output'];
+        foreach ($output_stream_list as $item)
         {
-            // if no task is specified, use the last subprocess as the default
-            $specified_subprocess = $subprocesses[$subprocess_count-1];
+            $output_collection->push($item['eid']);
         }
-         else
-        {
-            foreach ($subprocesses as $sp)
-            {
-                $task = $sp['task'];
-                if (isset($task['eid']) && $task['eid'] === $task_eid)
-                {
-                    $specified_subprocess = $sp;
-                    break;
-                }
-            }
-
-            if ($specified_subprocess === false)
-                return false;
-        }
-
-        // get the output streams
-        $specified_output = $specified_subprocess['output'];
-        foreach ($specified_output as $output)
-        {
-            $stream = \Flexio\Object\Stream::load($output['eid']);
-            if ($stream === false)
-                continue;
-
-            $result[] = $stream;
-        }
-
-        return $result;
     }
 
     public function isBuildMode()
@@ -584,7 +548,7 @@ class Process extends \Flexio\Object\Base
         $subprocess_properties['process_status'] = \Model::PROCESS_STATUS_PENDING;
         $subprocess_properties['process_eid'] = $main_process_eid;
         $subprocess_properties['parent_eid'] = $sub_process_eid;
-        $subprocess_properties['task_type'] = isset_or($step['type'], '');
+        $subprocess_properties['task_type'] = $step['type'] ?? '';
         $subprocess_properties['parent_eid'] = $sub_process_eid;
         $subprocess_properties['task'] = json_encode($step);
         $subprocess_properties['input'] = json_encode("[]"); // set by the loop
@@ -596,6 +560,7 @@ class Process extends \Flexio\Object\Base
 
     private function execute()
     {
+        /*
         global $g_procerr_info;
 
         // this shutdown function should only be registered once
@@ -634,6 +599,7 @@ class Process extends \Flexio\Object\Base
                 }
             });
         }
+        */
 
 
         // TODO: set appropriate status for failures
@@ -734,7 +700,7 @@ class Process extends \Flexio\Object\Base
             // unreliable; set an error so that the process fails
             $implementation_revision_update = \Flexio\System\System::getGitRevision();
             if ($implementation_revision !== $implementation_revision_update)
-                $this->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
+                $this->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
 
             // if there are errors, fail the job
             $process_status = \Model::PROCESS_STATUS_COMPLETED;
@@ -821,7 +787,7 @@ class Process extends \Flexio\Object\Base
         // create the job with the task
         $job = self::createJob($this, $task);
         if ($job === false)
-            return $process->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return $process->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
 
         try
         {
@@ -840,7 +806,7 @@ class Process extends \Flexio\Object\Base
                 file_put_contents($GLOBALS['g_config']->debug_error_log, "Job exception caught '$message'; json was $json\n\n", FILE_APPEND);
             }
 
-            return $process->fail(\Model::ERROR_GENERAL, _(''), __FILE__, __LINE__);
+            return $process->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
         }
     }
 
@@ -1077,8 +1043,8 @@ class Process extends \Flexio\Object\Base
         // the task eid; if we can't find one of these, don't generate
         // the hash
 
-        $task_type = isset_or($task['type'], false);
-        $task_parameters = isset_or($task['params'], false);
+        $task_type = $task['type'] ?? false;
+        $task_parameters = $task['params'] ?? false;
 
         if ($task_type === false || $task_parameters === false)
             return false;
@@ -1189,7 +1155,7 @@ class Process extends \Flexio\Object\Base
     private static function formatProcessInfo($params, $task_type, $finished = true)
     {
         $status_text = "";
-        $filename = isset_or($params['name'],'');
+        $filename = $params['name'] ?? '';
 
         if ($finished === true)
         {
@@ -1212,7 +1178,7 @@ class Process extends \Flexio\Object\Base
 
         // configure the output
         $result = array();
-        $result['name'] = isset_or($params['name'],'');
+        $result['name'] = $params['name'] ?? '';
         $result['description'] = $status_text;
 
         return $result;

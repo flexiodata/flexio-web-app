@@ -137,7 +137,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
 
     public function read($params, $callback)
     {
-        $path = isset_or($params['path'],'');
+        $path = $params['path'] ?? '';
 
         if (!$this->authenticated())
             return null;
@@ -166,8 +166,8 @@ class GoogleDrive implements \Flexio\Services\IConnection
 
     public function write($params, $callback)
     {
-        $path = isset_or($params['path'],'');
-        $content_type = isset_or($params['content_type'], \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $path = $params['path'] ?? '';
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
         $folder = trim($path,'/');
         while (false !== strpos($folder,'//'))
@@ -206,7 +206,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
 
 
             $result = @json_decode($result, true);
-            $fileid = isset_or($result['id'],'');
+            $fileid = $result['id'] ?? '';
             if (strlen($fileid) == 0)
                 return false;
         }
@@ -234,7 +234,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
         curl_close($ch);
 
         $result = @json_decode($result,true);
-        $file_size = isset_or($result['fileSize'], -1);
+        $file_size = $result['fileSize'] ?? -1;
 
         return ($file_size == $total_written ? true : false);
     }
@@ -301,8 +301,8 @@ class GoogleDrive implements \Flexio\Services\IConnection
 
     private static function initialize($params)
     {
-        $client_id = isset_or($GLOBALS['g_config']->googledrive_client_id, '');
-        $client_secret = isset_or($GLOBALS['g_config']->googledrive_client_secret, '');
+        $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
+        $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
             return null;
@@ -330,7 +330,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
         {
             $curtime = time();
 
-            $expires = isset_or($params['expires'], null);
+            $expires = $params['expires'] ?? null;
             if (is_null($expires))
                 $expires = 0;
             if (!is_int($expires))
@@ -343,7 +343,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
                 // access token is valid (not expired); use it
                 $object = new self;
                 $object->access_token = $params['access_token'];
-                $object->refresh_token = isset_or($params['refresh_token'],'');
+                $object->refresh_token = $params['refresh_token'] ?? '';
                 $object->expires = $expires;
                 $object->is_ok = true;
                 return $object;
@@ -355,7 +355,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
                 if (!$oauth)
                     return null;
 
-                $access_token = isset_or($params['access_token'], null);
+                $access_token = $params['access_token'] ?? null;
                 if (!isset($params['refresh_token']) || strlen($params['refresh_token']) == 0)
                     return null; // refresh token is missing
                 $refresh_token = $params['refresh_token'];
@@ -419,8 +419,8 @@ class GoogleDrive implements \Flexio\Services\IConnection
 
     private static function createService($oauth_callback)
     {
-        $client_id = isset_or($GLOBALS['g_config']->googledrive_client_id, '');
-        $client_secret = isset_or($GLOBALS['g_config']->googledrive_client_secret, '');
+        $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
+        $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
             return null;

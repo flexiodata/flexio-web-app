@@ -131,7 +131,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
-        $object = $object->set(null);
+        $object = $object->set([]);
         $actual =  'Flexio\Object\User';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'User::set(); return the object',  $actual, $expected, $results);
@@ -139,7 +139,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $eid1 = $object->getEid();
-        $eid2 = $object->set(null)->getEid();
+        $eid2 = $object->set([])->getEid();
         $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         TestCheck::assertBoolean('D.2', 'User::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
@@ -154,7 +154,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
-        $object = $object->set(null);
+        $object = $object->set([]);
         $actual =  $object->getType();
         $expected = \Model::TYPE_USER;
         TestCheck::assertString('D.4', 'User::set(); don\'t allow the type to be changed',  $actual, $expected, $results);

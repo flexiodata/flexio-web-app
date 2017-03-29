@@ -15,8 +15,6 @@
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Base.php';
-
 class Limit extends \Flexio\Jobs\Base
 {
     public function run()
@@ -55,18 +53,18 @@ class Limit extends \Flexio\Jobs\Base
 
         // get the number of rows to return
         $job_definition = $this->getProperties();
-        $rows = intval(isset_or($job_definition['params']['value'],0));
+        $rows = intval(($job_definition['params']['value'] ?? 0));
         $rows_to_output = ($rows > 0 ? $rows : 0);
 
         // create the reader
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         if ($streamreader === false)
-            return $this->fail(\Model::ERROR_READ_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         // write to the output
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         if ($streamwriter === false)
-            return $this->fail(\Model::ERROR_CREATE_FAILED, _(''), __FILE__, __LINE__);
+            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         // read the specified number of input rows and write them out
         for ($rown = 0; $rown < $rows_to_output; ++$rown)
@@ -77,7 +75,7 @@ class Limit extends \Flexio\Jobs\Base
 
             $result = $streamwriter->write($row);
             if ($result === false)
-                return $this->fail(\Model::ERROR_WRITE_FAILED, _(''), __FILE__, __LINE__);
+                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
         }
 
         $streamwriter->close();

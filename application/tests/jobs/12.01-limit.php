@@ -28,11 +28,12 @@ class Test
             {
                 "type": "flexio.create",
                 "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                     "columns": [
                         { "name": "field1", "type": "character", "width": 3, "scale": 0 },
                         { "name": "field2", "type": "character", "width": 3, "scale": 0 }
                     ],
-                    "rows": [
+                    "content": [
                         ["a","b"],
                         ["b","B"],
                         ["c","b"]

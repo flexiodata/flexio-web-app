@@ -27,22 +27,11 @@ class Test
         // TEST: \Model::create(); comment creation with no parameters
 
         // BEGIN TEST
-        $model->clearErrors();
         $info = array(
         );
         $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         TestCheck::assertBoolean('A.1', '\Model::create(); for comment creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $model->clearErrors();
-        $info = array(
-        );
-        $eid = $model->create(\Model::TYPE_COMMENT, $info);
-        $has_errors = $model->hasErrors();
-        $actual = $has_errors;
-        $expected = false;
-        TestCheck::assertBoolean('A.2', '\Model::create(); for comment creation, don\'t require input parameters; don\'t flag any errors',  $actual, $expected, $results);
     }
 }

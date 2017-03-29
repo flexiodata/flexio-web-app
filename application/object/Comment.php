@@ -25,9 +25,18 @@ class Comment extends \Flexio\Object\Base
     public function set($properties)
     {
         // TODO: add properties check
-        $this->clearCache();
-        $comment_model = $this->getModel()->comment;
-        $comment_model->set($this->getEid(), $properties);
+
+        // TODO: for now, don't forward model exception
+        try
+        {
+            $this->clearCache();
+            $comment_model = $this->getModel()->comment;
+            $comment_model->set($this->getEid(), $properties);
+        }
+        catch (\Exception $e)
+        {
+        }
+
         return $this;
     }
 
