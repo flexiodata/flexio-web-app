@@ -1,11 +1,12 @@
 <template>
   <div>
     <textarea
-      class="pa1 ba b--black-10"
+      class="w-100 pa1 ba b--black-10"
       autocomplete="off"
       rows="1"
       @keydown.esc="endEdit(false)"
       @keydown.enter="save"
+      @blur="save"
       v-model="edit_val"
       v-if="editing"
       v-focus
