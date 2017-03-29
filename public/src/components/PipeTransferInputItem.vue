@@ -27,6 +27,10 @@
     </div>
     <div v-if="items.length > 0">
       <div class="flex flex-row items-center pv1 ph2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
+        <div class="flex-none mr1">
+          <img v-if="isDir(item)" src="../assets/file-icon/folder-open-16.png" class="dib" alt="Folder">
+          <img v-else src="../assets/file-icon/file-16.png" class="dib" alt="File">
+        </div>
         <div class="flex-fill">{{item.path}}</div>
         <div class="flex-none pointer f3 lh-solid b child black-30 hover-black-60" @click="deleteFile(item)">&times;</div>
       </div>
@@ -129,6 +133,9 @@
     methods: {
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
+      },
+      isDir(item) {
+        return _.includes(_.get(item, 'path', ''), '*.')
       },
       updateFiles(items, modal) {
         var eid = this.pipeEid
