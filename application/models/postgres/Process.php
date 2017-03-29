@@ -355,6 +355,10 @@ class Process extends ModelBase
 
     public function getOutputByHash(string $hash) // TODO: add return type
     {
+        // don't pull results for empty string
+        if (strlen($hash) === 0)
+            return false;
+
         try
         {
             // see if a process output exists for the existing hash
