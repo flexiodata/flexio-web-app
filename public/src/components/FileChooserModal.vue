@@ -138,7 +138,10 @@
         this.items = []
       },
       onHide() {
-        this.$refs['url-input-list'].reset()
+        var url_list = this.$refs['url-input-list']
+        if (!_.isNil(url_list))
+          url_list.reset()
+
         this.reset()
       },
       openFolder(path) {
