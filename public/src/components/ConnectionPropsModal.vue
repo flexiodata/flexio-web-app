@@ -129,7 +129,7 @@
   }
 
   export default {
-    props: ['open-from', 'close-to', 'project-eid'],
+    props: ['project-eid'],
     mixins: [oauthPopup],
     components: {
       Btn,

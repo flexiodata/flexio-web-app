@@ -53,7 +53,6 @@
   }
 
   export default {
-    props: ['open-from', 'close-to'],
     components: {
       Btn
     },

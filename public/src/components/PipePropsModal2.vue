@@ -98,7 +98,7 @@
   }
 
   export default {
-    props: ['open-from', 'close-to', 'project-eid'],
+    props: ['project-eid'],
     components: {
       Btn,
       ConnectionIcon,
