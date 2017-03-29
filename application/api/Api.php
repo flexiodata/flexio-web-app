@@ -168,7 +168,22 @@ class Api
 
         $function = self::getApiEndpoint($api_path);
         if ($function !== false && is_callable($function) === true)
-            return $function($query_params, $request);
+        {
+            try
+            {
+                return $function($query_params, $request);
+            }
+            catch (\Exception $e)
+            {
+                $request->getValidator()->fail(\Flexio\Base\Error::GENERAL); // TODO: proxy error code
+                return;
+            }
+            catch (\Error $e)
+            {
+                $request->getValidator()->fail(\Flexio\Base\Error::GENERAL);
+                return;
+            }
+        }
 
         // ROUTE 2: if we weren't able to route the request "as is", try to
         // route the request based on checking for eids or identifiers in the
@@ -209,7 +224,22 @@ class Api
         $function = self::getApiEndpoint($api_path);
 
         if ($function !== false && is_callable($function) === true)
-            return $function($query_params, $request);
+        {
+            try
+            {
+                return $function($query_params, $request);
+            }
+            catch (\Exception $e)
+            {
+                $request->getValidator()->fail(\Flexio\Base\Error::GENERAL); // TODO: proxy error code
+                return;
+            }
+            catch (\Error $e)
+            {
+                $request->getValidator()->fail(\Flexio\Base\Error::GENERAL);
+                return;
+            }
+        }
 
         // we can't find the specified api endpoint
         return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_METHOD);
