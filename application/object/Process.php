@@ -775,7 +775,6 @@ class Process extends \Flexio\Object\Base
         }
 
         // create the job with the task
-        $job = null;
         try
         {
             // set the job input, run the job, and get the output
@@ -789,7 +788,6 @@ class Process extends \Flexio\Object\Base
             if (isset($GLOBALS['g_config']->debug_error_log))
             {
                 $message = $e->getMessage();
-                $task = $job->getProperties();
                 $json = json_encode($task);
                 file_put_contents($GLOBALS['g_config']->debug_error_log, "Job exception caught '$message'; json was $json\n\n", FILE_APPEND);
             }
