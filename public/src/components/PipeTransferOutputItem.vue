@@ -63,6 +63,12 @@
           <code class="f6">flexio pipes run pipe-name > output.txt</code>
         </div>
       </div>
+      <div class="tl" v-else-if="is_sftp">
+        <div class="lh-copy mid-gray f6 mb3 i">
+          <span v-if="connection.host.length == 0 || connection.database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files via {{service_name}}.</span>
+          <span v-else>Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> database on <span class="b black fs-normal">{{connection.host}}</span>.</span>
+        </div>
+      </div>
     </div>
 
     <!-- output chooser modal -->
@@ -85,7 +91,8 @@
     CONNECTION_TYPE_GOOGLESHEETS,
     CONNECTION_TYPE_MYSQL,
     CONNECTION_TYPE_POSTGRES,
-    CONNECTION_TYPE_STDOUT
+    CONNECTION_TYPE_STDOUT,
+    CONNECTION_TYPE_SFTP
   } from '../constants/connection-type'
   import { mapGetters } from 'vuex'
   import * as connections from '../constants/connection-info'
@@ -135,27 +142,16 @@
         var name = _.get(this.connection, 'name', '')
         return name.length > 0 ? name : this.service_name
       },
-      is_amazon_s3() {
-        return this.ctype == CONNECTION_TYPE_AMAZONS3
-      },
-      is_dropbox() {
-        return this.ctype == CONNECTION_TYPE_DROPBOX
-      },
-      is_google_drive() {
-        return this.ctype == CONNECTION_TYPE_GOOGLEDRIVE
-      },
-      is_google_sheets() {
-        return this.ctype == CONNECTION_TYPE_GOOGLESHEETS
-      },
-      is_mysql() {
-        return this.ctype == CONNECTION_TYPE_MYSQL
-      },
-      is_postgres() {
-        return this.ctype == CONNECTION_TYPE_POSTGRES
-      },
-      is_stdout() {
-        return this.ctype == CONNECTION_TYPE_STDOUT
-      },
+
+      is_amazon_s3()     { return this.ctype == CONNECTION_TYPE_AMAZONS3 },
+      is_dropbox()       { return this.ctype == CONNECTION_TYPE_DROPBOX },
+      is_google_drive()  { return this.ctype == CONNECTION_TYPE_GOOGLEDRIVE },
+      is_google_sheets() { return this.ctype == CONNECTION_TYPE_GOOGLESHEETS },
+      is_mysql()         { return this.ctype == CONNECTION_TYPE_MYSQL },
+      is_postgres()      { return this.ctype == CONNECTION_TYPE_POSTGRES },
+      is_stdout()        { return this.ctype == CONNECTION_TYPE_STDOUT },
+      is_sftp()          { return this.ctype == CONNECTION_TYPE_SFTP },
+
       menu_options() {
         var items = []
 
