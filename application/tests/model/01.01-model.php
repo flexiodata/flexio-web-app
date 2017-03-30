@@ -377,34 +377,44 @@ class Test
         TestCheck::assertString('H.12', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_STDIN;
+        $expected = 'stdin.api';
+        TestCheck::assertString('H.13', 'Connection type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_STDOUT;
+        $expected = 'stdout.api';
+        TestCheck::assertString('H.14', 'Connection type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_HTTP;
         $expected = 'http.api';
-        TestCheck::assertString('H.13', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.15', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_RSS;
         $expected = 'rss.api';
-        TestCheck::assertString('H.14', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.16', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_SOCRATA;
         $expected = 'socrata.api';
-        TestCheck::assertString('H.15', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.17', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_PIPELINEDEALS;
         $expected = 'pipelinedeals.api';
-        TestCheck::assertString('H.16', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.18', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_MAILJET;
         $expected = 'mailjet.api';
-        TestCheck::assertString('H.17', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.19', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_TWILIO;
         $expected = 'twilio.api';
-        TestCheck::assertString('H.18', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.20', 'Connection type constant',  $actual, $expected, $results);
 
 
 

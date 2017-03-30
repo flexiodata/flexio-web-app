@@ -22,9 +22,9 @@
     },
     computed: {
       cls() {
-        var outline = false,
-            prefix = 'bg-',
-            cls = [];
+        var outline = false
+        var prefix = 'bg-'
+        var cls = []
 
         if (this.btnOutline !== undefined)
           outline = true
