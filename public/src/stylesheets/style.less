@@ -33,6 +33,39 @@
 .absolute[class*=hint--] { position: absolute; }
 .fixed[class*=hint--] { position: fixed; }
 
+/**
+ * Error
+ */
+.hint--error {
+  &:after {
+    background-color: @dark-red;
+  }
+  &.hint--top-left:before {
+    border-top-color: @dark-red;
+  }
+  &.hint--top-right:before {
+    border-top-color: @dark-red;
+  }
+  &.hint--top:before {
+    border-top-color: @dark-red;
+  }
+  &.hint--bottom-left:before {
+    border-bottom-color: @dark-red;
+  }
+  &.hint--bottom-right:before {
+    border-bottom-color: @dark-red;
+  }
+  &.hint--bottom:before {
+    border-bottom-color: @dark-red;
+  }
+  &.hint--left:before {
+    border-left-color: @dark-red;
+  }
+  &.hint--right:before {
+    border-right-color: @dark-red;
+  }
+}
+
 // -- from github --
 
 .blankslate {

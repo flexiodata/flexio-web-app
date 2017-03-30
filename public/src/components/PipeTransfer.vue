@@ -91,7 +91,7 @@
           <button
             type="button"
             class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
-            aria-label="Take me to the builder"
+            aria-label="Switch to builder view"
             @click="$emit('open-builder')"
             v-if="has_tasks"
           >
@@ -114,7 +114,7 @@
               class="ttu b"
               @click="$emit('open-builder')"
             >
-              Take me to the builder
+              Switch to builder view
             </btn>
           </div>
         </div>
