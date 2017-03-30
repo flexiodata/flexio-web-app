@@ -36,10 +36,6 @@ class Stream extends \Flexio\Object\Base
             // if the structure is set, make sure it's valid
             $structure = $properties['structure'];
             $structure_object = \Flexio\Object\Structure::create($structure);
-
-            if ($structure_object === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
             $structure = $structure_object->enum();
             $properties['structure'] = json_encode($structure);
         }
@@ -79,10 +75,6 @@ class Stream extends \Flexio\Object\Base
             // if the structure is set, make sure it's valid
             $structure = $properties['structure'];
             $structure_object = \Flexio\Object\Structure::create($structure);
-
-            if ($structure_object === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
             $structure = $structure_object->enum();
             $properties['structure'] = json_encode($structure);
         }

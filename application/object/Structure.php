@@ -132,10 +132,11 @@ class Structure
         return self::create($structure_output);
     }
 
-    public static function intersect(array $structures)
+    public static function intersect(array $structures) : \Flexio\Object\Structure
     {
         // TODO: creates a structure that's the intersection of the specified structures
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return self::create();
     }
 
     public function copy() : \Flexio\Object\Structure
@@ -426,7 +427,7 @@ class Structure
         return $output_columns;
     }
 
-    private static function getWildcardColumns(string $wildcard_column, array $available_columns)
+    private static function getWildcardColumns(string $wildcard_column, array $available_columns) : array
     {
         $output_column_names = array();
 
@@ -465,7 +466,7 @@ class Structure
         return $output_column_names;
     }
 
-    private static function mergeStructure(array $structure1, array $structure2)
+    private static function mergeStructure(array $structure1, array $structure2) : array
     {
         $count_structure1 = count($structure1);
         $count_structure2 = count($structure2);
@@ -522,7 +523,7 @@ class Structure
         return $merged_structure;
     }
 
-    private static function mergeFieldInfo(array $field1_info, array $field2_info)
+    private static function mergeFieldInfo(array $field1_info, array $field2_info) : array
     {
         // this function takes the information for two fields and merges
         // them to create an output type that can safely be used to represent
@@ -553,7 +554,7 @@ class Structure
         return $output_info;
     }
 
-    private static function isTextColumn(array $column_info)
+    private static function isTextColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -567,7 +568,7 @@ class Structure
         }
     }
 
-    private static function isNumberColumn(array $column_info)
+    private static function isNumberColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -581,7 +582,7 @@ class Structure
         }
     }
 
-    private static function isDateColumn(array $column_info)
+    private static function isDateColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -593,7 +594,7 @@ class Structure
         }
     }
 
-    private static function isDateTimeColumn(array $column_info)
+    private static function isDateTimeColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -605,7 +606,7 @@ class Structure
         }
     }
 
-    private static function isBooleanColumn(array $column_info)
+    private static function isBooleanColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -617,7 +618,7 @@ class Structure
         }
     }
 
-    private static function getUniqueName(string $name, array $column_lookup)
+    private static function getUniqueName(string $name, array $column_lookup) : string
     {
         // if the column name doesn't exist, the name is valid; so return it
         if (!isset($column_lookup[$name]))
@@ -635,7 +636,7 @@ class Structure
         }
     }
 
-    private static function makeValidName(string $name)
+    private static function makeValidName(string $name) : string
     {
         // TODO: for now, make names lowercase (the datastore stores fields
         // in lowercase, so until we map the datastore structure to the
@@ -648,7 +649,7 @@ class Structure
         return trim($name);
     }
 
-    private static function makeValidStoreName(string $name)
+    private static function makeValidStoreName(string $name) : string
     {
         // store names are always lowercase
         $name = strtolower($name);
@@ -714,7 +715,7 @@ class Structure
         return trim($result);
     }
 
-    public static function isKeyword(string $str)
+    public static function isKeyword(string $str) : bool
     {
         $res = array_search(strtoupper($str),
             ["ABORT", "ABS", "ABSOLUTE", "ACCESS", "ACTION", "ADA", "ADD", "ADMIN", "AFTER", "AGGREGATE",

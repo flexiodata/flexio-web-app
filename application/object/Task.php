@@ -19,7 +19,7 @@ class Task
 {
     private $task;
 
-    public static function manifest()
+    public static function manifest() : array
     {
         // note: manifest() resturns a list of all available jobs and their related
         // information; enum() returns a list of publicly available functions in display
@@ -234,7 +234,7 @@ class Task
     public function push($command) : \Flexio\Object\Task // TODO: add input parameter types
     {
         // note: adds a raw command to the end of the task array
-        $this->addTaskStep($command, null);
+        $result = $this->addTaskStep($command, null);
         return $this;
     }
 
@@ -399,7 +399,7 @@ class Task
         return $updated_task;
     }
 
-    private static function updateTaskItemWithVariable($variables, $original_item, &$updated_item) // TODO: add input parameter types
+    private static function updateTaskItemWithVariable($variables, $original_item, &$updated_item) : bool // TODO: add input parameter types
     {
         // set the initial output to the input
         $updated_item = $original_item;
@@ -443,7 +443,7 @@ class Task
         return false;
     }
 
-    private static function replaceValueWithVariable($variables, $old_value, &$new_value) // TODO: add input parameter types
+    private static function replaceValueWithVariable($variables, $old_value, &$new_value) : bool // TODO: add input parameter types
     {
         // returns true if value was updated; false otherwise
 
@@ -488,7 +488,7 @@ class Task
         return $updated;
     }
 
-    private static function addEidToTaskStep($step) // TODO: add input parameter types
+    private static function addEidToTaskStep(array $step) : array
     {
         // if a task eid isn't set, then add one
 

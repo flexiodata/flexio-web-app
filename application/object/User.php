@@ -338,7 +338,7 @@ class User extends \Flexio\Object\Base
         return $result;
     }
 
-    public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h)
+    public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h) : bool
     {
         $eid = $this->getEid();
         $mime_type = 'text/plain';

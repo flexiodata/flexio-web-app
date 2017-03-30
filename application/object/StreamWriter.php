@@ -68,7 +68,7 @@ class StreamWriter
         }
 
         if ($object->isOk() === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $object;
     }

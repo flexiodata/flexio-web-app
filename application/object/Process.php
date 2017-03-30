@@ -775,18 +775,28 @@ class Process extends \Flexio\Object\Base
         }
 
         // create the job with the task
-        $job = self::createJob($this, $task);
-        if ($job === false)
-            return $process->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
-
+        $job = null;
         try
         {
             // set the job input, run the job, and get the output
+            $job = self::createJob($this, $task);
             $job->getInput()->set($input);
             $job->run();
             $output = $job->getOutput();
         }
         catch (\Exception $e)
+        {
+            if (isset($GLOBALS['g_config']->debug_error_log))
+            {
+                $message = $e->getMessage();
+                $task = $job->getProperties();
+                $json = json_encode($task);
+                file_put_contents($GLOBALS['g_config']->debug_error_log, "Job exception caught '$message'; json was $json\n\n", FILE_APPEND);
+            }
+
+            return $process->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
+        }
+        catch (\Error $e)
         {
             if (isset($GLOBALS['g_config']->debug_error_log))
             {
@@ -1049,16 +1059,10 @@ class Process extends \Flexio\Object\Base
         return $hash;
     }
 
-    private static function createJob($process, $task) // TODO: add input parameter types
+    private static function createJob(\Flexio\Object\Process $process, array $task) : \Flexio\Jobs\IJob
     {
-        if (!($process instanceof \Flexio\Object\Process))
-            return false;
-
-        if (!isset($task))
-            return false;
-
         if (!isset($task['type']))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $job_type = $task['type'];
 
@@ -1077,26 +1081,23 @@ class Process extends \Flexio\Object\Base
         }
 
         if ($full_class_name === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // try to find the job file
         $class_name_parts = explode("\\", $full_class_name);
         if (!isset($class_name_parts[3]))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $class_file = \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name_parts[3] . '.php';
         if (!@file_exists($class_file))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // load the job's php file and instantiate the job object
         include_once $class_file;
         $job = $full_class_name::create($process, $task);
 
         if ($job === false)
-            return false;
-
-        if (!($job instanceof \Flexio\Jobs\IJob))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $job;
     }

@@ -63,7 +63,7 @@ class StreamReader
         }
 
         if ($object->isOk() === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $object;
     }
