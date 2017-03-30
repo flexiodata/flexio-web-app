@@ -244,6 +244,8 @@ class Execute extends \Flexio\Jobs\Base
                     //$s = ob_get_clean();
                     //fxdebug("From process: ".$s."***\n\n\n\n");
 
+                    //fxdebug("Writing " . strlen($chunk) . " bytes\n");
+
                     $streamwriter->write($chunk);
                     $chunk = '';
                 }
@@ -252,6 +254,18 @@ class Execute extends \Flexio\Jobs\Base
 
 
         } while ($is_running);
+
+
+        // write any remaining data from process
+        while (true)
+        {
+            $chunk = $process->read(1024);
+            if (strlen($chunk) == 0)
+                break;
+            //fxdebug("Writing2  " . strlen($chunk) . " bytes\n");
+
+            $streamwriter->write($chunk);
+        }
 
 
         $err = $process->getError();
