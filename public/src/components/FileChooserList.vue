@@ -6,6 +6,9 @@
         <span class="ml2 f7">Loading...</span>
       </div>
     </div>
+    <div class="pa1 f7 i" v-else-if="items.length == 0">
+      This folder is either empty or does not exist
+    </div>
     <table v-else class="f6 w-100">
       <tbody class="lh-copy f6">
         <file-chooser-item
@@ -128,7 +131,10 @@
       },
       itemDblClick(item) {
         if (_.get(item, 'is_dir') === true)
+        {
           this.$emit('open-folder', _.defaultTo(item.path, '/'))
+          this.last_selected_item = null
+        }
       },
       refreshList() {
         var me = this

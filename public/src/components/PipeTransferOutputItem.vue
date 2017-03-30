@@ -36,6 +36,7 @@
           <btn
             btn-md
             btn-primary
+            @click="openOutputChooser"
           >
             <span class="ttu b">Change folder</span>
           </btn>
@@ -48,6 +49,16 @@
         </div>
       </div>
     </div>
+
+    <!-- output chooser modal -->
+    <output-chooser-modal
+      ref="modal-output-chooser"
+      :connection="connection"
+      :location="location"
+      @submit="saveLocation"
+      @hide="show_output_chooser_modal = false"
+      v-if="show_output_chooser_modal"
+    ></output-chooser-modal>
   </article>
 </template>
 
@@ -57,28 +68,45 @@
   import * as connections from '../constants/connection-info'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
+  import OutputChooserModal from './OutputChooserModal.vue'
 
   export default {
     props: ['item'],
     components: {
       Btn,
-      ConnectionIcon
+      ConnectionIcon,
+      OutputChooserModal
+    },
+    inject: ['pipeEid'],
+    data() {
+      return {
+        show_output_chooser_modal: false
+      }
     },
     computed: {
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
       },
+      task() {
+        return this.item
+      },
       ctype() {
-        return _.get(this.item, 'metadata.connection_type', '')
+        return _.get(this.task, 'metadata.connection_type', '')
       },
       conn_identifier() {
-        return _.get(this.item, 'params.connection', '')
+        return _.get(this.task, 'params.connection', '')
       },
       location() {
-        return _.get(this.item, 'params.location', '')
+        return _.get(this.task, 'params.location', '')
       },
       friendly_location() {
         return '<' + this.service_name + ' ' + 'root folder' + '>'
+      },
+      connection() {
+        var connection_eid = _.get(this.task, 'params.connection', '')
+        return _.get(this.$store, 'state.objects.'+connection_eid, {
+          connection_type: this.ctype
+        })
       },
       is_dropbox() {
         return this.ctype == CONNECTION_TYPE_DROPBOX
@@ -95,21 +123,34 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getAllConnections'
-      ]),
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },
-      getOurConnection() {
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(this.getAllConnections())
-          .filter((p) => {
-            return _.get(p, 'eid') == this.conn_identifier || _.get(p, 'ename') == this.conn_identifier
-          })
-          .value()
+      openOutputChooser() {
+        if (!_.isNil(this.connection))
+        {
+          this.show_output_chooser_modal = true
+          this.$nextTick(() => { this.$refs['modal-output-chooser'].open() })
+        }
+      },
+      saveLocation(location, modal) {
+        var eid = this.pipeEid
+        var task_eid = _.get(this.item, 'eid', '')
+        var attrs = _.cloneDeep(_.omit(this.item, 'eid'))
+
+        _.set(attrs, 'params.location', location)
+
+        // edit pipe task
+        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {
+          if (response.ok)
+          {
+            if (!_.isNil(modal))
+              modal.close()
+          }
+           else
+          {
+          }
+        })
       },
       onMenuItemClick(menu_item) {
         switch (menu_item.id)
