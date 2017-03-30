@@ -4,7 +4,7 @@
     <ui-progress-linear
       :type="type"
       :progress="pct"
-      v-show="is_running"
+      v-show="is_running || is_completed"
     ></ui-progress-linear>
   </article>
 </template>
