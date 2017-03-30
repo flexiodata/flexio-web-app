@@ -97,11 +97,11 @@ class Pipe extends \Flexio\Object\Base
         return $local_properties['task'];
     }
 
-    public function addTaskStep($task_step, $index) // TODO: add parameter types
+    public function addTaskStep(array $task_step, int $index) // TODO: add parameter types
     {
         // get the current task array
         $task_array = $this->getTask();
-        $task = \Flexio\Object\Task::load($task_array);
+        $task = \Flexio\Object\Task::create($task_array);
 
         // add a new task
         $task_eid = $task->addTaskStep($task_step, $index);
@@ -112,17 +112,17 @@ class Pipe extends \Flexio\Object\Base
     public function deleteTaskStep(string $task_eid) : \Flexio\Object\Pipe
     {
         $task_array = $this->getTask();
-        $task = \Flexio\Object\Task::load($task_array);
+        $task = \Flexio\Object\Task::create($task_array);
         $task->deleteTaskStep($task_eid);
         $this->setTask($task->get());
         return $this;
     }
 
-    public function setTaskStep($task_eid, $task_step) : \Flexio\Object\Pipe // TODO: add parameter types
+    public function setTaskStep(string $task_eid, array $task_step) : \Flexio\Object\Pipe
     {
         // get the current task array
         $task_array = $this->getTask();
-        $task = \Flexio\Object\Task::load($task_array);
+        $task = \Flexio\Object\Task::create($task_array);
         $task->setTaskStep($task_eid, $task_step);
         $this->setTask($task->get());
         return $this;
@@ -131,7 +131,7 @@ class Pipe extends \Flexio\Object\Base
     public function getTaskStep(string $task_eid)
     {
         $task_array = $this->getTask();
-        $task = \Flexio\Object\Task::load($task_array);
+        $task = \Flexio\Object\Task::create($task_array);
         return $task->getTaskStep($task_eid);
     }
 
