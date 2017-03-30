@@ -27,7 +27,7 @@
     </div>
     <div class="ma3">
       <div class="tl" v-if="is_dropbox">
-        <div class="lh-copy mid-gray f6 mb2">Files will be output to the following folder:</div>
+        <div class="lh-copy mid-gray f6 mb1">Files will be output to the following folder:</div>
         <div class="flex flex-row items-center">
           <div class="flex-fill f6 mr2 pa2 ba b--black-10 black">
             <span class="i" v-if="location == '/'">{{friendly_location}}</span>
