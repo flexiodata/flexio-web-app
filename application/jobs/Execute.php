@@ -142,6 +142,7 @@ class Execute extends \Flexio\Jobs\Base
         $done_writing = false;
         $first_chunk = true;
         $chunk = '';
+        $tot = 0;
 
         do
         {
@@ -244,7 +245,8 @@ class Execute extends \Flexio\Jobs\Base
                     //$s = ob_get_clean();
                     //fxdebug("From process: ".$s."***\n\n\n\n");
 
-                    //fxdebug("Writing " . strlen($chunk) . " bytes\n");
+                    fxdebug("Writing " . strlen($chunk) . " bytes\n");
+                    $tot += strlen($chunk);
 
                     $streamwriter->write($chunk);
                     $chunk = '';
@@ -262,11 +264,12 @@ class Execute extends \Flexio\Jobs\Base
             $chunk = $process->read(1024);
             if (strlen($chunk) == 0)
                 break;
-            //fxdebug("Writing2  " . strlen($chunk) . " bytes\n");
-
+            fxdebug("Writing2  " . strlen($chunk) . " bytes\n");
+            $tot += strlen($chunk);
             $streamwriter->write($chunk);
         }
 
+        fxdebug("Total bytes written: " . $tot);
 
         $err = $process->getError();
        // var_dump($err);
