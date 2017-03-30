@@ -35,25 +35,27 @@
         </inline-edit-text>
         <command-bar2
           ref="commandbar"
-          class="mv2"
-          :orig-json="task"
+          class="mv2 bg-white"
+          :orig-json="edit_json"
           @change="updateEditTask"
           @cancel="cancelEdit"
           @save="saveEdit"
         ></command-bar2>
         <code-editor
           ref="code"
-          class="mv2 ba b--black-10"
+          class="mv2 ba b--black-10 bg-white"
           :val="execute_code"
           :lang="execute_lang"
           @change="updateCode"
           v-if="is_task_execute"
         ></code-editor>
-        <div class="flex flex-row mv2" v-show="is_changed">
-          <div class="flex-fill">&nbsp;</div>
-          <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
-          <btn btn-sm class="b ttu white bg-blue" @click="saveEdit">Save Changes</btn>
-        </div>
+        <transition name="slide-fade">
+          <div class="flex flex-row mv2" v-show="is_changed">
+            <div class="flex-fill">&nbsp;</div>
+            <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
+            <btn btn-sm class="b ttu white bg-blue" @click="saveEdit">Save Changes</btn>
+          </div>
+        </transition>
         <pipe-content
           class="mt2 mb3 relative bg-white"
           style="height: 300px"
@@ -202,6 +204,7 @@
           input.endEdit()
       },
       cancelEdit() {
+        this.edit_json = this.getOrigJson()
         this.execute_code = this.getReadableCode()
 
         // reset the code in the code editor
@@ -229,3 +232,16 @@
     }
   }
 </script>
+
+<style>
+  .slide-fade-enter-active,
+  .slide-fade-leave-active {
+    transition: all .3s ease;
+  }
+
+  .slide-fade-enter,
+  .slide-fade-leave-to {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+</style>
