@@ -115,11 +115,26 @@
         return this.ctype == CONNECTION_TYPE_STDOUT
       },
       menu_options() {
-        return [{
+        var items = []
+
+        if (this.is_dropbox)
+        {
+          items = [{
+            id: 'change-folder',
+            label: 'Change Folder',
+            icon: 'folder_open'
+          },{
+            type: 'divider'
+          }]
+        }
+
+        items.push({
           id: 'delete',
           label: 'Remove this output',
           icon: 'delete'
-        }]
+        })
+
+        return items
       }
     },
     methods: {
@@ -155,6 +170,7 @@
       onMenuItemClick(menu_item) {
         switch (menu_item.id)
         {
+          case 'change-folder': return this.openOutputChooser()
           case 'delete':  return this.$emit('delete', this.item)
         }
       }
