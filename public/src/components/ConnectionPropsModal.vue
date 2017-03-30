@@ -24,7 +24,7 @@
           <div class="mid-gray f4 fw6">{{service_name}}</div>
           <div class="mid-gray f6 fw4 mt1">{{service_description}}</div>
         </div>
-        <div class="mid-gray" v-if="mode != 'edit'">
+        <div class="mid-gray" v-if="showSteps && mode != 'edit'">
           <i class="material-icons fw6 v-mid">chevron_left</i>
           <div
             class="dib f5 fw6 underline-hover pointer v-mid"
@@ -130,7 +130,16 @@
   }
 
   export default {
-    props: ['project-eid'],
+    props: {
+      'project-eid': {
+        default: '',
+        type: String
+      },
+      'show-steps': {
+        default: true,
+        type: Boolean
+      }
+    },
     mixins: [validation, oauthPopup],
     components: {
       Btn,

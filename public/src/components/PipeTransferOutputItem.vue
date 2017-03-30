@@ -2,7 +2,7 @@
   <article class="mb3">
     <div class="flex flex-row items-center pa2 bg-black-05 bb b--black-05">
       <connection-icon :type="ctype" class="v-mid br1 fx-square-2 mr2"></connection-icon>
-      <div class="f6 fw6 ttu silver">{{service_name}}</div>
+      <div class="f6 fw6 ttu silver">{{title}}</div>
       <div class="flex-fill"></div>
       <a
         class="no-underline f5 b dib pointer pa0 link black-30 hover-black-60 popover-trigger"
@@ -121,6 +121,10 @@
         return _.get(this.$store, 'state.objects.'+connection_eid, {
           connection_type: this.ctype
         })
+      },
+      title() {
+        var name = _.get(this.connection, 'name', '')
+        return name.length > 0 ? name : service_name
       },
       is_amazon_s3() {
         return this.ctype == CONNECTION_TYPE_AMAZONS3

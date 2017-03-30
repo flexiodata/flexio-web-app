@@ -25,6 +25,7 @@
     <connection-props-modal
       ref="modal-connection-props"
       :project-eid="projectEid"
+      :show-steps="false"
       @submit="tryUpdateConnection"
       @hide="show_connection_props_modal = false"
       v-if="show_connection_props_modal"
