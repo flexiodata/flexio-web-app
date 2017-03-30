@@ -33,36 +33,41 @@
           :val="description"
           @save="editTaskSingleton">
         </inline-edit-text>
-        <command-bar2
-          ref="commandbar"
-          class="mv2 bg-white"
-          :orig-json="edit_json"
-          @change="updateEditTask"
-          @cancel="cancelEdit"
-          @save="saveEdit"
-        ></command-bar2>
-        <code-editor
-          ref="code"
-          class="mv2 ba b--black-10 bg-white"
-          :val="execute_code"
-          :lang="execute_lang"
-          @change="updateCode"
-          v-if="is_task_execute"
-        ></code-editor>
-        <transition name="slide-fade">
-          <div class="flex flex-row mv2" v-show="is_changed">
-            <div class="flex-fill">&nbsp;</div>
-            <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
-            <btn btn-sm class="b ttu white bg-blue" @click="saveEdit">Save Changes</btn>
-          </div>
-        </transition>
-        <pipe-content
-          class="mv2 relative bg-white"
-          style="height: 300px"
-          :stream-eid="active_stream_eid"
-          :task-json="task"
-          v-if="active_stream_eid.length > 0"
-        ></pipe-content>
+        <div v-if="show_progress" class="mv3">
+          <process-progress-item :item="active_subprocess"></process-progress-item>
+        </div>
+        <div v-else>
+          <command-bar2
+            ref="commandbar"
+            class="mv2 bg-white"
+            :orig-json="edit_json"
+            @change="updateEditTask"
+            @cancel="cancelEdit"
+            @save="saveEdit"
+          ></command-bar2>
+          <code-editor
+            ref="code"
+            class="mv2 ba b--black-10 bg-white"
+            :val="execute_code"
+            :lang="execute_lang"
+            @change="updateCode"
+            v-if="is_task_execute"
+          ></code-editor>
+          <transition name="slide-fade">
+            <div class="flex flex-row mv2" v-show="is_changed">
+              <div class="flex-fill">&nbsp;</div>
+              <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
+              <btn btn-sm class="b ttu white bg-blue" @click="saveEdit">Save Changes</btn>
+            </div>
+          </transition>
+          <pipe-content
+            class="mv2 relative bg-white"
+            style="height: 300px"
+            :stream-eid="active_stream_eid"
+            :task-json="task"
+            v-if="active_stream_eid.length > 0"
+          ></pipe-content>
+        </div>
       </div>
     </div>
 
@@ -75,14 +80,16 @@
 </template>
 
 <script>
-  import * as types from '../constants/task-type'
+  import { PROCESS_STATUS_RUNNING } from '../constants/process'
   import { TASK_TYPE_EXECUTE } from '../constants/task-type'
+  import * as types from '../constants/task-type'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
   import CodeEditor from './CodeEditor.vue'
   import CommandBar2 from './CommandBar2.vue'
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
+  import ProcessProgressItem from './ProcessProgressItem.vue'
   import taskItemHelper from './mixins/task-item-helper'
 
   export default {
@@ -93,7 +100,8 @@
       CodeEditor,
       CommandBar2,
       InlineEditText,
-      PipeContent
+      PipeContent,
+      ProcessProgressItem
     },
     watch: {
       item: function(val, old_val) {
@@ -168,6 +176,10 @@
       active_stream_eid() {
         var stream = _.head(this.our_inputs)
         return _.get(stream, 'eid', '')
+      },
+
+      show_progress() {
+        return _.get(this.activeProcess, 'process_status') == PROCESS_STATUS_RUNNING
       }
     },
     methods: {

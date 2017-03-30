@@ -1,6 +1,6 @@
 <template>
-  <article class="pv2 ph3">
-    <p class="f5 fw6 mid-gray">{{title}}</p>
+  <article>
+    <div class="mb2 f6 fw6 mid-gray">{{title}}</div>
     <ui-progress-linear></ui-progress-linear>
   </article>
 </template>
