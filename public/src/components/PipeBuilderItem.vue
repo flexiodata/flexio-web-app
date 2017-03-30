@@ -39,7 +39,7 @@
         <div v-else>
           <command-bar2
             ref="commandbar"
-            class="mv2 bg-white"
+            class="mt2 bg-white"
             :orig-json="edit_json"
             @change="updateEditTask"
             @cancel="cancelEdit"
@@ -47,7 +47,7 @@
           ></command-bar2>
           <code-editor
             ref="code"
-            class="mv2 ba b--black-10 bg-white"
+            class="mb2 bl br bb b--black-10 bg-white"
             :val="execute_code"
             :lang="execute_lang"
             @change="updateCode"
