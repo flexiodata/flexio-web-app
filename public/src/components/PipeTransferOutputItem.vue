@@ -26,7 +26,7 @@
       </ui-popover>
     </div>
     <div class="ma3">
-      <div class="tl" v-if="is_dropbox">
+      <div class="tl" v-if="is_dropbox || is_google_drive">
         <div class="lh-copy mid-gray f6 mb1">Files will be output to the following folder:</div>
         <div class="flex flex-row items-center">
           <div class="flex-fill f6 mr2 pa2 ba b--black-10 black">
@@ -63,7 +63,11 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_DROPBOX, CONNECTION_TYPE_STDOUT } from '../constants/connection-type'
+  import {
+    CONNECTION_TYPE_DROPBOX,
+    CONNECTION_TYPE_GOOGLEDRIVE,
+    CONNECTION_TYPE_STDOUT
+  } from '../constants/connection-type'
   import { mapGetters } from 'vuex'
   import * as connections from '../constants/connection-info'
   import Btn from './Btn.vue'
@@ -110,6 +114,9 @@
       },
       is_dropbox() {
         return this.ctype == CONNECTION_TYPE_DROPBOX
+      },
+      is_google_drive() {
+        return this.ctype == CONNECTION_TYPE_GOOGLEDRIVE
       },
       is_stdout() {
         return this.ctype == CONNECTION_TYPE_STDOUT

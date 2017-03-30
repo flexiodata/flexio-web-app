@@ -119,6 +119,7 @@
         input.endEdit()
       },
       runPipe() {
+        this.setPipeView('builder')
         this.$emit('run-pipe')
       }
     }
