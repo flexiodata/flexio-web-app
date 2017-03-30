@@ -106,7 +106,7 @@
       },
       title() {
         var name = _.get(this.connection, 'name', '')
-        return name.length > 0 ? name : service_name
+        return name.length > 0 ? name : this.service_name
       },
       is_stdin() {
         return this.ctype == CONNECTION_TYPE_STDIN

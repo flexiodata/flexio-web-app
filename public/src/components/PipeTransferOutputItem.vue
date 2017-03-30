@@ -42,13 +42,20 @@
           </btn>
         </div>
       </div>
-      <div class="tl" v-else-if="is_google_sheets">
-        <div class="lh-copy mid-gray f6 mb3 i">Each file will be output to Google Sheets as a single sheet.</div>
-      </div>
       <div class="tl" v-else-if="is_amazon_s3">
         <div class="lh-copy mid-gray f6 mb3 i">
-          Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> bucket.
+          <span v-if="connection.database.length == 0">There's an error in the configuration of this connection. A bucket must be specified in order to output files to Amazon S3.</span>
+          <span v-else>Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> bucket.</span>
         </div>
+      </div>
+      <div class="tl" v-else-if="is_mysql || is_postgres">
+        <div class="lh-copy mid-gray f6 mb3 i">
+          <span v-if="connection.host.length == 0 || connection.database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files to {{service_name}}.</span>
+          <span v-else>Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> database on <span class="b black fs-normal">{{connection.host}}</span>.</span>
+        </div>
+      </div>
+      <div class="tl" v-else-if="is_google_sheets">
+        <div class="lh-copy mid-gray f6 mb3 i">Each file will be output to Google Sheets as a single sheet.</div>
       </div>
       <div class="tl" v-else-if="is_stdout">
         <div class="lh-copy mid-gray f6 mb3 i">Output files from the command line.</div>
@@ -76,6 +83,8 @@
     CONNECTION_TYPE_DROPBOX,
     CONNECTION_TYPE_GOOGLEDRIVE,
     CONNECTION_TYPE_GOOGLESHEETS,
+    CONNECTION_TYPE_MYSQL,
+    CONNECTION_TYPE_POSTGRES,
     CONNECTION_TYPE_STDOUT
   } from '../constants/connection-type'
   import { mapGetters } from 'vuex'
@@ -124,7 +133,7 @@
       },
       title() {
         var name = _.get(this.connection, 'name', '')
-        return name.length > 0 ? name : service_name
+        return name.length > 0 ? name : this.service_name
       },
       is_amazon_s3() {
         return this.ctype == CONNECTION_TYPE_AMAZONS3
@@ -137,6 +146,12 @@
       },
       is_google_sheets() {
         return this.ctype == CONNECTION_TYPE_GOOGLESHEETS
+      },
+      is_mysql() {
+        return this.ctype == CONNECTION_TYPE_MYSQL
+      },
+      is_postgres() {
+        return this.ctype == CONNECTION_TYPE_POSTGRES
       },
       is_stdout() {
         return this.ctype == CONNECTION_TYPE_STDOUT
