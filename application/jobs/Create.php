@@ -93,6 +93,7 @@ class Create extends \Flexio\Jobs\Base
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
             'structure' => $structure
         );
+
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
         $this->getOutput()->push($outstream);
 

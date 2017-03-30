@@ -24,6 +24,17 @@ class Collection
         $this->initialize();
     }
 
+    public function __toString()
+    {
+        $items = array();
+        foreach ($this->objects as $o)
+        {
+            $items[] = array('eid' => $o->getEid(), 'eid_type' => $o->getType());
+        }
+
+        return json_encode($items);
+    }
+
     public static function create()
     {
         return (new static);

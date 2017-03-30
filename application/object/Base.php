@@ -57,6 +57,15 @@ class Base implements IObject
         $this->setType(\Model::TYPE_UNDEFINED);
     }
 
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
+    }
+
     public static function create(array $properties = null) : \Flexio\Object\Base
     {
         $object = new static();
