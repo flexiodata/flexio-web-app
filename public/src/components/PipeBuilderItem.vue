@@ -40,7 +40,7 @@
           <command-bar2
             ref="commandbar"
             class="mt2 bg-white"
-            :orig-json="edit_json"
+            :orig-json="task"
             @change="updateEditTask"
             @cancel="cancelEdit"
             @save="saveEdit"
