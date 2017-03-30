@@ -57,7 +57,7 @@
           </div>
         </transition>
         <pipe-content
-          class="mt2 mb3 relative bg-white"
+          class="mv2 relative bg-white"
           style="height: 300px"
           :stream-eid="active_stream_eid"
           :task-json="task"
