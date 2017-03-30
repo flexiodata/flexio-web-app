@@ -132,6 +132,26 @@ const SOCRATA = {
   service_description: 'Open data portal for government data'
 }
 
+const STDIN = {
+  is_service: false,
+  is_input: true,
+  is_output: false,
+  connection_type: types.CONNECTION_TYPE_STDIN,
+  icon: require('../assets/icon/icon-console-128.png'),
+  service_name: 'Stdin',
+  service_description: 'Standard In'
+}
+
+const STDOUT = {
+  is_service: false,
+  is_input: false,
+  is_output: true,
+  connection_type: types.CONNECTION_TYPE_STDOUT,
+  icon: require('../assets/icon/icon-console-128.png'),
+  service_name: 'Stdout',
+  service_description: 'Standard Out'
+}
+
 const PIPELINEDEALS = {
   is_service: true,
   is_input: true,
@@ -154,11 +174,13 @@ const UPLOAD = {
 
 /* exports */
 
+// go out of alphabetical order here so the order is correct in the pipe add modal
+export const CONNECTION_INFO_STDIN         = STDIN
+export const CONNECTION_INFO_STDOUT        = STDOUT
+// export const CONNECTION_INFO_UPLOAD        = UPLOAD
+//export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
 export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BLANK_PIPE    = BLANK_PIPE
-// go out of alphabetical order here so the order is correct in the pipe add modal
-// export const CONNECTION_INFO_UPLOAD        = UPLOAD
-export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS  = GOOGLESHEETS

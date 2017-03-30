@@ -22,9 +22,9 @@
         <connection-icon :type="ctype" class="flex-none dib v-top br2 fx-square-4" style="max-height: 3rem"></connection-icon>
         <div class="flex-fill flex flex-column ml2">
           <div class="mid-gray f4 fw6">{{service_name}}</div>
-          <div class="mid-gray f6 fw4 mt2">{{service_description}}</div>
+          <div class="mid-gray f6 fw4 mt1">{{service_description}}</div>
         </div>
-        <div class="mid-gray" v-if="mode != 'edit'">
+        <div class="mid-gray" v-if="showSteps && mode != 'edit'">
           <i class="material-icons fw6 v-mid">chevron_left</i>
           <div
             class="dib f5 fw6 underline-hover pointer v-mid"
@@ -118,6 +118,7 @@
   import ServiceList from './ServiceList.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
+  import validation from './mixins/validation'
   import oauthPopup from './mixins/oauth-popup'
 
   const DEFAULT_ATTRS = {
@@ -129,8 +130,17 @@
   }
 
   export default {
-    props: ['open-from', 'close-to', 'project-eid'],
-    mixins: [oauthPopup],
+    props: {
+      'project-eid': {
+        default: '',
+        type: String
+      },
+      'show-steps': {
+        default: true,
+        type: Boolean
+      }
+    },
+    mixins: [validation, oauthPopup],
     components: {
       Btn,
       ServiceList,
@@ -138,7 +148,15 @@
       ConnectionConfigurePanel
     },
     watch: {
-      'connection.ename': function(val, old_val) { this.validate() }
+      'connection.ename': function(val, old_val) {
+        var ename = val
+
+        this.validateEname(val, (response, errors) => {
+          this.ss_errors = ename.length > 0 && _.size(errors) > 0
+            ? _.assign({}, errors)
+            : _.assign({})
+        })
+      }
     },
     data() {
       return {
@@ -221,9 +239,15 @@
           if (!success)
             return
 
-          this.validate(() => {
+          var ename = _.get(this.connection, 'ename', '')
+
+          this.validateEname(ename, (response, errors) => {
+            this.ss_errors = ename.length > 0 && _.size(errors) > 0
+              ? _.assign({}, errors)
+              : _.assign({})
+
             if (this.ename_error.length == 0)
-              this.$emit('submit', this.connection, this)
+              this.$nextTick(() => { this.$emit('submit', this.connection, this) })
           })
         })
       },
@@ -236,23 +260,6 @@
         this.reset()
         this.is_open = false
       },
-      validate: _.debounce(function(callback) {
-        var validate_attrs = [{
-          key: 'ename',
-          value: _.get(this.connection, 'ename', ''),
-          type: 'ename'
-        }]
-
-        api.validate({ attrs: validate_attrs }).then((response) => {
-          var errors = _.keyBy(response.body, 'key')
-          this.ss_errors = _.get(this.connection, 'ename', '').length > 0 && _.size(errors) > 0 ? _.assign({}, errors) : _.assign({})
-
-          if (_.isFunction(callback))
-            callback()
-        }, (response) => {
-          // error callback
-        })
-      }, 300),
       createPendingConnection(item) {
         var me = this
         var attrs = _.extend({}, this.connection, {

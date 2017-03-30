@@ -142,6 +142,9 @@ class Execute extends \Flexio\Jobs\Base
         $done_writing = false;
         $first_chunk = true;
         $chunk = '';
+        
+        //$tot = 0;
+        //$totw = 0;
 
         do
         {
@@ -188,20 +191,19 @@ class Execute extends \Flexio\Jobs\Base
                     //fxdebug("\n\n\n\nStream Reader: ".$s."***");
 
                     if ($buf === false)
-                        break;
-
-                    $len = strlen($buf);
-
-                    if ($len > 0)
-                        $process->write($buf);
-
-                    //fxdebug("Write Done\n");
-
-                    if ($len != 1024)
                     {
                         $process->closeWrite();
                         $done_writing = true;
-                        //fxdebug("Closed Writing\n");
+                        //fxdebug("Closed Writing; Total Written: $totw");
+                    }
+                     else
+                    {
+                        $len = strlen($buf);
+
+                        if ($len > 0)
+                            $process->write($buf);
+                        
+                        //$totw += $len;
                     }
                 }
             }
@@ -238,7 +240,7 @@ class Execute extends \Flexio\Jobs\Base
                         $first_chunk = false;
                     }
 
-                   // var_dump($chunk);
+                    // var_dump($chunk);
 
                     //ob_start();
                     //var_dump($chunk);
@@ -246,6 +248,7 @@ class Execute extends \Flexio\Jobs\Base
                     //fxdebug("From process: ".$s."***\n\n\n\n");
 
                     //fxdebug("Writing " . strlen($chunk) . " bytes\n");
+                    //$tot += strlen($chunk);
 
                     $streamwriter->write($chunk);
                     $chunk = '';
@@ -263,11 +266,12 @@ class Execute extends \Flexio\Jobs\Base
             $chunk = $process->read(1024);
             if (strlen($chunk) == 0)
                 break;
-            //fxdebug("Writing2  " . strlen($chunk) . " bytes\n");
-
+            //fxdebug("Writing (after process ended)  " . strlen($chunk) . " bytes\n");
+            //$tot += strlen($chunk);
             $streamwriter->write($chunk);
         }
 
+        //fxdebug("Total bytes written: " . $tot);
 
         $err = $process->getError();
        // var_dump($err);

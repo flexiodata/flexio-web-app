@@ -2,8 +2,7 @@
   <div class="flex flex-row items-stretch relative">
     <div class="flex-fill">
       <textarea type="text"
-        class="input-reset border-box w-100 h-100 bn outline-0 m0 pa2 f6 code"
-        style="resize: none"
+        class="input-reset border-box w-100 h-100 bn outline-0 m0 pa2 f6 code resize-none"
         placeholder="Type a command..."
         spellcheck="false"
         v-model.trim="cmd_text"

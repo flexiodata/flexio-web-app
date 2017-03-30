@@ -4,6 +4,7 @@
       v-for="(service, index) in services"
       :item="service"
       :index="index"
+      :layout="itemLayout"
       @activate="onItemActivate"
     >
     </service-item>
@@ -15,7 +16,7 @@
   import ServiceItem from './ServiceItem.vue'
 
   export default {
-    props: ['list-type'],
+    props: ['list-type', 'item-layout'],
     components: {
       ServiceItem
     },
