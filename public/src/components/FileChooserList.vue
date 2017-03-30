@@ -55,6 +55,7 @@
     data() {
       return {
         is_fetching: false,
+        is_inited: false,
         last_selected_item: {},
         items: []
       }
@@ -137,7 +138,6 @@
         }
       },
       refreshList() {
-        var me = this
         var path = _.defaultTo(this.path, '/')
         var eid = _.get(this.connection, 'eid', '')
 
@@ -153,13 +153,16 @@
             .value()
 
           // only show folders
-          if (me.foldersOnly)
+          if (this.foldersOnly)
             items = _.filter(items, (item) => { return _.get(item, 'is_dir') === true })
 
-          me.items = [].concat(items)
-          me.is_fetching = false
+          this.items = [].concat(items)
+          this.is_fetching = false
 
-          me.fireSelectionChangeEvent()
+          if (this.is_inited)
+            this.fireSelectionChangeEvent()
+
+          this.is_inited = true
         }, response => {
           console.log(response)
         })
