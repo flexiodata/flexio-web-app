@@ -131,6 +131,10 @@
         this.$refs['dialog'].close()
       },
       submit() {
+        var url_list = this.$refs['url-input-list']
+        if (!_.isNil(url_list))
+          url_list.finishEdit()
+
         this.$emit('submit', this.items, this)
       },
       reset(attrs) {
