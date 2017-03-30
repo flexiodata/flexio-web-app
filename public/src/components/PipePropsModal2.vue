@@ -184,7 +184,7 @@
               : _.assign({})
 
             if (this.ename_error.length == 0)
-              this.$nextTick(() => { this.$emit('submit', _.assign({}, pipe), this) })
+              this.$nextTick(() => { this.$emit('submit', this.pipe, this) })
           })
         })
       },
