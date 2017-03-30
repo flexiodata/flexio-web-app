@@ -309,7 +309,7 @@ class Structure
     public function get() : array
     {
         // return the structure "as is"
-        return $this->getColumns(false);
+        return $this->getColumns();
     }
 
     public function enum(array $columns = null) : array
