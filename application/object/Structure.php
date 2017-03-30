@@ -61,7 +61,7 @@ class Structure
             $columns = json_decode($columns, true);
 
         if (!isset($columns))
-            $column = array();
+            $columns = array();
 
         if (!is_array($columns))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
