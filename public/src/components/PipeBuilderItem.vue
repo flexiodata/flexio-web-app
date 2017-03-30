@@ -37,7 +37,7 @@
           ref="commandbar"
           class="mv2"
           :orig-json="task"
-          :task-json="task"
+          @change="updateEditTask"
           @cancel="cancelEdit"
           @save="saveEdit"
         ></command-bar2>
@@ -49,6 +49,11 @@
           @change="updateCode"
           v-if="is_task_execute"
         ></code-editor>
+        <div class="flex flex-row mv2" v-show="is_changed">
+          <div class="flex-fill">&nbsp;</div>
+          <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
+          <btn btn-sm class="b ttu white bg-blue" @click="saveEdit">Save Changes</btn>
+        </div>
         <pipe-content
           class="mt2 mb3 relative bg-white"
           style="height: 300px"
@@ -71,6 +76,7 @@
   import * as types from '../constants/task-type'
   import { TASK_TYPE_EXECUTE } from '../constants/task-type'
   import parser from '../utils/parser'
+  import Btn from './Btn.vue'
   import CodeEditor from './CodeEditor.vue'
   import CommandBar2 from './CommandBar2.vue'
   import InlineEditText from './InlineEditText.vue'
@@ -81,41 +87,64 @@
     props: ['item', 'index', 'pipe-eid', 'active-process', 'project-connections'],
     mixins: [taskItemHelper],
     components: {
+      Btn,
       CodeEditor,
       CommandBar2,
       InlineEditText,
       PipeContent
     },
     watch: {
-      'item'(val, old_val) {
+      item: function(val, old_val) {
+        this.edit_json = this.getOrigJson()
+        this.edit_command = this.getParserCommand()
         this.execute_code = this.getReadableCode()
       }
     },
     data() {
       return {
         description: this.getDescription(),
-        command: this.getParserCommand(),
+        edit_json: this.getOrigJson(),
+        edit_command: this.getParserCommand(),
         execute_code: this.getReadableCode()
       }
     },
     computed: {
-      task() { return this.item },
-      eid() { return _.get(this, 'task.eid', '') },
-      task_type() { return _.get(this, 'task.type', '') },
-      is_task_execute() { return this.task_type == TASK_TYPE_EXECUTE },
-      insert_tooltip() { return 'Insert a new step after step ' + (this.index+1) },
+      task() {
+        return this.item
+      },
+      eid() {
+        return _.get(this, 'task.eid', '')
+      },
+      task_type() {
+        return _.get(this, 'task.type', '')
+      },
+      is_task_execute() {
+        return this.task_type == TASK_TYPE_EXECUTE
+      },
+      orig_command() {
+        var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
+        var end_idx = cmd_text.indexOf(' code:')
 
+        if (this.is_task_execute && end_idx != -1)
+          return cmd_text.substring(0, end_idx)
+           else
+          return cmd_text
+      },
+      orig_code() {
+        var code = _.get(this, 'task.params.code', '')
+        try { return atob(code) } catch(e) { return '' }
+      },
+      is_changed() {
+        return this.is_task_execute && this.orig_code != this.execute_code
+          ? true : this.orig_command != this.edit_command
+          ? true : false
+      },
+      insert_tooltip() {
+        return 'Insert a new step after step ' + (this.index+1)
+      },
       execute_lang() {
         return _.get(this, 'task.params.lang', 'python')
       },
-
-      process_task_id() {
-        var process_eid = _.get(this.activeProcess, 'eid', '')
-        if (process_eid.length == 0)
-          return ''
-        return process_eid + '--' + this.eid
-      },
-
       // find the active subprocess by finding this task eid in the subprocess array
       active_subprocess() {
         return _
@@ -124,7 +153,6 @@
           .find((s) => { return _.get(s, 'task.eid') == this.eid })
           .value()
       },
-
       our_inputs() {
         var inputs = _.get(this.active_subprocess, 'output', [])
 
@@ -135,21 +163,15 @@
         // ...otherwise, use the output array from the active subprocess
         return inputs
       },
-
-      input_columns()  {
-        return this.getOurInputColumns()
-      },
-
-      output_columns() {
-        return this.getOurOutputColumns()
-      },
-
       active_stream_eid() {
         var stream = _.head(this.our_inputs)
         return _.get(stream, 'eid', '')
       }
     },
     methods: {
+      getOrigJson() {
+        return _.get(this, 'item', {})
+      },
       getDescription() {
         return _.get(this, 'item.description', '')
       },
@@ -163,27 +185,12 @@
       getBase64Code(code) {
         try { return btoa(code) } catch(e) { return '' }
       },
-      getOurInputColumns() {
-        var columns = _.get(this.$store, 'state.objects.'+this.process_task_id+'.input_columns', [])
-
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(columns)
-          .sortBy([ function(c) { return c.name } ])
-          .reverse()
-          .value()
+      updateEditTask(cmd_text, cmd_json) {
+        this.edit_command = cmd_text
+        this.edit_json = cmd_json
       },
-      getOurOutputColumns() {
-        var columns = _.get(this.$store, 'state.objects.'+this.process_task_id+'.output_columns', [])
-
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(columns)
-          .sortBy([ function(c) { return c.name } ])
-          .reverse()
-          .value()
+      updateCode(code) {
+        this.execute_code = code
       },
       editTaskSingleton(attrs, input) {
         var eid = this.pipeEid
@@ -202,17 +209,14 @@
         if (!_.isNil(code_editor))
           code_editor.setValue(this.execute_code)
       },
-      saveEdit(attrs) {
-        var edit_attrs = _.pick(attrs, ['metadata', 'type', 'params'])
+      saveEdit() {
+        var edit_attrs = _.pick(this.edit_json, ['metadata', 'type', 'params'])
 
         // sync up the changes from the code editor if we're on an execute step
         if (this.is_task_execute)
           _.set(edit_attrs, 'params.code', this.getBase64Code(this.execute_code))
 
         this.editTaskSingleton(edit_attrs)
-      },
-      updateCode(code) {
-        this.execute_code = code
       },
       insertNewTask() {
         this.$emit('insert-task', this.index+1)
