@@ -73,7 +73,7 @@
       }
     },
     watch: {
-      val(val, old_val) {
+      val: function(val, old_val) {
         this.edit_val = val
       }
     },

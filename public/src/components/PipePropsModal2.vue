@@ -108,7 +108,13 @@
       UrlInputList
     },
     watch: {
-      'pipe.ename': function(val, old_val) { this.validate() }
+      'pipe.ename': function(val, old_val) {
+        var ename = val
+
+        this.validate(val, (response, errors) => {
+          this.ss_errors = ename.length > 0 && _.size(errors) > 0 ? _.assign({}, errors) : _.assign({})
+        })
+      }
     },
     data() {
       return {
@@ -168,8 +174,11 @@
             return
 
           var pipe = _.assign({}, this.pipe)
+          var ename = _.get(this.pipe, 'ename', '')
 
-          this.validate(() => {
+          this.validate(ename, (response, errors) => {
+            this.ss_errors = ename.length > 0 && _.size(errors) > 0 ? _.assign({}, errors) : _.assign({})
+
             if (this.ename_error.length == 0)
               this.$nextTick(() => { this.$emit('submit', _.omit(pipe, ['mode']), this) })
           })
@@ -183,19 +192,14 @@
       onHide() {
         this.reset()
       },
-      validate: _.debounce(function(callback) {
-        var validate_attrs = [{
-          key: 'ename',
-          value: _.get(this.pipe, 'ename', ''),
-          type: 'ename'
-        }]
+      validate: _.debounce(function(ename, callback) {
+        var validate_attrs = [{ key: 'ename', value: ename, type: 'ename' }]
 
         api.validate({ attrs: validate_attrs }).then((response) => {
           var errors = _.keyBy(response.body, 'key')
-          this.ss_errors = _.get(this.pipe, 'ename', '').length > 0 && _.size(errors) > 0 ? _.assign({}, errors) : _.assign({})
 
           if (_.isFunction(callback))
-            callback()
+            callback(response, errors)
         }, (response) => {
           // error callback
         })
