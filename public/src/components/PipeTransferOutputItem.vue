@@ -45,6 +45,11 @@
       <div class="tl" v-else-if="is_google_sheets">
         <div class="lh-copy mid-gray f6 mb3 i">Each file will be output to Google Sheets as a single sheet.</div>
       </div>
+      <div class="tl" v-else-if="is_amazon_s3">
+        <div class="lh-copy mid-gray f6 mb3 i">
+          Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> bucket.
+        </div>
+      </div>
       <div class="tl" v-else-if="is_stdout">
         <div class="lh-copy mid-gray f6 mb3 i">Output files from the command line.</div>
         <div class="pv1 ph2 bg-black-05">
@@ -67,6 +72,7 @@
 
 <script>
   import {
+    CONNECTION_TYPE_AMAZONS3,
     CONNECTION_TYPE_DROPBOX,
     CONNECTION_TYPE_GOOGLEDRIVE,
     CONNECTION_TYPE_GOOGLESHEETS,
@@ -115,6 +121,9 @@
         return _.get(this.$store, 'state.objects.'+connection_eid, {
           connection_type: this.ctype
         })
+      },
+      is_amazon_s3() {
+        return this.ctype == CONNECTION_TYPE_AMAZONS3
       },
       is_dropbox() {
         return this.ctype == CONNECTION_TYPE_DROPBOX
