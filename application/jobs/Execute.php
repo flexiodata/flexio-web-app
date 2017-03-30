@@ -156,6 +156,7 @@ class Execute extends \Flexio\Jobs\Base
                 {
                     // write data
 
+                    $rowcnt = 0;
                     $row = $streamreader->readRow();
                     if ($row)
                     {
@@ -220,7 +221,7 @@ class Execute extends \Flexio\Jobs\Base
                         $content_type = 'application/octet-stream';
 
                         $end = strpos($chunk, "\r\n\r\n");
-                        
+
                         if ($chunk[0] == '{' && $end !== false)
                         {
                             $header = @json_decode(substr($chunk, 0, $end), true);
@@ -251,7 +252,7 @@ class Execute extends \Flexio\Jobs\Base
                     $streamwriter->write($chunk);
                     $chunk = '';
                 }
-                
+
             }
 
 
