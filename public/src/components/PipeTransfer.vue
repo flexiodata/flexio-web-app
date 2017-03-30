@@ -9,7 +9,7 @@
           <button
             type="button"
             class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
-            aria-label="Add another connection"
+            aria-label="Add another input"
             @click="show_input_chooser = true"
             v-if="allow_multiple_inputs && !show_input_chooser"
           >
@@ -18,7 +18,7 @@
           <button
             type="button"
             class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
-            aria-label="Cancel add connection"
+            aria-label="Cancel add input"
             @click="show_input_chooser = false"
             v-if="allow_multiple_inputs && show_input_chooser"
           >
@@ -50,7 +50,7 @@
           <button
             type="button"
             class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
-            aria-label="Add another connection"
+            aria-label="Add another output"
             @click="show_output_chooser = true"
             v-if="allow_multiple_outputs && !show_output_chooser"
           >
@@ -59,7 +59,7 @@
           <button
             type="button"
             class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
-            aria-label="Cancel add connection"
+            aria-label="Cancel add output"
             @click="show_output_chooser = false"
             v-if="allow_multiple_outputs && show_output_chooser"
           >
@@ -72,7 +72,7 @@
         class="flex-fill"
         :tasks="output_tasks"
         @output-delete="deleteOutput"
-        v-if="has_output"
+        v-if="has_output && !show_output_chooser"
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
         class="flex-fill overflow-y-auto"
