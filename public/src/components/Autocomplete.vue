@@ -3,8 +3,7 @@
     <textarea
       title
       ref="textarea"
-      class="awesomeplete"
-      style="resize: none; overflow-y: auto"
+      class="awesomeplete resize-none overflow-y-auto"
       spellcheck="false"
       data-multiple
       :placeholder="placeholder"
@@ -24,7 +23,7 @@
 <script>
   import * as connections from '../constants/connection-info'
   import Awesomplete from './experimental/Awesomplete2'
-  import tahelper from './experimental/textarea-helper.js'
+  import autosize from 'autosize'
   import parser from '../utils/parser'
 
   /*
@@ -84,20 +83,28 @@
   }
 
   export default {
-    props: ['val', 'placeholder', 'input-class', 'connections', 'columns'],
+    props: {
+      'val': {},
+      'placeholder': {},
+      'input-class': {},
+      'connections': {},
+      'columns': {},
+      'autosize': { default: true }
+    },
     watch: {
       val(val, old_val) {
         this.text = val
       },
       text(val, old_val) {
-        this.checkTextareaHeight()
+        this.updateTextareaHeight()
         this.$emit('change', this.text)
       }
     },
     data() {
       return {
         text: this.val,
-        dropdown_open: false
+        dropdown_open: false,
+        autosize_initialized: false
       }
     },
     mounted() {
@@ -107,7 +114,11 @@
         this.ta = this.$refs['textarea']
         this.ta.setAttribute('rows', '1')
 
-        tahelper.init(this.ta)
+        if (this.autosize)
+        {
+          autosize(this.ta)
+          this.autosize_initialized = true
+        }
 
         this.ac = new Awesomplete(this.ta, {
           list: [],
@@ -146,7 +157,9 @@
       })
     },
     beforeDestroy() {
-      tahelper.destroy()
+      if (this.autosize_initialized)
+        autosize.destroy(this.ta)
+
       this.ta.removeEventListener('awesomplete-open', this.onDropdownOpen)
       this.ta.removeEventListener('awesomplete-close', this.onDropdownClose)
     },
@@ -154,17 +167,11 @@
       focus() {
         this.ta.focus()
       },
-      // debounce for now -- we need to find out if this is the true problem
-      checkTextareaHeight: _.debounce(
-        function() {
-          var h = tahelper.getComputedHeight()
-          var old_h = this.ta.offsetHeight
-
-          if (h != old_h)
-            this.ta.style.height = h+'px'
-        },
-        200
-      ),
+      // debounce for now -- this function is slow in FF...
+      updateTextareaHeight: _.debounce(function() {
+        if (this.autosize_initialized)
+          autosize.update(this.ta)
+      }, 200),
       showDropdown() {
         if (_.isNil(this.ac))
           return
@@ -190,6 +197,7 @@
         if (_.isNil(this.ac))
           return
 
+        /*
         var caret_idx = tahelper.getCaretIndex()
 
         this.hint = parser.getHints(this.text, caret_idx, {
@@ -240,6 +248,7 @@
           this.ac.ul.style.top = (pos.top + 20)+'px'
           this.ac.ul.style.left = (pos.left)+'px'
         }
+        */
 
         // show the dropdown
         if (!this.dropdown_open)

@@ -6,6 +6,9 @@
         <span class="ml2 f7">Loading...</span>
       </div>
     </div>
+    <div class="pa1 f7 i" v-else-if="items.length == 0">
+      This folder is either empty or does not exist
+    </div>
     <table v-else class="f6 w-100">
       <tbody class="lh-copy f6">
         <file-chooser-item
@@ -34,13 +37,15 @@
       'path': {},
       'folders-only': {
         default: false,
-        type: Boolean,
-        required: false
+        type: Boolean
       },
       'allow-multiple': {
         default: true,
-        type: Boolean,
-        required: false
+        type: Boolean
+      },
+      'allow-folders': {
+        default: true,
+        type: Boolean
       }
     },
     components: {
@@ -50,6 +55,7 @@
     data() {
       return {
         is_fetching: false,
+        is_inited: false,
         last_selected_item: {},
         items: []
       }
@@ -61,9 +67,11 @@
     },
     computed: {
       selected_items() {
-        return this.allowMultiple
+        var items = this.allowMultiple
           ? _.filter(this.items, { is_selected: true })
           : this.last_selected_item
+
+        return this.allowFolders ? items : _.reject(items, { is_dir: true })
       }
     },
     mounted() {
@@ -84,6 +92,8 @@
         _.each(this.items, (f) => { f.is_selected = false })
         this.last_selected_item = item
         item.is_selected = true
+
+        this.$emit('item-click', item)
 
         this.fireSelectionChangeEvent()
       },
@@ -124,10 +134,12 @@
       },
       itemDblClick(item) {
         if (_.get(item, 'is_dir') === true)
+        {
           this.$emit('open-folder', _.defaultTo(item.path, '/'))
+          this.last_selected_item = null
+        }
       },
       refreshList() {
-        var me = this
         var path = _.defaultTo(this.path, '/')
         var eid = _.get(this.connection, 'eid', '')
 
@@ -143,13 +155,16 @@
             .value()
 
           // only show folders
-          if (me.foldersOnly)
+          if (this.foldersOnly)
             items = _.filter(items, (item) => { return _.get(item, 'is_dir') === true })
 
-          me.items = [].concat(items)
-          me.is_fetching = false
+          this.items = [].concat(items)
+          this.is_fetching = false
 
-          me.fireSelectionChangeEvent()
+          if (this.is_inited)
+            this.fireSelectionChangeEvent()
+
+          this.is_inited = true
         }, response => {
           console.log(response)
         })

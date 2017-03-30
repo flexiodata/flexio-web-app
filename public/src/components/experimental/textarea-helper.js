@@ -1,4 +1,6 @@
 
+// NOTE: don't use this file (for now) as it doesn't scope properly when used on multiple textareas on the same page
+
 var mirror_el = null
 var char_el = null
 
@@ -129,7 +131,11 @@ export default {
 
   destroy: function() {
     clearMirrorEl()
-    document.body.removeChild(mirror_el)
+
+    // this check here doesn't really solve the issue where the parent node
+    // of the mirror elements after the first one are null
+    if (mirror_el.parentNode)
+      document.body.removeChild(mirror_el)
   },
 
   getCharCoordinates: function(char_idx) {

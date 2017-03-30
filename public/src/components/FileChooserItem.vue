@@ -28,6 +28,11 @@
 
   export default {
     props: ['item'],
+    data() {
+      return {
+        double_click: false
+      }
+    },
     computed: {
       cls() {
         return this.item.is_selected ? 'bg-black-10' : 'bg-white'
@@ -44,7 +49,9 @@
     },
     methods: {
       onClick(evt) {
-        this.$emit('click', this.item, evt)
+        if (!this.double_click)
+          this.$emit('click', this.item, evt)
+        this.double_click = false
       },
       onCtrlClick(evt) {
         this.$emit('ctrl-click', this.item, evt)
@@ -53,6 +60,7 @@
         this.$emit('shift-click', this.item, evt)
       },
       onDblClick() {
+        this.double_click = true
         this.$emit('dblclick', this.item)
       }
     }

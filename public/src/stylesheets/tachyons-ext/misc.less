@@ -20,9 +20,14 @@
 
 // -- selection --
 
-.no-select {
-  user-select: none;
-}
+.no-select { user-select: none; }
+
+// -- resize (textarea) --
+
+.resize-horizontal { resize: horizontal; }
+.resize-vertical { resize: vertical; }
+.resize-both { resize: both; }
+.resize-none { resize: none; }
 
 // -- cursors --
 
@@ -47,6 +52,26 @@
 
 .darken-10:active {
   box-shadow: inset 9999px 9999px rgba(0,0,0,0.20)
+}
+
+// -- inverse hide --
+
+.swap-child .child {
+  display: inherit;
+}
+.swap-child:hover  .child,
+.swap-child:focus  .child,
+.swap-child:active .child {
+  display: none;
+}
+
+.swap-child .other-child {
+  display: none;
+}
+.swap-child:hover  .other-child,
+.swap-child:focus  .other-child,
+.swap-child:active .other-child {
+  display: inherit;
 }
 
 // -- focus styles --

@@ -3,8 +3,7 @@
     <div class="flex-fill flex flex-row items-stretch relative">
       <textarea
         ref="textarea"
-        class="input-reset border-box w-100 h-100 bn outline-0 m0 p0 f6 code"
-        style="resize: none"
+        class="input-reset border-box w-100 h-100 bn outline-0 m0 p0 f6 code resize-none"
         placeholder="Code goes here"
         spellcheck="false"
         v-model.trim="code_text"
@@ -25,6 +24,10 @@
       },
       'lang': {
         default: 'python'
+      },
+      'options': {
+        type: Object,
+        default: () => { return {} }
       }
     },
     data() {
@@ -38,11 +41,12 @@
     },
     mounted() {
       var me = this
-
-      this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], {
+      var opts = _.assign({
         lineNumbers: true,
         mode: this.lang
-      })
+      }, this.options)
+
+      this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
       this.editor.focus()
 
       this.editor.on('change', function(cm) {
@@ -52,6 +56,7 @@
     },
     methods: {
       setValue(val) {
+        this.code_text = val
         this.editor.setValue(val)
       }
     }

@@ -1,7 +1,11 @@
 <template>
-  <article class="pv2 ph3">
-    <p class="f5 fw6 mid-gray">{{title}}</p>
-    <ui-progress-linear></ui-progress-linear>
+  <article>
+    <div class="mb2 f6 fw6 mid-gray">{{title}}</div>
+    <ui-progress-linear
+      :type="type"
+      :progress="pct"
+      v-show="is_running || is_completed"
+    ></ui-progress-linear>
   </article>
 </template>
 
@@ -59,7 +63,17 @@
 
         return s
       },
-      icon() {
+      is_running() {
+        return _.get(this.item, 'process_status') == process.PROCESS_STATUS_RUNNING
+      },
+      is_completed() {
+        return _.get(this.item, 'process_status') == process.PROCESS_STATUS_COMPLETED
+      },
+      type() {
+        return this.is_running ? 'indeterminate' : 'determinate'
+      },
+      pct() {
+        return this.is_completed ? 100 : 0
       }
     }
   }

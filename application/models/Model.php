@@ -85,6 +85,8 @@ class Model
     const CONNECTION_TYPE_AMAZONS3      = 'amazons3.api';
     const CONNECTION_TYPE_UPLOAD        = 'upload.api';
     const CONNECTION_TYPE_DOWNLOAD      = 'download.api';
+    const CONNECTION_TYPE_STDIN         = 'stdin.api';
+    const CONNECTION_TYPE_STDOUT        = 'stdout.api';
     const CONNECTION_TYPE_HTTP          = 'http.api';
     const CONNECTION_TYPE_RSS           = 'rss.api';
     const CONNECTION_TYPE_SOCRATA       = 'socrata.api';

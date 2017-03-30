@@ -126,7 +126,7 @@
             :project-eid="projectEid"
             :connection-type="ctype"
             :show-add="true"
-            :mode="connection_list_mode"
+            :list-type="connection_list_mode"
             :show-blank-pipe="mode == 'create-pipe'"
             @add="addConnection"
             @item-activate="setConnection"
@@ -186,7 +186,7 @@
   }
 
   export default {
-    props: ['open-from', 'close-to', 'project-eid'],
+    props: ['project-eid'],
     components: {
       Btn,
       ConnectionIcon,

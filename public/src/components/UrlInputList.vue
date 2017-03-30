@@ -53,6 +53,9 @@
       focus() {
         this.$refs['input'].focus()
       },
+      reset() {
+        this.items = [].concat([])
+      },
       clearInput() {
         this.url_str = ''
       },
