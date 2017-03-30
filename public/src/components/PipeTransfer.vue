@@ -126,6 +126,7 @@
 
 <script>
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import { CONNECTION_TYPE_DROPBOX, CONNECTION_TYPE_GOOGLEDRIVE } from '../constants/connection-type'
   import Btn from './Btn.vue'
   import PipeTransferInputList from './PipeTransferInputList.vue'
   import PipeTransferInputChooser from './PipeTransferInputChooser.vue'
@@ -213,10 +214,12 @@
         var conn_identifier = _.get(connection, 'ename', '')
         conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(connection, 'eid', '')
 
+        var ctype = _.get(connection, 'connection_type', '')
+
         var eid = this.pipeEid
         var attrs = {
           metadata: {
-            connection_type: _.get(connection, 'connection_type', '')
+            connection_type: ctype
           },
           type: TASK_TYPE_OUTPUT,
           params: {}
@@ -224,6 +227,10 @@
 
         if (conn_identifier.length > 0)
           _.set(attrs, 'params.connection', conn_identifier)
+
+        // add default output location for connections that need this
+        if (ctype == CONNECTION_TYPE_DROPBOX || ctype == CONNECTION_TYPE_GOOGLEDRIVE)
+          _.set(attrs, 'params.location', '/')
 
         // add output task
         this.$store.dispatch('createPipeTask', { eid, attrs })

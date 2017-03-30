@@ -25,8 +25,23 @@
         ></ui-menu>
       </ui-popover>
     </div>
-    <div class="ma3 tc">
-      <div class="tl" v-if="is_stdout">
+    <div class="ma3">
+      <div class="tl" v-if="is_dropbox">
+        <div class="lh-copy mid-gray f6 mb2">Files will be output to the following folder:</div>
+        <div class="flex flex-row items-center">
+          <div class="flex-fill f6 mr2 pa2 ba b--black-10 black">
+            <span class="i" v-if="location == '/'">{{friendly_location}}</span>
+            <span v-else>{{location}}</span>
+          </div>
+          <btn
+            btn-md
+            btn-primary
+          >
+            <span class="ttu b">Change folder</span>
+          </btn>
+        </div>
+      </div>
+      <div class="tl" v-else-if="is_stdout">
         <div class="lh-copy mid-gray f6 mb3 i">Output files from the command line.</div>
         <div class="pv1 ph2 bg-black-05">
           <code class="f6">flexio pipes run pipe-name > output.txt</code>
@@ -37,24 +52,36 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_STDOUT } from '../constants/connection-type'
+  import { CONNECTION_TYPE_DROPBOX, CONNECTION_TYPE_STDOUT } from '../constants/connection-type'
+  import { mapGetters } from 'vuex'
   import * as connections from '../constants/connection-info'
+  import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
 
   export default {
-    props: ['item', 'connection-type'],
+    props: ['item'],
     components: {
+      Btn,
       ConnectionIcon
     },
     computed: {
+      service_name() {
+        return _.result(this, 'cinfo.service_name', '')
+      },
       ctype() {
         return _.get(this.item, 'metadata.connection_type', '')
       },
-      items() {
-        return _.get(this.item, 'params.items', '')
+      conn_identifier() {
+        return _.get(this.item, 'params.connection', '')
       },
-      service_name() {
-        return _.result(this, 'cinfo.service_name', '')
+      location() {
+        return _.get(this.item, 'params.location', '')
+      },
+      friendly_location() {
+        return '<' + this.service_name + ' ' + 'root folder' + '>'
+      },
+      is_dropbox() {
+        return this.ctype == CONNECTION_TYPE_DROPBOX
       },
       is_stdout() {
         return this.ctype == CONNECTION_TYPE_STDOUT
@@ -68,8 +95,21 @@
       }
     },
     methods: {
+      ...mapGetters([
+        'getAllConnections'
+      ]),
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
+      },
+      getOurConnection() {
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        return _
+          .chain(this.getAllConnections())
+          .filter((p) => {
+            return _.get(p, 'eid') == this.conn_identifier || _.get(p, 'ename') == this.conn_identifier
+          })
+          .value()
       },
       onMenuItemClick(menu_item) {
         switch (menu_item.id)
