@@ -19,6 +19,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
         // TODO: add tests for merging of structures where there are slight differences
         // in fieldnames cause by capitalization; equality rules used for matching should
         // follow the same rules as used for looking up a field (e.g. if fieldnames are not
@@ -38,45 +42,90 @@ class Test
         // TEST: Structure::union(); non-array input
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::union(null);
-        $expected = false;
-        TestCheck::assertBoolean('B.1', 'Structure::union(); if a non-array input is specified, return false',  $actual, $expected, $results);
+        $actual = \Flexio\Object\Structure::union(null)->get();
+        $expected = array();
+        TestCheck::assertArray('B.1', 'Structure::union(); if no input is specified, create an empty structure',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::union(false);
-        $expected = false;
-        TestCheck::assertBoolean('B.2', 'Structure::union(); if a non-array input is specified, return false',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Object\Structure::union(false);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.2', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::union(true);
-        $expected = false;
-        TestCheck::assertBoolean('B.3', 'Structure::union(); if a non-array input is specified, return false',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Object\Structure::union(true);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.3', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::union(1);
-        $expected = false;
-        TestCheck::assertBoolean('B.4', 'Structure::union(); if a non-array input is specified, return false',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Object\Structure::union(1);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.4', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::union('a');
-        $expected = false;
-        TestCheck::assertBoolean('B.5', 'Structure::union(); if a non-array input is specified, return false',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Object\Structure::union('a');
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.5', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::union(new \stdClass());
-        $expected = false;
-        TestCheck::assertBoolean('B.6', 'Structure::union(); if a non-array input is specified, return false',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Object\Structure::union(new \stdClass());
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.6', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
 
 
         // TEST: Structure::union(); single structure input
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1))->get();
         $expected = '
         [
@@ -90,16 +139,16 @@ class Test
         // TEST: Structure::union(); multiple structure input
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field2", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -110,16 +159,16 @@ class Test
         TestCheck::assertInArray('D.1', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -129,21 +178,21 @@ class Test
         TestCheck::assertInArray('D.2', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field2", "type":"text"}
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field3", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -155,21 +204,21 @@ class Test
         TestCheck::assertInArray('D.3', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field3", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -180,21 +229,21 @@ class Test
         TestCheck::assertInArray('D.4', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field2", "type":"text"}
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field2", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -205,21 +254,21 @@ class Test
         TestCheck::assertInArray('D.4', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field2", "type":"text"}
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -230,22 +279,22 @@ class Test
         TestCheck::assertInArray('D.4', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field2", "type":"text"},
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field2", "type":"text"}
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -256,24 +305,24 @@ class Test
         TestCheck::assertInArray('D.5', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"FIELD2", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"Field1", "type":"text"},
             {"name":"Field2", "type":"text"}
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"FIELD1", "type":"text"},
             {"name":"field2", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -284,24 +333,24 @@ class Test
         TestCheck::assertInArray('D.6', 'Structure::union(); merge fields that only differ by case',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"    field2", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1    ", "type":"text"},
             {"name":"field2    ", "type":"text"}
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"    field1", "type":"text"},
             {"name":"field2    ", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -316,25 +365,25 @@ class Test
         // TEST: Structure::union(); insert columns in output starting with most common structures
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field3", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"},
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -346,25 +395,25 @@ class Test
         TestCheck::assertInArray('E.1', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field2", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"},
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -376,25 +425,25 @@ class Test
         TestCheck::assertInArray('E.2', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"},
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -406,26 +455,26 @@ class Test
         TestCheck::assertInArray('E.3', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field3", "type":"text"},
             {"name":"field2", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"},
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -437,26 +486,26 @@ class Test
         TestCheck::assertInArray('E.4', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field3", "type":"text"},
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"},
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -468,26 +517,26 @@ class Test
         TestCheck::assertInArray('E.5', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field2", "type":"text"},
             {"name":"field1", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"},
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -500,28 +549,28 @@ class Test
 
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field2", "type":"text"},
             {"name":"field3", "type":"text"},
             {"name":"field4", "type":"text"},
             {"name":"field5", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field3", "type":"text"},
             {"name":"field4", "type":"text"}
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field3", "type":"text"},
             {"name":"field4", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -535,7 +584,7 @@ class Test
         TestCheck::assertInArray('E.7', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field0", "type":"text"},
             {"name":"field1", "type":"text"},
@@ -544,21 +593,21 @@ class Test
             {"name":"field4", "type":"text"},
             {"name":"field5", "type":"text"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field3", "type":"text"},
             {"name":"field4", "type":"text"}
         ]
-        ';
-        $column_info3 = '
+        ',true);
+        $column_info3 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field3", "type":"text"},
             {"name":"field4", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
@@ -577,7 +626,7 @@ class Test
         // TEST: Structure::union(); compatible type conversion
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"character"},
@@ -589,8 +638,8 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"text"},
@@ -602,7 +651,7 @@ class Test
             {"name":"field8", "type":"text"},
             {"name":"field9", "type":"text"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -620,7 +669,7 @@ class Test
         TestCheck::assertInArray('F.1', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"character"},
@@ -632,8 +681,8 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"character"},
             {"name":"field2", "type":"character"},
@@ -645,7 +694,7 @@ class Test
             {"name":"field8", "type":"character"},
             {"name":"field9", "type":"character"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -663,7 +712,7 @@ class Test
         TestCheck::assertInArray('F.2', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"character"},
@@ -675,8 +724,8 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"widecharacter"},
             {"name":"field2", "type":"widecharacter"},
@@ -688,7 +737,7 @@ class Test
             {"name":"field8", "type":"widecharacter"},
             {"name":"field9", "type":"widecharacter"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -706,7 +755,7 @@ class Test
         TestCheck::assertInArray('F.3', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"character"},
@@ -718,8 +767,8 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"numeric"},
             {"name":"field2", "type":"numeric"},
@@ -731,7 +780,7 @@ class Test
             {"name":"field8", "type":"numeric"},
             {"name":"field9", "type":"numeric"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -749,7 +798,7 @@ class Test
         TestCheck::assertInArray('F.4', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"character"},
@@ -761,8 +810,8 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"double"},
             {"name":"field2", "type":"double"},
@@ -774,7 +823,7 @@ class Test
             {"name":"field8", "type":"double"},
             {"name":"field9", "type":"double"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -792,7 +841,7 @@ class Test
         TestCheck::assertInArray('F.5', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"character"},
@@ -804,8 +853,8 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"integer"},
             {"name":"field2", "type":"integer"},
@@ -817,7 +866,7 @@ class Test
             {"name":"field8", "type":"integer"},
             {"name":"field9", "type":"integer"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -835,7 +884,7 @@ class Test
         TestCheck::assertInArray('F.6', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"character"},
@@ -847,8 +896,8 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"date"},
             {"name":"field2", "type":"date"},
@@ -860,7 +909,7 @@ class Test
             {"name":"field8", "type":"date"},
             {"name":"field9", "type":"date"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -878,7 +927,7 @@ class Test
         TestCheck::assertInArray('F.7', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"character"},
@@ -890,8 +939,8 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"datetime"},
             {"name":"field2", "type":"datetime"},
@@ -903,7 +952,7 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"datetime"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -922,7 +971,7 @@ class Test
 
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"text"},
             {"name":"field2", "type":"character"},
@@ -934,8 +983,8 @@ class Test
             {"name":"field8", "type":"datetime"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"boolean"},
             {"name":"field2", "type":"boolean"},
@@ -947,7 +996,7 @@ class Test
             {"name":"field8", "type":"boolean"},
             {"name":"field9", "type":"boolean"}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -969,18 +1018,18 @@ class Test
         // TEST: Structure::union(); largest width conversion
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"character", "width": 20},
             {"name":"field2", "type":"character", "width": 30}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"character", "width": 10},
             {"name":"field2", "type":"character", "width": 40}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -991,18 +1040,18 @@ class Test
         TestCheck::assertInArray('G.1', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"widecharacter", "width": 20},
             {"name":"field2", "type":"widecharacter", "width": 30}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"widecharacter", "width": 10},
             {"name":"field2", "type":"widecharacter", "width": 40}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -1013,18 +1062,18 @@ class Test
         TestCheck::assertInArray('G.2', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"numeric", "width": 8},
             {"name":"field2", "type":"numeric", "width": 10}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"numeric", "width": 4},
             {"name":"field2", "type":"numeric", "width": 12}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
@@ -1039,18 +1088,18 @@ class Test
         // TEST: Structure::union(); largest scale conversion
 
         // BEGIN TEST
-        $column_info1 = '
+        $column_info1 = json_decode('
         [
             {"name":"field1", "type":"numeric", "width": 10, "scale": 2},
             {"name":"field2", "type":"numeric", "width": 10, "scale": 4}
         ]
-        ';
-        $column_info2 = '
+        ',true);
+        $column_info2 = json_decode('
         [
             {"name":"field1", "type":"numeric", "width": 10, "scale": 6},
             {"name":"field2", "type":"numeric", "width": 10, "scale": 3}
         ]
-        ';
+        ',true);
         $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [

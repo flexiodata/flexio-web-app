@@ -19,6 +19,9 @@ class Test
 {
     public function run(&$results)
     {
+        $model = TestUtil::getModel();
+
+
         // BEGIN TEST
         $task = json_decode('
         [{
@@ -34,11 +37,6 @@ class Test
         }]
         ';
         TestCheck::assertInArray('A.2', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results);
-
-
-
-
-return;
 
 
 

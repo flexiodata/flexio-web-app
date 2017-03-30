@@ -27,10 +27,18 @@ class Test
         // TEST: store object creation
 
         // BEGIN TEST
-        $object = \Flexio\Object\Store::create(false, null);
-        $actual = $object;
-        $expected = false;
-        TestCheck::assertBoolean('A.1', 'Store::create(); return false if an object fails to create',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object = \Flexio\Object\Store::create(false, null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Exception $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', 'Store::create(); return false if an object fails to create',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Store::create(\Model::TYPE_OBJECT, null);

@@ -19,6 +19,9 @@ class Test
 {
     public function run(&$results)
     {
+        $model = TestUtil::getModel();
+
+
         // TEST: Task::create(); task creation
 
         // BEGIN TEST

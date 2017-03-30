@@ -23,7 +23,6 @@ class Test
         $model = TestUtil::getModel();
 
 
-
         // TODO: handle commented out tests
 
         // TEST: Query::exec(); valid query with properties that are a subset of those available
