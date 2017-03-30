@@ -13,7 +13,11 @@
         </div>
       </div>
       <div class="flex-fill relative">
-        <div class="bl bw1 b--black-10 pl3 absolute" style="top: 46px; bottom: -5px; left: -37px"></div>
+        <div
+          class="bl bw1 b--black-10 pl3 absolute"
+          style="top: 46px; bottom: -5px; left: -37px"
+          v-show="!show_progress"
+         ></div>
         <div class="flex flex-row">
           <div class="f5 lh-title mr1">{{index+1}}.</div>
           <inline-edit-text
@@ -71,7 +75,7 @@
       </div>
     </div>
 
-    <div class="flex flex-row pl3 pr4 pl0-l pr5-l">
+    <div class="flex flex-row pl3 pr4 pl0-l pr5-l" v-show="!show_progress">
       <div class="pointer moon-gray hover-blue link hint--right" style="margin-left: 8px" :aria-label="insert_tooltip" @click="insertNewTask">
         <i class="db material-icons f3">add_circle</i>
       </div>
