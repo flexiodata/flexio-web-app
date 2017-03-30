@@ -93,6 +93,8 @@
         this.last_selected_item = item
         item.is_selected = true
 
+        this.$emit('item-click', item)
+
         this.fireSelectionChangeEvent()
       },
       itemCtrlClick(item, evt) {
