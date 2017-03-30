@@ -232,18 +232,16 @@ class Api
         }
         catch (\Exception $e)
         {
-            $file = $e->getFile();
-            $line = $e->getLine();
             $code = \Flexio\Base\Error::GENERAL;
-            $message = (IS_DEBUG() === false ? '' : "exception thrown in file $file on line $line");
+            $message = $e->getMessage();
+            $message = (IS_DEBUG() === false ? '' : "$message");
             return $request->getValidator()->fail($code, $message);
         }
         catch (\Error $e)
         {
-            $file = $e->getFile();
-            $line = $e->getLine();
             $code = \Flexio\Base\Error::GENERAL;
-            $message = (IS_DEBUG() === false ? '' : "error thrown in file $file on line $line");
+            $message = $e->getMessage();
+            $message = (IS_DEBUG() === false ? '' : "$message");
             return $request->getValidator()->fail($code, $message);
         }
     }
