@@ -138,7 +138,7 @@ const STDIN = {
   is_output: false,
   connection_type: types.CONNECTION_TYPE_STDIN,
   icon: require('../assets/icon/icon-console-128.png'),
-  service_name: 'StdIn',
+  service_name: 'Stdin',
   service_description: 'Standard In'
 }
 
@@ -148,7 +148,7 @@ const STDOUT = {
   is_output: true,
   connection_type: types.CONNECTION_TYPE_STDOUT,
   icon: require('../assets/icon/icon-console-128.png'),
-  service_name: 'StdOut',
+  service_name: 'Stdout',
   service_description: 'Standard Out'
 }
 
