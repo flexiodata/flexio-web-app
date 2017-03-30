@@ -176,7 +176,6 @@
           if (!success)
             return
 
-          var pipe = _.assign({}, this.pipe)
           var ename = _.get(this.pipe, 'ename', '')
 
           this.validateEname(ename, (response, errors) => {
