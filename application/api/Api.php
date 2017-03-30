@@ -227,21 +227,24 @@ class Api
             $file = $e->getFile();
             $line = $e->getLine();
             $code = $info['code'];
-            $message = $info['message'] . (IS_DEBUG() === false ? '' : "; exception thrown in file $file on line $line");
+            $trace = json_encode($e->getTrace());
+            $message = $info['message'] . (IS_DEBUG() === false ? '' : "; exception thrown in file $file on line $line; trace: $trace");
             return $request->getValidator()->fail($code, $message);
         }
         catch (\Exception $e)
         {
             $code = \Flexio\Base\Error::GENERAL;
+            $trace = json_encode($e->getTrace());
             $message = $e->getMessage();
-            $message = (IS_DEBUG() === false ? '' : "$message");
+            $message = (IS_DEBUG() === false ? '' : "$message; trace: $trace");
             return $request->getValidator()->fail($code, $message);
         }
         catch (\Error $e)
         {
             $code = \Flexio\Base\Error::GENERAL;
+            $trace = json_encode($e->getTrace());
             $message = $e->getMessage();
-            $message = (IS_DEBUG() === false ? '' : "$message");
+            $message = (IS_DEBUG() === false ? '' : "$message; trace: $trace");
             return $request->getValidator()->fail($code, $message);
         }
     }
