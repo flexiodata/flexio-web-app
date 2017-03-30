@@ -47,18 +47,12 @@ class Structure
         $this->initialize();
     }
 
-    public static function create($columns = null) : \Flexio\Object\Structure
+    public static function create(array $columns = null) : \Flexio\Object\Structure
     {
         // TODO: \Structure::union() allows Structure type input; allow
         // \Structure::create() to take structure input; in general, we may
         // want the create() classes of various objects to also allow a copy
         // constructor type syntax where the input can also be a class object
-
-        // allow a structure to be created from 1) an array of columns,
-        // 2) a json_string that represents an array of columns
-
-        if (is_string($columns))
-            $columns = json_decode($columns, true);
 
         if (!isset($columns))
             $columns = array();
@@ -77,7 +71,7 @@ class Structure
         return $object;
     }
 
-    public static function union(array $structures) : \Flexio\Object\Structure
+    public static function union(array $structures = null) : \Flexio\Object\Structure
     {
         // TODO: make sure that union of structures handles column names
         // that are equivalent, differing only by case (e.g. Field1 vs. field1;
@@ -88,6 +82,9 @@ class Structure
         // and diffs it with the next most commonly occurring structure recursively
         // until a final structure is obtained
 
+        if (!isset($structures))
+            return self::create();
+
         $structure_list = array();
 
         // count the different structure kinds
@@ -96,11 +93,8 @@ class Structure
             if (!($structure_item instanceof \Flexio\Object\Structure))
             {
                 // if we don't have a structure, we may have a list of columns
-                // or a string that represents columns; try to create a structure
-                // object from the input; if we can't, disregard the entry
+                // try to create a structure object from the input
                 $structure_item = self::create($structure_item);
-                if ($structure_item === false)
-                    continue;
             }
 
             $structure = $structure_item->enum();
@@ -132,7 +126,7 @@ class Structure
         return self::create($structure_output);
     }
 
-    public static function intersect(array $structures) : \Flexio\Object\Structure
+    public static function intersect(array $structures = null) : \Flexio\Object\Structure
     {
         // TODO: creates a structure that's the intersection of the specified structures
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
