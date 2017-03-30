@@ -607,7 +607,9 @@ class Transform extends \Flexio\Jobs\Base
 
     private static function getChangeTypeExpr($operation, $expr, $column, &$new_structure)
     {
-        $old_type = $column['type'];
+        $type = $column['type'];
+        $width = $column['width'] ?? -1;
+        $scale = $column['scale'] ?? -1;
         $new_type = $operation['type'] ?? self::COLUMN_TYPE_NONE;
 
         // make sure it's a valid type
@@ -628,15 +630,15 @@ class Transform extends \Flexio\Jobs\Base
 
         if ($new_type == self::COLUMN_TYPE_CHARACTER)
         {
-            if ($old_type == self::COLUMN_TYPE_DATE)
+            if ($type == self::COLUMN_TYPE_DATE)
             {
                 $new_width = 10; $width = $new_width;
             }
-            else if ($old_type == self::COLUMN_TYPE_DATETIME)
+            else if ($type == self::COLUMN_TYPE_DATETIME)
             {
                 $new_width = 20; $width = $new_width;
             }
-            else if ($old_type == self::COLUMN_TYPE_NUMERIC || $old_type == self::COLUMN_TYPE_DOUBLE)
+            else if ($type == self::COLUMN_TYPE_NUMERIC || $type == self::COLUMN_TYPE_DOUBLE)
             {
                 if ($width < 0)
                 {
@@ -647,11 +649,11 @@ class Transform extends \Flexio\Jobs\Base
                     $new_width = $width+2; $width = $new_width;
                 }
             }
-            else if ($old_type == self::COLUMN_TYPE_INTEGER)
+            else if ($type == self::COLUMN_TYPE_INTEGER)
             {
                 $new_width = 20; $width = $new_width;
             }
-            else if ($old_type == self::COLUMN_TYPE_BOOLEAN)
+            else if ($type == self::COLUMN_TYPE_BOOLEAN)
             {
                 $new_width = 5; $width = $new_width; // enough to hold "true"/"false"
             }
@@ -659,16 +661,17 @@ class Transform extends \Flexio\Jobs\Base
 
         if ($new_type == self::COLUMN_TYPE_NUMERIC)
         {
-            if ($old_type == self::COLUMN_TYPE_DATE)
+            if ($type == self::COLUMN_TYPE_DATE)
             {
                 $new_width = 8; $width = $new_width;
             }
-            else if ($old_type == self::COLUMN_TYPE_DATETIME)
+            else if ($type == self::COLUMN_TYPE_DATETIME)
             {
                 $new_width = 14; $width = $new_width;
             }
         }
 
+        $old_type = $type;
         $expr = self::getChangeTypeExprDetail($column['name'], $old_type, $new_type, $width, $scale, $new_structure);
         return $expr;
     }
