@@ -155,6 +155,7 @@ class Execute extends \Flexio\Jobs\Base
                 {
                     // write data
 
+                    $rowcnt = 0;
                     $row = $streamreader->readRow();
                     if ($row)
                     {
@@ -219,7 +220,7 @@ class Execute extends \Flexio\Jobs\Base
                         $content_type = 'application/octet-stream';
 
                         $end = strpos($chunk, "\r\n\r\n");
-                        
+
                         if ($chunk[0] == '{' && $end !== false)
                         {
                             $header = @json_decode(substr($chunk, 0, $end), true);
@@ -244,14 +245,28 @@ class Execute extends \Flexio\Jobs\Base
                     //$s = ob_get_clean();
                     //fxdebug("From process: ".$s."***\n\n\n\n");
 
+                    //fxdebug("Writing " . strlen($chunk) . " bytes\n");
+
                     $streamwriter->write($chunk);
                     $chunk = '';
                 }
-                
+
             }
 
 
         } while ($is_running);
+
+
+        // write any remaining data from process
+        while (true)
+        {
+            $chunk = $process->read(1024);
+            if (strlen($chunk) == 0)
+                break;
+            //fxdebug("Writing2  " . strlen($chunk) . " bytes\n");
+
+            $streamwriter->write($chunk);
+        }
 
 
         $err = $process->getError();
