@@ -3,8 +3,7 @@
     <textarea
       title
       ref="textarea"
-      class="awesomeplete"
-      style="resize: none; overflow-y: auto"
+      class="awesomeplete resize-none overflow-y-auto"
       spellcheck="false"
       data-multiple
       :placeholder="placeholder"

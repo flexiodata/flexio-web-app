@@ -1,24 +1,25 @@
 <template>
   <div>
     <textarea
-      class="w-100 pa1 ba b--black-10"
+      ref="textarea"
+      class="w-100 pa1 ba b--black-10 resize-none"
       autocomplete="off"
       rows="1"
       @keydown.esc="endEdit(false)"
       @keydown.enter="save"
       @blur="save"
       v-model="edit_val"
-      v-if="editing"
+      v-show="editing"
       v-focus
     ></textarea>
-    <div class="flex flex-row items-center hide-child hover-black" v-else>
-      <div @click="editing = true" v-if="edit_val.length > 0">{{edit_val}}</div>
-      <div :class="placeholderCls" @click="editing = true" v-else>{{placeholder}}</div>
+    <div class="flex flex-row items-center hide-child hover-black" v-if="!editing">
+      <div @click="startEdit" v-if="edit_val.length > 0">{{edit_val}}</div>
+      <div :class="placeholderCls" @click="startEdit" v-else>{{placeholder}}</div>
       <button
         class="ml1 pa0 br1 child"
         :class="editButtonTooltipCls"
         :aria-label="editButtonLabel"
-        @click="editing = true"
+        @click="startEdit"
         v-if="!editing && showEditButton"
       ><i class="db material-icons f6">edit</i>
       </button>
@@ -27,6 +28,8 @@
 </template>
 
 <script>
+  import autosize from 'autosize'
+
   export default {
     props: {
       'input-key': {
@@ -56,12 +59,17 @@
       'show-edit-button': {
         default: true,
         type: Boolean
+      },
+      'autosize': {
+        default: true,
+        type: Boolean
       }
     },
     data() {
       return {
         edit_val: this.val,
-        editing: false
+        editing: false,
+        autosize_initialized: false
       }
     },
     watch: {
@@ -69,9 +77,30 @@
         this.edit_val = val
       }
     },
+    mounted() {
+      if (this.autosize)
+      {
+        autosize(this.$refs['textarea'])
+        this.autosize_initialized = true
+      }
+    },
+    beforeDestroy() {
+      if (this.autosize_initialized)
+        autosize.destroy(this.$refs['textarea'])
+    },
     methods: {
       save() {
         this.$emit('save', { [this.inputKey]: this.edit_val }, this)
+      },
+      startEdit() {
+        this.editing = true
+
+        this.$nextTick(() => {
+          var ta = this.$refs['textarea']
+          if (this.autosize_initialized)
+            autosize.update(ta)
+          ta.focus()
+        })
       },
       endEdit(save) {
         if (save === false)

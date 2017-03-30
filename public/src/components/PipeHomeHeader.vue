@@ -5,6 +5,7 @@
         <inline-edit-text
           class="dib f3 lh-title v-mid dark-gray mb1 mb0-ns mr1-ns"
           input-key="name"
+
           :val="pipe_name"
           @save="editPipeSingleton">
         </inline-edit-text>
