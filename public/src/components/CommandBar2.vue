@@ -1,15 +1,17 @@
 <template>
-  <div @click="focus">
-    <autocomplete
-      ref="input"
-      class="flex-fill pv1 ph2 ba b--black-10"
-      placeholder="Type a command..."
-      input-class="db input-reset border-box outline-0 bn pv1 mh0 max-h3 f6 code w-100"
-      :val="cmd_text"
-      @change="onCommandChange"
-      @revert="onCommandRevert"
-      @save="onCommandSave"
-    ></autocomplete>
+  <div>
+    <div @click="focus">
+      <autocomplete
+        ref="input"
+        class="flex-fill pv1 ph2 ba b--black-10"
+        placeholder="Type a command..."
+        input-class="db input-reset border-box outline-0 bn pv1 mh0 max-h3 f6 code w-100"
+        :val="cmd_text"
+        @change="onCommandChange"
+        @revert="onCommandRevert"
+        @save="onCommandSave"
+      ></autocomplete>
+    </div>
   </div>
 </template>
 
