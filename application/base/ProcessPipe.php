@@ -43,7 +43,7 @@ class ProcessPipe
             return false;
         }
 
-        stream_set_blocking($this->pipes[0], 0);
+        //stream_set_blocking($this->pipes[0], 0);
         stream_set_blocking($this->pipes[1], 0);
 
         return true;
@@ -91,6 +91,7 @@ class ProcessPipe
     public function write($buf)
     {
         fwrite($this->pipes[0], $buf);
+        //fflush($this->pipes[0]);
     }
 
     public function read($size)
