@@ -20,7 +20,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $task = \Flexio\Object\Task::create('
+        $task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -40,7 +40,7 @@ class Test
                 }
             }
         ]
-        ')->get();
+        ',true);
 
 
 

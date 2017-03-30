@@ -20,7 +20,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $task = \Flexio\Object\Task::create('
+        $task = json_decode('
         [
             '.TestSample::getCreateSampleDataTask().',
             {
@@ -31,7 +31,7 @@ class Test
                 }
             }
         ]
-        ')->get();
+        ',true);
 
 
 

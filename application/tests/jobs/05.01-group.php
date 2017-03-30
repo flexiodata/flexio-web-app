@@ -21,9 +21,8 @@ class Test
     {
         // TODO: in output columns, check for existence of name, formula, and expression
 
-
         // SETUP
-        $task = \Flexio\Object\Task::create('
+        $task = json_decode('
         [
             '.TestSample::getCreateSampleDataTask().',
             {
@@ -34,7 +33,7 @@ class Test
                 }
             }
         ]
-        ')->get();
+        ',true);
 
 
 
@@ -115,7 +114,7 @@ class Test
         TestCheck::assertString('C.1', 'Group Job; make sure output fieldnames don\'t have internal storage restrictions',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [
             '.TestSample::getCreateSampleDataTask().',
             {
@@ -131,7 +130,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $params = [
             "group" => ["char_1a"],
             "columns" => [
@@ -149,7 +148,7 @@ class Test
         // TEST: Group Job; bad group parameters
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [
             '.TestSample::getCreateSampleDataTask().',
             {
@@ -164,7 +163,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $params = [
             "group" => [""],
             "columns" => [
@@ -193,7 +192,7 @@ class Test
         // TEST: Group Job; basic column renaming
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [
             '.TestSample::getCreateSampleDataTask().',
             {
@@ -211,7 +210,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $params = [
             "group" => ["char_1a","char_1b"],
             "columns" => [

@@ -21,9 +21,8 @@ class Test
     {
         // TODO: placeholder job to test basic functionality; fill out tests
 
-
         // SETUP
-        $task = \Flexio\Object\Task::create('
+        $task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -48,7 +47,8 @@ class Test
                 }
             }
         ]
-        ')->get();
+        ',true);
+
 
 
         // TEST: Select Job
