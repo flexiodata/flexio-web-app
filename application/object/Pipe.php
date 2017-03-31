@@ -98,7 +98,7 @@ class Pipe extends \Flexio\Object\Base
         return $local_properties['task'];
     }
 
-    public function addTaskStep(array $task_step, int $index) // TODO: add parameter types
+    public function addTaskStep(array $task_step, int $index = null) // TODO: add parameter types
     {
         // get the current task array
         $task_array = $this->getTask();
