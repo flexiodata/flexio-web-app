@@ -9,7 +9,8 @@
       :pipe-view="pipe_view"
       :process-running="is_process_running"
       @set-pipe-view="setPipeView"
-      @run-pipe="runPipe">
+      @run-pipe="runPipe"
+      @cancel-process="cancelProcess">
     </pipe-home-header>
 
     <pipe-transfer
@@ -109,6 +110,14 @@
         }
 
         this.$store.dispatch('createProcess', { attrs })
+      },
+
+      cancelProcess() {
+        if (this.is_process_running)
+        {
+          var eid = _.get(this.active_process, 'eid', '')
+          this.$store.dispatch('cancelProcess', { eid })
+        }
       },
 
       addInput(attrs, modal) {
