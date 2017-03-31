@@ -7,9 +7,8 @@
       <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Input</div>
     </pipe-transfer-input-blankslate>
 
-    <div class="blankslate mh5 mv4" v-if="tasks.length == 0">
-      <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Transform</div>
-      <div class="lh-copy mid-gray f6 mb3">There are no transformation steps in this pipe.</div>
+    <div class="blankslate mv4" v-if="tasks.length == 0">
+      <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
       <div class="mt3">
         <btn
           btn-md

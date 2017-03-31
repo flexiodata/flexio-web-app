@@ -86,8 +86,8 @@
     <div class="flex-none flex flex-column css-pipe-transfer-column-transform">
       <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
         <div class="flex flex-row items-center justify-center relative">
-          <div v-if="has_tasks">Transformations</div>
-          <div v-else>3. Add Transformations</div>
+          <div v-if="has_tasks">Processing Steps</div>
+          <div v-else>3. Add Processing Steps</div>
           <button
             type="button"
             class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
@@ -106,7 +106,7 @@
       ></pipe-transfer-transform-list>
       <div class="flex-fill" v-else>
         <div class="ma3">
-          <div class="lh-copy mid-gray f6 mb3 tl tc-m i">There are no transformation steps in this pipe. Transformation steps can be added in the builder view.</div>
+          <div class="lh-copy mid-gray f6 mb3 tl tc-m i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
           <div class="tc">
             <btn
               btn-md
@@ -114,7 +114,7 @@
               class="ttu b"
               @click="$emit('open-builder')"
             >
-              Switch to builder view
+              Switch to pipe builder
             </btn>
           </div>
         </div>
