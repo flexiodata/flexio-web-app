@@ -65,7 +65,6 @@
           </transition>
           <pipe-content
             class="mt2 relative"
-            style="height: 300px"
             :stream-eid="active_stream_eid"
             :task-json="task"
             v-if="active_stream_eid.length > 0"
