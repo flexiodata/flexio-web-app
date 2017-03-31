@@ -36,17 +36,17 @@
         @save="editPipeSingleton">
       </inline-edit-text>
     </div>
-    <div class="flex-none flex flex-column flex-row-ns items-center-ns">
+    <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
       <div
-        class="f6 fw6 blue pointer mr3-ns dn db-ns"
-        @click="setPipeView('builder')"
-        v-if="pipeView == 'transfer'"
-      >Use Builder View</div>
-      <div
-        class="f6 fw6 blue pointer mr3-ns dn db-ns"
+        class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
+        :class="[pipeView=='transfer'?'b--blue':'b--transparent']"
         @click="setPipeView('transfer')"
-        v-else
-      >Use Transfer View</div>
+      >Pipe Overview</div>
+      <div
+        class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
+        :class="[pipeView=='builder'?'b--blue':'b--transparent']"
+        @click="setPipeView('builder')"
+      >Pipe Builder</div>
       <btn
         btn-md
         btn-primary
@@ -67,15 +67,15 @@
         >Run</btn>
       </div>
       <div
-        class="f7 fw6 blue pointer mt2 db dn-ns"
-        @click="setPipeView('builder')"
-        v-if="pipeView == 'transfer'"
-      >Builder View</div>
-      <div
-        class="f7 fw6 blue pointer mt2 db dn-ns"
+        class="f7 fw6 dark-gray pointer mt2 db dn-ns bb bw1 ttu css-nav-text"
+        :class="[pipeView=='transfer'?'b--blue':'b--transparent']"
         @click="setPipeView('transfer')"
-        v-else
-      >Transfer View</div>
+      >Pipe Overview</div>
+      <div
+        class="f7 fw6 dark-gray pointer mt2 db dn-ns bb bw1 ttu css-nav-text"
+        :class="[pipeView=='builder'?'b--blue':'b--transparent']"
+        @click="setPipeView('builder')"
+      >Pipe Builder</div>
     </div>
   </div>
 </template>
@@ -125,3 +125,17 @@
     }
   }
 </script>
+
+<style lang="less">
+  @import "../stylesheets/variables.less";
+
+  .css-nav-text {
+    transition: border 0.3s ease-in-out;
+    padding: 2px;
+
+    &:hover,
+    &.css-nav-active {
+      border-bottom: 2px solid @blue;
+    }
+  }
+</style>
