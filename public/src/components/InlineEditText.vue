@@ -2,7 +2,7 @@
   <div>
     <textarea
       ref="textarea"
-      class="w-100 pa1 ba b--black-10 resize-none"
+      class="w-100 pa1 ba b--black-30 resize-none input-reset lh-title focus-outline-transparent"
       autocomplete="off"
       rows="1"
       @keydown.esc="endEdit(false)"
@@ -10,7 +10,7 @@
       @blur="save"
       v-model="edit_val"
       v-show="editing"
-      v-focus
+      v-deferred-focus
     ></textarea>
     <div class="flex flex-row items-center hide-child hover-black" v-if="!editing">
       <div @click="startEdit" v-if="edit_val.length > 0">{{edit_val}}</div>

@@ -4,7 +4,6 @@
       <div class="flex-none">
         <div
           class="pointer pa2 mr3 br1 white trans-wh tc relative swap-child"
-          style="margin-top: 1px"
           :class="[ bg_color ]"
           @click="deleteTask"
         >
@@ -12,7 +11,7 @@
           <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
       </div>
-      <div class="flex-fill relative">
+      <div class="flex-fill relative bg-black-05 pa3 pt2" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
         <div
           class="bl bw1 b--black-10 pl3 absolute"
           style="top: 46px; bottom: -5px; left: -37px"
@@ -43,7 +42,7 @@
         <div v-else>
           <command-bar2
             ref="commandbar"
-            class="mt2 bg-white"
+            class="mt2 ba b--black-20 bg-white"
             :orig-json="task"
             @change="updateEditTask"
             @cancel="cancelEdit"
@@ -51,21 +50,21 @@
           ></command-bar2>
           <code-editor
             ref="code"
-            class="mb2 bl br bb b--black-10 bg-white"
+            class="mb2 bl br bb b--black-20 bg-white"
             :val="execute_code"
             :lang="execute_lang"
             @change="updateCode"
             v-if="is_task_execute"
           ></code-editor>
           <transition name="slide-fade">
-            <div class="flex flex-row mv2" v-show="is_changed">
+            <div class="flex flex-row mt2" v-show="is_changed">
               <div class="flex-fill">&nbsp;</div>
               <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
               <btn btn-sm class="b ttu white bg-blue" @click="saveEdit">Save Changes</btn>
             </div>
           </transition>
           <pipe-content
-            class="mv2 relative bg-white"
+            class="mt2 relative"
             style="height: 300px"
             :stream-eid="active_stream_eid"
             :task-json="task"
@@ -108,14 +107,20 @@
       ProcessProgressItem
     },
     watch: {
-      item: function(val, old_val) {
-        this.edit_json = this.getOrigJson()
+      task: function(val, old_val) {
+        this.edit_json = _.assign({}, val)
         this.edit_command = this.getParserCommand()
         this.execute_code = this.getReadableCode()
       }
     },
     data() {
+      // somewhat hack-ish, but effective; this will keep the computed
+      // 'is_changed' property from being true until we've initialized
+      // our data
+      this.$nextTick(() => { this.is_inited = true })
+
       return {
+        is_inited: false,
         description: this.getDescription(),
         edit_json: this.getOrigJson(),
         edit_command: this.getParserCommand(),
@@ -124,7 +129,7 @@
     },
     computed: {
       task() {
-        return this.item
+        return _.get(this, 'item', {})
       },
       eid() {
         return _.get(this, 'task.eid', '')
@@ -138,18 +143,17 @@
       orig_command() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
         var end_idx = cmd_text.indexOf(' code:')
-
-        if (this.is_task_execute && end_idx != -1)
-          return cmd_text.substring(0, end_idx)
-           else
-          return cmd_text
+        return (this.is_task_execute && end_idx != -1) ? cmd_text.substring(0, end_idx) : cmd_text
       },
       orig_code() {
         var code = _.get(this, 'task.params.code', '')
         try { return atob(code) } catch(e) { return '' }
       },
       is_changed() {
-        return this.is_task_execute && this.orig_code != this.execute_code
+        if (!this.is_inited)
+          return false
+
+        return this.is_task_execute && (this.orig_code != this.execute_code)
           ? true : this.orig_command != this.edit_command
           ? true : false
       },
@@ -194,7 +198,9 @@
         return _.get(this, 'item.description', '')
       },
       getParserCommand() {
-        return _.defaultTo(parser.toCmdbar(this.task), '')
+        var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
+        var end_idx = cmd_text.indexOf(' code:')
+        return (this.is_task_execute && end_idx != -1) ? cmd_text.substring(0, end_idx) : cmd_text
       },
       getReadableCode() {
         var code = _.get(this, 'item.params.code', '')
@@ -205,7 +211,7 @@
       },
       updateEditTask(cmd_text, cmd_json) {
         this.edit_command = cmd_text
-        this.edit_json = cmd_json
+        this.edit_json = _.assign({}, cmd_json)
       },
       updateCode(code) {
         this.execute_code = code
@@ -220,8 +226,14 @@
           input.endEdit()
       },
       cancelEdit() {
-        this.edit_json = this.getOrigJson()
+        this.edit_json = _.assign({}, this.getOrigJson())
+        this.edit_command = this.getParserCommand()
         this.execute_code = this.getReadableCode()
+
+        // reset the command in the command bar
+        var cmd_bar = this.$refs['commandbar']
+        if (!_.isNil(cmd_bar))
+          cmd_bar.setCmdText(this.edit_command)
 
         // reset the code in the code editor
         var code_editor = this.$refs['code']
@@ -233,7 +245,15 @@
 
         // sync up the changes from the code editor if we're on an execute step
         if (this.is_task_execute)
+        {
+          // this is a hack-ish workaround for the fact that the PHP backend returns
+          // empty objects as empty arrays
+          var params = _.get(edit_attrs, 'params')
+          if (_.isArray(params) && params.length == 0)
+            edit_attrs.params = {}
+
           _.set(edit_attrs, 'params.code', this.getBase64Code(this.execute_code))
+        }
 
         this.editTaskSingleton(edit_attrs)
       },
