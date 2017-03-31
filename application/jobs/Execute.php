@@ -51,13 +51,12 @@ class Execute extends \Flexio\Jobs\Base
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
-        // if the input mime type is a table, set the output type to text
-        $is_table = false;
+        $is_input_table = false;
         if ($instream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-        {
-            $is_table = true;
-            $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
-        }
+            $is_input_table = true;
+
+        // by default, set output content type to text
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
 
         // properties
         $job_definition = $this->getProperties();
@@ -102,7 +101,8 @@ class Execute extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = null; // created below
+
 
         // the code is base64 encoded, so decode it and write it out
         // to a temporary file
@@ -116,7 +116,6 @@ class Execute extends \Flexio\Jobs\Base
 
         $env = array('PYTHONPATH' => dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'python_include');
 
-
         $process = new \Flexio\Base\ProcessPipe;
         if (!$process->exec($cmd, $cwd, $env))
         {
@@ -124,21 +123,19 @@ class Execute extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
 
-
         // first, write a json header record to the process, followed by \r\n\r\n
         $header = array(
             'name' => $instream->getName(),
             'size' => $instream->getSize(),
             'content_type' => $instream->getMimeType(),
-            'structure' => ($is_table ? $instream->getStructure() : null)
+            'structure' => ($is_input_table ? $instream->getStructure() : null)
         );
         $header_json = json_encode($header);
         $process->write($header_json . "\r\n\r\n");
 
 
-
-
-        $done_writing = false;
+        $done_writing = false; // "done writing input to process"
+        $done_reading = false; // "done reading result from process"
         $first_chunk = true;
         $chunk = '';
 
@@ -149,13 +146,12 @@ class Execute extends \Flexio\Jobs\Base
         {
             $is_running = $process->isRunning();
 
-            // write a chunk to the stdin
+            // read chunk of data from input stream and write it to the process
 
-            if (!$done_writing)
+            if ($is_running && !$done_writing)
             {
-                if ($is_table)
+                if ($is_input_table)
                 {
-                    // write data
 
                     $rowcnt = 0;
                     $row = $streamreader->readRow();
@@ -181,7 +177,6 @@ class Execute extends \Flexio\Jobs\Base
                 }
                  else
                 {
-
                     $buf = $streamreader->read(1024);
 
                     //ob_start();
@@ -209,16 +204,29 @@ class Execute extends \Flexio\Jobs\Base
 
 
 
-            if ($process->canRead())
+            if (!$done_reading)
             {
                 //fxdebug("Reading...\n");
-                $chunk .= $process->read(1024);
+                $readbuf = $process->read(1024);
 
-                if (strlen($chunk) > 0)
+                if ($readbuf === false)
+                    $done_reading = true;
+                     else
+                    $chunk .= $readbuf;
+
+                if (strlen($chunk) == 0)
+                {
+                    if (!$is_running)
+                    {
+                        $done_reading = true;
+                    }
+                }
+                 else
                 {
                     if ($first_chunk)
                     {
                         $content_type = 'application/octet-stream';
+                        $structure = null;
 
                         $end = strpos($chunk, "\r\n\r\n");
 
@@ -235,8 +243,24 @@ class Execute extends \Flexio\Jobs\Base
                             $chunk = substr($chunk, $end+4);
                         }
 
-                        $outstream->setMimeType($content_type);
+                        if ($content_type == \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+                        {
+                            if (!isset($structure))
+                            {
+                                return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, $err, __FILE__, __LINE__);
+                            }
+                            $outstream->setMimeType($content_type);
+                            $outstream->setStructure($structure);
+                        }
+                         else
+                        {
+                            $outstream->setMimeType($content_type);
+                        }
+
                         $first_chunk = false;
+                        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+                        if ($streamwriter === false)
+                            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
                     }
 
                     // var_dump($chunk);
@@ -255,10 +279,11 @@ class Execute extends \Flexio\Jobs\Base
 
             }
 
+            // fxdebug("Done writing to process? " . ($done_writing?"true":"false") . " Done reading from process? " . ($done_reading?"true":"false")."\n");
 
-        } while ($is_running);
+        } while (!$done_writing || !$done_reading);
 
-
+/*
         // write any remaining data from process
         while (true)
         {
@@ -269,6 +294,7 @@ class Execute extends \Flexio\Jobs\Base
             //$tot += strlen($chunk);
             $streamwriter->write($chunk);
         }
+*/
 
         //fxdebug("Total bytes written: " . $tot);
 

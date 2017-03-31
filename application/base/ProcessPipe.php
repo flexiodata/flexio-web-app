@@ -39,15 +39,14 @@ class ProcessPipe
         );
 
         $this->process = proc_open($cmd, $descriptor_spec, $this->pipes, $cwd, $env);
-
         if (!is_resource($this->process))
         {
             $this->process = null;
             return false;
         }
 
-        //stream_set_blocking($this->pipes[0], 0);
-        stream_set_blocking($this->pipes[1], 0);
+        //stream_set_blocking($this->pipes[0], false);
+        stream_set_blocking($this->pipes[1], false);
 
         return true;
     }
