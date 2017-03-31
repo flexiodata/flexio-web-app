@@ -116,14 +116,12 @@ class Execute extends \Flexio\Jobs\Base
 
         $env = array('PYTHONPATH' => dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'python_include');
 
-
         $process = new \Flexio\Base\ProcessPipe;
         if (!$process->exec($cmd, $cwd, $env))
         {
             @unlink($filename);
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
-
 
         // first, write a json header record to the process, followed by \r\n\r\n
         $header = array(
