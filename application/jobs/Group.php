@@ -79,7 +79,6 @@ class Group extends \Flexio\Jobs\Base
 
         $input_columns = $instream->getStructure()->enum();
 
-
         // build and save the initial output struture
         $output_columns = array();
         $used_field_names = [];
@@ -213,6 +212,10 @@ class Group extends \Flexio\Jobs\Base
         // build the output statement
         $where = \Flexio\Base\ExprTranslatorPostgres::translate($where, $input_columns);
         $having = \Flexio\Base\ExprTranslatorPostgres::translate($having, $output_columns);
+        if ($where === false)
+            $where = '';
+        if ($having === false)
+            $having = '';
 
         $sql = "CREATE TABLE " . $outstream->getPath() . " AS SELECT ";
         $sql .= " $column_expr ";
