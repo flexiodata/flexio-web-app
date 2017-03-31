@@ -138,18 +138,17 @@
       orig_command() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
         var end_idx = cmd_text.indexOf(' code:')
-
-        if (this.is_task_execute && end_idx != -1)
-          return cmd_text.substring(0, end_idx)
-           else
-          return cmd_text
+        return (this.is_task_execute && end_idx != -1) ? cmd_text.substring(0, end_idx) : cmd_text
       },
       orig_code() {
         var code = _.get(this, 'task.params.code', '')
         try { return atob(code) } catch(e) { return '' }
       },
       is_changed() {
-        return this.is_task_execute && this.orig_code != this.execute_code
+        if (!this.is_inited)
+          return false
+
+        return this.is_task_execute && (this.orig_code != this.execute_code)
           ? true : this.orig_command != this.edit_command
           ? true : false
       },
@@ -194,7 +193,9 @@
         return _.get(this, 'item.description', '')
       },
       getParserCommand() {
-        return _.defaultTo(parser.toCmdbar(this.task), '')
+        var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
+        var end_idx = cmd_text.indexOf(' code:')
+        return (this.is_task_execute && end_idx != -1) ? cmd_text.substring(0, end_idx) : cmd_text
       },
       getReadableCode() {
         var code = _.get(this, 'item.params.code', '')
