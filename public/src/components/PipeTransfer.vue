@@ -259,8 +259,8 @@
 
   @media @breakpoint-large {
     .css-pipe-transfer-column-transform {
-      width: 32%;
-      max-width: 420px;
+      width: 30%;
+      max-width: 400px;
     }
   }
 </style>

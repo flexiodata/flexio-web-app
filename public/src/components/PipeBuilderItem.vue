@@ -50,7 +50,7 @@
           ></command-bar2>
           <code-editor
             ref="code"
-            class="mb2 bl br bb b--black-20 bg-white"
+            class="mb2 bl br bb b--black-20 bg-white max-h5 overflow-y-auto"
             :val="execute_code"
             :lang="execute_lang"
             @change="updateCode"
