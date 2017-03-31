@@ -4,7 +4,6 @@
       <div class="flex-none">
         <div
           class="pointer pa2 mr3 br1 white trans-wh tc relative swap-child"
-          style="margin-top: 1px"
           :class="[ bg_color ]"
           @click="deleteTask"
         >
@@ -12,7 +11,7 @@
           <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
       </div>
-      <div class="flex-fill relative">
+      <div class="flex-fill relative bg-black-05 pa3 pt2" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
         <div
           class="bl bw1 b--black-10 pl3 absolute"
           style="top: 46px; bottom: -5px; left: -37px"
@@ -43,7 +42,7 @@
         <div v-else>
           <command-bar2
             ref="commandbar"
-            class="mt2 bg-white"
+            class="mt2 ba b--black-20 bg-white"
             :orig-json="task"
             @change="updateEditTask"
             @cancel="cancelEdit"
@@ -51,21 +50,21 @@
           ></command-bar2>
           <code-editor
             ref="code"
-            class="mb2 bl br bb b--black-10 bg-white"
+            class="mb2 bl br bb b--black-20 bg-white"
             :val="execute_code"
             :lang="execute_lang"
             @change="updateCode"
             v-if="is_task_execute"
           ></code-editor>
           <transition name="slide-fade">
-            <div class="flex flex-row mv2" v-show="is_changed">
+            <div class="flex flex-row mt2" v-show="is_changed">
               <div class="flex-fill">&nbsp;</div>
               <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
               <btn btn-sm class="b ttu white bg-blue" @click="saveEdit">Save Changes</btn>
             </div>
           </transition>
           <pipe-content
-            class="mv2 relative bg-white"
+            class="mt2 relative"
             style="height: 300px"
             :stream-eid="active_stream_eid"
             :task-json="task"

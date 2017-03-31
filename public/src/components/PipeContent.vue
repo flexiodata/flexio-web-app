@@ -2,16 +2,16 @@
   <div v-if="is_fetching">
     <spinner size="medium" show-text loading-text="Loading preview..."></spinner>
   </div>
-  <div v-else-if="is_image" class="tc ba b--black-10">
+  <div v-else-if="is_image">
     <img :stream-eid="streamEid" :src="stream_content_url" class="dib max-h-100">
   </div>
-  <div v-else-if="is_pdf" class="ba b--black-10 relative overflow-hidden">
+  <div v-else-if="is_pdf" class="bg-white relative overflow-hidden">
     <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
   </div>
-  <div v-else-if="is_json || is_text" class="ba b--black-10">
+  <div v-else-if="is_json || is_text" class="bg-white ba b--black-10">
     <stream-text :stream-eid="streamEid" :content-url="stream_content_url" :is-json="is_json"></stream-text>
   </div>
-  <div v-else-if="is_table" class="ba b--black-10">
+  <div v-else-if="is_table" class="bg-white ba b--black-10">
     <stream-grid :stream-eid="streamEid" :content-url="stream_content_url" :task-json="taskJson"></stream-grid>
   </div>
 </template>
