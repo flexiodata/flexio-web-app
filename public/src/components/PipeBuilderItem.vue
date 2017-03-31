@@ -108,8 +108,8 @@
       ProcessProgressItem
     },
     watch: {
-      item: function(val, old_val) {
-        this.edit_json = _.assign({}, this.getOrigJson())
+      task: function(val, old_val) {
+        this.edit_json = _.assign({}, val)
         this.edit_command = this.getParserCommand()
         this.execute_code = this.getReadableCode()
       }
@@ -124,7 +124,7 @@
     },
     computed: {
       task() {
-        return this.item
+        return _.get(this, 'item', {})
       },
       eid() {
         return _.get(this, 'task.eid', '')
@@ -239,7 +239,15 @@
 
         // sync up the changes from the code editor if we're on an execute step
         if (this.is_task_execute)
+        {
+          // this is a hack-ish workaround for the fact that the PHP backend returns
+          // empty objects as empty arrays
+          var params = _.get(edit_attrs, 'params')
+          if (_.isArray(params) && params.length == 0)
+            edit_attrs.params = {}
+
           _.set(edit_attrs, 'params.code', this.getBase64Code(this.execute_code))
+        }
 
         this.editTaskSingleton(edit_attrs)
       },
