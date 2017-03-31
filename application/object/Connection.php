@@ -29,7 +29,7 @@ class Connection extends \Flexio\Object\Base
     public static function getDatastoreConnectionEid()
     {
         $registry_model = \Flexio\Object\Store::getModel()->registry;
-        $connection_eid = $registry_model->getString('', self::PROCESS_DATASTORE_1, false);
+        $connection_eid = $registry_model->getString('', self::PROCESS_DATASTORE_1);
 
         if ($connection_eid === false)
             $connection_eid = self::createDatastoreConnection();
