@@ -85,7 +85,7 @@ class Output extends \Flexio\Jobs\Base
             return -1;
     }
 
-    private function resolveOutputItems($params)
+    private function resolveOutputItems(array $params)
     {
         // if the items parameter isn't an array, the format is invalid
         $items = $params['items'] ?? false;
@@ -129,8 +129,7 @@ class Output extends \Flexio\Jobs\Base
         return $resolved_items;
     }
 
-
-    private function getConnectionInfoFromItem($params, $item)
+    private function getConnectionInfoFromItem(array $params, array $item)
     {
         if (isset($item['path']))
         {
@@ -164,9 +163,7 @@ class Output extends \Flexio\Jobs\Base
         return null;
     }
 
-
-
-    private function getMatchingStreamPaths($item)
+    private function getMatchingStreamPaths(array $item) : array
     {
         $expanded_items = array();
 
@@ -196,7 +193,7 @@ class Output extends \Flexio\Jobs\Base
         return $expanded_items;
     }
 
-    private function runExport($params, $connection_info, $file_info)
+    private function runExport(array $params, array $connection_info, array $file_info)
     {
         // STEP 1: make sure we have a destination connection and path
         if (!isset($connection_info['connection_type']))
@@ -263,12 +260,12 @@ class Output extends \Flexio\Jobs\Base
         }
     }
 
-    private function runDownloadExport($instream, $service, $output_info)
+    private function runDownloadExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
     {
         // note: don't do anything; the output stream was already passed on
     }
 
-    private function runDatabaseExport($instream, $service, $output_info)
+    private function runDatabaseExport(\Flexio\Object\Stream$instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -304,7 +301,7 @@ class Output extends \Flexio\Jobs\Base
         $inserter->finishInsert();
     }
 
-    private function runRemoteFileExport($instream, $service, $output_info)
+    private function runRemoteFileExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -318,7 +315,7 @@ class Output extends \Flexio\Jobs\Base
         });
     }
 
-    private function runGoogleSheetsExport($instream, $service, $output_info)
+    private function runGoogleSheetsExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -367,7 +364,7 @@ class Output extends \Flexio\Jobs\Base
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_NONE); // external table
     }
 
-    private function runMailJetExport($instream, $service, $output_info)
+    private function runMailJetExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -401,7 +398,7 @@ class Output extends \Flexio\Jobs\Base
         $service->close();
     }
 
-    private function createOutputStream($instream, $output_info)
+    private function createOutputStream(\Flexio\Object\Stream $instream, array $output_info) : \Flexio\Object\Stream
     {
         // copy the input properties to the output, overwriting the
         // connection_eid and path properties with the connection item info

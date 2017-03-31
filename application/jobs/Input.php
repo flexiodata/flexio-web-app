@@ -64,7 +64,7 @@ class Input extends \Flexio\Jobs\Base
         }
     }
 
-    private function resolveInputItems($params)
+    private function resolveInputItems(array $params)
     {
         // if the items parameter isn't an array, the format is invalid
         $items = $params['items'] ?? false;
@@ -96,7 +96,7 @@ class Input extends \Flexio\Jobs\Base
         return $resolved_items;
     }
 
-    private function runImport($connection_info, $file_info)
+    private function runImport(array $connection_info, array $file_info)
     {
         $connection_eid = $connection_info['eid'] ?? false;
         $connection_type = $connection_info['connection_type'] ?? false;
@@ -156,7 +156,7 @@ class Input extends \Flexio\Jobs\Base
         }
     }
 
-    private function runUpload($service, $file_info)
+    private function runUpload($service, array $file_info) // TODO: set paramater type
     {
         // the data is already uploaded, so simply pass on the data to
         // the output
@@ -165,7 +165,7 @@ class Input extends \Flexio\Jobs\Base
         $this->getOutput()->push($outstream);
     }
 
-    private function runDatabaseImport($service, $file_info)
+    private function runDatabaseImport($service, array $file_info) // TODO: set paramater type
     {
         // get the input
         $path = $file_info['path'];
@@ -202,7 +202,7 @@ class Input extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function runApiTableImport($service, $file_info)
+    private function runApiTableImport($service, array $file_info) // TODO: set paramater type
     {
         // get the input
         $path = $file_info['path'];
@@ -229,7 +229,7 @@ class Input extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function runRemoteFileImport($service, $file_info)
+    private function runRemoteFileImport($service, array $file_info) // TODO: set paramater type
     {
         // get the input
         $path = $file_info['path'];
@@ -277,7 +277,7 @@ class Input extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function runGoogleSheetsImport($service, $file_info)
+    private function runGoogleSheetsImport($service, array $file_info) // TODO: set paramater type
     {
         // get the input
         $path = $file_info['path'];
@@ -334,7 +334,7 @@ class Input extends \Flexio\Jobs\Base
         }
     }
 
-    private function createDatastoreStream($properties)
+    private function createDatastoreStream(array $properties) :  \Flexio\Object\Stream
     {
         // get a default connection and path
         $properties['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
@@ -347,7 +347,7 @@ class Input extends \Flexio\Jobs\Base
         return $stream;
     }
 
-    private function getConnectionInfoFromItem($params, $item)
+    private function getConnectionInfoFromItem(array $params, array $item)
     {
         if (!isset($item['path']))
             return null;
@@ -380,7 +380,7 @@ class Input extends \Flexio\Jobs\Base
         return null;
     }
 
-    private function getMatchingFileInfo($connection_info, $item)
+    private function getMatchingFileInfo(array $connection_info, array $item) : array
     {
         $matching_paths = array();
 
@@ -471,7 +471,7 @@ class Input extends \Flexio\Jobs\Base
         return $matching_paths;
     }
 
-    private static function getSpreadsheetColumnName($idx)
+    private static function getSpreadsheetColumnName(int $idx) : string
     {
         $n = $idx % 26;
         $ch = chr(ord('A') + $n);

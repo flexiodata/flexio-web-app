@@ -38,7 +38,7 @@ class CalcField extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutput($instream)
+    private function createOutput(\Flexio\Object\Stream $instream)
     {
         // get the job properties
         $job_definition = $this->getProperties();

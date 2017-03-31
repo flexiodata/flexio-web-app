@@ -38,7 +38,7 @@ class Group extends \Flexio\Jobs\Base
         }
     }
 
-    public function createOutputFromTable($instream)
+    public function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
@@ -63,7 +63,7 @@ class Group extends \Flexio\Jobs\Base
         $outstream->setStructure($output_columns);
     }
 
-    private static function prepareOutput($job_definition, $instream, &$outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Object\Stream $instream, \Flexio\Object\Stream &$outstream)
     {
         // properties
         if (!isset($job_definition['params']['columns']))
@@ -232,7 +232,7 @@ class Group extends \Flexio\Jobs\Base
         return $sql;
     }
 
-    private static function mergeColumnInfo($stream_columns, $store_columns)
+    private static function mergeColumnInfo(array $stream_columns, array $store_columns)
     {
         // take the name and the display name from the stream columns and merge
         // in the width and scale info from the columns in the storage table;

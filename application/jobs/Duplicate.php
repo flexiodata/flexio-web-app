@@ -38,7 +38,7 @@ class Duplicate extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTable($instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
@@ -55,7 +55,7 @@ class Duplicate extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }
 
-    private static function prepareOutput($job_definition, $instream, &$outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Object\Stream $instream, \Flexio\Object\Stream &$outstream)
     {
         $input_path = $instream->getPath();
         $output_path = $outstream->getPath();

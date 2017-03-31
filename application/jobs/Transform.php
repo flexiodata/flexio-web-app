@@ -123,7 +123,7 @@ class Transform extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTable($instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         $column_expression_map = $this->getTableExpressionMap($instream);
         if ($column_expression_map === false)
@@ -190,7 +190,7 @@ class Transform extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createOutputFromStream($instream)
+    private function createOutputFromStream(\Flexio\Object\Stream $instream)
     {
         $column_expression_map = $this->getStreamExpressionMap($instream);
         if ($column_expression_map === false)
@@ -235,7 +235,7 @@ class Transform extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getTableExpressionMap($instream)
+    private function getTableExpressionMap(\Flexio\Object\Stream $instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation
@@ -318,7 +318,7 @@ class Transform extends \Flexio\Jobs\Base
         return $column_expression_map;
     }
 
-    private function getStreamExpressionMap($instream)
+    private function getStreamExpressionMap(\Flexio\Object\Stream $instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation
@@ -389,7 +389,7 @@ class Transform extends \Flexio\Jobs\Base
         return $column_expression_map;
     }
 
-    private static function getChangeCaseExpr($operation, $expr)
+    private static function getChangeCaseExpr(array $operation, string $expr)
     {
         $new_case = $operation['case'] ?? self::CAPITALIZE_NONE;
 
@@ -408,7 +408,7 @@ class Transform extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function getSubstrExpr($operation, $expr)
+    private static function getSubstrExpr(array $operation, string $expr)
     {
         $location = $operation['location'] ?? self::SUBSTRING_LOCATION_NONE;
 
@@ -457,7 +457,7 @@ class Transform extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function getRemoveTextExpr($operation, $expr)
+    private static function getRemoveTextExpr(array $operation, string $expr)
     {
         $characters_regex = '';
 
@@ -557,7 +557,7 @@ class Transform extends \Flexio\Jobs\Base
         }
     }
 
-    private static function getTrimTextExpr($operation, $expr)
+    private static function getTrimTextExpr(array $operation, string $expr)
     {
         $location = $operation['location'] ?? '';
 
@@ -573,7 +573,7 @@ class Transform extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function getPadTextExpr($operation, $expr, $columns)
+    private static function getPadTextExpr(array $operation, string $expr, array $columns)
     {
         $location = $operation['location'] ?? '';
         $length = $operation['length'] ?? 0;
@@ -605,7 +605,7 @@ class Transform extends \Flexio\Jobs\Base
         return $new_expr;
     }
 
-    private static function getChangeTypeExpr($operation, $expr, $column, &$new_structure)
+    private static function getChangeTypeExpr(array $operation, string $expr, array $column, array &$new_structure)
     {
         $type = $column['type'];
         $width = $column['width'] ?? -1;
@@ -676,7 +676,7 @@ class Transform extends \Flexio\Jobs\Base
         return $expr;
     }
 
-    private static function getChangeTypeExprDetail($name, $old_type, $new_type, $new_width, $new_scale, &$new_structure)
+    private static function getChangeTypeExprDetail(string $name, string $old_type, string $new_type, $new_width, $new_scale, &$new_structure) // TODO: add parameter types
     {
         $width = $new_width;
         $scale = $new_scale;

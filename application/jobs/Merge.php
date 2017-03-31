@@ -106,7 +106,7 @@ class Merge extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function determineStructure()
+    private function determineStructure() : array
     {
         // this function finds out a "superset" structure from a list
         // of inputs that can be safely appended to

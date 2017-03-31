@@ -100,7 +100,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTableInput($instream, $output_mime_type)
+    private function createOutputFromTableInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
         $outstream = \Flexio\Object\Stream::create();
         $outstream->setName($instream->getName());
@@ -135,7 +135,7 @@ class Convert extends \Flexio\Jobs\Base
     }
 
 
-    private function createOutputFromPdfInput($instream, $output_mime_type)
+    private function createOutputFromPdfInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
         if (!isset($GLOBALS['pdfparser_included']))
         {
@@ -183,7 +183,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createOutputFromJsonInput($instream, $output_mime_type)
+    private function createOutputFromJsonInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
         // input/output
         $outstream = $instream->copy();
@@ -217,7 +217,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createOutputFromCsvInput($instream, $output_mime_type)
+    private function createOutputFromCsvInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
         // parameters
         $job_definition = $this->getProperties();
@@ -445,57 +445,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function indexOfWithQuoting($haystack, $needle, $qualifier)
-    {
-        if ($needle == '')
-            return false;
-        $haystack_len = strlen($haystack);
-        $needle_len = strlen($needle);
-        $firstch = $needle[0];
-        $offset = 0;
-        $quotec = false;
-
-        while ($offset < $haystack_len)
-        {
-            $ch = $haystack[$offset];
-
-            if ($quotec === false)
-            {
-                if ($ch == $qualifier)
-                {
-                    $quotec = $ch;
-                }
-                 else
-                {
-                    if ($ch == $firstch)
-                    {
-                        if (substr($haystack, $offset, $needle_len) == $needle)
-                            return $offset;
-                    }
-                }
-            }
-             else
-            {
-                if ($ch == $qualifier)
-                {
-                    if ($offset + 1 < $haystack_len && $haystack[$offset+1] == $qualifier) // csv double-quote "15"" Pizza"
-                    {
-                        ++$offset;
-                    }
-                     else
-                    {
-                        $quotec = false;
-                    }
-                }
-            }
-
-            ++$offset;
-        }
-
-        return false;
-    }
-
-    private function createOutputFromFixedLengthInput($instream)
+    private function createOutputFromFixedLengthInput(\Flexio\Object\Stream $instream)
     {
         // parameters
         $job_definition = $this->getProperties();
@@ -656,7 +606,57 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->close();
     }
 
-    private static function alterStructure($outstream, $structure)
+    private static function indexOfWithQuoting(string $haystack, string $needle, string $qualifier)
+    {
+        if ($needle == '')
+            return false;
+        $haystack_len = strlen($haystack);
+        $needle_len = strlen($needle);
+        $firstch = $needle[0];
+        $offset = 0;
+        $quotec = false;
+
+        while ($offset < $haystack_len)
+        {
+            $ch = $haystack[$offset];
+
+            if ($quotec === false)
+            {
+                if ($ch == $qualifier)
+                {
+                    $quotec = $ch;
+                }
+                 else
+                {
+                    if ($ch == $firstch)
+                    {
+                        if (substr($haystack, $offset, $needle_len) == $needle)
+                            return $offset;
+                    }
+                }
+            }
+             else
+            {
+                if ($ch == $qualifier)
+                {
+                    if ($offset + 1 < $haystack_len && $haystack[$offset+1] == $qualifier) // csv double-quote "15"" Pizza"
+                    {
+                        ++$offset;
+                    }
+                     else
+                    {
+                        $quotec = false;
+                    }
+                }
+            }
+
+            ++$offset;
+        }
+
+        return false;
+    }
+
+    private static function alterStructure(\Flexio\Object\Stream $outstream, array $structure) : bool
     {
         $service = $outstream->getService();
 
@@ -715,7 +715,7 @@ class Convert extends \Flexio\Jobs\Base
         return true;
     }
 
-    private static function conformValuesToStructure($structure, $row)
+    private static function conformValuesToStructure(array $structure, array $row) : array
     {
         $result_row = array();
 
@@ -761,7 +761,7 @@ class Convert extends \Flexio\Jobs\Base
         return $result_row;
     }
 
-    private static function updateStructureFromRow(&$structure, $row)
+    private static function updateStructureFromRow(array &$structure, array $row)
     {
         $idx = 0;
         foreach ($row as $key => $val)
@@ -847,7 +847,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private static function structureFromIcsv($row)
+    private static function structureFromIcsv(array $row)
     {
         $structure = [];
         foreach ($row as $fld)
@@ -884,12 +884,9 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function determineStructureFromJsonArray($items)
+    private static function determineStructureFromJsonArray(array $items)
     {
         // create the fields based off the first row
-        if (!is_array($items))
-            return false;
-
         if (count($items) === 0)
             return false;
 
@@ -909,7 +906,7 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function determineStructureFromRow($row, $header)
+    private static function determineStructureFromRow(array $row, bool $header) : array
     {
         // if the first row is a header row, turn it into field names
         if ($header === true)
@@ -946,7 +943,7 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function getInputMimeTypeFromDefinition($job_definition)
+    private static function getInputMimeTypeFromDefinition(array $job_definition)
     {
         if (!isset($job_definition['params']['input']['format']))
             return false;
@@ -966,7 +963,7 @@ class Convert extends \Flexio\Jobs\Base
             return false;
     }
 
-    private static function getOutputMimeTypeFromDefinition($job_definition)
+    private static function getOutputMimeTypeFromDefinition(array $job_definition)
     {
         if (!isset($job_definition['params']['output']['format']))
             return false;

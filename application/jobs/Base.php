@@ -42,14 +42,9 @@ EOD;
     {
     }
 
-    public static function create($process = null, $properties = null)
+    public static function create(\Flexio\Object\Process $process = null, array $properties = null) : \Flexio\Jobs\Base
     {
         $object = new static();
-
-        // if a process variable is specified, make sure it's an instance
-        // of the Process class
-        if (isset($process) && !($process instanceof \Flexio\Object\Process))
-            return false;
 
         // set the type and the process
         $object->type = static::MIME_TYPE;
@@ -62,19 +57,15 @@ EOD;
         // set the default properties
         $object->properties = json_decode($object::TEMPLATE,true);
 
-        // if the input is a string, treat as json and decode it
-        if (is_string($properties))
-            $properties = json_decode($properties, true);
-
         // if properties are specified, set them
-        if (isset($properties) && is_array($properties))
+        if (isset($properties))
         {
             // if the properties are set, make sure the input type matches
             if (!isset($properties['type']))
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
             if ($properties['type'] !== $object->getType())
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
             // TODO: temporarily disable
 
@@ -97,35 +88,31 @@ EOD;
         return $this->process;
     }
 
-    public function getType()
+    public function getType() : string
     {
         return $this->type;
     }
 
-    public function getProperties()
+    public function getProperties() : array
     {
-        if (!isset($this->properties))
-            return false;
-
         return $this->properties;
     }
 
-    public function getInput()
+    public function getInput() : \Flexio\Object\Collection
     {
         return $this->input;
     }
 
-    public function getOutput()
+    public function getOutput() : \Flexio\Object\Collection
     {
         return $this->output;
     }
 
     public function run()
     {
-        return;
     }
 
-    protected function isRunMode()
+    protected function isRunMode() : bool
     {
         $process = $this->getProcess();
         if ($process === false)
@@ -134,12 +121,13 @@ EOD;
         return $process->isRunMode();
     }
 
-    protected function setProgress($pct)
+    protected function setProgress(float $pct) : bool
     {
         $process = $this->getProcess();
         if ($process === false)
             return false;
 
         $process->setProgress($pct);
+        return true;
     }
 }

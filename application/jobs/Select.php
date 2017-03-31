@@ -38,7 +38,7 @@ class Select extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTable($instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy(); // copy everything, including the original path (since we're only selecting fields)
