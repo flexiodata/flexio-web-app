@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -26,7 +27,7 @@ class Test
         // Note: updated 20170322; use new data input path
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create('
+        $task = json_decode('
         [
             {
                 "eid": "ls3nzjhkkbgx",
@@ -87,7 +88,7 @@ class Test
                 }
             }
         ]
-        ')->get();
+        ',true);
 
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $result = TestUtil::getProcessResult($process,0,50);
@@ -106,7 +107,7 @@ class Test
         // 'contact-refinement' example that's installed in the demo data
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create('
+        $task = json_decode('
         [
             {
                 "eid": "p1zsvtts2gr7",
@@ -165,7 +166,7 @@ class Test
                 "description": "Filter records based on selected conditions"
             }
         ]
-        ')->get();
+        ',true);
 
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $result = TestUtil::getProcessSingleOutputResult($process,true,1535,1); // 1536 rows in output; get the last one
@@ -207,7 +208,7 @@ class Test
         // Note: updated 20170322; use new data input path
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create('
+        $task = json_decode('
         [
             {
                 "type": "flexio.input",
@@ -273,7 +274,7 @@ class Test
                 }
             }
         ]
-        ')->get();
+        ',true);
 
         $params = [
             "filter" => "bootstrap"

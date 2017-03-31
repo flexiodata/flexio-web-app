@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -46,7 +47,7 @@ class Test
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = '';
-        $value = '';
+        $value = true;
         $actual = $model->registry->setBoolean($object_eid, $name, $value);
         $expected = false;
         TestCheck::assertBoolean('A.2', 'Registry\Model::setBoolean(); return false when no name is specified', $actual, $expected, $results);
@@ -66,46 +67,73 @@ class Test
             $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.3', 'Registry\Model::setBoolean(); throw an error with null input', $actual, $expected, $results);
+        TestCheck::assertString('A.3', 'Registry\Model::setBoolean(); throw an error with bad input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = true;
         $actual = $model->registry->setBoolean($object_eid, $name, $value);
         $expected = true;
         TestCheck::assertBoolean('A.4', 'Registry\Model::setBoolean(); don\'t require an object to be specified', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = 1;
-        $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
-        $actual = $model->registry->setBoolean($object_eid, $name, $value);
-        $expected = false;
-        TestCheck::assertBoolean('A.5', 'Registry\Model::setBoolean(); if object is specified, it should be an eid', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = 1;
+            $name = \Flexio\Base\Util::generateHandle();
+            $value = true;
+            $model->registry->setBoolean($object_eid, $name, $value);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.5', 'Registry\Model::setBoolean(); if object is specified, it should be an eid', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = '';
+        try
+        {
+            $object_eid = '';
+            $name = \Flexio\Base\Util::generateHandle();
+            $value = true;
+            $expires = false;
+            $model->registry->setBoolean($object_eid, $name, $value, $expires);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.6', 'Registry\Model::setBoolean(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = '';
+        try
+        {
+            $object_eid = '';
+            $name = \Flexio\Base\Util::generateHandle();
+            $value = true;
+            $expires = 1.1;
+            $model->registry->setBoolean($object_eid, $name, $value, $expires);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.7', 'Registry\Model::setBoolean(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
-        $expires = false;
-        $actual = $model->registry->setBoolean($object_eid, $name, $value, $expires);
-        $expected = false;
-        TestCheck::assertBoolean('A.6', 'Registry\Model::setBoolean(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $object_eid = '';
-        $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
-        $expires = 1.1;
-        $actual = $model->registry->setBoolean($object_eid, $name, $value, $expires);
-        $expected = false;
-        TestCheck::assertBoolean('A.7', 'Registry\Model::setBoolean(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $object_eid = '';
-        $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = true;
         $expires = null;
         $actual = $model->registry->setBoolean($object_eid, $name, $value, $expires);
         $expected = true;
@@ -114,7 +142,7 @@ class Test
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = true;
         $expires = 3600;
         $actual = $model->registry->setBoolean($object_eid, $name, $value, $expires);
         $expected = true;
@@ -150,7 +178,7 @@ class Test
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = true;
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->entryExists($object_eid, $name);
         $expected = true;
@@ -159,7 +187,7 @@ class Test
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = true;
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->entryExists($object_eid, 'a');
         $expected = false;
@@ -168,7 +196,7 @@ class Test
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\Base\Util::generateHandle();
-        $value = '';
+        $value = true;
         $result = $model->registry->setBoolean($object_eid, $name, $value);
         $actual = $model->registry->entryExists('', $name);
         $expected = false;

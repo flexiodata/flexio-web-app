@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Base;
 
 
@@ -140,19 +141,19 @@ class Validator
                     continue;
 
                 // the field exists; make sure the field conforms to the type specified
-                if ($value['type'] == 'eid' && !\Flexio\Base\Eid::isValid($p))
+                if ($value['type'] == 'eid' && !$this->check_eid($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
-                if ($value['type'] == 'identifier' && !\Flexio\Base\Eid::isValid($p) && (strlen($p) > 0 && !\Flexio\Base\Identifier::isValid($p))) // allow identifiers to be zero length so they can be set to ''
+                if ($value['type'] == 'identifier' && !$this->check_identifier($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'json' && !$this->check_json($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'object' && !$this->check_object($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
-                if ($value['type'] == 'string' && !is_string($p))
+                if ($value['type'] == 'string' && !$this->check_string($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
-                if ($value['type'] == 'integer' && !(is_numeric($p) && intval($p) == floatval($p)))
+                if ($value['type'] == 'integer' && !$this->check_integer($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
-                if ($value['type'] == 'number' && !is_numeric($p))
+                if ($value['type'] == 'number' && !$this->check_number($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'boolean' && !$this->check_bool($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
@@ -239,7 +240,67 @@ class Validator
         $this->errors = array();
     }
 
-    private function check_object($value)
+    private function check_bool($value) : bool
+    {
+        if (is_bool($value))
+            return true;
+
+        // note: for validation, some input parameters are true/false values
+        // represented as strings (e.g. maybe they come in through a url param)
+        if (is_string($value) && ($value === 'true' || $value === 'false'))
+            return true;
+
+        return false;
+    }
+
+    private function check_integer($value) : bool
+    {
+        if (!(is_numeric($value) && intval($value) == floatval($value)))
+            return false;
+
+        return true;
+    }
+
+    private function check_number($value) : bool
+    {
+        if (!is_numeric($value))
+            return false;
+
+        return true;
+    }
+
+    private function check_string($value) : bool
+    {
+        if (!is_string($value))
+            return false;
+
+        return true;
+    }
+
+    private function check_eid($value) : bool
+    {
+        if (!is_string($value))
+            return false;
+
+        if (!\Flexio\Base\Eid::isValid($value))
+            return false;
+
+        return true;
+    }
+
+    private function check_identifier($value) : bool
+    {
+        if (!is_string($value))
+            return false;
+
+        // note: include strlen check so that identifiers can be zero length so they can be set to ''
+        if (!\Flexio\Base\Eid::isValid($value) && (strlen($value) > 0 && !\Flexio\Base\Identifier::isValid($value)))
+            return false;
+
+        return true;
+    }
+
+    private function check_object($value) : bool
     {
         // make sure we have an array or an object
         if (!is_object($value) && !is_array($value))
@@ -248,7 +309,7 @@ class Validator
         return true;
     }
 
-    private function check_json($value)
+    private function check_json($value) : bool
     {
         // our json validation is stricter than normal json; top-level
         // should be an array or an object rather than a primitive
@@ -265,19 +326,6 @@ class Validator
         // see if we can parse the value
         $result = @json_decode($value);
         if (json_last_error() === JSON_ERROR_NONE)
-            return true;
-
-        return false;
-    }
-
-    private function check_bool($value)
-    {
-        if (is_bool($value))
-            return true;
-
-        // note: for validation, some input parameters are true/false values
-        // represented as strings (e.g. maybe they come in through a url param)
-        if (is_string($value) && ($value === 'true' || $value === 'false'))
             return true;
 
         return false;

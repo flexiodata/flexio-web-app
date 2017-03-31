@@ -12,7 +12,9 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
+
 
 require_once dirname(__DIR__) . '/services/Abstract.php';
 
@@ -27,7 +29,7 @@ class Stream extends \Flexio\Object\Base
     // IObject interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\Stream
     {
         // structure is stored as json string; it needs to be validated
         // and encoded
@@ -36,10 +38,6 @@ class Stream extends \Flexio\Object\Base
             // if the structure is set, make sure it's valid
             $structure = $properties['structure'];
             $structure_object = \Flexio\Object\Structure::create($structure);
-
-            if ($structure_object === false)
-                return false;
-
             $structure = $structure_object->enum();
             $properties['structure'] = json_encode($structure);
         }
@@ -59,10 +57,7 @@ class Stream extends \Flexio\Object\Base
 
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
-
         $local_eid = $model->create($object->getType(), $properties);
-        if ($local_eid === false)
-            return false;
 
         $object->setModel($model);
         $object->setEid($local_eid);
@@ -71,8 +66,10 @@ class Stream extends \Flexio\Object\Base
         return $object;
     }
 
-    public function set($properties)
+    public function set(array $properties) : \Flexio\Object\Stream
     {
+        // TODO: add properties check
+
         // structure is stored as json string; it needs to be validated
         // and encoded
         if (isset($properties) && isset($properties['structure']))
@@ -80,27 +77,13 @@ class Stream extends \Flexio\Object\Base
             // if the structure is set, make sure it's valid
             $structure = $properties['structure'];
             $structure_object = \Flexio\Object\Structure::create($structure);
-
-            if ($structure_object === false)
-                return false;
-
             $structure = $structure_object->enum();
             $properties['structure'] = json_encode($structure);
         }
 
-        // TODO: add properties check
-
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $stream_model = $this->getModel()->stream;
-            $stream_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $stream_model = $this->getModel()->stream;
+        $stream_model->set($this->getEid(), $properties);
         return $this;
     }
 
@@ -121,7 +104,7 @@ class Stream extends \Flexio\Object\Base
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function setName($name)
+    public function setName(string $name) : \Flexio\Object\Stream
     {
         $properties = array();
         $properties['name'] = $name;
@@ -139,7 +122,7 @@ class Stream extends \Flexio\Object\Base
         return $this->properties['name'];
     }
 
-    public function setPath($path)
+    public function setPath(string $path) : \Flexio\Object\Stream
     {
         $properties = array();
         $properties['path'] = $path;
@@ -157,7 +140,7 @@ class Stream extends \Flexio\Object\Base
         return $this->properties['path'];
     }
 
-    public function setSize($size)
+    public function setSize($size) : \Flexio\Object\Stream // TODO: add input parameter types
     {
         $properties = array();
         $properties['size'] = $size;
@@ -173,7 +156,7 @@ class Stream extends \Flexio\Object\Base
         return $local_file_info['size'];
     }
 
-    public function setMimeType($mime_type)
+    public function setMimeType(string $mime_type) : \Flexio\Object\Stream
     {
         $properties = array();
         $properties['mime_type'] = $mime_type;
@@ -191,7 +174,7 @@ class Stream extends \Flexio\Object\Base
         return $this->properties['mime_type'];
     }
 
-    public function setStructure($structure)
+    public function setStructure($structure) : \Flexio\Object\Stream // TODO: add input parameter types
     {
         if (!($structure instanceof \Flexio\Object\Structure))
             $structure = \Flexio\Object\Structure::create($structure);
@@ -244,7 +227,7 @@ class Stream extends \Flexio\Object\Base
     // read/write functions
     ////////////////////////////////////////////////////////////
 
-    public function read($callback)
+    public function read($callback) // TODO: add input parameter types
     {
         $service = $this->getService();
         if ($service === false)
@@ -278,7 +261,7 @@ class Stream extends \Flexio\Object\Base
         });
     }
 
-    public function write($data)
+    public function write($data) // TODO: add input parameter types
     {
         // TODO: make sure the output table
 
@@ -309,7 +292,7 @@ class Stream extends \Flexio\Object\Base
     {
     }
 
-    public function content($start, $limit, $columns = true, $metadata = false, $handle = 'create')
+    public function content($start, $limit, $columns = true, $metadata = false, $handle = 'create') // TODO: add input parameter types
     {
         // returns the requested content for the given stream
 
@@ -447,7 +430,7 @@ class Stream extends \Flexio\Object\Base
         return $service;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -455,13 +438,14 @@ class Stream extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
         if ($local_properties === false)
@@ -507,7 +491,7 @@ class Stream extends \Flexio\Object\Base
         return $properties;
     }
 
-    private static function convertStoreNameToName($row, $structure)
+    private static function convertStoreNameToName(array $row, array $structure) : array
     {
         $mapped_row = array();
         foreach ($structure as $col)
@@ -516,7 +500,7 @@ class Stream extends \Flexio\Object\Base
         return $mapped_row;
     }
 
-    private static function convertNameToStoreName($row, $structure)
+    private static function convertNameToStoreName(array $row, array $structure) : array
     {
         $mapped_row = array();
         foreach ($structure as $col)

@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -27,10 +28,18 @@ class Test
         // TEST: store object creation
 
         // BEGIN TEST
-        $object = \Flexio\Object\Store::create(false, null);
-        $actual = $object;
-        $expected = false;
-        TestCheck::assertBoolean('A.1', 'Store::create(); return false if an object fails to create',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object = \Flexio\Object\Store::create(false, null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', 'Store::create(); return false if an object fails to create',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Store::create(\Model::TYPE_OBJECT, null);
@@ -55,10 +64,18 @@ class Test
         // TEST: store object loading
 
         // BEGIN TEST
-        $object = \Flexio\Object\Store::load(false);
-        $actual = $object;
-        $expected = false;
-        TestCheck::assertBoolean('B.1', 'Store::load(); return false if an object fails to load',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object = \Flexio\Object\Store::load(false);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.1', 'Store::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_OBJECT, null);

@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -38,7 +39,7 @@ class Select extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTable($instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy(); // copy everything, including the original path (since we're only selecting fields)
@@ -48,7 +49,7 @@ class Select extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
         if (!isset($params['columns']) || !is_array($params['columns']))
-            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         $output_structure = $instream->getStructure()->enum($params['columns']);
         $outstream->setStructure($output_structure);

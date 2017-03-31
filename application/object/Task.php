@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -19,7 +20,7 @@ class Task
 {
     private $task;
 
-    public static function manifest()
+    public static function manifest() : array
     {
         // note: manifest() resturns a list of all available jobs and their related
         // information; enum() returns a list of publicly available functions in display
@@ -181,17 +182,12 @@ class Task
         return $manifest;
     }
 
-    public static function create($properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\Task
     {
         $object = new static();
         $object->task = array();
 
-        // if the input is a string, treat as json and decode it
-        if (is_string($properties))
-            $properties = json_decode($properties, true);
-
-        // if the input is a task array, add on an id to each step
-        if (is_array($properties))
+        if (isset($properties))
         {
             foreach ($properties as $p)
             {
@@ -202,56 +198,28 @@ class Task
         return $object;
     }
 
-    public static function load($task)
-    {
-        // similar to create (we don't have eids for tasks yet),
-        // but assumes a valid task array has already been created
-
-        $object = new static();
-        $object->task = array();
-
-        if ($task instanceof \Flexio\Object\Task)
-        {
-            $object->task = $task->get();
-            return $object;
-        }
-
-        if (is_array($task))
-        {
-            $object->task = $task;
-            return $object;
-        }
-
-        return false;
-    }
-
     public function get()
     {
         // returns the list of commands
         return $this->task;
     }
 
-    public function push($command)
+    public function push(array $task_step) : \Flexio\Object\Task // TODO: add input parameter types
     {
         // note: adds a raw command to the end of the task array
-        $this->addTaskStep($command, null);
+        $this->addTaskStep($task_step, null);
         return $this;
     }
 
-    public function pop()
+    public function pop() : \Flexio\Object\Task
     {
         // removes a command from the end of the task array
         array_pop($this->task);
         return $this;
     }
 
-    public function addTaskStep($command, $index = null)
+    public function addTaskStep(array $task_step, int $index = null) : string
     {
-        // make sure the command is in the proper format
-        $task_step = self::convertCommand($command);
-        if ($task_step === false)
-            return false;
-
         // TODO: any supplied ids shouldn't exist in the application as
         // a registered object, since tasks eids aren't currently registered;
         // so if an eid is supplied, make sure it's valid and that it isn't
@@ -267,10 +235,9 @@ class Task
         $task_step = self::addEidToTaskStep($task_step);
         $task_count = count($this->task);
 
-        // if the index is something besides an integer, set the index
-        // to the number of elements in the task list (e.g. insert the
-        // task at the end of the task list)
-        if (!is_integer($index))
+        // if the index isn't set, set the index to the number of elements
+        // in the task list (e.g. insert the task at the end of the task list)
+        if (!isset($index))
             $index = count($this->task);
 
         if ($index <= 0 )
@@ -305,7 +272,7 @@ class Task
         return $task_step['eid'];
     }
 
-    public function deleteTaskStep($task_eid)
+    public function deleteTaskStep(string $task_eid) : \Flexio\Object\Task
     {
         if (!\Flexio\Base\Eid::isValid($task_eid))
             return $this;
@@ -327,13 +294,9 @@ class Task
         return $this;
     }
 
-    public function setTaskStep($task_eid, $command)
+    public function setTaskStep($task_eid, $task_step) : \Flexio\Object\Task // TODO: add input parameter types
     {
         if (!\Flexio\Base\Eid::isValid($task_eid))
-            return $this;
-
-        $task_step = self::convertCommand($command);
-        if ($task_step === false)
             return $this;
 
         // iterate through the tasks; if the eid of the task step
@@ -356,7 +319,7 @@ class Task
         return $this;
     }
 
-    public function getTaskStep($task_eid)
+    public function getTaskStep(string $task_eid)
     {
         // iterate through the tasks; if the eid of the task step
         // matches the existing task, return the task
@@ -369,9 +332,9 @@ class Task
         return false;
     }
 
-    public function setParams($variables)
+    public function setParams(array $variables) : \Flexio\Object\Task
     {
-        if (!is_array($variables) || count($variables) === 0)
+        if (count($variables) === 0)
             return $this;
 
         $new_task = array();
@@ -384,9 +347,9 @@ class Task
         return $this;
     }
 
-    private static function updateVariables($task, $variables)
+    private static function updateVariables(array $task, array $variables) : array
     {
-        $updated_task = (array)$task;
+        $updated_task = $task;
         if (isset($updated_task['params']))
         {
             $original_params = $task['params'];
@@ -399,7 +362,7 @@ class Task
         return $updated_task;
     }
 
-    private static function updateTaskItemWithVariable($variables, $original_item, &$updated_item)
+    private static function updateTaskItemWithVariable(array $variables, $original_item, &$updated_item) : bool
     {
         // set the initial output to the input
         $updated_item = $original_item;
@@ -443,7 +406,7 @@ class Task
         return false;
     }
 
-    private static function replaceValueWithVariable($variables, $old_value, &$new_value)
+    private static function replaceValueWithVariable(array $variables, $old_value, &$new_value) : bool
     {
         // returns true if value was updated; false otherwise
 
@@ -461,7 +424,7 @@ class Task
             $variable_match_regex = '/\$\{'.$variable_key.'\}/';
 
             // see if the variable matches anything in the string
-            if (!preg_match($variable_match_regex, $old_value))
+            if (!preg_match($variable_match_regex, (string)$old_value))
                 continue;
 
             // if the variable matches the entire value, replace the
@@ -488,7 +451,7 @@ class Task
         return $updated;
     }
 
-    private static function addEidToTaskStep($step)
+    private static function addEidToTaskStep(array $step) : array
     {
         // if a task eid isn't set, then add one
 
@@ -503,25 +466,5 @@ class Task
         }
 
         return $step;
-    }
-
-    private static function convertCommand($command)
-    {
-        $task_step = false;
-
-        if ($command instanceof \Flexio\Jobs\IJob)
-            $task_step = $command->getProperties();
-
-        if (is_array($command))
-            $task_step = $command;
-
-        if (is_string($command))
-        {
-            $command_decoded = json_decode($command, true);
-            if (isset($command_decoded))
-                $task_step = $command_decoded;
-        }
-
-        return $task_step;
     }
 }

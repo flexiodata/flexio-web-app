@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -44,7 +45,7 @@ class Execute extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutput($instream)
+    private function createOutput(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
@@ -88,17 +89,16 @@ class Execute extends \Flexio\Jobs\Base
         }
 
         if ($program_type === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $program_path = \Flexio\System\System::getBinaryPath($program_type);
         if (!isset($program_path))
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // get the code from the template
         $code = $job_definition['params']['code'] ?? '';
         if (strlen($code) == 0)
-            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _(''), __FILE__, __LINE__);
-
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = null; // created below
@@ -121,7 +121,7 @@ class Execute extends \Flexio\Jobs\Base
         if (!$process->exec($cmd, $cwd, $env))
         {
             @unlink($filename);
-            return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
 
 
@@ -136,13 +136,11 @@ class Execute extends \Flexio\Jobs\Base
         $process->write($header_json . "\r\n\r\n");
 
 
-
-
         $done_writing = false; // "done writing input to process"
         $done_reading = false; // "done reading result from process"
         $first_chunk = true;
         $chunk = '';
-        
+
         //$tot = 0;
         //$totw = 0;
 
@@ -200,7 +198,7 @@ class Execute extends \Flexio\Jobs\Base
 
                         if ($len > 0)
                             $process->write($buf);
-                        
+
                         //$totw += $len;
                     }
                 }
@@ -210,7 +208,7 @@ class Execute extends \Flexio\Jobs\Base
 
             if (!$done_reading)
             {
-                fxdebug("Reading...\n");
+                //fxdebug("Reading...\n");
                 $readbuf = $process->read(1024);
 
                 if ($readbuf === false)
@@ -274,7 +272,7 @@ class Execute extends \Flexio\Jobs\Base
                     //$s = ob_get_clean();
                     //fxdebug("From process: ".$s."***\n\n\n\n");
 
-                    fxdebug("Writing " . strlen($chunk) . " bytes\n");
+                    //fxdebug("Writing " . strlen($chunk) . " bytes\n");
                     //$tot += strlen($chunk);
 
                     $streamwriter->write($chunk);
@@ -283,7 +281,7 @@ class Execute extends \Flexio\Jobs\Base
 
             }
 
-                   // fxdebug("Done writing to process? " . ($done_writing?"true":"false") . " Done reading from process? " . ($done_reading?"true":"false")."\n");
+            // fxdebug("Done writing to process? " . ($done_writing?"true":"false") . " Done reading from process? " . ($done_reading?"true":"false")."\n");
 
         } while (!$done_writing || !$done_reading);
 
@@ -306,7 +304,7 @@ class Execute extends \Flexio\Jobs\Base
        // var_dump($err);
         if (isset($err))
         {
-            return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, $err, __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
     }
 

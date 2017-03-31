@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -25,7 +26,7 @@ class StreamWriter
         $this->close();
     }
 
-    public static function create($stream, $datastore_mode = true)
+    public static function create($stream, $datastore_mode = true) : \Flexio\Object\StreamWriter
     {
         // TODO: StreamWriter is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service
@@ -68,7 +69,7 @@ class StreamWriter
         }
 
         if ($object->isOk() === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $object;
     }
@@ -94,22 +95,23 @@ class StreamWriter
         return $this->writer->write($data);
     }
 
-    public function getBytesWritten()
+    public function getBytesWritten() : int
     {
         // returns the total amount written
         return $this->bytes_written;
     }
 
-    public function close()
+    public function close() : bool
     {
         if ($this->isOk() === false)
-            return;
+            return true;
 
         $this->writer->close();
         $this->writer = false;
+        return true;
     }
 
-    private function isOk()
+    private function isOk() : bool
     {
         if ($this->writer === false)
             return false;

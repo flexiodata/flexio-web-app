@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -57,14 +58,20 @@ class Base implements IObject
         $this->setType(\Model::TYPE_UNDEFINED);
     }
 
-    public static function create($properties = null)
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
+    }
+
+    public static function create(array $properties = null) : \Flexio\Object\Base
     {
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
-
         $local_eid = $model->create($object->getType(), $properties);
-        if ($local_eid === false)
-            return false;
 
         $object->setModel($model);
         $object->setEid($local_eid);
@@ -73,7 +80,7 @@ class Base implements IObject
         return $object;
     }
 
-    public static function load($identifier)
+    public static function load(string $identifier)
     {
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
@@ -108,7 +115,7 @@ class Base implements IObject
         return $object;
     }
 
-    public function copy()
+    public function copy() : \Flexio\Object\Base
     {
         // get the parameters, reset the ename so the create doesn't
         // fail on account of a duplicate name
@@ -120,14 +127,14 @@ class Base implements IObject
         return $object;
     }
 
-    public function delete()
+    public function delete() : \Flexio\Object\Base
     {
         $this->clearCache();
         $this->getModel()->delete($this->getEid());
         return $this;
     }
 
-    public function set($properties)
+    public function set(array $properties) : \Flexio\Object\Base
     {
         $this->clearCache();
 
@@ -151,14 +158,14 @@ class Base implements IObject
         return false;
     }
 
-    public function setEid($eid)
+    public function setEid(string $eid) : \Flexio\Object\Base
     {
         // only allow the eid to be set once
         if (!is_null($this->eid))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $this->eid = $eid;
-        return true;
+        return $this;
     }
 
     public function getEid()
@@ -166,11 +173,11 @@ class Base implements IObject
         return $this->eid;
     }
 
-    public function setType($eid_type)
+    public function setType(string $eid_type) : \Flexio\Object\Base
     {
         // only allow the eid_type to be set once
         if (!is_null($this->eid_type))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $this->eid_type = $eid_type;
         return $this;
@@ -181,18 +188,10 @@ class Base implements IObject
         return $this->eid_type;
     }
 
-    public function setStatus($status)
+    public function setStatus(string $status) : \Flexio\Object\Base
     {
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $result = $this->getModel()->setStatus($this->getEid(), $status);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $result = $this->getModel()->setStatus($this->getEid(), $status);
         return $this;
     }
 
@@ -207,27 +206,17 @@ class Base implements IObject
         return $status;
     }
 
-    public function setOwner($user_eid)
+    public function setOwner(string $user_eid) : \Flexio\Object\Base
     {
         // TODO: remove previous owner, if any
 
         // TODO: do we want to do more checking? have to be careful because
         // system and public users don't follow normal eid convention
-        if ($user_eid === false)
-            return false;
 
-        try
-        {
-            $object_eid = $this->getEid();
-            $this->getModel()->assoc_add($user_eid, \Model::EDGE_OWNS, $object_eid);
-            $this->getModel()->assoc_add($object_eid, \Model::EDGE_OWNED_BY, $user_eid);
-        }
-        catch (\Exception $e)
-        {
-            return false;
-        }
-
-        return true;
+        $object_eid = $this->getEid();
+        $this->getModel()->assoc_add($user_eid, \Model::EDGE_OWNS, $object_eid);
+        $this->getModel()->assoc_add($object_eid, \Model::EDGE_OWNED_BY, $user_eid);
+        return $this;
     }
 
     public function getOwner()
@@ -241,26 +230,17 @@ class Base implements IObject
         return $result[0]['eid'];
     }
 
-    public function setCreatedBy($user_eid)
+    public function setCreatedBy(string $user_eid) : \Flexio\Object\Base
     {
         // TODO: remove previous created by, if any
 
         // TODO: do we want to do more checking? have to be careful because
         // system and public users don't follow normal eid convention
-        if ($user_eid === false)
-            return false;
 
-        try
-        {
-            $object_eid = $this->getEid();
-            $this->getModel()->assoc_add($user_eid, \Model::EDGE_CREATED, $object_eid);
-            $this->getModel()->assoc_add($object_eid, \Model::EDGE_CREATED_BY, $user_eid);
-        }
-        catch (\Exception $e)
-        {
-        }
-
-        return true;
+        $object_eid = $this->getEid();
+        $this->getModel()->assoc_add($user_eid, \Model::EDGE_CREATED, $object_eid);
+        $this->getModel()->assoc_add($object_eid, \Model::EDGE_CREATED_BY, $user_eid);
+        return $this;
     }
 
     public function getCreatedBy()
@@ -274,7 +254,7 @@ class Base implements IObject
         return $result[0]['eid'];
     }
 
-    public function allows($user_eid, $action_type)
+    public function allows(string $user_eid, string $action_type) : bool
     {
         // find out all operations the specified user can take on the
         // object in question
@@ -288,30 +268,27 @@ class Base implements IObject
         return false;
     }
 
-    public function setRights($rights = array())
+    public function setRights(array $rights = null) : \Flexio\Object\Base
     {
         // TODO: set the rights
 
         // reset the rights cache
         $this->rights = false;
+        return $this;
     }
 
-    public function addComment($comment_eid)
+    public function addComment(string $comment_eid) : \Flexio\Object\Base
     {
         // make sure we have a comment
         $comment = \Flexio\Object\Comment::load($comment_eid);
         if ($comment === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // add the comment association
         $object_eid = $this->getEid();
         $result1 = $this->getModel()->assoc_add($object_eid, \Model::EDGE_HAS_COMMENT, $comment_eid);
         $result2 = $this->getModel()->assoc_add($comment_eid, \Model::EDGE_COMMENT_ON, $object_eid);
-
-        if ($result1 === false || $result2 === false)
-            return false;
-
-        return true;
+        return $this;
     }
 
     public function getComments()
@@ -334,9 +311,10 @@ class Base implements IObject
         return $result;
     }
 
-    protected function setModel($model)
+    protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type
     {
-        return $this->model = $model;
+        $this->model = $model;
+        return $this;
     }
 
     protected function getModel()
@@ -344,7 +322,7 @@ class Base implements IObject
         return $this->model;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -352,13 +330,14 @@ class Base implements IObject
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
         if ($local_properties === false)

@@ -12,6 +12,9 @@
  */
 
 
+declare(strict_types=1);
+
+
 class ModelBase
 {
     private $model;

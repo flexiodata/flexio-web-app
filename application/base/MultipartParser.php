@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Base;
 
 
@@ -134,7 +135,7 @@ class MultipartParser
 
             if ($current_name !== false)
             {
-                $is_file = strlen($current_filename) > 0;
+                $is_file = $current_filename !== false && strlen($current_filename) > 0;
                 $callback($is_file ? self::TYPE_FILE_DATA : self::TYPE_KEY_VALUE,
                         $current_name,
                         substr($buf, 0, $boundary_pos),
@@ -176,11 +177,8 @@ class MultipartParser
             $current_mimetype = $mimetype;
 
            // echo "name:$name filename:$filename mime_type:$mimetype<br>";
-
-            if (strlen($filename) > 0)
-            {
+            if ($filename !== false && strlen($filename) > 0)
                 $callback(self::TYPE_FILE_BEGIN, $name, '', $filename, $mimetype);
-            }
         }
 
         return true;

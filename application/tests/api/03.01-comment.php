@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -24,7 +25,9 @@ class Test
         // TEST: object creation
 
         // BEGIN TEST
+        $user_eid = TestUtil::getDefaultTestUser();
         $parent = \Flexio\Object\Object::create();
+        $parent->setOwner($user_eid);
         $parent_eid = $parent->getEid();
 
         $params = json_decode('
@@ -33,7 +36,7 @@ class Test
             "comment": "Test comment"
         }
         ',true);
-        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $request = \Flexio\Api\Request::create()->setRequestingUser($user_eid);
         $actual = \Flexio\Api\Comment::create($params, $request);
 
         $expected = '

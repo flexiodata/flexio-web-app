@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -26,7 +27,7 @@ class Create extends \Flexio\Jobs\Base
 
         $validator = \Flexio\Base\ValidatorSchema::check($job_definition, \Flexio\Jobs\Create::SCHEMA);
         if ($validator->hasErrors() === true)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // get the content type
         $mime_type = $job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
@@ -42,9 +43,6 @@ class Create extends \Flexio\Jobs\Base
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                 return $this->createTableOutput();
         }
-
-        // default fall through; shouldn't happen
-        $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
     }
 
     private function createStreamOutput()
@@ -59,7 +57,7 @@ class Create extends \Flexio\Jobs\Base
         {
             $content = $job_definition['params']['content'];
             if (!is_string($content))
-                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $content = base64_decode($content);
         }
@@ -71,10 +69,7 @@ class Create extends \Flexio\Jobs\Base
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
         $this->getOutput()->push($outstream);
-
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         // write the content
         $streamwriter->write($content);
@@ -93,18 +88,16 @@ class Create extends \Flexio\Jobs\Base
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
             'structure' => $structure
         );
+
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
         $this->getOutput()->push($outstream);
-
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         if (isset($job_definition['params']['content']))
         {
             $rows = $job_definition['params']['content'];
             if (!is_array($rows))
-                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             foreach ($rows as $row)
             {
@@ -126,13 +119,13 @@ class Create extends \Flexio\Jobs\Base
 
                 $result = $streamwriter->write($row);
                 if ($result === false)
-                    $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
             }
         }
 
         $result = $streamwriter->close();
         if ($result === false)
-            $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $outstream->setSize($streamwriter->getBytesWritten());
     }

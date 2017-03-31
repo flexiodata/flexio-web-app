@@ -12,6 +12,9 @@
  */
 
 
+declare(strict_types=1);
+
+
 class Process extends ModelBase
 {
     public function create(array $params = null, bool $primary_process = true) : string

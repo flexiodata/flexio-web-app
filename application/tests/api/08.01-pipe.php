@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -30,7 +31,8 @@ class Test
             "description": "Test pipe"
         }
         ',true);
-        $request = \Flexio\Api\Request::create()->setRequestingUser(\Flexio\Object\User::USER_SYSTEM);
+        $user_eid = TestUtil::getDefaultTestUser();
+        $request = \Flexio\Api\Request::create()->setRequestingUser($user_eid);
         $actual = \Flexio\Api\Pipe::create($params, $request);
         $expected = '
         {

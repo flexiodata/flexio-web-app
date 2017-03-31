@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -38,26 +39,25 @@ class Copy extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTable($instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->push($outstream);
 
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
         if ($job_statement === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         if ($outstream->getService()->exec($job_statement) === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }
 
-    private static function prepareOutput($job_definition, $instream, $outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream)
     {
         // properties
         $input_structure = $instream->getStructure();
@@ -120,7 +120,7 @@ class Copy extends \Flexio\Jobs\Base
         return $sql;
     }
 
-    private static function getOutputStructureFromColumnParams($job_definition, $input_columns)
+    private static function getOutputStructureFromColumnParams(array $job_definition, array $input_columns)
     {
         if (!isset($job_definition['params']['columns']))
             return false;
@@ -154,7 +154,7 @@ class Copy extends \Flexio\Jobs\Base
         return $output_columns;
     }
 
-    private static function getOutputStructureFromActionParams($job_definition, $input_columns)
+    private static function getOutputStructureFromActionParams(array $job_definition, array $input_columns)
     {
         if (!isset($job_definition['params']['actions']))
             return false;

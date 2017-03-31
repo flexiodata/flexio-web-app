@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -38,11 +39,11 @@ class Replace extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTable($instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         $column_expression_map = $this->getColumnExpressionMap($instream);
         if ($column_expression_map === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // if there aren't any operations, simply create an output stream
         // pointing to the origina content
@@ -90,7 +91,7 @@ class Replace extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getColumnExpressionMap($instream)
+    private function getColumnExpressionMap(\Flexio\Object\Stream $instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the replace
@@ -135,7 +136,7 @@ class Replace extends \Flexio\Jobs\Base
             $expreval = new \Flexio\Base\ExprEvaluate;
             $parse_result = $expreval->prepare($exprtext, $instream->getStructure()->enum());
             if ($parse_result === false)
-                return; // trouble building the expression
+                return false; // trouble building the expression
 
             $column_expression_map[$column['name']] = array(
                 'exprtext' => $exprtext,

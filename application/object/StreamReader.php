@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -25,7 +26,7 @@ class StreamReader
         $this->close();
     }
 
-    public static function create($stream)
+    public static function create($stream) : \Flexio\Object\StreamReader
     {
         // TODO: StreamReader is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service
@@ -63,7 +64,7 @@ class StreamReader
         }
 
         if ($object->isOk() === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $object;
     }
@@ -84,16 +85,17 @@ class StreamReader
         return $this->reader->readRow();
     }
 
-    public function close()
+    public function close() : bool
     {
         if ($this->isOk() === false)
-            return;
+            return true;
 
         $this->reader->close();
         $this->reader = false;
+        return true;
     }
 
-    private function isOk()
+    private function isOk() : bool
     {
         if ($this->reader === false)
             return false;
@@ -117,7 +119,7 @@ class StreamFileReader
         $this->close();
     }
 
-    public static function create($stream_info)
+    public static function create(array $stream_info)
     {
         $object = new static;
         $object->stream_info = $stream_info;
@@ -139,7 +141,7 @@ class StreamFileReader
         $this->read_buffer = '';
     }
 
-    public function read($length)
+    public function read(int $length = 1024)
     {
         if ($this->iterator === false)
         {
@@ -217,7 +219,7 @@ class StreamFileReader
         }
     }
 
-    private static function getRowFromBuffer(&$buffer)
+    private static function getRowFromBuffer(&$buffer) // TODO: add input parameter types
     {
         $pos = strpos($buffer, "\n");
         if ($pos !== false)
@@ -321,7 +323,7 @@ class StreamTableReader
         $this->close();
     }
 
-    public static function create($stream_info)
+    public static function create(array $stream_info)
     {
         $object = new static;
         $object->stream_info = $stream_info;
@@ -343,7 +345,7 @@ class StreamTableReader
         $this->read_buffer = '';
     }
 
-    public function read($length)
+    public function read(int $length)
     {
         if (!isset($this->stream_info['path']))
             return false;
@@ -448,7 +450,7 @@ class StreamTableReader
         return $this->service;
     }
 
-    private static function arrayToCsv($arr)
+    private static function arrayToCsv(array $arr)
     {
         $buffer = fopen('php://temp', 'r+');
         fputcsv($buffer, $arr, ',', '"', "\\");
@@ -475,7 +477,7 @@ class StreamTableJsonReader
         $this->close();
     }
 
-    public static function create($stream_info)
+    public static function create(array $stream_info)
     {
         $object = new static;
         $object->stream_info = $stream_info;
@@ -497,7 +499,7 @@ class StreamTableJsonReader
         $this->read_buffer = '';
     }
 
-    public function read($length)
+    public function read(int $length)
     {
         if (!isset($this->stream_info['path']))
             return false;
@@ -610,7 +612,7 @@ class StreamTableJsonReader
         return $this->service;
     }
 
-    private static function arrayToCsv($arr)
+    private static function arrayToCsv(array $arr)
     {
         $buffer = fopen('php://temp', 'r+');
         fputcsv($buffer, $arr, ',', '"', "\\");

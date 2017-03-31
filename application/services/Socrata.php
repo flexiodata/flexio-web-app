@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Services;
 
 
@@ -332,7 +333,7 @@ class Socrata implements \Flexio\Services\IConnection
 
         $table_schema = @json_decode($table_schema_json,true);
         if (!isset($table_schema['columns']) || !is_array($table_schema['columns']))
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            return array();
 
         // generate output structure
         $structure = \Flexio\Object\Structure::create();

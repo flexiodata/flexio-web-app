@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -49,7 +50,7 @@ class Test
         // TEST: object loading
 
         // BEGIN TEST
-        $object = \Flexio\Object\Comment::load(false);
+        $object = \Flexio\Object\Comment::load('');
         $actual = $object;
         $expected = false;
         TestCheck::assertBoolean('B.1', 'Comment::load(); return false if an object fails to load',  $actual, $expected, $results);
@@ -232,12 +233,20 @@ class Test
         TestCheck::assertString('F.3', 'Comment::setStatus(); setting status of an object shouldn\'t change its type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $object = \Flexio\Object\Comment::create();
-        $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
-        $status2 = $object->setStatus('.')->getStatus();
-        $actual =  ($status1 === \Model::STATUS_TRASH && $status2 === \Model::STATUS_TRASH);
-        $expected = true;
-        TestCheck::assertBoolean('F.4', 'Comment::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object = \Flexio\Object\Comment::create();
+            $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
+            $status2 = $object->setStatus('.')->getStatus();
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Exception $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('F.4', 'Comment::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Comment::create();

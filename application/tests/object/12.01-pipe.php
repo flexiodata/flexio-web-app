@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -49,7 +50,7 @@ class Test
         // TEST: object loading
 
         // BEGIN TEST
-        $object = \Flexio\Object\Pipe::load(false);
+        $object = \Flexio\Object\Pipe::load('');
         $actual = $object;
         $expected = false;
         TestCheck::assertBoolean('B.1', 'Pipe::load(); return false if an object fails to load',  $actual, $expected, $results);
@@ -244,12 +245,20 @@ class Test
         TestCheck::assertString('F.3', 'Pipe::setStatus(); setting status of an object shouldn\'t change its type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $object = \Flexio\Object\Pipe::create();
-        $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
-        $status2 = $object->setStatus('.')->getStatus();
-        $actual =  ($status1 === \Model::STATUS_TRASH && $status2 === \Model::STATUS_TRASH);
-        $expected = true;
-        TestCheck::assertBoolean('F.4', 'Pipe::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object = \Flexio\Object\Pipe::create();
+            $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
+            $status2 = $object->setStatus('.')->getStatus();
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Exception $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('F.4', 'Pipe::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
@@ -263,7 +272,7 @@ class Test
         // TEST: object task step addition
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create();
+        $task = \Flexio\Object\Task::create()->get();
         $object = \Flexio\Object\Pipe::create()->setTask($task);
         $actual = count($object->getTask());
         $expected = 0;
@@ -277,14 +286,18 @@ class Test
         TestCheck::assertNumber('G.2', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\Create::create())->push(\Flexio\Jobs\Convert::create());
+        $task_step1 = \Flexio\Jobs\Create::create()->getProperties();
+        $task_step2 = \Flexio\Jobs\Convert::create()->getProperties();
+        $task = \Flexio\Object\Task::create()->push($task_step1)->push($task_step2);
         $object = \Flexio\Object\Pipe::create()->setTask($task->get());
         $actual = count($object->getTask());
         $expected = 2;
         TestCheck::assertNumber('G.3', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\Create::create())->push(\Flexio\Jobs\Convert::create());
+        $task_step1 = \Flexio\Jobs\Create::create()->getProperties();
+        $task_step2 = \Flexio\Jobs\Convert::create()->getProperties();
+        $task = \Flexio\Object\Task::create()->push($task_step1)->push($task_step2);
         $object = \Flexio\Object\Pipe::create()->setTask($task->get());
         $actual = ($object->getTask()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE) && ($object->getTask()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE);
         $expected = true;

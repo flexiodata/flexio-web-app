@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -25,33 +26,11 @@ class User extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_USER);
     }
 
-    public static function create($properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\User
     {
         // config is stored as a json string, so it needs to be encoded
         if (isset($properties) && isset($properties['config']))
             $properties['config'] = json_encode($properties['config']);
-
-/*
-        // TODO: find out what's wrong with this implementation
-
-        // a unique username is required for users; if a username
-        // isn't specified, then supply a default
-        $username = \Flexio\Base\Util::generateHandle();
-        $email= $username.'@flex.io';
-        if (!isset($properties))
-        {
-            $properties = array('user_name' => $username, 'email' => $email);
-        }
-        if (is_array($properties) && !isset($properties['user_name']))
-        {
-            if (!isset($properties['user_name']))
-                $properties['user_name'] = $username;
-            if (!isset($properties['email']))
-                $properties['email'] = $email;
-        }
-
-        parent::create($properties);
-*/
 
         // a unique username is required for users; if a username
         // isn't specified, then supply a default
@@ -71,10 +50,7 @@ class User extends \Flexio\Object\Base
 
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
-
         $local_eid = $model->create($object->getType(), $properties);
-        if ($local_eid === false)
-            return false;
 
         $object->setModel($model);
         $object->setEid($local_eid);
@@ -83,7 +59,7 @@ class User extends \Flexio\Object\Base
         return $object;
     }
 
-    public static function load($identifier)
+    public static function load(string $identifier)
     {
         // note: \User::load() differs from other load implementations
         // in that a user can be loaded either by a unique eid, by
@@ -125,29 +101,21 @@ class User extends \Flexio\Object\Base
 
     public function copy()
     {
-        // TODO: disable copying of user objects for now, since users can't
-        // have the same username or email
-        return false;
+        // user info is unique; don't allow users to be copied
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
     }
 
-    public function set($properties)
+    public function set(array $properties) : \Flexio\Object\User
     {
-        // TODO: for now, don't forward model exception
-        try
-        {
-            // config is stored as a json string, so these need to be encoded
-            if (isset($properties) && isset($properties['config']))
-                $properties['config'] = json_encode($properties['config']);
+        // TODO: add properties check
 
-            // TODO: add properties check
-            $this->clearCache();
-            $user_model = $this->getModel()->user;
-            $user_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
+        // config is stored as a json string, so these need to be encoded
+        if (isset($properties) && isset($properties['config']))
+            $properties['config'] = json_encode($properties['config']);
 
+        $this->clearCache();
+        $user_model = $this->getModel()->user;
+        $user_model->set($this->getEid(), $properties);
         return $this;
     }
 
@@ -162,7 +130,7 @@ class User extends \Flexio\Object\Base
         return false;
     }
 
-    public function getProjects()
+    public function getProjects() : array
     {
         $eid = $this->getEid();
 
@@ -188,7 +156,7 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getPipes()
+    public function getPipes() : array
     {
         // note: we need to query the pipes for active projects only; because we don't have the ability to specify
         // properties in the graph query, we have to do two operations to get the pipes; first get the active projects,
@@ -249,7 +217,7 @@ class User extends \Flexio\Object\Base
 */
     }
 
-    public function getTokens()
+    public function getTokens() : array
     {
         $res = array();
         $token_items = $this->getModel()->token->getInfoFromUserEid($this->getEid());
@@ -272,18 +240,18 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getVerifyCode()
+    public function getVerifyCode() : string
     {
         $properties = $this->get();
         return $properties['verify_code'];
     }
 
-    public function checkPassword($password)
+    public function checkPassword(string $password) : bool
     {
         return $this->getModel()->user->checkUserPasswordByEid($this->getEid(), $password);
     }
 
-    public function isAdministrator()
+    public function isAdministrator() : bool
     {
         // TODO: for now, administrators is any user with an email address for flexio
 
@@ -318,7 +286,7 @@ class User extends \Flexio\Object\Base
         echo $data;
     }
 
-    public function changeProfilePicture($filename, $mime_type)
+    public function changeProfilePicture(string $filename, string $mime_type)
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -356,7 +324,7 @@ class User extends \Flexio\Object\Base
         echo $data;
     }
 
-    public function changeProfileBackground($filename, $mime_type)
+    public function changeProfileBackground(string $filename, string $mime_type)
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -371,7 +339,7 @@ class User extends \Flexio\Object\Base
         return $result;
     }
 
-    public function cropPicture($type, $src_x, $src_y, $src_w, $src_h)
+    public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h) : bool
     {
         $eid = $this->getEid();
         $mime_type = 'text/plain';
@@ -429,7 +397,7 @@ class User extends \Flexio\Object\Base
         return true;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -437,13 +405,14 @@ class User extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         // get the properties
         $local_properties = $this->getProperties();

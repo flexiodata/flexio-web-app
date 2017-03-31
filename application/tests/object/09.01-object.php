@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -49,7 +50,7 @@ class Test
         // TEST: object loading
 
         // BEGIN TEST
-        $object = \Flexio\Object\Object::load(false);
+        $object = \Flexio\Object\Object::load('');
         $actual = $object;
         $expected = false;
         TestCheck::assertBoolean('B.1', 'Object::load(); return false if an object fails to load',  $actual, $expected, $results);
@@ -121,19 +122,19 @@ class Test
         // TEST: object property setting
 
         // BEGIN TEST
-        $object = \Flexio\Object\Object::create();
-        $object = $object->set(null);
-        $actual =  'Flexio\Object\Object';
-        $expected = get_class($object);
-        TestCheck::assertString('D.1', 'Object::set(); return the object',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $object = \Flexio\Object\Object::create();
-        $eid1 = $object->getEid();
-        $eid2 = $object->set(null)->getEid();
-        $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
-        $expected = true;
-        TestCheck::assertBoolean('D.2', 'Object::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object = \Flexio\Object\Object::create();
+            $object = $object->set(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('D.1', 'Object::set(); if no input is set, throw an exeption',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
@@ -141,21 +142,14 @@ class Test
         $eid2 = $object->set(array('eid'=>'xxxxxxxxxxxx'))->getEid();
         $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
-        TestCheck::assertBoolean('D.3', 'Object::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $object = \Flexio\Object\Object::create();
-        $object = $object->set(null);
-        $actual =  $object->getType();
-        $expected = \Model::TYPE_OBJECT;
-        TestCheck::assertString('D.4', 'Object::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.2', 'Object::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();
         $object = $object->set(array('eid_type'=>\Model::TYPE_COMMENT));
         $actual =  $object->getType();
         $expected = \Model::TYPE_OBJECT;
-        TestCheck::assertString('D.5', 'Object::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
+        TestCheck::assertString('D.3', 'Object::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
 
 
 
@@ -210,12 +204,20 @@ class Test
         TestCheck::assertString('F.3', 'Object::setStatus(); setting status of an object shouldn\'t change its type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $object = \Flexio\Object\Object::create();
-        $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
-        $status2 = $object->setStatus('.')->getStatus();
-        $actual =  ($status1 === \Model::STATUS_TRASH && $status2 === \Model::STATUS_TRASH);
-        $expected = true;
-        TestCheck::assertBoolean('F.4', 'Object::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object = \Flexio\Object\Object::create();
+            $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
+            $status2 = $object->setStatus('.')->getStatus();
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Exception $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('F.4', 'Object::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Object::create();

@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -22,21 +23,26 @@ class Project extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_PROJECT);
     }
 
-    public function set($properties)
+    public static function create(array $properties = null) : \Flexio\Object\Project
+    {
+        $object = new static();
+        $model = \Flexio\Object\Store::getModel();
+        $local_eid = $model->create($object->getType(), $properties);
+
+        $object->setModel($model);
+        $object->setEid($local_eid);
+        $object->setRights();
+        $object->clearCache();
+        return $object;
+    }
+
+    public function set(array $properties) : \Flexio\Object\Project
     {
         // TODO: add properties check
 
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $project_model = $this->getModel()->project;
-            $project_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $project_model = $this->getModel()->project;
+        $project_model->set($this->getEid(), $properties);
         return $this;
     }
 
@@ -51,24 +57,20 @@ class Project extends \Flexio\Object\Base
         return false;
     }
 
-    public function addMember($object_eid)
+    public function addMember(string $object_eid) : \Flexio\Object\Project
     {
         if (!\Flexio\Base\Eid::isValid($object_eid))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $this->clearCache();
 
         $project_eid = $this->getEid();
         $result1 = $this->getModel()->assoc_add($project_eid, \Model::EDGE_HAS_MEMBER, $object_eid);
         $result2 = $this->getModel()->assoc_add($object_eid, \Model::EDGE_MEMBER_OF, $project_eid);
-
-        if ($result1 === false || $result2 === false)
-            return false;
-
-        return true;
+        return $this;
     }
 
-    public function getMembers()
+    public function getMembers() : array
     {
         $result = array();
 
@@ -88,7 +90,7 @@ class Project extends \Flexio\Object\Base
         return $result;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -96,13 +98,14 @@ class Project extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         // get the properties
         $local_properties = $this->getProperties();

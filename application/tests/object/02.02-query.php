@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -21,7 +22,6 @@ class Test
     {
         // SETUP
         $model = TestUtil::getModel();
-
 
 
         // TODO: handle commented out tests

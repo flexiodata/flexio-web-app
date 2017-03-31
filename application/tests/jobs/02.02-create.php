@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -22,7 +23,8 @@ class Test
         // TEST: Create; basic test with single column and row creation
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -36,7 +38,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process, true);
         $expected = '
@@ -53,7 +56,8 @@ class Test
         TestCheck::assertInArray('A.1', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -70,7 +74,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process, true);
         $expected = '
@@ -90,7 +95,8 @@ class Test
         TestCheck::assertInArray('A.2', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -107,7 +113,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process, true);
         $expected = '
@@ -127,7 +134,8 @@ class Test
         TestCheck::assertInArray('A.3', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -144,7 +152,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process, true);
         $expected = '
@@ -164,7 +173,8 @@ class Test
         TestCheck::assertInArray('A.4', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -181,7 +191,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process, true);
         $expected = '
@@ -201,7 +212,8 @@ class Test
         TestCheck::assertInArray('A.5', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -218,7 +230,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process, true);
         $expected = '
@@ -238,7 +251,8 @@ class Test
         TestCheck::assertInArray('A.6', 'Create Job; date field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -255,7 +269,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process, true);
         $expected = '
@@ -279,7 +294,8 @@ class Test
         // TEST: Create; basic test with multiple column and row creation
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -301,7 +317,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process, true);
         $expected = '

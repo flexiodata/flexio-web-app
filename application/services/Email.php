@@ -16,6 +16,7 @@
 // the following library is used:  https://github.com/zbateson/MailMimeParser
 
 
+declare(strict_types=1);
 namespace Flexio\Services;
 
 

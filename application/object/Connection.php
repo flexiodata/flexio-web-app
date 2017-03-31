@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -28,7 +29,7 @@ class Connection extends \Flexio\Object\Base
     public static function getDatastoreConnectionEid()
     {
         $registry_model = \Flexio\Object\Store::getModel()->registry;
-        $connection_eid = $registry_model->getString('', self::PROCESS_DATASTORE_1, false);
+        $connection_eid = $registry_model->getString('', self::PROCESS_DATASTORE_1);
 
         if ($connection_eid === false)
             $connection_eid = self::createDatastoreConnection();
@@ -42,21 +43,26 @@ class Connection extends \Flexio\Object\Base
         return $connection_eid;
     }
 
-    public function set($properties)
+    public static function create(array $properties = null) : \Flexio\Object\Connection
+    {
+        $object = new static();
+        $model = \Flexio\Object\Store::getModel();
+        $local_eid = $model->create($object->getType(), $properties);
+
+        $object->setModel($model);
+        $object->setEid($local_eid);
+        $object->setRights();
+        $object->clearCache();
+        return $object;
+    }
+
+    public function set(array $properties) : \Flexio\Object\Connection
     {
         // TODO: add properties check
 
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $connection_model = $this->getModel()->connection;
-            $connection_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $connection_model = $this->getModel()->connection;
+        $connection_model->set($this->getEid(), $properties);
         return $this;
     }
 
@@ -71,7 +77,7 @@ class Connection extends \Flexio\Object\Base
         return false;
     }
 
-    public function connect()
+    public function connect() : \Flexio\Object\Connection
     {
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
@@ -90,7 +96,7 @@ class Connection extends \Flexio\Object\Base
         return $this;
     }
 
-    public function disconnect()
+    public function disconnect() : \Flexio\Object\Connection
     {
         $this->clearCache();
 
@@ -106,7 +112,7 @@ class Connection extends \Flexio\Object\Base
         return $this;
     }
 
-    public function authenticate($params)
+    public function authenticate(array $params)
     {
         // TODO: this was moved from \Flexio\Api\Connection::authenticate() which functioned
         // somewhat like a static method so that everything was passed to the function;
@@ -238,7 +244,7 @@ class Connection extends \Flexio\Object\Base
         return $service;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -246,13 +252,14 @@ class Connection extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         // get the properties
         $local_properties = $this->getProperties();
@@ -321,7 +328,7 @@ class Connection extends \Flexio\Object\Base
         return $properties;
     }
 
-    private static function createDatastoreConnection()
+    private static function createDatastoreConnection() : string
     {
         $dbconfig = \Model::getDatabaseConfig();
 
@@ -329,7 +336,7 @@ class Connection extends \Flexio\Object\Base
         // TODO: we'll want to add some ability to pull from a pool of available datastore
         // so we can have multiple servers; but right now, we just have one
         if (!isset($dbconfig['datastore_dbname']) || strlen($dbconfig['datastore_dbname']) === 0)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $params = array('host'            => $dbconfig['datastore_host'],
                         'port'            => $dbconfig['datastore_port'],
@@ -340,13 +347,10 @@ class Connection extends \Flexio\Object\Base
                         );
 
         $connection_eid = \Flexio\Object\Store::getModel()->create(\Model::TYPE_CONNECTION, $params);
-        if ($connection_eid === false)
-            return false;
-
         return $connection_eid;
     }
 
-    private static function createDatastore($host, $port, $database, $username, $password)
+    private static function createDatastore(string $host, int $port, string $database, string $username, string $password) : \Flexio\Services\Postgres
     {
         // note: this function isn't used right now, but is here for reference
 
@@ -359,7 +363,7 @@ class Connection extends \Flexio\Object\Base
 
         $db = \Flexio\Services\Postgres::create($params);
         if (!$db)
-            return false;   // service not available
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         try
         {
@@ -368,9 +372,9 @@ class Connection extends \Flexio\Object\Base
         }
         catch (\Exception $e)
         {
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
 
-        return true;
+        return $db;
     }
 }

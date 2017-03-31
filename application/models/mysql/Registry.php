@@ -12,6 +12,9 @@
  */
 
 
+declare(strict_types=1);
+
+
 // NOTE: for MySQL implementations, make sure to set the following
 // param in the my.ini:
 // max_allowed_packet = 16M

@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -22,6 +23,17 @@ class Collection
     public function __construct()
     {
         $this->initialize();
+    }
+
+    public function __toString()
+    {
+        $items = array();
+        foreach ($this->objects as $o)
+        {
+            $items[] = array('eid' => $o->getEid(), 'eid_type' => $o->getType());
+        }
+
+        return json_encode($items);
     }
 
     public static function create()
@@ -42,33 +54,24 @@ class Collection
             // a collection contains one of these objects, don't allow the collection
             // to be copied
             $object_copy = $object->copy();
-            if ($object_copy === false)
-                return false;
-
             $result = $collection_copy->push($object_copy);
             if ($result === false)
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
 
         return $collection_copy;
     }
 
-    public function set($collection)
+    public function set(\Flexio\Object\Collection $collection)
     {
         // sets the collection to the input collection
-        if (!($collection instanceof \Flexio\Object\Collection))
-            return false;
-
         $this->objects = $collection->enum();
         return $this;
     }
 
-    public function merge($collection)
+    public function merge(\Flexio\Object\Collection $collection)
     {
         // adds the items in the collection to the existing collection
-        if (!($collection instanceof \Flexio\Object\Collection))
-            return false;
-
         $collection_objects = $collection->enum();
         foreach ($collection_objects as $object)
         {
@@ -78,7 +81,7 @@ class Collection
         return $this;
     }
 
-    public function push($object)
+    public function push($object) // TODO: only accept one type of input?
     {
         // adds an object onto the end of the collection
 
@@ -103,7 +106,7 @@ class Collection
         }
 
         // input is invalid
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
     }
 
     public function pop()
@@ -119,7 +122,7 @@ class Collection
         return $this->objects;
     }
 
-    public function find($name)
+    public function find(string $name)
     {
         // returns the first object with a given name; if no object are found, returns false
         foreach ($this->objects as $object)

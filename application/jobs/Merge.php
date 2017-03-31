@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -43,8 +44,6 @@ class Merge extends \Flexio\Jobs\Base
 
         if ($table_merge_mode === true)
             return $this->mergeTables();
-
-        return $this->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
     }
 
     private function mergeStreams()
@@ -60,8 +59,6 @@ class Merge extends \Flexio\Jobs\Base
 
         // write to the output
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         $input = $this->getInput()->enum();
         foreach ($input as $instream)
@@ -91,8 +88,6 @@ class Merge extends \Flexio\Jobs\Base
 
         // write to the output
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         $row_template = array();
         foreach ($outstream_structure as $s)
@@ -112,7 +107,7 @@ class Merge extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function determineStructure()
+    private function determineStructure() : array
     {
         // this function finds out a "superset" structure from a list
         // of inputs that can be safely appended to

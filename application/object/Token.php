@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -22,16 +23,16 @@ class Token extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_TOKEN);
     }
 
-    public static function create($properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\Token
     {
         // the user_eid needs to be set and be a valid user
         if (!isset($properties['user_eid']))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $user_eid = $properties['user_eid'];
         $user = \Flexio\Object\User::load($user_eid);
         if ($user === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // generate an access code and a secret code
         $properties['access_code'] = \Flexio\Base\Util::generateHandle();
@@ -39,10 +40,7 @@ class Token extends \Flexio\Object\Base
 
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
-
         $local_eid = $model->create($object->getType(), $properties);
-        if ($local_eid === false)
-            return false;
 
         $object->setModel($model);
         $object->setEid($local_eid);
@@ -50,10 +48,10 @@ class Token extends \Flexio\Object\Base
         return $object;
     }
 
-    public function set($properties)
+    public function set(array $properties) : \Flexio\Object\Token
     {
-        // don't allow anything to be set once it's been created
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        return $this;
     }
 
     public function get()
@@ -67,7 +65,7 @@ class Token extends \Flexio\Object\Base
         return false;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -75,13 +73,14 @@ class Token extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
         if ($local_properties === false)

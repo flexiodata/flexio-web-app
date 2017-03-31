@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -29,7 +30,8 @@ class Test
 
 
         // SETUP
-        $template_task = \Flexio\Object\Task::create()->push('
+        $template_task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -39,15 +41,16 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
 
 
 
         // TEST: Table Creation; no columns
 
         // BEGIN TEST
-
-        $local_task = \Flexio\Object\Task::create()->push('
+        $local_task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -58,7 +61,9 @@ class Test
                     "content": "bad content"
                 }
             }
-        ')->get();
+        ]
+        ',true);
+
         $process = \Flexio\Object\Process::create()->setTask($local_task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
@@ -218,11 +223,11 @@ class Test
 
 
 
-
         // TEST: Create; basic test with multiple columns and no values
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -235,14 +240,16 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_COMPLETED;
         TestCheck::assertString('I.1', 'Table Creation; succeed when job definition is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -255,7 +262,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '

@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -268,7 +269,7 @@ class Scheduler
 
     }
 
-    private static function runPipe($pipe_eid)
+    private static function runPipe(string $pipe_eid)
     {
         // TODO: following run code is similar to \Flexio\Api\Process::create() and
         // \Manager::runJob(); should factor; for example, the \Flexio\Api\Process::create()
@@ -293,7 +294,7 @@ class Scheduler
         $process->run();
     }
 
-    private static function getDateTimeParts($t = null, $tz = null)
+    private static function getDateTimeParts($t = null, $tz = null) // TODO: add input parameter types
     {
         if (is_null($tz))
             $tz = date_default_timezone_get();

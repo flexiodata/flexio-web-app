@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -22,7 +23,7 @@ class Test
         // TEST: Transform Job: standardize text with capitalization (none, lowercase, uppercase, proper, first letter)
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -51,14 +52,14 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
 		TestCheck::assertString('A.1', 'Transform Job; if capitalization mode is set to bad parameter, job should fail',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -87,7 +88,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -106,7 +107,7 @@ class Test
 		TestCheck::assertInArray('A.2', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -135,7 +136,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -154,7 +155,7 @@ class Test
 		TestCheck::assertInArray('A.3', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -183,7 +184,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -202,7 +203,7 @@ class Test
 		TestCheck::assertInArray('A.4', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -231,7 +232,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -254,7 +255,7 @@ class Test
         // TEST: Transform Job; standardize text with pad (left, right)
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -283,14 +284,14 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
 		TestCheck::assertString('B.1', 'Transform Job; standardize text with pad; don\'t do anything if the location isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -319,7 +320,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -338,7 +339,7 @@ class Test
 		TestCheck::assertInArray('B.2', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -367,7 +368,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -386,7 +387,7 @@ class Test
 		TestCheck::assertInArray('B.3', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -415,7 +416,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -434,7 +435,7 @@ class Test
 		TestCheck::assertInArray('B.4', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -463,7 +464,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -482,7 +483,7 @@ class Test
 		TestCheck::assertInArray('B.5', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -513,7 +514,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -533,7 +534,7 @@ class Test
 		TestCheck::assertInArray('B.6', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -565,7 +566,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -585,7 +586,7 @@ class Test
 		TestCheck::assertInArray('B.7', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -614,7 +615,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -633,7 +634,7 @@ class Test
 		TestCheck::assertInArray('B.8', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -662,7 +663,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -681,7 +682,7 @@ class Test
 		TestCheck::assertInArray('B.9', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -710,7 +711,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -729,7 +730,7 @@ class Test
 		TestCheck::assertInArray('B.10', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -758,7 +759,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -777,7 +778,7 @@ class Test
 		TestCheck::assertInArray('B.11', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -808,7 +809,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -828,7 +829,7 @@ class Test
 		TestCheck::assertInArray('B.12', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -859,7 +860,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -883,7 +884,7 @@ class Test
         // TEST: Transform Job; standardize text with trim spaces (leading, trailing, leading and trailing)
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -912,14 +913,14 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
 		TestCheck::assertString('C.1', 'Transform Job; standardize text with trim spaces; don\'t do anything if the type isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -948,7 +949,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -967,7 +968,7 @@ class Test
 		TestCheck::assertInArray('C.2', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -996,7 +997,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -1015,7 +1016,7 @@ class Test
 		TestCheck::assertInArray('C.3', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -1044,7 +1045,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -1063,7 +1064,7 @@ class Test
 		TestCheck::assertInArray('C.4', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -1093,7 +1094,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '

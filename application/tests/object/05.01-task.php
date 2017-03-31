@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -19,6 +20,9 @@ class Test
 {
     public function run(&$results)
     {
+        $model = TestUtil::getModel();
+
+
         // TEST: Task::create(); task creation
 
         // BEGIN TEST

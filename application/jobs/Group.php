@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -38,7 +39,7 @@ class Group extends \Flexio\Jobs\Base
         }
     }
 
-    public function createOutputFromTable($instream)
+    public function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
@@ -47,11 +48,11 @@ class Group extends \Flexio\Jobs\Base
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
         if ($job_statement === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // note: no need to call StreamWriter::create() because job statement creates a table
         if ($outstream->getService()->exec($job_statement) === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         // update the output structure; the fieldnames are specified by the job (and may
         // be different than the fieldnames used in the internal storage; however, the
@@ -63,7 +64,7 @@ class Group extends \Flexio\Jobs\Base
         $outstream->setStructure($output_columns);
     }
 
-    private static function prepareOutput($job_definition, $instream, &$outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Object\Stream $instream, \Flexio\Object\Stream &$outstream)
     {
         // properties
         if (!isset($job_definition['params']['columns']))
@@ -77,7 +78,6 @@ class Group extends \Flexio\Jobs\Base
         $detail = $job_definition['params']['detail'] ?? false;
 
         $input_columns = $instream->getStructure()->enum();
-
 
         // build and save the initial output struture
         $output_columns = array();
@@ -212,6 +212,10 @@ class Group extends \Flexio\Jobs\Base
         // build the output statement
         $where = \Flexio\Base\ExprTranslatorPostgres::translate($where, $input_columns);
         $having = \Flexio\Base\ExprTranslatorPostgres::translate($having, $output_columns);
+        if ($where === false)
+            $where = '';
+        if ($having === false)
+            $having = '';
 
         $sql = "CREATE TABLE " . $outstream->getPath() . " AS SELECT ";
         $sql .= " $column_expr ";
@@ -232,7 +236,7 @@ class Group extends \Flexio\Jobs\Base
         return $sql;
     }
 
-    private static function mergeColumnInfo($stream_columns, $store_columns)
+    private static function mergeColumnInfo(array $stream_columns, array $store_columns)
     {
         // take the name and the display name from the stream columns and merge
         // in the width and scale info from the columns in the storage table;

@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -44,7 +45,7 @@ class Search extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTable($instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
@@ -53,17 +54,15 @@ class Search extends \Flexio\Jobs\Base
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
         if ($job_statement === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         if ($outstream->getService()->exec($job_statement) === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }
 
-    private static function prepareOutput($job_definition, $instream, &$outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Object\Stream $instream, \Flexio\Object\Stream &$outstream)
     {
         // note: \Flexio\Jobs\Search used to be implement the functionality using
         // \Flexio\Jobs\Filter, the old implementation of which is now below until
@@ -119,7 +118,7 @@ class Search extends \Flexio\Jobs\Base
         return self::createFilterStatement($filter_job_definition, $instream, $outstream);
     }
 
-    private static function createFilterStatement($job_definition, $instream, &$outstream)
+    private static function createFilterStatement(array $job_definition, \Flexio\Object\Stream $instream, \Flexio\Object\Stream &$outstream)
     {
         // if the condition operator exists, it will be either "and" or "or"
         if (!isset($job_definition['params']['condition']['items']) || !is_array($job_definition['params']['condition']['items']) || count($job_definition['params']['condition']['items']) == 0)
@@ -240,7 +239,7 @@ class Search extends \Flexio\Jobs\Base
         return $sql;
     }
 
-    private static function assembleConditionPart($column, $operator, $value, $date_format)
+    private static function assembleConditionPart(array $column, string $operator, $value, string $date_format) // TODO: add parameter type
     {
         $finfo = $column;
 

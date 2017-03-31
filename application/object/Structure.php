@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -47,34 +48,31 @@ class Structure
         $this->initialize();
     }
 
-    public static function create($columns = array())
+    public static function create(array $columns = null) : \Flexio\Object\Structure
     {
         // TODO: \Structure::union() allows Structure type input; allow
         // \Structure::create() to take structure input; in general, we may
         // want the create() classes of various objects to also allow a copy
         // constructor type syntax where the input can also be a class object
 
-        // allow a structure to be created from 1) an array of columns,
-        // 2) a json_string that represents an array of columns
-
-        if (is_string($columns))
-            $columns = json_decode($columns, true);
+        if (!isset($columns))
+            $columns = array();
 
         if (!is_array($columns))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $object = (new self);
         foreach ($columns as $c)
         {
             $result = $object->push($c);
             if ($result === false)
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
 
         return $object;
     }
 
-    public static function union($structures = array())
+    public static function union(array $structures = null) : \Flexio\Object\Structure
     {
         // TODO: make sure that union of structures handles column names
         // that are equivalent, differing only by case (e.g. Field1 vs. field1;
@@ -85,8 +83,8 @@ class Structure
         // and diffs it with the next most commonly occurring structure recursively
         // until a final structure is obtained
 
-        if (!is_array($structures))
-            return false;
+        if (!isset($structures))
+            return self::create();
 
         $structure_list = array();
 
@@ -96,11 +94,8 @@ class Structure
             if (!($structure_item instanceof \Flexio\Object\Structure))
             {
                 // if we don't have a structure, we may have a list of columns
-                // or a string that represents columns; try to create a structure
-                // object from the input; if we can't, disregard the entry
+                // try to create a structure object from the input
                 $structure_item = self::create($structure_item);
-                if ($structure_item === false)
-                    continue;
             }
 
             $structure = $structure_item->enum();
@@ -132,26 +127,23 @@ class Structure
         return self::create($structure_output);
     }
 
-    public static function intersect($structures)
+    public static function intersect(array $structures = null) : \Flexio\Object\Structure
     {
         // TODO: creates a structure that's the intersection of the specified structures
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return self::create();
     }
 
-    public function copy()
+    public function copy() : \Flexio\Object\Structure
     {
         $object_copy = self::create();
         $object_copy->columns = $this->columns;
         return $object_copy;
     }
 
-    public function push($column)
+    public function push(array $column)
     {
         // note: returns the added column, or false if the column couldn't be added
-
-        // make sure we have a column array
-        if (!is_array($column))
-            return false;
 
         // get the column info from the input
         $column_entry = array(
@@ -309,18 +301,18 @@ class Structure
         return $removed_element;
     }
 
-    public function get()
+    public function get() : array
     {
         // return the structure "as is"
-        return $this->getColumns(false);
+        return $this->getColumns();
     }
 
-    public function enum($columns = false)
+    public function enum(array $columns = null) : array
     {
         return $this->getColumns($columns);
     }
 
-    public function getNames($columns = false)
+    public function getNames(array $columns = null) : array
     {
         $columns =  $this->getColumns($columns);
 
@@ -331,7 +323,7 @@ class Structure
         return $column_names;
     }
 
-    public function clear()
+    public function clear() : bool
     {
         $this->initialize();
         return true;
@@ -344,7 +336,7 @@ class Structure
         $this->column_store_index_lookup = array();
     }
 
-    private function getColumns($specified_columns = false, $filter_type = false)
+    private function getColumns(array $specified_columns = null, string $filter_type = null) : array
     {
         // takes an optional list of specified column names and returns a unique list of
         // output columns (structure) composed of: 1) any available column that satisfies
@@ -358,11 +350,8 @@ class Structure
         // for jobs that need to filter by type until these jobs are able to work on columns
         // of different types
 
-        if ($specified_columns === false)
+        if (!isset($specified_columns))
             return $this->columns;
-
-        if (!is_array($specified_columns))
-            return array();
 
         $column_names_to_output = array();
         $available_column_info_clean_by_name = array();   // structure info indexed by name
@@ -377,7 +366,7 @@ class Structure
                 continue;
 
             // if a column type filter is set, only allow through columns of that type
-            if (is_string($filter_type) && $filter_type === self::TYPE_CHARACTER)
+            if (isset($filter_type) && $filter_type === self::TYPE_CHARACTER)
             {
                 if (isset($column_info['type']) && $column_info['type'] !== self::TYPE_CHARACTER)
                     continue;
@@ -433,7 +422,7 @@ class Structure
         return $output_columns;
     }
 
-    private static function getWildcardColumns($wildcard_column, $available_columns)
+    private static function getWildcardColumns(string $wildcard_column, array $available_columns) : array
     {
         $output_column_names = array();
 
@@ -472,7 +461,7 @@ class Structure
         return $output_column_names;
     }
 
-    private static function mergeStructure($structure1, $structure2)
+    private static function mergeStructure(array $structure1, array $structure2) : array
     {
         $count_structure1 = count($structure1);
         $count_structure2 = count($structure2);
@@ -529,7 +518,7 @@ class Structure
         return $merged_structure;
     }
 
-    private static function mergeFieldInfo($field1_info, $field2_info)
+    private static function mergeFieldInfo(array $field1_info, array $field2_info) : array
     {
         // this function takes the information for two fields and merges
         // them to create an output type that can safely be used to represent
@@ -560,7 +549,7 @@ class Structure
         return $output_info;
     }
 
-    private static function isTextColumn($column_info)
+    private static function isTextColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -574,7 +563,7 @@ class Structure
         }
     }
 
-    private static function isNumberColumn($column_info)
+    private static function isNumberColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -588,7 +577,7 @@ class Structure
         }
     }
 
-    private static function isDateColumn($column_info)
+    private static function isDateColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -600,7 +589,7 @@ class Structure
         }
     }
 
-    private static function isDateTimeColumn($column_info)
+    private static function isDateTimeColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -612,7 +601,7 @@ class Structure
         }
     }
 
-    private static function isBooleanColumn($column_info)
+    private static function isBooleanColumn(array $column_info) : bool
     {
         switch ($column_info['type'])
         {
@@ -624,7 +613,7 @@ class Structure
         }
     }
 
-    private static function getUniqueName($name, $column_lookup)
+    private static function getUniqueName(string $name, array $column_lookup) : string
     {
         // if the column name doesn't exist, the name is valid; so return it
         if (!isset($column_lookup[$name]))
@@ -642,7 +631,7 @@ class Structure
         }
     }
 
-    private static function makeValidName($name)
+    private static function makeValidName(string $name) : string
     {
         // TODO: for now, make names lowercase (the datastore stores fields
         // in lowercase, so until we map the datastore structure to the
@@ -655,7 +644,7 @@ class Structure
         return trim($name);
     }
 
-    private static function makeValidStoreName($name)
+    private static function makeValidStoreName(string $name) : string
     {
         // store names are always lowercase
         $name = strtolower($name);
@@ -721,7 +710,7 @@ class Structure
         return trim($result);
     }
 
-    public static function isKeyword($str)
+    public static function isKeyword(string $str) : bool
     {
         $res = array_search(strtoupper($str),
             ["ABORT", "ABS", "ABSOLUTE", "ACCESS", "ACTION", "ADA", "ADD", "ADMIN", "AFTER", "AGGREGATE",
