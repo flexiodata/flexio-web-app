@@ -222,11 +222,11 @@ class Test
 
 
 
-
         // TEST: Create; basic test with multiple columns and no values
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -239,14 +239,16 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_COMPLETED;
         TestCheck::assertString('I.1', 'Table Creation; succeed when job definition is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('
+        $task = json_decode('
+        [
             {
                 "type": "flexio.create",
                 "params": {
@@ -259,7 +261,8 @@ class Test
                     ]
                 }
             }
-        ')->get();
+        ]
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '
