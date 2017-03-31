@@ -1,12 +1,5 @@
 <template>
   <div class="overflow-y-auto">
-    <pipe-transfer-input-blankslate
-      class="blankslate mh5 mv3"
-      v-if="!has_input && false"
-    >
-      <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Input</div>
-    </pipe-transfer-input-blankslate>
-
     <div class="blankslate mv4" v-if="tasks.length == 0">
       <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
       <div class="mt3">
@@ -31,29 +24,18 @@
         @insert-task="insertNewTask"
       ></pipe-builder-item>
     </div>
-
-    <pipe-transfer-output-blankslate
-      class="blankslate mh5 mt3 mb5"
-      v-if="!has_output && false"
-    >
-      <div class="f8 fw6 moon-gray ttu absolute css-corner-title">Output</div>
-    </pipe-transfer-output-blankslate>
   </div>
 </template>
 
 <script>
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
-  import PipeTransferInputBlankslate from './PipeTransferInputBlankslate.vue'
-  import PipeTransferOutputBlankslate from './PipeTransferOutputBlankslate.vue'
   import PipeBuilderItem from './PipeBuilderItem.vue'
 
   export default {
     props: ['pipe-eid', 'tasks', 'active-process', 'project-connections'],
     components: {
       Btn,
-      PipeTransferInputBlankslate,
-      PipeTransferOutputBlankslate,
       PipeBuilderItem
     },
     computed: {

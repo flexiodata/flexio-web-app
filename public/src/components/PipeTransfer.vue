@@ -91,19 +91,30 @@
           <button
             type="button"
             class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
-            aria-label="Switch to builder view"
+            aria-label="Edit steps"
             @click="$emit('open-builder')"
-            v-if="has_tasks"
+            v-if="has_tasks && false"
           >
             <i class="db material-icons f4">edit</i>
           </button>
         </div>
       </div>
-      <pipe-transfer-transform-list
-        class="flex-fill pa3"
-        :tasks="transform_tasks"
-        v-if="has_tasks"
-      ></pipe-transfer-transform-list>
+      <div class="flex-fill overflow-y-auto pa3" v-if="has_tasks">
+        <pipe-transfer-transform-list
+          :tasks="transform_tasks"
+        ></pipe-transfer-transform-list>
+        <div>
+          <btn
+            btn-md
+            btn-primary
+            class="ttu b"
+            @click="$emit('open-builder')"
+          >
+            <i class="material-icons md-18 v-mid" style="margin-left: -4px" v-if="false">edit</i>
+            <span class="v-mid">Edit steps</span>
+          </btn>
+        </div>
+      </div>
       <div class="flex-fill" v-else>
         <div class="ma3">
           <div class="lh-copy mid-gray f6 mb3 tl tc-m i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
