@@ -13,7 +13,7 @@
     </pipe-home-header>
 
     <pipe-transfer
-      class="flex-fill ph5-l"
+      class="flex-fill ph5-l bt b--black-10 bw0-l"
       :project-eid="project_eid"
       :pipe-eid="eid"
       :tasks="tasks"
