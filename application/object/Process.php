@@ -470,16 +470,6 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function failValidation($validator, $file = null, $line = null) // TODO: add input parameter types
-    {
-        $errors = $validator->getErrors();
-        foreach ($errors as $e)
-        {
-            $this->setError($e['code'], $e['message'], $file, $line);
-        }
-        return;
-    }
-
     public function fail($code = '', $message = null, $file = null, $line = null) // TODO: add input parameter types
     {
         $this->setError($code, $message, $file, $line);
