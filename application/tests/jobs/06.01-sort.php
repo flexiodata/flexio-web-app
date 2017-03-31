@@ -48,6 +48,41 @@ class Test
 
 
 
+
+
+
+        // TEST: Sort Job; basic functional test
+
+        // BEGIN TEST
+        $params = [
+            "order" => [
+                [
+                    "expression" => "field1",
+                    "direction" => "asc"
+                ]
+            ]
+        ];
+        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $expected = [["a"],["b"],["c"]];
+        TestCheck::assertString('C.1', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = [
+            "order" => [
+                [
+                    "expression" => "field1",
+                    "direction" => "desc"
+                ]
+            ]
+        ];
+        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $expected = [["c"],["b"],["a"]];
+        TestCheck::assertString('C.2', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);
+
+
+
         // TEST: Sort Job; missing parameters
 
         // BEGIN TEST

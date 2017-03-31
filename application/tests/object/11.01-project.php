@@ -50,7 +50,7 @@ class Test
         // TEST: object loading
 
         // BEGIN TEST
-        $object = \Flexio\Object\Project::load(false);
+        $object = \Flexio\Object\Project::load('');
         $actual = $object;
         $expected = false;
         TestCheck::assertBoolean('B.1', 'Project::load(); return false if an object fails to load',  $actual, $expected, $results);

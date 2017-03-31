@@ -113,22 +113,31 @@ class Test
         TestCheck::assertString('A.5', 'Registry\Model::setNumber(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $object_eid = '';
-        $name = \Flexio\Base\Util::generateHandle();
-        $value = 1;
-        $expires = false;
-        $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
-        $expected = false;
-        TestCheck::assertBoolean('A.6', 'Registry\Model::setNumber(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object_eid = '';
+            $name = \Flexio\Base\Util::generateHandle();
+            $value = 1;
+            $expires = false;
+            $model->registry->setNumber($object_eid, $name, $value, $expires);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.6', 'Registry\Model::setNumber(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
         $name = \Flexio\Base\Util::generateHandle();
-        $value = 1;
+        $value = 1.1;
         $expires = 0;
         $actual = $model->registry->setNumber($object_eid, $name, $value, $expires);
         $expected = true;
-        TestCheck::assertBoolean('A.7', 'Registry\Model::setNumber(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
+        TestCheck::assertString('A.7', 'Registry\Model::setNumber(); set expiration time with non-negative integer', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';

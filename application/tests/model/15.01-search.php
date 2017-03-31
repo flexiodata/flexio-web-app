@@ -43,11 +43,19 @@ class Test
         TestCheck::assertString('A.1', '\Model::search(); throw an error with and invalid search parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $path = true;
-        $result = $model->search($path);
-        $actual = $result;
-        $expected = false;
-        TestCheck::assertBoolean('A.2', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $path = true;
+            $result = $model->search($path);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.2', '\Model::search(); throw an error with and invalid search parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $path = "";

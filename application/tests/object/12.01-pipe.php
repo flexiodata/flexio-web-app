@@ -50,7 +50,7 @@ class Test
         // TEST: object loading
 
         // BEGIN TEST
-        $object = \Flexio\Object\Pipe::load(false);
+        $object = \Flexio\Object\Pipe::load('');
         $actual = $object;
         $expected = false;
         TestCheck::assertBoolean('B.1', 'Pipe::load(); return false if an object fails to load',  $actual, $expected, $results);
