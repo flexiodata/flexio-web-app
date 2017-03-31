@@ -446,12 +446,12 @@ class Process extends \Flexio\Object\Base
         return false;
     }
 
-    private function getErrors()
+    public function getErrors()
     {
         return $this->errors;
     }
 
-    private function hasErrors() : bool
+    public function hasErrors() : bool
     {
         if (empty($this->errors))
             return false;
