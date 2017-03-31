@@ -115,7 +115,13 @@
       }
     },
     data() {
+      // somewhat hack-ish, but effective; this will keep the computed
+      // 'is_changed' property from being true until we've initialized
+      // our data
+      this.$nextTick(() => { this.is_inited = true })
+
       return {
+        is_inited: false,
         description: this.getDescription(),
         edit_json: this.getOrigJson(),
         edit_command: this.getParserCommand(),
