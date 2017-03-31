@@ -445,18 +445,12 @@ class Process extends \Flexio\Object\Base
         return false;
     }
 
-    public function setError($code, $message = null, $file = null, $line = null) : \Flexio\Object\Process // TODO: add input parameter types
-    {
-        $this->errors[] = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line);
-        return $this;
-    }
-
-    public function getErrors()
+    private function getErrors()
     {
         return $this->errors;
     }
 
-    public function hasErrors() : bool
+    private function hasErrors() : bool
     {
         if (empty($this->errors))
             return false;
@@ -464,15 +458,9 @@ class Process extends \Flexio\Object\Base
         return true;
     }
 
-    public function clearErrors() : \Flexio\Object\Process
+    private function fail($code = '', $message = null, $file = null, $line = null) // TODO: add input parameter types
     {
-        $this->errors = array();
-        return $this;
-    }
-
-    public function fail($code = '', $message = null, $file = null, $line = null) // TODO: add input parameter types
-    {
-        $this->setError($code, $message, $file, $line);
+        $this->errors[] = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line);
         return;
     }
 
@@ -773,28 +761,33 @@ class Process extends \Flexio\Object\Base
             $job->run();
             $output = $job->getOutput();
         }
+        catch (\Flexio\Base\Exception $e)
+        {
+            self::logExceptionIfConfigured($e, $task);
+
+            $info = $e->getMessage(); // exception info is packaged up in message
+            $info = json_decode($info,true);
+            $file = $e->getFile();
+            $line = $e->getLine();
+            $code = $info['code'];
+            $message = $info['message'];
+            return $process->fail($code, $message, $file, $line);
+        }
         catch (\Exception $e)
         {
-            if (isset($GLOBALS['g_config']->debug_error_log))
-            {
-                $message = $e->getMessage();
-                $json = json_encode($task);
-                file_put_contents($GLOBALS['g_config']->debug_error_log, "Job exception caught '$message'; json was $json\n\n", FILE_APPEND);
-            }
+            self::logExceptionIfConfigured($e, $task);
 
-            return $process->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
+            $file = $e->getFile();
+            $line = $e->getLine();
+            return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
         }
         catch (\Error $e)
         {
-            if (isset($GLOBALS['g_config']->debug_error_log))
-            {
-                $message = $e->getMessage();
-                $task = $job->getProperties();
-                $json = json_encode($task);
-                file_put_contents($GLOBALS['g_config']->debug_error_log, "Job exception caught '$message'; json was $json\n\n", FILE_APPEND);
-            }
+            self::logExceptionIfConfigured($e, $task);
 
-            return $process->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
+            $file = $e->getFile();
+            $line = $e->getLine();
+            return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
         }
     }
 
@@ -1179,5 +1172,15 @@ class Process extends \Flexio\Object\Base
         $time_micropart = sprintf("%06d", ($time - floor($time)) * 1000000);
         $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, $time));
         return ($date->format("Y-m-d H:i:s.u"));
+    }
+
+    private static function logExceptionIfConfigured($exception, $task)
+    {
+        if (isset($GLOBALS['g_config']->debug_error_log))
+        {
+            $message = $exception->getMessage();
+            $json = json_encode($task);
+            file_put_contents($GLOBALS['g_config']->debug_error_log, "Job exception caught '$message'; json was $json\n\n", FILE_APPEND);
+        }
     }
 }
