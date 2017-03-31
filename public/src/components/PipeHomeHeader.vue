@@ -52,6 +52,7 @@
         btn-primary
         class="ttu b"
         v-if="processRunning"
+        @click="cancelProcess"
       >Cancel</btn>
       <div
         class="hint--bottom-left"
@@ -121,6 +122,9 @@
       runPipe() {
         this.setPipeView('builder')
         this.$emit('run-pipe')
+      },
+      cancelProcess() {
+        this.$emit('cancel-process')
       }
     }
   }
