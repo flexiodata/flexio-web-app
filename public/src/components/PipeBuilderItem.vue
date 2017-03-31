@@ -109,7 +109,7 @@
     },
     watch: {
       item: function(val, old_val) {
-        this.edit_json = this.getOrigJson()
+        this.edit_json = _.assign({}, this.getOrigJson())
         this.edit_command = this.getParserCommand()
         this.execute_code = this.getReadableCode()
       }
@@ -205,7 +205,7 @@
       },
       updateEditTask(cmd_text, cmd_json) {
         this.edit_command = cmd_text
-        this.edit_json = cmd_json
+        this.edit_json = _.assign({}, cmd_json)
       },
       updateCode(code) {
         this.execute_code = code
@@ -220,8 +220,14 @@
           input.endEdit()
       },
       cancelEdit() {
-        this.edit_json = this.getOrigJson()
+        this.edit_json = _.assign({}, this.getOrigJson())
+        this.edit_command = this.getParserCommand()
         this.execute_code = this.getReadableCode()
+
+        // reset the command in the command bar
+        var cmd_bar = this.$refs['commandbar']
+        if (!_.isNil(cmd_bar))
+          cmd_bar.setCmdText(this.edit_command)
 
         // reset the code in the code editor
         var code_editor = this.$refs['code']
