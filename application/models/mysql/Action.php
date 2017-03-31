@@ -12,6 +12,9 @@
  */
 
 
+declare(strict_types=1);
+
+
 class Action extends ModelBase
 {
     public function record(array $params) : bool

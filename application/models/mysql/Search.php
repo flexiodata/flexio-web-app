@@ -12,6 +12,9 @@
  */
 
 
+declare(strict_types=1);
+
+
 class SearchTerm
 {
     public $node_eids = false;

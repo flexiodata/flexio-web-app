@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -22,21 +23,26 @@ class Comment extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_COMMENT);
     }
 
-    public function set($properties)
+    public static function create(array $properties = null) : \Flexio\Object\Comment
+    {
+        $object = new static();
+        $model = \Flexio\Object\Store::getModel();
+        $local_eid = $model->create($object->getType(), $properties);
+
+        $object->setModel($model);
+        $object->setEid($local_eid);
+        $object->setRights();
+        $object->clearCache();
+        return $object;
+    }
+
+    public function set(array $properties) : \Flexio\Object\Comment
     {
         // TODO: add properties check
 
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $comment_model = $this->getModel()->comment;
-            $comment_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $comment_model = $this->getModel()->comment;
+        $comment_model->set($this->getEid(), $properties);
         return $this;
     }
 
@@ -51,7 +57,7 @@ class Comment extends \Flexio\Object\Base
         return false;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -59,13 +65,14 @@ class Comment extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
         if ($local_properties === false)

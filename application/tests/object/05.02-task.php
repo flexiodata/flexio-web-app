@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -19,12 +20,15 @@ class Test
 {
     public function run(&$results)
     {
+        $model = TestUtil::getModel();
+
+
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${v1}"
         }]
-        ';
+        ',true);
         $variables = [
         ];
         $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
@@ -37,19 +41,14 @@ class Test
 
 
 
-
-return;
-
-
-
         // TEST: Task::setParams(); variable serialization with single variable
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": ""
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -62,11 +61,11 @@ return;
         TestCheck::assertInArray('A.1', 'Task::setParams(); handle case with no replacement', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${v1}"
         }]
-        ';
+        ',true);
         $variables = [
         ];
         $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
@@ -78,11 +77,11 @@ return;
         TestCheck::assertInArray('A.2', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${v1}"
         }]
-        ';
+        ',true);
         $variables = [
             "v2" => "field1"
         ];
@@ -95,11 +94,11 @@ return;
         TestCheck::assertInArray('A.3', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${v1}"
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -112,11 +111,11 @@ return;
         TestCheck::assertInArray('A.4', 'Task::setParams(); basic replacement of single variable', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${v1}"
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -129,11 +128,11 @@ return;
         TestCheck::assertInArray('A.5', 'Task::setParams(); basic replacement of single variable; case-sensitive check', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${V1}"
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -146,11 +145,11 @@ return;
         TestCheck::assertInArray('A.6', 'Task::setParams(); basic replacement of single variable; case-sensitive check', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "$ {v1}"
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -163,11 +162,11 @@ return;
         TestCheck::assertInArray('A.7', 'Task::setParams(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${ v1}"
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -180,11 +179,11 @@ return;
         TestCheck::assertInArray('A.8', 'Task::setParams(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${v1 }"
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -197,11 +196,11 @@ return;
         TestCheck::assertInArray('A.9', 'Task::setParams(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "  ${v1}  "
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -214,11 +213,11 @@ return;
         TestCheck::assertInArray('A.10', 'Task::setParams(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "{v1}"
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -231,11 +230,11 @@ return;
         TestCheck::assertInArray('A.11', 'Task::setParams(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "$v1}"
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -248,11 +247,11 @@ return;
         TestCheck::assertInArray('A.12', 'Task::setParams(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${v1"
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -265,11 +264,11 @@ return;
         TestCheck::assertInArray('A.13', 'Task::setParams(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${1}"
         }]
-        ';
+        ',true);
         $variables = [
             "1" => "test@flex.io"
         ];
@@ -282,11 +281,11 @@ return;
         TestCheck::assertInArray('A.14', 'Task::setParams(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${_1}"
         }]
-        ';
+        ',true);
         $variables = [
             "_1" => "test@flex.io"
         ];
@@ -299,11 +298,11 @@ return;
         TestCheck::assertInArray('A.15', 'Task::setParams(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${email-address-1}"
         }]
-        ';
+        ',true);
         $variables = [
             "email-address-1" => "test@flex.io"
         ];
@@ -316,11 +315,11 @@ return;
         TestCheck::assertInArray('A.16', 'Task::setParams(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${email_address_1}"
         }]
-        ';
+        ',true);
         $variables = [
             "email_address_1" => "test@flex.io"
         ];
@@ -333,11 +332,11 @@ return;
         TestCheck::assertInArray('A.17', 'Task::setParams(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${variable}"
         }]
-        ';
+        ',true);
         $variables = [
             "variable" => "'"
         ];
@@ -350,11 +349,11 @@ return;
         TestCheck::assertInArray('A.18', 'Task::setParams(); basic replacement of single variable; variable values with symbols', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${variable}"
         }]
-        ';
+        ',true);
         $variables = [
             'variable' => '${}'
         ];
@@ -367,11 +366,11 @@ return;
         TestCheck::assertInArray('A.19', 'Task::setParams(); basic replacement of single variable; variable values with symbols', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${variable}"
         }]
-        ';
+        ',true);
         $variables = [
             'variable' => "\\"
         ];
@@ -388,11 +387,11 @@ return;
         // TEST: Task::setParams(); variable serialization with variables of different types
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "different_value" => null
         ];
@@ -405,11 +404,11 @@ return;
         TestCheck::assertInArray('B.1', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "value" => null
         ];
@@ -422,11 +421,11 @@ return;
         TestCheck::assertInArray('B.2', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "different_value" => false
         ];
@@ -439,11 +438,11 @@ return;
         TestCheck::assertInArray('B.3', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "value" => false
         ];
@@ -456,11 +455,11 @@ return;
         TestCheck::assertInArray('B.4', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "value" => true
         ];
@@ -473,11 +472,11 @@ return;
         TestCheck::assertInArray('B.5', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "different_value" => 10
         ];
@@ -490,11 +489,11 @@ return;
         TestCheck::assertInArray('B.6', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "value" => 10
         ];
@@ -507,11 +506,11 @@ return;
         TestCheck::assertInArray('B.7', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "value" => -2.1
         ];
@@ -524,11 +523,11 @@ return;
         TestCheck::assertInArray('B.8', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "different_value" => [1,2,3]
         ];
@@ -541,11 +540,11 @@ return;
         TestCheck::assertInArray('B.9', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "value" => [1,2,3]
         ];
@@ -558,11 +557,11 @@ return;
         TestCheck::assertInArray('B.10', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "different_value" => ["a" => "b"]
         ];
@@ -575,11 +574,11 @@ return;
         TestCheck::assertInArray('B.11', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}"
         }]
-        ';
+        ',true);
         $variables = [
             "value" => ["a" => "b"]
         ];
@@ -592,11 +591,11 @@ return;
         TestCheck::assertInArray('B.12', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "The value is: ${value} units."
         }]
-        ';
+        ',true);
         $variables = [
             "different_value" => 10
         ];
@@ -609,11 +608,11 @@ return;
         TestCheck::assertInArray('B.13', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "The value is: ${value} units."
         }]
-        ';
+        ',true);
         $variables = [
             "value" => 10
         ];
@@ -626,11 +625,11 @@ return;
         TestCheck::assertInArray('B.14', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "The statement is ${value}."
         }]
-        ';
+        ',true);
         $variables = [
             "different_value" => true
         ];
@@ -643,11 +642,11 @@ return;
         TestCheck::assertInArray('B.15', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "The statement is ${value}."
         }]
-        ';
+        ',true);
         $variables = [
             "value" => true
         ];
@@ -660,11 +659,11 @@ return;
         TestCheck::assertInArray('B.16', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "The value is ${value}."
         }]
-        ';
+        ',true);
         $variables = [
             "value" => null
         ];
@@ -677,11 +676,11 @@ return;
         TestCheck::assertInArray('B.17', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string; nulls become empty', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${value}/${value} is 1"
         }]
-        ';
+        ',true);
         $variables = [
             "value" => 10
         ];
@@ -698,11 +697,11 @@ return;
         // TEST: Task::setParams(); variable serialization with multiple variables
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": [ "${v1}", "${v2}" ]
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1",
             "v2" => "field2"
@@ -716,11 +715,11 @@ return;
         TestCheck::assertInArray('C.1', 'Task::setParams(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": [ "${v2}", "${v1}" ]
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1",
             "v2" => "field2"
@@ -734,11 +733,11 @@ return;
         TestCheck::assertInArray('C.2', 'Task::setParams(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": [ "${v2}", "${v1}", "${v2}", "${v1}" ]
         }]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1",
             "v2" => "field2"
@@ -752,11 +751,11 @@ return;
         TestCheck::assertInArray('C.3', 'Task::setParams(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": [ "${v2}", "${v1}", "${v2}", "${v1}" ]
         }]
-        ';
+        ',true);
         $variables = [
             "v2" => "field2",
             "v3" => "field3"
@@ -770,11 +769,11 @@ return;
         TestCheck::assertInArray('C.4', 'Task::setParams(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": {"${key}": "${value}"}
         }]
-        ';
+        ',true);
         $variables = [
             "key" => "a",
             "value" => "b"
@@ -788,11 +787,11 @@ return;
         TestCheck::assertInArray('C.5', 'Task::setParams(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "The ${_1} is ${_2}."
         }]
-        ';
+        ',true);
         $variables = [
             "_1" => "key",
             "_2" => "value"
@@ -806,11 +805,11 @@ return;
         TestCheck::assertInArray('C.6', 'Task::setParams(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": "${_2} is ${_1}."
         }]
-        ';
+        ',true);
         $variables = [
             "_1" => "key",
             "_2" => "Value"
@@ -824,11 +823,11 @@ return;
         TestCheck::assertInArray('C.7', 'Task::setParams(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [{
             "params": {"a": "${var_01}", "b": "${var_02}"}
         }]
-        ';
+        ',true);
         $variables = [
             "var_01" => "A",
             "var_02" => "B"
@@ -846,7 +845,7 @@ return;
         // TEST: Task::setParams(); variable serialization with multiple variables at varying object depths
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [
             {
                 "type": "flexio.nop",
@@ -860,7 +859,7 @@ return;
                 ]
             }
         ]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -883,7 +882,7 @@ return;
         TestCheck::assertInArray('D.1', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [
             {
                 "type": "flexio.nop",
@@ -898,7 +897,7 @@ return;
                 }
             }
         ]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -921,7 +920,7 @@ return;
         TestCheck::assertInArray('D.2', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [
             {
                 "type": "flexio.nop",
@@ -935,7 +934,7 @@ return;
                 ]
             }
         ]
-        ';
+        ',true);
         $variables = [
             "v1" => "field1"
         ];
@@ -958,7 +957,7 @@ return;
         TestCheck::assertInArray('D.3', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -974,7 +973,7 @@ return;
                 }
             }
         ]
-        ';
+        ',true);
         $variables = [
             "name" => "f1",
             "type" => "numeric",
@@ -1002,7 +1001,7 @@ return;
         TestCheck::assertInArray('D.4', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -1024,7 +1023,7 @@ return;
                 }
             }
         ]
-        ';
+        ',true;
         $variables = [
             "name" => "f1",
             "type" => "text",
@@ -1054,7 +1053,7 @@ return;
         TestCheck::assertInArray('D.5', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = '
+        $task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -1076,7 +1075,7 @@ return;
                 }
             }
         ]
-        ';
+        ',true);
         $variables = [
             "name" => "f1",
             "type" => "numeric",

@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -106,7 +107,7 @@ class EmailSend extends \Flexio\Jobs\Base
         }
     }
 
-    private function getAttachmentsFromInput($instream_list)
+    private function getAttachmentsFromInput(array $instream_list)
     {
         $attachments = array();
 
@@ -147,7 +148,7 @@ class EmailSend extends \Flexio\Jobs\Base
         return $attachments;
     }
 
-    private function saveDataToFile($stream, $filename)
+    private function saveDataToFile(\Flexio\Object\Stream $stream, string $filename)
     {
         $handle = fopen($filename, "wt");
         if (!$handle)
@@ -161,7 +162,7 @@ class EmailSend extends \Flexio\Jobs\Base
         return true;
     }
 
-    private function saveDataToCsv($stream, $filename, $maxrows = -1, $maxbytes = -1)
+    private function saveDataToCsv(\Flexio\Object\Stream $stream, string $filename, int $maxrows = -1, int $maxbytes = -1)
     {
         $handle = fopen($filename, "wt");
         if (!$handle)

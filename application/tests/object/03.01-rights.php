@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -19,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
         // TEST: Rights constant tests
 
         // BEGIN TEST

@@ -12,6 +12,9 @@
  */
 
 
+declare(strict_types=1);
+
+
 class Tempdata extends ModelBase
 {
     public function entryExists(string $name) : bool

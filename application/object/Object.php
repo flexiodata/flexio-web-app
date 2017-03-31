@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -22,14 +23,27 @@ class Object extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_OBJECT);
     }
 
-    public function set($properties)
+    public static function create(array $properties = null) : \Flexio\Object\Object
+    {
+        $object = new static();
+        $model = \Flexio\Object\Store::getModel();
+        $local_eid = $model->create($object->getType(), $properties);
+
+        $object->setModel($model);
+        $object->setEid($local_eid);
+        $object->setRights();
+        $object->clearCache();
+        return $object;
+    }
+
+    public function set(array $properties) : \Flexio\Object\Object
     {
         $this->clearCache();
 
         if (isset($properties['eid_status']))
         {
             $status = $properties['eid_status'];
-            $result = $this->getModel()->setStatus($this->getEid(), $status);
+            $this->getModel()->setStatus($this->getEid(), $status);
         }
 
         return $this;
@@ -46,7 +60,7 @@ class Object extends \Flexio\Object\Base
         return false;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -54,13 +68,14 @@ class Object extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
         if ($local_properties === false)

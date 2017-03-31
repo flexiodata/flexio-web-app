@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -38,7 +39,7 @@ class CalcField extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutput($instream)
+    private function createOutput(\Flexio\Object\Stream $instream)
     {
         // get the job properties
         $job_definition = $this->getProperties();
@@ -59,7 +60,7 @@ class CalcField extends \Flexio\Jobs\Base
         $success = $expreval->prepare($expression, $input_structure);
 
         if ($success === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // create the output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
@@ -73,7 +74,7 @@ class CalcField extends \Flexio\Jobs\Base
             'scale' => $scale
         ));
         if ($added_field === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $name = $added_field['name']; // get the name of the field that was added (in case it was adjusted for duplicate, for example)
         $outstream->setStructure($output_structure);

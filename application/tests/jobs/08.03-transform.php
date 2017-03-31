@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -57,7 +58,7 @@ class Test
 
 
         // SETUP
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -86,7 +87,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
 
 
 
@@ -114,7 +115,7 @@ class Test
 
 
         // BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -141,7 +142,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -164,7 +165,7 @@ class Test
         // TEST: Transform Job; conversion to character type from numeric type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -195,7 +196,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -216,7 +217,7 @@ class Test
 		TestCheck::assertInArray('B.1', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -245,7 +246,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -264,7 +265,7 @@ class Test
 		TestCheck::assertInArray('B.2', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -294,7 +295,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -318,7 +319,7 @@ class Test
         // TEST: Transform Job; conversion to character type from double type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -349,7 +350,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -370,7 +371,7 @@ class Test
 		TestCheck::assertInArray('C.1', 'Transform Job; conversion from double to character',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -400,7 +401,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -424,7 +425,7 @@ class Test
         // TEST: Transform Job; conversion to character type from integer type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -455,7 +456,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -480,7 +481,7 @@ class Test
         // TEST: Transform Job; conversion to character type from date type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -509,7 +510,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -532,7 +533,7 @@ class Test
         // TEST: Transform Job; conversion to character type from datetime type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -561,7 +562,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -584,7 +585,7 @@ class Test
         // TEST: Transform Job; conversion to character type from boolean type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -612,7 +613,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -633,7 +634,7 @@ class Test
         // TEST: Transform Job; conversion to boolean type from character type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -672,7 +673,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -705,7 +706,7 @@ class Test
         // TEST: Transform Job; conversion to boolean type from numeric type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -735,7 +736,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -755,7 +756,7 @@ class Test
 		TestCheck::assertInArray('I.1', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -785,7 +786,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -809,7 +810,7 @@ class Test
         // TEST: Transform Job; conversion to boolean type from double type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -839,7 +840,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -863,7 +864,7 @@ class Test
         // TEST: Transform Job; conversion to boolean type from integer type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -893,7 +894,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -917,7 +918,7 @@ class Test
         // TEST: Transform Job; conversion to boolean type from date type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -945,7 +946,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -967,7 +968,7 @@ class Test
         // TEST: Transform Job; conversion to boolean type from datetime type
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -995,7 +996,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '
@@ -1017,7 +1018,7 @@ class Test
         // TEST: Transform Job; conversion to boolean type from boolean type (identity)
 
 		// BEGIN TEST
-		$task = '
+		$task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -1045,7 +1046,7 @@ class Test
                 }
             }
         ]
-        ';
+        ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputResult($process);
 		$expected = '

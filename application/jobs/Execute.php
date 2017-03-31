@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -44,7 +45,7 @@ class Execute extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutput($instream)
+    private function createOutput(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
@@ -89,18 +90,16 @@ class Execute extends \Flexio\Jobs\Base
         }
 
         if ($program_type === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $program_path = \Flexio\System\System::getBinaryPath($program_type);
         if (!isset($program_path))
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // get the code from the template
         $code = $job_definition['params']['code'] ?? '';
         if (strlen($code) == 0)
-            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _(''), __FILE__, __LINE__);
-
-
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
@@ -122,7 +121,7 @@ class Execute extends \Flexio\Jobs\Base
         if (!$process->exec($cmd, $cwd, $env))
         {
             @unlink($filename);
-            return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
 
 
@@ -142,7 +141,7 @@ class Execute extends \Flexio\Jobs\Base
         $done_writing = false;
         $first_chunk = true;
         $chunk = '';
-        
+
         //$tot = 0;
         //$totw = 0;
 
@@ -202,7 +201,7 @@ class Execute extends \Flexio\Jobs\Base
 
                         if ($len > 0)
                             $process->write($buf);
-                        
+
                         //$totw += $len;
                     }
                 }
@@ -277,7 +276,7 @@ class Execute extends \Flexio\Jobs\Base
        // var_dump($err);
         if (isset($err))
         {
-            return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, $err, __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
     }
 

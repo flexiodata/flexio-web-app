@@ -12,18 +12,19 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
 interface IJob
 {
-    public static function create($process = null, $properties = null);
+    public static function create(\Flexio\Object\Process $process = null, array $properties = null);
     public function getProcess();
-    public function getType();
-    public function getProperties();
+    public function getType() : string;
+    public function getProperties() : array;
 
-    public function getInput();
-    public function getOutput();
+    public function getInput() : \Flexio\Object\Collection;
+    public function getOutput() : \Flexio\Object\Collection;
 
     public function run();
 }

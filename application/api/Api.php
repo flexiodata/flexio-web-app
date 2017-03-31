@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Api;
 
 
@@ -168,7 +169,7 @@ class Api
 
         $function = self::getApiEndpoint($api_path);
         if ($function !== false && is_callable($function) === true)
-            return $function($query_params, $request);
+            return self::execApiCall($function, $query_params, $request);
 
         // ROUTE 2: if we weren't able to route the request "as is", try to
         // route the request based on checking for eids or identifiers in the
@@ -207,12 +208,48 @@ class Api
         $query_params = array_merge($p, $query_params);
 
         $function = self::getApiEndpoint($api_path);
-
         if ($function !== false && is_callable($function) === true)
-            return $function($query_params, $request);
+            return self::execApiCall($function, $query_params, $request);
 
         // we can't find the specified api endpoint
         return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_METHOD);
+    }
+
+    private static function execApiCAll($function, $query_params, $request)
+    {
+        try
+        {
+            return $function($query_params, $request);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $info = $e->getMessage(); // exception info is packaged up in message
+            $info = json_decode($info,true);
+            $file = $e->getFile();
+            $line = $e->getLine();
+            $code = $info['code'];
+            $trace = json_encode($e->getTrace());
+            $message = $info['message'] . (IS_DEBUG() === false ? '' : "; exception thrown in file $file on line $line; trace: $trace");
+            return $request->getValidator()->fail($code, $message);
+        }
+        catch (\Exception $e)
+        {
+            $file = $e->getFile();
+            $line = $e->getLine();
+            $code = \Flexio\Base\Error::GENERAL;
+            $trace = json_encode($e->getTrace());
+            $message = (IS_DEBUG() === false ? '' : "exception thrown in file $file on line $line; trace: $trace");
+            return $request->getValidator()->fail($code, $message);
+        }
+        catch (\Error $e)
+        {
+            $file = $e->getFile();
+            $line = $e->getLine();
+            $code = \Flexio\Base\Error::GENERAL;
+            $trace = json_encode($e->getTrace());
+            $message = (IS_DEBUG() === false ? '' : "error thrown in file $file on line $line; trace: $trace");
+            return $request->getValidator()->fail($code, $message);
+        }
     }
 
     private static function mapUrlParamsToApiParams($url_params)

@@ -12,19 +12,18 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
 class Store
 {
-    public static function create($eid_type, $properties)
+    public static function create(string $eid_type, array $properties = null) : \Flexio\Object\Base
     {
         switch ($eid_type)
         {
-            // TODO: fill out with appropriate classes when finished
-
             default:
-                return false; // unknown eid type
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
             case \Model::TYPE_OBJECT:
                 return \Flexio\Object\Object::create($properties);
@@ -55,13 +54,11 @@ class Store
         }
     }
 
-    public static function load($identifier)
+    public static function load(string $identifier)
     {
         $eid_type = self::getModel()->getTypeByIdentifier($identifier);
         switch ($eid_type)
         {
-            // TODO: fill out with appropriate classes when finished
-
             default:
                 return false; // unknown eid type
 

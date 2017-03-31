@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -27,24 +28,60 @@ class Test
         // TEST: Model valid type function
 
         // BEGIN TEST
-        $actual = \Model::isValidType(false);
-        $expected = false;
-        TestCheck::assertBoolean('A.1', '\Model::isValidType(); return false for invalid types',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidType(false);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', '\Model::isValidType(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(true);
-        $expected = false;
-        TestCheck::assertBoolean('A.2', '\Model::isValidType(); return false for invalid types',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidType(true);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.2', '\Model::isValidType(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(0);
-        $expected = false;
-        TestCheck::assertBoolean('A.3', '\Model::isValidType(); return false for invalid types',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidType(0);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.3', '\Model::isValidType(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(1);
-        $expected = false;
-        TestCheck::assertBoolean('A.4', '\Model::isValidType(); return false for invalid types',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidType(1);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.4', '\Model::isValidType(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -120,24 +157,60 @@ class Test
         // TEST: Model valid edge function
 
         // BEGIN TEST
-        $actual = \Model::isValidEdge(false);
-        $expected = false;
-        TestCheck::assertBoolean('B.1', '\Model::isValidEdge(); return false for invalid edges',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidEdge(false);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.1', '\Model::isValidEdge(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidEdge(true);
-        $expected = false;
-        TestCheck::assertBoolean('B.2', '\Model::isValidEdge(); return false for invalid edges',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidEdge(true);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.2', '\Model::isValidEdge(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidEdge(0);
-        $expected = false;
-        TestCheck::assertBoolean('B.3', '\Model::isValidEdge(); return false for invalid edges',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidEdge(0);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.3', '\Model::isValidEdge(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidEdge(1);
-        $expected = false;
-        TestCheck::assertBoolean('B.4', '\Model::isValidEdge(); return false for invalid edges',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidEdge(1);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.4', '\Model::isValidEdge(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -268,24 +341,60 @@ class Test
         // TEST: Model valid status FUNCTION
 
         // BEGIN TEST
-        $actual = \Model::isValidStatus(false);
-        $expected = false;
-        TestCheck::assertBoolean('C.1', '\Model::isValidStatus(); return false for an invalid status',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidStatus(false);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('C.1', '\Model::isValidStatus(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidStatus(true);
-        $expected = false;
-        TestCheck::assertBoolean('C.2', '\Model::isValidStatus(); return false for an invalid status',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidStatus(true);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('C.2', '\Model::isValidStatus(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidStatus(0);
-        $expected = false;
-        TestCheck::assertBoolean('C.3', '\Model::isValidStatus(); return false for an invalid status',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidStatus(0);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('C.3', '\Model::isValidStatus(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidStatus(1);
-        $expected = false;
-        TestCheck::assertBoolean('C.4', '\Model::isValidStatus(); return false for an invalid status',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Model::isValidStatus(1);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('C.4', '\Model::isValidStatus(); throw an exception for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';

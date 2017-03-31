@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Services;
 
 
@@ -179,7 +180,7 @@ class Postgres implements \Flexio\Services\IConnection
 
         if (isset($GLOBALS['g_config']->query_log))
         {
-            $t1 = microtime(true);
+            $t1 = (int)microtime(true);
             $t1_micropart = sprintf("%06d", ($t1 - floor($t1)) * 1000000);
             $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
             $timestamp = $date->format("Y-m-d H:i:s.u");
@@ -291,9 +292,9 @@ class Postgres implements \Flexio\Services\IConnection
         }
 
         $sql = 'select count(*) as cnt from ' . $table;
-        $t1 = microtime(true);
+        $t1 = (int)microtime(true);
         $result = $this->db->query($sql);
-        $t2 = microtime(true);
+        $t2 = (int)microtime(true);
 
         if (isset($GLOBALS['g_config']->query_log))
         {
@@ -434,7 +435,7 @@ class Postgres implements \Flexio\Services\IConnection
         }
 
         $db->beginTransaction();
-        $f = $db->pgsqlLOBOpen($oid, 'r+b');
+        $f = $db->pgsqlLOBOpen((string)$oid, 'r+b');
         if (!$f)
             return null;
 
@@ -482,9 +483,9 @@ class Postgres implements \Flexio\Services\IConnection
         $sql .= "attrelid = (select oid from pg_class where relname='$table') and ";
         $sql .= "attnum >= 1 order by attnum";
 
-        $t1 = microtime(true);
+        $t1 = (int)microtime(true);
         $result = $this->db->query($sql);
-        $t2 = microtime(true);
+        $t2 = (int)microtime(true);
 
         if (isset($GLOBALS['g_config']->query_log))
         {
@@ -922,9 +923,9 @@ class PostgresIterator
             $sql .= ' offset ' . intval($offset);
             $sql .= ' limit ' . intval($limit);
 
-            $t1 = microtime(true);
+            $t1 = (int)microtime(true);
             $stmt = $this->db->query($sql);
-            $t2 = microtime(true);
+            $t2 = (int)microtime(true);
 
             if (isset($GLOBALS['g_config']->query_log))
             {
@@ -1203,7 +1204,7 @@ class PostgresInserterMultiRow
                     break;
 
                 default:
-                    $f = $this->db->quote($f);
+                    $f = $this->db->quote((string)$f);
                     break;
             }
 

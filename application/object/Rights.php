@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -28,7 +29,7 @@ class Rights
     const MEMBER_GROUP     = 'G';
     const MEMBER_PUBLIC    = 'P';
 
-    public static function listall($user_eid, $object_eid)
+    public static function listall(string $user_eid, string $object_eid) : array
     {
         // lists all operations the specified user can take on the
         // object in question
@@ -124,14 +125,16 @@ class Rights
         return self::response($user_eid, $rights);
     }
 
-    public static function issystem($object_eid, $user_eid)
+    public static function issystem(string $object_eid, string $user_eid) : bool
     {
         // the system user has rights to everything
         if ($user_eid === \Flexio\Object\User::USER_SYSTEM)
             return true;
+
+        return false;
     }
 
-    public static function isowned($object_eid, $user_eid)
+    public static function isowned(string $object_eid, string $user_eid) : bool
     {
         // invalid objects can't owned; object can't be owned
         // by an invalid user
@@ -149,7 +152,7 @@ class Rights
         return false;
     }
 
-    public static function ismember($object_eid, $user_eid)
+    public static function ismember(string $object_eid, string $user_eid) : bool
     {
         // invalid objects or users can't be followed or follow
         if (!\Flexio\Base\Eid::isValid($object_eid))
@@ -202,7 +205,7 @@ class Rights
         return false;
     }
 
-    private static function response($user_eid, $rights_arr)
+    private static function response(string $user_eid, array $rights_arr) : array
     {
         // packages up the specified user and rights into a
         // standard result

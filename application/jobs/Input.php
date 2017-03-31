@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -25,7 +26,7 @@ class Input extends \Flexio\Jobs\Base
         // make sure we have a params node
         $job_definition = $this->getProperties();
         if (!isset($job_definition['params']))
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $params = $job_definition['params'];
 
         // make fully qualified path, if necessary
@@ -52,7 +53,7 @@ class Input extends \Flexio\Jobs\Base
         // paths and determining the appropriate connection type/eid for each item
         $items = $this->resolveInputItems($params);
         if ($items === false)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // input job adds new streams; add streams onto inputs we've already received
         $this->getOutput()->merge($this->getInput());
@@ -64,7 +65,7 @@ class Input extends \Flexio\Jobs\Base
         }
     }
 
-    private function resolveInputItems($params)
+    private function resolveInputItems(array $params)
     {
         // if the items parameter isn't an array, the format is invalid
         $items = $params['items'] ?? false;
@@ -96,7 +97,7 @@ class Input extends \Flexio\Jobs\Base
         return $resolved_items;
     }
 
-    private function runImport($connection_info, $file_info)
+    private function runImport(array $connection_info, array $file_info)
     {
         $connection_eid = $connection_info['eid'] ?? false;
         $connection_type = $connection_info['connection_type'] ?? false;
@@ -116,13 +117,13 @@ class Input extends \Flexio\Jobs\Base
         // load the service
         $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
-            return $this->fail(\Flexio\Base\Error::NO_SERVICE, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         // route the request based on the connection type
         switch ($connection_type)
         {
             default:
-                return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             // upload
             case \Model::CONNECTION_TYPE_UPLOAD:
@@ -156,7 +157,7 @@ class Input extends \Flexio\Jobs\Base
         }
     }
 
-    private function runUpload($service, $file_info)
+    private function runUpload($service, array $file_info) // TODO: set paramater type
     {
         // the data is already uploaded, so simply pass on the data to
         // the output
@@ -165,31 +166,26 @@ class Input extends \Flexio\Jobs\Base
         $this->getOutput()->push($outstream);
     }
 
-    private function runDatabaseImport($service, $file_info)
+    private function runDatabaseImport($service, array $file_info) // TODO: set paramater type
     {
         // get the input
         $path = $file_info['path'];
         $structure = $service->describeTable($path);
         if (!$structure)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // create the output
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
         $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // create the iterator
         $iter = $service->queryAll($path);
         if (!$iter)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // transfer the data
         while (true)
@@ -200,33 +196,28 @@ class Input extends \Flexio\Jobs\Base
 
             $result = $streamwriter->write(array_values($row));
             if ($result === false)
-                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function runApiTableImport($service, $file_info)
+    private function runApiTableImport($service, array $file_info) // TODO: set paramater type
     {
         // get the input
         $path = $file_info['path'];
         $structure = $service->describeTable($path);
         if (!$structure)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // create the output
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
         $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // transfer the data
         $params = array();
@@ -239,19 +230,14 @@ class Input extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function runRemoteFileImport($service, $file_info)
+    private function runRemoteFileImport($service, array $file_info) // TODO: set paramater type
     {
         // get the input
         $path = $file_info['path'];
         $stream_properties = $file_info;
         $outstream = self::createDatastoreStream($stream_properties);
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
         $this->getOutput()->push($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         $mime_data_sample = '';
         $params = array();
@@ -292,7 +278,7 @@ class Input extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function runGoogleSheetsImport($service, $file_info)
+    private function runGoogleSheetsImport($service, array $file_info) // TODO: set paramater type
     {
         // get the input
         $path = $file_info['path'];
@@ -301,9 +287,6 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $outstream = self::createDatastoreStream($stream_properties);
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
         $this->getOutput()->push($outstream);
 
         $rownum = 0;
@@ -352,20 +335,20 @@ class Input extends \Flexio\Jobs\Base
         }
     }
 
-    private function createDatastoreStream($properties)
+    private function createDatastoreStream(array $properties) :  \Flexio\Object\Stream
     {
         // get a default connection and path
         $properties['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $properties['path'] = \Flexio\Base\Util::generateHandle();
 
         if (!\Flexio\Base\Eid::isValid($properties['connection_eid']))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $stream = \Flexio\Object\Stream::create($properties);
         return $stream;
     }
 
-    private function getConnectionInfoFromItem($params, $item)
+    private function getConnectionInfoFromItem(array $params, array $item)
     {
         if (!isset($item['path']))
             return null;
@@ -398,7 +381,7 @@ class Input extends \Flexio\Jobs\Base
         return null;
     }
 
-    private function getMatchingFileInfo($connection_info, $item)
+    private function getMatchingFileInfo(array $connection_info, array $item) : array
     {
         $matching_paths = array();
 
@@ -489,7 +472,7 @@ class Input extends \Flexio\Jobs\Base
         return $matching_paths;
     }
 
-    private static function getSpreadsheetColumnName($idx)
+    private static function getSpreadsheetColumnName(int $idx) : string
     {
         $n = $idx % 26;
         $ch = chr(ord('A') + $n);

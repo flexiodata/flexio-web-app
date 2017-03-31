@@ -12,6 +12,9 @@
  */
 
 
+declare(strict_types=1);
+
+
 class Token extends ModelBase
 {
     public function create(array $params = null) : string

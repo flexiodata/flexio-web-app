@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -45,7 +46,7 @@ class Test
         {
             $result = $model->setTimezone(true);
         }
-        catch (\Exception $e)
+        catch (\Error $e)
         {
             $actual = TestError::ERROR_EXCEPTION;
         }

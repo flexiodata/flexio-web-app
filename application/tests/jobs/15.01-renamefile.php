@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -23,7 +24,7 @@ class Test
 
 
         // SETUP
-        $task = \Flexio\Object\Task::create('
+        $task = json_decode('
         [
             {
                 "type": "flexio.create",
@@ -47,7 +48,7 @@ class Test
                 }
             }
         ]
-        ')->get();
+        ',true);
 
 
 

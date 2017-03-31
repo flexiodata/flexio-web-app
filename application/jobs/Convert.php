@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -100,7 +101,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTableInput($instream, $output_mime_type)
+    private function createOutputFromTableInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
         $outstream = \Flexio\Object\Stream::create();
         $outstream->setName($instream->getName());
@@ -110,13 +111,7 @@ class Convert extends \Flexio\Jobs\Base
         $this->getOutput()->push($outstream);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
-        // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-        if ($streamreader === false)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         $rown = 0;
 
@@ -141,7 +136,7 @@ class Convert extends \Flexio\Jobs\Base
     }
 
 
-    private function createOutputFromPdfInput($instream, $output_mime_type)
+    private function createOutputFromPdfInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
         if (!isset($GLOBALS['pdfparser_included']))
         {
@@ -153,16 +148,12 @@ class Convert extends \Flexio\Jobs\Base
 
 
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
         $this->getOutput()->push($outstream);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // read the pdf into a buffer
         $buffer = '';
@@ -186,20 +177,18 @@ class Convert extends \Flexio\Jobs\Base
         }
         catch (\Exception $e)
         {
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createOutputFromJsonInput($instream, $output_mime_type)
+    private function createOutputFromJsonInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
 
@@ -215,13 +204,10 @@ class Convert extends \Flexio\Jobs\Base
         // set the output structure and write the rows
         $structure = self::determineStructureFromJsonArray($items);
         if ($structure === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $outstream->setStructure($structure);
-
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         foreach($items as $i)
         {
@@ -232,7 +218,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createOutputFromCsvInput($instream, $output_mime_type)
+    private function createOutputFromCsvInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
         // parameters
         $job_definition = $this->getProperties();
@@ -292,15 +278,8 @@ class Convert extends \Flexio\Jobs\Base
 
         // get the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-        if ($streamreader === false)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
-
-        // create the output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
-
-
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType($is_output_json ? \Flexio\Base\ContentType::MIME_TYPE_JSON : \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
 
@@ -309,8 +288,6 @@ class Convert extends \Flexio\Jobs\Base
             // for json output, streamwriter is created here; for table output, streamwriter
             // is created below, because header row must be collected in advance
             $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-            if ($streamwriter === false)
-                return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
             $streamwriter->write("[");
         }
 
@@ -398,8 +375,6 @@ class Convert extends \Flexio\Jobs\Base
                 {
                     $outstream->setStructure($structure);
                     $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-                    if ($streamwriter === false)
-                        return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
                     $structure = $outstream->getStructure()->enum();
                 }
 
@@ -430,7 +405,7 @@ class Convert extends \Flexio\Jobs\Base
             }
 
             if ($result === false)
-                $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             ++$rown;
         }
@@ -445,7 +420,7 @@ class Convert extends \Flexio\Jobs\Base
 
             $result = $streamwriter->close();
             if ($result === false)
-                $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             $outstream->setSize($streamwriter->getBytesWritten());
         }
@@ -456,7 +431,7 @@ class Convert extends \Flexio\Jobs\Base
         {
             $result = self::alterStructure($outstream, $structure);
             if ($result === false)
-                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 */
 
@@ -471,57 +446,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function indexOfWithQuoting($haystack, $needle, $qualifier)
-    {
-        if ($needle == '')
-            return false;
-        $haystack_len = strlen($haystack);
-        $needle_len = strlen($needle);
-        $firstch = $needle[0];
-        $offset = 0;
-        $quotec = false;
-
-        while ($offset < $haystack_len)
-        {
-            $ch = $haystack[$offset];
-
-            if ($quotec === false)
-            {
-                if ($ch == $qualifier)
-                {
-                    $quotec = $ch;
-                }
-                 else
-                {
-                    if ($ch == $firstch)
-                    {
-                        if (substr($haystack, $offset, $needle_len) == $needle)
-                            return $offset;
-                    }
-                }
-            }
-             else
-            {
-                if ($ch == $qualifier)
-                {
-                    if ($offset + 1 < $haystack_len && $haystack[$offset+1] == $qualifier) // csv double-quote "15"" Pizza"
-                    {
-                        ++$offset;
-                    }
-                     else
-                    {
-                        $quotec = false;
-                    }
-                }
-            }
-
-            ++$offset;
-        }
-
-        return false;
-    }
-
-    private function createOutputFromFixedLengthInput($instream)
+    private function createOutputFromFixedLengthInput(\Flexio\Object\Stream $instream)
     {
         // parameters
         $job_definition = $this->getProperties();
@@ -532,18 +457,12 @@ class Convert extends \Flexio\Jobs\Base
         $columns = $params['columns'] ?? [];
 
         if ($row_width == 0)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // get the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-        if ($streamreader === false)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
-
-        // create the output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
-
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
 
@@ -590,9 +509,6 @@ class Convert extends \Flexio\Jobs\Base
 
         $outstream->setStructure($structure);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
-
 
         $bufsize = 65536;
 
@@ -677,7 +593,7 @@ class Convert extends \Flexio\Jobs\Base
 
                 $result = $streamwriter->write($row);
                 if ($result === false)
-                    $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
                 $buf_offset += $row_width;
             }
@@ -691,7 +607,57 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->close();
     }
 
-    private static function alterStructure($outstream, $structure)
+    private static function indexOfWithQuoting(string $haystack, string $needle, string $qualifier)
+    {
+        if ($needle == '')
+            return false;
+        $haystack_len = strlen($haystack);
+        $needle_len = strlen($needle);
+        $firstch = $needle[0];
+        $offset = 0;
+        $quotec = false;
+
+        while ($offset < $haystack_len)
+        {
+            $ch = $haystack[$offset];
+
+            if ($quotec === false)
+            {
+                if ($ch == $qualifier)
+                {
+                    $quotec = $ch;
+                }
+                 else
+                {
+                    if ($ch == $firstch)
+                    {
+                        if (substr($haystack, $offset, $needle_len) == $needle)
+                            return $offset;
+                    }
+                }
+            }
+             else
+            {
+                if ($ch == $qualifier)
+                {
+                    if ($offset + 1 < $haystack_len && $haystack[$offset+1] == $qualifier) // csv double-quote "15"" Pizza"
+                    {
+                        ++$offset;
+                    }
+                     else
+                    {
+                        $quotec = false;
+                    }
+                }
+            }
+
+            ++$offset;
+        }
+
+        return false;
+    }
+
+    private static function alterStructure(\Flexio\Object\Stream $outstream, array $structure) : bool
     {
         $service = $outstream->getService();
 
@@ -750,7 +716,7 @@ class Convert extends \Flexio\Jobs\Base
         return true;
     }
 
-    private static function conformValuesToStructure($structure, $row)
+    private static function conformValuesToStructure(array $structure, array $row) : array
     {
         $result_row = array();
 
@@ -796,7 +762,7 @@ class Convert extends \Flexio\Jobs\Base
         return $result_row;
     }
 
-    private static function updateStructureFromRow(&$structure, $row)
+    private static function updateStructureFromRow(array &$structure, array $row)
     {
         $idx = 0;
         foreach ($row as $key => $val)
@@ -882,7 +848,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private static function structureFromIcsv($row)
+    private static function structureFromIcsv(array $row)
     {
         $structure = [];
         foreach ($row as $fld)
@@ -919,12 +885,9 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function determineStructureFromJsonArray($items)
+    private static function determineStructureFromJsonArray(array $items)
     {
         // create the fields based off the first row
-        if (!is_array($items))
-            return false;
-
         if (count($items) === 0)
             return false;
 
@@ -944,7 +907,7 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function determineStructureFromRow($row, $header)
+    private static function determineStructureFromRow(array $row, bool $header) : array
     {
         // if the first row is a header row, turn it into field names
         if ($header === true)
@@ -981,7 +944,7 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function getInputMimeTypeFromDefinition($job_definition)
+    private static function getInputMimeTypeFromDefinition(array $job_definition)
     {
         if (!isset($job_definition['params']['input']['format']))
             return false;
@@ -1001,7 +964,7 @@ class Convert extends \Flexio\Jobs\Base
             return false;
     }
 
-    private static function getOutputMimeTypeFromDefinition($job_definition)
+    private static function getOutputMimeTypeFromDefinition(array $job_definition)
     {
         if (!isset($job_definition['params']['output']['format']))
             return false;

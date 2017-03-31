@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Tests;
 
 
@@ -19,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
         // TEST: Structure::enum(); no input
 
         // BEGIN TEST
@@ -56,9 +61,18 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->enum('a');
-        $expected = array();
-        TestCheck::assertInArray('B.2', 'Structure::enum(); if a non-array input is specified, return an empty array',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Object\Structure::create($column_info)->enum('a');
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.2', 'Structure::enum(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
 
 

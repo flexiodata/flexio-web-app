@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
 
 
@@ -22,7 +23,7 @@ class Pipe extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_PIPE);
     }
 
-    public static function create($properties = null)
+    public static function create(array $properties = null) : \Flexio\Object\Pipe
     {
         // if a task parameter is set, we need to assign a client id to each element
         if (isset($properties) && isset($properties['task']))
@@ -36,17 +37,14 @@ class Pipe extends \Flexio\Object\Base
         {
             $schedule = $properties['schedule'];
             if (\Flexio\Base\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
             $properties['schedule'] = json_encode($schedule);
         }
 
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
-
         $local_eid = $model->create($object->getType(), $properties);
-        if ($local_eid === false)
-            return false;
 
         $object->setModel($model);
         $object->setEid($local_eid);
@@ -55,8 +53,10 @@ class Pipe extends \Flexio\Object\Base
         return $object;
     }
 
-    public function set($properties)
+    public function set(array $properties) : \Flexio\Object\Pipe
     {
+        // TODO: add properties check
+
         // if a task parameter is set, we need to assign a client id to each element
         if (isset($properties) && isset($properties['task']))
             $properties['task'] = \Flexio\Object\Task::create($properties['task'])->get();
@@ -69,28 +69,18 @@ class Pipe extends \Flexio\Object\Base
         {
             $schedule = $properties['schedule'];
             if (\Flexio\Base\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $properties['schedule'] = json_encode($schedule);
         }
 
-        // TODO: add properties check
-
-        // TODO: for now, don't forward model exception
-        try
-        {
-            $this->clearCache();
-            $pipe_model = $this->getModel()->pipe;
-            $pipe_model->set($this->getEid(), $properties);
-        }
-        catch (\Exception $e)
-        {
-        }
-
+        $this->clearCache();
+        $pipe_model = $this->getModel()->pipe;
+        $pipe_model->set($this->getEid(), $properties);
         return $this;
     }
 
-    public function setTask($task)
+    public function setTask(array $task) : \Flexio\Object\Pipe
     {
         // shorthand for setting task info
         $properties = array();
@@ -108,11 +98,11 @@ class Pipe extends \Flexio\Object\Base
         return $local_properties['task'];
     }
 
-    public function addTaskStep($task_step, $index)
+    public function addTaskStep(array $task_step, int $index) // TODO: add parameter types
     {
         // get the current task array
         $task_array = $this->getTask();
-        $task = \Flexio\Object\Task::load($task_array);
+        $task = \Flexio\Object\Task::create($task_array);
 
         // add a new task
         $task_eid = $task->addTaskStep($task_step, $index);
@@ -120,33 +110,33 @@ class Pipe extends \Flexio\Object\Base
         return $task_eid;
     }
 
-    public function deleteTaskStep($task_eid)
+    public function deleteTaskStep(string $task_eid) : \Flexio\Object\Pipe
     {
         $task_array = $this->getTask();
-        $task = \Flexio\Object\Task::load($task_array);
+        $task = \Flexio\Object\Task::create($task_array);
         $task->deleteTaskStep($task_eid);
         $this->setTask($task->get());
         return $this;
     }
 
-    public function setTaskStep($task_eid, $task_step)
+    public function setTaskStep(string $task_eid, array $task_step) : \Flexio\Object\Pipe
     {
         // get the current task array
         $task_array = $this->getTask();
-        $task = \Flexio\Object\Task::load($task_array);
+        $task = \Flexio\Object\Task::create($task_array);
         $task->setTaskStep($task_eid, $task_step);
         $this->setTask($task->get());
         return $this;
     }
 
-    public function getTaskStep($task_eid)
+    public function getTaskStep(string $task_eid)
     {
         $task_array = $this->getTask();
-        $task = \Flexio\Object\Task::load($task_array);
+        $task = \Flexio\Object\Task::create($task_array);
         return $task->getTaskStep($task_eid);
     }
 
-    public function setSchedule($schedule)
+    public function setSchedule(array $schedule) : \Flexio\Object\Pipe
     {
         // make sure the schedule format is valid
         if (\Flexio\Base\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
@@ -168,13 +158,14 @@ class Pipe extends \Flexio\Object\Base
         return $local_properties['schedule'];
     }
 
-    public function addProcess($process)
+    public function addProcess(\Flexio\Object\Process $process) : \Flexio\Object\Pipe
     {
         $result = $this->getModel()->assoc_add($this->getEid(), \Model::EDGE_HAS_PROCESS, $process->getEid());
         $this->getModel()->assoc_add($process->getEid(), \Model::EDGE_PROCESS_OF, $this->getEid());
+        return $this;
     }
 
-    public function getProcesses()
+    public function getProcesses() : array
     {
         $result = array();
 
@@ -205,7 +196,7 @@ class Pipe extends \Flexio\Object\Base
         return false;
     }
 
-    private function isCached()
+    private function isCached() : bool
     {
         if ($this->properties === false)
             return false;
@@ -213,13 +204,14 @@ class Pipe extends \Flexio\Object\Base
         return true;
     }
 
-    private function clearCache()
+    private function clearCache() : bool
     {
         $this->eid_status = false;
         $this->properties = false;
+        return true;
     }
 
-    private function populateCache()
+    private function populateCache() : bool
     {
         // get the properties
         $local_properties = $this->getProperties();

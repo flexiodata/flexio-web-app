@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -123,11 +124,11 @@ class Transform extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTable($instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream)
     {
         $column_expression_map = $this->getTableExpressionMap($instream);
         if ($column_expression_map === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // if there aren't any operations, simply create an output stream
         // pointing to the original content
@@ -190,11 +191,11 @@ class Transform extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createOutputFromStream($instream)
+    private function createOutputFromStream(\Flexio\Object\Stream $instream)
     {
         $column_expression_map = $this->getStreamExpressionMap($instream);
         if ($column_expression_map === false)
-            return $this->fail(\Model::ERROR_INVALID_PARAMETER, _(''), __FILE__, __LINE__); // something went wrong with the params
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // if there aren't any operations, simply create an output stream
         // pointing to the original content
@@ -235,7 +236,7 @@ class Transform extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getTableExpressionMap($instream)
+    private function getTableExpressionMap(\Flexio\Object\Stream $instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation
@@ -318,7 +319,7 @@ class Transform extends \Flexio\Jobs\Base
         return $column_expression_map;
     }
 
-    private function getStreamExpressionMap($instream)
+    private function getStreamExpressionMap(\Flexio\Object\Stream $instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation
@@ -389,7 +390,7 @@ class Transform extends \Flexio\Jobs\Base
         return $column_expression_map;
     }
 
-    private static function getChangeCaseExpr($operation, $expr)
+    private static function getChangeCaseExpr(array $operation, string $expr)
     {
         $new_case = $operation['case'] ?? self::CAPITALIZE_NONE;
 
@@ -408,7 +409,7 @@ class Transform extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function getSubstrExpr($operation, $expr)
+    private static function getSubstrExpr(array $operation, string $expr)
     {
         $location = $operation['location'] ?? self::SUBSTRING_LOCATION_NONE;
 
@@ -457,7 +458,7 @@ class Transform extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function getRemoveTextExpr($operation, $expr)
+    private static function getRemoveTextExpr(array $operation, string $expr)
     {
         $characters_regex = '';
 
@@ -557,7 +558,7 @@ class Transform extends \Flexio\Jobs\Base
         }
     }
 
-    private static function getTrimTextExpr($operation, $expr)
+    private static function getTrimTextExpr(array $operation, string $expr)
     {
         $location = $operation['location'] ?? '';
 
@@ -573,7 +574,7 @@ class Transform extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function getPadTextExpr($operation, $expr, $columns)
+    private static function getPadTextExpr(array $operation, string $expr, array $columns)
     {
         $location = $operation['location'] ?? '';
         $length = $operation['length'] ?? 0;
@@ -605,9 +606,11 @@ class Transform extends \Flexio\Jobs\Base
         return $new_expr;
     }
 
-    private static function getChangeTypeExpr($operation, $expr, $column, &$new_structure)
+    private static function getChangeTypeExpr(array $operation, string $expr, array $column, array &$new_structure)
     {
-        $old_type = $column['type'];
+        $type = $column['type'];
+        $width = $column['width'] ?? -1;
+        $scale = $column['scale'] ?? -1;
         $new_type = $operation['type'] ?? self::COLUMN_TYPE_NONE;
 
         // make sure it's a valid type
@@ -628,15 +631,15 @@ class Transform extends \Flexio\Jobs\Base
 
         if ($new_type == self::COLUMN_TYPE_CHARACTER)
         {
-            if ($old_type == self::COLUMN_TYPE_DATE)
+            if ($type == self::COLUMN_TYPE_DATE)
             {
                 $new_width = 10; $width = $new_width;
             }
-            else if ($old_type == self::COLUMN_TYPE_DATETIME)
+            else if ($type == self::COLUMN_TYPE_DATETIME)
             {
                 $new_width = 20; $width = $new_width;
             }
-            else if ($old_type == self::COLUMN_TYPE_NUMERIC || $old_type == self::COLUMN_TYPE_DOUBLE)
+            else if ($type == self::COLUMN_TYPE_NUMERIC || $type == self::COLUMN_TYPE_DOUBLE)
             {
                 if ($width < 0)
                 {
@@ -647,11 +650,11 @@ class Transform extends \Flexio\Jobs\Base
                     $new_width = $width+2; $width = $new_width;
                 }
             }
-            else if ($old_type == self::COLUMN_TYPE_INTEGER)
+            else if ($type == self::COLUMN_TYPE_INTEGER)
             {
                 $new_width = 20; $width = $new_width;
             }
-            else if ($old_type == self::COLUMN_TYPE_BOOLEAN)
+            else if ($type == self::COLUMN_TYPE_BOOLEAN)
             {
                 $new_width = 5; $width = $new_width; // enough to hold "true"/"false"
             }
@@ -659,21 +662,22 @@ class Transform extends \Flexio\Jobs\Base
 
         if ($new_type == self::COLUMN_TYPE_NUMERIC)
         {
-            if ($old_type == self::COLUMN_TYPE_DATE)
+            if ($type == self::COLUMN_TYPE_DATE)
             {
                 $new_width = 8; $width = $new_width;
             }
-            else if ($old_type == self::COLUMN_TYPE_DATETIME)
+            else if ($type == self::COLUMN_TYPE_DATETIME)
             {
                 $new_width = 14; $width = $new_width;
             }
         }
 
+        $old_type = $type;
         $expr = self::getChangeTypeExprDetail($column['name'], $old_type, $new_type, $width, $scale, $new_structure);
         return $expr;
     }
 
-    private static function getChangeTypeExprDetail($name, $old_type, $new_type, $new_width, $new_scale, &$new_structure)
+    private static function getChangeTypeExprDetail(string $name, string $old_type, string $new_type, $new_width, $new_scale, &$new_structure) // TODO: add parameter types
     {
         $width = $new_width;
         $scale = $new_scale;

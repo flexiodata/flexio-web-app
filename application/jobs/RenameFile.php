@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
@@ -33,7 +34,7 @@ class RenameFile extends \Flexio\Jobs\Base
         }
     }
 
-    public function createOutputFromInput($instream)
+    public function createOutputFromInput(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
