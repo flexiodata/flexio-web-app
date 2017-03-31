@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Controllers;
 
 
@@ -184,7 +185,7 @@ echo "<pre>";
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
         echo "<br>" . $expr. " should be '  .0$'<br>";
         var_dump($actual);
-        
+
         $expr = 'to_char(0,"FM9.9$")';
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
         echo "<br>" . $expr. "<br>";

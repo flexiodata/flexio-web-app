@@ -12,7 +12,9 @@
  */
 
 
+declare(strict_types=1);
 namespace Flexio\Object;
+
 
 require_once dirname(__DIR__) . '/services/Abstract.php';
 

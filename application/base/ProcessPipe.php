@@ -11,7 +11,10 @@
  * @subpackage Base
  */
 
+
+declare(strict_types=1);
 namespace Flexio\Base;
+
 
 class ProcessPipe
 {

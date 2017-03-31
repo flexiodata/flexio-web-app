@@ -12,6 +12,7 @@
  */
 
 
+declare(strict_types=1);
 require_once __DIR__ . '/../base/Db.php';
 require_once 'ModelBase.php';
 
