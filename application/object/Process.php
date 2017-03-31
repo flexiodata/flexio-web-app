@@ -465,11 +465,15 @@ class Process extends \Flexio\Object\Base
         return;
     }
 
-    private function setCurrentExecutingSubProcess(string $subprocess)
+    private function setCurrentExecutingSubProcess(string $subprocess = null)
     {
         // if the subprocess is the same, we're done
         if ($subprocess === $this->current_executing_subprocess_eid)
             return;
+
+        // allow subprocess to be reset
+        if (!isset($subprocess))
+            $subprocess = false;
 
         $this->last_percentage_saved = false;
         $this->current_executing_subprocess_eid = $subprocess;
@@ -594,7 +598,7 @@ class Process extends \Flexio\Object\Base
 
         // STEP 1: get the list of subprocesses and reset the current subprocess
         $subprocesses = $local_properties['subprocesses'];
-        $this->setCurrentExecutingSubProcess(false);
+        $this->setCurrentExecutingSubProcess(null);
 
         // STEP 2: set any initial input in the input record; these may be set
         // by an experimental api endpoint
@@ -704,7 +708,7 @@ class Process extends \Flexio\Object\Base
         }
 
 	    // reset the current subprocess
-        $this->setCurrentExecutingSubProcess(false);
+        $this->setCurrentExecutingSubProcess(null);
 
         // set final job status
         $process_params = array();
