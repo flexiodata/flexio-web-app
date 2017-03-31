@@ -2497,7 +2497,7 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     private static function exprToNumber($value)
     {
-        if (is_numeric($value))
+        if (is_numeric($value) && !is_string($value)) // is_numeric() will return true for a string that's a number (e.g. '1')
             return $value;
 
         if (is_string($value))

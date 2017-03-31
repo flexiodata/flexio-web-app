@@ -101,7 +101,7 @@ class ExprParser
         $idx = 0;
         foreach ($this->operators as $oper)
         {
-            if (0 == strcasecmp($oper['name'],$s) && !$oper['unary'])
+            if (0 == strcasecmp($oper['name'],(string)$s) && !$oper['unary'])
                 return $idx;
             ++$idx;
         }
@@ -113,7 +113,7 @@ class ExprParser
         $idx = 0;
         foreach ($this->operators as $oper)
         {
-            if (0 == strcasecmp($oper['name'],$s) && $oper['unary'])
+            if (0 == strcasecmp($oper['name'],(string)$s) && $oper['unary'])
                 return $idx;
             ++$idx;
         }
