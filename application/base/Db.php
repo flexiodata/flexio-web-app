@@ -157,10 +157,10 @@ class Db extends DbBase
 
         if ($this->doLog())
         {
-            $t1 = microtime(true);
+            $t1 = (int)microtime(true);
             $result = $this->getConnection()->prepare($sql);
             $result->execute($params);
-            $t2 = microtime(true);
+            $t2 = (int)microtime(true);
 
             $t1_micropart = sprintf("%06d", ($t1 - floor($t1)) * 1000000);
             $date = new \DateTime(date('Y-m-d H:i:s.' . $t1_micropart, $t1));
