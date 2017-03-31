@@ -435,7 +435,7 @@ class Postgres implements \Flexio\Services\IConnection
         }
 
         $db->beginTransaction();
-        $f = $db->pgsqlLOBOpen($oid, 'r+b');
+        $f = $db->pgsqlLOBOpen((string)$oid, 'r+b');
         if (!$f)
             return null;
 
@@ -1204,7 +1204,7 @@ class PostgresInserterMultiRow
                     break;
 
                 default:
-                    $f = $this->db->quote($f);
+                    $f = $this->db->quote((string)$f);
                     break;
             }
 
