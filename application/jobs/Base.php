@@ -142,22 +142,4 @@ EOD;
 
         $process->setProgress($pct);
     }
-
-    protected function fail($error, $message, $file, $line)
-    {
-        $process = $this->getProcess();
-        if ($process === false)
-            return false;
-
-        return $process->fail($error, $message, $file, $line);
-    }
-
-    protected function failValidation($validator, $file, $line)
-    {
-        $process = $this->getProcess();
-        if ($process === false)
-            return false;
-
-        return $this->failValidation($validator, $file, $line);
-    }
 }

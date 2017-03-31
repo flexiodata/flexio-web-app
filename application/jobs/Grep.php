@@ -46,8 +46,7 @@ class Grep extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $grepexpr = $job_definition['params']['expression'] ?? '';
         if (strlen($grepexpr) == 0)
-            return $this->fail(\Flexio\Base\Error::MISSING_PARAMETER, _(''), __FILE__, __LINE__);
-
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         // build command line
         $cmd = \Flexio\System\System::getBinaryPath('grep') . ' ' . $grepexpr;
@@ -77,7 +76,7 @@ class Grep extends \Flexio\Jobs\Base
         if (!$external_process->exec($cmd, $cwd))
         {
             @unlink($filename);
-            return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
 
         $mime_type = $instream->getMimeType();

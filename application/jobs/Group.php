@@ -47,11 +47,11 @@ class Group extends \Flexio\Jobs\Base
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
         if ($job_statement === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // note: no need to call StreamWriter::create() because job statement creates a table
         if ($outstream->getService()->exec($job_statement) === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         // update the output structure; the fieldnames are specified by the job (and may
         // be different than the fieldnames used in the internal storage; however, the

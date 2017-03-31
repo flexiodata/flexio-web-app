@@ -56,15 +56,9 @@ class Limit extends \Flexio\Jobs\Base
         $rows = intval(($job_definition['params']['value'] ?? 0));
         $rows_to_output = ($rows > 0 ? $rows : 0);
 
-        // create the reader
+        // create the reader/writer
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-        if ($streamreader === false)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
-
-        // write to the output
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         // read the specified number of input rows and write them out
         for ($rown = 0; $rown < $rows_to_output; ++$rown)
@@ -75,7 +69,7 @@ class Limit extends \Flexio\Jobs\Base
 
             $result = $streamwriter->write($row);
             if ($result === false)
-                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
         $streamwriter->close();

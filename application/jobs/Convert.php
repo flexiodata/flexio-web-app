@@ -110,13 +110,7 @@ class Convert extends \Flexio\Jobs\Base
         $this->getOutput()->push($outstream);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
-        // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-        if ($streamreader === false)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
 
         $rown = 0;
 
@@ -153,16 +147,12 @@ class Convert extends \Flexio\Jobs\Base
 
 
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
         $this->getOutput()->push($outstream);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         // read the pdf into a buffer
         $buffer = '';
@@ -186,7 +176,7 @@ class Convert extends \Flexio\Jobs\Base
         }
         catch (\Exception $e)
         {
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
         $streamwriter->close();
@@ -196,10 +186,8 @@ class Convert extends \Flexio\Jobs\Base
     private function createOutputFromJsonInput($instream, $output_mime_type)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
-
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
 
@@ -215,13 +203,10 @@ class Convert extends \Flexio\Jobs\Base
         // set the output structure and write the rows
         $structure = self::determineStructureFromJsonArray($items);
         if ($structure === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $outstream->setStructure($structure);
-
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
 
         foreach($items as $i)
         {
@@ -292,15 +277,8 @@ class Convert extends \Flexio\Jobs\Base
 
         // get the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-        if ($streamreader === false)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
-
-        // create the output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
-
-
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType($is_output_json ? \Flexio\Base\ContentType::MIME_TYPE_JSON : \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
 
@@ -309,8 +287,6 @@ class Convert extends \Flexio\Jobs\Base
             // for json output, streamwriter is created here; for table output, streamwriter
             // is created below, because header row must be collected in advance
             $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-            if ($streamwriter === false)
-                return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
             $streamwriter->write("[");
         }
 
@@ -398,8 +374,6 @@ class Convert extends \Flexio\Jobs\Base
                 {
                     $outstream->setStructure($structure);
                     $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-                    if ($streamwriter === false)
-                        return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
                     $structure = $outstream->getStructure()->enum();
                 }
 
@@ -430,7 +404,7 @@ class Convert extends \Flexio\Jobs\Base
             }
 
             if ($result === false)
-                $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             ++$rown;
         }
@@ -445,7 +419,7 @@ class Convert extends \Flexio\Jobs\Base
 
             $result = $streamwriter->close();
             if ($result === false)
-                $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             $outstream->setSize($streamwriter->getBytesWritten());
         }
@@ -456,7 +430,7 @@ class Convert extends \Flexio\Jobs\Base
         {
             $result = self::alterStructure($outstream, $structure);
             if ($result === false)
-                return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 */
 
@@ -532,18 +506,12 @@ class Convert extends \Flexio\Jobs\Base
         $columns = $params['columns'] ?? [];
 
         if ($row_width == 0)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // get the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-        if ($streamreader === false)
-            return $this->fail(\Flexio\Base\Error::READ_FAILED, _(''), __FILE__, __LINE__);
-
-        // create the output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        if ($outstream === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
-
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
         $this->getOutput()->push($outstream);
 
@@ -590,9 +558,6 @@ class Convert extends \Flexio\Jobs\Base
 
         $outstream->setStructure($structure);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
-
 
         $bufsize = 65536;
 
@@ -677,7 +642,7 @@ class Convert extends \Flexio\Jobs\Base
 
                 $result = $streamwriter->write($row);
                 if ($result === false)
-                    $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
                 $buf_offset += $row_width;
             }

@@ -47,14 +47,12 @@ class Sort extends \Flexio\Jobs\Base
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
         if ($job_statement === false)
-            return $this->fail(\Flexio\Base\Error::INVALID_PARAMETER, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        if ($streamwriter === false)
-            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
 
         if ($outstream->getService()->exec($job_statement) === false)
-            return $this->fail(\Flexio\Base\Error::WRITE_FAILED, _(''), __FILE__, __LINE__);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }
 
     private static function prepareOutput($job_definition, $instream, &$outstream)
