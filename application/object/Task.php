@@ -424,7 +424,7 @@ class Task
             $variable_match_regex = '/\$\{'.$variable_key.'\}/';
 
             // see if the variable matches anything in the string
-            if (!preg_match($variable_match_regex, $old_value))
+            if (!preg_match($variable_match_regex, (string)$old_value))
                 continue;
 
             // if the variable matches the entire value, replace the
