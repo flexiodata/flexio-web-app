@@ -1169,7 +1169,7 @@ class Process extends \Flexio\Object\Base
     private static function getProcessTimestamp() : string
     {
         // return the timestamp as accurately as we can determine
-        $time = microtime(true);
+        $time = (int)microtime(true);
         $time_micropart = sprintf("%06d", ($time - floor($time)) * 1000000);
         $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, $time));
         return ($date->format("Y-m-d H:i:s.u"));
