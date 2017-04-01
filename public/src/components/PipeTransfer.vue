@@ -1,7 +1,7 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
-    <div class="flex-fill flex flex-column mr4-l">
+    <div class="flex-fill flex flex-column mb4 mr4-l">
       <div class="f4 pa3 dark-gray tc">
         <div class="relative" v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
@@ -28,13 +28,13 @@
         <div v-else>Choose Input</div>
       </div>
       <pipe-transfer-input-list
-        class="flex-fill bg-white bl-l br-l bt-l b--black-20"
+        class="flex-fill bg-white ba-l b--black-20"
         :tasks="input_tasks"
         @input-delete="deleteInput"
         v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
-        class="flex-fill bg-white bl-l br-l bt-l b--black-20 overflow-y-auto"
+        class="flex-fill bg-white ba-l b--black-20 overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         @choose-input="addInput"
@@ -42,7 +42,7 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column mr4-l">
+    <div class="flex-fill flex flex-column mb4 mr4-l">
       <div class="f4 pa3 dark-gray tc">
         <div class="relative" v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
@@ -69,13 +69,13 @@
         <div v-else>Choose Output</div>
       </div>
       <pipe-transfer-output-list
-        class="flex-fill bg-white bl-l br-l bt-l b--black-20"
+        class="flex-fill bg-white ba-l b--black-20"
         :tasks="output_tasks"
         @output-delete="deleteOutput"
         v-if="has_output && !show_output_chooser"
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
-        class="flex-fill bg-white bl-l br-l bt-l b--black-20 overflow-y-auto"
+        class="flex-fill bg-white ba-l b--black-20 overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_output_chooser = false"
         @choose-output="addOutput"
@@ -252,7 +252,7 @@
   @media @breakpoint-large {
     .css-pipe-transfer-column-transform {
       width: 26%;
-      max-width: 350px;
+      max-width: 320px;
     }
   }
 </style>
