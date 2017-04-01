@@ -67,6 +67,7 @@
     ROUTE_ACCOUNT,
     ROUTE_EMBEDHOME,
     ROUTE_HOME,
+    ROUTE_PIPEHOME,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
     ROUTE_FORGOTPASSWORD,
@@ -100,6 +101,7 @@
           case ROUTE_SIGNIN:
           case ROUTE_SIGNUP:
           case ROUTE_FORGOTPASSWORD:
+          case ROUTE_PIPEHOME:
           case ROUTE_RESETPASSWORD:
             return false
 

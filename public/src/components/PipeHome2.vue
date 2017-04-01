@@ -4,7 +4,8 @@
   </div>
   <div v-else class="flex flex-column items-stretch" style="background-color: #f1f4f5">
     <pipe-home-header
-      class="pv2 ph3 ph0-l mh4-l"
+      class="pv2 ph3"
+      style="background-color: #5f6c72"
       :pipe-eid="eid"
       :pipe-view="pipe_view"
       :process-running="is_process_running"
@@ -14,7 +15,7 @@
     </pipe-home-header>
 
     <pipe-transfer
-      class="flex-fill pl4-l bt b--black-10 bw0-l"
+      class="flex-fill pl4-l"
       :project-eid="project_eid"
       :pipe-eid="eid"
       :tasks="tasks"
@@ -23,7 +24,7 @@
     </pipe-transfer>
 
     <pipe-builder-list
-      class="flex-fill mh4-l bt b--black-10"
+      class="flex-fill ml4-l"
       :pipe-eid="eid"
       :tasks="tasks"
       :active-process="active_process"
