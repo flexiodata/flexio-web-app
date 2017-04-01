@@ -324,7 +324,7 @@ class Convert extends \Flexio\Jobs\Base
                     if ($terminator != "\r" && $terminator != "\n")
                         break;
 
-                    $lfpos = self::indexOfWithQuoting($row, $terminator, $qualifier);
+                    $lfpos = self::indexOfLineTerminator($row, $qualifier);
                     if ($lfpos !== false)
                         break; // if we found an LF, we have the whole CSV row; if not, read in another row
                 }
@@ -607,13 +607,9 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->close();
     }
 
-    private static function indexOfWithQuoting(string $haystack, string $needle, string $qualifier)
+    public static function indexOfLineTerminator(string $haystack, string $qualifier)
     {
-        if ($needle == '')
-            return false;
         $haystack_len = strlen($haystack);
-        $needle_len = strlen($needle);
-        $firstch = $needle[0];
         $offset = 0;
         $quotec = false;
 
@@ -629,11 +625,8 @@ class Convert extends \Flexio\Jobs\Base
                 }
                  else
                 {
-                    if ($ch == $firstch)
-                    {
-                        if (substr($haystack, $offset, $needle_len) == $needle)
-                            return $offset;
-                    }
+                    if ($ch == "\r" || $ch == "\n")
+                        return $offset;
                 }
             }
              else
@@ -716,7 +709,7 @@ class Convert extends \Flexio\Jobs\Base
         return true;
     }
 
-    private static function conformValuesToStructure(array $structure, array $row) : array
+    public static function conformValuesToStructure(array $structure, array $row) : array
     {
         $result_row = array();
 
