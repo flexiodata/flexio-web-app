@@ -52,6 +52,7 @@ class Execute extends \Flexio\Jobs\Base
         $this->getOutput()->push($outstream);
 
         $is_input_table = false;
+        $is_output_table = false;
         if ($instream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             $is_input_table = true;
 
@@ -152,7 +153,6 @@ class Execute extends \Flexio\Jobs\Base
             {
                 if ($is_input_table)
                 {
-
                     $rowcnt = 0;
                     $row = $streamreader->readRow();
                     if ($row)
@@ -209,9 +209,7 @@ class Execute extends \Flexio\Jobs\Base
                 //fxdebug("Reading...\n");
                 $readbuf = $process->read(1024);
 
-                if ($readbuf === false)
-                    $done_reading = true;
-                     else
+                if ($readbuf !== false)
                     $chunk .= $readbuf;
 
                 if (strlen($chunk) == 0)
@@ -239,6 +237,7 @@ class Execute extends \Flexio\Jobs\Base
                                 {
                                     $content_type = $header['content_type'];
                                 }
+                                $structure = $header['structure'] ?? null;
                             }
                             $chunk = substr($chunk, $end+4);
                         }
@@ -251,10 +250,12 @@ class Execute extends \Flexio\Jobs\Base
                             }
                             $outstream->setMimeType($content_type);
                             $outstream->setStructure($structure);
+                            $is_output_table = true;
                         }
                          else
                         {
                             $outstream->setMimeType($content_type);
+                            $is_output_table = false;
                         }
 
                         $first_chunk = false;
@@ -273,8 +274,14 @@ class Execute extends \Flexio\Jobs\Base
                     //fxdebug("Writing " . strlen($chunk) . " bytes\n");
                     //$tot += strlen($chunk);
 
-                    $streamwriter->write($chunk);
-                    $chunk = '';
+                    if ($is_output_table)
+                    {
+                    }
+                     else
+                    {
+                        $streamwriter->write($chunk);
+                        $chunk = '';
+                    }
                 }
 
             }
