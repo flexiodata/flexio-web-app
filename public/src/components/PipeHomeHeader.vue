@@ -60,8 +60,7 @@
       >
         <btn
           btn-md
-          btn-primary
-          class="ttu b"
+          class="ttu b white bg-black-20"
           :disabled="!is_run_allowed"
           @click="runPipe"
         >Run</btn>
