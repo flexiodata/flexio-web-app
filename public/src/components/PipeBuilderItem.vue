@@ -1,7 +1,7 @@
 <template>
   <div class="relative ml2-m ml3-l" style="max-width: 1500px">
-    <div class="flex flex-row mv2 pl3 pr4 pl0-l pr5-l">
-      <div class="flex-none">
+    <div class="flex flex-row relative mv2 pl3 pr4 pl0-l pr5-l">
+      <div class="flex flex-row items-start">
         <div
           class="pointer pa2 mr3 br1 white trans-wh tc relative swap-child"
           :class="[ bg_color ]"
@@ -10,15 +10,15 @@
           <i class="db material-icons f3 child">{{task_icon}}</i>
           <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
+        <div class="f5 pt2 bt bw1 b--transparent lh-title mr3">{{index+1}}.</div>
       </div>
-      <div class="flex-fill relative bg-black-05 pa3 pt2" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
         <div
           class="bl bw1 b--black-10 pl3 absolute"
-          style="top: 46px; bottom: -5px; left: -37px"
+          style="top: 45px; bottom: -5px; left: 19px"
           v-show="!show_progress"
          ></div>
+      <div class="flex-fill relative bg-white bl bt br b--black-10 pa3 pt2" style="box-shadow: 0 3px 4px -2px rgba(0,0,0,0.2)">
         <div class="flex flex-row">
-          <div class="f5 lh-title mr1">{{index+1}}.</div>
           <inline-edit-text
             class="flex-fill f5 lh-title"
             edit-button-tooltip-cls="hint--top-left"
@@ -42,7 +42,7 @@
         <div v-else>
           <command-bar2
             ref="commandbar"
-            class="mt2 ba b--black-20 bg-white"
+            class="mt2 ba b--black-10 bg-white"
             :orig-json="task"
             @change="updateEditTask"
             @cancel="cancelEdit"
@@ -50,7 +50,7 @@
           ></command-bar2>
           <code-editor
             ref="code"
-            class="mb2 bl br bb b--black-20 bg-white max-h5 overflow-y-auto"
+            class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
             :val="execute_code"
             :lang="execute_lang"
             @change="updateCode"

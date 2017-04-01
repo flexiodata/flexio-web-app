@@ -1,9 +1,9 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
-    <div class="flex-fill flex flex-column mr3-l">
-      <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
-        <div class="flex flex-row items-center justify-center relative" v-if="has_input">
+    <div class="flex-fill flex flex-column bl-l br-l bt-l b--black-10 bg-white mr3-l">
+      <div class="f4 pa3 dark-gray bb b--black-10 tc">
+        <div class="relative" v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
           <div v-else>Input</div>
           <button
@@ -25,7 +25,7 @@
             <i class="db material-icons f4">cancel</i>
           </button>
         </div>
-        <div v-else>1. Choose Input</div>
+        <div v-else>Choose Input</div>
       </div>
       <pipe-transfer-input-list
         class="flex-fill"
@@ -42,9 +42,9 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column mr3-l">
-      <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
-        <div class="flex flex-row items-center justify-center relative" v-if="has_output">
+    <div class="flex-fill flex flex-column bl-l br-l bt-l b--black-10 bg-white mr3-l">
+      <div class="f4 pa3 dark-gray bb b--black-10 tc">
+        <div class="relative" v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
           <button
@@ -66,7 +66,7 @@
             <i class="db material-icons f4">cancel</i>
           </button>
         </div>
-        <div v-else>2. Choose Output</div>
+        <div v-else>Choose Output</div>
       </div>
       <pipe-transfer-output-list
         class="flex-fill"
@@ -83,11 +83,11 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex-none flex flex-column css-pipe-transfer-column-transform">
-      <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
-        <div class="flex flex-row items-center justify-center relative">
-          <div v-if="has_tasks">Processing Steps</div>
-          <div v-else>3. Add Processing Steps</div>
+    <div class="flex-none flex flex-column ml3 css-pipe-transfer-column-transform">
+      <div class="f4 pt3 dark-gray">
+        <div class="pb1 bb b--black-10 relative">
+          <div v-if="has_tasks">Summary</div>
+          <div v-else>Summary</div>
           <button
             type="button"
             class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
@@ -99,7 +99,7 @@
           </button>
         </div>
       </div>
-      <div class="flex-fill overflow-y-auto pa3" v-if="has_tasks">
+      <div class="flex-fill pt3 pr4 pb3 overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
           :tasks="transform_tasks"
         ></pipe-transfer-transform-list>
@@ -115,18 +115,16 @@
           </btn>
         </div>
       </div>
-      <div class="flex-fill" v-else>
-        <div class="ma3 tl tc-m">
-          <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
-          <btn
-            btn-md
-            btn-primary
-            class="ttu b w-100 w-auto-ns"
-            @click="$emit('open-builder')"
-          >
-            Add steps
-          </btn>
-        </div>
+      <div class="flex-fill pt3 pr4 tl tc-m" v-else>
+        <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
+        <btn
+          btn-md
+          btn-primary
+          class="ttu b w-100 w-auto-ns"
+          @click="$emit('open-builder')"
+        >
+          Add steps
+        </btn>
       </div>
     </div>
 
@@ -251,16 +249,10 @@
 <style lang="less">
   @import "../stylesheets/variables.less";
 
-  /*
-  .css-pipe-transfer-header {
-    box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2);
-  }
-  */
-
   @media @breakpoint-large {
     .css-pipe-transfer-column-transform {
       width: 30%;
-      max-width: 400px;
+      max-width: 320px;
     }
   }
 </style>
