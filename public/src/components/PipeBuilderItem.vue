@@ -17,7 +17,7 @@
           style="top: 45px; bottom: -5px; left: 19px"
           v-show="!show_progress"
          ></div>
-      <div class="flex-fill relative bg-white bl bt br b--black-10 pa3 pt2" style="box-shadow: 0 3px 4px -2px rgba(0,0,0,0.2)">
+      <div class="flex-fill relative bg-white ba b--black-20 pa3 pt2" style="box-shadow: 0 3px 4px -3px rgba(0,0,0,0.2)">
         <div class="flex flex-row">
           <inline-edit-text
             class="flex-fill f5 lh-title"

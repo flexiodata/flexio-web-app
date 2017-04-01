@@ -2,7 +2,7 @@
   <div v-if="is_fetching">
     <spinner size="medium" show-text loading-text="Loading pipe..."></spinner>
   </div>
-  <div v-else class="flex flex-column items-stretch" style="background-color: #f5f8fa">
+  <div v-else class="flex flex-column items-stretch" style="background-color: #f1f4f5">
     <pipe-home-header
       class="pv2 ph3 ph0-l mh4-l"
       :pipe-eid="eid"

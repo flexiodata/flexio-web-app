@@ -28,13 +28,13 @@
         <div v-else>Choose Input</div>
       </div>
       <pipe-transfer-input-list
-        class="flex-fill bg-white bl-l br-l bt-l b--black-10"
+        class="flex-fill bg-white bl-l br-l bt-l b--black-20"
         :tasks="input_tasks"
         @input-delete="deleteInput"
         v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
-        class="flex-fill bg-white bl-l br-l bt-l b--black-10 overflow-y-auto"
+        class="flex-fill bg-white bl-l br-l bt-l b--black-20 overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         @choose-input="addInput"
@@ -69,13 +69,13 @@
         <div v-else>Choose Output</div>
       </div>
       <pipe-transfer-output-list
-        class="flex-fill bg-white bl-l br-l bt-l b--black-10"
+        class="flex-fill bg-white bl-l br-l bt-l b--black-20"
         :tasks="output_tasks"
         @output-delete="deleteOutput"
         v-if="has_output && !show_output_chooser"
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
-        class="flex-fill bg-white bl-l br-l bt-l b--black-10 overflow-y-auto"
+        class="flex-fill bg-white bl-l br-l bt-l b--black-20 overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_output_chooser = false"
         @choose-output="addOutput"
@@ -85,7 +85,7 @@
 
     <div class="flex-none flex flex-column mr4-l css-pipe-transfer-column-transform">
       <div class="f4 pt3 dark-gray">
-        <div class="pb1 bb b--black-10 relative">
+        <div class="pb1 bb b--black-20 relative">
           <div v-if="has_tasks">Summary</div>
           <div v-else>Summary</div>
           <button
