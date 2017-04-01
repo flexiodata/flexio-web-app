@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row min-w5">
-    <div class="flex-fill">
+    <div class="flex-fill mr3">
       <div class="flex flex-column flex-row-l items-center-l mb1">
         <inline-edit-text
           class="dib f3 lh-title v-mid dark-gray mb1 mb0-ns mr1-ns"

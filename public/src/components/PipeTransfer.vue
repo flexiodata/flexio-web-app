@@ -1,7 +1,7 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
-    <div class="flex-fill flex flex-column bl-l br-l bt-l b--black-10 bg-white mr3-l">
+    <div class="flex-fill flex flex-column bl-l br-l bt-l b--black-10 bg-white mr4-l">
       <div class="f4 pa3 dark-gray bb b--black-10 tc">
         <div class="relative" v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
@@ -42,7 +42,7 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column bl-l br-l bt-l b--black-10 bg-white mr3-l">
+    <div class="flex-fill flex flex-column bl-l br-l bt-l b--black-10 bg-white mr4-l">
       <div class="f4 pa3 dark-gray bb b--black-10 tc">
         <div class="relative" v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
@@ -83,7 +83,7 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex-none flex flex-column ml3 css-pipe-transfer-column-transform">
+    <div class="flex-none flex flex-column mr4-l css-pipe-transfer-column-transform">
       <div class="f4 pt3 dark-gray">
         <div class="pb1 bb b--black-10 relative">
           <div v-if="has_tasks">Summary</div>
@@ -99,7 +99,7 @@
           </button>
         </div>
       </div>
-      <div class="flex-fill pt3 pr4 pb3 overflow-y-auto" v-if="has_tasks">
+      <div class="flex-fill pa3 ph0-l overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
           :tasks="transform_tasks"
         ></pipe-transfer-transform-list>
@@ -115,7 +115,7 @@
           </btn>
         </div>
       </div>
-      <div class="flex-fill pt3 pr4 tl tc-m" v-else>
+      <div class="flex-fill pt3 tl tc-m" v-else>
         <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
         <btn
           btn-md
@@ -251,8 +251,8 @@
 
   @media @breakpoint-large {
     .css-pipe-transfer-column-transform {
-      width: 30%;
-      max-width: 320px;
+      width: 26%;
+      max-width: 350px;
     }
   }
 </style>

@@ -2,7 +2,7 @@
   <article class="flex flex-row pt1 pb3">
     <div class="flex-none">
       <div
-        class="pointer pa1 mr3 br1 white trans-wh tc relative"
+        class="pointer pa1 mr2 br1 white trans-wh tc relative"
         :class="[ bg_color ]"
       >
         <i class="db material-icons f4">{{task_icon}}</i>
