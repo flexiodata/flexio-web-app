@@ -776,6 +776,7 @@ class Process extends \Flexio\Object\Base
             $line = $e->getLine();
             $code = $info['code'];
             $message = $info['message'];
+            //die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
             return $process->fail($code, $message, $file, $line);
         }
         catch (\Exception $e)
@@ -784,6 +785,7 @@ class Process extends \Flexio\Object\Base
 
             $file = $e->getFile();
             $line = $e->getLine();
+            //die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
             return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
         }
         catch (\Error $e)
@@ -792,6 +794,7 @@ class Process extends \Flexio\Object\Base
 
             $file = $e->getFile();
             $line = $e->getLine();
+            //die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
             return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
         }
     }
