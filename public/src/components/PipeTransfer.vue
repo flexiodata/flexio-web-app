@@ -1,8 +1,8 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
-    <div class="flex-fill flex flex-column mb4 mr4-l">
-      <div class="f4 pa3 dark-gray tc">
+    <div class="flex-fill flex flex-column bg-white mv4-l mr4-l" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
+      <div class="f4 pa2 dark-gray bb b--black-10 tc">
         <div class="relative" v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
           <div v-else>Input</div>
@@ -28,13 +28,13 @@
         <div v-else>Choose Input</div>
       </div>
       <pipe-transfer-input-list
-        class="flex-fill bg-white ba-l b--black-20"
+        class="flex-fill bg-white overflow-y-auto"
         :tasks="input_tasks"
         @input-delete="deleteInput"
         v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
-        class="flex-fill bg-white ba-l b--black-20 overflow-y-auto"
+        class="flex-fill bg-white overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         @choose-input="addInput"
@@ -42,8 +42,8 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column mb4 mr4-l">
-      <div class="f4 pa3 dark-gray tc">
+    <div class="flex-fill flex flex-column bg-white mv4-l mr4-l" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
+      <div class="f4 pa2 dark-gray bb b--black-10 tc">
         <div class="relative" v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
@@ -69,13 +69,13 @@
         <div v-else>Choose Output</div>
       </div>
       <pipe-transfer-output-list
-        class="flex-fill bg-white ba-l b--black-20"
+        class="flex-fill bg-white overflow-y-auto"
         :tasks="output_tasks"
         @output-delete="deleteOutput"
         v-if="has_output && !show_output_chooser"
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
-        class="flex-fill bg-white ba-l b--black-20 overflow-y-auto"
+        class="flex-fill bg-white overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_output_chooser = false"
         @choose-output="addOutput"
@@ -83,23 +83,20 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex-none flex flex-column mr4-l css-pipe-transfer-column-transform">
-      <div class="f4 pt3 dark-gray">
-        <div class="pb1 bb b--black-20 relative">
-          <div v-if="has_tasks">Summary</div>
-          <div v-else>Summary</div>
-          <button
-            type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
-            aria-label="Edit steps"
-            @click="$emit('open-builder')"
-            v-if="has_tasks && false"
-          >
-            <i class="db material-icons f4">edit</i>
-          </button>
-        </div>
+    <div class="flex-none flex flex-column bg-white bl-l b--black-10 css-pipe-transfer-column-transform">
+      <div class="f4 pv2 ph3 dark-gray bt bb bt0-l bb0-l b--black-10 tc tl-l relative">
+        <div>Summary</div>
+        <button
+          type="button"
+          class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
+          aria-label="Edit steps"
+          @click="$emit('open-builder')"
+          v-if="has_tasks && false"
+        >
+          <i class="db material-icons f4">edit</i>
+        </button>
       </div>
-      <div class="flex-fill pa3 ph0-l overflow-y-auto" v-if="has_tasks">
+      <div class="flex-fill pa3 overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
           :tasks="transform_tasks"
         ></pipe-transfer-transform-list>
@@ -115,7 +112,7 @@
           </btn>
         </div>
       </div>
-      <div class="flex-fill pt3 tl tc-m" v-else>
+      <div class="flex-fill pa3 tl tc-m" v-else>
         <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
         <btn
           btn-md
