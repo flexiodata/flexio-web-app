@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="render_nav" v-show="show_nav" class="bb b--black-10">
+  <nav v-if="render_nav" v-show="show_nav" class="bb b--black-20">
     <div class="flex flex-row bg-white pa1 pl3-ns pr2-ns items-center">
       <div class="flex-fill flex flex-row items-center truncate">
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">

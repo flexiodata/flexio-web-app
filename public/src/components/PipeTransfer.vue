@@ -1,7 +1,7 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
-    <div class="flex-fill flex flex-column bg-white mb4-l mr4-l" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
+    <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
       <div class="f4 pa2 dark-gray bb b--black-10 tc">
         <div class="relative" v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
@@ -42,7 +42,7 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column bg-white mb4-l mr4-l" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
+    <div class="flex-fill flex flex-column bg-white mb4-l mr4-l css-white-box">
       <div class="f4 pa2 dark-gray bb b--black-10 tc">
         <div class="relative" v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
