@@ -11,22 +11,20 @@
           <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
       </div>
+      <div class="f5 lh-title pt2 mr3">{{index+1}}.</div>
       <div
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 46px; bottom: -5px; left: 19px"
         v-show="!show_progress"
       ></div>
       <div class="flex-fill relative pa3 pt2 bg-white" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
-        <div class="flex flex-row">
-          <div class="f5 lh-title mr1">{{index+1}}.</div>
-          <inline-edit-text
-            class="flex-fill f5 lh-title"
-            edit-button-tooltip-cls="hint--top-left"
-            input-key="name"
-            :val="display_name"
-            @save="editTaskSingleton">
-          </inline-edit-text>
-        </div>
+        <inline-edit-text
+          class="flex-fill f5 lh-title"
+          edit-button-tooltip-cls="hint--top-left"
+          input-key="name"
+          :val="display_name"
+          @save="editTaskSingleton">
+        </inline-edit-text>
         <inline-edit-text
           class="f7 lh-title gray mt1"
           placeholder="Add a description"
@@ -42,7 +40,7 @@
         <div v-else>
           <command-bar2
             ref="commandbar"
-            class="mt2 ba b--black-20 bg-white"
+            class="mt2 ba b--black-10 bg-white"
             :orig-json="task"
             @change="updateEditTask"
             @cancel="cancelEdit"
@@ -50,7 +48,7 @@
           ></command-bar2>
           <code-editor
             ref="code"
-            class="mb2 bl br bb b--black-20 bg-white max-h5 overflow-y-auto"
+            class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
             :val="execute_code"
             :lang="execute_lang"
             @change="updateCode"
