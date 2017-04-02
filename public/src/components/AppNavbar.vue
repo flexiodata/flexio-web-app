@@ -5,7 +5,7 @@
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <app-breadcrumbs class="flex flex-row items-center lh-title f6 f4-ns fw6"></app-breadcrumbs>
+        <app-breadcrumbs class="flex flex-row items-center lh-title f6 fw6 f4-ns fw4-ns"></app-breadcrumbs>
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
