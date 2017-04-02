@@ -1,7 +1,7 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
-    <div class="flex-fill flex flex-column bg-white mv4-l mr4-l" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
+    <div class="flex-fill flex flex-column bg-white mb4-l mr4-l" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
       <div class="f4 pa2 dark-gray bb b--black-10 tc">
         <div class="relative" v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
@@ -42,7 +42,7 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column bg-white mv4-l mr4-l" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
+    <div class="flex-fill flex flex-column bg-white mb4-l mr4-l" style="box-shadow: 0 2px 4px -1px rgba(0,0,0,0.3)">
       <div class="f4 pa2 dark-gray bb b--black-10 tc">
         <div class="relative" v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
@@ -83,8 +83,8 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex-none flex flex-column bg-white bl-l b--black-10 css-pipe-transfer-column-transform">
-      <div class="f4 pv2 pv3-l ph3 dark-gray bt bb bt-0-l bb-0-l b--black-10 tc tl-l relative">
+    <div class="flex-none flex flex-column mb4-l mr4-l css-pipe-transfer-column-transform">
+      <div class="f5 pb2 dark-gray bb b--black-10 tc tl-l relative">
         <div>Pipe Summary</div>
         <button
           type="button"
@@ -96,7 +96,7 @@
           <i class="db material-icons f4">edit</i>
         </button>
       </div>
-      <div class="flex-fill pa3 pt0 overflow-y-auto" v-if="has_tasks">
+      <div class="flex-fill pt3 pr3 overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
           :tasks="transform_tasks"
         ></pipe-transfer-transform-list>
@@ -112,7 +112,7 @@
           </btn>
         </div>
       </div>
-      <div class="flex-fill pa3 tl tc-m" v-else>
+      <div class="flex-fill pt3 pr3 overflow-y-auto tl tc-m" v-else>
         <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
         <btn
           btn-md
@@ -249,7 +249,7 @@
   @media @breakpoint-large {
     .css-pipe-transfer-column-transform {
       width: 26%;
-      max-width: 340px;
+      max-width: 300px;
     }
   }
 </style>
