@@ -84,8 +84,8 @@
     </div>
 
     <div class="flex-none flex flex-column bg-white bl-l b--black-10 css-pipe-transfer-column-transform">
-      <div class="f4 pv2 ph3 dark-gray bt bb bt0-l bb0-l b--black-10 tc tl-l relative">
-        <div>Summary</div>
+      <div class="f4 pv2 pv3-l ph3 dark-gray bt bb bt-0-l bb-0-l b--black-10 tc tl-l relative">
+        <div>Pipe Summary</div>
         <button
           type="button"
           class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
@@ -96,7 +96,7 @@
           <i class="db material-icons f4">edit</i>
         </button>
       </div>
-      <div class="flex-fill pa3 overflow-y-auto" v-if="has_tasks">
+      <div class="flex-fill pa3 pt0 overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
           :tasks="transform_tasks"
         ></pipe-transfer-transform-list>
