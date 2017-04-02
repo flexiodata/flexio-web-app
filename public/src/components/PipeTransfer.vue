@@ -85,7 +85,7 @@
 
     <div class="flex-none flex flex-column mb4-l mr4-l css-pipe-transfer-column-transform">
       <div class="f5 pb2 dark-gray bb b--black-10 tc tl-l relative">
-        <div>Pipe Summary</div>
+        <div>Summary of Steps</div>
         <button
           type="button"
           class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
@@ -98,7 +98,7 @@
       </div>
       <div class="flex-fill pt3 pr3 overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
-          :tasks="transform_tasks"
+          :tasks="tasks"
         ></pipe-transfer-transform-list>
         <div>
           <btn
