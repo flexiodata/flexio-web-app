@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-y-auto">
-    <div class="blankslate mv4" v-if="tasks.length == 0">
+    <div class="blankslate mv3 mr4" v-if="tasks.length == 0">
       <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
       <div class="mt3">
         <btn
