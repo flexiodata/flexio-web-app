@@ -113,7 +113,7 @@
         return ename.length > 0 ? ename : _.get(this.pipe, 'eid', '')
       },
       pipe_cmd_line_example() {
-        return 'flexio pipes run ' + this.pipe_identifier + ' file.txt *.csv'
+        return 'flexio pipes run ' + this.pipe_identifier + ' myfile.txt'
       },
       connection() {
         var connection_eid = _.get(this.item, 'params.connection', '')
