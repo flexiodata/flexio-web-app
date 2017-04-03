@@ -18,12 +18,9 @@ namespace Flexio\Services;
 
 class Store
 {
-    public static function load($connection_info)
+    public static function load(array $connection_info)
     {
         global $g_store;
-
-        if (!is_array($connection_info))
-            return false;
 
         // create a connection hash for storing/retrieving caches of
         // the service
@@ -179,7 +176,7 @@ class Store
         return $service;
     }
 
-    private static function createConnectionHash($connection_info)
+    private static function createConnectionHash(array $connection_info) : string
     {
         return md5(json_encode($connection_info));
     }

@@ -33,7 +33,7 @@ class Dropbox implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($params = null)
+    public static function create(array $params = null) : \Flexio\Services\Dropbox
     {
         if (!isset($params))
             return new self;
@@ -41,12 +41,12 @@ class Dropbox implements \Flexio\Services\IConnection
         return self::initialize($params);
     }
 
-    public function connect($params)
+    public function connect(array $params) : bool
     {
-        // TODO: implement
+        return true;
     }
 
-    public function isOk()
+    public function isOk() : bool
     {
         return $this->is_ok;
     }
@@ -57,10 +57,10 @@ class Dropbox implements \Flexio\Services\IConnection
         $this->access_token = '';
     }
 
-    public function listObjects($path = '')
+    public function listObjects(string $path = '') : array
     {
         if (!$this->authenticated())
-            return null;
+            return array();
 
         $file_limit = 10000; // limit return results to 10000
 
@@ -109,19 +109,21 @@ class Dropbox implements \Flexio\Services\IConnection
         return $files;
     }
 
-    public function exists($path)
+    public function exists($path) : bool
     {
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
     public function getInfo($path)
     {
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function read($params, $callback)
+    public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
 
@@ -172,14 +174,14 @@ class Dropbox implements \Flexio\Services\IConnection
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function getTokens()
+    public function getTokens() : array
     {
         return [ 'access_token' => $this->access_token,
                  'refresh_token' => '',           // dropbox doesn't use refresh tokens
                  'expires' => 0  ];               // dropbox tokens are usable until revocation
     }
 
-    private function authenticated()
+    private function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
             return true;
@@ -187,7 +189,7 @@ class Dropbox implements \Flexio\Services\IConnection
         return false;
     }
 
-    private static function initialize($params)
+    private static function initialize(array $params)
     {
         $client_id = $GLOBALS['g_config']->dropbox_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->dropbox_client_secret ?? '';

@@ -33,7 +33,7 @@ class Postgres implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($params = null)
+    public static function create(array $params = null) : \Flexio\Services\Postgres
     {
         $service = new self;
 
@@ -43,7 +43,7 @@ class Postgres implements \Flexio\Services\IConnection
         return $service;
     }
 
-    public function connect($params)
+    public function connect(array $params) : bool
     {
         $this->close();
 
@@ -61,12 +61,12 @@ class Postgres implements \Flexio\Services\IConnection
             ))) === false)
             return false;
 */
-        $this->initialize($params['host'], $params['port'], $params['database'], $params['username'], $params['password']);
+        $this->initialize($params['host'], intval($params['port']), $params['database'], $params['username'], $params['password']);
 
         return $this->isOk();
     }
 
-    public function isOk()
+    public function isOk() : bool
     {
         return $this->is_ok;
     }
@@ -82,7 +82,7 @@ class Postgres implements \Flexio\Services\IConnection
         $this->password = null;
     }
 
-    public function listObjects($path = '')
+    public function listObjects(string $path = '') : array
     {
         $db = $this->newConnection();
 
@@ -108,19 +108,21 @@ class Postgres implements \Flexio\Services\IConnection
         return $tables;
     }
 
-    public function exists($path)
+    public function exists(string $path) : bool
     {
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function getInfo($path)
+    public function getInfo(string $path) : array
     {
         // TODO: implement
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return array();
     }
 
-    public function read($params, $callback)
+    public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
 
@@ -161,12 +163,13 @@ class Postgres implements \Flexio\Services\IConnection
         }
     }
 
-    public function write($params, $callback)
+    public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
 
@@ -206,7 +209,7 @@ class Postgres implements \Flexio\Services\IConnection
         return null;
     }
 
-    private function initialize($host, $port, $database, $username, $password)
+    private function initialize(string $host, int $port, string $database, string $username, string $password) : bool
     {
         $this->host = $host;
         $this->port = intval($port);
@@ -220,7 +223,7 @@ class Postgres implements \Flexio\Services\IConnection
         return $this->is_ok;
     }
 
-    public function exec($sql)
+    public function exec(string $sql) : bool
     {
         try
         {
@@ -234,7 +237,7 @@ class Postgres implements \Flexio\Services\IConnection
         }
     }
 
-    public function query($query_params)
+    public function query(array $query_params) // TODO: set return type
     {
         // TODO: add validation; quote table parameter
 
@@ -322,7 +325,7 @@ class Postgres implements \Flexio\Services\IConnection
         return $iter;
     }
 
-    public function queryAll($table)
+    public function queryAll(string $table) // TODO: set return type
     {
         $sql = "select * from " . self::quoteIdentifierIfNecessary($table);
 
@@ -335,11 +338,8 @@ class Postgres implements \Flexio\Services\IConnection
         return $iter;
     }
 
-    public function createTable($table, $structure)
+    public function createTable(string $table, array $structure) : bool
     {
-        if (!is_array($structure) || count($structure) == 0)
-            return false;
-
         try
         {
             // map each field into an sql definition
@@ -369,7 +369,7 @@ class Postgres implements \Flexio\Services\IConnection
         return true;
     }
 
-    public function createFile($path, $mime_type = "text/plain", $encoding = "default")
+    public function createFile(string $path, string $mime_type = "text/plain", string $encoding = "default") : bool
     {
         $this->deleteFile($path);
 
@@ -416,7 +416,7 @@ class Postgres implements \Flexio\Services\IConnection
         return true;
     }
 
-    public function openFile($path)
+    public function openFile(string $path) // TODO: set return type
     {
         $db = $this->newConnection();
         $qtbl = self::quoteIdentifierIfNecessary($path);
@@ -446,7 +446,7 @@ class Postgres implements \Flexio\Services\IConnection
         return $binf;
     }
 
-    public function bulkInsert($table)
+    public function bulkInsert(string $table)
     {
         $inserter = new PostgresInserterMultiRow;
 
@@ -458,7 +458,7 @@ class Postgres implements \Flexio\Services\IConnection
         return $inserter;
     }
 
-    public function deleteFile($path)
+    public function deleteFile(string $path)
     {
         $qdbtable = self::quoteIdentifierIfNecessary($path);
 
@@ -466,7 +466,7 @@ class Postgres implements \Flexio\Services\IConnection
         $this->db->exec($sql);
     }
 
-    public function describeTable($table)
+    public function describeTable(string $table)
     {
         $handle_type = substr($table,0,3);
 
@@ -476,7 +476,7 @@ class Postgres implements \Flexio\Services\IConnection
             if (!$iter->fromHandle($table))
                 return null;
             $table = $iter->table;
-            die($table);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
         $sql  = "select attname,atttypid,atttypmod from pg_attribute where ";
@@ -570,7 +570,7 @@ class Postgres implements \Flexio\Services\IConnection
         return $structure;
     }
 
-    public function getFileInfo($path)
+    public function getFileInfo(string $path)
     {
         $qtbl = $this->db->quote($path);
         $sql = "select t.tablename as name, coalesce(d.description,'') as type from pg_tables t " .
@@ -610,7 +610,7 @@ class Postgres implements \Flexio\Services\IConnection
         return $result;
     }
 
-    public function getTableRowCount($table)
+    public function getTableRowCount(string $table) : int
     {
         $qtbl = self::quoteIdentifierIfNecessary($table);
 
@@ -622,7 +622,7 @@ class Postgres implements \Flexio\Services\IConnection
         return isset($rows[0]['cnt']) ? $rows[0]['cnt'] : null;
     }
 
-    public function getIteratorFromHandle($handle)
+    public function getIteratorFromHandle(string $handle)
     {
         $iter = new PostgresIterator;
         $iter->db = $this->db;
@@ -635,7 +635,7 @@ class Postgres implements \Flexio\Services\IConnection
         return $this->db;
     }
 
-    public static function quoteIdentifierIfNecessary($str)
+    public static function quoteIdentifierIfNecessary(string $str) : string
     {
         $str = str_replace('?', '', $str);
 
@@ -645,7 +645,7 @@ class Postgres implements \Flexio\Services\IConnection
             return ('"' . $str . '"');
     }
 
-    public static function createDelimitedFieldList($fields)
+    public static function createDelimitedFieldList(array $fields) : string
     {
         $result = '';
         $first = true;
@@ -665,7 +665,7 @@ class Postgres implements \Flexio\Services\IConnection
         return $result;
     }
 
-    public static function isValidFieldName($str)
+    public static function isValidFieldName(string $str) : bool
     {
         if (!is_string($str))
             return false;
@@ -765,7 +765,7 @@ class Postgres implements \Flexio\Services\IConnection
         return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
     }
 
-    private static function pgtypeToDbtype($pg_type)
+    private static function pgtypeToDbtype(string $pg_type) : string
     {
         switch ($pg_type)
         {
@@ -808,7 +808,7 @@ class Postgres implements \Flexio\Services\IConnection
         return 'invalid';
     }
 
-    private static function getFieldString($field)
+    private static function getFieldString(array $field) : string
     {
         if (!isset($field['name']))
             return '';
@@ -886,7 +886,7 @@ class PostgresIterator
     public $rows = [];
     public $last_block = false;
 
-    public function fromHandle($handle)
+    public function fromHandle(string $handle) : bool
     {
         $this->cursor_type = substr($handle,0,3);
 
@@ -904,12 +904,12 @@ class PostgresIterator
         }
     }
 
-    public function getHandle()
+    public function getHandle() // TODO: set return type
     {
         return $this->cursor_type . \Flexio\Services\Postgres::base64url_encode($this->table . "\t" . $this->row_count . "\t" . $this->primary_key);
     }
 
-    public function getRows($offset, $limit)
+    public function getRows(int $offset, int $limit)
     {
         if ($this->cursor_type == 'xh1')
         {
@@ -943,7 +943,7 @@ class PostgresIterator
         return null;
     }
 
-    public function fetchRow()
+    public function fetchRow() // TODO: set return type
     {
         $cnt = count($this->rows);
 
@@ -998,7 +998,7 @@ class PostgresInserter
     private $structure = null;
     private $columns = null;
 
-    public function init($service, $db, $table)
+    public function init($service, $db, $table) // TODO: set parameter types
     {
         $this->db = $db;
         $this->table = $table;
@@ -1008,7 +1008,7 @@ class PostgresInserter
         return true;
     }
 
-    public function startInsert($fields)
+    public function startInsert(array $fields) : bool
     {
         $structure_indexed = [];
         foreach ($this->structure as $column)
@@ -1031,7 +1031,7 @@ class PostgresInserter
         return true;
     }
 
-    public function insertRow($row)
+    public function insertRow(array $row) : bool
     {
         $field_idx = 0;
         $column_count = count($this->columns);
@@ -1096,7 +1096,7 @@ class PostgresInserter
         return $this->flush();
     }
 
-    public function flush()
+    public function flush() : bool
     {
         try
         {
@@ -1136,7 +1136,7 @@ class PostgresInserterMultiRow
     private $structure = null;
     private $columns = null;
 
-    public function init($service, $db, $table)
+    public function init($service, $db, $table) // TODO: set parameter types
     {
         $this->db = $db;
         $this->table = $table;
@@ -1146,7 +1146,7 @@ class PostgresInserterMultiRow
         return true;
     }
 
-    public function startInsert($fields)
+    public function startInsert(array $fields) : bool
     {
         $structure_indexed = [];
         foreach ($this->structure as $column)
@@ -1166,7 +1166,7 @@ class PostgresInserterMultiRow
         return true;
     }
 
-    public function insertRow($row)
+    public function insertRow(array $row) : bool
     {
         $field_idx = 0;
         $column_count = count($this->columns);
@@ -1235,7 +1235,7 @@ class PostgresInserterMultiRow
         return $this->flush();
     }
 
-    public function flush()
+    public function flush() : bool
     {
         try
         {
@@ -1261,7 +1261,7 @@ class PostgresInserterMultiRow
         return $this->flush();
     }
 
-    private static function buildInsertStatement($table, $fields, $rows)
+    private static function buildInsertStatement(string $table, string $fields, array $rows) : string
     {
         $sql = '';
 
@@ -1295,7 +1295,7 @@ class PostgresInserterSimple
     private $rows = array();
     private $stmt = null;
 
-    public function init($service, $db, $table)
+    public function init($service, $db, $table) // TODO: set parameter types
     {
         $this->db = $db;
         $this->table = $table;
@@ -1305,30 +1305,34 @@ class PostgresInserterSimple
         return true;
     }
 
-    public function startInsert($fields)
+    public function startInsert(array $fields) : bool
     {
         $sql =  'insert into '. \Flexio\Services\Postgres::quoteIdentifierIfNecessary($this->table) . ' (';
         $sql .= \Flexio\Services\Postgres::createDelimitedFieldList($fields);
         $sql .= ') VALUES ( ' . trim(str_repeat('?,',count($fields)),',') . ')';
 
         $this->stmt = $this->db->prepare($sql);
+        return true;
     }
 
-    public function insertRow($row)
+    public function insertRow(array $row) : bool
     {
         // only take sequential arrays
         if (isset($row[0]))
         {
             $this->stmt->execute($row);
         }
+        return true;
     }
 
-    public function flush()
+    public function flush() : bool
     {
+        return true;
     }
 
     public function finishInsert()
     {
+        return $this->flush();
     }
 }
 

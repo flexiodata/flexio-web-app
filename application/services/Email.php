@@ -63,18 +63,18 @@ class Email
     private $_aws = null;
     private $_ses = null;
 
-    public static function isValid($email)
+    public static function isValid(string $email) : bool
     {
         // checks if an email address is valid
         return \Flexio\Base\Util::isValidEmail($email);
     }
 
-    public static function create($params = false)
+    public static function create(array $params = null) : \Flexio\Services\Email
     {
         $email = new self;
         $email->initialize();
 
-        if ($params === false)
+        if (!isset($params))
             return $email;
 
         if (isset($params['from']))
@@ -106,48 +106,31 @@ class Email
         return $email;
     }
 
-    public static function parseText($content)
+    public static function parseText(string $content) : \Flexio\Services\Email
     {
-        if (!is_string($content))
-            return false;
+        $email = new self;
 
         // parse the content
         $parser = new \ZBateson\MailMimeParser\MailMimeParser;
         $message = $parser->parse($content);
 
         // create the email with the parsed values
-        $email = new self;
         $email->initializeFromParsedMessage($message);
 
         return $email;
-
-/*
-        if (!is_string($content))
-            return false;
-
-        // parse the content
-        $parser = new \PhpMimeMailParser\Parser;
-        $parser->setText($content);
-
-        // create the email with the parsed values
-        $email = new self;
-        $email->initializeFromParser($parser);
-
-        return $email;
-*/
     }
 
-    public static function parseStream($stream)
+    public static function parseStream(string $stream) : \Flexio\Services\Email
     {
-        if (!is_string($stream))
-            return false;
+        $email = new self;
+
         if (strlen($stream) === 0)
-            return false;
+            return $email;
 
         // get the stream
         $handle = fopen($stream, 'r');
         if ($handle === false)
-            return false;
+            return $email;
 
         // parse the stream
         $parser = new \ZBateson\MailMimeParser\MailMimeParser;
@@ -159,29 +142,6 @@ class Email
         $email->initializeFromParsedMessage($message);
 
         return $email;
-
-
-/*
-        if (!is_string($stream))
-            return false;
-        if (strlen($stream) === 0)
-            return false;
-
-        // get the stream
-        $stream_handle = fopen($stream, 'r');
-        if ($stream_handle === false)
-            return false;
-
-        // parse the stream
-        $parser = new \PhpMimeMailParser\Parser;
-        $parser->setStream($stream_handle);
-
-        // create the email with the parsed values
-        $email = new self;
-        $email->($parser);
-
-        return $email;
-*/
     }
 
     public function send()
@@ -192,7 +152,7 @@ class Email
             $this->sendWithoutAttachments();
     }
 
-    public function setFrom($addresses)
+    public function setFrom($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -205,12 +165,12 @@ class Email
         return $this;
     }
 
-    public function getFrom()
+    public function getFrom() : array
     {
         return $this->from_addresses;
     }
 
-    public function setTo($addresses)
+    public function setTo($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -223,12 +183,12 @@ class Email
         return $this;
     }
 
-    public function getTo()
+    public function getTo() : array
     {
         return $this->to_addresses;
     }
 
-    public function setCC($addresses)
+    public function setCC($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -241,12 +201,12 @@ class Email
         return $this;
     }
 
-    public function getCC()
+    public function getCC() : array
     {
         return $this->cc_addresses;
     }
 
-    public function setBCC($addresses)
+    public function setBCC($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -259,12 +219,12 @@ class Email
         return $this;
     }
 
-    public function getBCC()
+    public function getBCC() : array
     {
         return $this->bcc_addresses;
     }
 
-    public function setReplyTo($addresses)
+    public function setReplyTo($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -277,44 +237,35 @@ class Email
         return $this;
     }
 
-    public function getReplyTo()
+    public function getReplyTo() : array
     {
         return $this->replyto_addresses;
     }
 
-    public function setSubject($subject)
+    public function setSubject(string $subject) : \Flexio\Services\Email
     {
-        if (!is_string($subject))
-            return $this;
-
         $this->subject = $subject;
         return $this;
     }
 
-    public function getSubject()
+    public function getSubject() : string
     {
         return $this->subject;
     }
 
-    public function setMessageText($message)
+    public function setMessageText(string $message) : \Flexio\Services\Email
     {
-        if (!is_string($message))
-            return $this;
-
 	    $this->msg_text = $message;
         return $this;
     }
 
-    public function getMessageText()
+    public function getMessageText() : string
     {
         return $this->msg_text;
     }
 
-    public function setMessageHtml($message)
+    public function setMessageHtml(string $message) : \Flexio\Services\Email
     {
-        if (!is_string($message))
-            return $this;
-
         $this->msg_html = $message;
         return $this;
     }
@@ -324,28 +275,19 @@ class Email
         return $this->msg_html;
     }
 
-    public function setMessageHtmlEmbedded($message)
+    public function setMessageHtmlEmbedded(string $message) : \Flexio\Services\Email
     {
-        if (!is_string($message))
-            return $this;
-
         $this->msg_htmlembedded = $message;
         return $this;
     }
 
-    public function getMessageHtmlEmbedded()
+    public function getMessageHtmlEmbedded() : string
     {
         return $this->msg_htmlembedded;
     }
 
-    public function addAttachment($attachment)
+    public function addAttachment(array $attachment) : \Flexio\Services\Email
     {
-        if (!is_array($attachment))
-            return $this;
-
-        if ($this->attachments === false)
-            $this->attachments = array();
-
         $a = array();
         $a['name'] = $attachment['name'] ?? '';
         $a['file'] = $attachment['file'] ?? '';
@@ -356,12 +298,12 @@ class Email
         return $this;
     }
 
-    public function getAttachments()
+    public function getAttachments() : array
     {
         return $this->attachments;
     }
 
-    public function clearAttachments()
+    public function clearAttachments() : \Flexio\Services\Email
     {
         $this->attachments = array();
         return $this;
@@ -381,7 +323,7 @@ class Email
         $this->attachments = array();
     }
 
-    private function initializeFromParsedMessage($message)
+    private function initializeFromParsedMessage($message) : \ZBateson\MailMimeParser\Message
     {
         // start with a clean slate
         $this->initialize();
@@ -432,72 +374,9 @@ class Email
         $this->setMessageText($message->getTextContent());
         $this->setMessageHtml($message->getHtmlContent());
         $this->setMessageHtmlEmbedded($message->getHtmlContent());
-
-/*
-        // start with a clean slate
-        $this->initialize();
-
-        // get the "from" values
-        $from = array();
-        $from_array = $parser->getAddresses('from');
-        foreach ($from_array as $item)
-        {
-            $display = $item['display'];
-            $address = $item['address'];
-            $is_group = $item['is_group'];
-            $from[] = "$display <$address>";
-        }
-        $this->setFrom($from);
-
-        // get the "to"
-        $to = array();
-        $to_array = $parser->getAddresses('to');
-        foreach ($to_array as $item)
-        {
-            $display = $item['display'];
-            $address = $item['address'];
-            $is_group = $item['is_group'];
-            $to[] = "$display <$address>";
-        }
-        $this->setTo($to);
-
-        // get the "cc"
-        $this->setCC(''); // TODO: populate
-
-        // get the "bcc"
-        $this->setBCC(''); // TODO: populate
-
-        // get the "replyto"
-        $this->setReplyTo(''); // TODO: populate
-
-        // get the subject
-        $this->setSubject($parser->getHeader('subject'));
-
-        // get the body
-        $this->setMessageText($parser->getMessageBody('text'));
-        $this->setMessageHtml($parser->getMessageBody('html'));
-        $this->setMessageHtmlEmbedded($parser->getMessageBody('htmlEmbedded'));
-
-        // get the attachments; note: the $attachment->getContent() call reads
-        // the file into memory, which may cause problems with large attachments;
-        // the parser library allows a streaming option, so this potential issue
-        // is in the implementation below
-        $attachments = $parser->getAttachments();
-        if (count($attachments) > 0)
-        {
-            foreach ($attachments as $attachment)
-            {
-                $a = array();
-                $a['name'] = $attachment->getFilename();
-                $a['mime_type'] = $attachment->getContentType();
-                $a['content'] = $attachment->getContent();
-                $this->attachments[] = $a;
-            }
-        }
-*/
     }
 
-    private function sendWithoutAttachments()
+    private function sendWithoutAttachments() : bool
     {
         $ses = $this->getSes();
         if (!$ses)
@@ -557,7 +436,7 @@ class Email
         return true;
     }
 
-    private function sendWithAttachments()
+    private function sendWithAttachments() : bool
     {
         $ses = $this->getSes();
         if (!$ses)
@@ -624,7 +503,7 @@ class Email
         return true;
     }
 
-    private function getSes()
+    private function getSes() : \Aws\Ses\SesClient
     {
         //setAutoloaderIgnoreErrors(true);
         require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
@@ -644,45 +523,7 @@ class Email
         return $this->_ses;
     }
 
-
-/*
-    private function getSes()
-    {
-        if (null === $this->_ses)
-        {
-            $aws = $this->getAWS();
-            if ($aws)
-                $this->_ses = $aws->get('ses');
-        }
-
-        return $this->_ses;
-    }
-
-    private function getAWS()
-    {
-        //setAutoloaderIgnoreErrors(true);
-
-        require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
-
-        global $g_config;
-
-        if (null === $this->_aws)
-        {
-            if (!isset($g_config->ses_access_key) || !isset($g_config->ses_secret_key))
-                return null;
-
-            $this->_aws = \Aws\Common\Aws::factory(array(
-               'key' => $g_config->ses_access_key,
-               'secret' => $g_config->ses_secret_key,
-               'region' => 'us-east-1'
-            ));
-        }
-
-        return $this->_aws;
-    }
-*/
-
-    private static function getCleanedAddresses($addresses)
+    private static function getCleanedAddresses(array $addresses) : array
     {
         $cleaned_addresses = array();
         foreach ($addresses as $a)

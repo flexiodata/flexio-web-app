@@ -37,7 +37,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($params = null)
+    public static function create(array $params = null) : \Flexio\Services\AmazonS3
     {
         $service = new self;
 
@@ -47,7 +47,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
         return $service;
     }
 
-    public function connect($params)
+    public function connect(array $params) : bool
     {
         $this->close();
 
@@ -68,7 +68,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
         return $this->isOk();
     }
 
-    public function isOk()
+    public function isOk() : bool
     {
         return $this->is_ok;
     }
@@ -83,7 +83,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
         $this->s3 = null;
    }
 
-    public function listObjects($path = '')
+    public function listObjects(string $path = '') : array
     {
         if (!$this->isOk())
             return array();
@@ -185,7 +185,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
         return $objects;
     }
 
-    public function exists($path)
+    public function exists(string $path) : bool
     {
         if (substr($path,0,1) == '/')
             $path = substr($path,1);
@@ -203,14 +203,17 @@ class AmazonS3 implements \Flexio\Services\IConnection
         return true;
     }
 
-    public function getInfo($path)
+    public function getInfo($path) : array
     {
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function read($params, $callback)
+    public function read(array $params, callable $callback)
     {
+        // TODO: let exceptions through on failure?
+
         $path = $params['path'] ?? '';
 
         if (!$this->isOk())
@@ -242,7 +245,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
         return true;
     }
 
-    public function write($params, $callback)
+    public function write(array $params, callable $callback) : bool
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
@@ -309,7 +312,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function initialize($region, $bucket, $accesskey, $secretkey)
+    private function initialize(string $region, string $bucket, string $accesskey, string $secretkey)
     {
         $this->close();
         $this->region = $region;

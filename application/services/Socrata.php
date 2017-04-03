@@ -33,7 +33,7 @@ class Socrata implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($params = null)
+    public static function create(array $params = null) : \Flexio\Services\Socrata
     {
         $service = new self;
 
@@ -43,20 +43,20 @@ class Socrata implements \Flexio\Services\IConnection
         return $service;
     }
 
-    public function connect($params)
+    public function connect(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::getInstance();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true)
             ))) === false)
-            return null;
+            return true;
 
-        $this->initialize($params['host'], $params['port']);
+        $this->initialize($params['host'], intval($params['port']));
         return $this->isOk();
     }
 
-    public function isOk()
+    public function isOk() : bool
     {
         return $this->is_ok;
     }
@@ -67,7 +67,7 @@ class Socrata implements \Flexio\Services\IConnection
         $this->is_ok = false;
     }
 
-    public function listObjects($path = '')
+    public function listObjects(string $path = '') : array
     {
         // TODO: filter based on a specified path
 
@@ -177,19 +177,21 @@ class Socrata implements \Flexio\Services\IConnection
         return $tables;
     }
 
-    public function exists($path)
+    public function exists(string $path) : bool
     {
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function getInfo($path)
+    public function getInfo(string $path) : array
     {
         // TODO: implement
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return array();
     }
 
-    public function read($params, $callback)
+    public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
 
@@ -280,19 +282,20 @@ class Socrata implements \Flexio\Services\IConnection
         curl_close($ch);
     }
 
-    public function write($params, $callback)
+    public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function describeTable($path)
+    public function describeTable(string $path) : array
     {
         if (!$this->isOk())
         {
@@ -363,7 +366,7 @@ class Socrata implements \Flexio\Services\IConnection
         return $structure->enum();
     }
 
-    private static function convertRow(&$structure, $row)
+    private static function convertRow(array &$structure, array $row) : array
     {
         $res = [];
         foreach ($structure as $col)
@@ -376,7 +379,7 @@ class Socrata implements \Flexio\Services\IConnection
         return $res;
     }
 
-    private function initialize($host, $port)
+    private function initialize(string $host, int $port)
     {
         $this->close();
 
@@ -386,7 +389,7 @@ class Socrata implements \Flexio\Services\IConnection
         $url = $host;
         if (false === strpos($url, "://"))
         {
-            if ((int)$port == 80)
+            if ($port == 80)
                 $url = "http://$url";
                  else
                 $url = "https://$url";

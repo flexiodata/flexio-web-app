@@ -40,7 +40,7 @@ class Sftp implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($params = null)
+    public static function create(array $params = null) : \Flexio\Services\Sftp
     {
         $service = new self;
 
@@ -50,7 +50,7 @@ class Sftp implements \Flexio\Services\IConnection
         return $service;
     }
 
-    public function connect($params)
+    public function connect(array $params) : bool
     {
         $this->close();
         if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
@@ -64,7 +64,7 @@ class Sftp implements \Flexio\Services\IConnection
         return $this->isOk();
     }
 
-    public function isOk()
+    public function isOk() : bool
     {
         return $this->is_ok;
     }
@@ -78,7 +78,7 @@ class Sftp implements \Flexio\Services\IConnection
         $this->is_ok = false;
     }
 
-    public function listObjects($path = '')
+    public function listObjects(string $path = '') : array
     {
         if (!$this->isOk())
         {
@@ -123,19 +123,21 @@ class Sftp implements \Flexio\Services\IConnection
         return $result;
     }
 
-    public function exists($path)
+    public function exists(string $path) : bool
     {
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function getInfo($path)
+    public function getInfo(string $path) : array
     {
         // TODO: implement
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return array();
     }
 
-    public function read($params, $callback)
+    public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
 
@@ -157,7 +159,7 @@ class Sftp implements \Flexio\Services\IConnection
         });
     }
 
-    public function write($params, $callback)
+    public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
@@ -182,7 +184,7 @@ class Sftp implements \Flexio\Services\IConnection
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function initialize($host, $username, $password)
+    private function initialize(string $host, string $username, string $password)
     {
         $this->close();
 
@@ -192,7 +194,7 @@ class Sftp implements \Flexio\Services\IConnection
 
         $sftp = new \phpseclib\Net\SFTP($host);
         if (!$sftp->login($username, $password))
-            return false;
+            return;
 
         $this->connection = $sftp;
         $this->is_ok = true;

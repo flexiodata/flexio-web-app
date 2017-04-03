@@ -35,7 +35,7 @@ class Twilio implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($params = null)
+    public static function create(array $params = null) : \Flexio\Services\Twilio
     {
         $service = new self;
 
@@ -45,7 +45,7 @@ class Twilio implements \Flexio\Services\IConnection
         return $service;
     }
 
-    public function connect($params)
+    public function connect(array $params) : bool
     {
         $this->close();
 
@@ -62,7 +62,7 @@ class Twilio implements \Flexio\Services\IConnection
         return $this->isOk();
     }
 
-    public function isOk()
+    public function isOk() : bool
     {
         return $this->is_ok;
     }
@@ -74,7 +74,7 @@ class Twilio implements \Flexio\Services\IConnection
         $this->apitoken = '';
     }
 
-    public function listObjects($path = '')
+    public function listObjects(string $path = '') : array
     {
         if (!$this->isOk())
             return array();
@@ -97,19 +97,21 @@ class Twilio implements \Flexio\Services\IConnection
         return $objects;
     }
 
-    public function exists($path)
+    public function exists(string $path) : bool
     {
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function getInfo($path)
+    public function getInfo(string $path) : array
     {
         // TODO: implement
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return array();
     }
 
-    public function read($params, $callback)
+    public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
 
@@ -119,7 +121,7 @@ class Twilio implements \Flexio\Services\IConnection
         // TODO: only read the buffer amount
         // TODO: limit the request rate
 
-        $page = false;
+        $page = null;
         while (true)
         {
             $rows = $this->fetchData($path, $page);
@@ -139,7 +141,7 @@ class Twilio implements \Flexio\Services\IConnection
         return true;
     }
 
-    public function write($params, $callback)
+    public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
@@ -152,7 +154,7 @@ class Twilio implements \Flexio\Services\IConnection
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function describeTable($path)
+    public function describeTable(string $path)
     {
         if (!$this->isOk())
             return false;
@@ -168,10 +170,10 @@ class Twilio implements \Flexio\Services\IConnection
         return $structure;
     }
 
-    private function fetchData($path, &$page)
+    private function fetchData(string $path, int &$page = null)
     {
         $path = self::cleanPath($path);
-        if ($page === false)
+        if (!isset($page))
             $page = 1;
 
         // load the definition for the given path
@@ -212,7 +214,7 @@ class Twilio implements \Flexio\Services\IConnection
         return $rows;
     }
 
-    private function map($content_root, $apidata, $structure)
+    private function map($content_root, $apidata, $structure) // TODO: add function parameters/return types
     {
         $result = array();
 
@@ -246,12 +248,8 @@ class Twilio implements \Flexio\Services\IConnection
         return $result;
     }
 
-    private function getRowData($content_root, $apidata)
+    private function getRowData($content_root, $apidata) // TODO: add function parameters/return types
     {
-        // find out where the data is located in the result
-        if (!is_string($content_root))
-            return array();
-
         // set the current path to the root apidata object; find out the
         // path to the data node
         $currentpath = $apidata;
@@ -275,7 +273,7 @@ class Twilio implements \Flexio\Services\IConnection
         return $currentpath;
     }
 
-    private function initialize($apikey, $apitoken)
+    private function initialize(string $apikey, string $apitoken)
     {
         // TODO: test api key
 
@@ -285,7 +283,7 @@ class Twilio implements \Flexio\Services\IConnection
         $this->is_ok = true;
     }
 
-    private function lookupDefinition($path)
+    private function lookupDefinition(string $path)
     {
         $definitions = $this->getDefinitions();
         foreach ($definitions as $d)
@@ -297,7 +295,7 @@ class Twilio implements \Flexio\Services\IConnection
         return false;
     }
 
-    private function getDefinitions()
+    private function getDefinitions() : array
     {
         // note: "content_root" is the the json path where the data in the return
         // result is located; so "$.calls" means the data is stored in the "entries"

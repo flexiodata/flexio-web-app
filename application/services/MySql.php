@@ -40,7 +40,7 @@ class MySql implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($params = null)
+    public static function create(array $params = null) : \Flexio\Services\MySql
     {
         $service = new self;
 
@@ -50,7 +50,7 @@ class MySql implements \Flexio\Services\IConnection
         return $service;
     }
 
-    public function connect($params)
+    public function connect(array $params) : bool
     {
         $this->close();
 
@@ -68,13 +68,13 @@ class MySql implements \Flexio\Services\IConnection
             ))) === false)
             return false;
 
-        $this->initialize($params['host'], $params['port'], $params['database'], $params['username'], $params['password']);
+        $this->initialize($params['host'], intval($params['port']), $params['database'], $params['username'], $params['password']);
         $this->dbtable = $params['path'];
 
         return $this->isOk();
     }
 
-    public function isOk()
+    public function isOk() : bool
     {
         return $this->is_ok;
     }
@@ -93,7 +93,7 @@ class MySql implements \Flexio\Services\IConnection
         $this->rowbuffersize = 100;
     }
 
-    public function listObjects($path = '')
+    public function listObjects(string $path = '') : array
     {
         if (!$this->isOk())
             return array();
@@ -121,30 +121,32 @@ class MySql implements \Flexio\Services\IConnection
         return $fields;
     }
 
-    public function exists($path)
+    public function exists(string $path) : bool
     {
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function getInfo($path)
+    public function getInfo(string $path) : array
     {
         // TODO: implement
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return array();
     }
 
-    public function read($params, $callback)
+    public function read(array $params, callable $callback)
     {
         // TODO: implement
         $path = $params['path'] ?? '';
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function write($params, $callback)
+    public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-
-        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
 
@@ -152,12 +154,12 @@ class MySql implements \Flexio\Services\IConnection
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function initialize($host, $port, $database, $username, $password)
+    private function initialize(string $host, int $port, string $database, string $username, string $password)
     {
         $this->close();
 
         $this->host = $host;
-        $this->port = intval($port);
+        $this->port = $port;
         $this->database = $database;
         $this->username = $username;
         $this->password = $password;
@@ -197,7 +199,7 @@ class MySql implements \Flexio\Services\IConnection
         return null;
     }
 
-    public function queryAll($table)
+    public function queryAll(string $table)
     {
         $sql = "select * from " . self::quoteIdentifier($table);
 
@@ -210,7 +212,7 @@ class MySql implements \Flexio\Services\IConnection
         return $iter;
     }
 
-    public function createTable($table, $structure)
+    public function createTable(string $table, array $structure) : bool
     {
         if (!$this->isOk())
             return false;
@@ -249,7 +251,7 @@ class MySql implements \Flexio\Services\IConnection
         return true;
     }
 
-    public function bulkInsert($table)
+    public function bulkInsert(string $table)
     {
         $inserter = new MysqlInserter;
         if (!$inserter->init($this, $this->db, $table))
@@ -257,7 +259,7 @@ class MySql implements \Flexio\Services\IConnection
         return $inserter;
     }
 
-    public function describeTable($table)
+    public function describeTable(string $table)
     {
         // STEP 1: query the database for the structure and the rows
         $structure = array();
@@ -291,7 +293,7 @@ class MySql implements \Flexio\Services\IConnection
         return $structure;
     }
 
-    public function getTableRowCount($table)
+    public function getTableRowCount(string $table) : int
     {
         $db = $this->newConnection();
         if (!$db)
@@ -312,7 +314,7 @@ class MySql implements \Flexio\Services\IConnection
         return $this->dbresult->fetch_assoc();
     }
 
-    private static function getFieldInfo($info, &$name, &$type, &$width, &$scale)
+    private static function getFieldInfo(array $info, string &$name, string &$type, int &$width, int &$scale)
     {
         // MySQL types (from the create statement documentation)
         // note: describe table returns these in lowercase; when
@@ -356,11 +358,7 @@ class MySql implements \Flexio\Services\IConnection
         $width = 0;
         $scale = 0;
 
-        if (!is_array($info))
-            return;
-
         $name = $info['Field'];
-
 
         // STEP 1: handle character types
 
@@ -475,14 +473,12 @@ class MySql implements \Flexio\Services\IConnection
         }
     }
 
-    public static function quoteIdentifier($str)
+    public static function quoteIdentifier(string $str) : string
     {
         return '`' . str_replace('`', '``',$str) . '`';
     }
 
-
-
-    private static function getFieldString($field)
+    private static function getFieldString(string $field) : string
     {
         $name = $field['name'];
         $type = $field['type'];
@@ -530,7 +526,6 @@ class MySql implements \Flexio\Services\IConnection
 }
 
 
-
 class MysqlIteratorAll
 {
     public $result;
@@ -545,10 +540,6 @@ class MysqlIteratorAll
 
 
 
-
-
-
-
 class MysqlInserter
 {
     public $db;
@@ -559,7 +550,7 @@ class MysqlInserter
     private $fields = '';
     private $columns = null;
 
-    public function init($service, $db, $table)
+    public function init($service, $db, $table) // TODO: add parameter/return types
     {
         $this->db = $db;
         $this->table = $table;
@@ -570,7 +561,7 @@ class MysqlInserter
         return true;
     }
 
-    public function startInsert($fields)
+    public function startInsert(array $fields) : bool
     {
         $this->fields = '';
 
@@ -598,7 +589,7 @@ class MysqlInserter
         return true;
     }
 
-    public function insertRow($row)
+    public function insertRow(array $row) : bool
     {
         $field_idx = 0;
         foreach ($row as &$f)
@@ -625,37 +616,6 @@ class MysqlInserter
                         $f = "'" . $this->db->real_escape_string($f) . "'";
                     break;
             }
-
-/*
-            if (false !== strpbrk($f, "\b\f\n\r\t\v"))
-            {
-                $f = strtr($f, array("\b" => "\\b", "\f" => "\\f", "\n" => "\\n", "\t" => "\\t", "\v" => "\\v"));
-            }
-
-            if (is_null($f))
-            {
-                $f = "\\N";
-                ++$field_idx;
-                continue;
-            }
-
-            // check field types
-            switch ($this->columns[$field_idx]['type'])
-            {
-                case 'date':
-                    if (strlen($f) < 10)
-                        $f = "\\N";
-                    break;
-                case 'datetime':
-                    if (strlen($f) < 19)
-                        $f = "\\N";
-                    break;
-                case 'boolean':
-                    $f = ($f ? 'TRUE':'FALSE');
-                    break;
-            }
-*/
-
 
             ++$field_idx;
         }
