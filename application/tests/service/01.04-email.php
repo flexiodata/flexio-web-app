@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
         // TODO: add email creation tests that include additional paramaters,
         // such as attachments
 
@@ -32,9 +36,16 @@ class Test
         TestCheck::assertString('A.1', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = \Flexio\Services\Email::create(false);
-        $actual = get_class($email);
-        $expected = 'Flexio\Services\Email';
+        try
+        {
+            $email = \Flexio\Services\Email::create(false);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         TestCheck::assertString('A.2', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST

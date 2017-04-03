@@ -38,15 +38,19 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
         // TODO: fill out tests
 
         // TEST: stream parsing; empty input
 
         // BEGIN TEST
         $email = \Flexio\Services\Email::parseStream('');
-        $actual = $email;
-        $expected = false;
-        TestCheck::assertBoolean('A.1', '\Flexio\Services\Email::parseStream(); basic test', $actual, $expected, $results);
+        $actual = get_class($email);
+        $expected = 'Flexio\Services\Email';
+        TestCheck::assertString('A.1', '\Flexio\Services\Email::parseStream(); basic test', $actual, $expected, $results);
 
 
         // TEST: content parsing; "from" information

@@ -18,27 +18,27 @@ namespace Flexio\Services;
 
 class XferFsLocal
 {
-    public static function isReady()
+    public static function isReady() : bool
     {
         // filesystem is always ready
         return true;
     }
 
-    public static function createDirectory($path)
+    public static function createDirectory(string $path) : bool
     {
         $full = self::makePath($path);
 
         return @mkdir($full, 0750, true) ? true : false;
     }
 
-    public static function createFile($path, $import_file)
+    public static function createFile(string $path, string $import_file) : bool
     {
         $full = self::makePath($path);
 
         return copy($import_file, $full);
     }
 
-    public static function deleteFile($path)
+    public static function deleteFile(string $path) : bool
     {
         $full = self::makePath($path);
 
@@ -46,7 +46,7 @@ class XferFsLocal
         return false;
     }
 
-    public static function getDirectories($path)
+    public static function getDirectories(string $path) : array
     {
         $full = self::makePath($path);
 
@@ -63,7 +63,7 @@ class XferFsLocal
         return $arr;
     }
 
-    public static function getObjects($path)
+    public static function getObjects(string $path) : array
     {
         $full = self::makePath($path);
 
@@ -80,12 +80,13 @@ class XferFsLocal
         return $arr;
     }
 
-    public static function getDirectoryListing($path, $initial_marker = null)
+    public static function getDirectoryListing(string $path, string $initial_marker = null) : array
     {
         die("TODO: implement");
+        return array();
     }
 
-    public static function fileExists($path)
+    public static function fileExists(string $path) : bool
     {
         $full = self::makePath($path);
 
@@ -96,13 +97,13 @@ class XferFsLocal
         return false;
     }
 
-    public static function exportFile($path, $local_path)
+    public static function exportFile(string $path, string $local_path) : bool
     {
         $full = self::makePath($path);
         return @copy($full, $local_path);
     }
 
-    private static function makePath($path)
+    private static function makePath(string $path) : string
     {
         global $g_config;
 

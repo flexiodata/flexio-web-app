@@ -36,7 +36,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($params = null)
+    public static function create(array $params = null) : \Flexio\Services\GoogleSheets
     {
         if (!isset($params))
             return new self;
@@ -44,12 +44,12 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return self::initialize($params);
     }
 
-    public function connect($params)
+    public function connect(array $params) : bool
     {
-        // TODO: implement
+        return true;
     }
 
-    public function isOk()
+    public function isOk() : bool
     {
         return $this->is_ok;
     }
@@ -62,7 +62,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         $this->expires = 0;
     }
 
-    public function listObjects($path = '')
+    public function listObjects(string $path = '') : array
     {
         $spreadsheets = $this->getSpreadsheets();
 
@@ -125,19 +125,21 @@ class GoogleSheets implements \Flexio\Services\IConnection
         }
     }
 
-    public function exists($path)
+    public function exists(string $path) : bool
     {
         // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function getInfo($path)
+    public function getInfo(string $path) : array
     {
         // TODO: implement
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return array();
     }
 
-    public function read($params, $callback)
+    public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
 
@@ -168,12 +170,12 @@ class GoogleSheets implements \Flexio\Services\IConnection
         $this->readFile($spreadsheet_id, $worksheet_id, $callback);
     }
 
-    public function write($params, $callback)
+    public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
-        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
 
@@ -184,7 +186,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
     private $spreadsheets = [];
 
     // returns an array of GoogleSpreadsheet objects
-    public function getSpreadsheets()
+    public function getSpreadsheets() // TODO: set return type
     {
         if (count($this->spreadsheets) > 0)
             return $this->spreadsheets;
@@ -245,18 +247,18 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return $this->spreadsheets;
     }
 
-    public function getSpreadsheetByTitle($title)
+    public function getSpreadsheetByTitle(string $title) // TODO: set return type
     {
         $spreadsheets = $this->getSpreadsheets();
         foreach ($spreadsheets as $spreadsheet)
         {
-            if (0 == strcasecmp($spreadsheet->title, $title))
+            if (0 == strcasecmp($spreadsheet->title, $title)) // TODO: set return type
                 return $spreadsheet;
         }
         return false;
     }
 
-    public function getSpreadsheetById($spreadsheet_id)
+    public function getSpreadsheetById(string $spreadsheet_id) // TODO: set return type
     {
         $spreadsheets = $this->getSpreadsheets();
         foreach ($spreadsheets as $spreadsheet)
@@ -272,7 +274,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function getIdsFromPath($path)
+    public function getIdsFromPath(string $path)
     {
         if (strlen($path) == 0)
             return false;
@@ -301,7 +303,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function readFile($spreadsheet_id, $worksheet_id, $callback)
+    public function readFile(string $spreadsheet_id, string $worksheet_id, callable $callback)
     {
         if (!$this->authenticated())
             return null;
@@ -332,7 +334,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return true;
     }
 
-    private static function processChunk(&$buf, &$info, $callback, $last)
+    private static function processChunk(&$buf, &$info, $callback, $last) // TODO: set parameter/return types
     {
         // fetch row and column count from the beginning of the XML stream
         if (!isset($info['rowcount']) || !isset($info['colcount']))
@@ -467,7 +469,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
     // creates a new spreadsheet via the google docs v3 api; returns file id
     // or false if something goes wrong
 
-    public function createFile($name)
+    public function createFile(string $name) // TODO: set return types
     {
         $postdata = json_encode(array(
             "name" => $name,
@@ -510,14 +512,14 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return $spreadsheet;
     }
 
-    public function getTokens()
+    public function getTokens() : array
     {
         return [ 'access_token' => $this->access_token,
                  'refresh_token' => $this->refresh_token,
                  'expires' => $this->expires ];
     }
 
-    private function authenticated()
+    private function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
             return true;
@@ -525,7 +527,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return false;
     }
 
-    private static function initialize($params)
+    private static function initialize(array $params)
     {
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
@@ -643,7 +645,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
     }
 
-    private static function createService($oauth_callback)
+    private static function createService($oauth_callback) // TODO: set parameter/return type
     {
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
@@ -671,7 +673,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return $service;
     }
 
-    private static function stringFromColumnIndex($idx)
+    private static function stringFromColumnIndex(int $idx)
     {
         // takes a numeric index and converts it to a suitable
         // spreadsheet column (lowercase):
@@ -698,7 +700,7 @@ class GoogleSpreadsheet
     public $title = '';
     public $worksheets = [];
 
-    public function getWorksheets($_ch = null)
+    public function getWorksheets($_ch = null) // TODO: set parameter/return types
     {
         if (count($this->worksheets) > 0)
             return $this->worksheets;
@@ -787,7 +789,7 @@ class GoogleWorksheet
     public $edit_link = '';
 
 
-    public function setInfo($title, $rows, $cols)
+    public function setInfo($title, $rows, $cols) // TODO: set parameter types
     {
         $title = isset($title) ? $title : $this->title;
         $rows = isset($rows) ? (int)$rows : $this->row_count;
@@ -821,7 +823,7 @@ EOL;
     // $cells should be an array like this
     // [ { "row" => 1, "col" => 1, "value" => "contents" }, { ... } ]
 
-    public function setCells($cells)
+    public function setCells($cells) // TODO: set parameter type
     {
         $spreadsheet_id = $this->spreadsheet_id;
         $worksheet_id = $this->worksheet_id;
@@ -879,7 +881,7 @@ EOL;
     public $insert_row = 1;
     public $current_rowcount = 0;
 
-    public function startInsert($fields)
+    public function startInsert($fields) // TODO: set parameter type
     {
         $this->setInfo(null, 500, count($fields));
         $this->current_rowcount = 500;
@@ -890,7 +892,7 @@ EOL;
         return true;
     }
 
-    public function insertRow($row)
+    public function insertRow($row) // TODO: set parameter type
     {
         $colidx = 1;
         foreach ($row as $value)

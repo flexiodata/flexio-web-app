@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 class XferFs
 {
-    public static function __callStatic($name, $arguments)
+    public static function __callStatic(string $name, array $arguments)
     {
         global $g_config;
 

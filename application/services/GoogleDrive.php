@@ -35,7 +35,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create($params = null)
+    public static function create(array $params = null) : \Flexio\Services\GoogleDrive
     {
         if (!isset($params))
             return new self;
@@ -43,12 +43,12 @@ class GoogleDrive implements \Flexio\Services\IConnection
         return self::initialize($params);
     }
 
-    public function connect($params)
+    public function connect(array $params) : bool
     {
-        // TODO: implement
+        return true;
     }
 
-    public function isOk()
+    public function isOk() : bool
     {
         return $this->is_ok;
     }
@@ -61,17 +61,17 @@ class GoogleDrive implements \Flexio\Services\IConnection
         $this->expires = 0;
     }
 
-    public function listObjects($path = '')
+    public function listObjects(string $path = '') : array
     {
         if (!$this->authenticated())
-            return null;
+            return array();
 
         $file_limit = 1000; // limit return results to 1000; max is 1000, default is 100
         $folder = $path;
 
         $folderid = $this->getFileId($folder);
         if (!$folderid)
-            return null;
+            return array();
 
         $ch = curl_init();
 
@@ -124,24 +124,24 @@ class GoogleDrive implements \Flexio\Services\IConnection
         return $files;
     }
 
-    public function exists($path)
+    public function exists(string $path) : bool
     {
-        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function getInfo($path)
+    public function getInfo(string $path) : array
     {
-        // TODO: implement
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return array();
     }
 
-    public function read($params, $callback)
+    public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
 
         if (!$this->authenticated())
-            return null;
+            return false;
 
         $fileid = $this->getFileId($path);
         if (is_null($fileid) || strlen($fileid) == 0 || $fileid == 'root')
@@ -161,11 +161,9 @@ class GoogleDrive implements \Flexio\Services\IConnection
         });
         $result = curl_exec($ch);
         curl_close($ch);
-
-        return true;
     }
 
-    public function write($params, $callback)
+    public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
@@ -245,14 +243,14 @@ class GoogleDrive implements \Flexio\Services\IConnection
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function getTokens()
+    public function getTokens() : array
     {
         return [ 'access_token' => $this->access_token,
                  'refresh_token' => $this->refresh_token,
                  'expires' => $this->expires ];
     }
 
-    private function authenticated()
+    private function authenticated() : bool
     {
         if (strlen($this->access_token) > 0)
             return true;
@@ -260,7 +258,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function getFileId($folder)
+    public function getFileId(string $folder) : string
     {
         if (is_null($folder) || $folder == '' || $folder == '/')
             return 'root';
@@ -300,7 +298,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
         return $curfolder;
     }
 
-    private static function initialize($params)
+    private static function initialize(array $params)
     {
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
@@ -418,7 +416,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
         return $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
     }
 
-    private static function createService($oauth_callback)
+    private static function createService($oauth_callback) // TODO: set parameter/return type
     {
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';

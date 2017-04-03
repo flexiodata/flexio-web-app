@@ -38,6 +38,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
         // TODO: fix bad tests that are commented out
 
         // TEST: content parsing; empty input

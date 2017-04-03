@@ -18,15 +18,15 @@ namespace Flexio\Services;
 
 interface IConnection
 {
-    public static function create($params = null);
-    public function connect($params);
-    public function isOk();
+    public static function create(array $params = null);
+    public function connect(array $params) : bool;
+    public function isOk() : bool;
     public function close();
 
-    public function listObjects($path);
-    public function exists($path);
-    public function getInfo($path);
+    public function listObjects(string $path = '') : array;
+    public function exists(string $path) : bool;
+    public function getInfo(string $path) : array;
 
-    public function read($params, $callback);
-    public function write($params, $callback);
+    public function read(array $params, callable $callback);
+    public function write(array $params, callable $callback);
 }

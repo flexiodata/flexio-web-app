@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
         // TEST: set/get email 'from'
 
         // BEGIN TEST
@@ -248,8 +252,16 @@ class Test
         TestCheck::assertString('F.1', '\Flexio\Services\Email::getSubject(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::create()->setSubject(123)->getSubject();
-        $expected = '';
+        try
+        {
+            \Flexio\Services\Email::create()->setSubject(123)->getSubject();
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         TestCheck::assertString('F.2', '\Flexio\Services\Email::setSubject(); set parameter based on string', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -272,8 +284,16 @@ class Test
         TestCheck::assertString('G.1', '\Flexio\Services\Email::getMessageText(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::create()->setMessageText(123)->getMessageText();
-        $expected = '';
+        try
+        {
+            \Flexio\Services\Email::create()->setMessageText(123)->getMessageText();
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         TestCheck::assertString('G.2', '\Flexio\Services\Email::setMessageText(); set parameter based on string', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -296,8 +316,16 @@ class Test
         TestCheck::assertString('H.1', '\Flexio\Services\Email::getMessageHtml(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::create()->setMessageHtml(123)->getMessageHtml();
-        $expected = '';
+        try
+        {
+            \Flexio\Services\Email::create()->setMessageHtml(123)->getMessageHtml();
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         TestCheck::assertString('H.2', '\Flexio\Services\Email::setMessageHtml(); set parameter based on string', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -320,8 +348,16 @@ class Test
         TestCheck::assertString('I.1', '\Flexio\Services\Email::getMessageHtml(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::create()->setMessageHtmlEmbedded(123)->getMessageHtmlEmbedded();
-        $expected = '';
+        try
+        {
+            \Flexio\Services\Email::create()->setMessageHtmlEmbedded(123)->getMessageHtmlEmbedded();
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         TestCheck::assertString('I.2', '\Flexio\Services\Email::setMessageHtmlEmbedded(); set parameter based on string', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -344,9 +380,17 @@ class Test
         TestCheck::assertArray('J.1', '\Flexio\Services\Email::getAttachments(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::create()->addAttachment(123)->getAttachments();
-        $expected = '[]';
-        TestCheck::assertArray('J.2', '\Flexio\Services\Email::getAttachments(); don\'t add invalid attachments', $actual, $expected, $results);
+        try
+        {
+            \Flexio\Services\Email::create()->addAttachment(123)->getAttachments();
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('J.2', '\Flexio\Services\Email::getAttachments(); don\'t add invalid attachments', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Services\Email::create()->addAttachment(array())->getAttachments();
