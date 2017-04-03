@@ -765,7 +765,7 @@ class Postgres implements \Flexio\Services\IConnection
         return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
     }
 
-    private static function pgtypeToDbtype(string $pg_type) : string
+    private static function pgtypeToDbtype(int $pg_type) : string
     {
         switch ($pg_type)
         {
