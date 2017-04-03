@@ -1,6 +1,6 @@
 <template>
   <article class="mb3">
-    <div class="flex flex-row items-center pa2 bg-black-05 bb b--black-05">
+    <div class="flex flex-row items-center pa2 bg-black-05">
       <connection-icon :type="ctype" class="v-mid br1 fx-square-2 mr2"></connection-icon>
       <div class="f6 fw6 ttu silver">{{title}}</div>
       <div class="flex-fill"></div>
@@ -37,7 +37,7 @@
     </div>
     <div class="ma3 tc" v-else>
       <div class="tl" v-if="is_stdin">
-        <div class="lh-copy mid-gray f6 mb2 i">Input files from the command line.</div>
+        <div class="lh-copy mid-gray f6 mb2 i">Input files using the command line.</div>
         <div class="flex flex-row items-stretch">
           <div class="flex-fill pa2 f6 code bt bb bl b--black-10 br1 br--left" :id="code_id">
             {{pipe_cmd_line_example}}
@@ -113,7 +113,7 @@
         return ename.length > 0 ? ename : _.get(this.pipe, 'eid', '')
       },
       pipe_cmd_line_example() {
-        return 'flexio pipes run ' + this.pipe_identifier + ' file.txt *.csv'
+        return 'flexio pipes run ' + this.pipe_identifier + ' myfile.txt'
       },
       connection() {
         var connection_eid = _.get(this.item, 'params.connection', '')

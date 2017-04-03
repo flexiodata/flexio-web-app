@@ -2,9 +2,10 @@
   <div v-if="is_fetching">
     <spinner size="medium" show-text loading-text="Loading pipe..."></spinner>
   </div>
-  <div v-else class="flex flex-column items-stretch" style="background-color: #f1f4f5">
+  <div v-else class="flex flex-column items-stretch" style="background-color: #f9f9f9">
     <pipe-home-header
-      class="pv2 ph3 ph4-l"
+      class="pv2a ph3 ph4-l"
+      style="background-color: #f3f3f3"
       :pipe-eid="eid"
       :pipe-view="pipe_view"
       :process-running="is_process_running"
@@ -14,7 +15,7 @@
     </pipe-home-header>
 
     <pipe-transfer
-      class="flex-fill pv0 pv3-l pl4-l bt-l b--black-10"
+      class="flex-fill pv0 pv4-l pl4-l bt b--black-10"
       :project-eid="project_eid"
       :pipe-eid="eid"
       :tasks="tasks"

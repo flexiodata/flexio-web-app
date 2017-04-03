@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-row items-start min-w5">
     <div class="flex-fill mb1 mr2">
-      <div class="flex flex-column flex-row-l items-center-l mb1 mb0-l">
+      <div class="flex flex-column flex-row-l items-center-l">
         <inline-edit-text
-          class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr2-ns"
+          class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr2-l"
           input-key="name"
           :val="pipe_name"
           @save="editPipeSingleton">
@@ -27,7 +27,7 @@
         </div>
       </div>
       <inline-edit-text
-        class="f6 lh-title gray"
+        class="f6 lh-title gray mt1"
         placeholder="Add a description"
         placeholder-cls="fw6 black-20 hover-black-40"
         input-key="description"

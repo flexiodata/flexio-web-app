@@ -1,9 +1,9 @@
 <template>
-  <div class="relative ml2-m ml3-l" style="max-width: 1500px">
-    <div class="flex flex-row relative mv2 pl3 pr4 pl0-l pr5-l">
+  <div class="relative ml2-m ml3-l" style="max-width: 1600px">
+    <div class="flex flex-row relative mv2 ml3 ml0-l mr4 mr5-l">
       <div class="flex-none">
         <div
-          class="pointer pa2 mr3 br1 white trans-wh tc relative swap-child"
+          class="pointer pa2 mr2 mr3-ns br1 white trans-wh tc relative swap-child"
           :class="[ bg_color ]"
           @click="deleteTask"
         >
@@ -11,7 +11,7 @@
           <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
       </div>
-      <div class="f5 lh-title pt2 mr3">{{index+1}}.</div>
+      <div class="f5 lh-title pt2 mr2 mr3-ns">{{index+1}}.</div>
       <div
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 46px; bottom: -5px; left: 19px"

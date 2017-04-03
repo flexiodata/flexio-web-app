@@ -124,6 +124,12 @@ class Task
                 'verb' => 'Processing'
             ),
             array(
+                'type' => \Flexio\Jobs\Fail::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Fail',
+                'name' => 'Fail',
+                'verb' => 'Failed'
+            ),
+            array(
                 'type' => \Flexio\Jobs\Prompt::MIME_TYPE,
                 'class' => '\Flexio\Jobs\Prompt',
                 'name' => 'Ask For Information',

@@ -42,6 +42,16 @@ const DROPBOX = {
   service_description: 'Cloud file storage and syncing'
 }
 
+const EMAIL = {
+  is_service: false,
+  is_input: false,
+  is_output: true,
+  connection_type: types.CONNECTION_TYPE_EMAIL,
+  icon: require('../assets/icon/icon-email-128.png'),
+  service_name: 'Email',
+  service_description: ''
+}
+
 const GOOGLEDRIVE = {
   is_service: true,
   is_input: true,
@@ -176,8 +186,9 @@ const UPLOAD = {
 
 // go out of alphabetical order here so the order is correct in the pipe add modal
 export const CONNECTION_INFO_STDIN         = STDIN
-export const CONNECTION_INFO_STDOUT        = STDOUT
 // export const CONNECTION_INFO_UPLOAD        = UPLOAD
+export const CONNECTION_INFO_STDOUT        = STDOUT
+export const CONNECTION_INFO_EMAIL         = EMAIL
 //export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
 export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BLANK_PIPE    = BLANK_PIPE
