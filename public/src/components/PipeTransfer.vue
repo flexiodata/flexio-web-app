@@ -8,7 +8,7 @@
           <div v-else>Input</div>
           <button
             type="button"
-            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
+            class="ma2 mv3-l black-30 hover-black-60 link hint--bottom-left absolute top-0 right-0"
             aria-label="Add another input"
             @click="show_input_chooser = true"
             v-if="allow_multiple_inputs && !show_input_chooser"
@@ -17,7 +17,7 @@
           </button>
           <button
             type="button"
-            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
+            class="ma2 mv3-l black-30 hover-black-60 link hint--bottom-left absolute top-0 right-0"
             aria-label="Cancel add input"
             @click="show_input_chooser = false"
             v-if="allow_multiple_inputs && show_input_chooser"
@@ -49,7 +49,7 @@
           <div v-else>Output</div>
           <button
             type="button"
-            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
+            class="ma2 mv3-l black-30 hover-black-60 link hint--bottom-left absolute top-0 right-0"
             aria-label="Add another output"
             @click="show_output_chooser = true"
             v-if="allow_multiple_outputs && !show_output_chooser"
@@ -58,7 +58,7 @@
           </button>
           <button
             type="button"
-            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
+            class="ma2 mv3-l black-30 hover-black-60 link hint--bottom-left absolute top-0 right-0"
             aria-label="Cancel add output"
             @click="show_output_chooser = false"
             v-if="allow_multiple_outputs && show_output_chooser"
