@@ -20,31 +20,80 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = TestUtil::getModel();
+
+
         // TEST: non-string inputs
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::isValid(null);
-        $expected = false;
-        TestCheck::assertBoolean('A.1', '\Flexio\Services\Email::isValid() null input', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Services\Email::isValid(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.1', '\Flexio\Services\Email::isValid() null input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::isValid(false);
-        $expected = false;
-        TestCheck::assertBoolean('A.2', '\Flexio\Services\Email::isValid() false input', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Services\Email::isValid(false);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.2', '\Flexio\Services\Email::isValid() false input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::isValid(true);
-        $expected = false;
-        TestCheck::assertBoolean('A.3', '\Flexio\Services\Email::isValid() true input', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Services\Email::isValid(true);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.3', '\Flexio\Services\Email::isValid() true input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::isValid(111111111111);
-        $expected = false;
-        TestCheck::assertBoolean('A.4', '\Flexio\Services\Email::isValid() numeric input', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Services\Email::isValid(1111);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.4', '\Flexio\Services\Email::isValid() numeric input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Email::isValid(array());
-        $expected = false;
-        TestCheck::assertBoolean('A.5', '\Flexio\Services\Email::isValid() array input', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            \Flexio\Services\Email::isValid(array());
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.5', '\Flexio\Services\Email::isValid() array input', $actual, $expected, $results);
     }
 }
