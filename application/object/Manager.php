@@ -61,7 +61,7 @@ class Manager
         if ($pipe !== false)
         {
             $pipe_properties = $pipe->get();
-            unset($pipe_properites['ename']);
+            unset($pipe_properties['ename']);
             $process = \Flexio\Object\Process::create($pipe_properties);
             if ($process !== false)
             {
