@@ -47,7 +47,7 @@ const EMAIL = {
   is_input: false,
   is_output: true,
   connection_type: types.CONNECTION_TYPE_EMAIL,
-  icon: require('../assets/icon/icon-upload-128.png'),
+  icon: require('../assets/icon/icon-email-128.png'),
   service_name: 'Email',
   service_description: ''
 }
