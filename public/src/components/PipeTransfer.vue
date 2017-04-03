@@ -2,7 +2,9 @@
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
     <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
-      <div class="f4 pa2 dark-gray bb b--black-10 tc">
+      <div
+        class="f4 pv2 ph3 white bg-blue relative tc"
+      >
         <div class="relative" v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
           <div v-else>Input</div>
@@ -42,8 +44,8 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column bg-white mb4-l mr4-l css-white-box">
-      <div class="f4 pa2 dark-gray bb b--black-10 tc">
+    <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
+      <div class="f4 pv2 ph3 white bg-blue relative tc">
         <div class="relative" v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
@@ -83,20 +85,11 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex-none flex flex-column mb4-l mr4-l css-pipe-transfer-column-transform">
-      <div class="f5 pb2 dark-gray bb b--black-10 tc tl-l relative">
-        <div>Summary of Steps</div>
-        <button
-          type="button"
-          class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
-          aria-label="Edit steps"
-          @click="$emit('open-builder')"
-          v-if="has_tasks && false"
-        >
-          <i class="db material-icons f4">edit</i>
-        </button>
+    <div class="flex-fill flex flex-column bg-white mb4-l mr4-l css-white-box css-pipe-transfer-column-transform">
+      <div class="f4 pv2 ph3 white bg-blue relative tc">
+        <div>Summary</div>
       </div>
-      <div class="flex-fill pt3 pr3 overflow-y-auto" v-if="has_tasks">
+      <div class="flex-fill pa3 overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
           :tasks="tasks"
         ></pipe-transfer-transform-list>
@@ -112,7 +105,7 @@
           </btn>
         </div>
       </div>
-      <div class="flex-fill pt3 pr3 overflow-y-auto tl tc-m" v-else>
+      <div class="flex-fill pa3 overflow-y-auto tl tc-m" v-else>
         <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
         <btn
           btn-md
