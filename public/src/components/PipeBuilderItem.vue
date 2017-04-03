@@ -1,5 +1,5 @@
 <template>
-  <div class="relative ml2-m ml3-l" style="max-width: 1500px">
+  <div class="relative ml2-m ml3-l" style="max-width: 1600px">
     <div class="flex flex-row relative mv2 ml3 ml0-l mr4 mr5-l">
       <div class="flex-none">
         <div
