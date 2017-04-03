@@ -323,7 +323,7 @@ class Email
         $this->attachments = array();
     }
 
-    private function initializeFromParsedMessage($message) : \ZBateson\MailMimeParser\Message
+    private function initializeFromParsedMessage(\ZBateson\MailMimeParser\Message $message)
     {
         // start with a clean slate
         $this->initialize();
@@ -367,13 +367,17 @@ class Email
         // get the "replyto"
         $this->setReplyTo(''); // TODO: populate
 
-                // get the subject
-        $this->setSubject($message->getHeaderValue('subject'));
+        // get the subject
+        $subject = $message->getHeaderValue('subject') ?? '';
+        $this->setSubject($subject);
 
-                // get the body
-        $this->setMessageText($message->getTextContent());
-        $this->setMessageHtml($message->getHtmlContent());
-        $this->setMessageHtmlEmbedded($message->getHtmlContent());
+        // get the body
+        $txtcontent = $message->getTextContent() ?? '';
+        $this->setMessageText($txtcontent);
+
+        $htmlcontent = $message->getHtmlContent() ?? '';
+        $this->setMessageHtml($htmlcontent );
+        $this->setMessageHtmlEmbedded($htmlcontent);
     }
 
     private function sendWithoutAttachments() : bool
