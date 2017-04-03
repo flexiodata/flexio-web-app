@@ -3,14 +3,14 @@
 
     <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
       <div
-        class="f5 pv2 ph3 white bg-blue relative ttu tc"
+        class="f5 pa2 white bg-blue relative ttu tc tl-l"
       >
-        <div class="relative" v-if="has_input">
+        <div v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
           <div v-else>Input</div>
           <button
             type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
             aria-label="Add another input"
             @click="show_input_chooser = true"
             v-if="allow_multiple_inputs && !show_input_chooser"
@@ -19,7 +19,7 @@
           </button>
           <button
             type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
             aria-label="Cancel add input"
             @click="show_input_chooser = false"
             v-if="allow_multiple_inputs && show_input_chooser"
@@ -45,13 +45,13 @@
     </div>
 
     <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
-      <div class="f5 pv2 ph3 white bg-blue relative ttu tc">
-        <div class="relative" v-if="has_output">
+      <div class="f5 pa2 white bg-blue relative ttu tc tl-l">
+        <div v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
           <button
             type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
             aria-label="Add another output"
             @click="show_output_chooser = true"
             v-if="allow_multiple_outputs && !show_output_chooser"
@@ -60,7 +60,7 @@
           </button>
           <button
             type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
             aria-label="Cancel add output"
             @click="show_output_chooser = false"
             v-if="allow_multiple_outputs && show_output_chooser"
@@ -85,8 +85,8 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex flex-column mb4-l mr4-l css-pipe-transfer-column-transform">
-      <div class="f5 pv2 pt0-l pb1-l ml3-l mid-gray bb b--black-10 relative ttu tc tl-l">
+    <div class="flex flex-column mb4-l mr4-l css-pipe-transfer-column-summary">
+      <div class="f5 pv2 pt0-l pb1-l ml3-l mid-gray bb b--black-10 relative ttu tc tl-l css-pipe-transfer-column-summary">
         <div>Summary</div>
       </div>
       <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto" v-if="has_tasks">
@@ -162,7 +162,7 @@
 
       has_input()  { return this.input_tasks.length > 0 },
       has_output() { return this.output_tasks.length > 0 },
-      has_tasks()  { return this.transform_tasks.length > 0 }
+      has_tasks()  { return this.tasks.length > 0 }
     },
     methods: {
       deleteInput(input) {
@@ -240,7 +240,7 @@
   @import "../stylesheets/variables.less";
 
   @media @breakpoint-large {
-    .css-pipe-transfer-column-transform {
+    .css-pipe-transfer-column-summary {
       width: 26%;
       max-width: 314px;
     }

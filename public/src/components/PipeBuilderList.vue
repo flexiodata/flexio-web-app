@@ -13,7 +13,7 @@
         </btn>
       </div>
     </div>
-    <div class="pv3" v-else>
+    <div class="pb3" v-else>
       <pipe-builder-item
         v-for="(task, index) in tasks"
         :pipe-eid="pipeEid"
