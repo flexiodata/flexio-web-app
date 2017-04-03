@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row min-w5">
+  <div class="flex flex-row items-start min-w5">
     <div class="flex-fill">
       <div class="flex flex-column flex-row-l items-center-l mb1">
         <inline-edit-text
@@ -9,7 +9,7 @@
           :val="pipe_name"
           @save="editPipeSingleton">
         </inline-edit-text>
-        <div class="flex flex-row">
+        <div class="flex flex-row items-center">
           <inline-edit-text
             class="dib f7 v-mid silver bg-black-05 pv1 ph2 mr1"
             placeholder="Add an alias"

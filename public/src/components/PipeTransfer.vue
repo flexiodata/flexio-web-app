@@ -1,14 +1,16 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
-    <div class="flex-fill flex flex-column mr3-l">
-      <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
-        <div class="flex flex-row items-center justify-center relative" v-if="has_input">
+    <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
+      <div
+        class="f5 pa2 white bg-blue relative ttu fw6"
+      >
+        <div v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
           <div v-else>Input</div>
           <button
             type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
             aria-label="Add another input"
             @click="show_input_chooser = true"
             v-if="allow_multiple_inputs && !show_input_chooser"
@@ -17,7 +19,7 @@
           </button>
           <button
             type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
             aria-label="Cancel add input"
             @click="show_input_chooser = false"
             v-if="allow_multiple_inputs && show_input_chooser"
@@ -25,16 +27,16 @@
             <i class="db material-icons f4">cancel</i>
           </button>
         </div>
-        <div v-else>1. Choose Input</div>
+        <div v-else>Choose Input</div>
       </div>
       <pipe-transfer-input-list
-        class="flex-fill"
+        class="flex-fill bg-white overflow-y-auto"
         :tasks="input_tasks"
         @input-delete="deleteInput"
         v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
-        class="flex-fill overflow-y-auto"
+        class="flex-fill bg-white overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         @choose-input="addInput"
@@ -42,14 +44,14 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column mr3-l">
-      <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
-        <div class="flex flex-row items-center justify-center relative" v-if="has_output">
+    <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
+      <div class="f5 pa2 white bg-blue relative ttu fw6">
+        <div v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
           <button
             type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
             aria-label="Add another output"
             @click="show_output_chooser = true"
             v-if="allow_multiple_outputs && !show_output_chooser"
@@ -58,7 +60,7 @@
           </button>
           <button
             type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom absolute right-0"
+            class="pa2 ml2 white-50 hover-white link hint--bottom absolute top-0 right-0"
             aria-label="Cancel add output"
             @click="show_output_chooser = false"
             v-if="allow_multiple_outputs && show_output_chooser"
@@ -66,16 +68,16 @@
             <i class="db material-icons f4">cancel</i>
           </button>
         </div>
-        <div v-else>2. Choose Output</div>
+        <div v-else>Choose Output</div>
       </div>
       <pipe-transfer-output-list
-        class="flex-fill"
+        class="flex-fill bg-white overflow-y-auto"
         :tasks="output_tasks"
         @output-delete="deleteOutput"
         v-if="has_output && !show_output_chooser"
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
-        class="flex-fill overflow-y-auto"
+        class="flex-fill bg-white overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_output_chooser = false"
         @choose-output="addOutput"
@@ -83,25 +85,13 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex-none flex flex-column css-pipe-transfer-column-transform">
-      <div class="f4 pa2 bg-blue white tc css-pipe-transfer-header">
-        <div class="flex flex-row items-center justify-center relative">
-          <div v-if="has_tasks">Processing Steps</div>
-          <div v-else>3. Add Processing Steps</div>
-          <button
-            type="button"
-            class="pa0 ml2 white-50 hover-white link hint--bottom-left absolute right-0"
-            aria-label="Edit steps"
-            @click="$emit('open-builder')"
-            v-if="has_tasks && false"
-          >
-            <i class="db material-icons f4">edit</i>
-          </button>
-        </div>
+    <div class="flex flex-column mb4-l mr4-l css-pipe-transfer-column-summary">
+      <div class="f5 pa2 pl0-l pt0-l pb1-l ml3-l relative ttu fw6 css-pipe-transfer-column-summary-header">
+        <div>Summary</div>
       </div>
-      <div class="flex-fill overflow-y-auto pa3" v-if="has_tasks">
+      <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
-          :tasks="transform_tasks"
+          :tasks="tasks"
         ></pipe-transfer-transform-list>
         <div>
           <btn
@@ -115,18 +105,16 @@
           </btn>
         </div>
       </div>
-      <div class="flex-fill" v-else>
-        <div class="ma3 tl tc-m">
-          <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
-          <btn
-            btn-md
-            btn-primary
-            class="ttu b w-100 w-auto-ns"
-            @click="$emit('open-builder')"
-          >
-            Add steps
-          </btn>
-        </div>
+      <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto tl tc-m" v-else>
+        <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
+        <btn
+          btn-md
+          btn-primary
+          class="ttu b w-100 w-auto-ns"
+          @click="$emit('open-builder')"
+        >
+          Add steps
+        </btn>
       </div>
     </div>
 
@@ -174,7 +162,7 @@
 
       has_input()  { return this.input_tasks.length > 0 },
       has_output() { return this.output_tasks.length > 0 },
-      has_tasks()  { return this.transform_tasks.length > 0 }
+      has_tasks()  { return this.tasks.length > 0 }
     },
     methods: {
       deleteInput(input) {
@@ -251,16 +239,26 @@
 <style lang="less">
   @import "../stylesheets/variables.less";
 
-  /*
-  .css-pipe-transfer-header {
-    box-shadow: inset -1px -1px 0 rgba(0,0,0,0.2);
+  .css-pipe-transfer-column-summary-header {
+    background-color: @blue;
+    color: #fff;
   }
-  */
+
+  .css-pipe-transfer-column-summary {
+    background-color: #fff;
+  }
 
   @media @breakpoint-large {
-    .css-pipe-transfer-column-transform {
-      width: 30%;
-      max-width: 400px;
+    .css-pipe-transfer-column-summary {
+      width: 26%;
+      max-width: 314px;
+      background-color: transparent;
+    }
+
+    .css-pipe-transfer-column-summary-header {
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      background-color: transparent;
+      color: #555; /* mid-gray */
     }
   }
 </style>
