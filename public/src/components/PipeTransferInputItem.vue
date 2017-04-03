@@ -39,13 +39,13 @@
       <div class="tl" v-if="is_stdin">
         <div class="lh-copy mid-gray f6 mb2 i">Input files from the command line.</div>
         <div class="flex flex-row items-stretch">
-          <div class="flex-fill pa2 bt bb bl b--black-10 br2 br--left">
+          <div class="flex-fill pa2 bt bb bl b--black-10 br1 br--left">
             <code class="f6" :id="code_id">{{pipe_cmd_line_example}}</code>
           </div>
           <btn
             btn-md
             btn-primary
-            class="br2 br--right hint--top-left clipboardjs"
+            class="br1 br--right hint--top-left clipboardjs"
             aria-label="Copy to Clipboard"
             :data-clipboard-target="'#'+code_id"
           ><span class="ttu b">Copy</span></btn>

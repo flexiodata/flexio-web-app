@@ -27,18 +27,19 @@
     </div>
     <div class="ma3">
       <div class="tl" v-if="is_dropbox || is_google_drive">
-        <div class="lh-copy mid-gray f6 mb1">Files will be output to the following folder:</div>
-        <div class="flex flex-row items-center">
-          <div class="flex-fill f6 mr2 pa2 ba b--black-10 black">
+        <div class="lh-copy mid-gray f6 mb2">Files will be output to the following folder:</div>
+        <div class="flex flex-row items-stretch">
+          <div class="flex-fill f6 pa2 black bt bb bl b--black-10 br1 br--left">
             <span class="i" v-if="location == '/'">{{friendly_location}}</span>
             <span v-else>{{location}}</span>
           </div>
           <btn
             btn-md
             btn-primary
+            class="br1 br--right"
             @click="openOutputChooser"
           >
-            <span class="ttu b">Change folder</span>
+            <span class="ttu b">Browse</span>
           </btn>
         </div>
       </div>
@@ -60,13 +61,13 @@
       <div class="tl" v-else-if="is_stdout">
         <div class="lh-copy mid-gray f6 mb2 i">Output files from the command line.</div>
         <div class="flex flex-row items-stretch">
-          <div class="flex-fill pa2 bt bb bl b--black-10 br2 br--left">
+          <div class="flex-fill pa2 bt bb bl b--black-10 br1 br--left">
             <code class="f6" :id="code_id">{{pipe_cmd_line_example}}</code>
           </div>
           <btn
             btn-md
             btn-primary
-            class="br2 br--right hint--top-left clipboardjs"
+            class="br1 br--right hint--top-left clipboardjs"
             aria-label="Copy to Clipboard"
             :data-clipboard-target="'#'+code_id"
           ><span class="ttu b">Copy</span></btn>

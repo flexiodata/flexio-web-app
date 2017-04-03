@@ -23,7 +23,7 @@
       <input
         type="text"
         ref="linkinput"
-        class="flex-fill input-reset lh-copy pa2 bt bb bl b--black-20 br2 br--left"
+        class="flex-fill input-reset lh-copy pa2 bt bb bl b--black-20 br1 br--left"
         spellcheck="false"
         v-deferred-focus
         v-select-all
@@ -34,7 +34,7 @@
       <btn
         btn-primary
         btn-square
-        class="pv2a ph3 hint--bottom-left br2 br--right clipboardjs"
+        class="pv2a ph3 hint--bottom-left br1 br--right clipboardjs"
         aria-label="Copy to Clipboard"
         :data-clipboard-target="'#'+input_id"
       ><span class="ttu b">Copy</span></btn>
