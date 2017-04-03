@@ -1,11 +1,11 @@
 <template>
-  <nav v-if="render_nav" v-show="show_nav" class="bb b--black-10">
+  <nav v-if="render_nav" v-show="show_nav" class="bb b--black-20">
     <div class="flex flex-row bg-white pa1 pl3-ns pr2-ns items-center">
       <div class="flex-fill flex flex-row items-center truncate">
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <app-breadcrumbs class="flex flex-row items-center lh-title f6 f4-ns fw6"></app-breadcrumbs>
+        <app-breadcrumbs class="flex flex-row items-center lh-title f6 fw6 f4-ns fw4-ns"></app-breadcrumbs>
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>

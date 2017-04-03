@@ -27,46 +27,56 @@
     </div>
     <div class="ma3">
       <div class="tl" v-if="is_dropbox || is_google_drive">
-        <div class="lh-copy mid-gray f6 mb1">Files will be output to the following folder:</div>
-        <div class="flex flex-row items-center">
-          <div class="flex-fill f6 mr2 pa2 ba b--black-10 black">
+        <div class="lh-copy mid-gray f6 mb2">Files will be output to the following folder:</div>
+        <div class="flex flex-row items-stretch">
+          <div class="flex-fill f6 pa2 black bt bb bl b--black-10 br1 br--left">
             <span class="i" v-if="location == '/'">{{friendly_location}}</span>
             <span v-else>{{location}}</span>
           </div>
           <btn
             btn-md
             btn-primary
+            class="br1 br--right"
             @click="openOutputChooser"
           >
-            <span class="ttu b">Change folder</span>
+            <span class="ttu b">Browse</span>
           </btn>
         </div>
       </div>
       <div class="tl" v-else-if="is_amazon_s3">
         <div class="lh-copy mid-gray f6 mb3 i">
-          <span v-if="connection.database.length == 0">There's an error in the configuration of this connection. A bucket must be specified in order to output files to Amazon S3.</span>
-          <span v-else>Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> bucket.</span>
+          <span v-if="database.length == 0">There's an error in the configuration of this connection. A bucket must be specified in order to output files to Amazon S3.</span>
+          <span v-else>Files will be output to the <span class="b black fs-normal">{{database}}</span> bucket.</span>
         </div>
       </div>
       <div class="tl" v-else-if="is_mysql || is_postgres">
         <div class="lh-copy mid-gray f6 mb3 i">
-          <span v-if="connection.host.length == 0 || connection.database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files to {{service_name}}.</span>
-          <span v-else>Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> database on <span class="b black fs-normal">{{connection.host}}</span>.</span>
+          <span v-if="host.length == 0 || database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files to {{service_name}}.</span>
+          <span v-else>Files will be output to the <span class="b black fs-normal">{{database}}</span> database on <span class="b black fs-normal">{{host}}</span>.</span>
         </div>
       </div>
       <div class="tl" v-else-if="is_google_sheets">
         <div class="lh-copy mid-gray f6 mb3 i">Each file will be output to Google Sheets as a single sheet.</div>
       </div>
       <div class="tl" v-else-if="is_stdout">
-        <div class="lh-copy mid-gray f6 mb3 i">Output files from the command line.</div>
-        <div class="pv1 ph2 bg-black-05">
-          <code class="f6">flexio pipes run pipe-name > output.txt</code>
+        <div class="lh-copy mid-gray f6 mb2 i">Output files from the command line.</div>
+        <div class="flex flex-row items-stretch">
+          <div class="flex-fill pa2 f6 code bt bb bl b--black-10 br1 br--left" :id="code_id">
+            {{pipe_cmd_line_example}}
+          </div>
+          <btn
+            btn-md
+            btn-primary
+            class="br1 br--right hint--top-left clipboardjs"
+            aria-label="Copy to Clipboard"
+            :data-clipboard-target="'#'+code_id"
+          ><span class="ttu b">Copy</span></btn>
         </div>
       </div>
       <div class="tl" v-else-if="is_sftp">
         <div class="lh-copy mid-gray f6 mb3 i">
-          <span v-if="connection.host.length == 0 || connection.database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files via {{service_name}}.</span>
-          <span v-else>Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> database on <span class="b black fs-normal">{{connection.host}}</span>.</span>
+          <span v-if="host.length == 0 || database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files via {{service_name}}.</span>
+          <span v-else>Files will be output to the <span class="b black fs-normal">{{database}}</span> database on <span class="b black fs-normal">{{host}}</span>.</span>
         </div>
       </div>
     </div>
@@ -110,6 +120,7 @@
     inject: ['pipeEid'],
     data() {
       return {
+        code_id: _.uniqueId('code-'),
         show_output_chooser_modal: false
       }
     },
@@ -132,11 +143,27 @@
       friendly_location() {
         return '<' + this.service_name + ' ' + 'root folder' + '>'
       },
+      pipe() {
+        return _.get(this.$store, 'state.objects.'+this.pipeEid, {})
+      },
+      pipe_identifier() {
+        var ename = _.get(this.pipe, 'ename', '')
+        return ename.length > 0 ? ename : _.get(this.pipe, 'eid', '')
+      },
+      pipe_cmd_line_example() {
+        return 'flexio pipes run ' + this.pipe_identifier + ' > output.txt'
+      },
       connection() {
         var connection_eid = _.get(this.task, 'params.connection', '')
         return _.get(this.$store, 'state.objects.'+connection_eid, {
           connection_type: this.ctype
         })
+      },
+      database() {
+        return _.get(this.connection, 'database', '')
+      },
+      host() {
+        return _.get(this.connection, 'host', '')
       },
       title() {
         var name = _.get(this.connection, 'name', '')

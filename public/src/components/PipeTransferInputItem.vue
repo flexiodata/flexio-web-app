@@ -37,9 +37,18 @@
     </div>
     <div class="ma3 tc" v-else>
       <div class="tl" v-if="is_stdin">
-        <div class="lh-copy mid-gray f6 mb3 i">Input files from the command line.</div>
-        <div class="pv1 ph2 bg-black-05">
-          <code class="f6">$ flexio pipes run pipe-name file.txt *.csv</code>
+        <div class="lh-copy mid-gray f6 mb2 i">Input files from the command line.</div>
+        <div class="flex flex-row items-stretch">
+          <div class="flex-fill pa2 f6 code bt bb bl b--black-10 br1 br--left" :id="code_id">
+            {{pipe_cmd_line_example}}
+          </div>
+          <btn
+            btn-md
+            btn-primary
+            class="br1 br--right hint--top-left clipboardjs"
+            aria-label="Copy to Clipboard"
+            :data-clipboard-target="'#'+code_id"
+          ><span class="ttu b">Copy</span></btn>
         </div>
       </div>
       <div v-else>
@@ -85,6 +94,7 @@
     inject: ['pipeEid'],
     data() {
       return {
+        code_id: _.uniqueId('code-'),
         show_file_chooser_modal: false
       }
     },
@@ -94,6 +104,16 @@
       },
       items() {
         return _.get(this.item, 'params.items', '')
+      },
+      pipe() {
+        return _.get(this.$store, 'state.objects.'+this.pipeEid, {})
+      },
+      pipe_identifier() {
+        var ename = _.get(this.pipe, 'ename', '')
+        return ename.length > 0 ? ename : _.get(this.pipe, 'eid', '')
+      },
+      pipe_cmd_line_example() {
+        return 'flexio pipes run ' + this.pipe_identifier + ' file.txt *.csv'
       },
       connection() {
         var connection_eid = _.get(this.item, 'params.connection', '')
