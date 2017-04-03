@@ -88,6 +88,7 @@ class Model
     const CONNECTION_TYPE_DOWNLOAD      = 'download.api';
     const CONNECTION_TYPE_STDIN         = 'stdin.api';
     const CONNECTION_TYPE_STDOUT        = 'stdout.api';
+    const CONNECTION_TYPE_EMAIL         = 'email.api';
     const CONNECTION_TYPE_HTTP          = 'http.api';
     const CONNECTION_TYPE_RSS           = 'rss.api';
     const CONNECTION_TYPE_SOCRATA       = 'socrata.api';
