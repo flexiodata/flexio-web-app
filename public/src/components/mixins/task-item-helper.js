@@ -10,7 +10,7 @@ export default {
     },
     display_name() {
       var name = _.get(this, 'task.name', '')
-      var default_name = _.result(this, 'tinfo.name', 'Untitled Task')
+      var default_name = _.result(this, 'tinfo.name', 'Untitled Step')
       return name.length > 0 ? name : default_name
     },
     bg_color() {
