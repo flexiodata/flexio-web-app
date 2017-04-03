@@ -319,11 +319,6 @@ class Convert extends \Flexio\Jobs\Base
                          else
                         $row .= $buf;
 
-                    // can we find an unquoted line terminator
-                    $terminator = substr($buf, -1); // last char of row buffer
-                    if ($terminator != "\r" && $terminator != "\n")
-                        break;
-
                     $lfpos = self::indexOfLineTerminator($row, $qualifier);
                     if ($lfpos !== false)
                         break; // if we found an LF, we have the whole CSV row; if not, read in another row
@@ -607,10 +602,10 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->close();
     }
 
-    public static function indexOfLineTerminator(string $haystack, string $qualifier)
+    public static function indexOfLineTerminator(string $haystack, string $qualifier, $start = 0)
     {
         $haystack_len = strlen($haystack);
-        $offset = 0;
+        $offset = $start;
         $quotec = false;
 
         while ($offset < $haystack_len)

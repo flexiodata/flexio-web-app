@@ -276,6 +276,31 @@ class Execute extends \Flexio\Jobs\Base
 
                     if ($is_output_table)
                     {
+                        $offset = 0;
+                        while (true)
+                        {
+                            $eolpos = \Flexio\Jobs\Convert::indexOfLineTerminator($chunk, '"', $offset);
+                            if ($eolpos === false)
+                            {
+                                $chunk = substr($chunk, $offset);
+                                break;
+                            }
+                            
+                            $line = substr($chunk, $offset, $eolpos - $offset);
+
+                            $offset = $eolpos+1;
+                            if ($chunk[$offset-1] == "\r" && ($chunk[$offset] ?? '') == "\n")
+                                $offset++;
+
+                            $row = str_getcsv($line);
+
+                            if ($row !== false)
+                            {
+                                $row = \Flexio\Jobs\Convert::conformValuesToStructure($structure, $row);
+                                $streamwriter->write($row);
+                            }
+                     
+                        }
                     }
                      else
                     {
