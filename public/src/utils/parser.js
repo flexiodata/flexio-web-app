@@ -376,7 +376,7 @@
         else
           return json;  // unknown from: type
       }
-      
+
       if (from_format == '' && (params.hasOwnProperty('delimiter') || params.hasOwnProperty('qualifier') || params.hasOwnProperty('header')))
       {
         // no from format specified -- implicit format is delimited
@@ -925,6 +925,58 @@
 
       return res;
     };
+
+
+
+
+    this.args.fail = ['code','message'];
+    this.hints.fail = {
+      "code":       [ 'general', 'unimplemented', 'unauthorized' ]
+    };
+    this.keywords.fail = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.fail",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.fail);
+
+      if (params.hasOwnProperty('code'))
+      {
+        json.params.code = params['code'];
+      }
+
+      if (params.hasOwnProperty('message'))
+      {
+        json.params.message = params['message'];
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.fail"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "fail";
+
+      if (json.params.hasOwnProperty('code'))
+      {
+        res = this.append(res, "code: " + json.params['code']);
+      }
+
+      if (json.params.hasOwnProperty('message'))
+      {
+        res = this.append(res, "message: " + json.params['message']);
+      }
+
+      return res;
+    };
+
 
 
 
