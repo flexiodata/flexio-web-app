@@ -4,7 +4,7 @@
   </div>
   <div v-else class="flex flex-column items-stretch" style="background-color: #f9f9f9">
     <pipe-home-header
-      class="pv2 ph3 ph4-l"
+      class="pv2a ph3 ph4-l"
       style="background-color: #f3f3f3"
       :pipe-eid="eid"
       :pipe-view="pipe_view"
