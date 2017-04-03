@@ -58,9 +58,9 @@
         <div class="lh-copy mid-gray f6 mb3 i">Each file will be output to Google Sheets as a single sheet.</div>
       </div>
       <div class="tl" v-else-if="is_stdout">
-        <div class="lh-copy mid-gray f6 mb3 i">Output files from the command line.</div>
+        <div class="lh-copy mid-gray f6 mb2 i">Output files from the command line.</div>
         <div class="flex flex-row items-stretch">
-          <div class="flex-fill pa2 bg-black-10 br2 br--left">
+          <div class="flex-fill pa2 bt bb bl b--black-10 br2 br--left">
             <code class="f6" :id="code_id">{{pipe_cmd_line_example}}</code>
           </div>
           <btn

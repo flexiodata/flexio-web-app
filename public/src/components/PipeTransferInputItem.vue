@@ -37,9 +37,9 @@
     </div>
     <div class="ma3 tc" v-else>
       <div class="tl" v-if="is_stdin">
-        <div class="lh-copy mid-gray f6 mb3 i">Input files from the command line.</div>
+        <div class="lh-copy mid-gray f6 mb2 i">Input files from the command line.</div>
         <div class="flex flex-row items-stretch">
-          <div class="flex-fill pa2 bg-black-10 br2 br--left">
+          <div class="flex-fill pa2 bt bb bl b--black-10 br2 br--left">
             <code class="f6" :id="code_id">{{pipe_cmd_line_example}}</code>
           </div>
           <btn
