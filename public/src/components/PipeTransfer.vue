@@ -3,7 +3,7 @@
 
     <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
       <div
-        class="f4 pv2 ph3 white bg-blue relative tc"
+        class="f5 pv2 ph3 white bg-blue relative ttu tc"
       >
         <div class="relative" v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
@@ -45,7 +45,7 @@
     </div>
 
     <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
-      <div class="f4 pv2 ph3 white bg-blue relative tc">
+      <div class="f5 pv2 ph3 white bg-blue relative ttu tc">
         <div class="relative" v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
@@ -85,11 +85,11 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column bg-white mb4-l mr4-l css-white-box css-pipe-transfer-column-transform">
-      <div class="f4 pv2 ph3 white bg-blue relative tc">
+    <div class="flex flex-column mb4-l mr4-l css-pipe-transfer-column-transform">
+      <div class="f5 pv2 pt0-l pb1-l ml3-l mid-gray bb b--black-10 relative ttu tc tl-l">
         <div>Summary</div>
       </div>
-      <div class="flex-fill pa3 overflow-y-auto" v-if="has_tasks">
+      <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
           :tasks="tasks"
         ></pipe-transfer-transform-list>
@@ -105,7 +105,7 @@
           </btn>
         </div>
       </div>
-      <div class="flex-fill pa3 overflow-y-auto tl tc-m" v-else>
+      <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto tl tc-m" v-else>
         <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
         <btn
           btn-md
@@ -242,7 +242,7 @@
   @media @breakpoint-large {
     .css-pipe-transfer-column-transform {
       width: 26%;
-      max-width: 300px;
+      max-width: 314px;
     }
   }
 </style>
