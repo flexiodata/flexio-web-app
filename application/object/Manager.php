@@ -49,7 +49,7 @@ class Manager
             $email_to_addresses = $parser->getTo();
             if (count($email_to_addresses) > 0)
             {
-                $primary_to_address = $email_to_addresses[0];
+                $primary_to_address = trim($email_to_addresses[0], "\t\n\r\0\x0B<>");
                 $email_to_parts = explode("@", $primary_to_address, 2);
                 $pipe_eid = $email_to_parts[0];
             }
