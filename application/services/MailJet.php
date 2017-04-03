@@ -68,7 +68,7 @@ class MailJet implements \Flexio\Services\IConnection
         $this->password = '';
     }
 
-    public function listObjects(string $path = '') : bool
+    public function listObjects(string $path = '') : array
     {
         if (!$this->isOk())
             return array();

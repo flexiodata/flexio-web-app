@@ -109,18 +109,18 @@ class Dropbox implements \Flexio\Services\IConnection
         return $files;
     }
 
-    public function exists($path) : bool
+    public function exists(string $path) : bool
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function getInfo($path)
+    public function getInfo(string $path) : array
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -145,7 +145,7 @@ class Dropbox implements \Flexio\Services\IConnection
         curl_close($ch);
     }
 
-    public function write($params, $callback)
+    public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;

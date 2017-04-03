@@ -133,7 +133,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
     public function getInfo(string $path) : array
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        return array();
     }
 
     public function read(array $params, callable $callback)
