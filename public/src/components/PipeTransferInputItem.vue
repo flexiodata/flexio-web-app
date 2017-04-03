@@ -39,7 +39,7 @@
       <div class="tl" v-if="is_stdin">
         <div class="lh-copy mid-gray f6 mb3 i">Input files from the command line.</div>
         <div class="pv1 ph2 bg-black-05">
-          <code class="f6">$ flexio pipes run pipe-name file.txt *.csv</code>
+          <code class="f6">flexio pipes run {{pipe_identifier}} file.txt *.csv</code>
         </div>
       </div>
       <div v-else>
@@ -94,6 +94,13 @@
       },
       items() {
         return _.get(this.item, 'params.items', '')
+      },
+      pipe() {
+        return _.get(this.$store, 'state.objects.'+this.pipeEid, {})
+      },
+      pipe_identifier() {
+        var ename = _.get(this.pipe, 'ename', '')
+        return ename.length > 0 ? ename : _.get(this.pipe, 'eid', '')
       },
       connection() {
         var connection_eid = _.get(this.item, 'params.connection', '')

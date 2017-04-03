@@ -60,7 +60,7 @@
       <div class="tl" v-else-if="is_stdout">
         <div class="lh-copy mid-gray f6 mb3 i">Output files from the command line.</div>
         <div class="pv1 ph2 bg-black-05">
-          <code class="f6">flexio pipes run pipe-name > output.txt</code>
+          <code class="f6">flexio pipes run {{pipe_identifier}} > output.txt</code>
         </div>
       </div>
       <div class="tl" v-else-if="is_sftp">
@@ -131,6 +131,13 @@
       },
       friendly_location() {
         return '<' + this.service_name + ' ' + 'root folder' + '>'
+      },
+      pipe() {
+        return _.get(this.$store, 'state.objects.'+this.pipeEid, {})
+      },
+      pipe_identifier() {
+        var ename = _.get(this.pipe, 'ename', '')
+        return ename.length > 0 ? ename : _.get(this.pipe, 'eid', '')
       },
       connection() {
         var connection_eid = _.get(this.task, 'params.connection', '')
