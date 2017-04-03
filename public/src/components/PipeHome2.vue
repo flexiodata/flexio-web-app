@@ -14,7 +14,7 @@
     </pipe-home-header>
 
     <pipe-transfer
-      class="flex-fill pv0 pv3-l pl4-l bt b--black-10"
+      class="flex-fill pv0 pv4-l pl4-l bt b--black-10"
       :project-eid="project_eid"
       :pipe-eid="eid"
       :tasks="tasks"
