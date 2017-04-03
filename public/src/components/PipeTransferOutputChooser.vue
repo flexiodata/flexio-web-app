@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="pa2 bg-black-05 bb ba-l b--black-05">
+    <div class="pa2 bg-black-05">
       <div class="f6 fw6 ttu silver">My Connections</div>
     </div>
     <div class="relative">
@@ -13,7 +13,7 @@
         @item-activate="chooseConnection"
       ></connection-chooser-list>
     </div>
-    <div class="pa2 bg-black-05 bb ba-l b--black-05 relative" style="top: -1px">
+    <div class="pa2 bg-black-05">
       <div class="f6 fw6 ttu silver">Available Connections</div>
     </div>
     <service-list
