@@ -3,7 +3,7 @@
 
     <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
       <div
-        class="f5 pa2 white bg-blue relative ttu tc tl-l"
+        class="f5 pa2 white bg-blue relative ttu"
       >
         <div v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
@@ -45,7 +45,7 @@
     </div>
 
     <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
-      <div class="f5 pa2 white bg-blue relative ttu tc tl-l">
+      <div class="f5 pa2 white bg-blue relative ttu">
         <div v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
@@ -86,7 +86,7 @@
     </div>
 
     <div class="flex flex-column mb4-l mr4-l css-pipe-transfer-column-summary">
-      <div class="f5 pv2 pt0-l pb1-l ml3-l mid-gray bb b--black-10 relative ttu tc tl-l css-pipe-transfer-column-summary">
+      <div class="f5 pa2 pl0-l pt0-l pb1-l ml3-l relative ttu css-pipe-transfer-column-summary-header">
         <div>Summary</div>
       </div>
       <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto" v-if="has_tasks">
@@ -239,10 +239,26 @@
 <style lang="less">
   @import "../stylesheets/variables.less";
 
+  .css-pipe-transfer-column-summary-header {
+    background-color: @blue;
+    color: #fff;
+  }
+
+  .css-pipe-transfer-column-summary {
+    background-color: #fff;
+  }
+
   @media @breakpoint-large {
     .css-pipe-transfer-column-summary {
       width: 26%;
       max-width: 314px;
+      background-color: transparent;
+    }
+
+    .css-pipe-transfer-column-summary-header {
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      background-color: transparent;
+      color: #555; /* mid-gray */
     }
   }
 </style>
