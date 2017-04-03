@@ -22,6 +22,7 @@ require_once dirname(__DIR__) . '/services/Abstract.php';
 class Process extends \Flexio\Object\Base
 {
     // variables and errors
+    private $debug;
     private $errors;
 
     // progress variables
@@ -31,6 +32,7 @@ class Process extends \Flexio\Object\Base
     public function __construct()
     {
         $this->setType(\Model::TYPE_PROCESS);
+        $this->debug = false;
         $this->errors = array();
         $this->current_executing_subprocess_eid = false;
         $this->last_percentage_saved = false;
@@ -92,7 +94,7 @@ class Process extends \Flexio\Object\Base
         return false;
     }
 
-    public function run(bool $background = true) : \Flexio\Object\Process
+    public function run(bool $background = true, bool $debug = false) : \Flexio\Object\Process
     {
         // STEP 1: check the status; don't run the job in certain circumstances
         $this->clearCache();
@@ -127,8 +129,12 @@ class Process extends \Flexio\Object\Base
         // STEP 3: run the job
         if ($background !== true)
         {
+            if ($debug === true)
+                $this->setDebug(true);
+
             $this->prepare();
             $this->execute();
+
             return $this;
         }
 
@@ -288,6 +294,16 @@ class Process extends \Flexio\Object\Base
         $input_params = $process_properties['input_params'];
         $input = @json_decode($input_params, true);
         return $input;
+    }
+
+    public function setDebug(bool $debug)
+    {
+        $this->debug = $debug;
+    }
+
+    public function getDebug()
+    {
+        return $this->debug;
     }
 
     public function getEnvironmentParams() : array
@@ -776,7 +792,10 @@ class Process extends \Flexio\Object\Base
             $line = $e->getLine();
             $code = $info['code'];
             $message = $info['message'];
-            //die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
+
+            if ($this->getDebug() === true)
+                die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
+                  else
             return $process->fail($code, $message, $file, $line);
         }
         catch (\Exception $e)
@@ -785,8 +804,11 @@ class Process extends \Flexio\Object\Base
 
             $file = $e->getFile();
             $line = $e->getLine();
-            //die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
-            return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
+
+            if ($this->getDebug() === true)
+                die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
+                 else
+                return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
         }
         catch (\Error $e)
         {
@@ -794,8 +816,11 @@ class Process extends \Flexio\Object\Base
 
             $file = $e->getFile();
             $line = $e->getLine();
-            //die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
-            return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
+
+            if ($this->getDebug() === true)
+                die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
+                 else
+                return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
         }
     }
 

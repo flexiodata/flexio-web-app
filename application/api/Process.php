@@ -34,6 +34,7 @@ class Process
 
         // run the specified job in blocking mode
         $params['background'] = $params['background'] ?? false;
+        $params['debug'] = true;
         $process = self::create_internal($params, $request);
         if ($process === false)
             return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
@@ -50,12 +51,14 @@ class Process
                 'task'         => array('type' => 'object', 'required' => false, 'default' => []),
                 'params'       => array('type' => 'object', 'required' => false),
                 'background'   => array('type' => 'boolean', 'required' => false, 'default' => true),
+                'debug'        => array('type' => 'boolean', 'required' => false, 'default' => false),
                 'run'          => array('type' => 'boolean', 'required' => false, 'default' => false)
             ))) === false)
             return $request->getValidator()->fail();
 
         $pipe_identifier = isset($params['parent_eid']) ? $params['parent_eid'] : false;
         $background = toBoolean($params['background']);
+        $debug = toBoolean($params['debug']);
         $autorun = toBoolean($params['run']);
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -106,7 +109,7 @@ class Process
 
         // STEP 3: run the process and return the process info
         if ($autorun === true)
-            $process->run($background);
+            $process->run($background, $debug);
 
         return $process;
     }
