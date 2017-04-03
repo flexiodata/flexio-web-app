@@ -2,9 +2,7 @@
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
     <div class="flex-fill flex flex-column bg-white mr3-l css-white-box-l">
-      <div
-        class="f5 pa3 mid-gray relative ttu tc fw6"
-      >
+      <div class="f5 pa2 pa3-l relative ttu tc fw6 css-pipe-transfer-column-header">
         <div v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
           <div v-else>Input</div>
@@ -30,13 +28,13 @@
         <div v-else>Choose Input</div>
       </div>
       <pipe-transfer-input-list
-        class="flex-fill bg-white ph3 pb3 overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l overflow-y-auto"
         :tasks="input_tasks"
         @input-delete="deleteInput"
         v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
-        class="flex-fill bg-white ph3 pb3 overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         @choose-input="addInput"
@@ -45,7 +43,7 @@
     </div>
 
     <div class="flex-fill flex flex-column bg-white mr3-l css-white-box-l">
-      <div class="f5 pa3 mid-gray relative ttu tc fw6">
+      <div class="f5 pa2 pa3-l relative ttu tc fw6 css-pipe-transfer-column-header">
         <div v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
@@ -71,13 +69,13 @@
         <div v-else>Choose Output</div>
       </div>
       <pipe-transfer-output-list
-        class="flex-fill bg-white ph3 pb3 overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l overflow-y-auto"
         :tasks="output_tasks"
         @output-delete="deleteOutput"
         v-if="has_output && !show_output_chooser"
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
-        class="flex-fill bg-white ph3 pb3 overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_output_chooser = false"
         @choose-output="addOutput"
@@ -86,7 +84,7 @@
     </div>
 
     <div class="flex flex-column mr4-l css-pipe-transfer-column-summary">
-      <div class="f5 pa2 pl0-l pt0-l pb2-l ml3-l relative ttu fw6 css-pipe-transfer-column-summary-header">
+      <div class="f5 pa2 pl0-l pt0-l pb2-l ml3-l relative ttu tc tl-l fw6 bb b--black-10 css-pipe-transfer-column-header">
         <div>Summary</div>
       </div>
       <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto" v-if="has_tasks">
@@ -239,7 +237,7 @@
 <style lang="less">
   @import "../stylesheets/variables.less";
 
-  .css-pipe-transfer-column-summary-header {
+  .css-pipe-transfer-column-header {
     background-color: @blue;
     color: #fff;
   }
@@ -255,8 +253,7 @@
       background-color: transparent;
     }
 
-    .css-pipe-transfer-column-summary-header {
-      border-bottom: 1px solid rgba(0,0,0,0.1);
+    .css-pipe-transfer-column-header {
       background-color: transparent;
       color: #555; /* mid-gray */
     }
