@@ -59,8 +59,17 @@
       </div>
       <div class="tl" v-else-if="is_stdout">
         <div class="lh-copy mid-gray f6 mb3 i">Output files from the command line.</div>
-        <div class="pv1 ph2 bg-black-05">
-          <code class="f6">flexio pipes run {{pipe_identifier}} > output.txt</code>
+        <div class="flex flex-row items-stretch">
+          <div class="flex-fill pa2 bg-black-10 br2 br--left">
+            <code class="f6" :id="code_id">{{pipe_cmd_line_example}}</code>
+          </div>
+          <btn
+            btn-md
+            btn-primary
+            class="br2 br--right hint--top-left clipboardjs"
+            aria-label="Copy to Clipboard"
+            :data-clipboard-target="'#'+code_id"
+          ><span class="ttu b">Copy</span></btn>
         </div>
       </div>
       <div class="tl" v-else-if="is_sftp">
@@ -110,6 +119,7 @@
     inject: ['pipeEid'],
     data() {
       return {
+        code_id: _.uniqueId('code-'),
         show_output_chooser_modal: false
       }
     },
@@ -138,6 +148,9 @@
       pipe_identifier() {
         var ename = _.get(this.pipe, 'ename', '')
         return ename.length > 0 ? ename : _.get(this.pipe, 'eid', '')
+      },
+      pipe_cmd_line_example() {
+        return 'flexio pipes run ' + this.pipe_identifier + ' > output.txt'
       },
       connection() {
         var connection_eid = _.get(this.task, 'params.connection', '')
