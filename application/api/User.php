@@ -53,7 +53,7 @@ class User
                 'create_sample_project' => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'require_verification'  => array('type' => 'boolean', 'required' => false, 'default' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // required fields
         $user_name = $params['user_name'];
@@ -62,7 +62,7 @@ class User
 
         // make sure the user_name is valid syntactically; note: don't check for existence here
         if (!\Flexio\Base\Identifier::isValid($user_name))
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER, _('This username is invalid.  Please try another.'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('This username is invalid.  Please try another.'));
 
         // configuration fields we don't want to pass on
         $send_email = $params['send_email'];
@@ -91,7 +91,7 @@ class User
             // create the user
             $user = \Flexio\Object\User::create($new_user_info);
             if ($user === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED, _('Unable to create the user.'));
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, _('Unable to create the user.'));
 
             // set the owner and creator
             $user_eid = $user->getEid();
@@ -118,7 +118,7 @@ class User
 
         // POSSIBILITY 2: the user already already exists; fail if the user status is anything besides pending
         if ($user->getStatus() != \Model::STATUS_PENDING)
-            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED, _('This email address is already taken.  Please try another.'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, _('This email address is already taken.  Please try another.'));
 
 
         // POSSIBILITY 3: user already exists and has the correct verification code;
@@ -143,7 +143,7 @@ class User
 
             $result = $user->set($new_user_info);
             if ($result === false)
-                $request->getValidator()->fail(\Flexio\Base\Error::WRITE_FAILED, _('Operation failed'));
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Operation failed'));
 
             // we're done; other parts of the account will have already been created
             return $user->get();
@@ -165,7 +165,7 @@ class User
 
         $result = $user->set($new_user_info);
         if ($result === false)
-            $request->getValidator()->fail(\Flexio\Base\Error::WRITE_FAILED, _('Operation failed'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Operation failed'));
 
         // if appropriate, send an email
         if ($send_email === true)
@@ -204,7 +204,7 @@ class User
                 'timezone'          => array('type' => 'string', 'required' => false),
                 'config'            => array('type' => 'object', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // note: password parameter is allowed in this call; it's used in some
         // type of workflow (such as when sharing with a user that doesn't exist)
@@ -215,7 +215,7 @@ class User
         // load the user
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights, but only if the object isn't pending;
         // TODO: proper approach is to always check rights; right now, \Flexio\Api\User::set()
@@ -227,7 +227,7 @@ class User
         if ($user->getStatus() !== \Model::STATUS_PENDING)
         {
             if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
         $user->set($params);
@@ -239,7 +239,7 @@ class User
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -247,11 +247,11 @@ class User
         // load the object
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $user->get();
     }
@@ -264,11 +264,11 @@ class User
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $projects = $user->getProjects();
         $pipes = $user->getPipes();
@@ -309,7 +309,7 @@ class User
                 'old_password'      => array('type' => 'string', 'required' => true),
                 'new_password'      => array('type' => 'string', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -319,14 +319,14 @@ class User
         // load the object
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($user->checkPassword($old_password) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER, _('The current password entered was incorrect'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The current password entered was incorrect'));
 
         $new_params = array(
             'password' => $new_password
@@ -341,23 +341,23 @@ class User
                 'email'     => array('type' => 'string', 'required' => true),
                 'verify_code'      => array('type' => 'string', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $email = $params['email'];
         $code = $params['verify_code'];
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
 
         if ($user->getStatus() != \Model::STATUS_PENDING)
-            return $request->getValidator()->fail(\Flexio\Base\Error::WRITE_FAILED, _('This user is already activated'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('This user is already activated'));
 
         if ($this->getVerifyCode() != $code)
-            return $request->getValidator()->fail(\Flexio\Base\Error::WRITE_FAILED, _('The activation credentials do not match'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('The activation credentials do not match'));
 
         if ($user->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not activate the user at this time'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not activate the user at this time'));
 
         return true;
     }
@@ -367,20 +367,20 @@ class User
         if (($params = $request->getValidator()->check($params, array(
                 'email'     => array('type' => 'string', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $email = $params['email'];
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
 
         // TODO: if the verify code is a set, but blank, should we regenerate
         // the verification code?
 
         $verify_code = $this->getVerifyCode();
         if (!isset($verify_code))
-            return $request->getValidator()->fail(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing verification code'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing verification code'));
 
         $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
         $email_params = array('email' => $email, 'verify_code' => $verify_code);
@@ -395,17 +395,17 @@ class User
         if (($params = $request->getValidator()->check($params, array(
                 'email'     => array('type' => 'string', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $email = $params['email'];
         $verify_code = \Flexio\Base\Util::generateHandle();
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
 
         if ($user->set(array('verify_code' => $verify_code)) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not send password reset email at this time'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not send password reset email at this time'));
 
         $message_type = \Flexio\Object\Message::TYPE_EMAIL_RESET_PASSWORD;
         $email_params = array('email' => $email, 'verify_code' => $verify_code);
@@ -422,7 +422,7 @@ class User
                 'password'    => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $email = $params['email'];
         $password = $params['password'];
@@ -430,13 +430,13 @@ class User
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
 
         if ($user->getVerifyCode() !== $code)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER, _('The credentials do not match'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The credentials do not match'));
 
         if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::WRITE_FAILED, _('Could not update user at this time'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not update user at this time'));
 
         return true;
     }
@@ -471,7 +471,7 @@ class User
 
         if (($params = $request->getValidator()->check($params, array(
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_eid = $request->getRequestingUser();
         $project = self::createSampleProject($user_eid, 'Sample Project');

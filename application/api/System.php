@@ -24,7 +24,7 @@ class System
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // try to log in to the system
         $error_message = _('Authentication failed'); // default error message
@@ -33,7 +33,7 @@ class System
         if (!$result)
         {
             sleep(1);
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER, $error_message);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, $error_message);
         }
 
         return true;
@@ -44,7 +44,7 @@ class System
         // validation placeholder; no parameters are used
         if (($params = $request->getValidator()->check($params, array(
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         \Flexio\System\System::clearLoginIdentity();
         @session_destroy();
@@ -73,10 +73,10 @@ class System
 
         // make sure params is an array
         if (!is_array($params))
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         if (count($params) === 0 || count($params) > 10)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // make sure each of the items in the array has the required params
         foreach ($params as $p)
@@ -87,7 +87,7 @@ class System
                     'value' => array('type' => 'string', 'required' => true),
                     'type' => array('type' => 'string', 'required' => true)
                 ))) === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
         // build up the return object of results
@@ -99,7 +99,7 @@ class System
             // if the validation of an object fails, there's some kind of an invalid parameter
             // (e.g. type isn't specified)
             if ($r === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $result[] = $r;
         }

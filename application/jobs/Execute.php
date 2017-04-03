@@ -245,9 +245,8 @@ class Execute extends \Flexio\Jobs\Base
                         if ($content_type == \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
                         {
                             if (!isset($structure))
-                            {
-                                return $this->fail(\Flexio\Base\Error::INVALID_SYNTAX, $err, __FILE__, __LINE__);
-                            }
+                                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
                             $outstream->setMimeType($content_type);
                             $outstream->setStructure($structure);
                             $is_output_table = true;
@@ -260,8 +259,6 @@ class Execute extends \Flexio\Jobs\Base
 
                         $first_chunk = false;
                         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-                        if ($streamwriter === false)
-                            return $this->fail(\Flexio\Base\Error::CREATE_FAILED, _(''), __FILE__, __LINE__);
                     }
 
                     // var_dump($chunk);
@@ -285,7 +282,7 @@ class Execute extends \Flexio\Jobs\Base
                                 $chunk = substr($chunk, $offset);
                                 break;
                             }
-                            
+
                             $line = substr($chunk, $offset, $eolpos - $offset);
 
                             $offset = $eolpos+1;
@@ -299,7 +296,7 @@ class Execute extends \Flexio\Jobs\Base
                                 $row = \Flexio\Jobs\Convert::conformValuesToStructure($structure, $row);
                                 $streamwriter->write($row);
                             }
-                     
+
                         }
                     }
                      else

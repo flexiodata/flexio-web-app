@@ -28,7 +28,7 @@ class Stream
                 'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
                 'file_modified' => array('type' => 'string',  'required' => false)  // TODO: date type?
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // create the stream
         $stream = \Flexio\Object\Stream::create($params); // the \Flexio\Object\Stream::create() creates a default connection and path
@@ -49,7 +49,7 @@ class Stream
                 'file_modified' => array('type' => 'string',  'required' => false)  // TODO: date type?
 
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $stream_identifier = $params['eid'];
 
@@ -65,7 +65,7 @@ class Stream
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $stream_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -73,11 +73,11 @@ class Stream
         // check the rights on the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //    return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $stream->get();
     }
@@ -92,7 +92,7 @@ class Stream
                 'metadata' => array('type' => 'string', 'required' => false),
                 'handle'   => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -105,15 +105,15 @@ class Stream
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+           throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //    return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream_info = $stream->get();
         if ($stream_info === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
         $content = $stream->content($start, $limit, $columns, $metadata, $handle);
@@ -145,14 +145,14 @@ class Stream
                 'file_modified' => array('type' => 'string',  'required' => false), // TODO: date type?
                 'filename_hint' => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $stream_identifier = $params['eid'];
 
         // get the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         self::handleStreamUpload($params, $stream);
 
@@ -309,7 +309,7 @@ class Stream
                 'metadata' => array('type' => 'string', 'required' => false),
                 'handle'   => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -322,15 +322,15 @@ class Stream
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //    return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream_info = $stream->get();
         if ($stream_info === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
         $http_header_mime_type = ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE ? \Flexio\Base\ContentType::MIME_TYPE_CSV : $mime_type);

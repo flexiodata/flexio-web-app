@@ -35,7 +35,7 @@ class Connection
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = isset($params['parent_eid']) ? $params['parent_eid'] : false;
         $requesting_user_eid = $request->getRequestingUser();
@@ -46,16 +46,16 @@ class Connection
         {
             $project = \Flexio\Object\Project::load($project_identifier);
             if ($project === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
         // create the object; associate it with the user who created it
         $connection = \Flexio\Object\Connection::create($params);
         if ($connection === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // set the owner and creator
         $connection->setOwner($requesting_user_eid);
@@ -75,7 +75,7 @@ class Connection
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -83,11 +83,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection->delete();
         return true;
@@ -110,7 +110,7 @@ class Connection
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -118,11 +118,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the properties
         $connection->set($params);
@@ -137,7 +137,7 @@ class Connection
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -145,11 +145,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the connection properties
         $properties = self::filterProperties($connection->get());
@@ -161,7 +161,7 @@ class Connection
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -169,11 +169,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the comments
         $result = array();
@@ -192,7 +192,7 @@ class Connection
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'q' => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -200,25 +200,25 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the connection items
         $service = $connection->getService();
         if (!$service)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_SERVICE);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         if (!$service->isOk())
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_SERVICE);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         $path = $params['q'] ?? '';
         $result = $service->listObjects($path);
 
         if (!is_array($result))
-            return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         return $result;
     }
@@ -228,7 +228,7 @@ class Connection
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -236,13 +236,13 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // try to connect
         $connection->connect();
@@ -255,7 +255,7 @@ class Connection
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -263,11 +263,11 @@ class Connection
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // disconnect
         $connection->disconnect();

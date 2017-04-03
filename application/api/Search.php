@@ -24,7 +24,7 @@ class Search
                 'owner'    => array('type' => 'string', 'required' => false),
                 'name'     => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $requesting_user_eid = $request->getRequestingUser();
 
