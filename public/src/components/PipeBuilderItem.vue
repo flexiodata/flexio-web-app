@@ -17,7 +17,7 @@
         style="top: 46px; bottom: -5px; left: 19px"
         v-show="!show_progress"
       ></div>
-      <div class="flex-fill relative pa3 pt2">
+      <div class="flex-fill relative pt2 pb3">
         <inline-edit-text
           class="flex-fill f5 lh-title"
           edit-button-tooltip-cls="hint--top-left"
