@@ -29,29 +29,29 @@ class Fail extends \Flexio\Jobs\Base
             default:
                 throw new \Error;
 
-            case NONE:
-            case UNDEFINED:
-            case GENERAL:
-            case UNIMPLEMENTED:
-            case NO_DATABASE:
-            case NO_MODEL:
-            case NO_SERVICE:
-            case MISSING_PARAMETER:
-            case INVALID_PARAMETER:
-            case INVALID_SYNTAX:
-            case NO_OBJECT:
-            case CONNECTION_FAILED:
-            case CREATE_FAILED:
-            case DELETE_FAILED:
-            case WRITE_FAILED:
-            case READ_FAILED:
-            case UNAUTHORIZED:
-            case INSUFFICIENT_RIGHTS:
-            case SIZE_LIMIT_EXCEEDED:
-            case INVALID_METHOD:
-            case INVALID_VERSION:
-            case INVALID_REQUEST:
-                throw new \Flexio\Base\Exception($error, $message);
+            case \Flexio\Base\Error::NONE:
+            case \Flexio\Base\Error::UNDEFINED:
+            case \Flexio\Base\Error::GENERAL:
+            case \Flexio\Base\Error::UNIMPLEMENTED:
+            case \Flexio\Base\Error::NO_DATABASE:
+            case \Flexio\Base\Error::NO_MODEL:
+            case \Flexio\Base\Error::NO_SERVICE:
+            case \Flexio\Base\Error::MISSING_PARAMETER:
+            case \Flexio\Base\Error::INVALID_PARAMETER:
+            case \Flexio\Base\Error::INVALID_SYNTAX:
+            case \Flexio\Base\Error::NO_OBJECT:
+            case \Flexio\Base\Error::CONNECTION_FAILED:
+            case \Flexio\Base\Error::CREATE_FAILED:
+            case \Flexio\Base\Error::DELETE_FAILED:
+            case \Flexio\Base\Error::WRITE_FAILED:
+            case \Flexio\Base\Error::READ_FAILED:
+            case \Flexio\Base\Error::UNAUTHORIZED:
+            case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:
+            case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
+            case \Flexio\Base\Error::INVALID_METHOD:
+            case \Flexio\Base\Error::INVALID_VERSION:
+            case \Flexio\Base\Error::INVALID_REQUEST:
+                throw new \Flexio\Base\Exception($code, $message);
         }
     }
 
