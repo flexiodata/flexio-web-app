@@ -37,7 +37,7 @@
         class="pv2a ph3 hint--bottom-left br2 br--right clipboardjs"
         aria-label="Copy to Clipboard"
         :data-clipboard-target="'#'+input_id"
-      ><span class="ttu">Copy</span></btn>
+      ><span class="ttu b">Copy</span></btn>
     </div>
     <div class="fw6 black-60 mt3 mb1">Preview:</div>
     <div v-html="embed"></div>
