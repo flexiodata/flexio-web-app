@@ -44,14 +44,14 @@
       </div>
       <div class="tl" v-else-if="is_amazon_s3">
         <div class="lh-copy mid-gray f6 mb3 i">
-          <span v-if="connection.database.length == 0">There's an error in the configuration of this connection. A bucket must be specified in order to output files to Amazon S3.</span>
-          <span v-else>Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> bucket.</span>
+          <span v-if="database.length == 0">There's an error in the configuration of this connection. A bucket must be specified in order to output files to Amazon S3.</span>
+          <span v-else>Files will be output to the <span class="b black fs-normal">{{database}}</span> bucket.</span>
         </div>
       </div>
       <div class="tl" v-else-if="is_mysql || is_postgres">
         <div class="lh-copy mid-gray f6 mb3 i">
-          <span v-if="connection.host.length == 0 || connection.database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files to {{service_name}}.</span>
-          <span v-else>Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> database on <span class="b black fs-normal">{{connection.host}}</span>.</span>
+          <span v-if="host.length == 0 || database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files to {{service_name}}.</span>
+          <span v-else>Files will be output to the <span class="b black fs-normal">{{database}}</span> database on <span class="b black fs-normal">{{host}}</span>.</span>
         </div>
       </div>
       <div class="tl" v-else-if="is_google_sheets">
@@ -65,8 +65,8 @@
       </div>
       <div class="tl" v-else-if="is_sftp">
         <div class="lh-copy mid-gray f6 mb3 i">
-          <span v-if="connection.host.length == 0 || connection.database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files via {{service_name}}.</span>
-          <span v-else>Files will be output to the <span class="b black fs-normal">{{connection.database}}</span> database on <span class="b black fs-normal">{{connection.host}}</span>.</span>
+          <span v-if="host.length == 0 || database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files via {{service_name}}.</span>
+          <span v-else>Files will be output to the <span class="b black fs-normal">{{database}}</span> database on <span class="b black fs-normal">{{host}}</span>.</span>
         </div>
       </div>
     </div>
@@ -137,6 +137,12 @@
         return _.get(this.$store, 'state.objects.'+connection_eid, {
           connection_type: this.ctype
         })
+      },
+      database() {
+        return _.get(this.connection, 'database', '')
+      },
+      host() {
+        return _.get(this.connection, 'host', '')
       },
       title() {
         var name = _.get(this.connection, 'name', '')
