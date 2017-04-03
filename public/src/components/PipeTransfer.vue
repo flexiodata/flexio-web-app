@@ -1,9 +1,9 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
-    <div class="flex-fill flex flex-column bg-white mr3-l css-white-box">
+    <div class="flex-fill flex flex-column bg-white mr3-l css-white-box-l">
       <div
-        class="f5 pa2 white bg-blue relative ttu fw6"
+        class="f5 pa3 mid-gray relative ttu tc fw6"
       >
         <div v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
@@ -44,8 +44,8 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column bg-white mr3-l css-white-box">
-      <div class="f5 pa2 white bg-blue relative ttu fw6">
+    <div class="flex-fill flex flex-column bg-white mr3-l css-white-box-l">
+      <div class="f5 pa3 mid-gray relative ttu tc fw6">
         <div v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
