@@ -1,7 +1,7 @@
 <template>
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
-    <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
+    <div class="flex-fill flex flex-column bg-white mr3-l css-white-box">
       <div
         class="f5 pa2 white bg-blue relative ttu fw6"
       >
@@ -44,7 +44,7 @@
       ></pipe-transfer-input-chooser>
     </div>
 
-    <div class="flex-fill flex flex-column bg-white mb4-l mr3-l css-white-box">
+    <div class="flex-fill flex flex-column bg-white mr3-l css-white-box">
       <div class="f5 pa2 white bg-blue relative ttu fw6">
         <div v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
@@ -85,7 +85,7 @@
       ></pipe-transfer-output-chooser>
     </div>
 
-    <div class="flex flex-column mb4-l mr4-l css-pipe-transfer-column-summary">
+    <div class="flex flex-column mr4-l css-pipe-transfer-column-summary">
       <div class="f5 pa2 pl0-l pt0-l pb1-l ml3-l relative ttu fw6 css-pipe-transfer-column-summary-header">
         <div>Summary</div>
       </div>

@@ -1,11 +1,10 @@
 <template>
   <div class="flex flex-row items-start min-w5">
-    <div class="flex-fill">
-      <div class="flex flex-column flex-row-l items-center-l mb1">
+    <div class="flex-fill mb1 mr2">
+      <div class="flex flex-column flex-row-l items-center-l mb1 mb0-l">
         <inline-edit-text
-          class="dib f3 lh-title v-mid dark-gray mb1 mb0-ns mr1-ns"
+          class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr2-ns"
           input-key="name"
-
           :val="pipe_name"
           @save="editPipeSingleton">
         </inline-edit-text>
@@ -107,7 +106,7 @@
       },
 
       run_button_tooltip() {
-        return this.is_run_allowed ? '' : 'Pipes must have an input to be run'
+        return this.is_run_allowed ? '' : 'Pipes must have an input or execute step in order to be run'
       }
     },
     methods: {
