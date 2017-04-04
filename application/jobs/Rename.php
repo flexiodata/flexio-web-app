@@ -29,62 +29,94 @@ class Rename extends \Flexio\Jobs\Base
 
     private function createOutput(\Flexio\Object\Stream $instream)
     {
-        $this->createOutputWithRenamedColumns($instream);
-    }
-
-    private function createOutputWithRenamedStreams(\Flexio\Object\Stream $instream)
-    {
-        // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        // copy everything, including the original path; any renames will be
+        // handled by the file/column rename handler; if there aren't any
+        // operations, the stream will simply be copied to the output
+        $outstream = $instream->copy();
         $this->getOutput()->push($outstream);
 
-        // properties
         $job_definition = $this->getProperties();
+        $mime_type = $outstream->getMimeType();
 
-        $append_timestamp = false;
-        if (isset($job_definition['params']['append_timestamp']))
-            $append_timestamp = toBoolean($job_definition['params']['append_timestamp']);
+        // rename the output stream if appropriate
+        if (isset($job_definition['params']['files']))
+            $this->renameStream($outstream);
 
-        $instream_info = $instream->get();
-        $outstream_info = $instream_info;
-
-        $filename = $outstream_info['name'] ?? false;
-        if ($filename !== false && $append_timestamp === true)
+        // if we have a table, rename any columns if specified; note: this may
+        // works in conjunction with renaming the file, so a file that's renamed
+        // may also have columns renamed
+        if (isset($job_definition['params']['columns']))
         {
-            // TODO: generalize wildcard replacement; for now, just add a datestamp
-            $timestamp = \Flexio\System\System::getTimestamp();
-            $file_timestamp = \Flexio\Base\Util::formatDate($timestamp);
-            $file_timestamp = preg_replace('/[^A-Za-z0-9]/', '', $file_timestamp);
+            switch ($mime_type)
+            {
+                // don't do anything
+                default:
+                    break;
 
-            // rename the file if we can get the filename parts
-            $filename_base = \Flexio\Base\Util::getFilename($filename);
-            $filename_ext = \Flexio\Base\Util::getFileExtension($filename);
-
-            $new_filename = (strlen($filename_base) > 0 ? $filename_base . "_" : '') . $file_timestamp . (strlen($filename_ext) > 0 ? ".$filename_ext" : '');
-            $outstream_info['name'] = $new_filename;
+                // table input
+                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                    $this->renameColumns($outstream);
+                    break;
+            }
         }
-
-        $outstream->set($outstream_info);
     }
 
-    private function createOutputWithRenamedColumns(\Flexio\Object\Stream $instream)
+    private function renameStream(\Flexio\Object\Stream $outstream)
     {
-        // input/output
-        $outstream = $instream->copy(); // copy everything, including the original path (since we're only changing field names)
-        $this->getOutput()->push($outstream);
+        // get the files to rename
+        $job_definition = $this->getProperties();
+        $params = $job_definition['params'];
+        $job_file_renames = $params['files'];
+        $stream_name = $outstream->getName();
 
-        // properties
-        $input_structure = $instream->getStructure();
-        $input_columns = $input_structure->enum();
+        foreach ($job_file_renames as $f)
+        {
+            // if the name of the outstream doesn't match the file pattern, move on
+            $file_match_pattern = $f['name'] ?? false;
+            $file_new_name_expr = $f['new_name'] ?? false;
 
+            if (!is_string($file_match_pattern) || !is_string($file_new_name_expr))
+                continue;
+
+            if (\Flexio\Base\Util::matchPath($stream_name, $file_match_pattern, true) === false) // true: case-sensitive match
+                continue;
+
+            // the pattern matches; get the rename expression, evaluate it and rename the file
+
+            // evaluate the expression with the environment variables
+            $variables = array();
+            $variables['stream.name'] = $outstream->getName();
+            $variables['stream.name.base'] = \Flexio\Base\Util::getFilename($outstream->getName());
+            $variables['stream.name.ext'] = \Flexio\Base\Util::getFileExtension($outstream->getName());
+            $variables['stream.path'] = $outstream->getPath();
+            $variables['stream.content.type'] = $outstream->getMimeType();
+
+            $process = $this->getProcess();
+            if ($process !== false)
+                $variables = array_merge($process->getEnvironmentParams(), $variables);
+
+            $retval = '';
+            if (self::evaluateExpr($file_new_name_expr, $variables, $retval) === false)
+                $retval = $file_new_name_expr; // unable to evaluate the expression
+
+            $new_name = $retval;
+            $outstream->setName($new_name);
+            break; // rename based on the first valid match
+        }
+    }
+
+    private function renameColumns(\Flexio\Object\Stream $outstream)
+    {
         // get the columns to rename
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
-        if (!isset($params['columns']) || !is_array($params['columns']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+        $job_columns = $params['params']['columns'];
+
+        // get the original names
+        $original_structure = $outstream->getStructure();
+        $original_columns = $original_structure->enum();
 
         $indexed = [];
-        $job_columns = $params['columns'];
         foreach ($job_columns as $column)
         {
             if (!isset($column['name']) || !isset($column['new_name']))
@@ -94,19 +126,31 @@ class Rename extends \Flexio\Jobs\Base
         }
 
         // create a new structure with the renamed columns
-        $output_columns = [];
-        foreach ($input_columns as $c)
+        $renamed_columns = [];
+        foreach ($original_columns as $c)
         {
             $name = strtolower($c['name']);
             if (isset($indexed[$name]))
                 $c['name'] = $indexed[$name];
 
-            $output_columns[] = $c;
+            $renamed_columns[] = $c;
         }
 
         // update the structure
-        $outstream->setStructure($output_columns);
+        $outstream->setStructure($renamed_columns);
     }
+
+    private function evaluateExpr(string $expr, array $variables, &$retval) : bool
+    {
+        $structure = array();
+        foreach ($variables as $name => $value)
+        {
+            $structure[] = array("name" => $name, "type" => "text");
+        }
+
+        return \Flexio\Base\ExprEvaluate::evaluate($expr, $variables, $structure, $retval);
+    }
+
 
     // job definition info
     const MIME_TYPE = 'flexio.rename';
@@ -114,6 +158,8 @@ class Rename extends \Flexio\Jobs\Base
     {
         "type": "flexio.rename",
         "params": {
+            "columns": [],
+            "files": []
         }
     }
 EOD;
