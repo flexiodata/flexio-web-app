@@ -104,7 +104,7 @@
         </div>
       </div>
       <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto tl tc-m" v-else>
-        <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
+        <div class="lh-copy mid-gray f6 mb3 i">There are no steps in this pipe.</div>
         <btn
           btn-md
           btn-primary
