@@ -156,6 +156,28 @@ class Email
         return $email;
     }
 
+    // splits an address list like:  [  "First Last <first.last@email.com>" ] into
+    //                               [ { "display" => "First Last", "email" => "first.last@email.com" } ]
+
+    public static function splitAddressList(array $arr)
+    {
+        $ret = [];
+        foreach ($arr as $a)
+            $ret[] = self::splitAddress($a);
+        return $ret;
+    }
+
+    public static function splitAddress(string $str)
+    {
+        $pos = strpos($str, '<');
+        if ($pos === false)
+            return array("display" => $str, "email" => $str);
+        
+        $ret = [];
+        $ret['display'] = trim(substr($str, 0, $pos), " \t\n\r\0\x0B<>'\"");
+        $ret['email'] = trim(substr($str, $pos+1), " \t\n\r\0\x0B<>'\"");
+        return $ret;
+    }
 
     public function send()
     {
