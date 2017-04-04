@@ -2,7 +2,7 @@
   <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
     <div class="flex-fill flex flex-column bg-white mr3-l br2-l ba-l b--white-box">
-      <div class="f5 pa2 pa3-l relative ttu tc fw6 css-pipe-transfer-column-header">
+      <div class="f5 pa2 pa3-l relative ttu tc tl-l fw6 css-pipe-transfer-column-header">
         <div v-if="has_input">
           <div v-if="show_input_chooser">Add Input</div>
           <div v-else>Input</div>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="flex-fill flex flex-column bg-white mr3-l br2-l ba-l b--white-box">
-      <div class="f5 pa2 pa3-l relative ttu tc fw6 css-pipe-transfer-column-header">
+      <div class="f5 pa2 pa3-l relative ttu tc tl-l fw6 css-pipe-transfer-column-header">
         <div v-if="has_output">
           <div v-if="show_output_chooser">Add Output</div>
           <div v-else>Output</div>
@@ -85,7 +85,7 @@
 
     <div class="flex flex-column mr4-l css-pipe-transfer-column-summary">
       <div class="f5 pa2 pl0-l pt0-l pb2-l ml3-l relative ttu tc tl-l fw6 bb b--black-10 css-pipe-transfer-column-header">
-        <div>Summary</div>
+        <div>Pipe Steps</div>
       </div>
       <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto" v-if="has_tasks">
         <pipe-transfer-transform-list
@@ -247,15 +247,15 @@
   }
 
   @media @breakpoint-large {
+    .css-pipe-transfer-column-header {
+      background-color: transparent;
+      color: #555; /* .mid-gray */
+    }
+
     .css-pipe-transfer-column-summary {
       width: 26%;
       max-width: 314px;
       background-color: transparent;
-    }
-
-    .css-pipe-transfer-column-header {
-      background-color: transparent;
-      color: #555; /* mid-gray */
     }
   }
 </style>
