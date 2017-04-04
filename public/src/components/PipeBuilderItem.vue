@@ -25,7 +25,7 @@
         </div>
       </div>
       <div
-        class="flex-fill relative pa3 pt2 bg-white bl br b--black-10"
+        class="flex-fill relative pa3 pt2 bg-white bl br b--white-box"
         :class="content_cls"
       >
         <inline-edit-text
