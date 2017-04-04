@@ -26,7 +26,7 @@ require_once 'humannameparser_init.php';
 
 class User
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'user_name'             => array('type' => 'string',  'required' => true),
@@ -180,7 +180,7 @@ class User
         return $user->get();
     }
 
-    public static function set($params, $request)
+    public static function set(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'               => array('type' => 'identifier', 'required' => true),
@@ -234,7 +234,7 @@ class User
         return $user->get();
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -256,7 +256,7 @@ class User
         return $user->get();
     }
 
-    public static function statistics($params, $request)
+    public static function statistics(array $params, \Flexio\Api\Request $request) : array
     {
         // returns useage statistics for the current user
         $requesting_user_eid = $request->getRequestingUser();
@@ -283,7 +283,7 @@ class User
         return $properties;
     }
 
-    public static function about($params, $request)
+    public static function about(array $params, \Flexio\Api\Request $request) : array
     {
         // returns the information for the currently logged-in user or an empty eid
         // if the user isn't logged in
@@ -302,7 +302,7 @@ class User
         return $user->get();
     }
 
-    public static function changepassword($params, $request)
+    public static function changepassword(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'               => array('type' => 'identifier', 'required' => true),
@@ -335,7 +335,7 @@ class User
         return $user->get();
     }
 
-    public static function activate($params, $request)
+    public static function activate(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'email'     => array('type' => 'string', 'required' => true),
@@ -362,7 +362,7 @@ class User
         return true;
     }
 
-    public static function resendverify($params, $request)
+    public static function resendverify(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'email'     => array('type' => 'string', 'required' => true)
@@ -390,7 +390,7 @@ class User
         return true;
     }
 
-    public static function requestpasswordreset($params, $request)
+    public static function requestpasswordreset(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'email'     => array('type' => 'string', 'required' => true)
@@ -415,7 +415,7 @@ class User
         return true;
     }
 
-    public static function resetpassword($params, $request)
+    public static function resetpassword(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
@@ -441,7 +441,7 @@ class User
         return true;
     }
 
-    public static function parseFullname($full_name, &$first_name, &$last_name)
+    public static function parseFullname(string $full_name, string &$first_name, string &$last_name)
     {
         // if a full name is specified, try to parse it
         $first_name = '';
@@ -462,7 +462,7 @@ class User
         */
     }
 
-    public static function createSample($params, $request)
+    public static function createSample(array $params, \Flexio\Api\Request $request) : bool
     {
         // note: this is an API endpoint function for debugging; internally,
         // createSampleProject() is used when a user is created so that the owner
@@ -478,38 +478,38 @@ class User
         return true;
     }
 
-    private static function createSampleProject($user_eid, $name = null, $description = null)
+    private static function createSampleProject(string $user_eid, string $name = null, string $description = null) : bool
     {
-        // TODO: convert over to using API functions?
-
         $project_params['name'] = $name ?? _('Sample Project');
         $project_params['description'] = $description ?? _('Sample project to demonstrate functionality.');
 
-        $project = \Flexio\Object\Project::create($project_params);
-        if ($project === false)
-            return false;
+        // create sample pipes; ensure user creation even if sample fails
+        try
+        {
+            $project = \Flexio\Object\Project::create($project_params);
+            $project->setOwner($user_eid);
+            $project->setCreatedBy($user_eid);
 
-        // TODO: no need to check owner since creation of project
-        // implies ability to set rights; correct?
-
-        // set the owner
-        $project->setOwner($user_eid);
-        $project->setCreatedBy($user_eid);
-
-        // create sample pipes
-        $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
-        self::createSamplePipe($user_eid, $project->getEid(), $demo_dir .'pipe_commit.json');
-        self::createSamplePipe($user_eid, $project->getEid(), $demo_dir .'pipe_contact.json');
+            $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
+            $pipe1_eid = self::createSamplePipe($user_eid, $project->getEid(), $demo_dir .'pipe_commit.json');
+            $pipe2_eid = self::createSamplePipe($user_eid, $project->getEid(), $demo_dir .'pipe_contact.json');
+        }
+        catch (\Exception $e)
+        {
+        }
+        catch (\Error $e)
+        {
+        }
 
         return true;
     }
 
-    private static function createSamplePipe($user_eid, $project_eid, $file_name)
+    private static function createSamplePipe(string $user_eid, string $project_eid, string $file_name) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
         $f = @fopen($file_name, 'rb');
         if (!$f)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $buf = '';
         while (!feof($f))
@@ -521,7 +521,7 @@ class User
 
         $pipe_definition = @json_decode($buf,true);
         if ($pipe_definition === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // STEP 2: create a pipe container and add it to the project
         $user = \Flexio\Object\User::load($user_eid);
@@ -567,10 +567,6 @@ class User
             $call_params['task'] = $pipe_definition['task'];
 
         $pipe = \Flexio\Object\Pipe::create($call_params);
-        if ($pipe === false)
-            return false;
-
-        // set the owner
         $pipe->setOwner($user_eid);
         $pipe->setCreatedBy($user_eid);
 

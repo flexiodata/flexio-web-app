@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Token
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -49,7 +49,7 @@ class Token
         return $token->get();
     }
 
-    public static function delete($params, $request)
+    public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -77,7 +77,7 @@ class Token
         return true;
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -105,7 +105,7 @@ class Token
         return $properties;
     }
 
-    public static function listall($params, $request)
+    public static function listall(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
             'eid' => array('type' => 'identifier', 'required' => true)

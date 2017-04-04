@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Pipe
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         $params_original = $params;
         if (($params = $request->getValidator()->check($params, array(
@@ -73,7 +73,7 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function copy($params, $request)
+    public static function copy(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'copy_eid'    => array('type' => 'identifier', 'required' => true),
@@ -127,7 +127,7 @@ class Pipe
         return $new_pipe->get();
     }
 
-    public static function delete($params, $request)
+    public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -150,7 +150,7 @@ class Pipe
         return true;
     }
 
-    public static function set($params, $request)
+    public static function set(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'             => array('type' => 'identifier', 'required' => true),
@@ -181,7 +181,7 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -204,7 +204,7 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function listall($params, $request)
+    public static function listall(array $params, \Flexio\Api\Request $request) : array
     {
         // get the pipes for the requesting user
         $requesting_user_eid = $request->getRequestingUser();
@@ -232,7 +232,7 @@ class Pipe
         return $result;
     }
 
-    public static function comments($params, $request)
+    public static function comments(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -262,7 +262,7 @@ class Pipe
         return $result;
     }
 
-    public static function processes($params, $request)
+    public static function processes(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -297,7 +297,7 @@ class Pipe
         return $result;
     }
 
-    public static function run($params, $request)
+    public static function run(array $params, \Flexio\Api\Request $request) // TODO: add return type
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -456,7 +456,7 @@ class Pipe
         */
     }
 
-    public static function addTaskStep($params, $request)
+    public static function addTaskStep(array $params, \Flexio\Api\Request $request) : array
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -492,7 +492,7 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function deleteTaskStep($params, $request)
+    public static function deleteTaskStep(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'        => array('type' => 'identifier', 'required' => true),
@@ -518,7 +518,7 @@ class Pipe
         return true;
     }
 
-    public static function setTaskStep($params, $request)
+    public static function setTaskStep(array $params, \Flexio\Api\Request $request) : array
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -552,7 +552,7 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function getTaskStep($params, $request)
+    public static function getTaskStep(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'        => array('type' => 'identifier', 'required' => true),

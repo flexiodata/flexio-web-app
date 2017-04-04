@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Connection
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'parent_eid'        => array('type' => 'identifier', 'required' => false),
@@ -70,7 +70,7 @@ class Connection
         return $properties;
     }
 
-    public static function delete($params, $request)
+    public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -93,7 +93,7 @@ class Connection
         return true;
     }
 
-    public static function set($params, $request)
+    public static function set(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'               => array('type' => 'identifier', 'required' => true),
@@ -132,7 +132,7 @@ class Connection
         return $properties;
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -156,7 +156,7 @@ class Connection
         return $properties;
     }
 
-    public static function comments($params, $request)
+    public static function comments(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)

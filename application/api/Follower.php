@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Follower
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request  $request) : array
     {
         // TODO: this function is a bit outdated in the conventions
         // it uses; should be updated to be more consistent with other
@@ -179,7 +179,7 @@ class Follower
         return $result;
     }
 
-    public static function delete($params, $request)
+    public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         // TODO: make unfollow work with multiple users; same as share
 
@@ -217,7 +217,7 @@ class Follower
         return true;
     }
 
-    public static function listall($params, $request)
+    public static function listall(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)

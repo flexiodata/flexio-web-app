@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class System
 {
-    public static function login($params, $request)
+    public static function login(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'username' => array('type' => 'string', 'required' => true),
@@ -39,7 +39,7 @@ class System
         return true;
     }
 
-    public static function logout($params, $request)
+    public static function logout(array $params, \Flexio\Api\Request $request) : bool
     {
         // validation placeholder; no parameters are used
         if (($params = $request->getValidator()->check($params, array(
@@ -52,7 +52,7 @@ class System
         return true;
     }
 
-    public static function validate($params, $request)
+    public static function validate(array $params, \Flexio\Api\Request $request) : array
     {
         // the input for a validation is an array of objects that each
         // have a key, value and type; only 10 items can be validated at a time
@@ -94,14 +94,7 @@ class System
         $result = array();
         foreach ($params as $p)
         {
-            $r = self::validateObject($p['key'], $p['value'], $p['type']);
-
-            // if the validation of an object fails, there's some kind of an invalid parameter
-            // (e.g. type isn't specified)
-            if ($r === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $result[] = $r;
+            $result[] = self::validateObject($p['key'], $p['value'], $p['type']);
         }
 
         // wait 100 milliseconds to prevent large numbers of calls to mine for information
@@ -111,7 +104,7 @@ class System
         return $result;
     }
 
-    public static function validateObject($key, $value, $type)
+    public static function validateObject(string $key, string $value, $type) : array
     {
         $valid = false;
         $message = '';
@@ -119,7 +112,7 @@ class System
         switch ($type)
         {
             default:
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             case 'identifier':
             case 'username':
@@ -209,8 +202,6 @@ class System
                 break;
         }
 
-
-
         // echo back the key and whether or not it's valid (note: don't echo
         // back the value to minimize transport of values like a password)
         $result = array();
@@ -221,15 +212,15 @@ class System
         return $result;
     }
 
-    public static function configuration()
+    public static function configuration() : array
     {
         if (!IS_TESTING())
-            return;
+            return array();
 
         return self::checkServerSettings();
     }
 
-    private static function checkServerSettings()
+    private static function checkServerSettings() : array
     {
         $messages = array();
 
@@ -288,7 +279,7 @@ class System
         return $messages;
     }
 
-    private static function convertToNumber($size_str)
+    private static function convertToNumber(string $size_str) : int
     {
         switch (strtoupper(substr($size_str, -1)))
         {

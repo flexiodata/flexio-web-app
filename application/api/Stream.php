@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Stream
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid_status'    => array('type' => 'string', 'required' => false),
@@ -37,7 +37,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function set($params, $request)
+    public static function set(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'           => array('type' => 'identifier', 'required' => true),
@@ -60,7 +60,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -82,7 +82,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function content($params, $request)
+    public static function content(array $params, \Flexio\Api\Request $request)
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'      => array('type' => 'identifier', 'required' => true),
@@ -134,7 +134,7 @@ class Stream
         exit(0);
     }
 
-    public static function upload($params, $request)
+    public static function upload(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'           => array('type' => 'identifier', 'required' => true),
@@ -160,24 +160,19 @@ class Stream
         return $stream->get();
     }
 
-
-
-    public static function handleStreamUpload($params, $stream)
+    public static function handleStreamUpload(array $params, \Flexio\Object\Stream $stream) : bool
     {
         // get the stream and the service
         $path = $stream->getPath();
         $service = $stream->getService();
         if ($service === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         // create the output
         $streamwriter = \Flexio\Object\StreamWriter::create($stream);
-        if ($streamwriter === false)
-            return false;
 
         // get the information the parser needs to parse the content
         $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
-
 
         if (strpos($post_content_type, 'multipart/form-data') !== false)
         {
@@ -222,7 +217,7 @@ class Stream
 
             // make sure the parse was successful
             if (!$part_succeeded)
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
             // determine the filename, stripping off the leading path info;
             // use a default if one wasn't supplied
@@ -286,16 +281,14 @@ class Stream
                 $mime_type = $declared_mime_type;
         }
 
-
         // set the stream info
         $stream_info = array();
         $stream_info['name'] = $filename;
         $stream_info['mime_type'] = $mime_type;
-        $stream->set($stream_info);
+        return $stream->set($stream_info);
     }
 
-
-    public static function download($params, $request)
+    public static function download(array $params, \Flexio\Api\Request $request)
     {
         // note: function adapted from the content function; first part of
         // the function is the same but then changes to convert to the flexio

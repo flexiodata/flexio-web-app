@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Search
 {
-    public static function search($params, $request)
+    public static function search(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'owner'    => array('type' => 'string', 'required' => false),

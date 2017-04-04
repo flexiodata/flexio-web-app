@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Process
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         $process = self::create_internal($params, $request);
         if ($process === false)
@@ -26,11 +26,11 @@ class Process
         return $process->get();
     }
 
-    public static function debug($params, $request)
+    public static function debug(array $params, \Flexio\Api\Request $request) : array
     {
         // allow in debug mode or on test site
         if (!IS_DEBUG() && !IS_TESTSITE())
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_METHOD);
 
         // run the specified job in blocking mode
         $params['background'] = $params['background'] ?? false;
@@ -43,7 +43,7 @@ class Process
         return $properties;
     }
 
-    private static function create_internal($params, $request)
+    private static function create_internal(array $params, \Flexio\Api\Request $request) : \Flexio\Object\Process
     {
         if (($params = $request->getValidator()->check($params, array(
                 'parent_eid'   => array('type' => 'identifier', 'required' => false),
@@ -114,7 +114,7 @@ class Process
         return $process;
     }
 
-    public static function delete($params, $request)
+    public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -137,7 +137,7 @@ class Process
         return true;
     }
 
-    public static function set($params, $request)
+    public static function set(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
@@ -172,7 +172,7 @@ class Process
         return $process->get();
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
@@ -232,7 +232,7 @@ class Process
         return $process_info;
     }
 
-    public static function run($params, $request)
+    public static function run(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
@@ -256,7 +256,7 @@ class Process
         return $process->run($background)->get();
     }
 
-    public static function cancel($params, $request)
+    public static function cancel(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -278,7 +278,7 @@ class Process
         return $process->cancel()->get();
     }
 
-    public static function pause($params, $request)
+    public static function pause(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -300,7 +300,7 @@ class Process
         return $process->pause()->get();
     }
 
-    public static function addInput($params, $request)
+    public static function addInput(array $params, \Flexio\Api\Request $request) : array
     {
         // TODO: handle manual streams that are added so that proces inputs
         // can come from files that are directly uploaded as well as from
@@ -332,7 +332,7 @@ class Process
         return $process->addInput($stream)->get();
     }
 
-    public static function getInput($params, $request)
+    public static function getInput(array $params, \Flexio\Api\Request $request)
     {
         // return the process input before any tasks; these will only be
         // streams that are added via addInput(); otherwise, the result
@@ -359,7 +359,7 @@ class Process
         return self::echoStreamInfo($process_streams, $params);
     }
 
-    public static function getOutput($params, $request)
+    public static function getOutput(array $params, \Flexio\Api\Request $request)
     {
         // return the process output after the last task; this will be
         // empty if the process hasn't run
@@ -385,7 +385,7 @@ class Process
         return self::echoStreamInfo($process_streams, $params);
     }
 
-    public static function getTaskInputInfo($params, $request)
+    public static function getTaskInputInfo(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'parent_eid' => array('type' => 'identifier', 'required' => true),
@@ -418,7 +418,7 @@ class Process
         return $merged_structure->enum();
     }
 
-    public static function getTaskOutputInfo($params, $request)
+    public static function getTaskOutputInfo(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'parent_eid' => array('type' => 'identifier', 'required' => true),
@@ -451,7 +451,7 @@ class Process
         return $merged_structure->enum();
     }
 
-    public static function getStatistics($params, $request)
+    public static function getStatistics(array $params, \Flexio\Api\Request $request) : array
     {
         // only allow users from flex.io to get this info
 
@@ -466,7 +466,7 @@ class Process
         return \Flexio\System\System::getModel()->process->getProcessStatistics();
     }
 
-    private static function waitforchangewhilerunning($eid, $time_to_wait_for_change)
+    private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change)
     {
         // TODO: move part of implemention to some type of function
         // on the object?  e.g. $object->hasChanged() so we can cache
@@ -521,7 +521,7 @@ class Process
         }
     }
 
-    private static function echoStreamInfo($process_streams, $params)
+    private static function echoStreamInfo(array $process_streams, array $params)
     {
         // return the stream info the user requests
         $flags = array();
@@ -579,7 +579,7 @@ class Process
         exit(0);
     }
 
-    private static function packageRequestedStreamInfo($stream, $flags, $mime_type)
+    private static function packageRequestedStreamInfo(\Flexio\Object\Stream $stream, array $flags, string $mime_type) : string
     {
         $fields = $flags['fields'];
         $contentlimit = $flags['content-limit'];
