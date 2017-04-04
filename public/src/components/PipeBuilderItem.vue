@@ -1,5 +1,5 @@
 <template>
-  <div class="relative ml2-m ml3-l" style="max-width: 1600px">
+  <div class="relative ml2-m ml3-l" style="max-width: 1574px">
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
       <div class="flex-none">
         <div :class="[ index==0?'mt2':'' ]" @click="deleteTask">
