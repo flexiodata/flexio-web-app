@@ -1,9 +1,16 @@
 <template>
   <article class="flex flex-row pt1 pb3">
     <div class="flex-none">
+      <connection-icon
+        :type="ctype"
+        class="br1 mr2"
+        style="width: 28px; height: 28px"
+        v-if="show_connection_icon"
+      ></connection-icon>
       <div
         class="pointer pa1 mr2 br1 white trans-wh tc relative"
         :class="[ bg_color ]"
+        v-else
       >
         <i class="db material-icons f4">{{task_icon}}</i>
       </div>
@@ -20,15 +27,42 @@
 </template>
 
 <script>
+  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import ConnectionIcon from './ConnectionIcon.vue'
   import taskItemHelper from './mixins/task-item-helper'
 
   export default {
     props: ['item', 'index'],
     mixins: [taskItemHelper],
+    components: {
+      ConnectionIcon
+    },
     computed: {
-      task() { return this.item },
-      description() { return _.get(this, 'task.description', '') },
-      title_style() { return this.description.length > 0 ? 'top: -3px' : 'top: 3px' }
+      task() {
+        return this.item
+      },
+      ctype() {
+        return _.get(this, 'task.metadata.connection_type', '')
+      },
+      description() {
+        return _.get(this, 'task.description', '')
+      },
+      title_style() {
+        return this.description.length > 0 ? 'top: -3px' : 'top: 3px'
+      },
+      show_connection_icon() {
+        if (this.ctype.length == 0)
+          return false
+
+        switch (_.get(this, 'task.type', ''))
+        {
+          case TASK_TYPE_INPUT:
+          case TASK_TYPE_OUTPUT:
+            return true
+        }
+
+        return false
+      }
     }
   }
 </script>
