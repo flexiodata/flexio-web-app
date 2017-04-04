@@ -89,7 +89,7 @@ class Manager
         return $process->get();
     }
 
-    private static function saveAttachmentsToStreams(\Flexio\Services\Email $email, \Flexio\Object\Pipe $process) // TODO: set parameter type
+    private static function saveAttachmentsToStreams(\Flexio\Services\Email $email, \Flexio\Object\Process $process)
     {
         // create a new stream for each attachment; return an array of stream eids
         $streams = array();
