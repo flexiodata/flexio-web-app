@@ -68,12 +68,13 @@ class Manager
             {
                 // save the email attachments as streams, and if there
                 // are any attachments, run the pipe with the attachments
-                $streams = self::saveAttachmentsToStreams($parser);
+                $streams = self::saveAttachmentsToStreams($parser, $process);
+            /*
                 foreach ($streams as $s)
                 {
                     $process->addInput($streams);
                 }
-
+*/
                 $process->run(false); // handleEmail should be run in background from email processing script
             }
         }
@@ -88,12 +89,12 @@ class Manager
         return $process->get();
     }
 
-    private static function saveAttachmentsToStreams($email_parser) // TODO: set parameter type
+    private static function saveAttachmentsToStreams(\Flexio\Services\Email $email, \Flexio\Object\Pipe $process) // TODO: set parameter type
     {
         // create a new stream for each attachment; return an array of stream eids
         $streams = array();
 
-        $email_attachments = $email_parser->getAttachments();
+        $email_attachments = $email->getAttachments();
         foreach ($email_attachments as $attachment)
         {
             // create the stream
@@ -107,7 +108,8 @@ class Manager
             if ($streamwriter !== false)
             {
                 $streamwriter->write($attachment['content']);
-                $streams[] = array('eid' => $outstream->getEid());
+                //$streams[] = array('eid' => $outstream->getEid());
+                $process->addInput($outstream);
             }
         }
 
