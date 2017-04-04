@@ -4,14 +4,14 @@
       <div class="flex-none">
         <div
           class="pointer pa2 mr2 mr3-ns br1 white trans-wh tc relative swap-child"
-          :class="[ bg_color ]"
+          :class="[ bg_color, index==0?'mt2':'' ]"
           @click="deleteTask"
         >
           <i class="db material-icons f3 child">{{task_icon}}</i>
           <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
       </div>
-      <div class="f5 lh-title pt2 mr2 mr3-ns" :class="number_cls">{{index+1}}.</div>
+      <div class="f5 lh-title mr2 mr3-ns" :class="[number_cls, index==0?'pt3':'pt2' ]">{{index+1}}.</div>
       <div
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 46px; bottom: 36px; left: 19px"
@@ -25,8 +25,8 @@
         </div>
       </div>
       <div
-        class="flex-fill relative pa3 pt2 bg-white bl br b--white-box"
-        :class="content_cls"
+        class="flex-fill relative pa3 bg-white bl br b--white-box"
+        :class="[ content_cls, index==0?'':'pt2' ]"
       >
         <inline-edit-text
           class="flex-fill f5 lh-title"
