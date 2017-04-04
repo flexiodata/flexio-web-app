@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class RenameColumn extends \Flexio\Jobs\Base
+class Rename extends \Flexio\Jobs\Base
 {
     public function run()
     {

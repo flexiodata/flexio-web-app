@@ -28,13 +28,13 @@
         <div v-else>Choose Input</div>
       </div>
       <pipe-transfer-input-list
-        class="flex-fill bg-white ph3-l pb3-l overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto"
         :tasks="input_tasks"
         @input-delete="deleteInput"
         v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
-        class="flex-fill bg-white ph3-l pb3-l overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         @choose-input="addInput"
@@ -69,13 +69,13 @@
         <div v-else>Choose Output</div>
       </div>
       <pipe-transfer-output-list
-        class="flex-fill bg-white ph3-l pb3-l overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto"
         :tasks="output_tasks"
         @output-delete="deleteOutput"
         v-if="has_output && !show_output_chooser"
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
-        class="flex-fill bg-white ph3-l pb3-l overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto"
         :project-eid="projectEid"
         @cancel="show_output_chooser = false"
         @choose-output="addOutput"
@@ -104,7 +104,7 @@
         </div>
       </div>
       <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto tl tc-m" v-else>
-        <div class="lh-copy mid-gray f6 mb3 i">There are no processing steps in this pipe. Processing steps can be added in the pipe builder.</div>
+        <div class="lh-copy mid-gray f6 mb3 i">There are no steps in this pipe.</div>
         <btn
           btn-md
           btn-primary

@@ -8,6 +8,22 @@ export default {
     task_icon() {
       return _.result(this, 'tinfo.icon', 'build')
     },
+    ctype() {
+      return _.get(this, 'task.metadata.connection_type', '')
+    },
+    show_connection_icon() {
+      if (this.ctype.length == 0)
+        return false
+
+      switch (_.get(this, 'task.type', ''))
+      {
+        case types.TASK_TYPE_INPUT:
+        case types.TASK_TYPE_OUTPUT:
+          return true
+      }
+
+      return false
+    },
     display_name() {
       var name = _.get(this, 'task.name', '')
       var default_name = _.result(this, 'tinfo.name', 'Untitled Step')
