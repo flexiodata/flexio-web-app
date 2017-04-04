@@ -108,13 +108,12 @@ class Email
 
     public static function parseText(string $content) : \Flexio\Services\Email
     {
-        $email = new self;
-
-        // parse the content
+        // parse the string content
         $parser = new \ZBateson\MailMimeParser\MailMimeParser;
         $message = $parser->parse($content);
 
         // create the email with the parsed values
+        $email = new self;
         $email->initializeFromParsedMessage($message);
 
         return $email;
@@ -127,12 +126,12 @@ class Email
         if (strlen($path) === 0)
             return $email;
 
-        // get the stream
+        // open the file
         $handle = fopen($path, 'r');
         if ($handle === false)
             return $email;
 
-        // parse the stream
+        // parse the file contents
         $parser = new \ZBateson\MailMimeParser\MailMimeParser;
         $message = $parser->parse($handle);
         fclose($handle);
