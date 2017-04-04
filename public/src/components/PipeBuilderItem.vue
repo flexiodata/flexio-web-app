@@ -1,6 +1,8 @@
 <template>
-  <div class="relative ml2-m ml3-l" style="max-width: 1574px">
+  <div class="relative" style="max-width: 1574px">
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
+
+      <!-- task icon -->
       <div class="flex-none">
         <div :class="[ index==0?'mt2':'' ]" @click="deleteTask">
           <div class="swap-child" v-if="show_connection_icon">
@@ -20,22 +22,43 @@
         </div>
       </div>
       <div class="f5 lh-title mr2 mr3-ns" :class="[number_cls, index==0?'pt3':'pt2' ]">{{index+1}}.</div>
+
+      <!-- vertical line -->
       <div
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 46px; bottom: 36px; left: 19px"
+        :class="[ index==0?'mt2':'' ]"
         v-show="!show_progress"
       ></div>
-      <div class="absolute"
-        style="bottom: 5px"
-        v-show="!show_progress">
-        <div class="pointer moon-gray hover-blue link hint--right" style="margin-left: 8px" :aria-label="insert_tooltip" @click="insertNewTask">
+
+      <!-- insert before button -->
+      <div
+        class="absolute"
+        style="top: -24px"
+        v-show="!show_progress"
+        v-if="index==0 && false"
+      >
+        <div class="pointer moon-gray hover-blue link hint--right" style="margin-left: 8px" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
           <i class="db material-icons f3">add_circle</i>
         </div>
       </div>
+
+      <!-- insert after button -->
+      <div
+        class="absolute"
+        style="bottom: 5px"
+        v-show="!show_progress">
+        <div class="pointer moon-gray hover-blue link hint--right" style="margin-left: 8px" :aria-label="insert_after_tooltip" @click="insertNewTask()">
+          <i class="db material-icons f3">add_circle</i>
+        </div>
+      </div>
+
+      <!-- main content -->
       <div
         class="flex-fill relative pa3 bg-white bl br b--white-box"
         :class="[ content_cls, index==0?'':'pt2' ]"
       >
+        <!-- task name -->
         <inline-edit-text
           class="flex-fill f5 lh-title"
           edit-button-tooltip-cls="hint--top-left"
@@ -43,6 +66,8 @@
           :val="display_name"
           @save="editTaskSingleton">
         </inline-edit-text>
+
+        <!-- task description -->
         <inline-edit-text
           class="f7 lh-title gray mt1"
           placeholder="Add a description"
@@ -52,7 +77,8 @@
           :val="description"
           @save="editTaskSingleton">
         </inline-edit-text>
-        <div v-if="show_progress" class="mt2 pt2 bt b--black-10">
+
+        <div class="mt2 pt2 bt b--black-10" v-if="show_progress">
           <process-progress-item :item="active_subprocess"></process-progress-item>
         </div>
         <div v-else>
@@ -168,7 +194,10 @@
           ? true : this.orig_command != this.edit_command
           ? true : false
       },
-      insert_tooltip() {
+      insert_before_tooltip() {
+        return 'Insert a new step before step ' + (this.index+1)
+      },
+      insert_after_tooltip() {
         return 'Insert a new step after step ' + (this.index+1)
       },
       execute_lang() {
@@ -286,8 +315,9 @@
 
         this.editTaskSingleton(edit_attrs)
       },
-      insertNewTask() {
-        this.$emit('insert-task', this.index+1)
+      insertNewTask(insert_idx) {
+        var idx = _.defaultTo(insert_idx, this.index+1)
+        this.$emit('insert-task', idx)
       },
       deleteTask() {
         var eid = this.pipeEid
