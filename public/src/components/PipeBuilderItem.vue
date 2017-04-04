@@ -11,7 +11,7 @@
           <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
         </div>
       </div>
-      <div class="f5 lh-title pt2 mr2 mr3-ns">{{index+1}}.</div>
+      <div class="f5 lh-title pt2 mr2 mr3-ns" :class="number_cls">{{index+1}}.</div>
       <div
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 46px; bottom: 36px; left: 19px"
@@ -189,10 +189,24 @@
       show_progress() {
         return _.get(this.activeProcess, 'process_status') == PROCESS_STATUS_RUNNING
       },
+      number_cls() {
+        // compensate for content top border
+        return this.index == 0 ? 'bt b--transparent' : ''
+      },
       content_cls() {
-        return this.index == 0
-          ? 'pb4a bt br2 br--top' : this.index == _.get(this, 'tasks', []).length - 1
-          ? 'mb4a bb br2 br--bottom' : 'pb4a'
+        var task_cnt = _.get(this, 'tasks', []).length
+        var is_last = this.index == task_cnt - 1
+
+        if (task_cnt == 1)
+          return ['pb4a','br2','ba'].join(' ')
+
+        if (this.index == 0)
+          return ['pb4a','br2','bt','br--top'].join(' ')
+
+        if (is_last)
+          return ['pb4a','br2','bb','br--bottom'].join(' ')
+
+        return 'pb4a'
       }
     },
     methods: {
@@ -289,10 +303,4 @@
   .pb4a {
     padding-bottom: 3rem;
   }
-
-
-  .mb4a {
-    margin-bottom: 3rem;
-  }
-
 </style>

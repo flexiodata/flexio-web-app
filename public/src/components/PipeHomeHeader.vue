@@ -134,7 +134,7 @@
 
   .css-nav-text {
     transition: border 0.3s ease-in-out;
-    padding: 2px;
+    padding: 3px 2px 2px;
 
     &:hover,
     &.css-nav-active {
