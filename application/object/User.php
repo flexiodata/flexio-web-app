@@ -482,7 +482,7 @@ class User extends \Flexio\Object\Base
             return false;
 
         // unpack the config
-        $config = $properties['config'];
+        $config = $properties['config'] ?? '{}';
         $config = @json_decode($config, true);
         if (!is_array($config))
             $config = new Object;
