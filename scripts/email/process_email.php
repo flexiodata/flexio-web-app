@@ -5,5 +5,6 @@
 
 require_once dirname(__DIR__) . '/stub.php';
 
-\Flexio\Object\Manager::handleEmail("php://stdin");
+$f = fopen('php://stdin', 'r');
+\Flexio\Object\Manager::handleEmail($f);
 

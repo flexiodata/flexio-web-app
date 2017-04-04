@@ -18,7 +18,7 @@ namespace Flexio\Object;
 
 class Manager
 {
-    public static function handleEmail(string $stream, string $pipe_eid = null)
+    public static function handleEmail($stream, string $pipe_eid = null)
     {
         // if eid is specified, the pipe with the given eid will be
         // run, otherwise, the first part of the email subject will
