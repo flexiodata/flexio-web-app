@@ -67,9 +67,13 @@ class Manager
             if ($process !== false)
             {
                 // set an environment variable (parameter) with the "from" email address
-                $params = array('email-from' => $parser->getFrom());
-                $process->setParams($params);
-                
+                $from_addresses = $parser->getFrom();
+                if (count($from_addresses) > 0)
+                {
+                    $params = array('email-from' => $from_addresses[0]); 
+                    $process->setParams($params);
+                }
+
                 // save the email attachments as streams, and if there
                 // are any attachments, run the pipe with the attachments
                 $streams = self::saveAttachmentsToStreams($parser, $process);
