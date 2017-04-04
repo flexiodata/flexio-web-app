@@ -23,7 +23,7 @@ class Manager
         // if eid is specified, the pipe with the given eid will be
         // run, otherwise, the first part of the email subject will
         // be used
-
+/*
         // STEP 1: save the email to a temporary file
         $emailfile = \Flexio\Base\Util::getTempFilename('txt');
 
@@ -37,9 +37,10 @@ class Manager
 
         fclose($instream);
         fclose($outstream);
+        */
 
         // STEP 2: parse the temporary file
-        $parser = \Flexio\Services\Email::parseStream($emailfile);
+        $parser = \Flexio\Services\Email::parseResource($stream);
 
         // STEP 3: determine where to route the email; the pipe to launch
         // is the first part of the email; e.g. <pipe_eid>@email.flex.io
@@ -78,7 +79,7 @@ class Manager
         }
 
         // STEP 5: delete the temporary file
-        unlink($emailfile);
+        //unlink($emailfile);
 
         // if the process ran, return the info
         if ($process === false)

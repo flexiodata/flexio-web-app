@@ -120,15 +120,15 @@ class Email
         return $email;
     }
 
-    public static function parseStream(string $stream) : \Flexio\Services\Email
+    public static function parseFile(string $path) : \Flexio\Services\Email
     {
         $email = new self;
 
-        if (strlen($stream) === 0)
+        if (strlen($path) === 0)
             return $email;
 
         // get the stream
-        $handle = fopen($stream, 'r');
+        $handle = fopen($path, 'r');
         if ($handle === false)
             return $email;
 
@@ -143,6 +143,20 @@ class Email
 
         return $email;
     }
+
+    public static function parseResource(resource $handle) : \Flexio\Services\Email
+    {
+        // parse the stream
+        $parser = new \ZBateson\MailMimeParser\MailMimeParser;
+        $message = $parser->parse($handle);
+
+        // create the email with the parsed values
+        $email = new self;
+        $email->initializeFromParsedMessage($message);
+
+        return $email;
+    }
+
 
     public function send()
     {
