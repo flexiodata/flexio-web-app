@@ -70,7 +70,7 @@ class Manager
                 $from_addresses = $parser->getFrom();
                 if (count($from_addresses) > 0)
                 {
-                    $params = array('email-from' => $from_addresses[0]); 
+                    $params = array('email-from' => trim($from_addresses[0], "\t\n\r\0\x0B<>")); 
                     $process->setParams($params);
                 }
 
