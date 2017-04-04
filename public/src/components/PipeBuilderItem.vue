@@ -44,7 +44,7 @@
           :val="description"
           @save="editTaskSingleton">
         </inline-edit-text>
-        <div v-if="show_progress" class="mv3">
+        <div v-if="show_progress" class="mt2 pt2 bt b--black-10">
           <process-progress-item :item="active_subprocess"></process-progress-item>
         </div>
         <div v-else>
@@ -191,8 +191,8 @@
       },
       content_cls() {
         return this.index == 0
-          ? 'bt pb4a' : this.index == _.get(this, 'tasks', []).length - 1
-          ? 'bb mb4a' : 'pb4a'
+          ? 'pb4a bt br2 br--top' : this.index == _.get(this, 'tasks', []).length - 1
+          ? 'mb4a bb br2 br--bottom' : 'pb4a'
       }
     },
     methods: {
