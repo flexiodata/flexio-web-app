@@ -18,12 +18,12 @@ namespace Flexio\Object;
 
 class Manager
 {
-    public static function handleEmail(string $stream, string $pipe_eid = null)
+    public static function handleEmail($stream, string $pipe_eid = null)
     {
         // if eid is specified, the pipe with the given eid will be
         // run, otherwise, the first part of the email subject will
         // be used
-
+/*
         // STEP 1: save the email to a temporary file
         $emailfile = \Flexio\Base\Util::getTempFilename('txt');
 
@@ -37,9 +37,10 @@ class Manager
 
         fclose($instream);
         fclose($outstream);
+        */
 
         // STEP 2: parse the temporary file
-        $parser = \Flexio\Services\Email::parseStream($emailfile);
+        $parser = \Flexio\Services\Email::parseResource($stream);
 
         // STEP 3: determine where to route the email; the pipe to launch
         // is the first part of the email; e.g. <pipe_eid>@email.flex.io
@@ -67,18 +68,19 @@ class Manager
             {
                 // save the email attachments as streams, and if there
                 // are any attachments, run the pipe with the attachments
-                $streams = self::saveAttachmentsToStreams($parser);
+                $streams = self::saveAttachmentsToStreams($parser, $process);
+            /*
                 foreach ($streams as $s)
                 {
                     $process->addInput($streams);
                 }
-
+*/
                 $process->run(false); // handleEmail should be run in background from email processing script
             }
         }
 
         // STEP 5: delete the temporary file
-        unlink($emailfile);
+        //unlink($emailfile);
 
         // if the process ran, return the info
         if ($process === false)
@@ -87,32 +89,27 @@ class Manager
         return $process->get();
     }
 
-    private static function saveAttachmentsToStreams($email_parser) // TODO: set parameter type
+    private static function saveAttachmentsToStreams(\Flexio\Services\Email $email, \Flexio\Object\Process $process)
     {
         // create a new stream for each attachment; return an array of stream eids
         $streams = array();
 
-        $email_attachments = $email_parser->getAttachments();
+        $email_attachments = $email->getAttachments();
         foreach ($email_attachments as $attachment)
         {
-            // TODO: read attachment in chunks for large files
-
-            $name = $attachment['name'];
-            $content = $attachment['content'];
-            $mime_type = \Flexio\Base\ContentType::getMimeType($name, $content);
-
             // create the stream
             $outstream_properties = array(
-                'name' => $name,
-                'mime_type' => $mime_type
+                'name' => $attachment['name'] ?? 'content.dat',
+                'mime_type' => $attachment['mime_type'] ?? 'application/octet-stream'
             );
             $outstream = \Flexio\Object\Stream::create($outstream_properties);
             $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
             if ($streamwriter !== false)
             {
-                $streamwriter->write($content);
-                $streams[] = array('eid' => $outstream->getEid());
+                $streamwriter->write($attachment['content']);
+                //$streams[] = array('eid' => $outstream->getEid());
+                $process->addInput($outstream);
             }
         }
 

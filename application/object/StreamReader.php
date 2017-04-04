@@ -133,8 +133,8 @@ class StreamFileReader
 
     public function close()
     {
-        if ($this->service !== false)
-            $this->service->close();
+        //if ($this->service !== false)
+        //    $this->service->close();
 
         $this->service = false;
         $this->iterator = false;
@@ -337,8 +337,8 @@ class StreamTableReader
 
     public function close()
     {
-        if ($this->service !== false)
-            $this->service->close();
+        //if ($this->service !== false)
+        //    $this->service->close();
 
         $this->service = false;
         $this->iterator = false;
@@ -491,8 +491,8 @@ class StreamTableJsonReader
 
     public function close()
     {
-        if ($this->service !== false)
-            $this->service->close();
+        //if ($this->service !== false)
+        //    $this->service->close();
 
         $this->service = false;
         $this->iterator = false;

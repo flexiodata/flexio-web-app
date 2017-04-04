@@ -47,7 +47,7 @@ class Test
         // TEST: stream parsing; empty input
 
         // BEGIN TEST
-        $email = \Flexio\Services\Email::parseStream('');
+        $email = \Flexio\Services\Email::parseFile('');
         $actual = get_class($email);
         $expected = 'Flexio\Services\Email';
         TestCheck::assertString('A.1', '\Flexio\Services\Email::parseStream(); basic test', $actual, $expected, $results);
@@ -57,7 +57,7 @@ class Test
 
         // BEGIN TEST
         $file = getTestEmailFile('m0001.txt');
-        $email = \Flexio\Services\Email::parseStream($file);
+        $email = \Flexio\Services\Email::parseFile($file);
         $actual = $email->getFrom();
         $expected = '["Doug Sauder <doug@example.com>"]';
         TestCheck::assertArray('B.1', '\Flexio\Services\Email::parseText(); get the "from" addresses', $actual, $expected, $results);

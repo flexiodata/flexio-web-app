@@ -179,8 +179,8 @@ class StreamFileWriter
 
     public function close()
     {
-        if ($this->service !== false)
-            $this->service->close();
+        //if ($this->service !== false)
+        //    $this->service->close();
 
         $this->inserter = false;
         $this->service = false;
@@ -340,8 +340,8 @@ class StreamTableWriter
         if ($this->inserter !== false)
             $this->inserter->finishInsert();
 
-        if ($this->service !== false)
-            $this->service->close();
+        //if ($this->service !== false)
+        //    $this->service->close();
 
         $this->inserter = false;
         $this->service = false;
@@ -521,8 +521,8 @@ class StreamTableJsonWriter
         if ($this->inserter !== false)
             $this->inserter->finishInsert();
 
-        if ($this->service !== false)
-            $this->service->close();
+        //if ($this->service !== false)
+        //    $this->service->close();
 
         $this->inserter = false;
         $this->service = false;

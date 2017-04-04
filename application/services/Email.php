@@ -108,31 +108,30 @@ class Email
 
     public static function parseText(string $content) : \Flexio\Services\Email
     {
-        $email = new self;
-
-        // parse the content
+        // parse the string content
         $parser = new \ZBateson\MailMimeParser\MailMimeParser;
         $message = $parser->parse($content);
 
         // create the email with the parsed values
+        $email = new self;
         $email->initializeFromParsedMessage($message);
 
         return $email;
     }
 
-    public static function parseStream(string $stream) : \Flexio\Services\Email
+    public static function parseFile(string $path) : \Flexio\Services\Email
     {
         $email = new self;
 
-        if (strlen($stream) === 0)
+        if (strlen($path) === 0)
             return $email;
 
-        // get the stream
-        $handle = fopen($stream, 'r');
+        // open the file
+        $handle = fopen($path, 'r');
         if ($handle === false)
             return $email;
 
-        // parse the stream
+        // parse the file contents
         $parser = new \ZBateson\MailMimeParser\MailMimeParser;
         $message = $parser->parse($handle);
         fclose($handle);
@@ -143,6 +142,20 @@ class Email
 
         return $email;
     }
+
+    public static function parseResource($handle) : \Flexio\Services\Email
+    {
+        // parse the stream
+        $parser = new \ZBateson\MailMimeParser\MailMimeParser;
+        $message = $parser->parse($handle);
+
+        // create the email with the parsed values
+        $email = new self;
+        $email->initializeFromParsedMessage($message);
+
+        return $email;
+    }
+
 
     public function send()
     {
@@ -376,8 +389,24 @@ class Email
         $this->setMessageText($txtcontent);
 
         $htmlcontent = $message->getHtmlContent() ?? '';
-        $this->setMessageHtml($htmlcontent );
+        $this->setMessageHtml($htmlcontent);
         $this->setMessageHtmlEmbedded($htmlcontent);
+
+        // get the attachments
+        $attachments = $message->getAllAttachmentParts();
+        $this->attachments = [];
+        foreach ($attachments as $attachment)
+        {
+            $att = array(
+                'mime_type' => $attachment->getHeaderValue('Content-Type', 'application/octet-stream'),
+                'name' => $attachment->getHeaderParameter('Content-Type', 'name') ?? null,
+                'file' => null,
+                'content' => stream_get_contents($attachment->getContentResourceHandle())
+            );
+
+            $this->addAttachment($att);
+        }
+
     }
 
     private function sendWithoutAttachments() : bool
