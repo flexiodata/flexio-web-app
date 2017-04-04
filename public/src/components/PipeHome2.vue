@@ -24,7 +24,7 @@
     </pipe-transfer>
 
     <pipe-builder-list
-      class="flex-fill pv3 pl4-l bt b--black-10"
+      class="flex-fill pv4 pl4-l bt b--black-10"
       :pipe-eid="eid"
       :tasks="tasks"
       :active-process="active_process"
