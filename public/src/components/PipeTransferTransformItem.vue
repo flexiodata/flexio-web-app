@@ -27,7 +27,6 @@
 </template>
 
 <script>
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import ConnectionIcon from './ConnectionIcon.vue'
   import taskItemHelper from './mixins/task-item-helper'
 
@@ -39,29 +38,13 @@
     },
     computed: {
       task() {
-        return this.item
-      },
-      ctype() {
-        return _.get(this, 'task.metadata.connection_type', '')
+        return _.get(this, 'item', {})
       },
       description() {
         return _.get(this, 'task.description', '')
       },
       title_style() {
         return this.description.length > 0 ? 'top: -3px' : 'top: 3px'
-      },
-      show_connection_icon() {
-        if (this.ctype.length == 0)
-          return false
-
-        switch (_.get(this, 'task.type', ''))
-        {
-          case TASK_TYPE_INPUT:
-          case TASK_TYPE_OUTPUT:
-            return true
-        }
-
-        return false
       }
     }
   }

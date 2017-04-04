@@ -2,13 +2,21 @@
   <div class="relative ml2-m ml3-l" style="max-width: 1600px">
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
       <div class="flex-none">
-        <div
-          class="pointer pa2 mr2 mr3-ns br1 white trans-wh tc relative swap-child"
-          :class="[ bg_color, index==0?'mt2':'' ]"
-          @click="deleteTask"
-        >
-          <i class="db material-icons f3 child">{{task_icon}}</i>
-          <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
+        <div :class="[ index==0?'mt2':'' ]" @click="deleteTask">
+          <div class="swap-child" v-if="show_connection_icon">
+            <connection-icon
+              class="mr2 mr3-ns br1 pointer child"
+              style="width: 40px; height: 40px"
+              :type="ctype"
+            ></connection-icon>
+            <div class="pointer pa2 mr2 mr3-ns br1 bg-light-silver white tc relative other-child">
+              <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
+            </div>
+          </div>
+          <div class="pointer pa2 mr2 mr3-ns br1 white tc relative swap-child" :class="[ bg_color ]" v-else>
+            <i class="db material-icons f3 child">{{task_icon}}</i>
+            <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
+          </div>
         </div>
       </div>
       <div class="f5 lh-title mr2 mr3-ns" :class="[number_cls, index==0?'pt3':'pt2' ]">{{index+1}}.</div>
@@ -89,6 +97,7 @@
   import * as types from '../constants/task-type'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
+  import ConnectionIcon from './ConnectionIcon.vue'
   import CodeEditor from './CodeEditor.vue'
   import CommandBar from './CommandBar.vue'
   import InlineEditText from './InlineEditText.vue'
@@ -101,6 +110,7 @@
     mixins: [taskItemHelper],
     components: {
       Btn,
+      ConnectionIcon,
       CodeEditor,
       CommandBar,
       InlineEditText,
