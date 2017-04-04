@@ -48,14 +48,14 @@
           <process-progress-item :item="active_subprocess"></process-progress-item>
         </div>
         <div v-else>
-          <command-bar2
+          <command-bar
             ref="commandbar"
             class="mt2 ba b--black-10 bg-white"
             :orig-json="task"
             @change="updateEditTask"
             @cancel="cancelEdit"
             @save="saveEdit"
-          ></command-bar2>
+          ></command-bar>
           <code-editor
             ref="code"
             class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"

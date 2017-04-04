@@ -35,12 +35,12 @@
       v-if="show_connection_props_modal"
     ></connection-props-modal>
 
-    <pipe-props-modal2
+    <pipe-props-modal
       ref="modal-pipe-props"
       project-eid="test-project"
       @hide="show_pipe_props_modal = false"
       v-if="show_pipe_props_modal"
-    ></pipe-props-modal2>
+    ></pipe-props-modal>
 
     <pipe-schedule-modal
       ref="modal-pipe-schedule"

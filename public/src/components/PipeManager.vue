@@ -28,22 +28,22 @@
     ></pipe-list>
 
     <!-- add modal -->
-    <pipe-props-modal2
+    <pipe-props-modal
       ref="modal-add-pipe"
       :project-eid="projectEid"
       @submit="tryCreatePipe"
       @hide="show_pipe_add_modal = false"
       v-if="show_pipe_add_modal"
-    ></pipe-props-modal2>
+    ></pipe-props-modal>
 
     <!-- edit modal -->
-    <pipe-props-modal2
+    <pipe-props-modal
       ref="modal-edit-pipe"
       :project-eid="projectEid"
       @submit="tryUpdatePipe"
       @hide="show_pipe_edit_modal = false"
       v-if="show_pipe_edit_modal"
-    ></pipe-props-modal2>
+    ></pipe-props-modal>
 
     <!-- share modal -->
     <pipe-share-modal
