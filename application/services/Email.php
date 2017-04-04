@@ -389,8 +389,24 @@ class Email
         $this->setMessageText($txtcontent);
 
         $htmlcontent = $message->getHtmlContent() ?? '';
-        $this->setMessageHtml($htmlcontent );
+        $this->setMessageHtml($htmlcontent);
         $this->setMessageHtmlEmbedded($htmlcontent);
+
+        // get the attachments
+        $attachments = $message->getAllAttachmentParts();
+        $this->attachments = [];
+        foreach ($attachments as $attachment)
+        {
+            $att = array(
+                'mime_type' => $attachment->getHeaderValue('Content-Type', 'application/octet-stream'),
+                'name' => $attachment->getHeaderParameter('Content-Type', 'name') ?? null,
+                'file' => null,
+                'content' => stream_get_contents($attachment->getContentResourceHandle())
+            );
+
+            $this->addAttachment($att);
+        }
+
     }
 
     private function sendWithoutAttachments() : bool
