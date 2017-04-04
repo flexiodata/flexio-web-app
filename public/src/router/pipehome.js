@@ -1,8 +1,8 @@
 import { ROUTE_PIPEHOME } from '../constants/route'
-import PipeHome2 from '../components/PipeHome2.vue'
+import PipeHome from '../components/PipeHome.vue'
 
 export default {
   path: '/pipe/:eid',
   name: ROUTE_PIPEHOME,
-  component: PipeHome2
+  component: PipeHome
 }

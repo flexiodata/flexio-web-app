@@ -74,7 +74,7 @@
   import ConfirmModal from './ConfirmModal.vue'
   import ProjectPropsModal from './ProjectPropsModal.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
-  import PipePropsModal2 from './PipePropsModal2.vue'
+  import PipePropsModal from './PipePropsModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
   import PipeShareModal from './PipeShareModal.vue'
   import EmailSupportModal from './EmailSupportModal.vue'
@@ -108,7 +108,7 @@
       ConfirmModal,
       ProjectPropsModal,
       ConnectionPropsModal,
-      PipePropsModal2,
+      PipePropsModal,
       PipeScheduleModal,
       PipeShareModal,
       EmailSupportModal,

@@ -90,7 +90,7 @@
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
   import CodeEditor from './CodeEditor.vue'
-  import CommandBar2 from './CommandBar2.vue'
+  import CommandBar from './CommandBar.vue'
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
   import ProcessProgressItem from './ProcessProgressItem.vue'
@@ -102,7 +102,7 @@
     components: {
       Btn,
       CodeEditor,
-      CommandBar2,
+      CommandBar,
       InlineEditText,
       PipeContent,
       ProcessProgressItem

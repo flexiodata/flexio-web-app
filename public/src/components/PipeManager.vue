@@ -68,7 +68,7 @@
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import Spinner from './Spinner.vue'
   import PipeList from './PipeList.vue'
-  import PipePropsModal2 from './PipePropsModal2.vue'
+  import PipePropsModal from './PipePropsModal.vue'
   import PipeShareModal from './PipeShareModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
   import Btn from './Btn.vue'
@@ -78,7 +78,7 @@
     components: {
       Spinner,
       PipeList,
-      PipePropsModal2,
+      PipePropsModal,
       PipeShareModal,
       PipeScheduleModal,
       Btn
