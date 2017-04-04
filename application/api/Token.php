@@ -18,12 +18,12 @@ namespace Flexio\Api;
 
 class Token
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -31,10 +31,10 @@ class Token
         // load the object and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the token object
         $token_properties = $params;
@@ -43,18 +43,18 @@ class Token
 
         $token = \Flexio\Object\Token::create($token_properties);
         if ($token === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // get the token properties
         return $token->get();
     }
 
-    public static function delete($params, $request)
+    public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -65,10 +65,10 @@ class Token
         // load the user and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 */
         $token = \Flexio\Object\Token::load($user_identifier);
         if ($token !== false)
@@ -77,12 +77,12 @@ class Token
         return true;
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -90,14 +90,14 @@ class Token
         // load the user and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $token = \Flexio\Object\Token::load($user_identifier);
         if ($token === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the properties; double check to make sure that secret code isn't returned
         $properties = $token->get();
@@ -105,12 +105,12 @@ class Token
         return $properties;
     }
 
-    public static function listall($params, $request)
+    public static function listall(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
             'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -118,10 +118,10 @@ class Token
         // load the user and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $user->getTokens();
     }

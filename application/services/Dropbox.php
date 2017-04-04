@@ -33,7 +33,7 @@ class Dropbox implements \Flexio\Services\IConnection
     // IConnection interface
     ////////////////////////////////////////////////////////////
 
-    public static function create(array $params = null) : \Flexio\Services\Dropbox
+    public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
     {
         if (!isset($params))
             return new self;

@@ -18,13 +18,13 @@ namespace Flexio\Api;
 
 class Comment
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'parent_eid' => array('type' => 'identifier', 'required' => true),
                 'comment'    => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $parent_identifier = $params['parent_eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -32,16 +32,16 @@ class Comment
         // load the parent
         $parent = \Flexio\Object\Store::load($parent_identifier);
         if ($parent === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the parent
         if ($parent->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the comment
         $comment = \Flexio\Object\Comment::create($params);
         if ($comment === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // set the owner and creator
         $comment->setOwner($requesting_user_eid);
@@ -54,12 +54,12 @@ class Comment
         return $comment->get();
     }
 
-    public static function delete($params, $request)
+    public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $comment_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -67,24 +67,24 @@ class Comment
         // load the object
         $comment = \Flexio\Object\Comment::load($comment_identifier);
         if ($comment === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($comment->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // delete the object
         $comment->delete();
         return true;
     }
 
-    public static function set($params, $request)
+    public static function set(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'     => array('type' => 'identifier', 'required' => true),
                 'comment' => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $comment_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -92,23 +92,23 @@ class Comment
         // load the object
         $comment = \Flexio\Object\Comment::load($comment_identifier);
         if ($comment === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($comment->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // update the object
         $comment->set($params);
         return $comment->get();
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $comment_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -116,11 +116,11 @@ class Comment
         // load the object
         $comment = \Flexio\Object\Comment::load($comment_identifier);
         if ($comment === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($comment->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the object
         return $comment->get();

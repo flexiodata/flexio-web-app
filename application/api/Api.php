@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Api
 {
-    public static function request($server_request, $params, $echo = true)
+    public static function request(\Flexio\System\FrameworkRequest $server_request, array $params, $echo = true)
     {
         // get the method
         $method = $server_request->getMethod();
@@ -131,7 +131,7 @@ class Api
         self::sendResponse($response, $request);
     }
 
-    private static function processRequest($request_method, $url_params, $query_params, $request)
+    private static function processRequest(string $request_method, array $url_params, array $query_params, \Flexio\Api\Request $request)
     {
         // make sure we have a valid request method
         switch ($request_method)
@@ -215,7 +215,7 @@ class Api
         return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_METHOD);
     }
 
-    private static function execApiCAll($function, $query_params, $request)
+    private static function execApiCAll(callable $function, array $query_params, \Flexio\Api\Request $request)
     {
         try
         {
@@ -252,7 +252,7 @@ class Api
         }
     }
 
-    private static function mapUrlParamsToApiParams($url_params)
+    private static function mapUrlParamsToApiParams(array $url_params) : array
     {
         // get the api params from the url params
         $api_params = array();
@@ -265,7 +265,7 @@ class Api
         return $api_params;
     }
 
-    private static function createApiPath($request_method, $params)
+    private static function createApiPath(string $request_method, array $params) : string
     {
         // creates an api endpoint string that's used to lookup the
         // appropriate api implementation
@@ -286,7 +286,7 @@ class Api
         return $apiendpoint;
     }
 
-    private static function getApiEndpoint($apiendpoint)
+    private static function getApiEndpoint(string $apiendpoint)
     {
         switch ($apiendpoint)
         {
@@ -401,7 +401,7 @@ class Api
         }
     }
 
-    private static function packageResponse($response, $request)
+    private static function packageResponse($response, \Flexio\Api\Request $request)
     {
         if ($request->getValidator()->hasErrors() === false)
             return $response;
@@ -432,7 +432,7 @@ class Api
         return $result;
     }
 
-    private static function sendResponse($response, $request)
+    private static function sendResponse($response, \Flexio\Api\Request $request)
     {
         // set the headers; note: never cache api calls
         header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
@@ -519,7 +519,7 @@ class Api
         echo $response;
     }
 
-    private static function logErrorsIfDebugging($request)
+    private static function logErrorsIfDebugging(\Flexio\Api\Request $request)
     {
         if (!isset($GLOBALS['g_config']->debug_error_log))
             return;
@@ -545,7 +545,7 @@ class Api
         }
     }
 
-    private static function convertErrorToApiCode($error)
+    private static function convertErrorToApiCode($error) // TODO: set parameter/return types
     {
         // converts any validator error to an api error; populates
         // any empty message with an api code
@@ -609,7 +609,7 @@ class Api
         return $error;
     }
 
-    private static function parseRequestString($params)
+    private static function parseRequestString($params) // TODO: set parameter/return types
     {
         // only convert strings
         if (!is_string($params))
@@ -649,7 +649,7 @@ class Api
         return $result;
     }
 
-    private static function sessionAuthExpired()
+    private static function sessionAuthExpired() : bool
     {
         return (isset($_COOKIE['FXSESSID']) && strlen($_COOKIE['FXSESSID']) > 0 && $GLOBALS['g_store']->user_eid == '') ? true:false;
     }

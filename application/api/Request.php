@@ -29,40 +29,40 @@ class Request
         $this->api_version = 1;
     }
 
-    public static function create()
+    public static function create() : \Flexio\Api\Request
     {
         return (new static);
     }
 
-    public function setValidator($validator)
+    public function setValidator(\Flexio\Base\Validator $validator)
     {
         $this->validator = $validator;
         return $this;
     }
 
-    public function getValidator()
+    public function getValidator() : \Flexio\Base\Validator
     {
         return $this->validator;
     }
 
-    public function setRequestingUser($user)
+    public function setRequestingUser(string $user) : \Flexio\Api\Request
     {
         $this->requesting_user = $user;
         return $this;
     }
 
-    public function getRequestingUser()
+    public function getRequestingUser() : string
     {
         return $this->requesting_user;
     }
 
-    public function setApiVersion($version)
+    public function setApiVersion(int $version) : \Flexio\Api\Request
     {
         $this->api_version = $version;
         return $this;
     }
 
-    public function getApiVersion()
+    public function getApiVersion() : int
     {
         return $this->api_version;
     }

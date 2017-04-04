@@ -18,8 +18,8 @@ namespace Flexio\Object;
 
 class User extends \Flexio\Object\Base
 {
-    const USER_SYSTEM = 0;
-    const USER_PUBLIC = 1;
+    const USER_SYSTEM = '0';
+    const USER_PUBLIC = '1';
 
     public function __construct()
     {

@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Pipe
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         $params_original = $params;
         if (($params = $request->getValidator()->check($params, array(
@@ -32,7 +32,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = isset($params['parent_eid']) ? $params['parent_eid'] : false;
         $requesting_user_eid = $request->getRequestingUser();
@@ -49,17 +49,17 @@ class Pipe
         {
             $project = \Flexio\Object\Project::load($project_identifier);
             if ($project === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
         // create the object
         $pipe_properties = $params;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // set the owner and creator
         $pipe->setOwner($requesting_user_eid);
@@ -73,13 +73,13 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function copy($params, $request)
+    public static function copy(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'copy_eid'    => array('type' => 'identifier', 'required' => true),
                 'parent_eid'  => array('type' => 'identifier', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $original_pipe_identifier = $params['copy_eid'];
         $project_identifier = isset($params['parent_eid']) ? $params['parent_eid'] : false;
@@ -88,20 +88,20 @@ class Pipe
         // make sure we can read the pipe
         $original_pipe = \Flexio\Object\Pipe::load($original_pipe_identifier);
         if ($original_pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         if ($original_pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // make sure we can save the copied pipe to any specified parent
         if ($project_identifier!== false)
         {
             $project = \Flexio\Object\Project::load($project_identifier);
             if ($project === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
         // create a new pipe; copy the logic, but not the status, scheduling, etc
@@ -114,7 +114,7 @@ class Pipe
 
         $new_pipe = \Flexio\Object\Pipe::create($new_pipe_properties);
         if ($new_pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // set the owner and creator
         $new_pipe->setOwner($requesting_user_eid);
@@ -127,12 +127,12 @@ class Pipe
         return $new_pipe->get();
     }
 
-    public static function delete($params, $request)
+    public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -140,17 +140,17 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $pipe->delete();
         return true;
     }
 
-    public static function set($params, $request)
+    public static function set(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'             => array('type' => 'identifier', 'required' => true),
@@ -162,7 +162,7 @@ class Pipe
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -170,23 +170,23 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the properties
         $pipe->set($params);
         return $pipe->get();
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -194,17 +194,17 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the properties
         return $pipe->get();
     }
 
-    public static function listall($params, $request)
+    public static function listall(array $params, \Flexio\Api\Request $request) : array
     {
         // get the pipes for the requesting user
         $requesting_user_eid = $request->getRequestingUser();
@@ -212,11 +212,11 @@ class Pipe
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the pipes
         $result = array();
@@ -232,12 +232,12 @@ class Pipe
         return $result;
     }
 
-    public static function comments($params, $request)
+    public static function comments(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -245,11 +245,11 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the comments
         $result = array();
@@ -262,12 +262,12 @@ class Pipe
         return $result;
     }
 
-    public static function processes($params, $request)
+    public static function processes(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -275,11 +275,11 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the processes
         $result = array();
@@ -297,12 +297,12 @@ class Pipe
         return $result;
     }
 
-    public static function run($params, $request)
+    public static function run(array $params, \Flexio\Api\Request $request) // TODO: add return type
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -311,19 +311,19 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         // TODO: re-enable rights checking with execute check
         // if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-        //     return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // STEP 1: create a new process
         $process_properties = array();
         $process = \Flexio\Object\Process::create($process_properties);
 
         if ($process === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $process->setOwner($requesting_user_eid);
         $process->setCreatedBy($requesting_user_eid);
@@ -400,7 +400,7 @@ class Pipe
                     $stream = $output_streams[$i];
                     $stream_info = $stream->get();
                     if ($stream_info === false)
-                        return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
                     $mime_type = $stream_info['mime_type'];
                     $start = 0;
@@ -441,7 +441,7 @@ class Pipe
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier= $params['eid'];
 
@@ -456,7 +456,7 @@ class Pipe
         */
     }
 
-    public static function addTaskStep($params, $request)
+    public static function addTaskStep(array $params, \Flexio\Api\Request $request) : array
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -465,7 +465,7 @@ class Pipe
                 'eid'   => array('type' => 'identifier', 'required' => true),
                 'index' => array('type' => 'integer', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -473,11 +473,11 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // add the task
         $index = $params['index'] ?? null;
@@ -492,13 +492,13 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function deleteTaskStep($params, $request)
+    public static function deleteTaskStep(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'        => array('type' => 'identifier', 'required' => true),
                 'parent_eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $task_identifier = $params['eid'];
         $pipe_identifier = $params['parent_eid'];
@@ -507,18 +507,18 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // delete the task
         $pipe->deleteTaskStep($task_identifier);
         return true;
     }
 
-    public static function setTaskStep($params, $request)
+    public static function setTaskStep(array $params, \Flexio\Api\Request $request) : array
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -528,7 +528,7 @@ class Pipe
                 'eid'        => array('type' => 'identifier', 'required' => true),
                 'parent_eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $task_identifier = $params['eid'];
         $pipe_identifier = $params['parent_eid'];
@@ -537,11 +537,11 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // update the task
         $task = $params;
@@ -552,13 +552,13 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function getTaskStep($params, $request)
+    public static function getTaskStep(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'        => array('type' => 'identifier', 'required' => true),
                 'parent_eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $task_identifier = $params['eid'];
         $pipe_identifier = $params['parent_eid'];
@@ -567,11 +567,11 @@ class Pipe
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the task
         return $pipe->getTaskStep($task_identifier);

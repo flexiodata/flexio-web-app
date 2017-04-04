@@ -18,13 +18,13 @@ namespace Flexio\Api;
 
 class Search
 {
-    public static function search($params, $request)
+    public static function search(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'owner'    => array('type' => 'string', 'required' => false),
                 'name'     => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $requesting_user_eid = $request->getRequestingUser();
 

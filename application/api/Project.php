@@ -18,14 +18,14 @@ namespace Flexio\Api;
 
 class Project
 {
-    public static function create($params, $request)
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid_status'   => array('type' => 'string', 'required' => false),
                 'name'         => array('type' => 'string', 'required' => false),
                 'description'  => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -34,12 +34,12 @@ class Project
         // projects to be created from a user api endpoint)
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // create the object
         $project = \Flexio\Object\Project::create($params);
         if ($project === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // set the owner
         $project->setOwner($requesting_user_eid);
@@ -49,12 +49,12 @@ class Project
         return $project->get();
     }
 
-    public static function delete($params, $request)
+    public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -62,17 +62,17 @@ class Project
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
         if ($project === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $project->delete();
         return true;
     }
 
-    public static function set($params, $request)
+    public static function set(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid'          => array('type' => 'identifier', 'required' => true),
@@ -80,7 +80,7 @@ class Project
                 'name'         => array('type' => 'string', 'required' => false),
                 'description'  => array('type' => 'string', 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -88,23 +88,23 @@ class Project
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
         if ($project === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the project params
         $project->set($params);
         return $project->get();
     }
 
-    public static function get($params, $request)
+    public static function get(array $params, \Flexio\Api\Request $request) : array
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
@@ -112,21 +112,21 @@ class Project
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
         if ($project === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // fill out the properties with additional info
         $properties = $project->get();
         if ($properties === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         return $properties;
     }
 
-    public static function listall($params, $request)
+    public static function listall(array $params, \Flexio\Api\Request $request) : array
     {
         // get the projects for the requesting user
         $requesting_user_eid = $request->getRequestingUser();
@@ -134,11 +134,11 @@ class Project
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the projects
         $result = array();
@@ -154,63 +154,63 @@ class Project
         return $result;
     }
 
-    public static function pipes($params, $request)
+    public static function pipes(array $params, \Flexio\Api\Request $request) : array
     {
         // eid is the project
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'pipe_eid' => array('type' => 'identifier', 'array' => true, 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = $params['eid'];
-        $filter_list = $params['pipe_eid'] ?? false;
+        $filter_list = $params['pipe_eid'] ?? null;
         $requesting_user_eid = $request->getRequestingUser();
 
         // load the project
         $project = \Flexio\Object\Project::load($project_identifier);
         if ($project === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check rights for the project
         if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return self::getMembersByType($project, \Model::TYPE_PIPE, $filter_list);
     }
 
-    public static function connections($params, $request)
+    public static function connections(array $params, \Flexio\Api\Request $request) : array
     {
         // eid is the project
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'connection_eid' => array('type' => 'identifier', 'array' => true, 'required' => false)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = $params['eid'];
-        $filter_list = $params['connection_eid'] ?? false;
+        $filter_list = $params['connection_eid'] ?? null;
         $requesting_user_eid = $request->getRequestingUser();
 
         // load the project
         $project = \Flexio\Object\Project::load($project_identifier);
         if ($project === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check rights for the project
         if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return self::getMembersByType($project, \Model::TYPE_CONNECTION, $filter_list);
     }
 
-    public static function trashed($params, $request)
+    public static function trashed(array $params, \Flexio\Api\Request $request) : array
     {
         // eid is the parent container
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // see if the user has rights to this project
         $project_identifier = $params['eid'];
@@ -219,11 +219,11 @@ class Project
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
         if ($project === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+           throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the trashed items
         $result = array();
@@ -247,20 +247,20 @@ class Project
         return $result;
     }
 
-    public static function addTrash($params, $request)
+    public static function addTrash(array $params, \Flexio\Api\Request $request) : bool
     {
         // eid is the project; currently, not checked
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'items' => array('type' => 'object', 'required' => true)
             ))) === false)
-            return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $requesting_user_eid = $request->getRequestingUser();
 
         $objects = self::filterEidItems($params['items']);
         if ($objects === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_SYNTAX);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // check the rights for each object; make sure all of them have
         // write privileges (TODO: explicitly check the parent project rather
@@ -270,11 +270,11 @@ class Project
             // load the object
             $object = \Flexio\Object\Store::load($eid);
             if ($object === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
             if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
         // loop through the objects and try to add them to the trash
@@ -299,20 +299,20 @@ class Project
         return true;
     }
 
-    public static function unTrash($params, $request)
+    public static function unTrash(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'items' => array('type' => 'object', 'required' => true)
             ))) === false)
-           return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $requesting_user_eid = $request->getRequestingUser();
 
         $project_identifier = $params['eid'];
         $objects = self::filterEidItems($params['items']);
         if ($objects === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_SYNTAX);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // check the rights for each object; make sure all of them have
         // write privileges (TODO: explicitly check the parent project rather
@@ -322,17 +322,17 @@ class Project
             // load the object
             $object = \Flexio\Object\Store::load($eid);
             if ($object === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+               throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
             if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
         // iterate through the members and restore the trashed objects in the list
         $project = \Flexio\Object\Project::load($project_identifier);
         if ($project === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         $object_eids = array_flip($objects);
         $project_members = $project->getMembers();
@@ -352,20 +352,20 @@ class Project
         return true;
     }
 
-    public static function clearTrash($params, $request)
+    public static function clearTrash(array $params, \Flexio\Api\Request $request) : bool
     {
         if (($params = $request->getValidator()->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'items' => array('type' => 'object', 'required' => true)
             ))) === false)
-           return $request->getValidator()->fail();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $requesting_user_eid = $request->getRequestingUser();
 
         $project_identifier = $params['eid'];
         $objects = self::filterEidItems($params['items']);
         if ($objects === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_SYNTAX);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // check the rights for each object; make sure all of them have
         // write privileges (TODO: explicitly check the parent project rather
@@ -375,17 +375,17 @@ class Project
             // load the object
             $object = \Flexio\Object\Store::load($eid);
             if ($object === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
             if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
-                return $request->getValidator()->fail(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
         // iterate through the members and clear the trashed objects in the list
         $project = \Flexio\Object\Project::load($project_identifier);
         if ($project === false)
-            return $request->getValidator()->fail(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         $object_eids = array_flip($objects);
         $project_members = $project->getMembers();
@@ -405,11 +405,11 @@ class Project
         return true;
     }
 
-    private static function getMembersByType($project, $type, $filter_list)
+    private static function getMembersByType(\Flexio\Object\Project $project, string $type, array $filter_list = null) : array
     {
         // get the member objects
         $check_object_list = false;
-        if (is_array($filter_list))
+        if (isset($filter_list))
             $check_object_list = true;
 
         $object_eids = array();
@@ -448,11 +448,8 @@ class Project
         return $result;
     }
 
-    private static function filterEidItems($items)
+    private static function filterEidItems(array $items) : array
     {
-        if (!is_array($items))
-            return false;
-
         $filtered_items = array();
         foreach ($items as $i)
         {
