@@ -1,6 +1,6 @@
 <template>
   <article class="mb3">
-    <div class="flex flex-row items-center pa2 bg-black-05 bb ba-l b--black-05">
+    <div class="flex flex-row items-center pa2 bg-black-05">
       <connection-icon :type="ctype" class="v-mid br1 fx-square-2 mr2"></connection-icon>
       <div class="f6 fw6 ttu silver">{{title}}</div>
       <div class="flex-fill"></div>
@@ -151,7 +151,7 @@
         return ename.length > 0 ? ename : _.get(this.pipe, 'eid', '')
       },
       pipe_cmd_line_example() {
-        return 'flexio pipes run ' + this.pipe_identifier + ' > output.txt'
+        return 'flexio pipes run ' + this.pipe_identifier + ' > myoutput.txt'
       },
       connection() {
         var connection_eid = _.get(this.task, 'params.connection', '')

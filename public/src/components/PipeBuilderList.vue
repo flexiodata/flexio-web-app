@@ -19,6 +19,7 @@
         :pipe-eid="pipeEid"
         :item="task"
         :index="index"
+        :tasks="tasks"
         :active-process="activeProcess"
         :project-connections="projectConnections"
         @insert-task="insertNewTask"

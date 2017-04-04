@@ -1,6 +1,6 @@
 <template>
   <article>
-    <div class="mb2 f6 fw6 mid-gray">{{title}}</div>
+    <div class="f7 lh-title mb2">{{title}}</div>
     <ui-progress-linear
       :type="type"
       :progress="pct"
