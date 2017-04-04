@@ -23,11 +23,51 @@ class Rename extends \Flexio\Jobs\Base
         $input = $this->getInput()->enum();
         foreach ($input as $instream)
         {
-            $this->createOutputFromTable($instream);
+            $this->createOutput($instream);
         }
     }
 
-    private function createOutputFromTable(\Flexio\Object\Stream $instream)
+    private function createOutput(\Flexio\Object\Stream $instream)
+    {
+        $this->createOutputWithRenamedColumns($instream);
+    }
+
+    private function createOutputWithRenamedStreams(\Flexio\Object\Stream $instream)
+    {
+        // input/output
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        $this->getOutput()->push($outstream);
+
+        // properties
+        $job_definition = $this->getProperties();
+
+        $append_timestamp = false;
+        if (isset($job_definition['params']['append_timestamp']))
+            $append_timestamp = toBoolean($job_definition['params']['append_timestamp']);
+
+        $instream_info = $instream->get();
+        $outstream_info = $instream_info;
+
+        $filename = $outstream_info['name'] ?? false;
+        if ($filename !== false && $append_timestamp === true)
+        {
+            // TODO: generalize wildcard replacement; for now, just add a datestamp
+            $timestamp = \Flexio\System\System::getTimestamp();
+            $file_timestamp = \Flexio\Base\Util::formatDate($timestamp);
+            $file_timestamp = preg_replace('/[^A-Za-z0-9]/', '', $file_timestamp);
+
+            // rename the file if we can get the filename parts
+            $filename_base = \Flexio\Base\Util::getFilename($filename);
+            $filename_ext = \Flexio\Base\Util::getFileExtension($filename);
+
+            $new_filename = (strlen($filename_base) > 0 ? $filename_base . "_" : '') . $file_timestamp . (strlen($filename_ext) > 0 ? ".$filename_ext" : '');
+            $outstream_info['name'] = $new_filename;
+        }
+
+        $outstream->set($outstream_info);
+    }
+
+    private function createOutputWithRenamedColumns(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy(); // copy everything, including the original path (since we're only changing field names)
