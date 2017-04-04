@@ -96,23 +96,17 @@ class Manager
         $email_attachments = $email_parser->getAttachments();
         foreach ($email_attachments as $attachment)
         {
-            // TODO: read attachment in chunks for large files
-
-            $name = $attachment['name'];
-            $content = $attachment['content'];
-            $mime_type = \Flexio\Base\ContentType::getMimeType($name, $content);
-
             // create the stream
             $outstream_properties = array(
-                'name' => $name,
-                'mime_type' => $mime_type
+                'name' => $attachment['name'] ?? 'content.dat',
+                'mime_type' => $attachment['mime_type'] ?? 'application/octet-stream'
             );
             $outstream = \Flexio\Object\Stream::create($outstream_properties);
             $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
             if ($streamwriter !== false)
             {
-                $streamwriter->write($content);
+                $streamwriter->write($attachment['content']);
                 $streams[] = array('eid' => $outstream->getEid());
             }
         }
