@@ -144,7 +144,7 @@ class Email
         return $email;
     }
 
-    public static function parseResource(resource $handle) : \Flexio\Services\Email
+    public static function parseResource(stream $handle) : \Flexio\Services\Email
     {
         // parse the stream
         $parser = new \ZBateson\MailMimeParser\MailMimeParser;
