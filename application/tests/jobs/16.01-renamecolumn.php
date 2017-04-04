@@ -53,7 +53,7 @@ class Test
 
 
 
-        // TEST: RenameColumn Job
+        // TEST: Rename Job
 
         // BEGIN TEST
         $params = [
@@ -66,6 +66,6 @@ class Test
             { "name": "field2", "type": "character", "width": 3 }
         ]
         ';
-        TestCheck::assertInArray('A.1', 'RenameColumn Job; check basic functionality',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', 'Rename Job; check basic functionality',  $actual, $expected, $results);
     }
 }
