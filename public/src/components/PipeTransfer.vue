@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-l flex-row-l items-stretch">
+  <div class="flex-l flex-row-l items-stretch overflow-y-auto">
 
     <div class="flex-fill flex flex-column bg-white mr3-l br2-l ba-l b--white-box">
       <div class="f5 pa2 pa3-l relative ttu tc tl-l fw6 css-pipe-transfer-column-header">
@@ -28,13 +28,13 @@
         <div v-else>Choose Input</div>
       </div>
       <pipe-transfer-input-list
-        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto-l"
         :tasks="input_tasks"
         @input-delete="deleteInput"
         v-if="has_input && !show_input_chooser"
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
-        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto-l"
         :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         @choose-input="addInput"
@@ -69,13 +69,13 @@
         <div v-else>Choose Output</div>
       </div>
       <pipe-transfer-output-list
-        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto-l"
         :tasks="output_tasks"
         @output-delete="deleteOutput"
         v-if="has_output && !show_output_chooser"
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
-        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto"
+        class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto-l"
         :project-eid="projectEid"
         @cancel="show_output_chooser = false"
         @choose-output="addOutput"
@@ -87,10 +87,8 @@
       <div class="f5 pa2 pl0-l pt0-l pb2-l ml3-l relative ttu tc tl-l fw6 bb b--black-10 css-pipe-transfer-column-header">
         <div>Pipe Steps</div>
       </div>
-      <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto" v-if="has_tasks">
-        <pipe-transfer-transform-list
-          :tasks="tasks"
-        ></pipe-transfer-transform-list>
+      <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto-l" v-if="has_tasks">
+        <pipe-transfer-transform-list :tasks="tasks"></pipe-transfer-transform-list>
         <div>
           <btn
             btn-md
