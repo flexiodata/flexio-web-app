@@ -150,9 +150,11 @@ class System
 
         // next, check if there is an authorization header -- this takes precedence over any session cookie
         $headers = apache_request_headers();
-        if (isset($headers['Authorization']))
+        $headers = array_change_key_case($headers, $case = CASE_LOWER);
+
+        if (isset($headers['authorization']))
         {
-            $auth_header = trim($headers['Authorization']);
+            $auth_header = trim($headers['authorization']);
 
             $pos = strpos($auth_header, ' ');
             $auth_type = ($pos === false) ? $auth_header : substr($auth_header, 0, $pos);
