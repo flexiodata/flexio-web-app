@@ -350,8 +350,10 @@ class Pipe
                 if ($stream)
                 {
                     // stream name will be the post variable name, not the multipart filename
+                    // TODO: should we be using filename in the path and form name in the name?
                     $stream_info = array();
                     $stream_info['name'] = $name;
+                    $stream_info['path'] = $filename;
                     $stream_info['mime_type'] = $content_type;
                     $stream->set($stream_info);
 
