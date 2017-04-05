@@ -17,6 +17,7 @@
     return new RegExp("^((" + words.join(")|(") + "))\\b");
   }
 
+
   CodeMirror.defineMode('flexio-commandbar', function(conf, parserConf) {
 
     var cmds = parser.getHintableCommands();
@@ -25,22 +26,50 @@
     var external = {
       startState: function(basecolumn) {
         return {
-
+          tokenize: null
         }
       },
 
       token: function(stream, state) {
 
+        function tokenString(quote) {
+          return function(stream, state) {
+            var escaped = false, next;
+            while ((next = stream.next()) != null) {
+              if (next == quote && !escaped) break;
+              escaped = !escaped && next == "\\";
+            }
+            if (!escaped) {
+              state.tokenize = null;
+            }
+            return "string"
+          };
+        }
+
+
+        if (state.tokenize)
+          return state.tokenize(stream.state);
+
+
+
+        var peek_ch = stream.peek()
+
+        if (peek_ch == '"' || peek_ch == "'") {
+          peek_ch = stream.next()
+          state.tokenize = tokenString(peek_ch);
+          return state.tokenize(stream, state);
+        }
+
         //if (undefined === stream.eat(/[0-9]+/))
         //  return 'number'
         if (stream.match(cmds_regexp) !== null)
-          return 'keyword'
+          return 'variable-2'
 
         if (stream.eat(/[0-9]/) !== undefined)
           return 'number'
 
         if (stream.match(/[a-z]+[:]/) !== null)
-          return 'keyword'
+          return 'variable-2'
 
         var ch = stream.next()
 

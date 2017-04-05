@@ -111,8 +111,7 @@
       var me = this
       var opts = {
         lineNumbers: false,
-        mode: 'flexio-commandbar',
-        theme: 'eclipse'
+        mode: 'flexio-commandbar'
       }
 
       this.text = this.val
