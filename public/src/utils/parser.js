@@ -1210,21 +1210,32 @@
 
 
 
-    this.args.select = ['col'];
+    this.args.select = ['col','file'];
     this.keywords.select = function(str)
     {
       var json =
         {
           "type": "flexio.select",
           "params": {
-            "columns": []
           }
         };
 
       var params = this.split(str, this.args.select);
 
+      if (params.hasOwnProperty('file'))
+      {
+        json.params.files = [];
+
+        var i, files = this.parseList(params['file']);
+        for (i = 0; i < files.length; ++i)
+        {
+          json.params.files.push(files[i]);
+        }
+      }
+
       if (params.hasOwnProperty('col') || params.hasOwnProperty('columns') || params.hasOwnProperty('column'))
       {
+        json.params.columns = [];
         var i, columns = this.parseColumns(params.hasOwnProperty('col') ? params['col'] : (params.hasOwnProperty('columns') ? params['columns'] : params['column']));
         for (i = 0; i < columns.length; ++i)
         {
@@ -1242,6 +1253,22 @@
         return '';
 
       var res = "select";
+
+      if (json.params.hasOwnProperty('files'))
+      {
+        var str = '';
+        for (var i = 0; i < json.params.files.length; ++i)
+        {
+          if (i > 0)
+          {
+            str += ', ';
+          }
+          str += this.quoteColumnIfNecessary(json.params.files[i]);
+
+        }
+
+        res = this.append(res, "file: " + str);
+      }
 
       if (json.params.hasOwnProperty('columns'))
       {
