@@ -8,11 +8,6 @@
       :class="inputClass"
       @keydown.esc="revert"
       @keydown.enter.prevent.stop="save"
-      @keydown="onKeydown"
-      @keyup="onKeyup"
-      @mouseup="onMouseup"
-      @focus="onFocus"
-      @blur="onBlur"
       v-model.trim="text"
     ></textarea>
   </div>
