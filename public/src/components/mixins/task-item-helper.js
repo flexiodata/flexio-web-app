@@ -38,7 +38,6 @@ export default {
         case types.TASK_TYPE_EMAIL_SEND:
         case types.TASK_TYPE_OUTPUT:
         case types.TASK_TYPE_PROMPT:
-        case types.TASK_TYPE_RENAME:
           return 'bg-task-blue'
 
         case types.TASK_TYPE_EXECUTE:
@@ -61,7 +60,7 @@ export default {
         case types.TASK_TYPE_CUSTOM:
         case types.TASK_TYPE_FIND_REPLACE:
         case types.TASK_TYPE_NOP:
-        case types.TASK_TYPE_RENAME_COLUMN:
+        case types.TASK_TYPE_RENAME:
         case types.TASK_TYPE_SELECT:
         case types.TASK_TYPE_TRANSFORM:
           return 'bg-task-orange'

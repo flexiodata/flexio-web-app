@@ -116,12 +116,6 @@ const RENAME = {
   icon: 'edit'
 }
 
-const RENAME_COLUMN = {
-  name: 'Rename Column',
-  type: types.TASK_TYPE_RENAME_COLUMN,
-  icon: 'edit'
-}
-
 const SEARCH = {
   name: 'Search',
   type: types.TASK_TYPE_SEARCH,
@@ -129,7 +123,7 @@ const SEARCH = {
 }
 
 const SELECT = {
-  name: 'Select Column',
+  name: 'Select',
   type: types.TASK_TYPE_SELECT,
   icon: 'view_carousel'
 }
@@ -167,7 +161,6 @@ export const TASK_INFO_OUTPUT        = OUTPUT
 export const TASK_INFO_PROMPT        = PROMPT
 export const TASK_INFO_R             = R
 export const TASK_INFO_RENAME        = RENAME
-export const TASK_INFO_RENAME_COLUMN = RENAME_COLUMN
 export const TASK_INFO_SEARCH        = SEARCH
 export const TASK_INFO_SELECT        = SELECT
 export const TASK_INFO_SORT          = SORT

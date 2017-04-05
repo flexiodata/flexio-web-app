@@ -19,7 +19,7 @@
     TASK_TYPE_FILTER,
     TASK_TYPE_FIND_REPLACE,
     TASK_TYPE_GROUP,
-    TASK_TYPE_RENAME_COLUMN,
+    TASK_TYPE_RENAME,
     TASK_TYPE_SEARCH,
     TASK_TYPE_SELECT,
     TASK_TYPE_SORT,
@@ -128,7 +128,7 @@
             break
           */
 
-          case TASK_TYPE_RENAME_COLUMN:
+          case TASK_TYPE_RENAME:
             style_obj = { title: 'Rename', bg_color: COLOR_ORANGE, color: COLOR_WHITE }
             cols = _.keyBy(task_params.columns, 'name')
             break
