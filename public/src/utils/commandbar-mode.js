@@ -2,19 +2,17 @@
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
 (function(mod) {
-  if (typeof exports == "object" && typeof module == "object") // CommonJS
-    mod(require("../../node_modules/codemirror/lib/codemirror"));
-  else if (typeof define == "function" && define.amd) // AMD
-    define(["../../node_modules/codemirror/lib/codemirror"], mod);
+  if (typeof exports == 'object' && typeof module == 'object') // CommonJS
+    mod(require('../../node_modules/codemirror/lib/codemirror'), require('../utils/parser'));
+  else if (typeof define == 'function' && define.amd) // AMD
+    define(['../../node_modules/codemirror/lib/codemirror', '../utils/parser'], mod);
   else // Plain browser env
-    mod(CodeMirror);
-})(function(CodeMirror) {
-  "use strict";
+    mod(CodeMirror, CommandBarParser);
+})(function(CodeMirror, parser) {
+  'use strict';
 
+  CodeMirror.defineMode('flexio-commandbar', function(conf, parserConf) {
 
-
-  CodeMirror.defineMode("flexio-commandbar", function(conf, parserConf) {
- 
     var external = {
       startState: function(basecolumn) {
         return {
@@ -23,15 +21,17 @@
       },
 
       token: function(stream, state) {
-        
+
+        console.log(parser)
+
         //if (undefined === stream.eat(/[0-9]+/))
-        //  return "number"
+        //  return 'number'
 
         if (stream.eat(/[0-9]/) !== undefined)
-          return "number"
+          return 'number'
 
         if (stream.match(/[a-z]+[:]/) !== null)
-          return "keyword"
+          return 'keyword'
 
         var ch = stream.next()
 
@@ -42,5 +42,5 @@
     return external;
   });
 
-  CodeMirror.defineMIME("text/x-flexio-commandbar", "flexio-commandbar");
+  CodeMirror.defineMIME('text/x-flexio-commandbar', 'flexio-commandbar');
 });

@@ -125,8 +125,8 @@
           this.$emit('change', this.text)
         })
 
-        var cursor = this.editor.getCursor()
-        console.log(cursor)
+        //var cursor = this.editor.getCursor()
+        //console.log(cursor)
 
         this.ac = new Awesomplete(this.ta, {
           list: [],
