@@ -23,19 +23,52 @@ class Select extends \Flexio\Jobs\Base
         $input = $this->getInput()->enum();
         foreach ($input as $instream)
         {
-            $mime_type = $instream->getMimeType();
-            switch ($mime_type)
-            {
-                // unhandled input
-                default:
-                    $this->getOutput()->push($instream->copy());
-                    break;
+            $this->createOutput($instream);
+        }
+    }
 
-                // table input
-                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutputFromTable($instream);
-                    break;
+    private function createOutput(\Flexio\Object\Stream $instream)
+    {
+        $job_definition = $this->getProperties();
+        $mime_type = $instream->getMimeType();
+
+        // if we have an output file filter, see if the filename
+        // matches any of the filters; if not, we're done
+        if (isset($job_definition['params']['files']))
+        {
+            $files = $job_definition['params']['files'];
+            if (!is_array($files))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $filematches = false;
+            $filename = $instream->getName();
+            foreach ($files as $pattern)
+            {
+                if (\Flexio\Base\Util::matchPath($filename, $pattern, true) === false)
+                    continue;
+
+                $filematches = true;
+                break;
             }
+
+            // file doesn't match any of the paths; we're done
+            if ($filematches === false)
+                return;
+        }
+
+        $mime_type = $instream->getMimeType();
+        switch ($mime_type)
+        {
+            // if we don't have a table, we only care about selecting the file,
+            // so we're done
+            default:
+                $this->getOutput()->push($instream->copy());
+                break;
+
+            // if we have a table input, perform additional column selection
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                $this->createOutputFromTable($instream);
+                break;
         }
     }
 
@@ -62,9 +95,9 @@ class Select extends \Flexio\Jobs\Base
     {
         "type": "flexio.select",
         "params": {
+            "files" : [
+            ],
             "columns": [
-                "",
-                ""
             ]
         }
     }
@@ -80,11 +113,15 @@ EOD;
             },
             "params": {
                 "type": "object",
-                "required": ["columns"],
                 "properties": {
+                    "files": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "columns": {
                         "type": "array",
-                        "minItems": 1,
                         "items": {
                             "type": "string"
                         }
