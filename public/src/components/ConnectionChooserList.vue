@@ -28,8 +28,8 @@
 
 <script>
   import { CONNECTION_TYPE_BLANK_PIPE } from '../constants/connection-type'
-  import { mapGetters } from 'vuex'
   import * as connections from '../constants/connection-info'
+  import { mapGetters } from 'vuex'
   import Spinner from './Spinner.vue'
   import ConnectionChooserItem from './ConnectionChooserItem.vue'
   import EmptyItem from './EmptyItem.vue'

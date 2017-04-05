@@ -80,6 +80,7 @@
 <script>
   import { CONNECTION_TYPE_STDIN } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
+  import { mapGetters } from 'vuex'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import FileChooserModal from './FileChooserModal.vue'
@@ -99,6 +100,9 @@
       }
     },
     computed: {
+      task() {
+        return this.item
+      },
       ctype() {
         return _.get(this.item, 'metadata.connection_type', '')
       },
@@ -116,10 +120,19 @@
         return 'flexio pipes run ' + this.pipe_identifier + ' myfile.txt'
       },
       connection() {
-        var connection_eid = _.get(this.item, 'params.connection', '')
-        return _.get(this.$store, 'state.objects.'+connection_eid, {
-          connection_type: this.ctype
-        })
+        var connection_identifier = _.get(this.task, 'params.connection', '')
+
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        var connection = _
+          .chain(this.getAllConnections())
+          .find((c) => {
+            return _.get(c, 'eid') == connection_identifier ||
+                   _.get(c, 'ename') == connection_identifier
+          })
+          .value()
+
+        return _.assign({ connection_type: this.ctype }, connection)
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
@@ -155,6 +168,9 @@
       }
     },
     methods: {
+      ...mapGetters([
+        'getAllConnections'
+      ]),
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },
