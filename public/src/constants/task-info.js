@@ -110,7 +110,7 @@ const R = {
   icon: ''
 }
 
-const RENAME_COLUMN = {
+const RENAME = {
   name: 'Rename',
   type: types.TASK_TYPE_RENAME,
   icon: 'edit'
@@ -161,7 +161,6 @@ export const TASK_INFO_OUTPUT        = OUTPUT
 export const TASK_INFO_PROMPT        = PROMPT
 export const TASK_INFO_R             = R
 export const TASK_INFO_RENAME        = RENAME
-export const TASK_INFO_RENAME_COLUMN = RENAME_COLUMN
 export const TASK_INFO_SEARCH        = SEARCH
 export const TASK_INFO_SELECT        = SELECT
 export const TASK_INFO_SORT          = SORT
