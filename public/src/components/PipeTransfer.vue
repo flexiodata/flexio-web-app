@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-l flex-row-l items-stretch overflow-y-auto">
+  <div class="flex-l flex-row-l items-stretch">
 
     <div class="flex-fill flex flex-column bg-white mr3-l br2-l ba-l b--white-box">
       <div class="f5 pa2 pa3-l relative ttu tc tl-l fw6 css-pipe-transfer-column-header">
