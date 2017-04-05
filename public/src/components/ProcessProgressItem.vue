@@ -39,10 +39,9 @@
           case types.TASK_TYPE_OUTPUT        : return 'Exporting files'
           case types.TASK_TYPE_PROMPT        : return 'Gathering information'
           case types.TASK_TYPE_R             : return 'Running "R" script'
-          case types.TASK_TYPE_RENAME        : return 'Renaming files'
-          case types.TASK_TYPE_RENAME_COLUMN : return 'Renaming columns'
+          case types.TASK_TYPE_RENAME        : return 'Renaming'
           case types.TASK_TYPE_SEARCH        : return 'Searching for values'
-          case types.TASK_TYPE_SELECT        : return 'Selecting columns'
+          case types.TASK_TYPE_SELECT        : return 'Selecting'
           case types.TASK_TYPE_SORT          : return 'Sorting rows'
           case types.TASK_TYPE_TRANSFORM     : return 'Transforming values'
         }

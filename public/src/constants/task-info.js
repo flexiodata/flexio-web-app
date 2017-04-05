@@ -110,15 +110,9 @@ const R = {
   icon: ''
 }
 
-const RENAME = {
+const RENAME_COLUMN = {
   name: 'Rename',
   type: types.TASK_TYPE_RENAME,
-  icon: 'edit'
-}
-
-const RENAME_COLUMN = {
-  name: 'Rename Column',
-  type: types.TASK_TYPE_RENAME_COLUMN,
   icon: 'edit'
 }
 

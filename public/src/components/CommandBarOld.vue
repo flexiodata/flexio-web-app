@@ -154,8 +154,7 @@
           case types.TASK_TYPE_OUTPUT        : return 'output to: my-connection location: /path/to/folder'
           case types.TASK_TYPE_PROMPT        : return ''
           case types.TASK_TYPE_R             : return ''
-          case types.TASK_TYPE_RENAME        : return ''
-          case types.TASK_TYPE_RENAME_COLUMN : return 'rename col: first_name => firstname, last_name => lastname'
+          case types.TASK_TYPE_RENAME        : return 'rename col: first_name => firstname, last_name => lastname'
           case types.TASK_TYPE_SEARCH        : return ''
           case types.TASK_TYPE_SELECT        : return 'select col: [vendor name], trans_date, gross_amt'
           case types.TASK_TYPE_SORT          : return 'sort col: [vendor name]'
@@ -187,7 +186,6 @@
           case types.TASK_TYPE_PROMPT        : return base_url
           case types.TASK_TYPE_R             : return base_url
           case types.TASK_TYPE_RENAME        : return base_url+'#rename'
-          case types.TASK_TYPE_RENAME_COLUMN : return base_url+'#rename'
           case types.TASK_TYPE_SEARCH        : return base_url
           case types.TASK_TYPE_SELECT        : return base_url+'#select'
           case types.TASK_TYPE_SORT          : return base_url+'#sort'
