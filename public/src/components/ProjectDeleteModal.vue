@@ -87,7 +87,7 @@
         this.$refs['dialog'].close()
       },
       submit() {
-        this.$validator.validateAll('form-delete').then(success => {
+        this.$validator.validateAll().then(success => {
           // handle error
           if (!success)
             return
