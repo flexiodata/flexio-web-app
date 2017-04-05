@@ -1,11 +1,9 @@
 <template>
   <div>
     <textarea
-      title
       ref="textarea"
-      class="awesomeplete resize-none overflow-y-auto"
+      class="awesomeplete input-reset border-box w-100 h-100 bn outline-0 f6 code resize-none"
       spellcheck="false"
-      data-multiple
       :placeholder="placeholder"
       :class="inputClass"
       @keydown.esc="revert"
@@ -15,15 +13,16 @@
       @mouseup="onMouseup"
       @focus="onFocus"
       @blur="onBlur"
-      v-model="text"
+      v-model.trim="text"
     ></textarea>
   </div>
 </template>
 
 <script>
   import * as connections from '../constants/connection-info'
+  import CodeMirror from 'codemirror'
   import Awesomplete from './experimental/Awesomplete2'
-  import autosize from 'autosize'
+  import {} from '../utils/commandbar-mode'
   import parser from '../utils/parser'
 
   /*
@@ -52,7 +51,7 @@
   }
 
   // copied from Awesomplete $.regExpEscape
-  $.regExpEscape = function (s) {
+  $.regExpEscape = function(s) {
     return s.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&")
   }
 
@@ -103,22 +102,31 @@
     data() {
       return {
         text: this.val,
+        editor: null,
         dropdown_open: false,
         autosize_initialized: false
       }
     },
     mounted() {
       var me = this
+      var opts = {
+        lineNumbers: false,
+        mode: 'flexio-commandbar'
+      }
+
+      this.text = this.val
+      this.ta = this.$refs['textarea']
 
       this.$nextTick(() => {
-        this.ta = this.$refs['textarea']
-        this.ta.setAttribute('rows', '1')
+        this.editor = CodeMirror.fromTextArea(this.ta, opts)
 
-        if (this.autosize)
-        {
-          autosize(this.ta)
-          this.autosize_initialized = true
-        }
+        this.editor.on('change', (cm) => {
+          this.text = cm.getValue()
+          this.$emit('change', this.text)
+        })
+
+        var cursor = this.editor.getCursor()
+        console.log(cursor)
 
         this.ac = new Awesomplete(this.ta, {
           list: [],
@@ -157,9 +165,6 @@
       })
     },
     beforeDestroy() {
-      if (this.autosize_initialized)
-        autosize.destroy(this.ta)
-
       this.ta.removeEventListener('awesomplete-open', this.onDropdownOpen)
       this.ta.removeEventListener('awesomplete-close', this.onDropdownClose)
     },
@@ -167,11 +172,11 @@
       focus() {
         this.ta.focus()
       },
+
       // debounce for now -- this function is slow in FF...
       updateTextareaHeight: _.debounce(function() {
-        if (this.autosize_initialized)
-          autosize.update(this.ta)
       }, 200),
+
       showDropdown() {
         if (_.isNil(this.ac))
           return
@@ -190,70 +195,90 @@
           this.ac.open()
         }
       },
+
       hideDropdown() {
         this.ac.close()
       },
+
       updateDropdown(char_idx) {
         if (_.isNil(this.ac))
           return
-
-        /*
-        var caret_idx = tahelper.getCaretIndex()
-
-        this.hint = parser.getHints(this.text, caret_idx, {
-          connections: this.connections,
-          columns: this.columns
-        })
-
-        if (this.hint.type == 'none')
-        {
-          this.hideDropdown()
-          return
-        }
-
-        // update the dropdown contents
-        if (this.hint.type == 'connections')
-        {
-          this.hint.items = _
-            .chain(this.hint.items)
-            .sortBy([ function(c) { return _.get(c, 'name', '').toLowerCase() } ])
-            .value()
-
-          this.renderConnectionDropdown()
-        }
-         else if (this.hint.type == 'columns')
-        {
-          this.hint.items = _
-            .chain(this.hint.items)
-            .sortBy([ function(c) { return _.get(c, 'name', '').toLowerCase() } ])
-            .value()
-
-          this.renderColumnDropdown()
-        }
-         else
-        {
-          this.renderDefaultDropdown()
-        }
-
-        // update the list items
-        this.ac.list = this.hint.items
-
-        // position the dropdown
-        if (this.ac.ul)
-        {
-          if (char_idx === undefined)
-            char_idx = this.hint.offset
-
-          var pos = tahelper.getCharCoordinates(char_idx)
-          this.ac.ul.style.top = (pos.top + 20)+'px'
-          this.ac.ul.style.left = (pos.left)+'px'
-        }
-        */
 
         // show the dropdown
         if (!this.dropdown_open)
           this.showDropdown()
       },
+
+      revert() {
+        if (_.isNil(this.ac))
+          return
+
+        // if the dropdown is open, close it
+        if (this.dropdown_open)
+        {
+          this.hideDropdown()
+        }
+         else
+        {
+          this.text = this.val
+          this.$emit('revert', this.text)
+        }
+      },
+
+      save(evt) {
+        if (!this.dropdown_open || evt.ctrlKey === true)
+        {
+          this.hideDropdown()
+          this.$emit('save', this.text)
+        }
+      },
+
+      onKeydown(evt) {
+        // show the dropdown
+        if (evt.code == 'Space' && evt.ctrlKey === true)
+          setTimeout(() => { this.updateDropdown() }, 10)
+      },
+
+      onKeyup(evt) {
+        // don't do anything when these keys are pressed on their own
+        if (_.includes(['Control','Alt','Shift','Meta'], evt.key))
+          return
+
+        // already handled by keydown.esc and keydown.enter.prevent
+        if (_.includes(['Escape','Enter'], evt.code))
+          return
+
+        // handled in keydown
+        if (evt.code == 'Enter' && evt.ctrlKey === true)
+          return
+
+        // handled in keydown
+        if (evt.code == 'Space' && evt.ctrlKey === true)
+          return
+
+        if (this.dropdown_open)
+        {
+          if (evt.code == 'ArrowUp' || evt.code == 'ArrowDown')
+            return
+        }
+
+        // for all other keys, make sure the dropdown is open
+        this.updateDropdown()
+      },
+
+      onMouseup() {
+        this.updateDropdown()
+      },
+
+      onFocus() {
+      },
+
+      onBlur() {
+        this.hideDropdown()
+      },
+
+      // -- dropdown rendering functions --
+
       renderConnectionDropdown() {
         var me = this
 
@@ -307,6 +332,7 @@
           })
         }
       },
+
       renderColumnDropdown() {
         var me = this
 
@@ -337,6 +363,7 @@
           })
         }
       },
+
       renderDefaultDropdown() {
         var me = this
 
@@ -358,67 +385,6 @@
             'aria-selected': 'false'
           })
         }
-      },
-      revert() {
-        if (_.isNil(this.ac))
-          return
-
-        // if the dropdown is open, close it
-        if (this.dropdown_open)
-        {
-          this.hideDropdown()
-        }
-         else
-        {
-          this.text = this.val
-          this.$emit('revert', this.text)
-        }
-      },
-      save(evt) {
-        if (!this.dropdown_open || evt.ctrlKey === true)
-        {
-          this.hideDropdown()
-          this.$emit('save', this.text)
-        }
-      },
-      onKeydown(evt) {
-        // show the dropdown
-        if (evt.code == 'Space' && evt.ctrlKey === true)
-          setTimeout(() => { this.updateDropdown() }, 10)
-      },
-      onKeyup(evt) {
-        // don't do anything when these keys are pressed on their own
-        if (_.includes(['Control','Alt','Shift','Meta'], evt.key))
-          return
-
-        // already handled by keydown.esc and keydown.enter.prevent
-        if (_.includes(['Escape','Enter'], evt.code))
-          return
-
-        // handled in keydown
-        if (evt.code == 'Enter' && evt.ctrlKey === true)
-          return
-
-        // handled in keydown
-        if (evt.code == 'Space' && evt.ctrlKey === true)
-          return
-
-        if (this.dropdown_open)
-        {
-          if (evt.code == 'ArrowUp' || evt.code == 'ArrowDown')
-            return
-        }
-
-        // for all other keys, make sure the dropdown is open
-        this.updateDropdown()
-      },
-      onMouseup() {
-        this.updateDropdown()
-      },
-      onFocus() {
-      },
-      onBlur() {
-        this.hideDropdown()
       }
     }
   }
