@@ -137,12 +137,6 @@ class Test
         TestCheck::assertString('A.21', '\Flexio\Jobs\Rename::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\RenameFile::create();
-        $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\RenameFile::MIME_TYPE;
-        TestCheck::assertString('A.22', '\Flexio\Jobs\RenameFile::create()',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $task = \Flexio\Jobs\Search::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Search::MIME_TYPE;

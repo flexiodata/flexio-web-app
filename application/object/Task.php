@@ -148,12 +148,6 @@ class Task
                 'verb' => 'Renaming columns in'
             ),
             array(
-                'type' => \Flexio\Jobs\RenameFile::MIME_TYPE,
-                'class' => '\Flexio\Jobs\RenameFile',
-                'name' => 'Rename Files',
-                'verb' => 'Renaming file'
-            ),
-            array(
                 'type' => \Flexio\Jobs\Search::MIME_TYPE,
                 'class' => '\Flexio\Jobs\Search',
                 'name' => 'Search',
