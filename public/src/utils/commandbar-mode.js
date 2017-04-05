@@ -36,8 +36,22 @@
           return function(stream, state) {
             var escaped = false, next;
             while ((next = stream.next()) != null) {
-              if (next == quote && !escaped) break;
-              escaped = !escaped && next == "\\";
+              
+              if (next == quote)
+              {
+                if (stream.peek() == quote)
+                {
+                  // escaped quote -- consume it and move on
+                  stream.next();
+                }
+                 else
+                {
+                  break;
+                }
+              }
+
+              //if (next == quote && !escaped) break;
+              //escaped = !escaped && next == "\\";
             }
             if (!escaped) {
               state.tokenize = null;
