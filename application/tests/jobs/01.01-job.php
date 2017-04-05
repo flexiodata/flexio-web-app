@@ -149,18 +149,11 @@ class Test
         TestCheck::assertBoolean('A.20', '\Flexio\Jobs\Prompt definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\RenameColumn::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Rename::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\RenameColumn::MIME_TYPE && $mime_type == 'flexio.rename';
+        $actual = $mime_type == \Flexio\Jobs\Rename::MIME_TYPE && $mime_type == 'flexio.rename';
         $expected = true;
-        TestCheck::assertBoolean('A.21', '\Flexio\Jobs\RenameColumn definition type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\RenameFile::TEMPLATE,true);
-        $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\RenameFile::MIME_TYPE && $mime_type == 'flexio.rename-file';
-        $expected = true;
-        TestCheck::assertBoolean('A.22', '\Flexio\Jobs\RenameFile definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.21', '\Flexio\Jobs\Rename definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Search::TEMPLATE,true);

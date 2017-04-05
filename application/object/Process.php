@@ -315,10 +315,10 @@ class Process extends \Flexio\Object\Base
         // "flexio.user_firstname", "flexio.user_lastname", etc
         $environment_params = array();
 
-        $environment_params['flexio_user_firstname'] = \Flexio\System\System::getCurrentUserFirstName();
-        $environment_params['flexio_user_lastname'] = \Flexio\System\System::getCurrentUserLastName();
-        $environment_params['flexio_user_email'] = \Flexio\System\System::getCurrentUserEmail();
-        $environment_params['flexio_timestamp'] = \Flexio\System\System::getTimestamp();
+        $environment_params['process.user.firstname'] = \Flexio\System\System::getCurrentUserFirstName();
+        $environment_params['process.user.lastname'] = \Flexio\System\System::getCurrentUserLastName();
+        $environment_params['process.user.email'] = \Flexio\System\System::getCurrentUserEmail();
+        $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
 
         return $environment_params;
     }

@@ -142,16 +142,10 @@ class Task
                 'verb' => 'Running a program on'
             ),
             array(
-                'type' => \Flexio\Jobs\RenameColumn::MIME_TYPE,
-                'class' => '\Flexio\Jobs\RenameColumn',
+                'type' => \Flexio\Jobs\Rename::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Rename',
                 'name' => 'Rename Columns',
                 'verb' => 'Renaming columns in'
-            ),
-            array(
-                'type' => \Flexio\Jobs\RenameFile::MIME_TYPE,
-                'class' => '\Flexio\Jobs\RenameFile',
-                'name' => 'Rename Files',
-                'verb' => 'Renaming file'
             ),
             array(
                 'type' => \Flexio\Jobs\Search::MIME_TYPE,

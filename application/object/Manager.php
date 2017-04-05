@@ -50,7 +50,7 @@ class Manager
             $email_to_addresses = $parser->getTo();
             if (count($email_to_addresses) > 0)
             {
-                $primary_to_address = trim($email_to_addresses[0], "\t\n\r\0\x0B<>");
+                $primary_to_address = trim($email_to_addresses[0], " \t\n\r\0\x0B<>");
                 $email_to_parts = explode("@", $primary_to_address, 2);
                 $pipe_eid = $email_to_parts[0];
             }
@@ -66,6 +66,16 @@ class Manager
             $process = \Flexio\Object\Process::create($pipe_properties);
             if ($process !== false)
             {
+                // set an environment variable (parameter) with the "from" email address
+                $from_addresses = $parser->getFrom();
+                if (count($from_addresses) > 0)
+                {
+                    $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
+                    $params = array('email-from' => $from_addresses[0]['email'],
+                                    'email-from-display' => $from_addresses[0]['display']);
+                    $process->setParams($params);
+                }
+
                 // save the email attachments as streams, and if there
                 // are any attachments, run the pipe with the attachments
                 $streams = self::saveAttachmentsToStreams($parser, $process);

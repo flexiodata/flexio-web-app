@@ -131,16 +131,10 @@ class Test
         TestCheck::assertBoolean('A.20', '\Flexio\Jobs\Prompt schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\RenameColumn::SCHEMA;
+        $schema = \Flexio\Jobs\Rename::SCHEMA;
         $actual = \Flexio\Base\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.21', '\Flexio\Jobs\RenameColumn schema format',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $schema = \Flexio\Jobs\RenameFile::SCHEMA;
-        $actual = \Flexio\Base\ValidatorSchema::checkSchema($schema)->hasErrors();
-        $expected = false;
-        TestCheck::assertBoolean('A.22', '\Flexio\Jobs\RenameFile schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.21', '\Flexio\Jobs\Rename schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\Search::SCHEMA;
