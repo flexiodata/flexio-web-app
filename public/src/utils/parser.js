@@ -1661,7 +1661,23 @@
 
 
 
-
+    this.getHintableCommands = function() {
+      return [
+        'input',
+        'output',
+        'convert',
+        'limit',
+        'select',
+        'rename',
+        'sort',
+        'filter',
+        'calc',
+        //'email', // removed for release
+        'execute',
+        'transform',
+        'merge'
+      ]
+    }
 
 
 
@@ -1708,21 +1724,7 @@
           arg: null,
           current_word: current_word,
           offset: 0,
-          items: [
-            'input',
-            'output',
-            'convert',
-            'limit',
-            'select',
-            'rename',
-            'sort',
-            'filter',
-            'calc',
-            //'email', // removed for release
-            'execute',
-            'transform',
-            'merge'
-          ]
+          items: this.getHintableCommands()
         }
       }
        else if (idx > first_space && idx > 2)
@@ -1868,7 +1870,9 @@
       var dbg = g_cmdbarparser.getHints(str, idx, options);
       //console.log(Date() + JSON.stringify(dbg));
       return dbg;
-
+    },
+    getHintableCommands: function() { 
+      return g_cmdbarparser.getHintableCommands()
     }
   }
 

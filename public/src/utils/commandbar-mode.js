@@ -11,7 +11,16 @@
 })(function(CodeMirror, parser) {
   'use strict';
 
+
+
+  function wordRegexp(words) {
+    return new RegExp("^((" + words.join(")|(") + "))\\b");
+  }
+
   CodeMirror.defineMode('flexio-commandbar', function(conf, parserConf) {
+
+    var cmds = parser.getHintableCommands();
+    var cmds_regexp = wordRegexp(cmds);
 
     var external = {
       startState: function(basecolumn) {
@@ -22,10 +31,10 @@
 
       token: function(stream, state) {
 
-        console.log(parser)
-
         //if (undefined === stream.eat(/[0-9]+/))
         //  return 'number'
+        if (stream.match(cmds_regexp) !== null)
+          return 'keyword'
 
         if (stream.eat(/[0-9]/) !== undefined)
           return 'number'
