@@ -22,6 +22,7 @@
 
     var cmds = parser.getHintableCommands();
     var cmds_regexp = wordRegexp(cmds);
+    //var operator_regexp = /[+\-*&%=<>!?|~^]/;
 
     var external = {
       startState: function(basecolumn) {
@@ -82,6 +83,9 @@
         if (stream.eat(/[0-9]/) !== undefined)
           return 'number'
 
+        //if (stream.eat(operator_regexp) !== undefined)
+        //  return 'operator'
+        
         if (stream.match(/[a-z]+[:]/) !== null)
           return 'variable-2'
 
