@@ -129,7 +129,7 @@ const SEARCH = {
 }
 
 const SELECT = {
-  name: 'Select Column',
+  name: 'Select',
   type: types.TASK_TYPE_SELECT,
   icon: 'view_carousel'
 }
