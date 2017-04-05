@@ -728,8 +728,11 @@ class Model
         if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
             return false;
 
+        // note: when deleting an object, make sure to reset the ename so that the
+        // identifier can be reused
         $timestamp = \Flexio\System\System::getTimestamp();
         $process_arr = array(
+            'ename'         => '',
             'eid_status'    => \Model::STATUS_DELETED,
             'updated'       => $timestamp
         );
@@ -774,6 +777,12 @@ class Model
             $status = $params['eid_status'];
             if (!\Model::isValidStatus($status))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            // if the status is being set to delete, we're deleting the object, so
+            // make sure to reset the ename so that the identifier can be reused
+            unset($params['ename']);
+            if ($status === \Model::STATUS_DELETED)
+                $process_arr['ename'] = '';
 
             $process_arr['eid_status'] = $status;
         }
