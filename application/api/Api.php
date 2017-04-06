@@ -447,9 +447,6 @@ class Api
         // if we have any errors, set to the appropriate http header error code
         if ($request->getValidator()->hasErrors())
         {
-            // log any errors
-            self::logErrorsIfDebugging($request);
-
             // set the header based on the type of error
             $errors = $request->getValidator()->getErrors();
             $last_error = end($errors);
@@ -517,32 +514,6 @@ class Api
 
         $response = @json_encode($response, JSON_PRETTY_PRINT);
         echo $response;
-    }
-
-    private static function logErrorsIfDebugging(\Flexio\Api\Request $request)
-    {
-        if (!isset($GLOBALS['g_config']->debug_error_log))
-            return;
-
-        if ($request->getValidator()->hasErrors() === false)
-            return;
-
-        ob_start();
-        debug_print_backtrace();
-        $data = ob_get_clean();
-
-        $errors = $request->getValidator()->getErrors();
-        foreach ($errors as $e)
-        {
-            $code = $e['code'];
-            $message = $e['message'];
-            self::convertErrorToApiCode($code, $message);
-
-            if (is_array($message))
-                $message = json_encode($message);
-
-            file_put_contents($GLOBALS['g_config']->debug_error_log, "API error '$message' set!\n$data\n\n", FILE_APPEND);
-        }
     }
 
     private static function convertErrorToApiCode($error) // TODO: set parameter/return types
