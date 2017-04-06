@@ -348,21 +348,21 @@ class Test
         $content = getTestEmailContents('m0001.txt');
         $email = \Flexio\Services\Email::parseText($content);
         $actual = $email->getSubject();
-        $expected = "Die Hasen und die Frösche";
+        $expected = "Die Hasen und die Frösche (Microsoft Outlook 00)";
         TestCheck::assertString('D.1', '\Flexio\Services\Email::parseText(); get the "subject"', $actual, $expected, $results);
 
         // BEGIN TEST
         $content = getTestEmailContents('m0002.txt');
         $email = \Flexio\Services\Email::parseText($content);
         $actual = $email->getSubject();
-        $expected = 'Die Hasen und die Frösche';
+        $expected = 'Die Hasen und die Frösche (Microsoft Outlook 00)';
         TestCheck::assertString('D.2', '\Flexio\Services\Email::parseText(); get the "subject"', $actual, $expected, $results);
 
         // BEGIN TEST
         $content = getTestEmailContents('m0003.txt');
         $email = \Flexio\Services\Email::parseText($content);
         $actual = $email->getSubject();
-        $expected = 'Die Hasen und die Frösche';
+        $expected = 'Die Hasen und die Frösche (Microsoft Outlook 00)';
         TestCheck::assertString('D.3', '\Flexio\Services\Email::parseText(); get the "subject"', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -404,7 +404,7 @@ class Test
         $content = getTestEmailContents('m0009.txt');
         $email = \Flexio\Services\Email::parseText($content);
         $actual = $email->getSubject();
-        $expected = 'Die Hasen und die Frösche';
+        $expected = 'Die Hasen und die Frösche (Microsoft Outlook 00)';
         TestCheck::assertString('D.9', '\Flexio\Services\Email::parseText(); get the "subject"', $actual, $expected, $results);
 
         // BEGIN TEST
