@@ -14,6 +14,7 @@
   import { TASK_TYPE_EXECUTE } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
   import CodeMirror from 'codemirror'
+  import {} from '../../node_modules/codemirror/addon/hint/show-hint'
   import {} from '../../node_modules/codemirror/addon/display/placeholder'
   import {} from '../utils/commandbar-mode'
   import parser from '../utils/parser'
