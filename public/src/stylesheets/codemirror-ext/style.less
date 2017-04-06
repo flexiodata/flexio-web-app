@@ -79,6 +79,19 @@
   display: block;
   padding: 3px 6px;
   border-radius: 2px;
+  cursor: default;
+
+  &:hover {
+    background-color: rgba(0,0,0,0.075);
+  }
+}
+
+.CodeMirror-flexio-cmdbar-tooltip-item-active {
+  background-color: rgba(0,0,0,0.15);
+
+  &:hover {
+    background-color: rgba(0,0,0,0.225);
+  }
 }
 
 .CodeMirror-flexio-cmdbar-hint-doc {

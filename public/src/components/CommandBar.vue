@@ -67,10 +67,14 @@
       }
     },
     data() {
+      var base_cls = 'CodeMirror-flexio-cmdbar-'
+
       return {
         cmd_text: '',
         editor: null,
-        dropdown_cls: 'CodeMirror-flexio-cmdbar-',
+        dropdown_cls: base_cls,
+        dropdown_item_cls: base_cls+'tooltip-item',
+        dropdown_item_active_cls: base_cls+'tooltip-item-active',
         active_dropdown: null
       }
     },
@@ -112,6 +116,7 @@
       this.editor.on('keydown', (cm, evt) => {
         if (evt.key == 'Enter')
         {
+          // don't allow multiple lines in the command bar
           evt.preventDefault()
 
           if (evt.ctrlKey === true)
@@ -129,6 +134,22 @@
             // save when user presses Enter without a dropdown open
             this.save()
           }
+        }
+
+        if (evt.code == 'ArrowUp')
+        {
+          evt.preventDefault()
+
+          if (this.active_dropdown)
+            this.highlightDropdownItemPrev()
+        }
+
+        if (evt.code == 'ArrowDown')
+        {
+          evt.preventDefault()
+
+          if (this.active_dropdown)
+            this.highlightDropdownItemNext()
         }
       })
 
@@ -189,7 +210,10 @@
 
         var tip = elt('span', null)
         for (var i = 0; i < hints.items.length; ++i) {
-          tip.appendChild(elt('span', this.dropdown_cls+'tooltip-item', hints.items[i]))
+          var tip_cls = this.dropdown_item_cls
+          if (i == 0)
+            tip_cls += ' '+this.dropdown_item_active_cls
+          tip.appendChild(elt('span', tip_cls, hints.items[i]))
         }
 
         var offset = this.editor.cursorCoords(null, 'page')
@@ -206,6 +230,30 @@
           return
 
         this.showDropdown()
+      },
+
+      highlightDropdownItemPrev() {
+        var el = this.active_dropdown.getElementsByClassName(this.dropdown_item_active_cls)
+        if (el && el.length == 1)
+          el = el[0]
+
+        if (el.previousSibling)
+        {
+          el.className = this.dropdown_item_cls
+          el.previousSibling.className = this.dropdown_item_cls+' '+this.dropdown_item_active_cls
+        }
+      },
+
+      highlightDropdownItemNext() {
+        var el = this.active_dropdown.getElementsByClassName(this.dropdown_item_active_cls)
+        if (el && el.length == 1)
+          el = el[0]
+
+        if (el.nextSibling)
+        {
+          el.className = this.dropdown_item_cls
+          el.nextSibling.className = this.dropdown_item_cls+' '+this.dropdown_item_active_cls
+        }
       }
     }
   }
