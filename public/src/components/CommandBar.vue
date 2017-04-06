@@ -67,14 +67,15 @@
       }
     },
     data() {
+      var base_cls = 'CodeMirror-flexio-cmdbar-'
+
       return {
         cmd_text: '',
         editor: null,
-        dropdown_open: false,
-        dropdown_cls: 'CodeMirror-flexio-cmdbar-',
-        insert_char_start_idx: 0,
-        insert_char_end_idx: 0,
-        active_tooltip: null
+        dropdown_cls: base_cls,
+        dropdown_item_cls: base_cls+'tooltip-item',
+        dropdown_item_active_cls: base_cls+'tooltip-item-active',
+        active_dropdown: null
       }
     },
     computed: {
@@ -104,7 +105,7 @@
       this.editor.setCursor({ line: 1, ch: 1000000 })
 
       this.editor.on('blur', (cm) => {
-        this.closeArgHints()
+        this.closeDropdown()
       })
 
       this.editor.on('change', (cm) => {
@@ -112,8 +113,48 @@
         this.$emit('change', this.cmd_text, this.cmd_json)
       })
 
+      this.editor.on('keydown', (cm, evt) => {
+        if (evt.key == 'Enter')
+        {
+          // don't allow multiple lines in the command bar
+          evt.preventDefault()
+
+          if (evt.ctrlKey === true)
+          {
+            // force a save when the user presses Ctrl+Enter
+            this.save()
+          }
+           else if (this.active_dropdown)
+          {
+            // select the item in the dropdown and close it
+            this.closeDropdown()
+          }
+           else
+          {
+            // save when user presses Enter without a dropdown open
+            this.save()
+          }
+        }
+
+        if (evt.code == 'ArrowUp')
+        {
+          evt.preventDefault()
+
+          if (this.active_dropdown)
+            this.highlightDropdownItemPrev()
+        }
+
+        if (evt.code == 'ArrowDown')
+        {
+          evt.preventDefault()
+
+          if (this.active_dropdown)
+            this.highlightDropdownItemNext()
+        }
+      })
+
       this.editor.on('cursorActivity', (cm) => {
-        this.updateArgHints()
+        this.updateDropdown()
       })
     },
     methods: {
@@ -127,9 +168,14 @@
         this.editor.setValue(this.val)
       },
 
+      save() {
+        this.closeDropdown()
+        this.$emit('save', this.cmd_text, this.cmd_json)
+      },
+
       /* -- autocomplete dropdown methods */
 
-      makeTooltip(x, y, content) {
+      createDropdown(x, y, content) {
         var node = elt('div', this.dropdown_cls+'tooltip', content)
         node.style.left = x+'px'
         node.style.top = (y+3)+'px'
@@ -137,18 +183,18 @@
         return node
       },
 
-      closeArgHints() {
-        if (this.active_tooltip)
+      closeDropdown() {
+        if (this.active_dropdown)
         {
-          if (this.active_tooltip.parentNode)
-            this.active_tooltip.parentNode.removeChild(this.active_tooltip)
+          if (this.active_dropdown.parentNode)
+            this.active_dropdown.parentNode.removeChild(this.active_dropdown)
 
-          this.active_tooltip = null
+          this.active_dropdown = null
         }
       },
 
-      showArgHints() {
-        this.closeArgHints()
+      showDropdown() {
+        this.closeDropdown()
 
         var idx = this.editor.getCursor().ch
         var val = this.editor.getValue()
@@ -164,15 +210,18 @@
 
         var tip = elt('span', null)
         for (var i = 0; i < hints.items.length; ++i) {
-          tip.appendChild(elt('span', this.dropdown_cls+'tooltip-item', hints.items[i]))
+          var tip_cls = this.dropdown_item_cls
+          if (i == 0)
+            tip_cls += ' '+this.dropdown_item_active_cls
+          tip.appendChild(elt('span', tip_cls, hints.items[i]))
         }
 
         var offset = this.editor.cursorCoords(null, 'page')
-        this.active_tooltip = this.makeTooltip(offset.right + 1, offset.bottom, tip)
+        this.active_dropdown = this.createDropdown(offset.right + 1, offset.bottom, tip)
       },
 
-      updateArgHints() {
-        this.closeArgHints()
+      updateDropdown() {
+        this.closeDropdown()
 
         var state = this.editor.getTokenAt(this.editor.getCursor()).state
         var inner = CodeMirror.innerMode(this.editor.getMode(), state)
@@ -180,7 +229,31 @@
         if (inner.mode.name != 'flexio-commandbar')
           return
 
-        this.showArgHints()
+        this.showDropdown()
+      },
+
+      highlightDropdownItemPrev() {
+        var el = this.active_dropdown.getElementsByClassName(this.dropdown_item_active_cls)
+        if (el && el.length == 1)
+          el = el[0]
+
+        if (el.previousSibling)
+        {
+          el.className = this.dropdown_item_cls
+          el.previousSibling.className = this.dropdown_item_cls+' '+this.dropdown_item_active_cls
+        }
+      },
+
+      highlightDropdownItemNext() {
+        var el = this.active_dropdown.getElementsByClassName(this.dropdown_item_active_cls)
+        if (el && el.length == 1)
+          el = el[0]
+
+        if (el.nextSibling)
+        {
+          el.className = this.dropdown_item_cls
+          el.nextSibling.className = this.dropdown_item_cls+' '+this.dropdown_item_active_cls
+        }
       }
     }
   }

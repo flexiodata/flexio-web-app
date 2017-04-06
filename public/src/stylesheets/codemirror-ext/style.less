@@ -66,19 +66,32 @@
   z-index: 60;
   white-space: pre-wrap;
   font-family: monospace;
-  color: #666;
+  color: #333;
   padding: 2px;
   background-color: #fff;
   min-width: 8rem;
   max-width: 32em;
-  border-radius: 3px;
+  border-radius: 0; // 3px?
   box-shadow: 2px 3px 5px rgba(0,0,0,0.125), -2px 3px 5px rgba(0,0,0,0.125), 0 0 2px rgba(0,0,0,0.25);
 }
 
 .CodeMirror-flexio-cmdbar-tooltip-item {
   display: block;
-  padding: 2px 4px;
+  padding: 3px 6px;
   border-radius: 2px;
+  cursor: default;
+
+  &:hover {
+    background-color: rgba(0,0,0,0.075);
+  }
+}
+
+.CodeMirror-flexio-cmdbar-tooltip-item-active {
+  background-color: rgba(0,0,0,0.15);
+
+  &:hover {
+    background-color: rgba(0,0,0,0.225);
+  }
 }
 
 .CodeMirror-flexio-cmdbar-hint-doc {
