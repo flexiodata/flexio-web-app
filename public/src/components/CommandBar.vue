@@ -87,163 +87,87 @@
 
 
 
-var cls = 'CodeMirror-flexio-cmdbar-';
-var ts = {}
+      // dropdown hinting engine
+      var cls = 'CodeMirror-flexio-cmdbar-'
+      var dropdown_state = {}
 
-function elt(tagname, cls /*, ... elts*/) {
-  var e = document.createElement(tagname);
-  if (cls) e.className = cls;
-  for (var i = 2; i < arguments.length; ++i) {
-    var elt = arguments[i];
-    if (typeof elt == "string") elt = document.createTextNode(elt);
-    e.appendChild(elt);
-  }
-  return e;
-}
+      function elt(tagname, cls /*, ... strings or elements*/) {
 
-function remove(node) {
-    var p = node && node.parentNode
-    if (p) p.removeChild(node)
-}
-
-function makeTooltip(x, y, content) {
-    var node = elt("div", cls + "tooltip", content)
-    node.style.left = x + "px"
-    node.style.top = y + "px"
-    document.body.appendChild(node)
-    return node
-}
-
-function closeArgHints(ts) {
-  if (ts.activeArgHints) { remove(ts.activeArgHints); ts.activeArgHints = null; }
-}
-
-function showArgHints(ts, cm, pos) {
-  closeArgHints(ts);
-
-  var idx = cm.getCursor().ch
-  var value = cm.getValue()
-
-  // if no text, no hint
-  if (value.length == 0)
-    return;
-
-  var hints = parser.getHints(value, idx, {})
-
-  if (hints.type == 'none')
-    return;
-
-  if (!_.isArray(hints.items))
-    return;
-
-  var tip = elt("span", null);
-  for (var i = 0; i < hints.items.length; ++i)
-  {
-    tip.appendChild(elt("span", "db", hints.items[i]));
-  }
-
-/*
-  var tip = elt("span", null, 
-                  elt("span", "db", value),
-                  elt("span", "db", "Test2"),
-                  elt("span", "db", "Test3")
-                  )
-*/
-
-
-  var place = cm.cursorCoords(null, "page")
-  //console.log("(" + place.right + "," + place.bottom + ")");
-
-  ts.activeArgHints = makeTooltip(place.right + 1, place.bottom, tip)
-/*
-  var cache = ts.cachedArgHints, tp = cache.type;
-  var tip = elt("span", cache.guess ? cls + "fhint-guess" : null,
-                elt("span", cls + "fname", cache.name), "(");
-  for (var i = 0; i < tp.args.length; ++i) {
-    if (i) tip.appendChild(document.createTextNode(", "));
-    var arg = tp.args[i];
-    tip.appendChild(elt("span", cls + "farg" + (i == pos ? " " + cls + "farg-current" : ""), arg.name || "?"));
-    if (arg.type != "?") {
-      tip.appendChild(document.createTextNode(":\u00a0"));
-      tip.appendChild(elt("span", cls + "type", arg.type));
-    }
-  }
-  tip.appendChild(document.createTextNode(tp.rettype ? ") ->\u00a0" : ")"));
-  if (tp.rettype) tip.appendChild(elt("span", cls + "type", tp.rettype));
-  var place = cm.cursorCoords(null, "page");
-  ts.activeArgHints = makeTooltip(place.right + 1, place.bottom, tip);
-  */
-}
-
-function updateArgHints(ts, cm) {
-
-  closeArgHints(ts);
-
-  var state = cm.getTokenAt(cm.getCursor()).state;
-  var inner = CodeMirror.innerMode(cm.getMode(), state);
-  console.log(inner.mode.name);
-  
-  if (inner.mode.name != "flexio-commandbar") return;
-
-  var ch, pos = 0;
-
-
-  showArgHints(ts, cm, pos);
-
-  /*
-    closeArgHints(ts);
-
-    if (cm.somethingSelected()) return;
-    var state = cm.getTokenAt(cm.getCursor()).state;
-    var inner = CodeMirror.innerMode(cm.getMode(), state);
-    if (inner.mode.name != "javascript") return;
-    var lex = inner.state.lexical;
-    if (lex.info != "call") return;
-
-    var ch, argPos = lex.pos || 0, tabSize = cm.getOption("tabSize");
-    for (var line = cm.getCursor().line, e = Math.max(0, line - 9), found = false; line >= e; --line) {
-      var str = cm.getLine(line), extra = 0;
-      for (var pos = 0;;) {
-        var tab = str.indexOf("\t", pos);
-        if (tab == -1) break;
-        extra += tabSize - (tab + extra) % tabSize - 1;
-        pos = tab + 1;
+        var e = document.createElement(tagname)
+        if (cls) e.className = cls
+        for (var i = 2; i < arguments.length; ++i) {
+          var elt = arguments[i]
+          if (typeof(elt) == 'string') {
+            elt = document.createTextNode(elt)
+          }
+          e.appendChild(elt)
+        }
+        return e
       }
-      ch = lex.column - extra;
-      if (str.charAt(ch) == "(") {found = true; break;}
-    }
-    if (!found) return;
 
-    var start = Pos(line, ch);
-    var cache = ts.cachedArgHints;
-    if (cache && cache.doc == cm.getDoc() && cmpPos(start, cache.start) == 0)
-      return showArgHints(ts, cm, argPos);
+      function makeTooltip(x, y, content) {
+        var node = elt('div', cls + 'tooltip', content)
+        node.style.left = x + 'px'
+        node.style.top = y + 'px'
+        document.body.appendChild(node)
+        return node
+      }
 
-    ts.request(cm, {type: "type", preferFunction: true, end: start}, function(error, data) {
-      if (error || !data.type || !(/^fn\(/).test(data.type)) return;
-      ts.cachedArgHints = {
-        start: start,
-        type: parseFnType(data.type),
-        name: data.exprName || data.name || "fn",
-        guess: data.guess,
-        doc: cm.getDoc()
-      };
-      showArgHints(ts, cm, argPos);
-    });
-  */
-}
+      function closeArgHints(dropdown_state) {
+
+        if (dropdown_state.active_tooltip) {
+          if (dropdown_state.active_tooltip.parentNode) {
+            dropdown_state.active_tooltip.parentNode.removeChild(dropdown_state.active_tooltip)
+          }
+          dropdown_state.active_tooltip = null
+        }
+      }
+
+      function showArgHints(dropdown_state, cm) {
+        
+        closeArgHints(dropdown_state)
+
+        var idx = cm.getCursor().ch
+        var value = cm.getValue()
+
+        // if no text, no hint
+        if (value.length == 0)
+          return
+
+        var hints = parser.getHints(value, idx, {})
+
+        if (hints.type == 'none')
+          return
+
+        if (!_.isArray(hints.items))
+          return
+
+        var tip = elt("span", null);
+        for (var i = 0; i < hints.items.length; ++i) {
+          tip.appendChild(elt("span", "db", hints.items[i]))
+        }
+
+        var place = cm.cursorCoords(null, "page")
+
+        dropdown_state.active_tooltip = makeTooltip(place.right + 1, place.bottom, tip)
+      }
+
+      function updateArgHints(dropdown_state, cm) {
+        
+        closeArgHints(dropdown_state)
+
+        var state = cm.getTokenAt(cm.getCursor()).state
+        var inner = CodeMirror.innerMode(cm.getMode(), state)
+
+        if (inner.mode.name != "flexio-commandbar") {
+          return
+        }
+
+        showArgHints(dropdown_state, cm)
+      }
 
 
-
-
-
-
-
-
-
-
-
-      this.editor.on('cursorActivity', function(cm) { updateArgHints(ts, cm) });
+      this.editor.on('cursorActivity', function(cm) { updateArgHints(dropdown_state, cm) });
     },
     methods: {
       setValue(val) {
