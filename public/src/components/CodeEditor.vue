@@ -3,7 +3,6 @@
     <div class="flex-fill flex flex-row items-stretch relative">
       <textarea
         ref="textarea"
-        class="input-reset border-box w-100 h-100 bn outline-0 f6 code resize-none"
         spellcheck="false"
         v-model.trim="code_text"
       ></textarea>

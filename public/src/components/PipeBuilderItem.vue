@@ -84,7 +84,7 @@
         <div v-else>
           <command-bar
             ref="commandbar"
-            class="mt2 ba b--black-10 bg-white"
+            class="mt2 pa1 ba b--black-10 bg-white"
             :orig-json="task"
             @change="updateEditTask"
             @cancel="cancelEdit"
@@ -146,8 +146,8 @@
     watch: {
       task: function(val, old_val) {
         this.edit_json = _.assign({}, val)
-        this.edit_command = this.getParserCommand()
-        this.execute_code = this.getReadableCode()
+        this.edit_command = this.getOrigCommand()
+        this.execute_code = this.getOrigCode()
       }
     },
     data() {
@@ -158,10 +158,10 @@
 
       return {
         is_inited: false,
-        description: this.getDescription(),
+        description: _.get(this, 'item.description', ''),
         edit_json: this.getOrigJson(),
-        edit_command: this.getParserCommand(),
-        execute_code: this.getReadableCode()
+        edit_command: this.getOrigCommand(),
+        execute_code: this.getOrigCode()
       }
     },
     computed: {
@@ -180,7 +180,9 @@
       orig_command() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
         var end_idx = cmd_text.indexOf(' code:')
-        return (this.is_task_execute && end_idx != -1) ? cmd_text.substring(0, end_idx) : cmd_text
+        return (this.is_task_execute && end_idx != -1)
+          ? cmd_text.substring(0, end_idx)
+          : cmd_text
       },
       orig_code() {
         var code = _.get(this, 'task.params.code', '')
@@ -252,15 +254,12 @@
       getOrigJson() {
         return _.get(this, 'item', {})
       },
-      getDescription() {
-        return _.get(this, 'item.description', '')
-      },
-      getParserCommand() {
-        var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
+      getOrigCommand() {
+        var cmd_text = _.defaultTo(parser.toCmdbar(this.getOrigJson()), '')
         var end_idx = cmd_text.indexOf(' code:')
         return (this.is_task_execute && end_idx != -1) ? cmd_text.substring(0, end_idx) : cmd_text
       },
-      getReadableCode() {
+      getOrigCode() {
         var code = _.get(this, 'item.params.code', '')
         try { return atob(code) } catch(e) { return '' }
       },
@@ -285,13 +284,13 @@
       },
       cancelEdit() {
         this.edit_json = _.assign({}, this.getOrigJson())
-        this.edit_command = this.getParserCommand()
-        this.execute_code = this.getReadableCode()
+        this.edit_command = this.getOrigCommand()
+        this.execute_code = this.getOrigCode()
 
         // reset the command in the command bar
         var cmd_bar = this.$refs['commandbar']
         if (!_.isNil(cmd_bar))
-          cmd_bar.setCmdText(this.edit_command)
+          cmd_bar.reset()
 
         // reset the code in the code editor
         var code_editor = this.$refs['code']
