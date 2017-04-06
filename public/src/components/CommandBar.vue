@@ -30,6 +30,17 @@
         default: () => { return {} }
       }
     },
+    watch: {
+      origJson(val, old_val) {
+        var cmd_text = _.defaultTo(parser.toCmdbar(val), '')
+        var end_idx = cmd_text.indexOf(' code:')
+
+        if (_.get(val, 'type') == TASK_TYPE_EXECUTE && end_idx != -1)
+          cmd_text = cmd_text.substring(0, end_idx)
+
+        this.setValue(cmd_text)
+      }
+    },
     data() {
       return {
         cmd_text: '',
