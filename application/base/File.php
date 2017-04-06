@@ -18,7 +18,7 @@ namespace Flexio\Base;
 
 class File
 {
-    public static function matchPath($str, $pattern, $case_sensitive)
+    public static function matchPath(string $str, string $pattern, bool $case_sensitive) : bool
     {
         return fnmatch($pattern, $str, $case_sensitive ? 0 : FNM_CASEFOLD);  // FNM_CASEFOLD triggers caseless match
     }
