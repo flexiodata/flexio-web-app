@@ -20,7 +20,7 @@ class TableReader
 {
     public static function open($filename)
     {
-        $extension = \Flexio\Base\Util::getFileExtension($filename);
+        $extension = \Flexio\Base\File::getFileExtension($filename);
 
         if (0 == strcasecmp($extension, 'csv') ||
             0 == strcasecmp($extension, 'icsv') ||

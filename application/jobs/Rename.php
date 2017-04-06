@@ -86,8 +86,8 @@ class Rename extends \Flexio\Jobs\Base
             // evaluate the expression with the environment variables
             $variables = array();
             $variables['stream.name'] = $outstream->getName();
-            $variables['stream.name.base'] = \Flexio\Base\Util::getFilename($outstream->getName());
-            $variables['stream.name.ext'] = \Flexio\Base\Util::getFileExtension($outstream->getName());
+            $variables['stream.name.base'] = \Flexio\Base\File::getFilename($outstream->getName());
+            $variables['stream.name.ext'] = \Flexio\Base\File::getFileExtension($outstream->getName());
             $variables['stream.path'] = $outstream->getPath();
             $variables['stream.content.type'] = $outstream->getMimeType();
 
