@@ -21,6 +21,10 @@
       'val': {
         default: ''
       },
+      'orig-json': {
+        type: Object,
+        default: () => { return {} }
+      },
       'options': {
         type: Object,
         default: () => { return {} }
@@ -30,6 +34,14 @@
       return {
         cmd_text: '',
         editor: null
+      }
+    },
+    computed: {
+      is_changed() {
+        return this.cmd_text != this.val
+      },
+      cmd_json() {
+        return this.is_changed ? parser.toJSON(this.cmd_text) : this.origJson
       }
     },
     created() {
@@ -48,7 +60,7 @@
 
       this.editor.on('change', (cm) => {
         this.cmd_text = cm.getValue()
-        this.$emit('change', this.cmd_text)
+        this.$emit('change', this.cmd_text, this.cmd_json)
       })
     },
     methods: {

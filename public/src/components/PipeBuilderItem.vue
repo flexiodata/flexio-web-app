@@ -86,6 +86,7 @@
             ref="commandbar"
             class="mt2 pa1 ba b--black-10 bg-white"
             :val="orig_cmd"
+            :orig-json="task"
             @change="updateCmd"
           ></command-bar>
           <code-editor
@@ -268,8 +269,9 @@
       getBase64Code(code) {
         try { return btoa(code) } catch(e) { return '' }
       },
-      updateCmd(cmd) {
+      updateCmd(cmd, json) {
         this.edit_cmd = cmd
+        this.edit_json = _.assign({}, json)
       },
       updateCode(code) {
         this.edit_code = code
@@ -301,7 +303,7 @@
         var edit_attrs = _.pick(this.edit_json, ['metadata', 'type', 'params'])
 
         // sync up the changes from the code editor if we're on an execute step
-        if (this.is_task_execute)
+        if (_.get(this, 'item.type') == TASK_TYPE_EXECUTE)
         {
           // this is a hack-ish workaround for the fact that the PHP backend returns
           // empty objects as empty arrays
