@@ -88,6 +88,8 @@
             :val="orig_cmd"
             :orig-json="task"
             @change="updateCmd"
+            @revert="cancelEdit"
+            @save="saveChanges"
           ></command-bar>
           <code-editor
             ref="code"
@@ -101,7 +103,7 @@
             <div class="flex flex-row mt2" v-show="is_changed">
               <div class="flex-fill">&nbsp;</div>
               <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
-              <btn btn-sm class="b ttu white bg-blue" @click="saveEdit">Save Changes</btn>
+              <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
             </div>
           </transition>
           <pipe-content
@@ -299,7 +301,7 @@
         if (!_.isNil(code_editor))
           code_editor.reset()
       },
-      saveEdit() {
+      saveChanges() {
         var edit_json = _.cloneDeep(this.edit_json)
         var edit_attrs = _.pick(edit_json, ['metadata', 'type', 'params'])
 
