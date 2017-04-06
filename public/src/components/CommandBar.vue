@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @mouseup="onMouseup">
     <textarea
       ref="textarea"
       class="awesomeplete"
@@ -108,7 +108,9 @@
       return {
         cmd_text: '',
         editor: null,
-        dropdown_open: false
+        dropdown_open: false,
+        insert_char_start_idx: 0,
+        insert_char_end_idx: 0
       }
     },
     computed: {
@@ -139,10 +141,6 @@
       this.editor.on('change', (cm) => {
         this.cmd_text = cm.getValue()
         this.$emit('change', this.cmd_text, this.cmd_json)
-      })
-
-      this.editor.on('mousedown', (cm) => {
-        this.updateDropdown()
       })
 
       this.editor.on('blur', (cm) => {
@@ -205,7 +203,7 @@
             return Awesomplete.FILTER_CONTAINS(text, str.match(/[^ ]*$/)[0])
           },
           replace(text) {
-            // tell CodeMirror what to do
+            me.insert_char_end_idx = me.editor.getCursor().ch
           }
         })
 
@@ -228,6 +226,9 @@
         this.editor.setValue(this.val)
       },
       /* -- BEGIN AWESOMPLETE METHODS -- */
+      onMouseup() {
+        setTimeout(() => { this.updateDropdown() }, 10)
+      },
       showDropdown() {
         if (_.isNil(this.ac))
           return
@@ -245,6 +246,8 @@
         {
           this.ac.open()
         }
+
+        this.insert_char_start_idx = this.editor.getCursor().ch
       },
       hideDropdown() {
         if (!_.isNil(this.ac))
