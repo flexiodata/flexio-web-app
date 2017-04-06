@@ -205,6 +205,20 @@
         this.$emit('save', this.cmd_text, this.cmd_json)
       },
 
+      getHints(idx) {
+        var val = this.editor.getValue()
+
+        // if we didn't pass a number in, use the cursor position
+        if (!_.isNumber(idx))
+          idx = this.editor.getCursor().ch
+
+        // if no text, no hint
+        if (val.length == 0)
+          return null
+
+        return parser.getHints(val, idx, {})
+      },
+
       /* -- autocomplete dropdown methods */
 
       createDropdown(x, y, content) {
@@ -228,16 +242,8 @@
       showDropdown() {
         this.closeDropdown()
 
-        var idx = this.editor.getCursor().ch
-        var val = this.editor.getValue()
-
-        // if no text, no hint
-        if (val.length == 0)
-          return
-
-        var hints = parser.getHints(val, idx, {})
-
-        if (hints.type == 'none' || !_.isArray(hints.items))
+        var hints = this.getHints()
+        if (_.isNil(hints) || hints.type == 'none' || !_.isArray(hints.items))
           return
 
         var tip = createEl('div', null)
@@ -247,7 +253,7 @@
             tip_cls += ' '+this.dropdown_item_active_cls
 
           var child_el = tip.appendChild(createEl('div', tip_cls, hints.items[i]))
-          $.data(child_el, 'hint', hints.items[i])
+          $.data(child_el, 'item', hints.items[i])
         }
 
         var offset = this.editor.charCoords({ line: 0, ch: hints.offset }, 'page')
@@ -283,14 +289,15 @@
 
         if (!_.isNil(el))
         {
-          var hint = $.data(el, 'hint')
-          if (_.isString(hint))
+          var item = $.data(el, 'item')
+          if (_.isString(item))
           {
-            if (hint.length == 0)
+            if (item.length == 0)
               return
 
-            var ch = this.editor.getCursor().ch
-            this.editor.replaceRange(hint, { line: 0, ch }, { line: 0, ch })
+            var hints = this.getHints()
+            var word = this.editor.findWordAt({ line: 0, ch: hints.offset })
+            this.editor.replaceRange(item, word.anchor, word.head)
           }
         }
 
