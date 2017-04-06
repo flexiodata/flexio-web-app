@@ -78,7 +78,7 @@ class Rename extends \Flexio\Jobs\Base
             if (!is_string($file_match_pattern) || !is_string($file_new_name_expr))
                 continue;
 
-            if (\Flexio\Base\Util::matchPath($stream_name, $file_match_pattern, true) === false) // true: case-sensitive match
+            if (\Flexio\Base\File::matchPath($stream_name, $file_match_pattern, true) === false) // true: case-sensitive match
                 continue;
 
             // the pattern matches; get the rename expression, evaluate it and rename the file
@@ -86,8 +86,8 @@ class Rename extends \Flexio\Jobs\Base
             // evaluate the expression with the environment variables
             $variables = array();
             $variables['stream.name'] = $outstream->getName();
-            $variables['stream.name.base'] = \Flexio\Base\Util::getFilename($outstream->getName());
-            $variables['stream.name.ext'] = \Flexio\Base\Util::getFileExtension($outstream->getName());
+            $variables['stream.name.base'] = \Flexio\Base\File::getFilename($outstream->getName());
+            $variables['stream.name.ext'] = \Flexio\Base\File::getFileExtension($outstream->getName());
             $variables['stream.path'] = $outstream->getPath();
             $variables['stream.content.type'] = $outstream->getMimeType();
 

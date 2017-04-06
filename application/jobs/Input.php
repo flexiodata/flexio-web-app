@@ -460,7 +460,7 @@ class Input extends \Flexio\Jobs\Base
                 continue;
 
             // look for the item -- pattern can be a filename or a wildcard
-            if (\Flexio\Base\Util::matchPath($filename, $pattern, true) === false)
+            if (\Flexio\Base\File::matchPath($filename, $pattern, true) === false)
                 continue;
 
             // we found the item

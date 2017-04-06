@@ -108,7 +108,7 @@ class Execute extends \Flexio\Jobs\Base
         // the code is base64 encoded, so decode it and write it out
         // to a temporary file
         $code = base64_decode($code);
-        $filename = \Flexio\Base\Util::createTempFile('fxscript', $program_extension);
+        $filename = \Flexio\Base\File::createTempFile('fxscript', $program_extension);
         file_put_contents($filename, $code);
 
         $cmd = $program_path . ' ' . "\"$filename\"";

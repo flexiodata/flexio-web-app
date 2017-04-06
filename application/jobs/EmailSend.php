@@ -119,18 +119,18 @@ class EmailSend extends \Flexio\Jobs\Base
             if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             {
                 $extension_to_add = 'csv';
-                $filename = \Flexio\Base\Util::getFilename($name);
+                $filename = \Flexio\Base\File::getFilename($name);
                 $name = "$filename.$extension_to_add";
 
                 $mime_type = \Flexio\Base\ContentType::MIME_TYPE_CSV;
-                $attachment_file = \Flexio\Base\Util::getTempFilename($extension_to_add);
+                $attachment_file = \Flexio\Base\File::getTempFilename($extension_to_add);
                 if (!$this->saveDataToCsv($instream, $attachment_file, -1, 20000000))
                     continue; // TODO: fail?
             }
              else
             {
-                $extension = \Flexio\Base\Util::getFileExtension($name);
-                $attachment_file = \Flexio\Base\Util::getTempFilename($extension);
+                $extension = \Flexio\Base\File::getFileExtension($name);
+                $attachment_file = \Flexio\Base\File::getTempFilename($extension);
                 if (!$this->saveDataToFile($instream, $attachment_file))
                     continue; // TODO: fail?
             }
