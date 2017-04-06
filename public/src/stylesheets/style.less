@@ -2,6 +2,7 @@
 //@import (less) "../../node_modules/awesomplete/awesomplete.css";
 @import (less) "../../node_modules/keen-ui/dist/keen-ui.css";
 @import (less) "../../node_modules/codemirror/lib/codemirror.css";
+//@import (less) "../../node_modules/codemirror/addon/hint/show-hint.css";
 //@import (less) "../../node_modules/codemirror/theme/eclipse.css";
 @import "variables.less";
 @import "core.less";
@@ -25,6 +26,10 @@
 .CodeMirror {
   width: 100%;
   height: 100%;
+}
+
+.CodeMirror-empty {
+  color: #aaa;
 }
 
 // -- hint.css --

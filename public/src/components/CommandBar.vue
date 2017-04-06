@@ -13,6 +13,7 @@
   import { TASK_TYPE_EXECUTE } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
   import CodeMirror from 'codemirror'
+  import {} from '../../node_modules/codemirror/addon/display/placeholder'
   import {} from '../utils/commandbar-mode'
   import parser from '../utils/parser'
 
@@ -62,7 +63,8 @@
       var opts = _.assign({
         lineNumbers: false,
         lineWrapping: true,
-        mode: 'flexio-commandbar'
+        mode: 'flexio-commandbar',
+        placeholder: 'Type a command...'
       }, this.options)
 
       this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
