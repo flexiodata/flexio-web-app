@@ -20,10 +20,11 @@ class System
 {
     public static function login(array $params, \Flexio\Api\Request $request) : bool
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // try to log in to the system
@@ -42,8 +43,9 @@ class System
     public static function logout(array $params, \Flexio\Api\Request $request) : bool
     {
         // validation placeholder; no parameters are used
-        if (($params = $request->getValidator()->check($params, array(
-            ))) === false)
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         \Flexio\System\System::clearLoginIdentity();
@@ -82,11 +84,12 @@ class System
         foreach ($params as $p)
         {
             // checks to see if a username is available
-            if (($request->getValidator()->check($p, array(
+            $validator = \Flexio\Base\Validator::create();
+            if (($validator->check($p, array(
                     'key' => array('type' => 'string', 'required' => true),
                     'value' => array('type' => 'string', 'required' => true),
                     'type' => array('type' => 'string', 'required' => true)
-                ))) === false)
+                ))->hasErrors()) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 

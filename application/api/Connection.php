@@ -20,7 +20,8 @@ class Connection
 {
     public static function create(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'parent_eid'        => array('type' => 'identifier', 'required' => false),
                 'eid_status'        => array('type' => 'string',  'required' => false),
                 'ename'             => array('type' => 'identifier', 'required' => false),
@@ -34,7 +35,7 @@ class Connection
                 'database'          => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = isset($params['parent_eid']) ? $params['parent_eid'] : false;
@@ -72,9 +73,10 @@ class Connection
 
     public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
@@ -95,7 +97,8 @@ class Connection
 
     public static function set(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid'               => array('type' => 'identifier', 'required' => true),
                 'eid_status'        => array('type' => 'string',  'required' => false),
                 'ename'             => array('type' => 'identifier', 'required' => false),
@@ -109,7 +112,7 @@ class Connection
                 'database'          => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
@@ -134,9 +137,10 @@ class Connection
 
     public static function get(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
@@ -158,9 +162,10 @@ class Connection
 
     public static function comments(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
@@ -188,10 +193,11 @@ class Connection
 
     public static function describe($params, $request)
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'q' => array('type' => 'string', 'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
@@ -225,9 +231,10 @@ class Connection
 
     public static function connect($params, $request)
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
@@ -252,9 +259,10 @@ class Connection
 
     public static function disconnect($params, $request)
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];

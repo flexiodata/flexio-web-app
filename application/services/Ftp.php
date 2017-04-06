@@ -46,11 +46,13 @@ class Ftp implements \Flexio\Services\IConnection
     public function connect(array $params) : bool
     {
         $this->close();
-        if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             return false;
 
         $this->initialize($params['host'], $params['username'], $params['password']);

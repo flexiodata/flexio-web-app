@@ -51,13 +51,13 @@ class AmazonS3 implements \Flexio\Services\IConnection
     {
         $this->close();
 
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'region' => array('type' => 'string', 'required' => true),
                 'bucket' => array('type' => 'string', 'required' => true),
                 'accesskey' => array('type' => 'string', 'required' => true),
                 'secretkey' => array('type' => 'string', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             return false;
 
         $region = $params['region'];

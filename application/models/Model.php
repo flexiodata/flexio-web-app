@@ -1020,17 +1020,6 @@ class Model
         return $this->generateUniqueEid();
     }
 
-    public static function check(array $params, array $checks) // TODO: add return type
-    {
-        // validate the parameters; if they check out, then return
-        // the cleaned parameters
-        if (($params = \Flexio\Base\Validator::getInstance()->check($params, $checks)) !== false)
-            return $params;
-
-        // if the parameters don't check out, return false
-        return false;
-    }
-
     public static function isValidType(string $type) : bool
     {
         switch ($type)
