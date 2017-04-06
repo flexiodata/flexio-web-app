@@ -294,7 +294,7 @@ class Task
         return $this;
     }
 
-    public function setTaskStep($task_eid, $task_step) : \Flexio\Object\Task // TODO: add input parameter types
+    public function setTaskStep(string $task_eid, array $task_step) : \Flexio\Object\Task // TODO: add input parameter types
     {
         if (!\Flexio\Base\Eid::isValid($task_eid))
             return $this;
@@ -417,7 +417,7 @@ class Task
         foreach ($variables as $variable_key => $variable_value)
         {
             // make sure variables are appropriately named
-            if (!preg_match('/^[a-zA-Z_-][a-zA-Z0-9_-]*$/', $variable_key))
+            if (!preg_match('/^[a-zA-Z_-][a-zA-Z0-9_-]*$/', (string)$variable_key))
                 continue;
 
             $variable_match_name = '${'.$variable_key.'}';
