@@ -132,7 +132,7 @@
       makeTooltip(x, y, content) {
         var node = elt('div', this.dropdown_cls+'tooltip', content)
         node.style.left = x+'px'
-        node.style.top = y+'px'
+        node.style.top = (y+3)+'px'
         document.body.appendChild(node)
         return node
       },
@@ -164,7 +164,7 @@
 
         var tip = elt('span', null)
         for (var i = 0; i < hints.items.length; ++i) {
-          tip.appendChild(elt('span', 'db', hints.items[i]))
+          tip.appendChild(elt('span', this.dropdown_cls+'tooltip-item', hints.items[i]))
         }
 
         var offset = this.editor.cursorCoords(null, 'page')
