@@ -204,6 +204,10 @@
           },
           replace(text) {
             me.insert_char_end_idx = me.editor.getCursor().ch
+
+            var start = me.insert_char_start_idx
+            var end = me.insert_char_end_idx
+            me.editor.replaceRange(text.value, { line: 0, ch: start }, { line: 0, ch: end })
           }
         })
 
