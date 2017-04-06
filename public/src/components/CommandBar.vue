@@ -1,5 +1,9 @@
 <template>
-  <div @mouseup="onMouseup">
+  <div
+    @mouseup="onMouseup"
+    @keydown="onKeydown"
+    @keyup="onKeyup"
+  >
     <textarea
       ref="textarea"
       class="awesomeplete"
@@ -147,48 +151,6 @@
         this.hideDropdown()
       })
 
-      this.editor.on('keydown', (cm, evt) => {
-        // show the dropdown
-        if (evt.code == 'Escape')
-        {
-          if (this.dropdown_open)
-            this.hideDropdown()
-            // else
-            // revert changes
-        }
-
-        // show the dropdown
-        if (evt.code == 'Space' && evt.ctrlKey === true)
-          setTimeout(() => { this.updateDropdown() }, 10)
-      })
-
-      this.editor.on('keyup', (cm, evt) => {
-        // don't do anything when these keys are pressed on their own
-        if (_.includes(['Control','Alt','Shift','Meta'], evt.key))
-          return
-
-        // already handled by keydown.esc and keydown.enter.prevent
-        if (_.includes(['Escape','Enter'], evt.code))
-          return
-
-        // handled in keydown
-        if (evt.code == 'Enter' && evt.ctrlKey === true)
-          return
-
-        // handled in keydown
-        if (evt.code == 'Space' && evt.ctrlKey === true)
-          return
-
-        if (this.dropdown_open)
-        {
-          if (evt.code == 'ArrowUp' || evt.code == 'ArrowDown')
-            return
-        }
-
-        // for all other keys, make sure the dropdown is open
-        this.updateDropdown()
-      })
-
       // create awesomplete
       this.$nextTick(() => {
         this.ta = this.$refs['textarea']
@@ -232,6 +194,46 @@
       /* -- BEGIN AWESOMPLETE METHODS -- */
       onMouseup() {
         setTimeout(() => { this.updateDropdown() }, 10)
+      },
+      onKeydown(evt) {
+        // show the dropdown
+        if (evt.code == 'Escape')
+        {
+          if (this.dropdown_open)
+            this.hideDropdown()
+            // else
+            // revert changes
+        }
+
+        // show the dropdown
+        if (evt.code == 'Space' && evt.ctrlKey === true)
+          setTimeout(() => { this.updateDropdown() }, 10)
+      },
+      onKeyup(evt) {
+        // don't do anything when these keys are pressed on their own
+        if (_.includes(['Control','Alt','Shift','Meta'], evt.key))
+          return
+
+        // already handled in onKeydown
+        if (evt.code == 'Escape')
+          return
+
+        // handled in keydown
+        if (evt.code == 'Enter' && evt.ctrlKey === true)
+          return
+
+        // handled in keydown
+        if (evt.code == 'Space' && evt.ctrlKey === true)
+          return
+
+        if (this.dropdown_open)
+        {
+          if (evt.code == 'ArrowUp' || evt.code == 'ArrowDown')
+            return
+        }
+
+        // for all other keys, make sure the dropdown is open
+        this.updateDropdown()
       },
       showDropdown() {
         if (_.isNil(this.ac))
