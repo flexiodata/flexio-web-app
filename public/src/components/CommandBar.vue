@@ -146,7 +146,26 @@
       })
 
       this.editor.on('keydown', (cm, evt) => {
-        if (evt.key == 'Enter')
+        if (evt.key == 'Escape')
+        {
+          evt.preventDefault()
+
+          if (evt.ctrlKey === true)
+          {
+            // force a revert when the user presses Ctrl+Enter
+            this.revert()
+          }
+           else if (this.active_dropdown)
+          {
+            this.closeDropdown()
+          }
+           else
+          {
+            // revert when user presses Escape without a dropdown open
+            this.revert()
+          }
+        }
+         else if (evt.key == 'Enter')
         {
           // don't allow multiple lines in the command bar
           evt.preventDefault()
@@ -167,16 +186,14 @@
             this.save()
           }
         }
-
-        if (evt.code == 'ArrowUp')
+         else if (evt.code == 'ArrowUp')
         {
           evt.preventDefault()
 
           if (this.active_dropdown)
             this.highlightPrevDropdownItem()
         }
-
-        if (evt.code == 'ArrowDown')
+         else if (evt.code == 'ArrowDown')
         {
           evt.preventDefault()
 
@@ -195,9 +212,16 @@
         this.editor.setValue(val)
       },
 
+      // does not fire an event
       reset() {
         this.cmd_text = this.val
         this.editor.setValue(this.val)
+      },
+
+      revert() {
+        this.closeDropdown()
+        this.reset()
+        this.$emit('revert', this.cmd_text, this.cmd_json)
       },
 
       save() {
