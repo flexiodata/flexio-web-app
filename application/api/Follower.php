@@ -18,16 +18,17 @@ namespace Flexio\Api;
 
 class Follower
 {
-    public static function create(array $params, \Flexio\Api\Request  $request) : array
+    public static function create(array $params, \Flexio\Api\Request $request) : array
     {
         // TODO: this function is a bit outdated in the conventions
         // it uses; should be updated to be more consistent with other
         // api functions
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid'     => array('type' => 'identifier', 'required' => true),
                 'users'   => array('type' => 'object', 'required' => true),
                 'message' => array('type' => 'string', 'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $object_identifier = $params['eid'];
@@ -182,11 +183,11 @@ class Follower
     public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
         // TODO: make unfollow work with multiple users; same as share
-
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'parent_eid' => array('type' => 'identifier', 'required' => true),
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $requesting_user_eid = $request->getRequestingUser();
@@ -219,9 +220,10 @@ class Follower
 
     public static function listall(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $object_identifier = $params['eid'];

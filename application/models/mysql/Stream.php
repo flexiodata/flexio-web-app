@@ -90,7 +90,8 @@ class Stream extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
-        if (($process_arr = \Model::check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($process_arr = $validator->check($params, array(
                 'name'                 => array('type' => 'string',  'required' => false),
                 'path'                 => array('type' => 'string',  'required' => false),
                 'size'                 => array('type' => 'number',  'required' => false),
@@ -102,7 +103,7 @@ class Stream extends ModelBase
                 'connection_eid'       => array('type' => 'eid',     'required' => false),
                 'cache_path'           => array('type' => 'string',  'required' => false),
                 'cache_connection_eid' => array('type' => 'eid',     'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 

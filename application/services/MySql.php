@@ -57,7 +57,7 @@ class MySql implements \Flexio\Services\IConnection
         if (isset($params['port']))
             $params['port'] = (string)$params['port'];
 
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true),
@@ -65,7 +65,7 @@ class MySql implements \Flexio\Services\IConnection
                 'password' => array('type' => 'string', 'required' => true),
                 'database' => array('type' => 'string', 'required' => true),
                 'path' => array('type' => 'string', 'required' => false, 'default' => '')
-            ))) === false)
+            ))->getParams()) === false)
             return false;
 
         $this->initialize($params['host'], intval($params['port']), $params['database'], $params['username'], $params['password']);

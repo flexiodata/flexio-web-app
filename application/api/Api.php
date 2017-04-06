@@ -54,7 +54,7 @@ class Api
 
         // create the request object
         $request = Request::create();
-        $request->setValidator(\Flexio\Base\Validator::getInstance());
+        $request->setValidator(\Flexio\Base\Validator::create());
         $request->setRequestingUser($requesting_user_eid);
 
 

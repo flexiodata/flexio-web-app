@@ -133,7 +133,8 @@ class User extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // make sure the properties that are being updated are the correct type
-        if (($process_arr = \Model::check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($process_arr = $validator->check($params, array(
                 'user_name'              => array('type' => 'string',  'required' => false),
                 'description'            => array('type' => 'string',  'required' => false),
                 'full_name'              => array('type' => 'string',  'required' => false),
@@ -154,7 +155,7 @@ class User extends ModelBase
                 'password'               => array('type' => 'string',  'required' => false),
                 'verify_code'            => array('type' => 'string',  'required' => false),
                 'config'                 => array('type' => 'string',  'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
