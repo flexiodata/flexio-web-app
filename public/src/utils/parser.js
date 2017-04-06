@@ -1677,9 +1677,13 @@
         'transform',
         'merge'
       ]
+    },
+
+    this.getVerbArguments = function(verb) {
+      // get a list of arguments for a given verb.
+      // e.g. for "calc" this would return [ 'name', 'formula', 'type', 'decimal' ] etc.
+      return this.args.hasOwnProperty(verb) ? this.args[verb] : null;
     }
-
-
 
     this.getHints = function(str, idx, options) {
 
@@ -1873,6 +1877,11 @@
     },
     getHintableCommands: function() { 
       return g_cmdbarparser.getHintableCommands()
+    },
+    getVerbArguments: function(verb) {
+      // get a list of arguments for a given verb.
+      // e.g. for "calc" this would return [ 'name', 'formula', 'type', 'decimal' ] etc.
+      return g_cmdbarparser.getVerbArguments(verb)
     }
   }
 

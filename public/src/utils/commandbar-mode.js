@@ -27,6 +27,8 @@
     var external = {
       startState: function(basecolumn) {
         return {
+          verb: null,         // this is a string containing the main command bar verb, like "input" or "convert"
+          args_regexp: null,  // contains a list, based off of the verb, for which arguments should be highlighted
           tokenize: null
         }
       },
@@ -71,14 +73,23 @@
 
         if (peek_ch == '"' || peek_ch == "'") {
           peek_ch = stream.next()
-          state.tokenize = tokenString(peek_ch);
-          return state.tokenize(stream, state);
+          state.tokenize = tokenString(peek_ch)
+          return state.tokenize(stream, state)
         }
 
         //if (undefined === stream.eat(/[0-9]+/))
         //  return 'number'
-        if (stream.match(cmds_regexp) !== null)
+        var res = stream.match(cmds_regexp)
+        if (res !== null)
+        {
+          // save the cmdbar verb for later highlighting decisions;
+          // for instance, the args are filtered based on which verb
+          // is used. e.g. "convert" 
+          state.verb = res[0]
+          var args = parser.getVerbArguments(state.verb)
+          state.args_regexp = (_.isArray(args) && args.length > 0) ? wordRegexp(args) : null;
           return 'variable-2'
+        }
 
         if (stream.eat(/[0-9]/) !== undefined)
           return 'number'
@@ -86,7 +97,7 @@
         //if (stream.eat(operator_regexp) !== undefined)
         //  return 'operator'
         
-        if (stream.match(/[a-z]+[:]/) !== null)
+        if (state.args_regexp && stream.match(state.args_regexp) !== null)
           return 'variable-2'
 
         var ch = stream.next()
