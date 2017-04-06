@@ -206,6 +206,9 @@
         this.updateDropdown()
       })
     },
+    beforeDestroy() {
+      this.closeDropdown()
+    },
     methods: {
       setValue(val) {
         this.cmd_text = val
