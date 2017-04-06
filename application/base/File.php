@@ -18,6 +18,11 @@ namespace Flexio\Base;
 
 class File
 {
+    public static function matchPath($str, $pattern, $case_sensitive)
+    {
+        return fnmatch($pattern, $str, $case_sensitive ? 0 : FNM_CASEFOLD);  // FNM_CASEFOLD triggers caseless match
+    }
+
     public static function getFilename(string $filename) : string
     {
         // pathinfo will parse paths differently, depending on the

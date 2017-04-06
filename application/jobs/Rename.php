@@ -78,7 +78,7 @@ class Rename extends \Flexio\Jobs\Base
             if (!is_string($file_match_pattern) || !is_string($file_new_name_expr))
                 continue;
 
-            if (\Flexio\Base\Util::matchPath($stream_name, $file_match_pattern, true) === false) // true: case-sensitive match
+            if (\Flexio\Base\File::matchPath($stream_name, $file_match_pattern, true) === false) // true: case-sensitive match
                 continue;
 
             // the pattern matches; get the rename expression, evaluate it and rename the file

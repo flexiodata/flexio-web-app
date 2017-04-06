@@ -105,11 +105,6 @@ class Util
         return $chunk;
     }
 
-    public static function matchPath($str, $pattern, $case_sensitive)
-    {
-        return fnmatch($pattern, $str, $case_sensitive ? 0 : FNM_CASEFOLD);  // FNM_CASEFOLD triggers caseless match
-    }
-
     public static function lpad($str, $n, $ch = ' ')
     {
         return str_pad($str, $n, $ch, STR_PAD_LEFT);

@@ -170,5 +170,119 @@ class Test
         $actual = \Flexio\Base\File::getFileExtension('c:\\path\name.ext');
         $expected = 'ext';
         TestCheck::assertString('B.14', '\Flexio\Base\File::getFileExtension() test to extract extension',  $actual, $expected, $results);
+
+
+
+        // TEST: \Flexio\Base\File::matchPath()
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('', '', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.1', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('a', '', true);
+        $expected = false;
+        TestCheck::assertBoolean('C.2', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('', 'a', true);
+        $expected = false;
+        TestCheck::assertBoolean('C.3', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('a', 'a', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.4', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('A', 'a', true);
+        $expected = false;
+        TestCheck::assertBoolean('C.5', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('a', 'A', true);
+        $expected = false;
+        TestCheck::assertBoolean('C.6', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('A', 'a', false);
+        $expected = true;
+        TestCheck::assertBoolean('C.7', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('a', 'A', false);
+        $expected = true;
+        TestCheck::assertBoolean('C.8', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('a', '*', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.9', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.txt', '*.txt', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.10', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.txt', '/folder1/folder2/file.txt', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.11', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.txt', '/folder1/folder2/*.txt', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.12', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.txt', '/folder1/folder2/*.*', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.13', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.txt', '/folder1/**/file.txt', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.14', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.txt', '/folder1/folder?/file.txt', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.15', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.txt', '/folder1/folder2/*.{txt,csv}', true);
+        $expected = false;
+        TestCheck::assertBoolean('C.16', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.csv', '/folder1/folder2/*.{txt,csv}', true);
+        $expected = false;
+        TestCheck::assertBoolean('C.17', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.json', '/folder1/folder2/*.{txt,csv}', true);
+        $expected = false;
+        TestCheck::assertBoolean('C.18', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file.json', '/folder1/folder2/file[1-9].*', true);
+        $expected = false;
+        TestCheck::assertBoolean('C.19', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file1.json', '/folder1/folder2/file[1-9].*', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.20', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/filea.json', '/folder1/folder2/file[1-9].*', true);
+        $expected = false;
+        TestCheck::assertBoolean('C.21', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\File::matchPath('/folder1/folder2/file1abc.json', '/folder1/folder2/file[1-9]*.*', true);
+        $expected = true;
+        TestCheck::assertBoolean('C.22', '\Flexio\Base\File::matchPath() test for path match',  $actual, $expected, $results);
     }
 }
