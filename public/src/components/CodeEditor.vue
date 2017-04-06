@@ -45,6 +45,7 @@
 
       this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
       this.editor.focus()
+      this.editor.setCursor({ line: 1, ch: 1000000 })
 
       this.editor.on('change', (cm) => {
         this.code_text = cm.getValue()
