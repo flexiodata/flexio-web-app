@@ -103,6 +103,10 @@
       this.editor.focus()
       this.editor.setCursor({ line: 1, ch: 1000000 })
 
+      this.editor.on('blur', (cm) => {
+        this.closeArgHints()
+      })
+
       this.editor.on('change', (cm) => {
         this.cmd_text = cm.getValue()
         this.$emit('change', this.cmd_text, this.cmd_json)
