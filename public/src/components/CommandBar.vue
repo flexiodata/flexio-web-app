@@ -159,7 +159,7 @@
            else if (this.active_dropdown)
           {
             // insert the value from the dropdown item into the CodeMirror editor
-            this.useDropdownItem()
+            this.replaceFromDropdownItem()
           }
            else
           {
@@ -240,6 +240,8 @@
       },
 
       showDropdown() {
+        var me = this
+
         this.closeDropdown()
 
         var hints = this.getHints()
@@ -254,6 +256,10 @@
 
           var child_el = tip.appendChild(createEl('div', tip_cls, hints.items[i]))
           $.data(child_el, 'item', hints.items[i])
+
+          child_el.addEventListener('mousedown', function(evt) {
+            me.replaceFromDropdownItem(evt.target)
+          })
         }
 
         var offset = this.editor.charCoords({ line: 0, ch: hints.offset }, 'page')
@@ -284,8 +290,11 @@
         return null
       },
 
-      useDropdownItem() {
-        var el = this.getActiveDropdownItem()
+      replaceFromDropdownItem(el) {
+        // if an element is passed to us, use it,
+        // otherwise use the active dropdown item
+        if (_.isNil(el))
+          el = this.getActiveDropdownItem()
 
         if (!_.isNil(el))
         {
