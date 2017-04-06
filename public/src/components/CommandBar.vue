@@ -111,11 +111,25 @@
 
       this.editor.on('keydown', (cm, evt) => {
         if (evt.key == 'Enter')
+        {
           evt.preventDefault()
 
-        // force save when the user presses Ctrl+Enter
-        if (evt.key == 'Enter' && evt.ctrlKey === true)
-          this.save(true)
+          if (evt.ctrlKey === true)
+          {
+            // force a save when the user presses Ctrl+Enter
+            this.save()
+          }
+           else if (this.active_dropdown)
+          {
+            // select the item in the dropdown and close it
+            this.closeDropdown()
+          }
+           else
+          {
+            // save when user presses Enter without a dropdown open
+            this.save()
+          }
+        }
       })
 
       this.editor.on('cursorActivity', (cm) => {
@@ -133,12 +147,9 @@
         this.editor.setValue(this.val)
       },
 
-      save(force) {
-        if (!this.active_dropdown || force === true)
-        {
-          this.closeDropdown()
-          this.$emit('save', this.cmd_text, this.cmd_json)
-        }
+      save() {
+        this.closeDropdown()
+        this.$emit('save', this.cmd_text, this.cmd_json)
       },
 
       /* -- autocomplete dropdown methods */
