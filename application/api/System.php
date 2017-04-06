@@ -89,7 +89,7 @@ class System
                     'key' => array('type' => 'string', 'required' => true),
                     'value' => array('type' => 'string', 'required' => true),
                     'type' => array('type' => 'string', 'required' => true)
-                ))->hasErrors()) === false)
+                ))->hasErrors()) === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
