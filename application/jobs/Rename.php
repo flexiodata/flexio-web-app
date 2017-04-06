@@ -110,7 +110,7 @@ class Rename extends \Flexio\Jobs\Base
         // get the columns to rename
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
-        $job_columns = $params['params']['columns'];
+        $job_columns = $params['columns'];
 
         // get the original names
         $original_structure = $outstream->getStructure();

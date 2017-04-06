@@ -62,6 +62,8 @@ class Fail extends \Flexio\Jobs\Base
     {
         "type": "flexio.fail",
         "params": {
+            "code": "string",
+            "message": "string"
         }
     }
 EOD;
@@ -75,8 +77,6 @@ EOD;
                 "enum": ["flexio.fail"]
             },
             "params": {
-                "code": "string"
-                "message": "string"
             }
         }
     }
