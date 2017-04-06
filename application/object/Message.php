@@ -81,10 +81,11 @@ class Message
 
     private static function createWelcomeEmail(array $params)
     {
-        if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             return false;
 
         $to = $params['email'];
@@ -109,10 +110,11 @@ class Message
 
     private static function createResetPasswordEmail(array $params)
     {
-        if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             return false;
 
         $to = $params['email'];
@@ -138,7 +140,8 @@ class Message
 
     private static function createShareProjectEmail(array $params)
     {
-        if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
                 'from_email'   => array('type' => 'string', 'required' => true),
@@ -146,7 +149,7 @@ class Message
                 'object_eid'  => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => false),
                 'message'     => array('type' => 'string', 'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             return false;
 
         $to = $params['email'];
@@ -188,13 +191,14 @@ class Message
 
     private static function createSharePipeEmail(array $params)
     {
-        if (($params = \Flexio\Base\Validator::getInstance()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
                 'object_eid'  => array('type' => 'string', 'required' => true),
                 'message'     => array('type' => 'string', 'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             return false;
 
         $to = $params['email'];

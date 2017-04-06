@@ -72,11 +72,12 @@ class Project extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
-        if (($process_arr = \Model::check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($process_arr = $validator->check($params, array(
                 'name'          => array('type' => 'string', 'required' => false),
                 'description'   => array('type' => 'string', 'required' => false),
                 'display_icon'  => array('type' => 'string', 'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 

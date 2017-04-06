@@ -23,28 +23,28 @@ class Test
         // TEST: Validator error functions; check for error existence
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $actual = $validator->hasErrors();
         $expected = false;
         TestCheck::assertBoolean('A.1', '\Flexio\Base\Validator::hasErrors(); should return false with no errors present',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator =\Flexio\Base\Validator::getInstance();
+        $validator =\Flexio\Base\Validator::create();
         $validator->setError(\Flexio\Base\Validator::ERROR_GENERAL,'general failure');
         $actual = $validator->hasErrors();
         $expected = true;
         TestCheck::assertBoolean('A.2', '\Flexio\Base\Validator::hasErrors(); should return true with single error present',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $validator->setError(\Flexio\Base\Validator::ERROR_GENERAL,'general failure');
-        $validator->clearErrors();
+        $validator->clear();
         $actual = $validator->hasErrors();
         $expected = false;
         TestCheck::assertBoolean('A.3', '\Flexio\Base\Validator::hasErrors(); should return false after single error is cleared',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $validator->setError(\Flexio\Base\Validator::ERROR_GENERAL,'general failure');
         $validator->setError(\Flexio\Base\Validator::ERROR_MISSING_PARAMETER,'missing parameter');
         $validator->setError(\Flexio\Base\Validator::ERROR_INVALID_PARAMETER,'invalid parameter');
@@ -53,11 +53,11 @@ class Test
         TestCheck::assertBoolean('A.4', '\Flexio\Base\Validator::hasErrors(); should return true when multiple errors are present',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $validator->setError(\Flexio\Base\Validator::ERROR_GENERAL,'general failure');
         $validator->setError(\Flexio\Base\Validator::ERROR_MISSING_PARAMETER,'missing parameter');
         $validator->setError(\Flexio\Base\Validator::ERROR_INVALID_PARAMETER,'invalid parameter');
-        $validator->clearErrors();
+        $validator->clear();
         $actual = $validator->hasErrors();
         $expected = false;
         TestCheck::assertBoolean('A.5', '\Flexio\Base\Validator::hasErrors(); should return false after multiple errors are cleared',  $actual, $expected, $results);
@@ -67,14 +67,14 @@ class Test
         // TEST: Validator error functions; get list of errors
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $actual = $validator->getErrors();
         $expected = array(
         );
         TestCheck::assertArray('B.1', '\Flexio\Base\Validator::getErrors(); return an empty array when no errors are present',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $validator->setError(\Flexio\Base\Validator::ERROR_GENERAL,'general failure error');
         $actual = $validator->getErrors();
         $expected = array(
@@ -86,16 +86,16 @@ class Test
         TestCheck::assertArray('B.2', '\Flexio\Base\Validator::getErrors(); return an array with the code and message when a single error is present',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $validator->setError(\Flexio\Base\Validator::ERROR_GENERAL,'general failure error');
-        $validator->clearErrors();
+        $validator->clear();
         $actual = $validator->getErrors();
         $expected = array(
         );
         TestCheck::assertArray('B.3', '\Flexio\Base\Validator::getErrors(); return empty array after clearing away an error',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $validator->setError(\Flexio\Base\Validator::ERROR_GENERAL,'general failure error');
         $validator->setError(\Flexio\Base\Validator::ERROR_MISSING_PARAMETER,'missing parameter error');
         $actual = $validator->getErrors();
@@ -112,7 +112,7 @@ class Test
         TestCheck::assertArray('B.4', '\Flexio\Base\Validator::getErrors(); return array of errors when multiple errors are present',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $validator->setError(\Flexio\Base\Validator::ERROR_GENERAL,'general failure error');
         $validator->setError(\Flexio\Base\Validator::ERROR_MISSING_PARAMETER,'missing parameter error');
         $validator->setError(\Flexio\Base\Validator::ERROR_INVALID_PARAMETER,'invalid parameter error');
@@ -134,11 +134,11 @@ class Test
         TestCheck::assertArray('B.5', '\Flexio\Base\Validator::getErrors(); return array of errors when multiple errors are present',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $validator = \Flexio\Base\Validator::getInstance();
+        $validator = \Flexio\Base\Validator::create();
         $validator->setError(\Flexio\Base\Validator::ERROR_GENERAL,'general failure');
         $validator->setError(\Flexio\Base\Validator::ERROR_MISSING_PARAMETER,'missing parameter');
         $validator->setError(\Flexio\Base\Validator::ERROR_INVALID_PARAMETER,'invalid parameter');
-        $validator->clearErrors();
+        $validator->clear();
         $actual = $validator->getErrors();
         $expected = array(
         );

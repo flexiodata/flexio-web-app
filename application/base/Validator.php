@@ -26,13 +26,15 @@ class Validator
     const ERROR_INVALID_PARAMETER  =  'invalid_parameter';
 
     private $errors = array();
+    private $params_updated = false;
 
-    public static function getInstance()
+    public static function create() : \Flexio\Base\Validator
     {
-        return (new self);
+        $validator = (new static());
+        return $validator;
     }
 
-    public function check($params, $checks)
+    public function check($params, $checks) : \Flexio\Base\Validator
     {
         // cleans and validates the input parameters against the checks;
         // if the required items in the checks aren't in the parameters,
@@ -55,15 +57,72 @@ class Validator
 
         // example of how this function might be used
 
-        // if (($params = self::getInstance()->check($params, array(
+        // $validator = \Flexio\Base\Validator::create();
+        // if (($params = $validator->check($params, array(
         //         'eid'   => array('type' => 'eid',    'required' => true),
         //         'name'  => array('type' => 'string', 'required' => false, 'default' => 'sample')
-        //     ))) === false)
-        //     return false;
+        //     ))->getParams()) === false)
+        //     throw new Exception;
 
+        $this->check_params($params, $checks);
+        return $this;
+    }
 
+    public function getParams()
+    {
+        // returns the validated/updated params
+        return $this->params_updated;
+    }
+
+    public function clear()
+    {
+        $this->errors = array();
+        $this->params_updated = false;
+    }
+
+    public function fail(string $code = null, string $message = null) : bool
+    {
+        if ($code == null)
+        {
+            // if an error code hasn't already been set, then
+            // set a general error, otherwise, leave the last
+            // error; useful when wanting to indicate failure
+            // in the code when a function, sets an error code
+            // and we want to give an indication of failure in
+            // the output without setting a new code
+            if (!$this->hasErrors())
+                $this->setError(self::ERROR_GENERAL);
+
+            return false;
+        }
+
+        $this->setError($code, $message);
+        return false;
+    }
+
+    public function setError(string $code, string $message = null)
+    {
+        $this->errors[] = array('code' => $code, 'message' => $message);
+        $this->params_updated = false;
+    }
+
+    public function getErrors() : array
+    {
+        return $this->errors;
+    }
+
+    public function hasErrors() : bool
+    {
+        if (empty($this->errors))
+            return false;
+
+        return true;
+    }
+
+    private function check_params($params, $checks) : bool
+    {
         // clear any validator errors
-        $this->clearErrors();
+        $this->clear();
 
         // require input params
         if (!is_array($params))
@@ -190,54 +249,17 @@ class Validator
             $this->setError($error_code, $error_message);
         }
 
-        // if there are any problems, return false
+        // if there are any problems, set the updated parameters to false
+        // and return false;
         if ($this->hasErrors())
-            return false;
-
-        return $result;
-    }
-
-    public function fail($code = null, $message = null)
-    {
-        if ($code == null)
         {
-            // if an error code hasn't already been set, then
-            // set a general error, otherwise, leave the last
-            // error; useful when wanting to indicate failure
-            // in the code when a function, sets an error code
-            // and we want to give an indication of failure in
-            // the output without setting a new code
-            if (!$this->hasErrors())
-                $this->setError(self::ERROR_GENERAL);
-
+            $this->params_updated = false;
             return false;
         }
 
-        $this->setError($code, $message);
-        return false;
-    }
-
-    public function setError($code, $message = null)
-    {
-        $this->errors[] = array('code' => $code, 'message' => $message);
-    }
-
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
-    public function hasErrors()
-    {
-        if (empty($this->errors))
-            return false;
-
+        // set the updated parameters
+        $this->params_updated = $result;
         return true;
-    }
-
-    public function clearErrors()
-    {
-        $this->errors = array();
     }
 
     private function check_bool($value) : bool

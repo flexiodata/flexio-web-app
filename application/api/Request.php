@@ -24,7 +24,7 @@ class Request
 
     public function __construct()
     {
-        $this->validator = \Flexio\Base\Validator::getInstance();
+        $this->validator = \Flexio\Base\Validator::create();
         $this->requesting_user = \Flexio\Object\User::USER_PUBLIC;
         $this->api_version = 1;
     }

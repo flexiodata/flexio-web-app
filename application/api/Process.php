@@ -45,7 +45,8 @@ class Process
 
     private static function create_internal(array $params, \Flexio\Api\Request $request) : \Flexio\Object\Process
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'parent_eid'   => array('type' => 'identifier', 'required' => false),
                 'process_mode' => array('type' => 'string', 'required' => false, 'default' => \Model::PROCESS_MODE_RUN),
                 'task'         => array('type' => 'object', 'required' => false, 'default' => []),
@@ -53,7 +54,7 @@ class Process
                 'background'   => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'debug'        => array('type' => 'boolean', 'required' => false, 'default' => false),
                 'run'          => array('type' => 'boolean', 'required' => false, 'default' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = isset($params['parent_eid']) ? $params['parent_eid'] : false;
@@ -116,9 +117,10 @@ class Process
 
     public static function delete(array $params, \Flexio\Api\Request $request) : bool
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
@@ -139,11 +141,12 @@ class Process
 
     public static function set(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'task' => array('type' => 'object', 'required' => false),
                 'params' => array('type' => 'object', 'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
@@ -174,11 +177,12 @@ class Process
 
     public static function get(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'wait' => array('type' => 'integer', 'required' => false), // how long to block (milliseconds) until a change is detected
                 'status' => array('type' => 'boolean', 'required' => false, 'default' => false) // false returns everything; true only the process info
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
@@ -234,10 +238,11 @@ class Process
 
     public static function run(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'background'  => array('type' => 'boolean', 'required' => false, 'default' => true),
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
@@ -258,9 +263,10 @@ class Process
 
     public static function cancel(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
@@ -280,9 +286,10 @@ class Process
 
     public static function pause(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
@@ -306,9 +313,10 @@ class Process
         // can come from files that are directly uploaded as well as from
         // streams that are already uploaded and are then added
 
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
@@ -338,13 +346,14 @@ class Process
         // streams that are added via addInput(); otherwise, the result
         // will be empty
 
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'fields' => array('type' => 'string', 'array' => true, 'required' => false),
                 'streams' => array('type' => 'string', 'array' => true, 'required' => false),
                 'format' => array('type' => 'string', 'required' => false),
                 'content-limit' => array('type' => 'string', 'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
@@ -363,14 +372,14 @@ class Process
     {
         // return the process output after the last task; this will be
         // empty if the process hasn't run
-
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'fields' => array('type' => 'string', 'array' => true, 'required' => false),
                 'streams' => array('type' => 'string', 'array' => true, 'required' => false),
                 'format' => array('type' => 'string', 'required' => false),
                 'content-limit' => array('type' => 'string', 'required' => false)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
@@ -387,10 +396,11 @@ class Process
 
     public static function getTaskInputInfo(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'parent_eid' => array('type' => 'identifier', 'required' => true),
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['parent_eid'];
@@ -420,10 +430,11 @@ class Process
 
     public static function getTaskOutputInfo(array $params, \Flexio\Api\Request $request) : array
     {
-        if (($params = $request->getValidator()->check($params, array(
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
                 'parent_eid' => array('type' => 'identifier', 'required' => true),
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))) === false)
+            ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['parent_eid'];
