@@ -133,8 +133,8 @@
 
       // create the CodeMirror editor
       this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
-      this.editor.focus()
-      this.editor.setCursor({ line: 1, ch: 1000000 })
+      //this.editor.focus()
+      //this.editor.setCursor({ line: 1, ch: 1000000 })
 
       this.editor.on('blur', (cm) => {
         this.closeDropdown()
@@ -250,8 +250,8 @@
           $.data(child_el, 'hint', hints.items[i])
         }
 
-        var offset = this.editor.cursorCoords(null, 'page')
-        this.active_dropdown = this.createDropdown(offset.right + 1, offset.bottom + 3, tip)
+        var offset = this.editor.charCoords({ line: 0, ch: hints.offset }, 'page')
+        this.active_dropdown = this.createDropdown(offset.left + 1, offset.bottom + 3, tip)
       },
 
       updateDropdown() {
