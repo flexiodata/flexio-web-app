@@ -102,6 +102,12 @@
         if (state.args_regexp && stream.match(state.args_regexp) !== null)
           return 'variable-2'
 
+
+        // eat an entire word (starting with a word break); also prevents
+        // embedded digits from being highlighted as numbers
+        if (stream.match(/\b\w+/))
+          return null;
+
         var ch = stream.next()
 
         return null;

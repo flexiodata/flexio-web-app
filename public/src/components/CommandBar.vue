@@ -19,8 +19,41 @@
   import {} from '../utils/commandbar-mode'
   import parser from '../utils/parser'
 
+  // simple way to accomplish jQuery.data()
+  // ref: http://stackoverflow.com/questions/29222027/vanilla-alternative-to-jquery-data-function-any-native-javascript-alternati
+  window.$ = {
+    data: function(obj, key, val) {
+        if (!obj)
+        {
+          return this._data
+        }
+         else if (!key)
+        {
+          if (!(obj in this._data))
+            return {}
+
+          return this._data[obj]
+        }
+         else if (arguments.length < 3)
+        {
+          if (!(obj in this._data))
+            return undefined
+
+          return this._data[obj][key]
+        }
+         else
+        {
+          if (!(obj in this._data))
+            this._data[obj] = {}
+
+          this._data[obj][key] = val
+        }
+    },
+    _data: {}
+  }
+
   // helper function for creating DOM nodes to insert into the dropdown
-  function elt(tagname, cls /*, ... strings or elements*/)
+  function createEl(tagname, cls /*, ... strings or elements*/)
   {
     var el = document.createElement(tagname)
 
@@ -39,7 +72,6 @@
 
     return el
   }
-
 
   export default {
     props: {
@@ -101,8 +133,8 @@
 
       // create the CodeMirror editor
       this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
-      this.editor.focus()
-      this.editor.setCursor({ line: 1, ch: 1000000 })
+      //this.editor.focus()
+      //this.editor.setCursor({ line: 1, ch: 1000000 })
 
       this.editor.on('blur', (cm) => {
         this.closeDropdown()
@@ -126,8 +158,8 @@
           }
            else if (this.active_dropdown)
           {
-            // select the item in the dropdown and close it
-            this.closeDropdown()
+            // insert the value from the dropdown item into the CodeMirror editor
+            this.replaceFromDropdownItem()
           }
            else
           {
@@ -141,7 +173,7 @@
           evt.preventDefault()
 
           if (this.active_dropdown)
-            this.highlightDropdownItemPrev()
+            this.highlightPrevDropdownItem()
         }
 
         if (evt.code == 'ArrowDown')
@@ -149,7 +181,7 @@
           evt.preventDefault()
 
           if (this.active_dropdown)
-            this.highlightDropdownItemNext()
+            this.highlightNextDropdownItem()
         }
       })
 
@@ -173,12 +205,26 @@
         this.$emit('save', this.cmd_text, this.cmd_json)
       },
 
+      getHints(idx) {
+        var val = this.editor.getValue()
+
+        // if we didn't pass a number in, use the cursor position
+        if (!_.isNumber(idx))
+          idx = this.editor.getCursor().ch
+
+        // if no text, no hint
+        if (val.length == 0)
+          return null
+
+        return parser.getHints(val, idx, {})
+      },
+
       /* -- autocomplete dropdown methods */
 
       createDropdown(x, y, content) {
-        var node = elt('div', this.dropdown_cls+'tooltip', content)
+        var node = createEl('div', this.dropdown_cls+'tooltip', content)
         node.style.left = x+'px'
-        node.style.top = (y+3)+'px'
+        node.style.top = y+'px'
         document.body.appendChild(node)
         return node
       },
@@ -194,30 +240,30 @@
       },
 
       showDropdown() {
+        var me = this
+
         this.closeDropdown()
 
-        var idx = this.editor.getCursor().ch
-        var val = this.editor.getValue()
-
-        // if no text, no hint
-        if (val.length == 0)
+        var hints = this.getHints()
+        if (_.isNil(hints) || hints.type == 'none' || !_.isArray(hints.items))
           return
 
-        var hints = parser.getHints(val, idx, {})
-
-        if (hints.type == 'none' || !_.isArray(hints.items))
-          return
-
-        var tip = elt('span', null)
+        var tip = createEl('div', null)
         for (var i = 0; i < hints.items.length; ++i) {
           var tip_cls = this.dropdown_item_cls
           if (i == 0)
             tip_cls += ' '+this.dropdown_item_active_cls
-          tip.appendChild(elt('span', tip_cls, hints.items[i]))
+
+          var child_el = tip.appendChild(createEl('div', tip_cls, hints.items[i]))
+          $.data(child_el, 'item', hints.items[i])
+
+          child_el.addEventListener('mousedown', function(evt) {
+            me.replaceFromDropdownItem(evt.target)
+          })
         }
 
-        var offset = this.editor.cursorCoords(null, 'page')
-        this.active_dropdown = this.createDropdown(offset.right + 1, offset.bottom, tip)
+        var offset = this.editor.charCoords({ line: 0, ch: hints.offset }, 'page')
+        this.active_dropdown = this.createDropdown(offset.left + 1, offset.bottom + 3, tip)
       },
 
       updateDropdown() {
@@ -232,24 +278,62 @@
         this.showDropdown()
       },
 
-      highlightDropdownItemPrev() {
-        var el = this.active_dropdown.getElementsByClassName(this.dropdown_item_active_cls)
-        if (el && el.length == 1)
-          el = el[0]
+      getActiveDropdownItem() {
+        if (this.active_dropdown)
+        {
+          var els = this.active_dropdown.getElementsByClassName(this.dropdown_item_active_cls)
 
-        if (el.previousSibling)
+          if (!_.isNil(els) && els.length == 1)
+            return els[0]
+        }
+
+        return null
+      },
+
+      replaceFromDropdownItem(el) {
+        // if an element is passed to us, use it,
+        // otherwise use the active dropdown item
+        if (_.isNil(el))
+          el = this.getActiveDropdownItem()
+
+        if (!_.isNil(el))
+        {
+          var item = $.data(el, 'item')
+          if (_.isString(item))
+          {
+            if (item.length == 0)
+              return
+
+            var hints = this.getHints()
+            var word = this.editor.findWordAt({ line: 0, ch: hints.offset })
+            var next_char = this.editor.getRange(word.head, { line: 0, ch: word.head.ch+1 })
+
+            // account for potential colons that have already been inserted
+            if (next_char == ':')
+              word.head = { line: 0, ch: word.head.ch+1 }
+
+            // do the replace
+            this.editor.replaceRange(item, word.anchor, word.head)
+          }
+        }
+
+        this.closeDropdown()
+      },
+
+      highlightPrevDropdownItem() {
+        var el = this.getActiveDropdownItem()
+
+        if (!_.isNil(el) && !_.isNil(el.previousSibling))
         {
           el.className = this.dropdown_item_cls
           el.previousSibling.className = this.dropdown_item_cls+' '+this.dropdown_item_active_cls
         }
       },
 
-      highlightDropdownItemNext() {
-        var el = this.active_dropdown.getElementsByClassName(this.dropdown_item_active_cls)
-        if (el && el.length == 1)
-          el = el[0]
+      highlightNextDropdownItem() {
+        var el = this.getActiveDropdownItem()
 
-        if (el.nextSibling)
+        if (!_.isNil(el) && !_.isNil(el.nextSibling))
         {
           el.className = this.dropdown_item_cls
           el.nextSibling.className = this.dropdown_item_cls+' '+this.dropdown_item_active_cls
