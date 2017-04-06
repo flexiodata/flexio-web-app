@@ -19,6 +19,28 @@
   import {} from '../utils/commandbar-mode'
   import parser from '../utils/parser'
 
+  // helper function for creating DOM nodes to insert into the dropdown
+  function elt(tagname, cls /*, ... strings or elements*/)
+  {
+    var el = document.createElement(tagname)
+
+    if (cls)
+      el.className = cls
+
+    for (var i = 2; i < arguments.length; ++i)
+    {
+      var child_el = arguments[i]
+
+      if (typeof(child_el) == 'string')
+        child_el = document.createTextNode(child_el)
+
+      el.appendChild(child_el)
+    }
+
+    return el
+  }
+
+
   export default {
     props: {
       'val': {
@@ -71,7 +93,7 @@
       var opts = _.assign({
         lineNumbers: false,
         lineWrapping: true,
-        extraKeys: {"Ctrl-Space": "autocomplete"},
+        //extraKeys: { 'Ctrl-Space': 'autocomplete' },
         mode: 'flexio-commandbar',
         placeholder: 'Type a command...'
       }, this.options)
@@ -86,96 +108,75 @@
         this.$emit('change', this.cmd_text, this.cmd_json)
       })
 
-
-
-
-      // dropdown hinting engine
-      function elt(tagname, cls /*, ... strings or elements*/) {
-
-        var e = document.createElement(tagname)
-        if (cls) e.className = cls
-        for (var i = 2; i < arguments.length; ++i) {
-          var elt = arguments[i]
-          if (typeof(elt) == 'string') {
-            elt = document.createTextNode(elt)
-          }
-          e.appendChild(elt)
-        }
-        return e
-      }
-
-      function makeTooltip(x, y, content) {
-        var node = elt('div', me.dropdown_cls + 'tooltip', content)
-        node.style.left = x + 'px'
-        node.style.top = y + 'px'
-        document.body.appendChild(node)
-        return node
-      }
-
-      function closeArgHints() {
-
-        if (me.active_tooltip) {
-          if (me.active_tooltip.parentNode) {
-            me.active_tooltip.parentNode.removeChild(me.active_tooltip)
-          }
-          me.active_tooltip = null
-        }
-      }
-
-      function showArgHints() {
-        
-        closeArgHints()
-
-        var idx = me.editor.getCursor().ch
-        var value = me.editor.getValue()
-
-        // if no text, no hint
-        if (value.length == 0)
-          return
-
-        var hints = parser.getHints(value, idx, {})
-
-        if (hints.type == 'none')
-          return
-
-        if (!_.isArray(hints.items))
-          return
-
-        var tip = elt("span", null);
-        for (var i = 0; i < hints.items.length; ++i) {
-          tip.appendChild(elt("span", "db", hints.items[i]))
-        }
-
-        var place = me.editor.cursorCoords(null, "page")
-
-        me.active_tooltip = makeTooltip(place.right + 1, place.bottom, tip)
-      }
-
-      function updateArgHints() {
-        
-        closeArgHints()
-
-        var state = me.editor.getTokenAt(me.editor.getCursor()).state
-        var inner = CodeMirror.innerMode(me.editor.getMode(), state)
-
-        if (inner.mode.name != "flexio-commandbar") {
-          return
-        }
-
-        showArgHints()
-      }
-
-
-      this.editor.on('cursorActivity', function(cm) { updateArgHints() });
+      this.editor.on('cursorActivity', (cm) => {
+        this.updateArgHints()
+      })
     },
     methods: {
       setValue(val) {
         this.cmd_text = val
         this.editor.setValue(val)
       },
+
       reset() {
         this.cmd_text = this.val
         this.editor.setValue(this.val)
+      },
+
+      /* -- autocomplete dropdown methods */
+
+      makeTooltip(x, y, content) {
+        var node = elt('div', this.dropdown_cls+'tooltip', content)
+        node.style.left = x+'px'
+        node.style.top = y+'px'
+        document.body.appendChild(node)
+        return node
+      },
+
+      closeArgHints() {
+        if (this.active_tooltip)
+        {
+          if (this.active_tooltip.parentNode)
+            this.active_tooltip.parentNode.removeChild(this.active_tooltip)
+
+          this.active_tooltip = null
+        }
+      },
+
+      showArgHints() {
+        this.closeArgHints()
+
+        var idx = this.editor.getCursor().ch
+        var val = this.editor.getValue()
+
+        // if no text, no hint
+        if (val.length == 0)
+          return
+
+        var hints = parser.getHints(val, idx, {})
+
+        if (hints.type == 'none' || !_.isArray(hints.items))
+          return
+
+        var tip = elt('span', null)
+        for (var i = 0; i < hints.items.length; ++i) {
+          tip.appendChild(elt('span', 'db', hints.items[i]))
+        }
+
+        var offset = this.editor.cursorCoords(null, 'page')
+        this.active_tooltip = this.makeTooltip(offset.right + 1, offset.bottom, tip)
+      },
+
+      updateArgHints() {
+        this.closeArgHints()
+
+        var state = this.editor.getTokenAt(this.editor.getCursor()).state
+        var inner = CodeMirror.innerMode(this.editor.getMode(), state)
+
+        if (inner.mode.name != 'flexio-commandbar')
+          return
+
+        this.showArgHints()
       }
     }
   }
