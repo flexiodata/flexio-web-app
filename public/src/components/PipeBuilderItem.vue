@@ -300,7 +300,8 @@
           code_editor.reset()
       },
       saveEdit() {
-        var edit_attrs = _.pick(this.edit_json, ['metadata', 'type', 'params'])
+        var edit_json = _.cloneDeep(this.edit_json)
+        var edit_attrs = _.pick(edit_json, ['metadata', 'type', 'params'])
 
         // sync up the changes from the code editor if we're on an execute step
         if (_.get(this, 'item.type') == TASK_TYPE_EXECUTE)
