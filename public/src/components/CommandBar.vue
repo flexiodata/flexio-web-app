@@ -49,8 +49,10 @@
         cmd_text: '',
         editor: null,
         dropdown_open: false,
+        dropdown_cls: 'CodeMirror-flexio-cmdbar-',
         insert_char_start_idx: 0,
-        insert_char_end_idx: 0
+        insert_char_end_idx: 0,
+        active_tooltip: null
       }
     },
     computed: {
@@ -88,9 +90,6 @@
 
 
       // dropdown hinting engine
-      var cls = 'CodeMirror-flexio-cmdbar-'
-      var dropdown_state = {}
-
       function elt(tagname, cls /*, ... strings or elements*/) {
 
         var e = document.createElement(tagname)
@@ -106,29 +105,29 @@
       }
 
       function makeTooltip(x, y, content) {
-        var node = elt('div', cls + 'tooltip', content)
+        var node = elt('div', me.dropdown_cls + 'tooltip', content)
         node.style.left = x + 'px'
         node.style.top = y + 'px'
         document.body.appendChild(node)
         return node
       }
 
-      function closeArgHints(dropdown_state) {
+      function closeArgHints() {
 
-        if (dropdown_state.active_tooltip) {
-          if (dropdown_state.active_tooltip.parentNode) {
-            dropdown_state.active_tooltip.parentNode.removeChild(dropdown_state.active_tooltip)
+        if (me.active_tooltip) {
+          if (me.active_tooltip.parentNode) {
+            me.active_tooltip.parentNode.removeChild(me.active_tooltip)
           }
-          dropdown_state.active_tooltip = null
+          me.active_tooltip = null
         }
       }
 
-      function showArgHints(dropdown_state, cm) {
+      function showArgHints() {
         
-        closeArgHints(dropdown_state)
+        closeArgHints()
 
-        var idx = cm.getCursor().ch
-        var value = cm.getValue()
+        var idx = me.editor.getCursor().ch
+        var value = me.editor.getValue()
 
         // if no text, no hint
         if (value.length == 0)
@@ -147,27 +146,27 @@
           tip.appendChild(elt("span", "db", hints.items[i]))
         }
 
-        var place = cm.cursorCoords(null, "page")
+        var place = me.editor.cursorCoords(null, "page")
 
-        dropdown_state.active_tooltip = makeTooltip(place.right + 1, place.bottom, tip)
+        me.active_tooltip = makeTooltip(place.right + 1, place.bottom, tip)
       }
 
-      function updateArgHints(dropdown_state, cm) {
+      function updateArgHints() {
         
-        closeArgHints(dropdown_state)
+        closeArgHints()
 
-        var state = cm.getTokenAt(cm.getCursor()).state
-        var inner = CodeMirror.innerMode(cm.getMode(), state)
+        var state = me.editor.getTokenAt(me.editor.getCursor()).state
+        var inner = CodeMirror.innerMode(me.editor.getMode(), state)
 
         if (inner.mode.name != "flexio-commandbar") {
           return
         }
 
-        showArgHints(dropdown_state, cm)
+        showArgHints()
       }
 
 
-      this.editor.on('cursorActivity', function(cm) { updateArgHints(dropdown_state, cm) });
+      this.editor.on('cursorActivity', function(cm) { updateArgHints() });
     },
     methods: {
       setValue(val) {
