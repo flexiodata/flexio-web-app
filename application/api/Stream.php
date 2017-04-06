@@ -223,8 +223,8 @@ class Stream
             // use a default if one wasn't supplied
             $default_name = \Flexio\Base\Util::generateHandle() . '.dat';
             $filename = strlen($part_filename) > 0 ? $part_filename : $default_name;
-            $name = \Flexio\Base\Util::getFilename($filename);
-            $ext = \Flexio\Base\Util::getFileExtension($filename);
+            $name = \Flexio\Base\File::getFilename($filename);
+            $ext = \Flexio\Base\File::getFileExtension($filename);
             $filename = $name . (strlen($ext) > 0 ? ".$ext" : '');
 
             // sense the mime type, but go with what is declared if it's available

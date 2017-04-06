@@ -44,7 +44,7 @@ class Select extends \Flexio\Jobs\Base
             $filename = $instream->getName();
             foreach ($files as $pattern)
             {
-                if (\Flexio\Base\Util::matchPath($filename, $pattern, true) === false)
+                if (\Flexio\Base\File::matchPath($filename, $pattern, true) === false)
                     continue;
 
                 $filematches = true;

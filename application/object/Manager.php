@@ -25,7 +25,7 @@ class Manager
         // be used
 /*
         // STEP 1: save the email to a temporary file
-        $emailfile = \Flexio\Base\Util::getTempFilename('txt');
+        $emailfile = \Flexio\Base\File::getTempFilename('txt');
 
         $instream = fopen($stream, 'rb');
         $outstream = fopen($emailfile, 'w');

@@ -65,7 +65,7 @@ class ContentType
 
         // the extension may be a path; if it is, get the actual extension
         if (strpos($extension, '.') !== false)
-            $extension = \Flexio\Base\Util::getFileExtension($extension);
+            $extension = \Flexio\Base\File::getFileExtension($extension);
         $extension = strtolower($extension);
 
         $file_mime_type;
@@ -139,7 +139,7 @@ class ContentType
     public static function getMimeTypeFromExtension($ext, $def_return = self::MIME_TYPE_STREAM) : string
     {
         if (strpos($ext, '.') !== false)
-            $ext = \Flexio\Base\Util::getFileExtension($ext);
+            $ext = \Flexio\Base\File::getFileExtension($ext);
 
         $ext = strtolower($ext);
 

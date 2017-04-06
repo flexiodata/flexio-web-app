@@ -181,7 +181,7 @@ class Output extends \Flexio\Jobs\Base
         $stream_idx = 0;
         foreach ($this->streams as $stream)
         {
-            if (\Flexio\Base\Util::matchPath($stream->getName(), $pattern, false) !== false)
+            if (\Flexio\Base\File::matchPath($stream->getName(), $pattern, false) !== false)
             {
                 $expanded_items[] = array("name" => $stream->getName(),
                                           "path" => isset($path) ? $path : $stream->getName(),

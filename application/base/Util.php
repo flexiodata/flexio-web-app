@@ -18,42 +18,6 @@ namespace Flexio\Base;
 
 class Util
 {
-    public static function getFilename($filename)
-    {
-        // pathinfo will parse paths differently, depending on the
-        // platform being run on; test which type of parsing is being
-        // used and convert the filename over to that
-
-        $sample_path = '/etc/temp.txt';
-        $sample_filename = pathinfo($sample_path, PATHINFO_FILENAME);
-        $is_linux = ($sample_filename === 'temp');
-
-        if ($is_linux === true)
-            $filename = str_replace("\\", "/", $filename); // parse using linux-style paths
-             else
-            $filename = str_replace("/", "\\", $filename); // parse using windows-style paths
-
-        return pathinfo($filename, PATHINFO_FILENAME);
-    }
-
-    public static function getFileExtension($filename)
-    {
-        // pathinfo will parse paths differently, depending on the
-        // platform being run on; test which type of parsing is being
-        // used and convert the filename over to that
-
-        $sample_path = '/etc/temp.txt';
-        $sample_filename = pathinfo($sample_path, PATHINFO_EXTENSION);
-        $is_linux = $sample_filename === 'txt';
-
-        if ($is_linux === true)
-            $filename = str_replace("\\", "/", $filename); // parse using linux-style paths
-             else
-            $filename = str_replace("/", "\\", $filename); // parse using windows-style paths
-
-        return pathinfo($filename, PATHINFO_EXTENSION);
-    }
-
     public static function rmtree($dir)
     {
         $files = array_diff(scandir($dir), array('.', '..'));
@@ -139,11 +103,6 @@ class Util
             return '';
 
         return $chunk;
-    }
-
-    public static function matchPath($str, $pattern, $case_sensitive)
-    {
-        return fnmatch($pattern, $str, $case_sensitive ? 0 : FNM_CASEFOLD);  // FNM_CASEFOLD triggers caseless match
     }
 
     public static function lpad($str, $n, $ch = ' ')
@@ -492,90 +451,6 @@ class Util
         return ($t2 + $mt2) - ($t1 + $mt1);
     }
 
-    public static function formatJson($json)
-    {
-        // if input isn't a string, then encode it; if it's
-        // a string, decode/encode it to make sure it's valid
-        // json and to pre-process it for formatting
-        if (!is_string($json))
-        {
-            // if input isn't a string, then encode it
-            $json = json_encode($json);
-        }
-         else
-        {
-            if (strlen($json) == 0)
-                return "\n";
-
-            $obj = json_decode($json);
-            if (!isset($obj))
-                return $json;
-            $json = json_encode($obj);
-        }
-
-        $result = '';
-        $in_quotes = false;
-        $fresh_line = true;
-
-        $level = 0;
-        $len = strlen($json);
-        for ($i = 0; $i <= $len; $i++)
-        {
-            $ch = substr($json, $i, 1);
-
-            if ($ch == '"' && ($i > 0 && substr($json, $i-1, 1) != '\\'))
-            {
-                $in_quotes = !$in_quotes;
-            }
-             else
-            {
-                if (($ch == '}' || $ch == ']') && !$in_quotes)
-                {
-                    $level--;
-                    $result .= "\n";
-
-                    for ($j = 0; $j < $level; $j++)
-                        $result .= '    ';
-                }
-            }
-
-            if ($in_quotes)
-            {
-                $result .= $ch;
-                $fresh_line = false;
-            }
-             else
-            {
-                if (($ch == '{' || $ch == '[') && !$fresh_line)
-                {
-                    $result .= "\n";
-                    for ($j = 0; $j < $level; $j++)
-                        $result .= '    ';
-                }
-
-                $result .= $ch;
-                $fresh_line = false;
-
-                if ($ch == ':')
-                    $result .= ' ';
-
-                if ($ch == '{' || $ch == '[' || $ch == ',')
-                {
-                    if ($ch == '{' || $ch == '[')
-                        $level++;
-
-                    $result .= "\n";
-
-                    for ($j = 0; $j < $level; $j++)
-                        $result .= '    ';
-                    $fresh_line = true;
-                }
-            }
-        }
-
-        return $result .= "\n";
-    }
-
     // sorts an array in ascending order by a specified field
     public static function sortByFieldAsc(&$arr, $field)
     {
@@ -890,35 +765,6 @@ class Util
         return rtrim($data, "\0");
     }
 
-    // shorthand for getting a temporary file
-    public static function getTempFilename($ext = null)
-    {
-        $temp_file = tempnam(sys_get_temp_dir(), 'fx_');
-        if (isset($ext) && strlen($ext) > 0)
-        {
-            @unlink($temp_file);
-            $temp_file .= ('.' . $ext);
-
-            $fp = fopen($temp_file, "w");
-            fclose($fp);
-
-            chmod($temp_file, 0600);
-        }
-
-        return $temp_file;
-    }
-
-    public static function appendPath($path, $part)
-    {
-        $result = $path;
-        $len = strlen($result);
-        if ($len == 0)
-            return $part;
-        if (substr($part, $len - 1, 1) != DIRECTORY_SEPARATOR)
-            $result .= DIRECTORY_SEPARATOR;
-        return $result . $part;
-    }
-
     public static function appendUrlPath($url, $part)
     {
         if (strlen($url) == 0)
@@ -1004,69 +850,6 @@ class Util
         header($protocol . ' ' . $code . ' ' . $text);
 
         return $code;
-    }
-
-    public static function createTempFile($prefix = '', $extension = 'tmp')
-    {
-        $fname = tempnam(sys_get_temp_dir(), $prefix);
-        $new_name = str_replace('.tmp', '_tmp', $fname) . ".$extension";
-        rename($fname, $new_name);
-        return $new_name;
-    }
-
-    public static function createThumbnail($input_path, $output_path, $new_max_size = 256)
-    {
-        if (!function_exists('imagecreatefrompng'))
-            return false; // gd library is not available
-
-        if (!file_exists($input_path))
-            return false;
-
-        if (!is_writeable(dirname($output_path)))
-            return false;
-
-        // get input file image info
-        $image_info = $image_info = @getimagesize($input_path);
-        list($width_orig, $height_orig, $image_type) = $image_info;
-
-        if ($width_orig == 0 || $height_orig == 0)
-            return false;
-
-        // determine output dimensions
-        if ($width_orig > $height_orig)
-        {
-            $width_new = $new_max_size;
-            $height_new = floor((($width_new / $width_orig) * $height_orig));
-        }
-         else
-        {
-            $height_new = $new_max_size;
-            $width_new = floor((($height_new / $height_orig) * $width_orig));
-        }
-
-        switch ($image_type)
-        {
-            case IMAGETYPE_GIF:  $image_orig = imagecreatefromgif($input_path); break;
-            case IMAGETYPE_JPEG: $image_orig = imagecreatefromjpeg($input_path); break;
-            case IMAGETYPE_PNG:  $image_orig = imagecreatefrompng($input_path); break;
-            default: return false; // unsupported image type
-        }
-
-        $image_new = imagecreatetruecolor($width_new, $height_new);
-        imagealphablending($image_new, false);
-        imagesavealpha($image_new, true);
-
-        imagecopyresampled($image_new, $image_orig,
-                           0, 0, 0, 0,
-                           $width_new, $height_new,
-                           $width_orig, $height_orig);
-
-        $res = imagepng($image_new, $output_path, 9);
-
-        imagedestroy($image_orig);
-        imagedestroy($image_new);
-
-        return $res;
     }
 }
 
