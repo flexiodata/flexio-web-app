@@ -32,204 +32,110 @@ class Test
         TestCheck::assertArray('A.1', 'Task::create(); create an empty task array if no input is specified', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create(true);
-        $actual = $task->get();
-        $expected = [];
-        TestCheck::assertArray('A.2', 'Task::create(); if input properties are specified, ignore them unless they\'re an array', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $task = \Flexio\Object\Task::create(true);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('A.2', 'Task::create(); if input properties are specified, make sure they are valid', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create([1]);
-        $actual = $task->get();
-        $expected = [];
-        TestCheck::assertArray('A.3', 'Task::create(); if input properties are specified, only add valid task steps', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $task = \Flexio\Object\Task::create([1]);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        TestCheck::assertString('A.3', 'Task::create(); if input properties are specified, make sure they are valid', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create([true]);
-        $actual = $task->get();
-        $expected = [];
-        TestCheck::assertArray('A.4', 'Task::create(); if input properties are specified, only add valid task steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create(["a"]);
-        $actual = $task->get();
-        $expected = [];
-        TestCheck::assertArray('A.5', 'Task::create(); if input properties are specified, only add valid task steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create([[]]);
+        $task = \Flexio\Object\Task::create([array("a"=>"b")]);
         $actual = is_string($task->get()[0]["eid"]);
         $expected = true;
-        TestCheck::assertBoolean('A.6', 'Task::create(); make sure eid is added to a task step', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.4', 'Task::create(); make sure eid is added to a task step', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create([
-                \Flexio\Jobs\Create::create()
-            ]);
-        $actual = $task->get()[0]['type'];
-        $expected = \Flexio\Jobs\Create::MIME_TYPE;
-        TestCheck::assertString('A.7', 'Task::create(); add valid steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create([
-                \Flexio\Jobs\Convert::create()
-            ]);
-        $actual = $task->get()[0]['type'];
-        $expected = \Flexio\Jobs\Convert::MIME_TYPE;
-        TestCheck::assertString('A.8', 'Task::create(); add valid steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create([
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]
-            ]);
-        $actual = $task->get()[0]['type'];
-        $expected = \Flexio\Jobs\Create::MIME_TYPE;
-        TestCheck::assertString('A.9', 'Task::create(); add as valid steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create([
-                '{"type": "flexio.create", "params": {}}'
-            ]);
-        $actual = $task->get()[0]['type'];
-        $expected = \Flexio\Jobs\Create::MIME_TYPE;
-        TestCheck::assertString('A.10', 'Task::create(); add as valid steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create([
-                \Flexio\Jobs\Create::create(),
-                \Flexio\Jobs\Convert::create(),
-            ]);
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
+        $task = \Flexio\Object\Task::create([array("a"=>"b"),array("c"=>"d")]);
+        $actual = is_string($task->get()[1]["eid"]);
         $expected = true;
-        TestCheck::assertBoolean('A.11', 'Task::create(); add valid steps', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.5', 'Task::create(); make sure eid is added to a task step', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create([
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                \Flexio\Jobs\Convert::create(),
+                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
             ]);
         $actual = $task->get()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
-        TestCheck::assertBoolean('A.12', 'Task::create(); add valid steps; allow mixed input types', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create([
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                '{"type": "flexio.convert", "params": {}}'
-            ]);
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
-        $expected = true;
-        TestCheck::assertBoolean('A.13', 'Task::create(); add valid steps; allow mixed input types', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create([
-                "A",
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                true,
-                '{"type": "flexio.convert", "params": {}}',
-                null
-            ]);
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
-        $expected = true;
-        TestCheck::assertBoolean('A.14', 'Task::create(); add valid steps; allow mixed input types; ingore bad input', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.6', 'Task::create(); add valid steps; make sure parameters are set', $actual, $expected, $results);
 
 
 
         // TEST: Task::push(); tests for adding a step
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(null);
-        $actual = $task->get();
-        $expected = [];
-        TestCheck::assertArray('B.1', 'Task::push(); create an empty task array if no input is specified', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $task = \Flexio\Object\Task::create()->push(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.1', 'Task::push(); if input properties are specified, make sure they are valid', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(false);
-        $actual = $task->get();
-        $expected = [];
-        TestCheck::assertArray('B.2', 'Task::push(); if input properties are specified, ignore them unless they\'re an array', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(true);
-        $actual = $task->get();
-        $expected = [];
-        TestCheck::assertArray('B.3', 'Task::push(); if input properties are specified, only add valid task steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(1);
-        $actual = $task->get();
-        $expected = [];
-        TestCheck::assertArray('B.4', 'Task::push(); if input properties are specified, only add valid task steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('a');
-        $actual = $task->get();
-        $expected = [];
-        TestCheck::assertArray('B.5', 'Task::push(); if input properties are specified, only add valid task steps', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $task = \Flexio\Object\Task::create()->push(true);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('B.2', 'Task::push(); if input properties are specified, make sure they are valid', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()->push([]);
         $actual = is_string($task->get()[0]["eid"]);
         $expected = true;
-        TestCheck::assertBoolean('B.6', 'Task::push(); make sure eid is added to a task step', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', 'Task::push(); make sure eid is added to a task step', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\Create::create());
-        $actual = $task->get()[0]['type'];
-        $expected = \Flexio\Jobs\Create::MIME_TYPE;
-        TestCheck::assertString('B.7', 'Task::push(); add valid steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(\Flexio\Jobs\Convert::create());
-        $actual = $task->get()[0]['type'];
-        $expected = \Flexio\Jobs\Convert::MIME_TYPE;
-        TestCheck::assertString('B.8', 'Task::push(); add valid steps', $actual, $expected, $results);
+        $task = \Flexio\Object\Task::create()->push([1]);
+        $actual = $task->get()[0]['type'] ?? false;
+        $expected = false;
+        TestCheck::assertBoolean('B.4', 'Task::push(); add valid steps', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()->push(["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]);
         $actual = $task->get()[0]['type'];
         $expected = \Flexio\Jobs\Create::MIME_TYPE;
-        TestCheck::assertString('B.9', 'Task::push(); add as valid steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push('{"type": "flexio.create", "params": {}}');
-        $actual = $task->get()[0]['type'];
-        $expected = \Flexio\Jobs\Create::MIME_TYPE;
-        TestCheck::assertString('B.10', 'Task::push(); add as valid steps', $actual, $expected, $results);
+        TestCheck::assertString('B.5', 'Task::push(); add valid steps', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()
-                        ->push(\Flexio\Jobs\Create::create())
-                        ->push(\Flexio\Jobs\Convert::create());
+                                ->push(["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]])
+                                ->push(["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]);
         $actual = $task->get()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
         $expected = true;
-        TestCheck::assertBoolean('B.11', 'Task::push(); add valid steps', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create()
-                        ->push(["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]])
-                        ->push(\Flexio\Jobs\Convert::create());
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
-        $expected = true;
-        TestCheck::assertBoolean('B.12', 'Task::push(); add valid steps; allow mixed input types', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create()
-                        ->push(["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]])
-                        ->push('{"type": "flexio.convert", "params": {}}');
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
-        $expected = true;
-        TestCheck::assertBoolean('B.13', 'Task::push(); add valid steps; allow mixed input types', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create()
-                        ->push("A")
-                        ->push(["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]])
-                        ->push(true)
-                        ->push('{"type": "flexio.convert", "params": {}}')
-                        ->push(null);
-        $actual = $task->get()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE && $task->get()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE;
-        $expected = true;
-        TestCheck::assertBoolean('B.14', 'Task::push(); add valid steps; allow mixed input types; ingore bad input', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.6', 'Task::push(); add valid steps', $actual, $expected, $results);
 
 
 
@@ -243,9 +149,9 @@ class Test
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()
-                        ->push(\Flexio\Jobs\Create::create())
-                        ->push(\Flexio\Jobs\Convert::create())
-                        ->push(\Flexio\Jobs\Filter::create());
+                        ->push(["type" => \Flexio\Jobs\Create::MIME_TYPE])
+                        ->push(["type" => \Flexio\Jobs\Convert::MIME_TYPE])
+                        ->push(["type" => \Flexio\Jobs\Filter::MIME_TYPE]);
         $task_list = $task->pop()->get();
         $actual = end($task_list)['type'];
         $expected = \Flexio\Jobs\Convert::MIME_TYPE;
@@ -253,9 +159,9 @@ class Test
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()
-                        ->push(\Flexio\Jobs\Create::create())
-                        ->push(\Flexio\Jobs\Convert::create())
-                        ->push(\Flexio\Jobs\Filter::create());
+                        ->push(["type" => \Flexio\Jobs\Create::MIME_TYPE])
+                        ->push(["type" => \Flexio\Jobs\Convert::MIME_TYPE])
+                        ->push(["type" => \Flexio\Jobs\Filter::MIME_TYPE]);
         $task_list = $task->pop()->pop()->get();
         $actual = end($task_list)['type'];
         $expected = \Flexio\Jobs\Create::MIME_TYPE;
@@ -263,9 +169,9 @@ class Test
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()
-                        ->push(\Flexio\Jobs\Create::create())
-                        ->push(\Flexio\Jobs\Convert::create())
-                        ->push(\Flexio\Jobs\Filter::create());
+                        ->push(["type" => \Flexio\Jobs\Create::MIME_TYPE])
+                        ->push(["type" => \Flexio\Jobs\Convert::MIME_TYPE])
+                        ->push(["type" => \Flexio\Jobs\Filter::MIME_TYPE]);
         $task->pop()->pop()->pop();
         $actual = $task->get();
         $expected = array();
@@ -276,36 +182,34 @@ class Test
         // TEST: Task::addTaskStep(); tests for adding a step
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create();
-        $task->addTaskStep(null);
-        $actual = $task->get();
-        $expected = [
-        ];
-        TestCheck::assertInArray('D.1', 'Task::addTaskStep(); don\'t add a step if the task is bad', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $task = \Flexio\Object\Task::create();
+            $task->addTaskStep(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('D.1', 'Task::addTaskStep(); if input properties are specified, make sure they are valid', $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create();
-        $task->addTaskStep(false);
-        $actual = $task->get();
-        $expected = [
-        ];
-        TestCheck::assertInArray('D.2', 'Task::addTaskStep(); don\'t add a step if the task is bad', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create();
-        $task->addTaskStep(1);
-        $actual = $task->get();
-        $expected = [
-        ];
-        TestCheck::assertInArray('D.3', 'Task::addTaskStep(); don\'t add a step if the task is bad', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create();
-        $task->addTaskStep('abc');
-        $actual = $task->get();
-        $expected = [
-        ];
-        TestCheck::assertInArray('D.4', 'Task::addTaskStep(); don\'t add a step if the task is bad', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $task = \Flexio\Object\Task::create();
+            $task->addTaskStep('abc');
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('D.2', 'Task::addTaskStep(); if input properties are specified, make sure they are valid', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
@@ -314,24 +218,15 @@ class Test
         $expected = [
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.5', 'Task::addTaskStep(); add steps that are in the correct format', $actual, $expected, $results);
+        TestCheck::assertInArray('D.3', 'Task::addTaskStep(); add steps that are in the correct format', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
-        $task->addTaskStep('{"type": "flexio.create", "params": {}}');
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('D.6', 'Task::addTaskStep(); add steps that are in the correct format', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = \Flexio\Object\Task::create();
-        $task->addTaskStep('{"type": "flexio.create", "params": {}}');
+        $task->addTaskStep(["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]);
         $result = $task->get();
         $actual = count($result) === 1 && isset($result[0]['eid']) && \Flexio\Base\Eid::isValid($result[0]['eid']);
         $expected = true;
-        TestCheck::assertBoolean('D.7', 'Task::addTaskStep(); when a step is added, make sure the eid is set', $actual, $expected, $results);
+        TestCheck::assertBoolean('D.4', 'Task::addTaskStep(); when a step is added, make sure the eid is set', $actual, $expected, $results);
 
         // BEGIN TEST
         $eid1 = \Flexio\Base\Eid::generate();
@@ -340,7 +235,7 @@ class Test
         $result = $task->get();
         $actual = count($result) === 1 && isset($result[0]['eid']) && \Flexio\Base\Eid::isValid($result[0]['eid']) && $result[0]['eid'] === $eid1;
         $expected = true;
-        TestCheck::assertBoolean('D.8', 'Task::addTaskStep(); add steps that are in the correct format; valid eids that aren\'t objects in the application are allowed to be set', $actual, $expected, $results);
+        TestCheck::assertBoolean('D.5', 'Task::addTaskStep(); add steps that are in the correct format; valid eids that aren\'t objects in the application are allowed to be set', $actual, $expected, $results);
 
         // BEGIN TEST
         $eid1 = 'xyz'; // bad eid
@@ -349,7 +244,7 @@ class Test
         $result = $task->get();
         $actual = count($result) === 1 && isset($result[0]['eid']) && \Flexio\Base\Eid::isValid($result[0]['eid']) && $result[0]['eid'] !== $eid1;
         $expected = true;
-        TestCheck::assertBoolean('D.9', 'Task::addTaskStep(); add steps that are in the correct format; if an eid is supplied, make sure it\'s valid and isn\'t an object in the application, or else generate a new one', $actual, $expected, $results);
+        TestCheck::assertBoolean('D.6', 'Task::addTaskStep(); add steps that are in the correct format; if an eid is supplied, make sure it\'s valid and isn\'t an object in the application, or else generate a new one', $actual, $expected, $results);
 
         // BEGIN TEST
         $eid1 = \Flexio\Object\Comment::create()->getEid(); // eid corresponding to an object
@@ -358,7 +253,7 @@ class Test
         $result = $task->get();
         $actual = count($result) === 1 && isset($result[0]['eid']) && \Flexio\Base\Eid::isValid($eid1) && \Flexio\Base\Eid::isValid($result[0]['eid']) && $result[0]['eid'] !== $eid1;
         $expected = true;
-        TestCheck::assertBoolean('D.10', 'Task::addTaskStep(); add steps that are in the correct format; if an eid is supplied, make sure it\'s valid and isn\'t an object in the application, or else generate a new one', $actual, $expected, $results);
+        TestCheck::assertBoolean('D.7', 'Task::addTaskStep(); add steps that are in the correct format; if an eid is supplied, make sure it\'s valid and isn\'t an object in the application, or else generate a new one', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
@@ -369,7 +264,7 @@ class Test
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.11', 'Task::addTaskStep(); make sure that steps without any supplied index are added to the end of the task list', $actual, $expected, $results);
+        TestCheck::assertInArray('D.8', 'Task::addTaskStep(); make sure that steps without any supplied index are added to the end of the task list', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
@@ -380,7 +275,7 @@ class Test
                 ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.12', 'Task::addTaskStep(); make sure that steps without any supplied index are added to the end of the task list', $actual, $expected, $results);
+        TestCheck::assertInArray('D.9', 'Task::addTaskStep(); make sure that steps without any supplied index are added to the end of the task list', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -395,7 +290,7 @@ class Test
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.13', 'Task::addTaskStep(); make sure that steps without any supplied index are added to the end of the task list', $actual, $expected, $results);
+        TestCheck::assertInArray('D.10', 'Task::addTaskStep(); make sure that steps without any supplied index are added to the end of the task list', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -410,37 +305,26 @@ class Test
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.14', 'Task::addTaskStep(); make sure that steps with bad indexes insert steps at the end', $actual, $expected, $results);
+        TestCheck::assertInArray('D.11', 'Task::addTaskStep(); make sure that steps with unsupplied indexes are inserted at the end', $actual, $expected, $results);
 
         // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->addTaskStep(["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]], false);
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('D.15', 'Task::addTaskStep(); make sure that steps with bad indexes insert steps at the end', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->addTaskStep(["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]], 'abc');
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('D.16', 'Task::addTaskStep(); make sure that steps with bad indexes insert steps at the end', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $steps = [
+                    ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
+                    ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
+            ];
+            $task = \Flexio\Object\Task::create($steps);
+            $task->addTaskStep(["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]], 'a');
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('D.12', 'Task::addTaskStep(); make sure that steps with bad indexes insert steps at the end', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
@@ -449,7 +333,7 @@ class Test
         $expected = [
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.17', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.13', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
@@ -458,7 +342,7 @@ class Test
         $expected = [
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.18', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.14', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
@@ -467,7 +351,7 @@ class Test
         $expected = [
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.19', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.15', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
@@ -478,7 +362,7 @@ class Test
                 ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.20', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.16', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create();
@@ -489,7 +373,7 @@ class Test
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.21', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.17', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -504,7 +388,7 @@ class Test
                 ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.22', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.18', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -519,7 +403,7 @@ class Test
                 ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.23', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.19', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -534,7 +418,7 @@ class Test
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.24', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.20', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -549,7 +433,7 @@ class Test
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.25', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.21', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -564,39 +448,49 @@ class Test
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('D.26', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
+        TestCheck::assertInArray('D.22', 'Task::addTaskStep(); make sure that steps with indexes are inserted at the appropriate position', $actual, $expected, $results);
 
 
 
         // TEST: Task::deleteTaskStep(); tests for deleting a step
 
         // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->deleteTaskStep(null);
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('E.1', 'Task::deleteTaskStep(); don\'t delete the step if the eid is bad', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $steps = [
+                    ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
+                    ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
+            ];
+            $task = \Flexio\Object\Task::create($steps);
+            $task->deleteTaskStep(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('E.1', 'Task::deleteTaskStep(); make sure deleteTaskStep has a valid eid', $actual, $expected, $results);
 
         // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->deleteTaskStep(false);
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('E.2', 'Task::deleteTaskStep(); don\'t delete the step if the eid is bad', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $steps = [
+                    ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
+                    ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
+            ];
+            $task = \Flexio\Object\Task::create($steps);
+            $task->deleteTaskStep(true);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('E.2', 'Task::deleteTaskStep(); make sure deleteTaskStep has a valid eid', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -610,7 +504,7 @@ class Test
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('E.3', 'Task::deleteTaskStep(); don\'t delete the step if the eid is bad', $actual, $expected, $results);
+        TestCheck::assertInArray('E.3', 'Task::deleteTaskStep(); don\'t delete the step if the eid doesn\'t match', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -659,88 +553,80 @@ class Test
         // TEST: Task::setTaskStep(); tests for changing a step
 
         // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->setTaskStep(null, ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]);
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('F.1', 'Task::setTaskStep(); don\'t replace the step if the eid is bad', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $steps = [
+                    ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
+                    ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
+            ];
+            $task = \Flexio\Object\Task::create($steps);
+            $task->setTaskStep(null, ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('F.1', 'Task::setTaskStep(); make sure the task identifier is a string', $actual, $expected, $results);
 
         // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->setTaskStep(false, ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]);
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('F.2', 'Task::setTaskStep(); don\'t replace the step if the eid is bad', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $steps = [
+                    ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
+                    ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
+            ];
+            $task = \Flexio\Object\Task::create($steps);
+            $task->setTaskStep(1, ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('F.2', 'Task::setTaskStep(); make sure the task identifier is a string', $actual, $expected, $results);
 
         // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->setTaskStep($eid1, null);
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('F.3', 'Task::setTaskStep(); don\'t replace the step if the input is bad', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $steps = [
+                    ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
+                    ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
+            ];
+            $task = \Flexio\Object\Task::create($steps);
+            $task->setTaskStep($eid1, null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('F.3', 'Task::setTaskStep(); make sure the task is an array', $actual, $expected, $results);
 
         // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->setTaskStep($eid1, false);
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('F.4', 'Task::setTaskStep(); don\'t replace the step if the input is bad', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->setTaskStep($eid1, 1);
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('F.5', 'Task::setTaskStep(); don\'t replace the step if the input is bad', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $task->setTaskStep($eid1, "a");
-        $actual = $task->get();
-        $expected = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        TestCheck::assertInArray('F.6', 'Task::setTaskStep(); don\'t replace the step if the input is bad', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $steps = [
+                    ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
+                    ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
+            ];
+            $task = \Flexio\Object\Task::create($steps);
+            $task->setTaskStep($eid1, 'abc');
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('F.4', 'Task::setTaskStep(); make sure the task is an array', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -755,7 +641,7 @@ class Test
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('F.7', 'Task::setTaskStep(); set the specified task if it exists', $actual, $expected, $results);
+        TestCheck::assertInArray('F.5', 'Task::setTaskStep(); set the specified task if it exists', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -770,7 +656,7 @@ class Test
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('F.8', 'Task::setTaskStep(); set the specified task if it exists', $actual, $expected, $results);
+        TestCheck::assertInArray('F.6', 'Task::setTaskStep(); set the specified task if it exists', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [
@@ -784,7 +670,7 @@ class Test
                 ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
                 ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('F.9', 'Task::setTaskStep(); set the specified task if it exists', $actual, $expected, $results);
+        TestCheck::assertInArray('F.7', 'Task::setTaskStep(); set the specified task if it exists', $actual, $expected, $results);
 
         // BEGIN TEST
         $eid1 = \Flexio\Base\Eid::generate();
@@ -799,31 +685,45 @@ class Test
         $expected = [
                 ["eid" => $task_list[1]['eid'], "type" => \Flexio\Jobs\Nop::MIME_TYPE, "params" => (object)[]]
         ];
-        TestCheck::assertInArray('F.10', 'Task::setTaskStep(); make sure eid can\'t be set when changing the step', $actual, $expected, $results);
-
+        TestCheck::assertInArray('F.8', 'Task::setTaskStep(); make sure eid can\'t be set when changing the step', $actual, $expected, $results);
 
 
         // TEST: Task::getTaskStep(); tests for getting a step
 
         // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $actual = $task->getTaskStep(null);
-        $expected = false;
-        TestCheck::assertBoolean('G.1', 'Task::getTaskStep(); don\'t get the step if the eid is bad', $actual, $expected, $results);
+        try
+        {
+            $steps = [
+                    ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
+                    ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
+            ];
+            $task = \Flexio\Object\Task::create($steps);
+            $task->getTaskStep(null);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('G.1', 'Task::getTaskStep(); make sure the task identifier is a string', $actual, $expected, $results);
 
-        // BEGIN TEST
-        $steps = [
-                ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
-                ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
-        ];
-        $task = \Flexio\Object\Task::create($steps);
-        $actual = $task->getTaskStep(false);
-        $expected = false;
-        TestCheck::assertBoolean('G.2', 'Task::getTaskStep(); don\'t get the step if the eid is bad', $actual, $expected, $results);
+        try
+        {
+            $steps = [
+                    ["type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]],
+                    ["type" => \Flexio\Jobs\Convert::MIME_TYPE, "params" => (object)[]]
+            ];
+            $task = \Flexio\Object\Task::create($steps);
+            $task->getTaskStep(true);
+            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        TestCheck::assertString('G.2', 'Task::getTaskStep(); make sure the task identifier is a string', $actual, $expected, $results);
 
         // BEGIN TEST
         $steps = [

@@ -1023,7 +1023,7 @@ class Test
                 }
             }
         ]
-        ',true;
+        ',true);
         $variables = [
             "name" => "f1",
             "type" => "text",
@@ -1107,5 +1107,6 @@ class Test
         ]
         ';
         TestCheck::assertInArray('D.6', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
+
     }
 }
