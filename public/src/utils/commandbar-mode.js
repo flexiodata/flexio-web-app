@@ -16,7 +16,9 @@
   function wordRegexp(words) {
     return new RegExp("^((" + words.join(")|(") + "))\\b");
   }
-
+  function argRegexp(words) {
+    return new RegExp("^((" + words.join(")|(") + "))[:]");
+  }
 
   CodeMirror.defineMode('flexio-commandbar', function(conf, parserConf) {
 
@@ -87,7 +89,7 @@
           // is used. e.g. "convert" 
           state.verb = res[0]
           var args = parser.getVerbArguments(state.verb)
-          state.args_regexp = (_.isArray(args) && args.length > 0) ? wordRegexp(args) : null;
+          state.args_regexp = (_.isArray(args) && args.length > 0) ? argRegexp(args) : null;
           return 'variable-2'
         }
 
