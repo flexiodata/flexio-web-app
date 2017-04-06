@@ -297,6 +297,13 @@
 
             var hints = this.getHints()
             var word = this.editor.findWordAt({ line: 0, ch: hints.offset })
+            var next_char = this.editor.getRange(word.head, { line: 0, ch: word.head.ch+1 })
+
+            // account for potential colons that have already been inserted
+            if (next_char == ':')
+              word.head = { line: 0, ch: word.head.ch+1 }
+
+            // do the replace
             this.editor.replaceRange(item, word.anchor, word.head)
           }
         }
