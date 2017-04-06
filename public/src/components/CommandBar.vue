@@ -102,16 +102,16 @@ function elt(tagname, cls /*, ... elts*/) {
 }
 
 function remove(node) {
-    var p = node && node.parentNode;
-    if (p) p.removeChild(node);
+    var p = node && node.parentNode
+    if (p) p.removeChild(node)
 }
 
 function makeTooltip(x, y, content) {
-    var node = elt("div", cls + "tooltip", content);
-    node.style.left = x + "px";
-    node.style.top = y + "px";
-    document.body.appendChild(node);
-    return node;
+    var node = elt("div", cls + "tooltip", content)
+    node.style.left = x + "px"
+    node.style.top = y + "px"
+    document.body.appendChild(node)
+    return node
 }
 
 function closeArgHints(ts) {
@@ -121,15 +121,40 @@ function closeArgHints(ts) {
 function showArgHints(ts, cm, pos) {
   closeArgHints(ts);
 
+  var idx = cm.getCursor().ch
+  var value = cm.getValue()
+
+  // if no text, no hint
+  if (value.length == 0)
+    return;
+
+  var hints = parser.getHints(value, idx, {})
+
+  if (hints.type == 'none')
+    return;
+
+  if (!_.isArray(hints.items))
+    return;
+
+  var tip = elt("span", null);
+  for (var i = 0; i < hints.items.length; ++i)
+  {
+    tip.appendChild(elt("span", "db", hints.items[i]));
+  }
+
+/*
   var tip = elt("span", null, 
-                  elt("span", "db", "Test1"),
+                  elt("span", "db", value),
                   elt("span", "db", "Test2"),
                   elt("span", "db", "Test3")
-                  );
-  var place = cm.cursorCoords(null, "page");
+                  )
+*/
+
+
+  var place = cm.cursorCoords(null, "page")
   //console.log("(" + place.right + "," + place.bottom + ")");
 
-  ts.activeArgHints = makeTooltip(place.right + 1, place.bottom, tip);
+  ts.activeArgHints = makeTooltip(place.right + 1, place.bottom, tip)
 /*
   var cache = ts.cachedArgHints, tp = cache.type;
   var tip = elt("span", cache.guess ? cls + "fhint-guess" : null,
