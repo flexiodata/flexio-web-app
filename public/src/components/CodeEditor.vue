@@ -38,7 +38,6 @@
       this.code_text = this.val
     },
     mounted() {
-      var me = this
       var opts = _.assign({
         lineNumbers: true,
         mode: this.lang
@@ -47,15 +46,19 @@
       this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
       this.editor.focus()
 
-      this.editor.on('change', function(cm) {
-        me.code_text = cm.getValue()
-        me.$emit('change', me.code_text)
+      this.editor.on('change', (cm) => {
+        this.code_text = cm.getValue()
+        this.$emit('change', this.code_text)
       })
     },
     methods: {
       setValue(val) {
         this.code_text = val
         this.editor.setValue(val)
+      },
+      reset() {
+        this.code_text = this.val
+        this.editor.setValue(this.val)
       }
     }
   }

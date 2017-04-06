@@ -85,16 +85,14 @@
           <command-bar
             ref="commandbar"
             class="mt2 pa1 ba b--black-10 bg-white"
-            :orig-json="task"
-            @change="updateEditTask"
-            @cancel="cancelEdit"
-            @save="saveEdit"
+            :val="orig_cmd"
+            @change="updateCmd"
           ></command-bar>
           <code-editor
             ref="code"
             class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
-            :val="execute_code"
-            :lang="execute_lang"
+            :val="orig_code"
+            :lang="code_lang"
             @change="updateCode"
             v-if="is_task_execute"
           ></code-editor>
@@ -146,8 +144,8 @@
     watch: {
       task: function(val, old_val) {
         this.edit_json = _.assign({}, val)
-        this.edit_command = this.getOrigCommand()
-        this.execute_code = this.getOrigCode()
+        this.edit_cmd = this.getOrigCmd()
+        this.edit_code = this.getOrigCode()
       }
     },
     data() {
@@ -160,8 +158,8 @@
         is_inited: false,
         description: _.get(this, 'item.description', ''),
         edit_json: this.getOrigJson(),
-        edit_command: this.getOrigCommand(),
-        execute_code: this.getOrigCode()
+        edit_cmd: this.getOrigCmd(),
+        edit_code: this.getOrigCode()
       }
     },
     computed: {
@@ -177,7 +175,7 @@
       is_task_execute() {
         return this.task_type == TASK_TYPE_EXECUTE
       },
-      orig_command() {
+      orig_cmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
         var end_idx = cmd_text.indexOf(' code:')
         return (this.is_task_execute && end_idx != -1)
@@ -192,9 +190,10 @@
         if (!this.is_inited)
           return false
 
-        return this.is_task_execute && (this.orig_code != this.execute_code)
-          ? true : this.orig_command != this.edit_command
-          ? true : false
+        if (this.is_task_execute && this.orig_code != this.edit_code)
+          return true
+
+        return this.orig_cmd != this.edit_cmd ? true : false
       },
       insert_before_tooltip() {
         return 'Insert a new step before step ' + (this.index+1)
@@ -202,7 +201,7 @@
       insert_after_tooltip() {
         return 'Insert a new step after step ' + (this.index+1)
       },
-      execute_lang() {
+      code_lang() {
         return _.get(this, 'task.params.lang', 'python')
       },
       // find the active subprocess by finding this task eid in the subprocess array
@@ -254,10 +253,13 @@
       getOrigJson() {
         return _.get(this, 'item', {})
       },
-      getOrigCommand() {
+      getOrigCmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.getOrigJson()), '')
         var end_idx = cmd_text.indexOf(' code:')
-        return (this.is_task_execute && end_idx != -1) ? cmd_text.substring(0, end_idx) : cmd_text
+
+        return (_.get(this, 'item.type') == TASK_TYPE_EXECUTE && end_idx != -1)
+          ? cmd_text.substring(0, end_idx)
+          : cmd_text
       },
       getOrigCode() {
         var code = _.get(this, 'item.params.code', '')
@@ -266,12 +268,11 @@
       getBase64Code(code) {
         try { return btoa(code) } catch(e) { return '' }
       },
-      updateEditTask(cmd_text, cmd_json) {
-        this.edit_command = cmd_text
-        this.edit_json = _.assign({}, cmd_json)
+      updateCmd(cmd) {
+        this.edit_cmd = cmd
       },
       updateCode(code) {
-        this.execute_code = code
+        this.edit_code = code
       },
       editTaskSingleton(attrs, input) {
         var eid = this.pipeEid
@@ -283,9 +284,8 @@
           input.endEdit()
       },
       cancelEdit() {
+        // reset the edit json
         this.edit_json = _.assign({}, this.getOrigJson())
-        this.edit_command = this.getOrigCommand()
-        this.execute_code = this.getOrigCode()
 
         // reset the command in the command bar
         var cmd_bar = this.$refs['commandbar']
@@ -295,7 +295,7 @@
         // reset the code in the code editor
         var code_editor = this.$refs['code']
         if (!_.isNil(code_editor))
-          code_editor.setValue(this.execute_code)
+          code_editor.reset()
       },
       saveEdit() {
         var edit_attrs = _.pick(this.edit_json, ['metadata', 'type', 'params'])
@@ -309,7 +309,7 @@
           if (_.isArray(params) && params.length == 0)
             edit_attrs.params = {}
 
-          _.set(edit_attrs, 'params.code', this.getBase64Code(this.execute_code))
+          _.set(edit_attrs, 'params.code', this.getBase64Code(this.edit_code))
         }
 
         this.editTaskSingleton(edit_attrs)

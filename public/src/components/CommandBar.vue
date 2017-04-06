@@ -18,102 +18,46 @@
 
   export default {
     props: {
-      'orig-json': {
-        default: () => { return {} },
-        type: Object
+      'val': {
+        default: ''
+      },
+      'options': {
+        type: Object,
+        default: () => { return {} }
       }
     },
     data() {
       return {
-        cmd_text: ''
+        cmd_text: '',
+        editor: null
       }
     },
-    watch: {
-      origJson: function(val, old_val) {
-        this.initFromTaskJson(val)
-      }
-    },
-    computed: {
-      orig_cmd() {
-        var parser_json = parser.toCmdbar(this.origJson)
-        return _.defaultTo(parser_json, '')
-      },
-      is_changed() {
-        return this.cmd_text != this.orig_cmd
-      },
-      cmd_json() {
-        return this.is_changed ? parser.toJSON(_.defaultTo(this.cmd_text), '') : this.origJson
-      },
-      task_type() {
-        return _.get(this.cmd_json, 'type', '')
-      },
-      is_task_execute() {
-        return this.task_type == TASK_TYPE_EXECUTE
-      },
+    created() {
+      this.cmd_text = this.val
     },
     mounted() {
-      var opts = {
+      var opts = _.assign({
         lineNumbers: false,
         lineWrapping: true,
         mode: 'flexio-commandbar'
-      }
+      }, this.options)
 
-      this.initFromTaskJson(this.origJson)
+      this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
+      this.editor.focus()
 
-      this.$nextTick(() => {
-        this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
-
-        this.editor.on('change', (cm) => {
-          var new_text = cm.getValue()
-          if (new_text == this.cmd_text)
-            return
-
-          this.setCmdText(new_text)
-
-          var attrs = _.assign({}, this.cmd_json)
-          attrs.eid = _.get(this.origJson, 'eid')
-          this.$emit('change', this.cmd_text, attrs)
-        })
+      this.editor.on('change', (cm) => {
+        this.cmd_text = cm.getValue()
+        this.$emit('change', this.cmd_text)
       })
     },
     methods: {
-      focus() {
-        this.$refs['textarea'].focus()
+      setValue(val) {
+        this.cmd_text = val
+        this.editor.setValue(val)
       },
-
-      initFromTaskJson(json) {
-        var parser_json = parser.toCmdbar(json)
-        var cmd_text = _.defaultTo(parser_json, '')
-        this.setCmdText(cmd_text)
-      },
-
       reset() {
-        this.initFromTaskJson(this.origJson)
-        this.editor.setValue(this.cmd_text)
-      },
-
-      revertChanges() {
-        this.reset()
-        this.$emit('cancel')
-      },
-
-      saveChanges() {
-        if (this.is_changed)
-        {
-          var attrs = _.assign({}, this.cmd_json)
-          attrs.eid = _.get(this.origJson, 'eid')
-          this.$emit('save', attrs)
-        }
-      },
-
-      setCmdText(cmd_text) {
-        if (!_.isString(cmd_text))
-          return
-
-        var end_idx = cmd_text.indexOf(' code:')
-        this.cmd_text = (this.is_task_execute && end_idx != -1)
-          ? cmd_text.substring(0, end_idx)
-          : cmd_text
+        this.cmd_text = this.val
+        this.editor.setValue(this.val)
       }
     }
   }
