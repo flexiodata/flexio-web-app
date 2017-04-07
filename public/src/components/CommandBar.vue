@@ -237,7 +237,7 @@
 
         // if we didn't pass a number in, use the cursor position
         if (!_.isNumber(idx))
-          idx = this.editor.getCursor().ch
+          idx = Math.max(this.editor.getCursor().ch - 1, 0)
 
         // if no text, no hint
         if (val.length == 0)
