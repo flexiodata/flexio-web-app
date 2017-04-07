@@ -486,7 +486,18 @@
       },
 
       buildColumnDropdownItem(cls, item) {
-        return createEl('div', cls, 'test')
+        var c = _.assign({}, item)
+
+        var html = '' +
+          '<div class="flex flex-row items-center">' +
+            '<div class="flex-fill black">'+c.name+'</div>' +
+            '<div class="font-default ttu b ml3 bg-white-60 black-60 ba b--black-20" style="padding: 2px; font-size: 10px">'+c.type+'</div>' +
+          '</div>'
+
+        var el = document.createElement('div')
+        el.innerHTML = html
+
+        return createEl('div', cls, el)
       }
     }
   }
