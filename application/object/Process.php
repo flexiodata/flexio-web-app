@@ -542,7 +542,7 @@ class Process extends \Flexio\Object\Base
         $this->clearCache();
     }
 
-    private function createTaskSubProcess(string $main_process_eid, string $sub_process_eid, array $step) : bool
+    private function createTaskSubProcess(string $main_process_eid, string $sub_process_eid, array $step) : string
     {
         $subprocess_properties = array();
         $subprocess_properties['process_status'] = \Model::PROCESS_STATUS_PENDING;
