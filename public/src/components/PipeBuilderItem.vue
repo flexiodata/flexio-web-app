@@ -87,6 +87,7 @@
             class="mt2 pa1 ba b--black-10 bg-white"
             :val="orig_cmd"
             :orig-json="task"
+            :is-scrolling="isScrolling"
             @change="updateCmd"
             @revert="cancelEdit"
             @save="saveChanges"
@@ -133,7 +134,7 @@
   import taskItemHelper from './mixins/task-item-helper'
 
   export default {
-    props: ['item', 'index', 'tasks', 'active-process'],
+    props: ['item', 'index', 'tasks', 'active-process', 'is-scrolling'],
     mixins: [taskItemHelper],
     components: {
       Btn,

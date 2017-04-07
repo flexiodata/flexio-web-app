@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-y-auto">
+  <div class="overflow-y-auto" @scroll="onScroll">
     <div class="pa4 ml4 ml0-l mr4 bg-white ba b--white-box br2 tc" v-if="tasks.length == 0">
       <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
       <div class="mt3">
@@ -22,6 +22,7 @@
         :tasks="tasks"
         :active-process="activeProcess"
         :project-connections="projectConnections"
+        :is-scrolling="is_scrolling"
         @insert-task="insertNewTask"
       ></pipe-builder-item>
     </div>
@@ -39,6 +40,11 @@
       Btn,
       PipeBuilderItem
     },
+    data() {
+      return {
+        is_scrolling: false
+      }
+    },
     computed: {
       input_tasks()  { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
       output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
@@ -53,7 +59,16 @@
           params: {}
         }
         this.$store.dispatch('createPipeTask', { eid, attrs })
-      }
+      },
+
+      resetScroll: _.debounce(function() {
+        this.is_scrolling = false
+      }, 200),
+
+      onScroll: _.debounce(function() {
+        this.is_scrolling = true
+        this.resetScroll()
+      }, 50, { 'leading': true, 'trailing': false })
     }
   }
 </script>

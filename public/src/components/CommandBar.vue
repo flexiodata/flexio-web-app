@@ -82,6 +82,10 @@
         type: Object,
         default: () => { return {} }
       },
+      'is-scrolling': {
+        type: Boolean,
+        default: false
+      },
       'options': {
         type: Object,
         default: () => { return {} }
@@ -89,6 +93,11 @@
     },
     inject: ['projectEid'],
     watch: {
+      isScrolling(val, old_val) {
+        console.log('here')
+        if (val === true)
+          this.closeDropdown()
+      },
       origJson(val, old_val) {
         var cmd_text = _.defaultTo(parser.toCmdbar(val), '')
         var end_idx = cmd_text.indexOf(' code:')
