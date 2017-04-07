@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @focus="onFocus">
     <textarea
       ref="textarea"
       class="awesomeplete"
@@ -13,6 +13,7 @@
   import { HOSTNAME } from '../constants/common'
   import { TASK_TYPE_EXECUTE } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
+  import { mapState, mapGetters } from 'vuex'
   import CodeMirror from 'codemirror'
   import {} from '../../node_modules/codemirror/addon/hint/show-hint'
   import {} from '../../node_modules/codemirror/addon/display/placeholder'
@@ -87,6 +88,7 @@
         default: () => { return {} }
       }
     },
+    inject: ['projectEid'],
     watch: {
       origJson(val, old_val) {
         var cmd_text = _.defaultTo(parser.toCmdbar(val), '')
@@ -111,6 +113,9 @@
       }
     },
     computed: {
+      ...mapState([
+        'active_project_eid'
+      ]),
       is_changed() {
         return this.cmd_text != this.val
       },
@@ -135,6 +140,10 @@
       this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
       //this.editor.focus()
       //this.editor.setCursor({ line: 1, ch: 1000000 })
+
+      this.editor.on('focus', (cm) => {
+        this.showDropdown()
+      })
 
       this.editor.on('blur', (cm) => {
         this.closeDropdown()
@@ -210,6 +219,21 @@
       this.closeDropdown()
     },
     methods: {
+      ...mapGetters([
+        'getAllConnections'
+      ]),
+
+      getOurConnections() {
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        return _
+          .chain(this.getAllConnections())
+          .filter((p) => { return _.get(p, 'project.eid') == this.active_project_eid })
+          .sortBy([ function(p) { return new Date(p.created) } ])
+          .reverse()
+          .value()
+      },
+
       setValue(val) {
         this.cmd_text = val
         this.editor.setValue(val)
@@ -237,14 +261,17 @@
 
         // if we didn't pass a number in, use the cursor position
         if (!_.isNumber(idx))
-          idx = Math.max(this.editor.getCursor().ch - 1, 0)
+          idx = Math.max(this.editor.getCursor().ch, 0)
 
         // if no text, no hint
         if (val.length == 0)
           return null
 
-        var hints = parser.getHints(val, idx, {})
+        var hints = parser.getHints(val, idx, {
+          connections: this.getOurConnections()
+        })
         hints.items = this.getFilteredDropdownItems(hints)
+
         return hints
       },
 
@@ -260,13 +287,20 @@
             hints.type == 'values'   ||
             hints.type == 'arguments')
         {
-          return _.filter(hints.items, (item) => {
-            return _.includes(item, hints.current_word)
-          })
+          return _
+            .chain(hints.items)
+            .filter((val) => { return _.includes(_.toLower(val), _.toLower(hints.current_word)) })
+            .value()
         }
          else if (hints.type == 'connections')
         {
-
+          return _
+            .chain(hints.items)
+            .pick(['eid', 'name', 'ename', 'description'])
+            .filter((val, key) => { return _.includes(_.toLower(val), _.toLower(hints.current_word)) })
+            .map((item) => { return _.get(item, 'name', '') })
+            .compact()
+            .value()
         }
          else if (hints.type == 'columns')
         {
