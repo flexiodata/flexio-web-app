@@ -308,7 +308,11 @@
 
       getCurrentWord() {
         var word = this.editor.findWordAt({ line: 0, ch: this.dropdown_hints.offset })
+        var first_char = this.editor.getRange(word.anchor, { line: 0, ch: word.anchor.ch+1 })
         var next_char = this.editor.getRange(word.head, { line: 0, ch: word.head.ch+1 })
+
+        if (first_char == ' ')
+          word.anchor = { line: 0, ch: word.anchor.ch+1 }
 
         // account for potential colons that have already been inserted
         if (next_char == ':')
@@ -443,7 +447,7 @@
             {
               // do the replace
               var word = this.getCurrentWord()
-              this.editor.replaceRange(val, word.anchor, word.head)
+              this.editor.replaceRange(val+' ', word.anchor, word.head)
             }
           }
         }
