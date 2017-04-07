@@ -372,7 +372,11 @@ class Process extends \Flexio\Object\Base
         $input_collection = \Flexio\Object\Collection::create();
         foreach ($input_collection as $input)
         {
-            $input_collection->push($input['eid']);
+            $stream = \Flexio\Object\Stream::load($input['eid']);
+            if ($stream === false)
+                continue;
+
+            $input_collection->push($stream);
         }
 
         return $input_collection;
@@ -430,13 +434,21 @@ class Process extends \Flexio\Object\Base
         $input_stream_list = $specified_subprocess['input'];
         foreach ($input_stream_list as $item)
         {
-            $input_collection->push($item['eid']);
+            $stream = \Flexio\Object\Stream::load($item['eid']);
+            if ($stream === false)
+                continue;
+
+            $input_collection->push($stream);
         }
 
         $output_stream_list = $specified_subprocess['output'];
         foreach ($output_stream_list as $item)
         {
-            $output_collection->push($item['eid']);
+            $stream = \Flexio\Object\Stream::load($item['eid']);
+            if ($stream === false)
+                continue;
+
+            $output_collection->push($stream);
         }
     }
 
@@ -635,12 +647,14 @@ class Process extends \Flexio\Object\Base
             // be that it should be processed as it occurs in the pipe
             foreach ($user_variables as $name => $value)
             {
-                if (\Flexio\Base\Eid::isValid($value))
-                {
-                    $stream = \Flexio\Object\Stream::load($value);
-                    if ($stream !== false)
-                        $input->push($stream);
-                }
+                if (\Flexio\Base\Eid::isValid($value) === false)
+                    continue;
+
+                $stream = \Flexio\Object\Stream::load($value);
+                if ($stream === false)
+                    continue;
+
+                $input->push($stream);
             }
         }
 
@@ -1005,7 +1019,7 @@ class Process extends \Flexio\Object\Base
         return $result;
     }
 
-    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Collection $input, &$output) : bool
+    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Collection $input, \Flexio\Object\Collection $output) : bool
     {
         // find the hash for the input and the task
         $hash = self::generateTaskHash($implementation_revision, $task, $input);
@@ -1022,8 +1036,11 @@ class Process extends \Flexio\Object\Base
 
         foreach ($process_output as $o)
         {
-            $eid = $o['eid'];
-            $output->push($eid);
+            $stream = \Flexio\Object\Stream::load($o['eid']);
+            if ($stream === false)
+                continue;
+
+            $output->push($stream);
         }
 
         return true;
@@ -1141,7 +1158,11 @@ class Process extends \Flexio\Object\Base
 
         foreach ($items as $i)
         {
-            $collection->push($i['eid']);
+            $stream = \Flexio\Object\Stream::load($i['eid']);
+            if ($stream === false)
+                continue;
+
+            $collection->push($stream);
         }
 
         return $collection;
