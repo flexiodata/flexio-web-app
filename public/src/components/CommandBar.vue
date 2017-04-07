@@ -1,5 +1,5 @@
 <template>
-  <div @focus="onFocus">
+  <div>
     <textarea
       ref="textarea"
       class="awesomeplete"
@@ -289,16 +289,14 @@
         {
           return _
             .chain(hints.items)
-            .filter((val) => { return _.includes(_.toLower(val), _.toLower(hints.current_word)) })
+            .filter(val => { return _.includes(_.toLower(val), _.toLower(hints.current_word)) })
             .value()
         }
          else if (hints.type == 'connections')
         {
           return _
             .chain(hints.items)
-            .pick(['eid', 'name', 'ename', 'description'])
             .filter((val, key) => { return _.includes(_.toLower(val), _.toLower(hints.current_word)) })
-            .map((item) => { return _.get(item, 'name', '') })
             .compact()
             .value()
         }
@@ -352,17 +350,34 @@
         if (_.isNil(hints) || !_.isArray(hints.items) || hints.items.length == 0)
           return
 
-        var items = hints.items
         var tip = createEl('div', null)
-        for (var i = 0; i < items.length; ++i) {
+        for (var i = 0; i < hints.items.length; ++i)
+        {
           var tip_cls = this.dropdown_item_cls
-          if (i == 0)
-            tip_cls += ' '+this.dropdown_item_active_cls
+          tip_cls += (i == 0) ? ' '+this.dropdown_item_active_cls : ''
 
-          var child_el = tip.appendChild(createEl('div', tip_cls, items[i]))
-          $.data(child_el, 'item', items[i])
+          var child_el
 
-          child_el.addEventListener('mousedown', function(evt) {
+          if (hints.type == 'commands' ||
+              hints.type == 'values'   ||
+              hints.type == 'arguments')
+          {
+            child_el = tip.appendChild(this.buildTextDropdownItem(tip_cls, hints.items[i]))
+          }
+           else if (hints.type == 'connections')
+          {
+            child_el = tip.appendChild(this.buildConnectionDropdownItem(tip_cls, hints.items[i]))
+          }
+           else if (hints.type == 'columns')
+          {
+            child_el = tip.appendChild(this.buildColumnDropdownItem(tip_cls, hints.items[i]))
+          }
+
+          // store item data with the DOM node
+          $.data(child_el, 'item', hints.items[i])
+
+          // update the command bar text when the user clicks on a dropdown item
+          child_el.addEventListener('click', function(evt) {
             me.replaceFromDropdownItem(evt.target)
           })
         }
@@ -436,6 +451,42 @@
           el.className = this.dropdown_item_cls
           el.nextSibling.className = this.dropdown_item_cls+' '+this.dropdown_item_active_cls
         }
+      },
+
+      buildTextDropdownItem(cls, text) {
+        return createEl('div', cls, text)
+      },
+
+      buildConnectionDropdownItem(cls, item) {
+        var c = _.assign({}, item)
+
+        var identifier = _.get(c, 'ename', '')
+        identifier = identifier.length > 0 ? identifier : _.get(c, 'eid')
+
+        var cinfo = _.find(connections, { connection_type: c.connection_type })
+        var icon = _.result(cinfo, 'icon', false)
+        var name = _.result(cinfo, 'service_name', '')
+
+        if (icon !== false)
+          icon = '<img src="'+icon+'" alt="'+name+'" title="'+name+'" class="db br2 fx-square-2">'
+
+        var html = '' +
+          '<div class="flex flex-row items-center">' +
+            (icon ? '<div class="flex-none mr1">'+icon+'</div>' : '') +
+            '<div class="flex-fill">' +
+              '<div class="font-default f7 fw6">'+c.name+'</div>' +
+            '</div>' +
+            '<div class="flex-none ml3">'+identifier+'</div>' +
+          '</div>'
+
+        var el = document.createElement('div')
+        el.innerHTML = html
+
+        return createEl('div', cls, el)
+      },
+
+      buildColumnDropdownItem(cls, item) {
+        return createEl('div', cls, 'test')
       }
     }
   }
