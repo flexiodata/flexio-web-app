@@ -243,7 +243,39 @@
         if (val.length == 0)
           return null
 
-        return parser.getHints(val, idx, {})
+        var hints = parser.getHints(val, idx, {})
+        hints.items = this.getFilteredDropdownItems(hints)
+        return hints
+      },
+
+      getFilteredDropdownItems(hints) {
+        if (_.isNil(hints))
+          return []
+
+        var items = hints.items
+        if (!_.isArray(items) || items.length == 0)
+          return []
+
+        if (hints.type == 'commands')
+        {
+          return _.filter(hints.items, (item) => {
+            return _.includes(item, hints.current_word)
+          })
+        }
+
+        return []
+      },
+
+      getCurrentWord() {
+        var hints = this.getHints()
+        var word = this.editor.findWordAt({ line: 0, ch: hints.offset })
+        var next_char = this.editor.getRange(word.head, { line: 0, ch: word.head.ch+1 })
+
+        // account for potential colons that have already been inserted
+        if (next_char == ':')
+          word.head = { line: 0, ch: word.head.ch+1 }
+
+        return word
       },
 
       /* -- autocomplete dropdown methods */
@@ -271,18 +303,20 @@
 
         this.closeDropdown()
 
+        // no hint or items, don't show a dropdown
         var hints = this.getHints()
-        if (_.isNil(hints) || hints.type == 'none' || !_.isArray(hints.items))
+        if (_.isNil(hints) || !_.isArray(hints.items) || hints.items.length == 0)
           return
 
+        var items = hints.items
         var tip = createEl('div', null)
-        for (var i = 0; i < hints.items.length; ++i) {
+        for (var i = 0; i < items.length; ++i) {
           var tip_cls = this.dropdown_item_cls
           if (i == 0)
             tip_cls += ' '+this.dropdown_item_active_cls
 
-          var child_el = tip.appendChild(createEl('div', tip_cls, hints.items[i]))
-          $.data(child_el, 'item', hints.items[i])
+          var child_el = tip.appendChild(createEl('div', tip_cls, items[i]))
+          $.data(child_el, 'item', items[i])
 
           child_el.addEventListener('mousedown', function(evt) {
             me.replaceFromDropdownItem(evt.target)
@@ -331,15 +365,8 @@
             if (item.length == 0)
               return
 
-            var hints = this.getHints()
-            var word = this.editor.findWordAt({ line: 0, ch: hints.offset })
-            var next_char = this.editor.getRange(word.head, { line: 0, ch: word.head.ch+1 })
-
-            // account for potential colons that have already been inserted
-            if (next_char == ':')
-              word.head = { line: 0, ch: word.head.ch+1 }
-
             // do the replace
+            var word = this.getCurrentWord()
             this.editor.replaceRange(item, word.anchor, word.head)
           }
         }
