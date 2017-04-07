@@ -164,6 +164,9 @@
         var connection = _
           .chain(this.getAllConnections())
           .find((c) => {
+            if (connection_identifier.length == 0)
+              return false
+
             return _.get(c, 'eid') == connection_identifier ||
                    _.get(c, 'ename') == connection_identifier
           })
