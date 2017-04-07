@@ -25,7 +25,7 @@ class System
     // if the authentication succeeded, the method returns true, otherwise
     // it returns false
 
-    public static function login($username, $password, &$error_message = null)
+    public static function login(string $username, string $password, string &$error_message = null) : bool
     {
         global $g_store, $g_config;
 
@@ -128,7 +128,7 @@ class System
     }
 
     // sets up a php call's user information
-    public static function setupSessionAuth()
+    public static function setupSessionAuth() : bool
     {
         global $g_store;
 
@@ -278,7 +278,7 @@ class System
         return true;
     }
 
-    public static function setCurrentLanguage($lang)
+    public static function setCurrentLanguage(string $lang)
     {
         $GLOBALS['g_store']->lang = $lang;
         \Flexio\System\Translate::setLocale($lang);
@@ -307,7 +307,7 @@ class System
         }
     }
 
-    public static function serializeGlobalVars()
+    public static function serializeGlobalVars() : string
     {
         global $g_store;
 
@@ -319,7 +319,7 @@ class System
                       'user_eid'           => $g_store->user_eid)));
     }
 
-    public static function unserializeGlobalVars($str)
+    public static function unserializeGlobalVars(string $str)
     {
         global $g_store;
         $arr = unserialize(base64_decode($str));
@@ -331,7 +331,7 @@ class System
         $g_store->user_eid = $arr['user_eid'];
     }
 
-    public static function verifyTemporaryLoginCredentials($login, $password, $maxage = 60 /* max age in seconds allowed */)
+    public static function verifyTemporaryLoginCredentials(string $login, string $password, int $maxage = 60 /* max age in seconds allowed */) : bool
     {
         global $g_config;
 
@@ -387,7 +387,7 @@ class System
         $g_store->model = null;
     }
 
-    public static function getModel()
+    public static function getModel() : \Model
     {
         global $g_store;
         if (isset($g_store->model))
@@ -406,7 +406,7 @@ class System
         return $model;
     }
 
-    public static function setLocaleSettings($params)
+    public static function setLocaleSettings(array $params)
     {
         // NB: Make sure call this function before session_write_close()
         // has been invoked
@@ -452,12 +452,12 @@ class System
         }
     }
 
-    public static function getLocaleShortDateFormat()
+    public static function getLocaleShortDateFormat() : string
     {
         return $GLOBALS['g_store']->date_format;
     }
 
-    public static function getLocaleDateFormat()
+    public static function getLocaleDateFormat() : string
     {
         $lang = $GLOBALS['g_store']->lang;
         $lang_prefix = substr($lang, 0, 2);
@@ -477,7 +477,7 @@ class System
         return $res;
     }
 
-    public static function getLocaleDateTimeFormat()
+    public static function getLocaleDateTimeFormat() : string
     {
         $lang = $GLOBALS['g_store']->lang;
         $lang_prefix = substr($lang, 0, 2);
@@ -497,35 +497,35 @@ class System
         return $res;
     }
 
-    public static function getCurrentThousandsSeparator()
+    public static function getCurrentThousandsSeparator() : string
     {
         return $GLOBALS['g_store']->thousands_separator;
     }
 
-    public static function getCurrentDecimalSeparator()
+    public static function getCurrentDecimalSeparator() : string
     {
         return $GLOBALS['g_store']->decimal_separator;
     }
 
-    public static function getCurrentLanguage()
+    public static function getCurrentLanguage() : string
     {
         return $GLOBALS['g_store']->lang;
     }
 
-    public static function getCurrentTimezone()
+    public static function getCurrentTimezone() : string
     {
         return $GLOBALS['g_store']->timezone;
     }
 
-    public static function getCurrentTimezoneOffsetInMinutes()
+    public static function getCurrentTimezoneOffsetInMinutes() : float
     {
         $tz_utc = new \DateTimeZone('UTC');
         $tz_local = new \DateTimeZone($GLOBALS['g_store']->timezone);
         $dt_local = new \DateTime('now', $tz_utc);
-        return ($tz_local->getOffset($dt_local) / 60);
+        return (float)($tz_local->getOffset($dt_local) / 60);
     }
 
-    public static function getTimestamp()
+    public static function getTimestamp() : string
     {
         // gives us a way of getting a consistent time in
         // order to set the created/updated database values
@@ -539,12 +539,12 @@ class System
         return $g_store->timestamp;
     }
 
-    public static function isLoggedIn()
+    public static function isLoggedIn() : bool
     {
         return (\Flexio\System\System::getCurrentUserName() != '') ? true : false;
     }
 
-    public static function getBaseDirectory()
+    public static function getBaseDirectory() : string
     {
         global $g_store;
         if (isset($g_store->dir_home))
@@ -553,32 +553,32 @@ class System
         return dirname(dirname(dirname(__FILE__)));
     }
 
-    public static function getPublicDirectory()
+    public static function getPublicDirectory() : string
     {
         return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'public';
     }
 
-    public static function getApplicationDirectory()
+    public static function getApplicationDirectory() : string
     {
         return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'application';
     }
 
-    public static function getConfigDirectory()
+    public static function getConfigDirectory() : string
     {
         return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'config';
     }
 
-    public static function getResDirectory()
+    public static function getResDirectory() : string
     {
         return \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'res';
     }
 
-    public static function getUpdateDirectory()
+    public static function getUpdateDirectory() : string
     {
         return (\Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'update');
     }
 
-    public static function getUpdateVersionFromFilename($filename)
+    public static function getUpdateVersionFromFilename(string $filename) : int
     {
         $version = 0;
         $matches = array();
@@ -588,7 +588,7 @@ class System
         return $version;
     }
 
-    public static function getLatestVersionNumber()
+    public static function getLatestVersionNumber() : int
     {
         // gets the version number of the database that is available
         // to update to (this corresponds to the highest number in update####
@@ -618,7 +618,7 @@ class System
         return $version;
     }
 
-    public static function getGitRevision()
+    public static function getGitRevision() : string
     {
         $path = dirname(dirname(__DIR__)) . '/.git/refs/heads/master';
         $str = @file_get_contents($path);
@@ -627,7 +627,7 @@ class System
         return trim($str);
     }
 
-    public static function getBinaryPath($bin)
+    public static function getBinaryPath(string $bin)
     {
         $fxhome = \Flexio\System\System::getBaseDirectory();
         $base_path = dirname($fxhome);
@@ -698,58 +698,58 @@ class System
         return null;
     }
 
-    public static function getCurrentUserFirstName()
+    public static function getCurrentUserFirstName() : string
     {
         return $GLOBALS['g_store']->user_first_name;
     }
 
-    public static function getCurrentUserLastName()
+    public static function getCurrentUserLastName() : string
     {
         return $GLOBALS['g_store']->user_last_name;
     }
 
-    public static function getCurrentUserEmail()
+    public static function getCurrentUserEmail() : string
     {
         return $GLOBALS['g_store']->user_email;
     }
 
-    public static function getCurrentUserName()
+    public static function getCurrentUserName() : string
     {
         return $GLOBALS['g_store']->user_name;
     }
 
-    public static function getCurrentUserEid()
+    public static function getCurrentUserEid() : string
     {
         return $GLOBALS['g_store']->user_eid;
     }
 
-    public static function isPlatformWindows()
+    public static function isPlatformWindows() : bool
     {
         return (strtoupper(substr(PHP_OS, 0, 3)) == "WIN") ? true : false;
     }
 
-    public static function isPlatformMac()
+    public static function isPlatformMac() : bool
     {
         return (strtoupper(substr(PHP_OS, 0, 6)) == "DARWIN") ? true : false;
     }
 
-    public static function isPlatformLinux()
+    public static function isPlatformLinux() : bool
     {
         return (strtoupper(substr(PHP_OS, 0, 5)) == "LINUX") ? true : false;
     }
 
-    public static function isXampp()
+    public static function isXampp() : bool
     {
         return (strpos(strtoupper(PHP_BINDIR), "XAMPP") !== false) ? true : false;
     }
 
-    public static function isNewInstallation()
+    public static function isNewInstallation() : bool
     {
         $f1 = file_exists(\Flexio\System\System::getConfigDirectory() . DIRECTORY_SEPARATOR . 'config.json');
         return $f1 ? false : true;
     }
 
-    public static function updateConfigSetting($fname, $setting, $value)
+    public static function updateConfigSetting(string $fname, string $setting, string $value) : bool
     {
         // prevent code injection
         $value = str_replace("\\", "\\\\", $value);
@@ -773,7 +773,7 @@ class System
         return $GLOBALS['g_config'];
     }
 
-    public static function log($str)
+    public static function log(string $str)
     {
         if (!isset($GLOBALS['g_config']->query_log))
             return;
