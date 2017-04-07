@@ -94,7 +94,6 @@
     inject: ['projectEid'],
     watch: {
       isScrolling(val, old_val) {
-        console.log('here')
         if (val === true)
           this.closeDropdown()
       },
