@@ -148,7 +148,7 @@ class Flexio_View_Filter_Translate
      * @param string $value
      * @return string
      */
-    public function filter($value)
+    public function filter(string $value) : string
     {
         $delim_start_len = strlen(Flexio_View_Filter_Translate::I18N_DELIMITER_START);
         $delim_end_len = strlen(Flexio_View_Filter_Translate::I18N_DELIMITER_END);
@@ -191,7 +191,7 @@ class Flexio_View_Filter_Translate
         return $value;
     }
 
-    public static function parseTagParams($str)
+    public static function parseTagParams(string $str) : array
     {
         $ret = array();
 
