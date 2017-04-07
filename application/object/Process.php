@@ -1167,38 +1167,6 @@ class Process extends \Flexio\Object\Base
         return $collection;
     }
 
-    private static function formatProcessInfo($params, $task_type, $finished = true) : array // TODO: add input parameter types
-    {
-        $status_text = "";
-        $filename = $params['name'] ?? '';
-
-        if ($finished === true)
-        {
-            $status_text = "Finished";
-        }
-         else
-        {
-            $status_text = "Processing $filename";
-            $task_manifest = \Flexio\Object\Task::manifest();
-
-            foreach ($task_manifest as $t)
-            {
-                if ($t['type'] !== $task_type)
-                    continue;
-
-                $status_text = $t['verb'] . " $filename";
-                break;
-            }
-        }
-
-        // configure the output
-        $result = array();
-        $result['name'] = $params['name'] ?? '';
-        $result['description'] = $status_text;
-
-        return $result;
-    }
-
     private static function isValidProcessStatus(string $status) : bool
     {
         switch ($status)
