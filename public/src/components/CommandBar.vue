@@ -256,7 +256,9 @@
         if (!_.isArray(items) || items.length == 0)
           return []
 
-        if (hints.type == 'commands')
+        if (hints.type == 'commands' ||
+            hints.type == 'values'   ||
+            hints.type == 'arguments')
         {
           return _.filter(hints.items, (item) => {
             return _.includes(item, hints.current_word)
