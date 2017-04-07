@@ -105,6 +105,7 @@
       return {
         cmd_text: '',
         editor: null,
+        dropdown_hints: {},
         dropdown_cls: base_cls,
         dropdown_item_cls: base_cls+'tooltip-item',
         dropdown_item_active_cls: base_cls+'tooltip-item-active',
@@ -271,7 +272,9 @@
         })
         hints.items = this.getFilteredDropdownItems(hints)
 
-        return hints
+        // store dropdown hints for use elsewhere
+        this.dropdown_hints = _.cloneDeep(hints)
+        return this.dropdown_hints
       },
 
       getFilteredDropdownItems(hints) {
@@ -308,8 +311,7 @@
       },
 
       getCurrentWord() {
-        var hints = this.getHints()
-        var word = this.editor.findWordAt({ line: 0, ch: hints.offset })
+        var word = this.editor.findWordAt({ line: 0, ch: this.dropdown_hints.offset })
         var next_char = this.editor.getRange(word.head, { line: 0, ch: word.head.ch+1 })
 
         // account for potential colons that have already been inserted
@@ -344,8 +346,10 @@
 
         this.closeDropdown()
 
-        // no hint or items, don't show a dropdown
+        // get a new set of hints based on the cursor position
         var hints = this.getHints()
+
+        // no hint or items, don't show a dropdown
         if (_.isNil(hints) || !_.isArray(hints.items) || hints.items.length == 0)
           return
 
@@ -417,15 +421,34 @@
 
         if (!_.isNil(el))
         {
+          var val = ''
           var item = $.data(el, 'item')
-          if (_.isString(item))
-          {
-            if (item.length == 0)
-              return
 
-            // do the replace
-            var word = this.getCurrentWord()
-            this.editor.replaceRange(item, word.anchor, word.head)
+          if (!_.isNil(item))
+          {
+            if (this.dropdown_hints.type == 'commands' ||
+                this.dropdown_hints.type == 'values'   ||
+                this.dropdown_hints.type == 'arguments')
+            {
+              val = item
+            }
+             else if (this.dropdown_hints.type == 'connections')
+            {
+              var identifier = _.get(item, 'ename', '')
+              identifier = identifier.length > 0 ? identifier : _.get(item, 'eid')
+              val = identifier
+            }
+             else if (this.dropdown_hints.type == 'columns')
+            {
+
+            }
+
+            if (val.length > 0)
+            {
+              // do the replace
+              var word = this.getCurrentWord()
+              this.editor.replaceRange(val, word.anchor, word.head)
+            }
           }
         }
 
