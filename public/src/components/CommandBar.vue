@@ -264,6 +264,14 @@
             return _.includes(item, hints.current_word)
           })
         }
+         else if (hints.type == 'connections')
+        {
+
+        }
+         else if (hints.type == 'columns')
+        {
+
+        }
 
         return []
       },

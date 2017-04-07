@@ -133,7 +133,7 @@
   import taskItemHelper from './mixins/task-item-helper'
 
   export default {
-    props: ['item', 'index', 'tasks', 'pipe-eid', 'active-process', 'project-connections'],
+    props: ['item', 'index', 'tasks', 'active-process'],
     mixins: [taskItemHelper],
     components: {
       Btn,
@@ -144,6 +144,7 @@
       PipeContent,
       ProcessProgressItem
     },
+    inject: ['pipeEid'],
     watch: {
       task: function(val, old_val) {
         this.edit_json = _.assign({}, val)
