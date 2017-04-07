@@ -263,10 +263,6 @@
         if (!_.isNumber(idx))
           idx = Math.max(this.editor.getCursor().ch, 0)
 
-        // if no text, no hint
-        if (val.length == 0)
-          return null
-
         var hints = parser.getHints(val, idx, {
           connections: this.getOurConnections()
         })
