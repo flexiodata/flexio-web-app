@@ -467,14 +467,12 @@
         var name = _.result(cinfo, 'service_name', '')
 
         if (icon !== false)
-          icon = '<img src="'+icon+'" alt="'+name+'" title="'+name+'" class="db br2 fx-square-2">'
+          icon = '<img src="'+icon+'" alt="'+name+'" title="'+name+'" class="flex-none mr1 br2 fx-square-2">'
 
         var html = '' +
           '<div class="flex flex-row items-center">' +
-            (icon ? '<div class="flex-none mr1">'+icon+'</div>' : '') +
-            '<div class="flex-fill">' +
-              '<div class="font-default f7 fw6">'+c.name+'</div>' +
-            '</div>' +
+            (icon ? icon : '') +
+            '<div class="flex-fill font-default fw6 lh-title pv2" style="font-size: 14px">'+c.name+'</div>' +
             '<div class="flex-none ml3">'+identifier+'</div>' +
           '</div>'
 
