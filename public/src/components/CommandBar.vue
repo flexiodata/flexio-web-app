@@ -2,7 +2,6 @@
   <div>
     <textarea
       ref="textarea"
-      class="awesomeplete"
       spellcheck="false"
       v-model.trim="cmd_text"
     ></textarea>
