@@ -122,6 +122,9 @@
       connection() {
         var connection_identifier = _.get(this.task, 'params.connection', '')
 
+        if (connection_identifier.length == 0)
+          return { connection_type: this.ctype }
+
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything
         var connection = _
