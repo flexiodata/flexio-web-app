@@ -18,7 +18,7 @@ namespace Flexio\System;
 
 class License
 {
-    public static function checkLicense(&$err = null)
+    public static function checkLicense(string &$err = null) : bool
     {
         $license_fname = \Flexio\System\System::getConfigDirectory() . DIRECTORY_SEPARATOR . 'license.dat';
         if (!file_exists($license_fname))
@@ -38,7 +38,7 @@ class License
         return self::isLicenseAuthentic($license, $err);
     }
 
-    public static function decodeLicense($license, &$err = null)
+    public static function decodeLicense(string $license, string &$err = null)
     {
         $license = preg_replace('/-{5}(BEGIN|END) LICENSE-{5}/', '', $license);
         $license = str_replace(array("\n", "\r", "\t", ' '), '', $license);
@@ -82,7 +82,7 @@ class License
         return $license;
     }
 
-    public static function isLicenseAuthentic($license, &$err = null)
+    public static function isLicenseAuthentic(string $license, string &$err = null) : bool
     {
         $license = self::decodeLicense($license, $err);
         if ($license === false)
@@ -168,7 +168,7 @@ class License
 
     // checkClock() returns false if the system has had its clock
     // set back by more than a week
-    public static function checkClock()
+    public static function checkClock() : bool
     {
         $dirs = array();
 
@@ -219,7 +219,7 @@ class License
         return ($strikes >= 3) ? false : true;
     }
 
-    public static function getServerId($use_cache = true)
+    public static function getServerId(bool $use_cache = true) : string
     {
         if (isset($GLOBALS['g_serverid_hash']))
             return $GLOBALS['g_serverid_hash'];
@@ -303,7 +303,7 @@ class License
         return $comp_id;
     }
 
-    public static function unjumbleBase64($s)
+    public static function unjumbleBase64(string $s) : string
     {
         $s = base64_decode($s);
         $r = '';
@@ -316,7 +316,7 @@ class License
         return $r;
     }
 
-    private static function getBlock($s, $key)
+    private static function getBlock(string $s, string $key) : string
     {
         $s = str_replace(array("\n", "\r"), '', $s);
         $matches = array();
@@ -325,7 +325,7 @@ class License
         return base64_decode(trim($matches[2]));
     }
 
-    private static function getSalt()
+    private static function getSalt() : string
     {
         $salt = 'aFVmcnUzYXRyQXRhNGFudWhVZnJ1M2F0ckF0YTRhbnVyYXhBU3RlUkF6dWNV'.
                 'Y3J1ZHJBcGhFWWF5VXRoQVpVNzc2UXV0ckF2VVZhZnJBM1JVY0g5dGhVWnV2'.
