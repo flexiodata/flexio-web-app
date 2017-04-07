@@ -82,7 +82,7 @@ class Manager
             /*
                 foreach ($streams as $s)
                 {
-                    $process->addInput($streams);
+                    $process->addInput($s);
                 }
 */
                 $process->run(false); // handleEmail should be run in background from email processing script
