@@ -18,7 +18,7 @@ namespace Flexio\System;
 
 class Serial
 {
-    public static function jumble(&$arr, $check, $encode)
+    public static function jumble(array &$arr, int $check, int $encode)
     {
         $key = array(6,7,9,5,1,4,5,4,2,8,1,8,7,2,3,4,1,7,5,6,9,2,7,7);
         $check = $check % count($key);
@@ -26,14 +26,14 @@ class Serial
             $arr[$i] = ($arr[$i] + ($key[($i+$check) % count($key)]*$encode) + 10000) % 10;
     }
 
-    public static function getDaysSince1970()
+    public static function getDaysSince1970() : float
     {
         $t1 = new \DateTime('1970-01-01');
         $t2 = new \DateTime("now");
-        return floor(($t2->getTimestamp() - $t1->getTimestamp()) / 86400);
+        return floor(($t2->getTimestamp() - $t1->getTimestamp()) / 86400); // returns float
     }
 
-    public static function isValidSerial($str)
+    public static function isValidSerial(string $str) : bool
     {
         $str = str_replace(array(' ','-'), '', $str);
         if (strlen($str) != 12)
@@ -56,7 +56,7 @@ class Serial
         return ($calc_check1 == $check1) && ($calc_check2 == $check2);
     }
 
-    public static function formatSerial($str)
+    public static function formatSerial(string $str) : string
     {
         $str = str_replace(array(' ','-'), '', $str);
         if (strlen($str) != 12)
