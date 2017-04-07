@@ -376,7 +376,7 @@
           $.data(child_el, 'item', hints.items[i])
 
           // update the command bar text when the user clicks on a dropdown item
-          child_el.addEventListener('click', function(evt) {
+          child_el.addEventListener('mousedown', function(evt) {
             me.replaceFromDropdownItem(evt.target)
           })
         }
