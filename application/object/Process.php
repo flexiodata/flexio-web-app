@@ -338,14 +338,6 @@ class Process extends \Flexio\Object\Base
 
     public function addInput(\Flexio\Object\Stream $stream) : \Flexio\Object\Process
     {
-        // TODO: only allow input to be added before a job is run
-
-        // a stream can be either a stream or an array with a stream eid
-        if (is_array($stream) && isset($stream['eid']))
-            $stream = \Flexio\Object\Stream::load($stream['eid']);
-        if (!($stream instanceof \Flexio\Object\Stream))
-            return $this;
-
         // get the current input
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
