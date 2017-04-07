@@ -120,8 +120,8 @@
 
 <script>
   import { PROCESS_STATUS_RUNNING } from '../constants/process'
-  import { TASK_TYPE_EXECUTE } from '../constants/task-type'
-  import * as types from '../constants/task-type'
+  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT, TASK_TYPE_EXECUTE } from '../constants/task-type'
+  import { mapGetters } from 'vuex'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
@@ -220,7 +220,7 @@
         var inputs = _.get(this.active_subprocess, 'output', [])
 
         // use the inputs specified in the input task
-        if (inputs.length == 0 && this.task_type == types.TASK_TYPE_INPUT)
+        if (inputs.length == 0 && this.task_type == TASK_TYPE_INPUT)
           return _.get(this.task, 'params.items', [])
 
         // ...otherwise, use the output array from the active subprocess
@@ -254,6 +254,9 @@
       }
     },
     methods: {
+      ...mapGetters([
+        'getAllConnections'
+      ]),
       getOrigJson() {
         return _.get(this, 'item', {})
       },
@@ -303,11 +306,13 @@
           code_editor.reset()
       },
       saveChanges() {
+        debugger
         var edit_json = _.cloneDeep(this.edit_json)
         var edit_attrs = _.pick(edit_json, ['metadata', 'type', 'params'])
+        var task_type = _.get(this, 'item.type')
 
         // sync up the changes from the code editor if we're on an execute step
-        if (_.get(this, 'item.type') == TASK_TYPE_EXECUTE)
+        if (task_type == TASK_TYPE_EXECUTE)
         {
           // this is a hack-ish workaround for the fact that the PHP backend returns
           // empty objects as empty arrays
@@ -316,6 +321,22 @@
             edit_attrs.params = {}
 
           _.set(edit_attrs, 'params.code', this.getBase64Code(this.edit_code))
+        }
+         else if (task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT)
+        {
+          var connection_identifier = _.get(edit_attrs, 'params.connection', '')
+
+          // NOTE: it's really important to include the '_' on the same line
+          // as the 'return', otherwise JS will return without doing anything
+          var connection = _
+            .chain(this.getAllConnections())
+            .find((c) => {
+              return _.get(c, 'eid') == connection_identifier ||
+                     _.get(c, 'ename') == connection_identifier
+            })
+            .value()
+
+          _.set(edit_attrs, 'metadata.connection_type', _.get(connection, 'connection_type', ''))
         }
 
         this.editTaskSingleton(edit_attrs)
