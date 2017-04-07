@@ -104,7 +104,9 @@
         if (_.get(val, 'type') == TASK_TYPE_EXECUTE && end_idx != -1)
           cmd_text = cmd_text.substring(0, end_idx)
 
+        this.just_loaded = true
         this.setValue(cmd_text)
+        setTimeout(() => { this.just_loaded = false }, 500)
       }
     },
     data() {
@@ -113,6 +115,7 @@
       return {
         cmd_text: '',
         editor: null,
+        just_loaded: false,
         dropdown_hints: {},
         dropdown_cls: base_cls,
         dropdown_item_cls: base_cls+'tooltip-item',
@@ -220,7 +223,8 @@
       })
 
       this.editor.on('cursorActivity', (cm) => {
-        this.updateDropdown()
+        if (!this.just_loaded)
+          this.updateDropdown()
       })
     },
     beforeDestroy() {
