@@ -392,7 +392,7 @@ class Process extends \Flexio\Object\Base
         return $output_collection;
     }
 
-    public function getTaskStreams(\Flexio\Object\Collection $input_collection, \Flexio\Object\Collection $output_collection, string $task_eid = null)
+    public function getTaskStreams(\Flexio\Object\Collection &$input_collection, \Flexio\Object\Collection &$output_collection, string $task_eid = null)
     {
         // returns a collection of input streams for the specified task of a
         // process; if no task is specified, the streams from the last subprocess
@@ -758,7 +758,7 @@ class Process extends \Flexio\Object\Base
         $this->clearCache();
     }
 
-    private function executeStep(array $task, \Flexio\Object\Process $process, \Flexio\Object\Collection $input, \Flexio\Object\Collection $output)
+    private function executeStep(array $task, \Flexio\Object\Process $process, \Flexio\Object\Collection $input, \Flexio\Object\Collection &$output)
     {
         // if the process is something besides running, we're done
         $status = $this->getModel()->process->getProcessStatus($this->getEid());
@@ -1018,7 +1018,7 @@ class Process extends \Flexio\Object\Base
         return $result;
     }
 
-    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Collection $input, \Flexio\Object\Collection $output) : bool
+    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Collection $input, \Flexio\Object\Collection &$output) : bool
     {
         // find the hash for the input and the task
         $hash = self::generateTaskHash($implementation_revision, $task, $input);
