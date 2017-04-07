@@ -18,7 +18,7 @@ namespace Flexio\Object;
 
 class Manager
 {
-    public static function handleEmail($stream, string $pipe_eid = null)
+    public static function handleEmail($stream, string $pipe_eid = null) // TODO: add function parameter
     {
         // if eid is specified, the pipe with the given eid will be
         // run, otherwise, the first part of the email subject will
@@ -99,7 +99,7 @@ class Manager
         return $process->get();
     }
 
-    private static function saveAttachmentsToStreams(\Flexio\Services\Email $email, \Flexio\Object\Process $process)
+    private static function saveAttachmentsToStreams(\Flexio\Services\Email $email, \Flexio\Object\Process $process) : array
     {
         // create a new stream for each attachment; return an array of stream eids
         $streams = array();
