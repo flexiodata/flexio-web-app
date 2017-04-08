@@ -528,7 +528,7 @@
             }
              else if (this.dropdown_hints.type == 'columns')
             {
-
+              val = _.get(item, 'name', '')
             }
 
             if (val.length > 0)
