@@ -108,9 +108,7 @@
         if (_.get(val, 'type') == TASK_TYPE_EXECUTE && end_idx != -1)
           cmd_text = cmd_text.substring(0, end_idx)
 
-        this.just_loaded = true
         this.setValue(cmd_text)
-        setTimeout(() => { this.just_loaded = false }, 500)
       },
       input_columns(val, old_val) {
         // if a user clicks on the command bar in a place where
@@ -280,14 +278,17 @@
       },
 
       setValue(val) {
+        // this 'just_loaded' variable helps us know not to show
+        // the dropdown on curstor active in the CodeMirror editor
+        this.just_loaded = true
         this.cmd_text = val
         this.editor.setValue(val)
+        setTimeout(() => { this.just_loaded = false }, 500)
       },
 
       // does not fire an event
       reset() {
-        this.cmd_text = this.val
-        this.editor.setValue(this.val)
+        this.setValue(this.val)
       },
 
       revert() {
