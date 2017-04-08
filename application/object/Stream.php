@@ -227,7 +227,7 @@ class Stream extends \Flexio\Object\Base
     // read/write functions
     ////////////////////////////////////////////////////////////
 
-    public function read($callback) // TODO: add input parameter types
+    public function read(callable $callback)
     {
         $service = $this->getService();
         if ($service === false)
@@ -261,7 +261,7 @@ class Stream extends \Flexio\Object\Base
         });
     }
 
-    public function write($data) // TODO: add input parameter types
+    public function write(callable $data)
     {
         // TODO: make sure the output table
 

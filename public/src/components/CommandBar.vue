@@ -82,6 +82,10 @@
         type: Object,
         default: () => { return {} }
       },
+      'active-process': {
+        type: Object,
+        default: () => { return {} }
+      },
       'is-scrolling': {
         type: Boolean,
         default: false
@@ -91,7 +95,6 @@
         default: () => { return {} }
       }
     },
-    inject: ['projectEid'],
     watch: {
       isScrolling(val, old_val) {
         if (val === true)
@@ -105,6 +108,14 @@
           cmd_text = cmd_text.substring(0, end_idx)
 
         this.setValue(cmd_text)
+      },
+      input_columns(val, old_val) {
+        // if a user clicks on the command bar in a place where
+        // the column hint is supposed to show, but the columns
+        // weren't loaded yet, this watcher will ensure that
+        // the dropdown shows as soon as the query returns
+        if (_.isArray(val) && val.length > 0)
+          this.showDropdown()
       }
     },
     data() {
@@ -113,6 +124,7 @@
       return {
         cmd_text: '',
         editor: null,
+        just_loaded: false,
         dropdown_hints: {},
         dropdown_cls: base_cls,
         dropdown_item_cls: base_cls+'tooltip-item',
@@ -129,6 +141,28 @@
       },
       cmd_json() {
         return this.is_changed ? parser.toJSON(this.cmd_text) : this.origJson
+      },
+      process_eid() {
+        return _.get(this.activeProcess, 'eid', '')
+      },
+      task_eid() {
+        return _.get(this.origJson, 'eid', '')
+      },
+      process_task_id() {
+        if (this.process_eid.length == 0 || this.task_eid.length == 0)
+          return ''
+
+        return this.process_eid + '--' + this.task_eid
+      },
+      input_columns() {
+        var cols = _.get(this.$store, 'state.objects.'+this.process_task_id+'.input_columns', [])
+
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        return _
+          .chain(cols)
+          .sortBy([ function(c) { return c.name } ])
+          .value()
       }
     },
     created() {
@@ -151,6 +185,7 @@
 
       this.editor.on('focus', (cm) => {
         this.showDropdown()
+        this.tryFetchColumns()
       })
 
       this.editor.on('blur', (cm) => {
@@ -220,7 +255,8 @@
       })
 
       this.editor.on('cursorActivity', (cm) => {
-        this.updateDropdown()
+        if (!this.just_loaded)
+          this.updateDropdown()
       })
     },
     beforeDestroy() {
@@ -238,19 +274,21 @@
           .chain(this.getAllConnections())
           .filter((p) => { return _.get(p, 'project.eid') == this.active_project_eid })
           .sortBy([ function(p) { return new Date(p.created) } ])
-          .reverse()
           .value()
       },
 
       setValue(val) {
+        // this 'just_loaded' variable helps us know not to show
+        // the dropdown on curstor active in the CodeMirror editor
+        this.just_loaded = true
         this.cmd_text = val
         this.editor.setValue(val)
+        setTimeout(() => { this.just_loaded = false }, 500)
       },
 
       // does not fire an event
       reset() {
-        this.cmd_text = this.val
-        this.editor.setValue(this.val)
+        this.setValue(this.val)
       },
 
       revert() {
@@ -272,7 +310,8 @@
           idx = Math.max(this.editor.getCursor().ch, 0)
 
         var hints = parser.getHints(val, idx, {
-          connections: this.getOurConnections()
+          connections: this.getOurConnections(),
+          columns: this.input_columns
         })
         hints.items = this.getFilteredDropdownItems(hints)
 
@@ -289,6 +328,16 @@
         if (!_.isArray(items) || items.length == 0)
           return []
 
+        var findPartialMatch = function(obj, find_val) {
+          var pick_arr = _
+            .chain(obj)
+            .mapValues(_.method('toLowerCase'))
+            .values()
+            .value()
+
+          return _.some(pick_arr, _.method('includes', find_val))
+        }
+
         if (hints.type == 'commands' ||
             hints.type == 'values'   ||
             hints.type == 'arguments')
@@ -302,13 +351,29 @@
         {
           return _
             .chain(hints.items)
-            .filter((val, key) => { return _.includes(_.toLower(val), _.toLower(hints.current_word)) })
+            .filter((obj, key) => {
+              var find_val = _.toLower(hints.current_word)
+              if (find_val.length == 0)
+                return true
+
+              return findPartialMatch(_.pick(obj, ['eid', 'ename', 'name', 'description']), find_val)
+            })
             .compact()
             .value()
         }
          else if (hints.type == 'columns')
         {
+          return _
+            .chain(hints.items)
+            .filter((obj, key) => {
+              var find_val = _.toLower(hints.current_word)
+              if (find_val.length == 0)
+                return true
 
+              return findPartialMatch(_.pick(obj, ['name']), find_val)
+            })
+            .compact()
+            .value()
         }
 
         return []
@@ -329,7 +394,22 @@
         return word
       },
 
-      /* -- autocomplete dropdown methods */
+      /* -- column fetching methods -- */
+
+      tryFetchColumns() {
+        if (this.process_task_id.length == 0)
+          return
+
+        var eid = this.process_eid
+        var task_eid = this.task_eid
+
+        // if we haven't fetched the columns for the active process task, do so now
+        var is_fetched = _.get(this.$store, 'state.objects.'+this.process_task_id+'.input_fetched', false)
+        if (!is_fetched)
+          this.$store.dispatch('fetchProcessTaskInputInfo', { eid, task_eid })
+      },
+
+      /* -- autocomplete dropdown methods -- */
 
       createDropdown(x, y, content) {
         var node = createEl('div', this.dropdown_cls+'tooltip', content)
@@ -448,7 +528,7 @@
             }
              else if (this.dropdown_hints.type == 'columns')
             {
-
+              val = _.get(item, 'name', '')
             }
 
             if (val.length > 0)

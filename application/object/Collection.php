@@ -36,12 +36,12 @@ class Collection
         return json_encode($items);
     }
 
-    public static function create()
+    public static function create() : \Flexio\Object\Collection
     {
         return (new static);
     }
 
-    public function copy()
+    public function copy() : \Flexio\Object\Collection
     {
         // creates a new collection with new objects for each of the
         // original objects (i.e., we'll have a collection with new objects
@@ -62,14 +62,14 @@ class Collection
         return $collection_copy;
     }
 
-    public function set(\Flexio\Object\Collection $collection)
+    public function set(\Flexio\Object\Collection $collection) : \Flexio\Object\Collection
     {
         // sets the collection to the input collection
         $this->objects = $collection->enum();
         return $this;
     }
 
-    public function merge(\Flexio\Object\Collection $collection)
+    public function merge(\Flexio\Object\Collection $collection) : \Flexio\Object\Collection
     {
         // adds the items in the collection to the existing collection
         $collection_objects = $collection->enum();
@@ -81,42 +81,21 @@ class Collection
         return $this;
     }
 
-    public function push($object) // TODO: only accept one type of input?
+    public function push(\Flexio\Object\Base $object) : \Flexio\Object\Collection
     {
         // adds an object onto the end of the collection
-
-        // if we have an object, add it
-        if (is_object($object) && is_subclass_of($object,'\Flexio\Object\Base'))
-        {
-            $this->objects[] = $object;
-            return $this;
-        }
-
-        // if we have an eid, try to load it and then add it
-        if (\Flexio\Base\Eid::isValid($object))
-        {
-            $object_eid = $object;
-            $object = \Flexio\Object\Store::load($object_eid);
-
-            if (is_subclass_of($object,'\Flexio\Object\Base'))
-            {
-                $this->objects[] = $object;
-                return $this;
-            }
-        }
-
-        // input is invalid
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        $this->objects[] = $object;
+        return $this;
     }
 
-    public function pop()
+    public function pop() : \Flexio\Object\Collection
     {
         // removes an item from the end of the collection
         array_pop($this->objects);
         return $this;
     }
 
-    public function enum()
+    public function enum() : array
     {
         // returns the items in the collection
         return $this->objects;
@@ -138,7 +117,7 @@ class Collection
         return false;
     }
 
-    public function clear()
+    public function clear() : \Flexio\Object\Collection
     {
         // removes all items from the collection
         $this->initialize();

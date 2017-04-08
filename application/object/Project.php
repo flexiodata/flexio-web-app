@@ -57,16 +57,16 @@ class Project extends \Flexio\Object\Base
         return false;
     }
 
-    public function addMember(string $object_eid) : \Flexio\Object\Project
+    public function addMember(\Flexio\Object\Base $object) : \Flexio\Object\Project
     {
-        if (!\Flexio\Base\Eid::isValid($object_eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
         $this->clearCache();
 
         $project_eid = $this->getEid();
+        $object_eid = $object->getEid();
+
         $result1 = $this->getModel()->assoc_add($project_eid, \Model::EDGE_HAS_MEMBER, $object_eid);
         $result2 = $this->getModel()->assoc_add($object_eid, \Model::EDGE_MEMBER_OF, $project_eid);
+
         return $this;
     }
 

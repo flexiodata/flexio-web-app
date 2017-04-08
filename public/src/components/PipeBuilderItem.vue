@@ -88,6 +88,7 @@
             :val="orig_cmd"
             :orig-json="task"
             :is-scrolling="isScrolling"
+            :active-process="activeProcess"
             @change="updateCmd"
             @revert="cancelEdit"
             @save="saveChanges"
@@ -307,7 +308,6 @@
           code_editor.reset()
       },
       saveChanges() {
-        debugger
         var edit_json = _.cloneDeep(this.edit_json)
         var edit_attrs = _.pick(edit_json, ['metadata', 'type', 'params'])
         var task_type = _.get(this, 'item.type')
@@ -332,12 +332,16 @@
           var connection = _
             .chain(this.getAllConnections())
             .find((c) => {
+              if (connection_identifier.length == 0)
+                return false
+
               return _.get(c, 'eid') == connection_identifier ||
                      _.get(c, 'ename') == connection_identifier
             })
             .value()
 
-          _.set(edit_attrs, 'metadata.connection_type', _.get(connection, 'connection_type', ''))
+          if (!_.isNil(connection))
+            _.set(edit_attrs, 'metadata.connection_type', _.get(connection, 'connection_type', ''))
         }
 
         this.editTaskSingleton(edit_attrs)

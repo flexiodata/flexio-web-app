@@ -165,7 +165,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function handleStreamUpload(array $params, \Flexio\Object\Stream $stream) : bool
+    public static function handleStreamUpload(array $params, \Flexio\Object\Stream $stream) : \Flexio\Object\Stream
     {
         // get the stream and the service
         $path = $stream->getPath();

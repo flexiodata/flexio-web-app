@@ -20,7 +20,7 @@ class Translate
 {
     // use this instead of calling setlocale() by yourself
 
-    public static function setLocale($locale)
+    public static function setLocale(string $locale)
     {
         $suffix = 'utf8';
         if (strtoupper(substr(PHP_OS, 0, 6)) == "DARWIN")
@@ -49,7 +49,7 @@ class Translate
         textdomain("messages");
     }
 
-    public static function translateText($str)
+    public static function translateText(string $str) : string
     {
         while (true)
         {

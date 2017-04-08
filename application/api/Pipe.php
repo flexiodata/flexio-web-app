@@ -68,7 +68,7 @@ class Pipe
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
-            $project->addMember($pipe->getEid());
+            $project->addMember($pipe);
 
         // get the pipe properties
         return $pipe->get();
@@ -124,7 +124,7 @@ class Pipe
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
-            $project->addMember($new_pipe->getEid());
+            $project->addMember($new_pipe);
 
         return $new_pipe->get();
     }

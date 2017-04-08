@@ -159,7 +159,7 @@ class Email
     // splits an address list like:  [  "First Last <first.last@email.com>" ] into
     //                               [ { "display" => "First Last", "email" => "first.last@email.com" } ]
 
-    public static function splitAddressList(array $arr)
+    public static function splitAddressList(array $arr) : array
     {
         $ret = [];
         foreach ($arr as $a)
@@ -167,24 +167,24 @@ class Email
         return $ret;
     }
 
-    public static function splitAddress(string $str)
+    public static function splitAddress(string $str) : array
     {
         $pos = strpos($str, '<');
         if ($pos === false)
             return array("display" => $str, "email" => $str);
-        
+
         $ret = [];
         $ret['display'] = trim(substr($str, 0, $pos), " \t\n\r\0\x0B<>'\"");
         $ret['email'] = trim(substr($str, $pos+1), " \t\n\r\0\x0B<>'\"");
         return $ret;
     }
 
-    public function send()
+    public function send() : bool
     {
         if (count($this->attachments) > 0)
-            $this->sendWithAttachments();
+            return $this->sendWithAttachments();
              else
-            $this->sendWithoutAttachments();
+            return $this->sendWithoutAttachments();
     }
 
     public function setFrom($addresses) : \Flexio\Services\Email // TODO: set parameter type
@@ -305,7 +305,7 @@ class Email
         return $this;
     }
 
-    public function getMessageHtml()
+    public function getMessageHtml() : string
     {
         return $this->msg_html;
     }
@@ -428,7 +428,6 @@ class Email
 
             $this->addAttachment($att);
         }
-
     }
 
     private function sendWithoutAttachments() : bool
