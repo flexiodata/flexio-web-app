@@ -758,9 +758,9 @@
 
 
 
-    this.args.execute = ['lang', 'code'];
+    this.args.execute = ['lang'/*, 'code'*/];
     this.hints.execute = {
-      "lang":       [ 'javascript', 'python' ]
+      "lang":       [ /*'javascript',*/ 'python' ]
     };
     this.keywords.execute = function(str)
     {
@@ -1875,7 +1875,7 @@
       //console.log(Date() + JSON.stringify(dbg));
       return dbg;
     },
-    getHintableCommands: function() { 
+    getHintableCommands: function() {
       return g_cmdbarparser.getHintableCommands()
     },
     getVerbArguments: function(verb) {
