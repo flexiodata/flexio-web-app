@@ -12,7 +12,7 @@
   import { HOSTNAME } from '../constants/common'
   import { TASK_TYPE_EXECUTE } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
-  import { mapState, mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
   import CodeMirror from 'codemirror'
   import {} from '../../node_modules/codemirror/addon/hint/show-hint'
   import {} from '../../node_modules/codemirror/addon/display/placeholder'
@@ -82,6 +82,10 @@
         type: Object,
         default: () => { return {} }
       },
+      'active-process': {
+        type: Object,
+        default: () => { return {} }
+      },
       'is-scrolling': {
         type: Boolean,
         default: false
@@ -107,6 +111,14 @@
         this.just_loaded = true
         this.setValue(cmd_text)
         setTimeout(() => { this.just_loaded = false }, 500)
+      },
+      input_columns(val, old_val) {
+        // if a user clicks on the command bar in a place where
+        // the column hint is supposed to show, but the columns
+        // weren't loaded yet, this watcher will ensure that
+        // the dropdown shows as soon as the query returns
+        if (_.isArray(val) && val.length > 0)
+          this.showDropdown()
       }
     },
     data() {
@@ -124,14 +136,34 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_project_eid'
-      ]),
       is_changed() {
         return this.cmd_text != this.val
       },
       cmd_json() {
         return this.is_changed ? parser.toJSON(this.cmd_text) : this.origJson
+      },
+      process_eid() {
+        return _.get(this.activeProcess, 'eid', '')
+      },
+      task_eid() {
+        return _.get(this.origJson, 'eid', '')
+      },
+      process_task_id() {
+        if (this.process_eid.length == 0 || this.task_eid.length == 0)
+          return ''
+
+        return this.process_eid + '--' + this.task_eid
+      },
+      input_columns() {
+        var cols = _.get(this.$store, 'state.objects.'+this.process_task_id+'.input_columns', [])
+
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        return _
+          .chain(cols)
+          .sortBy([ function(c) { return c.name } ])
+          .reverse()
+          .value()
       }
     },
     created() {
@@ -154,6 +186,7 @@
 
       this.editor.on('focus', (cm) => {
         this.showDropdown()
+        this.tryFetchColumns()
       })
 
       this.editor.on('blur', (cm) => {
@@ -240,7 +273,7 @@
         // as the 'return', otherwise JS will return without doing anything
         return _
           .chain(this.getAllConnections())
-          .filter((p) => { return _.get(p, 'project.eid') == this.active_project_eid })
+          .filter((p) => { return _.get(p, 'project.eid') == this.projectEid })
           .sortBy([ function(p) { return new Date(p.created) } ])
           .reverse()
           .value()
@@ -276,7 +309,8 @@
           idx = Math.max(this.editor.getCursor().ch, 0)
 
         var hints = parser.getHints(val, idx, {
-          connections: this.getOurConnections()
+          connections: this.getOurConnections(),
+          columns: this.input_columns
         })
         hints.items = this.getFilteredDropdownItems(hints)
 
@@ -312,7 +346,11 @@
         }
          else if (hints.type == 'columns')
         {
-
+          return _
+            .chain(hints.items)
+            .filter((val, key) => { return _.includes(_.toLower(val), _.toLower(hints.current_word)) })
+            .compact()
+            .value()
         }
 
         return []
@@ -333,7 +371,22 @@
         return word
       },
 
-      /* -- autocomplete dropdown methods */
+      /* -- column fetching methods -- */
+
+      tryFetchColumns() {
+        if (this.process_task_id.length == 0)
+          return
+
+        var eid = this.process_eid
+        var task_eid = this.task_eid
+
+        // if we haven't fetched the columns for the active process task, do so now
+        var is_fetched = _.get(this.$store, 'state.objects.'+this.process_task_id+'.input_fetched', false)
+        if (!is_fetched)
+          this.$store.dispatch('fetchProcessTaskInputInfo', { eid, task_eid })
+      },
+
+      /* -- autocomplete dropdown methods -- */
 
       createDropdown(x, y, content) {
         var node = createEl('div', this.dropdown_cls+'tooltip', content)

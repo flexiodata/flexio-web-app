@@ -88,6 +88,7 @@
             :val="orig_cmd"
             :orig-json="task"
             :is-scrolling="isScrolling"
+            :active-process="activeProcess"
             @change="updateCmd"
             @revert="cancelEdit"
             @save="saveChanges"
