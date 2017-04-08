@@ -330,6 +330,16 @@
         if (!_.isArray(items) || items.length == 0)
           return []
 
+        var findPartialMatch = function(obj, find_val) {
+          var pick_arr = _
+            .chain(obj)
+            .mapValues(_.method('toLowerCase'))
+            .values()
+            .value()
+
+          return _.some(pick_arr, _.method('includes', find_val))
+        }
+
         if (hints.type == 'commands' ||
             hints.type == 'values'   ||
             hints.type == 'arguments')
@@ -343,7 +353,13 @@
         {
           return _
             .chain(hints.items)
-            .filter((val, key) => { return _.includes(_.toLower(val), _.toLower(hints.current_word)) })
+            .filter((obj, key) => {
+              var find_val = _.toLower(hints.current_word)
+              if (find_val.length == 0)
+                return true
+
+              return findPartialMatch(_.pick(obj, ['eid', 'ename', 'name', 'description']), find_val)
+            })
             .compact()
             .value()
         }
@@ -351,7 +367,13 @@
         {
           return _
             .chain(hints.items)
-            .filter((val, key) => { return _.includes(_.toLower(val), _.toLower(hints.current_word)) })
+            .filter((obj, key) => {
+              var find_val = _.toLower(hints.current_word)
+              if (find_val.length == 0)
+                return true
+
+              return findPartialMatch(_.pick(obj, ['name']), find_val)
+            })
             .compact()
             .value()
         }
