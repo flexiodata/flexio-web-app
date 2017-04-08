@@ -162,7 +162,6 @@
         return _
           .chain(cols)
           .sortBy([ function(c) { return c.name } ])
-          .reverse()
           .value()
       }
     },
@@ -275,7 +274,6 @@
           .chain(this.getAllConnections())
           .filter((p) => { return _.get(p, 'project.eid') == this.active_project_eid })
           .sortBy([ function(p) { return new Date(p.created) } ])
-          .reverse()
           .value()
       },
 
