@@ -124,7 +124,7 @@
       return {
         cmd_text: '',
         editor: null,
-        just_loaded: false,
+        freeze_cursor_activity: false,
         dropdown_hints: {},
         dropdown_cls: base_cls,
         dropdown_item_cls: base_cls+'tooltip-item',
@@ -190,6 +190,7 @@
 
       this.editor.on('blur', (cm) => {
         this.closeDropdown()
+        this.clearSelection()
       })
 
       this.editor.on('change', (cm) => {
@@ -255,7 +256,7 @@
       })
 
       this.editor.on('cursorActivity', (cm) => {
-        if (!this.just_loaded)
+        if (!this.freeze_cursor_activity)
           this.updateDropdown()
       })
     },
@@ -278,12 +279,12 @@
       },
 
       setValue(val) {
-        // this 'just_loaded' variable helps us know not to show
-        // the dropdown on curstor active in the CodeMirror editor
-        this.just_loaded = true
+        // this 'freeze_cursor_activity' variable helps us know not to show
+        // the dropdown on cursor activity in the CodeMirror editor
+        this.freeze_cursor_activity = true
         this.cmd_text = val
         this.editor.setValue(val)
-        setTimeout(() => { this.just_loaded = false }, 500)
+        setTimeout(() => { this.freeze_cursor_activity = false }, 200)
       },
 
       // does not fire an event
@@ -300,6 +301,14 @@
       save() {
         this.closeDropdown()
         this.$emit('save', this.cmd_text, this.cmd_json)
+      },
+
+      clearSelection() {
+        // this 'freeze_cursor_activity' variable helps us know not to show
+        // the dropdown on cursor activity in the CodeMirror editor
+        this.freeze_cursor_activity = true
+        this.editor.setSelection({ line: 0, ch: 0 })
+        setTimeout(() => { this.freeze_cursor_activity = false }, 200)
       },
 
       getHints(idx) {
