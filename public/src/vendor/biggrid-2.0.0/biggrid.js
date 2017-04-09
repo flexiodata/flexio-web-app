@@ -3584,7 +3584,7 @@
 
                 // readable cell id and class
                 if (key_type == 'name-based')
-                    col_id = col.name.toLowerCase().replace(/ /g,'-');
+                    col_id = col.name.toLowerCase().replace(/[\.\ ]/g,'-');
                      else
                     col_id = opts.colClsPrefix+col_idx;
 
