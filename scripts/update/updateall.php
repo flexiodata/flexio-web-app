@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2012, Gold Prairie, Inc.  All rights reserved.
  *
- * Project:  Gold Prairie Website
+ * Project:  Flex.io App
  * Author:   Benjamin I. Williams
  * Created:  2012-06-02
  *

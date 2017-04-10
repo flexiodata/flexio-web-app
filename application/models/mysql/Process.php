@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2016, Gold Prairie, Inc.  All rights reserved.
  *
- * Project:  Gold Prairie Website
+ * Project:  Flex.io App
  * Author:   Aaron L. Williams
  * Created:  2016-03-25
  *
