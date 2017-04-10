@@ -470,6 +470,24 @@ class User
         */
     }
 
+    public static function resetConfig(array $params, \Flexio\Api\Request $request) : bool
+    {
+        // note: this is an API endpoint function for debugging; this allows
+        // the user configuration to be reset so that items like a welcome page
+        // can be displayed again
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
+            ))->getParams()) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $eid = $request->getRequestingUser();
+
+        $params = array('eid' => $eid, 'config' => []);
+        self::set($params, $request);
+        return true;
+    }
+
     public static function createSample(array $params, \Flexio\Api\Request $request) : bool
     {
         // note: this is an API endpoint function for debugging; internally,
