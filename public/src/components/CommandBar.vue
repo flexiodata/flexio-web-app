@@ -119,7 +119,7 @@
       }
     },
     data() {
-      var base_cls = 'CodeMirror-flexio-cmdbar-'
+      var base_cls = 'CodeMirror-flexio-commandbar-'
 
       return {
         cmd_text: '',
@@ -173,7 +173,7 @@
       var opts = _.assign({
         lineNumbers: false,
         lineWrapping: true,
-        //extraKeys: { 'Ctrl-Space': 'autocomplete' },
+        theme: 'flexio-commandbar',
         mode: 'flexio-commandbar',
         placeholder: 'Type a command...'
       }, this.options)

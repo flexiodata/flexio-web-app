@@ -41,7 +41,7 @@
           return function(stream, state) {
             var escaped = false, next;
             while ((next = stream.next()) != null) {
-              
+
               if (next == quote)
               {
                 if (stream.peek() == quote)
@@ -61,7 +61,7 @@
             if (!escaped) {
               state.tokenize = null;
             }
-            return "string"
+            return 'string'
           };
         }
 
@@ -86,11 +86,11 @@
         {
           // save the cmdbar verb for later highlighting decisions;
           // for instance, the args are filtered based on which verb
-          // is used. e.g. "convert" 
+          // is used. e.g. "convert"
           state.verb = res[0]
           var args = parser.getVerbArguments(state.verb)
           state.args_regexp = (_.isArray(args) && args.length > 0) ? argRegexp(args) : null;
-          return 'variable-2'
+          return 'def'
         }
 
         if (stream.eat(/[0-9]/) !== undefined)
@@ -98,9 +98,9 @@
 
         //if (stream.eat(operator_regexp) !== undefined)
         //  return 'operator'
-        
+
         if (state.args_regexp && stream.match(state.args_regexp) !== null)
-          return 'variable-2'
+          return 'def'
 
 
         // eat an entire word (starting with a word break); also prevents
