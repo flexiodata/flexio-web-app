@@ -21,6 +21,8 @@
           </div>
         </div>
       </div>
+
+      <!-- task number -->
       <div class="f5 lh-title mr2 mr3-ns" :class="[number_cls, index==0?'pt3':'pt2' ]">{{index+1}}.</div>
 
       <!-- vertical line -->

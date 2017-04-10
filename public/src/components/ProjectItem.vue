@@ -7,52 +7,51 @@
             <router-link :to="href" class="link underline-hover blue">{{item.name}}</router-link>
           </h1>
           <div class="flex-fill"></div>
-        <div class="flex-none ml2">
-          <a
-            class="f5 b dib pointer pa2 black-60 popover-trigger"
-            ref="dropdownTrigger"
-            tabindex="0"
-          ><i class="material-icons v-mid b">expand_more</i></a>
+          <div class="flex-none ml2">
+            <a
+              class="f5 b dib pointer pa2 black-60 popover-trigger"
+              ref="dropdownTrigger"
+              tabindex="0"
+            ><i class="material-icons v-mid b">expand_more</i></a>
 
-          <ui-popover
-            trigger="dropdownTrigger"
-            ref="dropdown"
-            dropdown-position="bottom right"
-          >
-            <ui-menu
-              contain-focus
-              has-icons
+            <ui-popover
+              trigger="dropdownTrigger"
+              ref="dropdown"
+              dropdown-position="bottom right"
+            >
+              <ui-menu
+                contain-focus
+                has-icons
 
-              :options="[{
-                id: 'open',
-                label: 'Open',
-                icon: 'file_upload'
-              },{
-                id: 'edit',
-                label: 'Edit',
-                icon: 'edit'
-              },{
-                id: 'leave',
-                label: 'Leave this project',
-                icon: 'exit_to_app',
-                disabled: this.is_owner ? true : false
-              },{
-                type: 'divider'
-              },{
-                id: 'delete',
-                label: 'Delete',
-                icon: 'delete',
-                disabled: this.is_owner ? false : true
-              }]"
+                :options="[{
+                  id: 'open',
+                  label: 'Open',
+                  icon: 'file_upload'
+                },{
+                  id: 'edit',
+                  label: 'Edit',
+                  icon: 'edit'
+                },{
+                  id: 'leave',
+                  label: 'Leave this project',
+                  icon: 'exit_to_app',
+                  disabled: this.is_owner ? true : false
+                },{
+                  type: 'divider'
+                },{
+                  id: 'delete',
+                  label: 'Delete',
+                  icon: 'delete',
+                  disabled: this.is_owner ? false : true
+                }]"
 
-              @select="onDropdownItemClick"
-              @close="$refs.dropdown.close()"
-            ></ui-menu>
-          </ui-popover>
+                @select="onDropdownItemClick"
+                @close="$refs.dropdown.close()"
+              ></ui-menu>
+            </ui-popover>
+          </div>
         </div>
-      </div>
-        </div>
-        <h2 class="f6 fw4 mt2 mb0 lh-copy">{{item.description}}</h2>
+        <div class="f6 lh-copy">{{item.description}}</div>
         <div class="flex flex-row mt2 f6 black-60">
           <div class="flex-fill">
             <span class="hint--top" :aria-label="fullname">{{owner}}</span>
