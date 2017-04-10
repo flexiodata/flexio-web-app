@@ -14,6 +14,9 @@
 
 include_once __DIR__.'/../stub.php';
 
+$iterations = 1;
+if (($argv[1] ?? '') == '--iterations' && count($argv) >= 3)
+    $iterations = (int)$argv[2];
 
 try
 {
@@ -28,15 +31,18 @@ try
     if ($tests === false)
         return; // no tests to run
 
-    // run through each test
-    echo("Starting tests...\n\n");
-    foreach ($tests as $t)
+    for ($i = 1; $i <= $iterations; ++$i)
     {
-        $cmd = "$php runtestfile.php $t $show_failures_only"; // true/false indicates whether to show failures only; for now, show everything
-        passthru($cmd);
-    }
+        // run through each test
+        echo("Starting tests (iteration $i of $iterations)...\n\n");
+        foreach ($tests as $t)
+        {
+            $cmd = "$php runtestfile.php $t $show_failures_only"; // true/false indicates whether to show failures only; for now, show everything
+            passthru($cmd);
+        }
 
-    echo("\n\nFinished tests.");
+        echo("\n\nFinished tests (iteration $i of $iterations).");
+    }
 }
 catch (\Exception $e)
 {
