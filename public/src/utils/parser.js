@@ -16,6 +16,10 @@
       {
         this.json = this.keywords[keyword].call(this, str);
       }
+       else
+      {
+        throw { "code": "unknown_command", "message": "Unknown command: '" + keyword +"'" }
+      }
     }
 
     this.getJSON = function()
