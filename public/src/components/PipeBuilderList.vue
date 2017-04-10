@@ -21,9 +21,10 @@
         :index="index"
         :tasks="tasks"
         :active-process="activeProcess"
-        :project-connections="projectConnections"
         :is-scrolling="is_scrolling"
+        :show-preview="show_all_previews"
         @insert-task="insertNewTask"
+        @toggle-preview="togglePreview"
       ></pipe-builder-item>
     </div>
   </div>
@@ -42,7 +43,8 @@
     },
     data() {
       return {
-        is_scrolling: false
+        is_scrolling: false,
+        show_all_previews: true
       }
     },
     computed: {
@@ -59,6 +61,11 @@
           params: {}
         }
         this.$store.dispatch('createPipeTask', { eid, attrs })
+      },
+
+      togglePreview(show, toggle_all) {
+        if (toggle_all)
+          this.show_all_previews = show
       },
 
       resetScroll: _.debounce(function() {
