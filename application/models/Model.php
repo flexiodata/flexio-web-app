@@ -780,9 +780,11 @@ class Model
 
             // if the status is being set to delete, we're deleting the object, so
             // make sure to reset the ename so that the identifier can be reused
-            unset($params['ename']);
             if ($status === \Model::STATUS_DELETED)
-                $process_arr['ename'] = '';
+            {
+                unset($params['ename']); // don't allow a new value to be set
+                $process_arr['ename'] = ''; // reset whatever is there already
+            }
 
             $process_arr['eid_status'] = $status;
         }
