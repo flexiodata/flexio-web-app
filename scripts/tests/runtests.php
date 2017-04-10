@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2017, Gold Prairie, Inc.  All rights reserved.
  *
- * Project:  Gold Prairie Website
+ * Project:  Flex.io App
  * Author:   Aaron L. Williams
  * Created:  2017-04-08
  *
@@ -17,60 +17,23 @@ include_once __DIR__.'/../stub.php';
 
 try
 {
+    // flag to indicate whether or not to show only failures
+    $show_failures_only = true;
+
+    // get the php binary
+    $php = \Flexio\System\System::getBinaryPath('php');
+
     // get the tests
     $tests = getTests();
     if ($tests === false)
         return; // no tests to run
 
     // run through each test
-
     echo("Starting tests...\n\n");
     foreach ($tests as $t)
     {
-        $params = array();
-        $params['id'] = $t;
-        $test_result = \Flexio\Tests\TestBase::run($params);
-
-        if (is_array($test_result) === false)
-        {
-            $message = "Warning: unable to process output for test $t\n";
-            echo($message);
-            continue;
-        }
-
-        foreach ($test_result as $test_summary)
-        {
-/*
-            $test_summary_name = $test_summary['name'];
-            $test_summary_message = $test_summary['message'];
-
-            echo($test_summary_name);
-            echo($test_summary_message);
-            echo('--------------------------------------------------');
-
-
-            $r['name'] = $test_name;
-            $r['passed'] = $test_passed;
-            $r['message'] = $test_message;
-            $r['test_cnt'] = $test_run_count;
-            $r['passed_cnt'] = $test_passed_count;
-            $r['failed_cnt'] = $test_failed_count;
-            $r['time'] = $test_time;
-            $r['details'] = $results;
-
-            $name = $r['name'];
-            $description = $r['description'];
-            $passed = $r['passed'];
-            $message = $r['message'];
-
-            $message = '';
-            $message .= $passed === true ? "Passed" : "Failed";
-            $message .= ". ";
-            $message .= "Test %t";
-            $message .= "\n";
-            echo($message);
-*/
-        }
+        $cmd = "$php runtestfile.php $t $show_failures_only"; // true/false indicates whether to show failures only; for now, show everything
+        passthru($cmd);
     }
 
     echo("\n\nFinished tests.");
