@@ -5,6 +5,7 @@
     "task": [
         {
             "type": "flexio.input",
+            "description": "Read 3 repository commit histories from GitHub API",
             "metadata": {
                 "connection_type": "http.api"
             },
@@ -24,6 +25,7 @@
         },
         {
             "type": "flexio.convert",
+            "description": "Convert from json to table",
             "params": {
                 "output": {
                     "format": "table"
@@ -32,10 +34,12 @@
         },
         {
             "type": "flexio.merge",
+            "description": "Merge three tables together",
             "params": []
         },
         {
             "type": "flexio.calc",
+            "description": "Create new field 'repository' which concatenates two different parts of the 'commit.tree.url' field to isolate 'user/repo'",
             "params": {
                 "name": "repository",
                 "expression": "concat(strpart([commit.tree.url],'\/',5),'\/',strpart([commit.tree.url],'\/',6))"
@@ -43,6 +47,7 @@
         },
         {
             "type": "flexio.select",
+            "description": "Select only the relevant columns",
             "params": {
                 "columns": [
                     "repository",
@@ -57,6 +62,7 @@
         },
         {
             "type": "flexio.rename",
+            "description": "Rename columns to something more readable",
             "params": {
                 "columns": [
                     {
@@ -88,6 +94,7 @@
         },
         {
             "type": "flexio.sort",
+            "description": "Sort descending by 'author_date'",
             "params": {
                 "order": [
                     {
