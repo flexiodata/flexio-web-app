@@ -38,10 +38,16 @@
       this.code_text = this.val
     },
     mounted() {
-      var opts = _.assign({
+      var opts = {
         lineNumbers: true,
         mode: this.lang
-      }, this.options)
+      }
+
+      if (this.lang == 'application/json')
+        opts = _.assign(opts, { theme: 'flexio-json' })
+
+      // apply any options passed to us (override defaults)
+      opts = _.assign(opts, this.options)
 
       this.editor = CodeMirror.fromTextArea(this.$refs['textarea'], opts)
       this.editor.focus()

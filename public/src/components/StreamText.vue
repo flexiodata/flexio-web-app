@@ -2,12 +2,20 @@
   <div v-if="state.is_fetching && !state.has_fetched">
     <spinner size="medium" show-text :loading-text="state.loading_text"></spinner>
   </div>
+  <code-editor
+    class="h-100 overflow-y-auto"
+    lang="application/json"
+    :val="state.text"
+    :options="{ lineNumbers: false }"
+    v-else-if="isJson"
+  ></code-editor>
   <pre v-else class="monospace ma0 pa2 h-100 overflow-auto" @scroll="onScroll">{{state.text}}</pre>
 </template>
 
 <script>
   import $ from 'jquery'
   import Spinner from './Spinner.vue'
+  import CodeEditor from './CodeEditor.vue'
 
   var initial_data = {
     is_fetching: false,
@@ -23,7 +31,8 @@
   export default {
     props: ['stream-eid', 'content-url', 'is-json'],
     components: {
-      Spinner
+      Spinner,
+      CodeEditor
     },
     data() {
       return {
