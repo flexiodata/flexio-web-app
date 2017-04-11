@@ -58,12 +58,7 @@ class Api
         $request->setRequestingUser($requesting_user_eid);
 
 
-        // STEP 2: parse the params
-
-        // if necessary, parse the url params
-        $params = self::parseRequestString($params);
-
-        // set the api version; make sure we have a valid api endpoint;
+        // STEP 2: set the api version; make sure we have a valid api endpoint;
         // convert api version over to a number
         $apiversion_param = $params['apiversion'] ?? '';
         unset($params['apiversion']);
@@ -573,46 +568,6 @@ class Api
         $error['message'] = $message;
 
         return $error;
-    }
-
-    private static function parseRequestString($params) // TODO: set parameter/return types
-    {
-        // only convert strings
-        if (!is_string($params))
-            return $params;
-
-        // parse the input string as a URL and reset the params
-        $components = parse_url($params);
-
-        // get the endpoint components from the path
-        $url_params = array();
-        if (isset($components['path']))
-        {
-            $parts = explode('/', $components['path'], 6);
-
-            if (isset($parts[2])) $url_params['apiversion'] = $parts[2];
-            if (isset($parts[3])) $url_params['apiparam1'] = $parts[3];
-            if (isset($parts[4])) $url_params['apiparam2'] = $parts[4];
-            if (isset($parts[5])) $url_params['apiparam3'] = $parts[5];
-            if (isset($parts[6])) $url_params['apiparam4'] = $parts[6];
-        }
-
-        // get the query parameters; make sure any api-related params
-        // are stripped out
-        $query_params = array();
-        if (isset($components['query']))
-        {
-            parse_str($components['query'], $query_params);
-            unset($query_params['apiversion']);
-            unset($query_params['apiparam1']);
-            unset($query_params['apiparam2']);
-            unset($query_params['apiparam3']);
-            unset($query_params['apiparam4']);
-        }
-
-        // reset the parameters with the parsed values
-        $result = array_merge($url_params, $query_params);
-        return $result;
     }
 
     private static function sessionAuthExpired() : bool
