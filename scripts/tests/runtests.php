@@ -34,6 +34,7 @@ try
     for ($i = 1; $i <= $iterations; ++$i)
     {
         // run through each test
+        $t1 = time();
         echo("Starting tests (iteration $i of $iterations)...\n\n");
         foreach ($tests as $t)
         {
@@ -41,7 +42,8 @@ try
             passthru($cmd);
         }
 
-        echo("\n\nFinished tests (iteration $i of $iterations).");
+        $t2 = time();
+        echo("\n\nFinished tests (iteration $i of $iterations.  Duration ".($t2-$t1)." seconds).");
     }
 }
 catch (\Exception $e)
