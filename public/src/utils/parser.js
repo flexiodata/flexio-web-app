@@ -9,13 +9,14 @@
 
     this.parse = function(str)
     {
-      var keyword = this.getKeyword(str).toLowerCase();
+      var keyword = this.getKeyword(str).toLowerCase()
 
-      this.json = null;
+      this.json = null
 
       if (this.keywords.hasOwnProperty(keyword))
       {
-        this.json = this.keywords[keyword].call(this, str);
+        this.json = this.keywords[keyword].call(this, str)
+        this.command = keyword
       }
        else
       {
@@ -48,11 +49,42 @@
         try
         {
           this.parse(cmdbar)
+
+          // check if there are any invalid/unknown arguments
+          if (this.args.hasOwnProperty(this.command))
+          {
+            var args = this.args[this.command];
+
+            var match, re = /([a-zA-Z]+):/g;
+            while (match = re.exec(cmdbar))
+            {
+              if (this.findToplevel(cmdbar, match[0], 0) != -1)
+              {
+                var found = false;
+                for (var i = 0; i < args.length; ++i)
+                {
+                  if (args[i] == match[1])
+                  {
+                    found = true;
+                    break;
+                  }
+                }
+
+                if (!found)
+                {
+                  throw { "code": "unknown_argument", "message": "Unknown argument: '" + match[1] +"'" }
+                }
+              }
+            }
+          }
+
+
           return true
         }
         catch (e)
         {
           // return error object
+          //console.log(e.message);
           return e
         }
     }
