@@ -3,7 +3,7 @@
     <a
       target="_blank"
       rel="noopener noreferrer"
-      class="css-pipe-item db link ma0 pv2a ph3 ba b--sui-segment br2 cursor-default shadow-sui-segment trans-pm no-select no-underline"
+      class="css-pipe-item db link ma0 pv2a ph3 ba br2 cursor-default shadow-sui-segment trans-pm no-select no-underline"
       :href="pipe_src"
     >
       <div class="flex flex-row items-center">

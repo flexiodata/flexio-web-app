@@ -1,5 +1,5 @@
 <template>
-  <article class="css-pipe-item mw8 ma0 ma3-ns pv3 pv2a-ns ph3 bb ba-ns b--sui-segment br2-ns cursor-default shadow-sui-segment-ns trans-pm no-select"
+  <article class="css-pipe-item mw8 ma0 ma3-ns pv3 pv2a-ns ph3 bb ba-ns br2-ns cursor-default no-select shadow-sui-segment-ns trans-pm"
     @dblclick="openPipe"
   >
     <div class="flex flex-row items-center">
