@@ -29,30 +29,6 @@ class Base implements IObject
     protected $eid_status;
     protected $properties;
 
-/*
-    private $data = [];
-    private $dirty = [];
-
-    public function __get($property)
-    {
-        if (array_key_exists($property, $this->data))
-            return $this->data[$property];
-    }
-
-    public function __set($property, $value)
-    {
-        // if the property exists and has been changed, update it and mark it as dirty
-
-        if (array_key_exists($property, $this->data) && $this->data[$property] !== $value)
-        {
-            $this->data[$property] = $value;
-            $this->dirty[$property] = true;
-        }
-
-        return $this;
-    }
-*/
-
     public function __construct()
     {
         $this->setType(\Model::TYPE_UNDEFINED);

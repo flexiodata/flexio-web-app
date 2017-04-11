@@ -14,6 +14,9 @@
   <div v-else-if="is_table" class="bg-white ba b--black-10" style="height: 360px">
     <stream-grid :stream-eid="streamEid" :content-url="stream_content_url" :task-json="taskJson"></stream-grid>
   </div>
+  <div v-else-if="is_table && false" class="bg-white ba b--black-10" style="height: 360px">
+    <stream-grid2 :stream-eid="streamEid" :content-url="stream_content_url" :task-json="taskJson"></stream-grid2>
+  </div>
 </template>
 
 <script>
@@ -21,6 +24,7 @@
   import Spinner from './Spinner.vue'
   import StreamText from './StreamText.vue'
   import StreamGrid from './StreamGrid.vue'
+  import StreamGrid2 from './StreamGrid2.vue'
   import { API_ROOT } from '../api/resources'
 
   export default {
@@ -28,7 +32,8 @@
     components: {
       Spinner,
       StreamText,
-      StreamGrid
+      StreamGrid,
+      StreamGrid2
     },
     computed: {
       stream() {
