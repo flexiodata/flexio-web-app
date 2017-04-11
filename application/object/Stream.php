@@ -25,10 +25,6 @@ class Stream extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_STREAM);
     }
 
-    ////////////////////////////////////////////////////////////
-    // IObject interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $properties = null) : \Flexio\Object\Stream
     {
         // structure is stored as json string; it needs to be validated
@@ -94,12 +90,6 @@ class Stream extends \Flexio\Object\Base
 
         return $this->properties;
     }
-
-
-
-    ////////////////////////////////////////////////////////////
-    // additional functions
-    ////////////////////////////////////////////////////////////
 
     public function setName(string $name) : \Flexio\Object\Stream
     {
@@ -195,77 +185,6 @@ class Stream extends \Flexio\Object\Base
         $info['file_modified'] = $this->properties['file_modified'];
 
         return $info;
-    }
-
-
-
-    ////////////////////////////////////////////////////////////
-    // read/write functions
-    ////////////////////////////////////////////////////////////
-
-    public function read(callable $callback)
-    {
-        $service = $this->getService();
-        if ($service === false)
-            return;
-
-        $is_internal_table = false;
-        if ($this->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            $is_internal_table = true;
-        $structure = $this->getStructure()->enum();
-
-        $params = array();
-        $params['path'] = $this->getPath();
-        $service->read($params, function ($data) use (&$callback, &$is_internal_table, $structure) {
-
-            // if we have an internal table, convert the data keys from
-            // the store_name to the application name
-
-            $data_to_write = false;
-            if ($is_internal_table !== true)
-            {
-                $data_to_write = $data;
-            }
-             else
-            {
-                $data_to_write = array();
-                foreach ($structure as $col)
-                    $data_to_write[$col['name']] = $data[$col['store_name']] ?? null;
-            }
-
-            $callback($data_to_write);
-        });
-    }
-
-    public function write(callable $data)
-    {
-        // TODO: make sure the output table
-
-        $service = $this->getService();
-        if ($service === false)
-            return;
-
-        $structure = $this->getStructure()->enum();
-        $data_to_write = false;
-
-        if ($this->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-        {
-            $data_to_write = $data;
-        }
-            else
-        {
-            $data_to_write = array();
-            foreach ($structure as $col)
-                $data_to_write[$col['name']] = $data[$col['store_name']] ?? null;
-        }
-
-        // TODO: this looks like a problem, since the service write function takes
-        // parameters and a callback; is this legacy and unused?
-        $service->write($data_to_write);
-    }
-
-    public function writePostContent()
-    {
     }
 
     public function content($start, $limit, $columns = true, $metadata = false, $handle = 'create') // TODO: add input parameter types
