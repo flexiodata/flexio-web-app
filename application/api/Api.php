@@ -43,87 +43,111 @@ class Api
 
 
         // STEP 1: create the request object
-
-        // get the user making the request; if we don't have an eid (or we
-        // have an invalid eid), set the user to the public user, which is
-        // an internal constant that isn't a valid eid so we can distinguish
-        // between it and properly authenticated users)
         $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
         if (!\Flexio\Base\Eid::isValid($requesting_user_eid))
             $requesting_user_eid = \Flexio\Object\User::USER_PUBLIC;
 
-        // create the request object
         $request = Request::create();
-        $request->setValidator(\Flexio\Base\Validator::create());
         $request->setRequestingUser($requesting_user_eid);
 
 
-        // STEP 2: set the api version; make sure we have a valid api endpoint;
-        // convert api version over to a number
-        $apiversion_param = $params['apiversion'] ?? '';
-        unset($params['apiversion']);
-
-        $apiversion = 0;
-        if ($apiversion_param === 'v1')
-            $apiversion = 1;
-
-        $request->setApiVersion($apiversion);
-
-        if (!isset($params['apiparam1']) || strlen($params['apiparam1']) == 0)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_METHOD);
-
-        // split the request into the url params and the query params;
-        $url_params = array();
-        if (isset($params['apiparam1'])) $url_params['apiparam1'] = $params['apiparam1'];
-        if (isset($params['apiparam2'])) $url_params['apiparam2'] = $params['apiparam2'];
-        if (isset($params['apiparam3'])) $url_params['apiparam3'] = $params['apiparam3'];
-        if (isset($params['apiparam4'])) $url_params['apiparam4'] = $params['apiparam4'];
-        if (isset($params['apiparam5'])) $url_params['apiparam5'] = $params['apiparam5'];
-        if (isset($params['apiparam6'])) $url_params['apiparam6'] = $params['apiparam6'];
-
-        $query_params = $params;
-        unset($query_params['apiparam1']);
-        unset($query_params['apiparam2']);
-        unset($query_params['apiparam3']);
-        unset($query_params['apiparam4']);
-        unset($query_params['apiparam5']);
-        unset($query_params['apiparam6']);
-
-        // handle tests for failures
-        if (isset($query_params['testfail']) && strlen($query_params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
+        // STEP 2: process the request
+        try
         {
-            $fail_string = $query_params['testfail'];
-            $response = $request->getValidator()->fail($fail_string);
-            $response = self::packageResponse($response, $request);
+            // if we're testing a failure, throw an error right away
+            if (isset($params['testfail']) && strlen($params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
+            {
+                $fail_string = $params['testfail'];
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $fail_string);
+            }
 
-            if ($echo === false)
-                return $response;
+            if (!isset($params['apiversion']) || $params['apiversion'] !== 'v1')
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
-            self::sendResponse($response, $request);
-            return;
-        }
+            if (!isset($params['apiparam1']) || strlen($params['apiparam1']) == 0)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
-        // handle api v1 requests
-        if ($request->getApiVersion() === 1)
-        {
+            // split the request into the url params and the query params;
+            $url_params = array();
+            if (isset($params['apiparam1'])) $url_params['apiparam1'] = $params['apiparam1'];
+            if (isset($params['apiparam2'])) $url_params['apiparam2'] = $params['apiparam2'];
+            if (isset($params['apiparam3'])) $url_params['apiparam3'] = $params['apiparam3'];
+            if (isset($params['apiparam4'])) $url_params['apiparam4'] = $params['apiparam4'];
+            if (isset($params['apiparam5'])) $url_params['apiparam5'] = $params['apiparam5'];
+            if (isset($params['apiparam6'])) $url_params['apiparam6'] = $params['apiparam6'];
+
+            $query_params = $params;
+            unset($query_params['apiversion']);
+            unset($query_params['apiparam1']);
+            unset($query_params['apiparam2']);
+            unset($query_params['apiparam3']);
+            unset($query_params['apiparam4']);
+            unset($query_params['apiparam5']);
+            unset($query_params['apiparam6']);
+
+            // send the response
             $response = self::processRequest($method, $url_params, $query_params, $request);
-            $response = self::packageResponse($response, $request);
-
             if ($echo === false)
                 return $response;
 
-            self::sendResponse($response, $request);
-            return;
+            self::sendContentResponse($response);
         }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $info = $e->getMessage(); // exception info is packaged up in message
+            $info = json_decode($info,true);
+            $file = $e->getFile();
+            $line = $e->getLine();
+            $code = $info['code'];
+            $trace = json_encode($e->getTrace());
+            $message = $info['message'] . (IS_DEBUG() === false ? '' : "; exception thrown in file $file on line $line; trace: $trace");
 
-        // handle unsupported api versions
-        $response = $request->getValidator()->fail(\Flexio\Base\Error::INVALID_VERSION);
-        $response = self::packageResponse($response, $request);
+            $response = array();
+            $response['errors'][] = array(
+                'code' => $code,
+                'message' => $message
+            );
+            if ($echo === false)
+                return $response;
 
-        if ($echo === false)
-            return $response;
+            self::sendErrorResponse($response);
+        }
+        catch (\Exception $e)
+        {
+            $file = $e->getFile();
+            $line = $e->getLine();
+            $code = \Flexio\Base\Error::GENERAL;
+            $trace = json_encode($e->getTrace());
+            $message = (IS_DEBUG() === false ? '' : "exception thrown in file $file on line $line; trace: $trace");
 
-        self::sendResponse($response, $request);
+            $response = array();
+            $response['errors'][] = array(
+                'code' => $code,
+                'message' => $message
+            );
+            if ($echo === false)
+                return $response;
+
+            self::sendErrorResponse($response);
+        }
+        catch (\Error $e)
+        {
+            $file = $e->getFile();
+            $line = $e->getLine();
+            $code = \Flexio\Base\Error::GENERAL;
+            $trace = json_encode($e->getTrace());
+            $message = (IS_DEBUG() === false ? '' : "error thrown in file $file on line $line; trace: $trace");
+
+            $response = array();
+            $response['errors'][] = array(
+                'code' => $code,
+                'message' => $message
+            );
+            if ($echo === false)
+                return $response;
+
+            self::sendErrorResponse($response);
+        }
     }
 
     private static function processRequest(string $request_method, array $url_params, array $query_params, \Flexio\Api\Request $request)
@@ -132,7 +156,7 @@ class Api
         switch ($request_method)
         {
             default:
-                return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_REQUEST);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
             case 'GET':
             case 'POST':
@@ -144,7 +168,7 @@ class Api
         // check url parameter count; has to be at least 1
         $url_param_count = count($url_params);
         if ($url_param_count < 1)
-            return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_REQUEST);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
         // save the request parameters; TODO: create action/history object
         $action_params_to_save = array(
@@ -155,6 +179,7 @@ class Api
         );
         \Flexio\System\System::getModel()->action->record($action_params_to_save);
 
+
         // ROUTE 1: try to route the request "as is" before looking for any
         // eids or identifiers in the path; if we can route the request,
         // we're done; this gives precedence to api keywords over eids and
@@ -163,8 +188,9 @@ class Api
         $api_path = self::createApiPath($request_method, $api_params);
 
         $function = self::getApiEndpoint($api_path);
-        if ($function !== false && is_callable($function) === true)
-            return self::execApiCall($function, $query_params, $request);
+        if (is_callable($function) === true)
+            return $function($query_params, $request);
+
 
         // ROUTE 2: if we weren't able to route the request "as is", try to
         // route the request based on checking for eids or identifiers in the
@@ -203,90 +229,19 @@ class Api
         $query_params = array_merge($p, $query_params);
 
         $function = self::getApiEndpoint($api_path);
-        if ($function !== false && is_callable($function) === true)
-            return self::execApiCall($function, $query_params, $request);
+        if (is_callable($function) === true)
+            return $function($query_params, $request);
 
         // we can't find the specified api endpoint
-        return $request->getValidator()->fail(\Flexio\Base\Error::INVALID_METHOD);
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
     }
 
-    private static function execApiCAll(callable $function, array $query_params, \Flexio\Api\Request $request)
-    {
-        try
-        {
-            return $function($query_params, $request);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $info = $e->getMessage(); // exception info is packaged up in message
-            $info = json_decode($info,true);
-            $file = $e->getFile();
-            $line = $e->getLine();
-            $code = $info['code'];
-            $trace = json_encode($e->getTrace());
-            $message = $info['message'] . (IS_DEBUG() === false ? '' : "; exception thrown in file $file on line $line; trace: $trace");
-            return $request->getValidator()->fail($code, $message);
-        }
-        catch (\Exception $e)
-        {
-            $file = $e->getFile();
-            $line = $e->getLine();
-            $code = \Flexio\Base\Error::GENERAL;
-            $trace = json_encode($e->getTrace());
-            $message = (IS_DEBUG() === false ? '' : "exception thrown in file $file on line $line; trace: $trace");
-            return $request->getValidator()->fail($code, $message);
-        }
-        catch (\Error $e)
-        {
-            $file = $e->getFile();
-            $line = $e->getLine();
-            $code = \Flexio\Base\Error::GENERAL;
-            $trace = json_encode($e->getTrace());
-            $message = (IS_DEBUG() === false ? '' : "error thrown in file $file on line $line; trace: $trace");
-            return $request->getValidator()->fail($code, $message);
-        }
-    }
-
-    private static function mapUrlParamsToApiParams(array $url_params) : array
-    {
-        // get the api params from the url params
-        $api_params = array();
-        $api_params['apiparam1'] = $url_params['apiparam1'] ?? '';
-        $api_params['apiparam2'] = $url_params['apiparam2'] ?? '';
-        $api_params['apiparam3'] = $url_params['apiparam3'] ?? '';
-        $api_params['apiparam4'] = $url_params['apiparam4'] ?? '';
-        $api_params['apiparam5'] = $url_params['apiparam5'] ?? '';
-        $api_params['apiparam6'] = $url_params['apiparam6'] ?? '';
-        return $api_params;
-    }
-
-    private static function createApiPath(string $request_method, array $params) : string
-    {
-        // creates an api endpoint string that's used to lookup the
-        // appropriate api implementation
-        $apiendpoint = '';
-
-        if ($request_method === 'GET')    $apiendpoint .= 'GET ';
-        if ($request_method === 'POST')   $apiendpoint .= 'POS ';
-        if ($request_method === 'PUT')    $apiendpoint .= 'PUT ';
-        if ($request_method === 'DELETE') $apiendpoint .= 'DEL ';
-
-        $apiendpoint .= (strlen($params['apiparam1']) > 0 ? ('/' . $params['apiparam1']) : '');
-        $apiendpoint .= (strlen($params['apiparam2']) > 0 ? ('/' . $params['apiparam2']) : '');
-        $apiendpoint .= (strlen($params['apiparam3']) > 0 ? ('/' . $params['apiparam3']) : '');
-        $apiendpoint .= (strlen($params['apiparam4']) > 0 ? ('/' . $params['apiparam4']) : '');
-        $apiendpoint .= (strlen($params['apiparam5']) > 0 ? ('/' . $params['apiparam5']) : '');
-        $apiendpoint .= (strlen($params['apiparam6']) > 0 ? ('/' . $params['apiparam6']) : '');
-
-        return $apiendpoint;
-    }
-
-    private static function getApiEndpoint(string $apiendpoint)
+    private static function getApiEndpoint(string $apiendpoint) : string
     {
         switch ($apiendpoint)
         {
             default:
-                return false;
+                return '';
 
             // system (public)
             case 'POS /validate'                       : return '\Flexio\Api\System::validate';
@@ -398,33 +353,9 @@ class Api
         }
     }
 
-    private static function packageResponse($response, \Flexio\Api\Request $request)
+    private static function sendContentResponse($response)
     {
-        if ($request->getValidator()->hasErrors() === false)
-            return $response;
-
-        // set the error string in the content
-        // example:
-        // {"errors": [{"message":"trouble", "code":"1"}]
-
-        $result = array();
-        $result['errors'] = array();
-
-        $errors = $request->getValidator()->getErrors();
-        foreach ($errors as $e)
-        {
-            $e = self::convertErrorToApiCode($e);
-            $item = &$result['errors'][];
-            $item['message'] = $e['message'];
-            $item['code'] = $e['code'];
-        }
-
-        return $result;
-    }
-
-    private static function sendResponse($response, \Flexio\Api\Request $request)
-    {
-        // set the headers; note: never cache api calls
+        // set the default headers; note: never cache api calls
         header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Pragma: no-cache');
@@ -434,144 +365,164 @@ class Api
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
 
-        // if we have any errors, set to the appropriate http header error code
-        if ($request->getValidator()->hasErrors())
+        $response = @json_encode($response, JSON_PRETTY_PRINT);
+        echo $response;
+    }
+
+    private static function sendErrorResponse($response)
+    {
+        // set the default headers; note: never cache api calls
+        header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Pragma: no-cache');
+
+        // set the HTTP header content type to json; note: IE's behaves badly if
+        // content-type json is returned in response to multi-part uploads
+        if (count($_FILES) == 0)
+            header('Content-Type: application/json');
+
+
+        // TODO: don't try to set/return an array of errors
+        $error = end($response);
+
+
+        // get the error code and message
+        $error_code = $error['code'] ?? '';
+        $error_message = $error['message'] ?? '';
+
+        // change the error code to be more specific in case of unauthorized access
+        if ($error_code === \Flexio\Base\Error::INSUFFICIENT_RIGHTS && self::sessionAuthExpired() === true)
+            $error_code = \Flexio\Base\Error::UNAUTHORIZED;
+
+        // set the specific error header
+        switch ($error_code)
         {
-            // set the header based on the type of error
-            $errors = $request->getValidator()->getErrors();
-            $last_error = end($errors);
-            $last_error = self::convertErrorToApiCode($last_error);
+            // TODO: for now, map the default and ERROR_GENERAL to 400, which
+            // is what we've been using for all error codes up 'till now; however,
+            // we may want to switch to 500, in which case we'll need to properly
+            // assign ERROR_GENERAL to other categories when appropriate
+            default:
+            case \Flexio\Base\Error::GENERAL:
+                \Flexio\Base\Util::header_error(400);
+                break;
 
-            $last_error_code = $last_error['code'];
+            // "UNAUTHORIZED" type errors; the user might have access to the object
+            // if they were logged in, but the session is invalid
+            case \Flexio\Base\Error::UNAUTHORIZED:
+                \Flexio\Base\Util::header_error(401);
+                break;
 
-            switch ($last_error_code)
-            {
-                // TODO: for now, map the default and ERROR_GENERAL to 400, which
-                // is what we've been using for all error codes up 'till now; however,
-                // we may want to switch to 500, in which case we'll need to properly
-                // assign ERROR_GENERAL to other categories when appropriate
-                default:
-                case \Flexio\Base\Error::GENERAL:
-                    \Flexio\Base\Util::header_error(400);
-                    break;
+            // "FORBIDDEN" type errors; access not allowed
+            case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:
+                \Flexio\Base\Util::header_error(403);
+                break;
 
-                // "UNAUTHORIZED" type errors; the user might have access to the object
-                // if they were logged in, but the session is invalid
-                case \Flexio\Base\Error::UNAUTHORIZED:
-                    \Flexio\Base\Util::header_error(401);
-                    break;
+            // "NOT FOUND" type errors; invalid requests, invalid
+            // parameters, or valid requests for objects that can't
+            // be found
+            case \Flexio\Base\Error::INVALID_VERSION:
+            case \Flexio\Base\Error::INVALID_METHOD:
+            case \Flexio\Base\Error::INVALID_REQUEST:
+            case \Flexio\Base\Error::MISSING_PARAMETER:
+            case \Flexio\Base\Error::INVALID_PARAMETER:
+            case \Flexio\Base\Error::NO_DATABASE:
+            case \Flexio\Base\Error::NO_MODEL:
+            case \Flexio\Base\Error::NO_SERVICE:
+            case \Flexio\Base\Error::NO_OBJECT:
+                \Flexio\Base\Util::header_error(404);
+                break;
 
-                // "FORBIDDEN" type errors; access not allowed
-                case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:
-                    \Flexio\Base\Util::header_error(403);
-                    break;
+            // "UNPROCESSABLE ENTITY"; request can't be processed
+            // for some reason
+            case \Flexio\Base\Error::CREATE_FAILED:
+            case \Flexio\Base\Error::DELETE_FAILED:
+            case \Flexio\Base\Error::WRITE_FAILED:
+            case \Flexio\Base\Error::READ_FAILED:
+            case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
+                \Flexio\Base\Util::header_error(422);
+                break;
 
-                // "NOT FOUND" type errors; invalid requests, invalid
-                // parameters, or valid requests for objects that can't
-                // be found
-                case \Flexio\Base\Error::INVALID_VERSION:
-                case \Flexio\Base\Error::INVALID_METHOD:
-                case \Flexio\Base\Error::INVALID_REQUEST:
-                case \Flexio\Base\Error::MISSING_PARAMETER:
-                case \Flexio\Base\Error::INVALID_PARAMETER:
-                case \Flexio\Base\Error::NO_DATABASE:
-                case \Flexio\Base\Error::NO_MODEL:
-                case \Flexio\Base\Error::NO_SERVICE:
-                case \Flexio\Base\Error::NO_OBJECT:
-                    \Flexio\Base\Util::header_error(404);
-                    break;
-
-                // "UNPROCESSABLE ENTITY"; request can't be processed
-                // for some reason
-                case \Flexio\Base\Error::CREATE_FAILED:
-                case \Flexio\Base\Error::DELETE_FAILED:
-                case \Flexio\Base\Error::WRITE_FAILED:
-                case \Flexio\Base\Error::READ_FAILED:
-                case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
-                    \Flexio\Base\Util::header_error(422);
-                    break;
-
-                // "INTERNAL SERVER ERROR"; something is wrong internally
-                case \Flexio\Base\Error::UNDEFINED:
-                case \Flexio\Base\Error::UNIMPLEMENTED:
-                case \Flexio\Base\Error::NO_DATABASE:
-                case \Flexio\Base\Error::NO_MODEL:
-                case \Flexio\Base\Error::NO_SERVICE:
-                    \Flexio\Base\Util::header_error(500);
-                    break;
-            }
+            // "INTERNAL SERVER ERROR"; something is wrong internally
+            case \Flexio\Base\Error::UNDEFINED:
+            case \Flexio\Base\Error::UNIMPLEMENTED:
+            case \Flexio\Base\Error::NO_DATABASE:
+            case \Flexio\Base\Error::NO_MODEL:
+            case \Flexio\Base\Error::NO_SERVICE:
+                \Flexio\Base\Util::header_error(500);
+                break;
         }
+
+/*
+        // if a message isn't specified, supply a default message
+        if (strlen($error_message ) == 0)
+        {
+            // try to map the code to suitable api error message
+            switch ($error_message)
+            {
+                default:                                         $error_message = _('Operation failed');            break;
+                case \Flexio\Base\Error::UNDEFINED:              $error_message = _('Operation failed');            break;
+                case \Flexio\Base\Error::GENERAL:                $error_message = _('General error');               break;
+                case \Flexio\Base\Error::UNIMPLEMENTED:          $error_message = _('Unimplemented');               break;
+                case \Flexio\Base\Error::NO_DATABASE:            $error_message = _('Database not available');      break;
+                case \Flexio\Base\Error::NO_MODEL:               $error_message = _('Model not available');         break;
+                case \Flexio\Base\Error::NO_SERVICE:             $error_message = _('Service not available');       break;
+                case \Flexio\Base\Error::NO_OBJECT:              $error_message = _('Object not available');        break;
+                case \Flexio\Base\Error::INVALID_SYNTAX:         $error_message = _('Invalid syntax');              break;
+                case \Flexio\Base\Error::MISSING_PARAMETER:      $error_message = _('Missing parameter');           break;
+                case \Flexio\Base\Error::INVALID_PARAMETER:      $error_message = _('Invalid parameter');           break;
+                case \Flexio\Base\Error::CREATE_FAILED:          $error_message = _('Could not create object');     break;
+                case \Flexio\Base\Error::DELETE_FAILED:          $error_message = _('Could not delete object');     break;
+                case \Flexio\Base\Error::WRITE_FAILED:           $error_message = _('Could not write to object');   break;
+                case \Flexio\Base\Error::READ_FAILED:            $error_message = _('Could not read from object');  break;
+                case \Flexio\Base\Error::UNAUTHORIZED:           $error_message = _('Unauthorized');                break;
+                case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:    $error_message = _('Insufficient rights');         break;
+                case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:    $error_message = _('Size limit exceeded');         break;
+            }
+
+            // TODO: set error message
+        }
+*/
 
         $response = @json_encode($response, JSON_PRETTY_PRINT);
         echo $response;
     }
 
-    private static function convertErrorToApiCode($error) // TODO: set parameter/return types
-    {
-        // converts any validator error to an api error; populates
-        // any empty message with an api code
-
-        // make sure we have an error object we can map
-        if (!is_array($error))
-            return $error;
-        if (!isset($error['code']))
-            return $error;
-
-        // TODO: verify that following logic will correctly handle expired sessions
-        if ($error['code'] === \Flexio\Base\Error::INSUFFICIENT_RIGHTS && self::sessionAuthExpired() === true)
-            $error['code'] = \Flexio\Base\Error::UNAUTHORIZED;
-
-        $code = $error['code'];
-        $message = $error['message'];
-
-        // make sure any validator codes are represented as
-        // an api code
-        switch ($code)
-        {
-            case \Flexio\Base\Validator::ERROR_NONE:              $code = \Flexio\Base\Error::NONE;              break;
-            case \Flexio\Base\Validator::ERROR_UNDEFINED:         $code = \Flexio\Base\Error::UNDEFINED;         break;
-            case \Flexio\Base\Validator::ERROR_GENERAL:           $code = \Flexio\Base\Error::GENERAL;           break;
-            case \Flexio\Base\Validator::ERROR_INVALID_SYNTAX:    $code = \Flexio\Base\Error::INVALID_SYNTAX;    break;
-            case \Flexio\Base\Validator::ERROR_MISSING_PARAMETER: $code = \Flexio\Base\Error::MISSING_PARAMETER; break;
-            case \Flexio\Base\Validator::ERROR_INVALID_PARAMETER: $code = \Flexio\Base\Error::INVALID_PARAMETER; break;
-        }
-
-        // if a message isn't specified, supply a default message
-        if (!isset($message) || strlen($message) == 0)
-        {
-            // try to map the code to suitable api error message
-            switch ($code)
-            {
-                default:                                         $message = _('Operation failed');            break;
-                case \Flexio\Base\Error::UNDEFINED:              $message = _('Operation failed');            break;
-                case \Flexio\Base\Error::GENERAL:                $message = _('General error');               break;
-                case \Flexio\Base\Error::UNIMPLEMENTED:          $message = _('Unimplemented');               break;
-                case \Flexio\Base\Error::NO_DATABASE:            $message = _('Database not available');      break;
-                case \Flexio\Base\Error::NO_MODEL:               $message = _('Model not available');         break;
-                case \Flexio\Base\Error::NO_SERVICE:             $message = _('Service not available');       break;
-                case \Flexio\Base\Error::NO_OBJECT:              $message = _('Object not available');        break;
-                case \Flexio\Base\Error::INVALID_SYNTAX:         $message = _('Invalid syntax');              break;
-                case \Flexio\Base\Error::MISSING_PARAMETER:      $message = _('Missing parameter');           break;
-                case \Flexio\Base\Error::INVALID_PARAMETER:      $message = _('Invalid parameter');           break;
-                case \Flexio\Base\Error::CREATE_FAILED:          $message = _('Could not create object');     break;
-                case \Flexio\Base\Error::DELETE_FAILED:          $message = _('Could not delete object');     break;
-                case \Flexio\Base\Error::WRITE_FAILED:           $message = _('Could not write to object');   break;
-                case \Flexio\Base\Error::READ_FAILED:            $message = _('Could not read from object');  break;
-                case \Flexio\Base\Error::UNAUTHORIZED:           $message = _('Unauthorized');                break;
-                case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:    $message = _('Insufficient rights');         break;
-                case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:    $message = _('Size limit exceeded');         break;
-            }
-        }
-
-        // set the code and message on the object and return it
-        $error['code'] = $code;
-        $error['message'] = $message;
-
-        return $error;
-    }
-
     private static function sessionAuthExpired() : bool
     {
         return (isset($_COOKIE['FXSESSID']) && strlen($_COOKIE['FXSESSID']) > 0 && $GLOBALS['g_store']->user_eid == '') ? true:false;
+    }
+
+    private static function mapUrlParamsToApiParams(array $url_params) : array
+    {
+        // get the api params from the url params
+        $api_params = array();
+        $api_params['apiparam1'] = $url_params['apiparam1'] ?? '';
+        $api_params['apiparam2'] = $url_params['apiparam2'] ?? '';
+        $api_params['apiparam3'] = $url_params['apiparam3'] ?? '';
+        $api_params['apiparam4'] = $url_params['apiparam4'] ?? '';
+        $api_params['apiparam5'] = $url_params['apiparam5'] ?? '';
+        $api_params['apiparam6'] = $url_params['apiparam6'] ?? '';
+        return $api_params;
+    }
+
+    private static function createApiPath(string $request_method, array $params) : string
+    {
+        // creates an api endpoint string that's used to lookup the
+        // appropriate api implementation
+        $apiendpoint = '';
+
+        if ($request_method === 'GET')    $apiendpoint .= 'GET ';
+        if ($request_method === 'POST')   $apiendpoint .= 'POS ';
+        if ($request_method === 'PUT')    $apiendpoint .= 'PUT ';
+        if ($request_method === 'DELETE') $apiendpoint .= 'DEL ';
+
+        $apiendpoint .= (strlen($params['apiparam1']) > 0 ? ('/' . $params['apiparam1']) : '');
+        $apiendpoint .= (strlen($params['apiparam2']) > 0 ? ('/' . $params['apiparam2']) : '');
+        $apiendpoint .= (strlen($params['apiparam3']) > 0 ? ('/' . $params['apiparam3']) : '');
+        $apiendpoint .= (strlen($params['apiparam4']) > 0 ? ('/' . $params['apiparam4']) : '');
+        $apiendpoint .= (strlen($params['apiparam5']) > 0 ? ('/' . $params['apiparam5']) : '');
+        $apiendpoint .= (strlen($params['apiparam6']) > 0 ? ('/' . $params['apiparam6']) : '');
+
+        return $apiendpoint;
     }
 }
