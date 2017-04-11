@@ -561,7 +561,7 @@ class Pipe
         return true;
     }
 
-    public static function setTaskStep(array $params, \Flexio\Api\Request $request) : array
+    public static function setTaskStep(array $params, \Flexio\Api\Request $request) /* : array */ // TODO: set function return type
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -596,7 +596,7 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function getTaskStep(array $params, \Flexio\Api\Request $request) : array
+    public static function getTaskStep(array $params, \Flexio\Api\Request $request) /* : array */ // TODO: set function return type
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
