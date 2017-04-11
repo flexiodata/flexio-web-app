@@ -10,6 +10,9 @@
         ref="thead-tr"
         class="flex flex-row nowrap relative"
       >
+        <div class="flex-none db overflow-hidden ba sg-td">
+          <div class="db lh-1 sg-th-inner light-silver tr bg-near-white" :style="'width: 60px'"></div>
+        </div>
         <div class="flex-none db overflow-hidden ba bg-near-white tc relative sg-th" v-for="c in columns">
           <div class="db lh-1 sg-th-inner" :style="'width: '+c.pixel_width+'px'">{{c.name}}</div>
           <div
@@ -25,7 +28,10 @@
       class="flex-fill overflow-auto"
       @scroll="onScroll"
     >
-      <div class="flex flex-row nowrap" v-for="r in rows">
+      <div class="flex flex-row nowrap" v-for="(r, index) in rows">
+        <div class="flex-none db overflow-hidden ba sg-td">
+          <div class="db lh-1 sg-td-inner light-silver tr bg-near-white" :style="'width: 60px'">{{start+index+1}}</div>
+        </div>
         <div class="flex-none db overflow-hidden ba sg-td" v-for="c in columns">
           <div class="db lh-1 sg-td-inner" :style="'width: '+c.pixel_width+'px'">{{r[c.name]}}</div>
         </div>
