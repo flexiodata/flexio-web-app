@@ -38,7 +38,7 @@
   import $ from 'jquery'
 
   const default_column_info = {
-    pixel_width: 120
+    pixel_width: 130
   }
 
   export default {
@@ -232,7 +232,6 @@
 
   .sg-th,
   .sg-td {
-    min-width: 30px;
     height: 24px;
     margin-top: -1px;
     margin-left: -1px;
@@ -241,6 +240,8 @@
 
   .sg-th-inner,
   .sg-td-inner {
+    min-width: 30px;
+    max-width: 1200px;
     padding: 5px 5px 4px;
   }
 </style>
