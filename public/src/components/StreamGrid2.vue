@@ -7,7 +7,11 @@
         </div>
       </div>
     </div>
-    <div class="flex-fill overflow-auto sg-tbody">
+    <div
+      ref="tbody"
+      class="flex-fill overflow-auto sg-tbody"
+      @scroll="onScrollVertical"
+    >
       <div class="flex flex-row nowrap sg-tr" v-for="r in rows">
         <div class="flex-none db overflow-hidden ba pa1 sg-td" v-for="c in columns">
           {{r[c.name]}}
@@ -30,12 +34,15 @@
     data() {
       return {
         inited: false,
+
         start: 0,
         limit: 100,
         total_row_count: 0,
         columns: [],
         rows: [],
-        cached_rows: {}
+        cached_rows: {},
+
+        scroll_top: 0
       }
     },
     computed: {
@@ -85,10 +92,12 @@
 
         })
       },
+
       tryRowCache() {
         if (!this.inited)
           return false
 
+        console.log(this.$refs)
         var missing_rows = false
         var start = this.start
         var limit = this.limit
@@ -117,7 +126,16 @@
 
         // let the callee know we found all of the rows in the row cache
         return true
-      }
+      },
+
+      onScrollVertical: _.debounce(function(evt) {
+        // only handle vertical scrolls
+        if (this.scroll_top == this.$refs.tbody.scrollTop)
+            return
+
+        this.scroll_top = this.$refs.tbody.scrollTop
+        console.log(this.scroll_top)
+      }, 20)
     }
   }
 </script>
