@@ -1,19 +1,22 @@
 <template>
-  <div class="flex flex-column relative sg-container h-100">
-    <div class="flex-none overflow-hidden sg-thead">
-      <div class="flex flex-row nowrap sg-tr">
-        <div class="flex-none db overflow-hidden ba pa1 bg-near-white tc sg-th" v-for="c in columns">
+  <div class="flex flex-column relative h-100 sg-container">
+    <div class="flex-none overflow-hidden bg-near-white">
+      <div
+        ref="thead-tr"
+        class="flex flex-row nowrap relative"
+      >
+        <div class="flex-none db overflow-hidden ba ph1 bg-near-white tc sg-th" v-for="c in columns">
           {{c.name}}
         </div>
       </div>
     </div>
     <div
       ref="tbody"
-      class="flex-fill overflow-auto sg-tbody"
-      @scroll="onScrollVertical"
+      class="flex-fill overflow-auto"
+      @scroll="onScroll"
     >
-      <div class="flex flex-row nowrap sg-tr" v-for="r in rows">
-        <div class="flex-none db overflow-hidden ba pa1 sg-td" v-for="c in columns">
+      <div class="flex flex-row nowrap" v-for="r in rows">
+        <div class="flex-none db overflow-hidden ba ph1 sg-td" v-for="c in columns">
           {{r[c.name]}}
         </div>
       </div>
@@ -38,11 +41,13 @@
         start: 0,
         limit: 100,
         total_row_count: 0,
+
         columns: [],
         rows: [],
         cached_rows: {},
 
-        scroll_top: 0
+        scroll_top: 0,
+        scroll_left: 0
       }
     },
     computed: {
@@ -128,14 +133,22 @@
         return true
       },
 
-      onScrollVertical: _.debounce(function(evt) {
-        // only handle vertical scrolls
-        if (this.scroll_top == this.$refs.tbody.scrollTop)
-            return
+      onScroll: _.throttle(function(evt) {
+        // vertical scrolls
+        if (this.scroll_top != this.$refs['tbody'].scrollTop)
+        {
+          this.scroll_top = this.$refs['tbody'].scrollTop
+        }
 
-        this.scroll_top = this.$refs.tbody.scrollTop
-        console.log(this.scroll_top)
-      }, 20)
+        // horizontal scrolls
+        if (this.scroll_left != this.$refs['tbody'].scrollLeft)
+        {
+          this.scroll_left = this.$refs['tbody'].scrollLeft
+
+          // sync up fixed header with content horizontal scroll offset
+          this.$refs['thead-tr'].style = 'left: -'+this.scroll_left+'px'
+        }
+      }, 10)
     }
   }
 </script>
@@ -150,6 +163,8 @@
   .sg-th,
   .sg-td {
     width: 120px;
+    height: 24px;
+    padding: 5px 4px 4px;
     margin-top: -1px;
     margin-left: -1px;
     border-color: #ddd;
