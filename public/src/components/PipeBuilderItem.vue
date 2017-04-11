@@ -96,8 +96,7 @@
               :aria-label="collapse_tooltip"
               @click="togglePreview"
             >
-              <i class="db material-icons md-18 rotate-90" v-if="show_preview">chevron_right</i>
-              <i class="db material-icons md-18" v-else>chevron_right</i>
+              <i class="db material-icons md-18 trans-t" :class="{ 'rotate-90': show_preview }">chevron_right</i>
             </div>
           </div>
 
@@ -127,12 +126,14 @@
               <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
             </div>
           </transition>
-          <pipe-content
-            class="mt2 relative"
-            :stream-eid="active_stream_eid"
-            :task-json="task"
-            v-if="show_preview && active_stream_eid.length > 0"
-          ></pipe-content>
+          <transition name="slide-fade">
+            <pipe-content
+              class="mt2 relative"
+              :stream-eid="active_stream_eid"
+              :task-json="task"
+              v-if="show_preview && active_stream_eid.length > 0"
+            ></pipe-content>
+          </transition>
         </div>
       </div>
     </div>
