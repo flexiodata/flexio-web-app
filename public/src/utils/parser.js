@@ -11,17 +11,6 @@
     {
       var keyword = this.getKeyword(str).toLowerCase();
 
-      if (this.keywords.hasOwnProperty(keyword))
-      {
-        this.json = this.keywords[keyword].call(this, str);
-      }
-
-      // TODO: throwing an error all the time here is causing
-      //       issues with the dropdown -- this is especially
-      //       problematic when starting to type a command in
-      //       which case the initial command will, of course,
-      //       have an invalid syntax
-      /*
       this.json = null;
 
       if (this.keywords.hasOwnProperty(keyword))
@@ -32,7 +21,6 @@
       {
         throw { "code": "unknown_command", "message": "Unknown command: '" + keyword +"'" }
       }
-      */
     }
 
     this.getJSON = function()
@@ -42,8 +30,31 @@
 
     this.toJSON = function(cmdbar)
     {
-      this.parse(cmdbar);
-      return this.getJSON();
+      try
+      {
+        this.parse(cmdbar);
+        return this.getJSON();
+      }
+      catch (e)
+      {
+        // error occurred -- return null
+      }
+
+      return null;
+    }
+
+    this.validate = function(cmdbar)
+    {
+        try
+        {
+          this.parse(cmdbar)
+          return true
+        }
+        catch (e)
+        {
+          // return error object
+          return e
+        }
     }
 
     this.toCmdbar = function(json)
@@ -1877,9 +1888,13 @@
   var g_cmdbarparser = new CommandBarParser
 
   var CommandBarParserExport = {
-    toJSON: function(str) {
+    validate: function(cmdbar) {
       var p = new CommandBarParser
-      return p.toJSON(str)
+      return p.validate(cmdbar)
+    },
+    toJSON: function(cmdbar) {
+      var p = new CommandBarParser
+      return p.toJSON(cmdbar)
     },
     toCmdbar: function(json) {
       var p = new CommandBarParser
