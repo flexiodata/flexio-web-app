@@ -6,7 +6,7 @@
         class="flex flex-row nowrap relative"
       >
         <div class="flex-none db overflow-hidden ba bg-near-white tc relative sg-th" v-for="c in columns">
-          <div :style="'width: '+c.pixel_width+'px'">{{c.name}}</div>
+          <div class="db lh-1 sg-th-inner" :style="'width: '+c.pixel_width+'px'">{{c.name}}</div>
           <div
             class="absolute top-0 bottom-0 right-0 bg-black"
             style="width: 4px"
@@ -22,7 +22,7 @@
     >
       <div class="flex flex-row nowrap" v-for="r in rows">
         <div class="flex-none db overflow-hidden ba sg-td" v-for="c in columns">
-          <div :style="'width: '+c.pixel_width+'px'">{{r[c.name]}}</div>
+          <div class="db lh-1 sg-td-inner" :style="'width: '+c.pixel_width+'px'">{{r[c.name]}}</div>
         </div>
       </div>
     </div>
@@ -195,9 +195,13 @@
   .sg-td {
     min-width: 30px;
     height: 24px;
-    padding: 5px 4px 4px;
     margin-top: -1px;
     margin-left: -1px;
     border-color: #ddd;
+  }
+
+  .sg-th-inner,
+  .sg-td-inner {
+    padding: 5px 5px 4px;
   }
 </style>
