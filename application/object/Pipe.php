@@ -88,13 +88,10 @@ class Pipe extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getTask() // TODO: add function return type
+    public function getTask() : array
     {
         // shorthand for getting task info
         $local_properties = $this->get();
-        if (!isset($local_properties['task']))
-            return false;
-
         return $local_properties['task'];
     }
 
@@ -267,6 +264,8 @@ class Pipe extends \Flexio\Object\Base
         $task = @json_decode($properties['task'],true);
         if ($task !== false)
             $properties['task'] = $task;
+             else
+            $properties['task'] = array();
 
         // unpack the schedule json
         $schedule = @json_decode($properties['schedule'],true);

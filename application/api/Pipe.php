@@ -451,6 +451,52 @@ class Pipe
         */
     }
 
+    public static function validate(array $params, \Flexio\Api\Request $request) : array
+    {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid'   => array('type' => 'identifier', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $pipe_identifier = $params['eid'];
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // load the object
+        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
+        if ($pipe === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // get the tasks
+        $pipe_info = $pipe->get();
+        $task = $pipe_info['task'];
+
+        // iterate through the task steps an validate each one
+        $result = array();
+        foreach ($task as $t)
+        {
+
+            // TODO: validate the step
+
+
+            // push back any steps with an error
+            $task_error = array();
+            $task_error[] = array(
+                'eid' => $t['eid'], // task eid
+                'error' => '', // error code
+                'message' => '' // error message
+            );
+
+            $result[] = $task_error;
+        }
+
+        return $result;
+    }
+
     public static function addTaskStep(array $params, \Flexio\Api\Request $request) : array
     {
         // the params that are posted is the task step; note: tasks don't
