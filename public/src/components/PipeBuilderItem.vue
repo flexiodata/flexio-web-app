@@ -96,8 +96,8 @@
               :aria-label="collapse_tooltip"
               @click="togglePreview"
             >
-              <i class="db material-icons md-18" style="margin-left: -1px" v-if="show_preview">arrow_drop_down</i>
-              <i class="db material-icons md-18 fa-rotate-270" v-else>arrow_drop_down</i>
+              <i class="db material-icons md-18 fa-rotate-90" v-if="show_preview">chevron_right</i>
+              <i class="db material-icons md-18" v-else>chevron_right</i>
             </div>
           </div>
 
