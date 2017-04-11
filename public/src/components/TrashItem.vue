@@ -3,7 +3,7 @@
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
         <connection-icon :type="input_type" class="dib v-mid br2 fx-square-3"></connection-icon>
-        <i class="material-icons md-24 black-40 v-mid fa-rotate-270" style="margin: 0 -4px">arrow_drop_down</i>
+        <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px">arrow_drop_down</i>
         <connection-icon :type="output_type" class="dib v-mid br2 fx-square-3"></connection-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns black-60 mv0 lh-title truncate">

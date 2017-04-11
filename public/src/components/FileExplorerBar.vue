@@ -15,7 +15,7 @@
         class="flex flex-row items-center"
         v-for="(item, index) in items"
       >
-        <i class="material-icons md-24 black-20 fa-rotate-270" style="margin: -2px">arrow_drop_down</i>
+        <i class="material-icons md-24 black-20 rotate-270" style="margin: -2px">arrow_drop_down</i>
         <span
           class="fw6 mid-gray underline-hover"
           @click="openFolder(item.path)"
