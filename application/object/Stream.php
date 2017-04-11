@@ -87,15 +87,12 @@ class Stream extends \Flexio\Object\Base
         return $this;
     }
 
-    public function get()
+    public function get() : array
     {
-        if ($this->isCached() === true)
-            return $this->properties;
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        if ($this->populateCache() === true)
-            return $this->properties;
-
-        return false;
+        return $this->properties;
     }
 
 
@@ -111,13 +108,10 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getName()
+    public function getName() // TODO: add return type
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         return $this->properties['name'];
     }
@@ -129,13 +123,10 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getPath()
+    public function getPath() // TODO: add return type
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         return $this->properties['path'];
     }
@@ -147,7 +138,7 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getSize()
+    public function getSize() // TODO: add return type
     {
         $local_file_info = $this->getFileInfo();
         if ($local_file_info === false)
@@ -163,13 +154,10 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getMimeType()
+    public function getMimeType() // TODO: add return type
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         return $this->properties['mime_type'];
     }
@@ -184,26 +172,20 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getStructure()
+    public function getStructure() // TODO: add return type
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         $s = $this->properties['structure'];
         $structure = \Flexio\Object\Structure::create($s);
         return $structure;
     }
 
-    public function getFileInfo()
+    public function getFileInfo() // TODO: add return type
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         $info = array();
         $info['name'] = $this->properties['name'];
@@ -295,9 +277,6 @@ class Stream extends \Flexio\Object\Base
 
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         $local_properties = $this->properties;
         $mime_type = $local_properties['mime_type'];
@@ -445,16 +424,12 @@ class Stream extends \Flexio\Object\Base
     private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
-        if ($local_properties === false)
-            return false;
-
-        // save the properties
         $this->properties = $local_properties;
         $this->eid_status = $local_properties['eid_status'];
         return true;
     }
 
-    private function getProperties()
+    private function getProperties() : array
     {
         $query = '
         {
@@ -478,7 +453,7 @@ class Stream extends \Flexio\Object\Base
         $query = json_decode($query);
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if ($properties === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the structure json
         $structure = @json_decode($properties['structure'],true);
