@@ -10,6 +10,18 @@
     this.parse = function(str)
     {
       var keyword = this.getKeyword(str).toLowerCase();
+
+      if (this.keywords.hasOwnProperty(keyword))
+      {
+        this.json = this.keywords[keyword].call(this, str);
+      }
+
+      // TODO: throwing an error all the time here is causing
+      //       issues with the dropdown -- this is especially
+      //       problematic when starting to type a command in
+      //       which case the initial command will, of course,
+      //       have an invalid syntax
+      /*
       this.json = null;
 
       if (this.keywords.hasOwnProperty(keyword))
@@ -20,6 +32,7 @@
       {
         throw { "code": "unknown_command", "message": "Unknown command: '" + keyword +"'" }
       }
+      */
     }
 
     this.getJSON = function()

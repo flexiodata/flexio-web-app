@@ -10,7 +10,7 @@
       <div class="f2 mv3">Welcome to Flex.io</div>
       <div class="mv3 f5 fw6 black-60">Watch this quick 3-minute video to get started.</div>
       <div class="mv4 ba b--black-20">
-        <iframe width="640" height="360" src="https://www.youtube.com/embed/iKvVYtn9hoY?rel=0&amp;showinfo=0" class="db" frameborder="0" allowfullscreen></iframe>
+        <iframe width="640" height="360" src="https://www.youtube.com/embed/enybDpEh-2U?rel=0&amp;showinfo=0" class="db" frameborder="0" allowfullscreen></iframe>
       </div>
       <btn btn-lg btn-primary class="b ttu" @click="close()">All set, take me to the app</btn>
       <div class="mv3 fw6 black-60">

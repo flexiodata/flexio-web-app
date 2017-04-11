@@ -4,7 +4,7 @@
       <span class="mid-gray mr2" @click="toggleDetails">
         <i
           class="material-icons db v-mid b pointer"
-          :class="{ 'fa-rotate-90': !show_details }"
+          :class="{ 'rotate-90': !show_details }"
           v-if="has_details"
         >chevron_right</i>
       </span>

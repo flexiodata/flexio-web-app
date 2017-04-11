@@ -395,9 +395,10 @@ class Api
             case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
 
             // DEBUG: endpoints for easy debugging using a URL in a browser
-            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';
-            case 'GET /users/createsampleproject'      : return '\Flexio\Api\User::createSample';
-            case 'GET /debug/config'                   : return '\Flexio\Api\System::configuration';
+            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug'; // display process info
+            case 'GET /debug/sysconfig'                : return '\Flexio\Api\System::configuration'; // displays config info
+            case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
+            case 'GET /debug/createsampleproject'      : return '\Flexio\Api\User::createSample'; // creates a sample project
         }
     }
 

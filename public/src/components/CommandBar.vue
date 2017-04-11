@@ -284,7 +284,7 @@
         this.freeze_cursor_activity = true
         this.cmd_text = val
         this.editor.setValue(val)
-        setTimeout(() => { this.freeze_cursor_activity = false }, 200)
+        setTimeout(() => { this.freeze_cursor_activity = false }, 500)
       },
 
       // does not fire an event
@@ -308,7 +308,7 @@
         // the dropdown on cursor activity in the CodeMirror editor
         this.freeze_cursor_activity = true
         this.editor.setSelection({ line: 0, ch: 0 })
-        setTimeout(() => { this.freeze_cursor_activity = false }, 200)
+        setTimeout(() => { this.freeze_cursor_activity = false }, 500)
       },
 
       getHints(idx) {

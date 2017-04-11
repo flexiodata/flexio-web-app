@@ -6,7 +6,7 @@
       class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns link b--black-10 bl mid-gray hover-black"
     ><i class="material-icons">home</i>
     </router-link>
-    <i v-if="show_first_descendant" class="material-icons md-24 black-20 fa-rotate-270">arrow_drop_down</i>
+    <i v-if="show_first_descendant" class="material-icons md-24 black-20 rotate-270">arrow_drop_down</i>
     <router-link
       v-if="show_first_descendant && show_second_descendant"
       :to="first_link"
@@ -18,7 +18,7 @@
       class="link mid-gray truncate"
     >{{first_name}}
     </div>
-    <i v-if="show_second_descendant" class="material-icons md-24 black-20 fa-rotate-270">arrow_drop_down</i>
+    <i v-if="show_second_descendant" class="material-icons md-24 black-20 rotate-270">arrow_drop_down</i>
     <div
       v-if="show_second_descendant"
       class="dib mid-gray truncate"

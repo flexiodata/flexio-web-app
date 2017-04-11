@@ -21,7 +21,6 @@ module.exports = {
       'vue-resource',
       'vue-router',
       'vee-validate',
-      'awesomplete',
       'keen-ui',
       'filesize',
       'clipboard',

@@ -21,6 +21,8 @@
           </div>
         </div>
       </div>
+
+      <!-- task number -->
       <div class="f5 lh-title mr2 mr3-ns" :class="[number_cls, index==0?'pt3':'pt2' ]">{{index+1}}.</div>
 
       <!-- vertical line -->
@@ -34,11 +36,11 @@
       <!-- insert before button -->
       <div
         class="absolute"
-        style="top: -24px"
+        style="top: -24px; left: 8px"
         v-show="!show_progress"
         v-if="index==0 && false"
       >
-        <div class="pointer moon-gray hover-blue link hint--right" style="margin-left: 8px" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
+        <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
           <i class="db material-icons f3">add_circle</i>
         </div>
       </div>
@@ -46,9 +48,9 @@
       <!-- insert after button -->
       <div
         class="absolute"
-        style="bottom: 5px"
+        style="bottom: 5px; left: 8px"
         v-show="!show_progress">
-        <div class="pointer moon-gray hover-blue link hint--right" style="margin-left: 8px" :aria-label="insert_after_tooltip" @click="insertNewTask()">
+        <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
           <i class="db material-icons f3">add_circle</i>
         </div>
       </div>
@@ -81,7 +83,23 @@
         <div class="mt2 pt2 bt b--black-10" v-if="show_progress">
           <process-progress-item :item="active_subprocess"></process-progress-item>
         </div>
-        <div v-else>
+        <div class="relative" v-else>
+
+          <!-- collapser -->
+          <div
+            class="absolute cursor-default"
+            style="top: 6px; left: -27px"
+            v-if="active_stream_eid.length > 0"
+          >
+            <div
+              class="pointer moon-gray bg-white ba b--white-box br-100 hover-blue hover-b--blue hint--top-right"
+              :aria-label="collapse_tooltip"
+              @click="togglePreview"
+            >
+              <i class="db material-icons md-18 trans-t" :class="{ 'rotate-90': show_preview }">chevron_right</i>
+            </div>
+          </div>
+
           <command-bar
             ref="commandbar"
             class="mt2 pa1 ba b--black-10 bg-white"
@@ -108,12 +126,14 @@
               <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
             </div>
           </transition>
-          <pipe-content
-            class="mt2 relative"
-            :stream-eid="active_stream_eid"
-            :task-json="task"
-            v-if="active_stream_eid.length > 0"
-          ></pipe-content>
+          <transition name="slide-fade">
+            <pipe-content
+              class="mt2 relative"
+              :stream-eid="active_stream_eid"
+              :task-json="task"
+              v-if="show_preview && active_stream_eid.length > 0"
+            ></pipe-content>
+          </transition>
         </div>
       </div>
     </div>
@@ -135,7 +155,17 @@
   import taskItemHelper from './mixins/task-item-helper'
 
   export default {
-    props: ['item', 'index', 'tasks', 'active-process', 'is-scrolling'],
+    props: {
+      'item': {},
+      'index': {},
+      'tasks': {},
+      'active-process': {},
+      'is-scrolling': {},
+      'show-preview': {
+        default: true,
+        type: Boolean
+      },
+    },
     mixins: [taskItemHelper],
     components: {
       Btn,
@@ -152,6 +182,9 @@
         this.edit_json = _.assign({}, val)
         this.edit_cmd = this.getOrigCmd()
         this.edit_code = this.getOrigCode()
+      },
+      showPreview: function(val, old_val) {
+        this.show_preview = val
       }
     },
     data() {
@@ -162,6 +195,7 @@
 
       return {
         is_inited: false,
+        show_preview: this.showPreview,
         description: _.get(this, 'item.description', ''),
         edit_json: this.getOrigJson(),
         edit_cmd: this.getOrigCmd(),
@@ -206,6 +240,9 @@
       },
       insert_after_tooltip() {
         return 'Insert a new step after step ' + (this.index+1)
+      },
+      collapse_tooltip() {
+        return this.show_preview ? 'Hide preview' : 'Show preview'
       },
       code_lang() {
         return _.get(this, 'task.params.lang', 'python')
@@ -354,6 +391,10 @@
         var eid = this.pipeEid
         var task_eid = this.eid
         this.$store.dispatch('deletePipeTask', { eid, task_eid })
+      },
+      togglePreview(evt) {
+        this.show_preview = !this.show_preview
+        this.$emit('toggle-preview', this.show_preview, evt.ctrlKey /* toggle all */)
       }
     }
   }

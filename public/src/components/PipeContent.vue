@@ -1,5 +1,5 @@
 <template>
-  <div v-if="is_fetching">
+  <div v-if="is_fetching" class="bg-white ba b--black-10" style="min-height: 160px">
     <spinner size="medium" show-text loading-text="Loading preview..."></spinner>
   </div>
   <div v-else-if="is_image">

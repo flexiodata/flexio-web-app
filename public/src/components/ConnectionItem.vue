@@ -1,5 +1,5 @@
 <template>
-  <article class="css-connection-item ma0 ma3-ns pv3 pv2a-ns ph3 bb ba-ns b--sui-segment br2-ns cursor-default shadow-sui-segment-ns trans-pm no-select">
+  <article class="css-connection-item ma0 ma3-ns pv3 pv2a-ns ph3 bb ba-ns br2-ns cursor-default no-select shadow-sui-segment-ns trans-pm">
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
         <connection-icon :type="item.connection_type" class="dib v-mid br2 fx-square-3 fx-square-4-ns"></connection-icon>
