@@ -39,7 +39,7 @@
       {
         // error occurred -- return null
       }
-      
+
       return null;
     }
 
@@ -1888,9 +1888,13 @@
   var g_cmdbarparser = new CommandBarParser
 
   var CommandBarParserExport = {
-    toJSON: function(str) {
+    validate: function(cmdbar) {
       var p = new CommandBarParser
-      return p.toJSON(str)
+      return p.validate(cmdbar)
+    },
+    toJSON: function(cmdbar) {
+      var p = new CommandBarParser
+      return p.toJSON(cmdbar)
     },
     toCmdbar: function(json) {
       var p = new CommandBarParser
