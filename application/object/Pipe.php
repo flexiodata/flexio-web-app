@@ -88,7 +88,7 @@ class Pipe extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getTask()
+    public function getTask() // TODO: add function return type
     {
         // shorthand for getting task info
         $local_properties = $this->get();
@@ -129,7 +129,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getTaskStep(string $task_eid)
+    public function getTaskStep(string $task_eid) // TODO: add function return type
     {
         $task_array = $this->getTask();
         $task = \Flexio\Object\Task::create($task_array);
@@ -148,7 +148,7 @@ class Pipe extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getSchedule()
+    public function getSchedule() // add function return type
     {
         // shorthand for getting schedule info
         $local_properties = $this->get();

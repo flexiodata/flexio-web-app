@@ -141,7 +141,7 @@ class Base implements IObject
         return $this;
     }
 
-    public function getEid()
+    public function getEid() : string
     {
         return $this->eid;
     }
@@ -156,7 +156,7 @@ class Base implements IObject
         return $this;
     }
 
-    public function getType()
+    public function getType() : string
     {
         return $this->eid_type;
     }
@@ -168,7 +168,7 @@ class Base implements IObject
         return $this;
     }
 
-    public function getStatus()
+    public function getStatus() : string
     {
         if ($this->eid_status !== false)
             return $this->eid_status;
@@ -192,13 +192,13 @@ class Base implements IObject
         return $this;
     }
 
-    public function getOwner()
+    public function getOwner() : string
     {
         $object_eid = $this->getEid();
         $result = $this->getModel()->assoc_range($object_eid, \Model::EDGE_OWNED_BY);
 
         if (count($result) === 0)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         return $result[0]['eid'];
     }
@@ -216,13 +216,13 @@ class Base implements IObject
         return $this;
     }
 
-    public function getCreatedBy()
+    public function getCreatedBy() : string
     {
         $object_eid = $this->getEid();
         $result = $this->getModel()->assoc_range($object_eid, \Model::EDGE_CREATED_BY);
 
         if (count($result) === 0)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         return $result[0]['eid'];
     }
@@ -264,7 +264,7 @@ class Base implements IObject
         return $this;
     }
 
-    public function getComments()
+    public function getComments() : array
     {
         $result = array();
 
@@ -290,7 +290,7 @@ class Base implements IObject
         return $this;
     }
 
-    protected function getModel()
+    protected function getModel() : \Model
     {
         return $this->model;
     }

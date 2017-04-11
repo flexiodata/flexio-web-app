@@ -108,7 +108,7 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getName() // TODO: add return type
+    public function getName() : string
     {
         if ($this->isCached() === false)
             $this->populateCache();
@@ -123,7 +123,7 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getPath() // TODO: add return type
+    public function getPath() : string
     {
         if ($this->isCached() === false)
             $this->populateCache();
@@ -138,12 +138,9 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getSize() // TODO: add return type
+    public function getSize() // TODO: add return type (size can be null)
     {
         $local_file_info = $this->getFileInfo();
-        if ($local_file_info === false)
-            return false;
-
         return $local_file_info['size'];
     }
 
@@ -154,7 +151,7 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getMimeType() // TODO: add return type
+    public function getMimeType() : string
     {
         if ($this->isCached() === false)
             $this->populateCache();
@@ -172,7 +169,7 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getStructure() // TODO: add return type
+    public function getStructure() : \Flexio\Object\Structure
     {
         if ($this->isCached() === false)
             $this->populateCache();
@@ -182,7 +179,7 @@ class Stream extends \Flexio\Object\Base
         return $structure;
     }
 
-    public function getFileInfo() // TODO: add return type
+    public function getFileInfo() : array
     {
         if ($this->isCached() === false)
             $this->populateCache();
