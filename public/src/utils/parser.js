@@ -24,17 +24,12 @@
       }
     }
 
-    this.getJSON = function()
-    {
-      return this.json;
-    }
-
     this.toJSON = function(cmdbar)
     {
       try
       {
         this.parse(cmdbar);
-        return this.getJSON();
+        return this.json
       }
       catch (e)
       {
