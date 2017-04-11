@@ -349,6 +349,12 @@
         var edit_attrs = _.pick(edit_json, ['metadata', 'type', 'params'])
         var task_type = _.get(this, 'item.type')
 
+        if (parser.validate(this.edit_cmd) !== true)
+        {
+          alert('There is a problem with the command syntax.')
+          return
+        }
+
         // sync up the changes from the code editor if we're on an execute step
         if (task_type == TASK_TYPE_EXECUTE)
         {
