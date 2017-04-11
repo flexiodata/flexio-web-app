@@ -297,29 +297,16 @@ class Stream extends \Flexio\Object\Base
         return $result;
     }
 
-    public function getConnection()
+    public function getService()
     {
         $stream_info = $this->get();
         $connection_eid = $stream_info['connection_eid'];
 
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        return $connection;
-    }
-
-    public function getService()
-    {
-        $connection = $this->getConnection();
-        if ($connection === false)
-            return false;
-
-        $service = $connection->getService();
-        if (!$service)
-            return false;
-
-        return $service;
+        return $connection->getService();
     }
 
     private function isCached() : bool

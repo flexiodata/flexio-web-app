@@ -201,13 +201,11 @@ class Connection extends \Flexio\Object\Base
     {
         // get the connection info
         $connection_info = $this->get();
-        if ($connection_info === false)
-            return false;
 
         // load the services from the services store
         $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         // for some of the connections, refresh the token
         $connection_type = $connection_info['connection_type'] ?? '';
