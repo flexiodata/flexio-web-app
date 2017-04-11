@@ -317,9 +317,7 @@ class Input extends \Flexio\Jobs\Base
 
                 $outstream->setStructure($structure);
                 $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-
-                if ($streamwriter !== false)
-                    $streamwriter->write($row);
+                $streamwriter->write($row);
             }
              else
             {

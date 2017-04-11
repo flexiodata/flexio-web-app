@@ -41,10 +41,6 @@ class Comment
 
         // create the comment
         $comment = \Flexio\Object\Comment::create($params);
-        if ($comment === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // set the owner and creator
         $comment->setOwner($requesting_user_eid);
         $comment->setCreatedBy($requesting_user_eid);
 

@@ -179,9 +179,6 @@ class Stream extends \Flexio\Object\Base
         if (!($structure instanceof \Flexio\Object\Structure))
             $structure = \Flexio\Object\Structure::create($structure);
 
-        if ($structure === false)
-            return $this;
-
         $properties = array();
         $properties['structure'] = $structure->enum();
         return $this->set($properties);

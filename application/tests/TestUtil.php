@@ -270,9 +270,6 @@ class TestUtil
                                'verify_code' => '');
 
         $user = \Flexio\Object\User::create($new_user_info);
-        if ($user === false)
-            return false;
-
         return $user->getEid();
     }
 
@@ -282,9 +279,6 @@ class TestUtil
         $properties['description'] = $description ?? 'Test project with test data.';
 
         $project = \Flexio\Object\Project::create($properties);
-        if ($project === false)
-            return false;
-
         $project->setOwner($user_eid);
         $project->setCreatedBy($user_eid);
 
@@ -296,10 +290,6 @@ class TestUtil
         $properties['name'] = $pipe_name;
 
         $pipe = \Flexio\Object\Pipe::create($properties);
-        if ($pipe === false)
-            return false;
-
-        // set the owner
         $pipe->setOwner($user_eid);
         $pipe->setCreatedBy($user_eid);
 

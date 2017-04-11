@@ -43,8 +43,6 @@ class Token
         unset($token_properties['eid']);
 
         $token = \Flexio\Object\Token::create($token_properties);
-        if ($token === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // get the token properties
         return $token->get();

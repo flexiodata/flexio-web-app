@@ -89,15 +89,11 @@ class Process
         $process_properties = $params;
         unset($process_properties['params']);
         $process = \Flexio\Object\Process::create($process_properties);
+        $process->setOwner($requesting_user_eid);
+        $process->setCreatedBy($requesting_user_eid);
 
         if (isset($params['params']))
             $process->setParams($params['params']);
-
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        $process->setOwner($requesting_user_eid);
-        $process->setCreatedBy($requesting_user_eid);
 
         // STEP 2: if a parent eid is specified, override the task with the parent's
         // task info, and associate the process

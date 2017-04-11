@@ -59,10 +59,6 @@ class Pipe
         // create the object
         $pipe_properties = $params;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // set the owner and creator
         $pipe->setOwner($requesting_user_eid);
         $pipe->setCreatedBy($requesting_user_eid);
 
@@ -115,10 +111,6 @@ class Pipe
         $new_pipe_properties['task'] = $original_pipe_properties['task'];
 
         $new_pipe = \Flexio\Object\Pipe::create($new_pipe_properties);
-        if ($new_pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // set the owner and creator
         $new_pipe->setOwner($requesting_user_eid);
         $new_pipe->setCreatedBy($requesting_user_eid);
 
@@ -329,10 +321,6 @@ class Pipe
         // STEP 1: create a new process
         $process_properties = array();
         $process = \Flexio\Object\Process::create($process_properties);
-
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
         $process->setOwner($requesting_user_eid);
         $process->setCreatedBy($requesting_user_eid);
         $pipe->addProcess($process);
@@ -355,20 +343,16 @@ class Pipe
             if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
             {
                 $stream = \Flexio\Object\Stream::create();
-                if ($stream)
-                {
-                    // stream name will be the post variable name, not the multipart filename
-                    // TODO: should we be using filename in the path and form name in the name?
-                    $stream_info = array();
-                    $stream_info['name'] = $name;
-                    //$stream_info['name'] = $filename; // TODO: test
-                    $stream_info['mime_type'] = $content_type;
-                    $stream->set($stream_info);
 
-                    $streamwriter = \Flexio\Object\StreamWriter::create($stream);
-                    if ($streamwriter === false)
-                        $stream = false;
-                }
+                // stream name will be the post variable name, not the multipart filename
+                // TODO: should we be using filename in the path and form name in the name?
+                $stream_info = array();
+                $stream_info['name'] = $name;
+                //$stream_info['name'] = $filename; // TODO: test
+                $stream_info['mime_type'] = $content_type;
+                $stream->set($stream_info);
+
+                $streamwriter = \Flexio\Object\StreamWriter::create($stream);
             }
              else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_DATA)
             {

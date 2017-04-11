@@ -55,10 +55,6 @@ class Connection
 
         // create the object; associate it with the user who created it
         $connection = \Flexio\Object\Connection::create($params);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // set the owner and creator
         $connection->setOwner($requesting_user_eid);
         $connection->setCreatedBy($requesting_user_eid);
 
