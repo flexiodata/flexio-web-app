@@ -13,7 +13,7 @@
         <div class="flex-none db overflow-hidden ba bg-near-white tc relative sg-th" v-for="c in columns">
           <div class="db lh-1 sg-th-inner" :style="'width: '+c.pixel_width+'px'">{{c.name}}</div>
           <div
-            class="absolute top-0 bottom-0 right-0 bg-black"
+            class="absolute top-0 bottom-0 right-0 cursor-resize-ew"
             style="width: 4px"
             @mousedown="onColumnResizerMousedown(c)"
           ></div>
