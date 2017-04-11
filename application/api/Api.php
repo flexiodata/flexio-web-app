@@ -408,13 +408,6 @@ class Api
         if ($request->getValidator()->hasErrors() === false)
             return $response;
 
-        // set the header based on the type of error
-        $errors = $request->getValidator()->getErrors();
-        $last_error = end($errors);
-        $last_error = self::convertErrorToApiCode($last_error);
-
-        $last_error_code = $last_error['code'];
-
         // set the error string in the content
         // example:
         // {"errors": [{"message":"trouble", "code":"1"}]
