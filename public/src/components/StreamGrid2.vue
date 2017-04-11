@@ -5,8 +5,13 @@
         ref="thead-tr"
         class="flex flex-row nowrap relative"
       >
-        <div class="flex-none db overflow-hidden ba ph1 bg-near-white tc sg-th" v-for="c in columns">
-          {{c.name}}
+        <div class="flex-none db overflow-hidden ba bg-near-white tc relative sg-th" v-for="c in columns">
+          <div :style="'width: '+c.pixel_width+'px'">{{c.name}}</div>
+          <div
+            class="absolute top-0 bottom-0 right-0 bg-black"
+            style="width: 4px"
+            @click="onColumnResizerClick(c)"
+          ></div>
         </div>
       </div>
     </div>
@@ -16,8 +21,8 @@
       @scroll="onScroll"
     >
       <div class="flex flex-row nowrap" v-for="r in rows">
-        <div class="flex-none db overflow-hidden ba ph1 sg-td" v-for="c in columns">
-          {{r[c.name]}}
+        <div class="flex-none db overflow-hidden ba sg-td" v-for="c in columns">
+          <div :style="'width: '+c.pixel_width+'px'">{{r[c.name]}}</div>
         </div>
       </div>
     </div>
@@ -26,6 +31,10 @@
 
 <script>
   import $ from 'jquery'
+
+  const default_column_info = {
+    pixel_width: 120
+  }
 
   export default {
     props: ['stream-eid', 'content-url', 'task-json'],
@@ -70,7 +79,14 @@
 
           // store our column info
           if (!me.inited && _.isArray(response.columns))
-            me.columns = [].concat(response.columns)
+          {
+            // include default column info with each column
+            var temp_cols = _.map(response.columns, (col) => {
+              return _.assign({}, default_column_info, col)
+            })
+
+            me.columns = [].concat(temp_cols)
+          }
 
           // store the current set of rows
           me.rows = [].concat(response.rows)
@@ -148,7 +164,22 @@
           // sync up fixed header with content horizontal scroll offset
           this.$refs['thead-tr'].style = 'left: -'+this.scroll_left+'px'
         }
-      }, 10)
+      }, 10),
+
+      onColumnResizerClick(col) {
+        var lookup_col = _.find(this.columns, { name: col.name })
+        if (!_.isNil(lookup_col))
+        {
+          var temp_cols = _.map(this.columns, (col) => {
+            if (_.get(col, 'name') == _.get(lookup_col, 'name'))
+              return _.assign({}, lookup_col, { pixel_width: _.get(lookup_col, 'pixel_width', 120) + 50 })
+
+            return col
+          })
+
+          this.columns = [].concat(temp_cols)
+        }
+      }
     }
   }
 </script>
@@ -162,7 +193,7 @@
 
   .sg-th,
   .sg-td {
-    width: 120px;
+    min-width: 30px;
     height: 24px;
     padding: 5px 4px 4px;
     margin-top: -1px;
