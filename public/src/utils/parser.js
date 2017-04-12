@@ -472,7 +472,7 @@
 
       if (params.hasOwnProperty('delimiter'))
       {
-        delimiter = params['delimiter'].value;
+        delimiter = params['delimiter'].value.trim();
 
         if (delimiter == 'none')
         {
@@ -515,7 +515,7 @@
 
       if (params.hasOwnProperty('qualifier'))
       {
-        qualifier = params['qualifier'].value;
+        qualifier = params['qualifier'].value.trim();
 
         if (qualifier == 'none')
         {
@@ -536,22 +536,42 @@
         {
           try
           {
+            // custom qualifier must be a single char enclosed in ' or "
+            if (qualifier.length == 0)
+              throw {}
+            if (qualifier[0] == "'") // json can only parse double-quoted strings
+              qualifier = qualifier.replace(/"/g,"\\\"").replace(/'/g,"\"");
+            
             var qualifier = JSON.parse(qualifier);
+            if (qualifier.length != 1)
+              throw {}
             if (from_format == 'delimited') json.params.input.qualifier  = qualifier;
             if (to_format   == 'delimited') json.params.output.qualifier = qualifier;
           }
           catch (e)
           {
+            throw { "code":     "invalid_value",
+                    "message":  "Invalid value: " + qualifier,
+                    "offset":   params['qualifier'].offset,
+                    "length":   params['qualifier'].length }
           }
         }
       }
 
       if (params.hasOwnProperty('header'))
       {
-        var header = this.toBoolean(params['header'].value);
+        var header = params['header'].value;
 
-        if (from_format == 'delimited') json.params.input.header  = header;
-        if (to_format   == 'delimited') json.params.output.header = header;
+        if (header != 'true' && header != 'false')
+        {
+            throw { "code":     "invalid_value",
+                    "message":  "Invalid value: '" + header + "'",
+                    "offset":   params['header'].offset,
+                    "length":   params['header'].length }
+        }
+
+        if (from_format == 'delimited') json.params.input.header  = (header == 'true' ? true : false);
+        if (to_format   == 'delimited') json.params.output.header = (header == 'true' ? true : false);
       }
 
       return json;
