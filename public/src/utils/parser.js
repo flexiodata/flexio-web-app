@@ -1138,6 +1138,13 @@
       {
         json.params.value = parseInt(params['value'].value);
       }
+       else
+      {
+          throw { "code":     "missing_parameter",
+                  "message":  "Missing parameter 'value:'",
+                  "offset":   str.length-1,
+                  "length":   1 }
+      }
 
       return json;
     };
