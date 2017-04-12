@@ -19,7 +19,6 @@
   }
 
   CodeMirror.defineMode('flexio-commandbar', function(conf, parserConf) {
-
     var cmds = parser.getHintableCommands()
     var cmds_regexp = wordRegexp(cmds)
     //var operator_regexp = /[+\-*&%=<>!?|~^]/
@@ -47,29 +46,26 @@
                 if (stream.peek() == quote)
                 {
                   // escaped quote -- consume it and move on
-                  stream.next();
+                  stream.next()
                 }
                  else
                 {
-                  break;
+                  break
                 }
               }
 
-              //if (next == quote && !escaped) break;
-              //escaped = !escaped && next == "\\";
+              //if (next == quote && !escaped) break
+              //escaped = !escaped && next == "\\"
             }
             if (!escaped) {
-              state.tokenize = null;
+              state.tokenize = null
             }
             return 'string'
-          };
+          }
         }
 
-
         if (state.tokenize)
-          return state.tokenize(stream.state);
-
-
+          return state.tokenize(stream.state)
 
         var peek_ch = stream.peek()
 
@@ -89,7 +85,7 @@
           // is used. e.g. "convert"
           state.verb = res[0]
           var args = parser.getVerbArguments(state.verb)
-          state.args_regexp = (_.isArray(args) && args.length > 0) ? argRegexp(args) : null;
+          state.args_regexp = (_.isArray(args) && args.length > 0) ? argRegexp(args) : null
           return 'def'
         }
 
@@ -106,16 +102,16 @@
         // eat an entire word (starting with a word break); also prevents
         // embedded digits from being highlighted as numbers
         if (stream.match(/\b\w+/))
-          return null;
+          return null
 
         var ch = stream.next()
 
-        return null;
+        return null
       }
+    }
 
-    };
-    return external;
-  });
+    return external
+  })
 
-  CodeMirror.defineMIME('text/x-flexio-commandbar', 'flexio-commandbar');
-});
+  CodeMirror.defineMIME('text/x-flexio-commandbar', 'flexio-commandbar')
+})
