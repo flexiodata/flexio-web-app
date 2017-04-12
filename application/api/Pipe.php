@@ -636,6 +636,11 @@ class Pipe
         // TODO: generalize this function so it can be used for other API endpoints
         // that involve lists
 
+
+        // if no parameters are defined, return the input
+        if (!isset($start) && !isset($limit) && !isset($order))
+            return $processes_accessible;
+
         if (isset($order))
         {
             $desc = false;
