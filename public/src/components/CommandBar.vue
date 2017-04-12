@@ -175,7 +175,7 @@
       var opts = _.assign({
         lineNumbers: false,
         lineWrapping: true,
-        lint: { delay: 1000 },
+        lint: { delay: 500 },
         theme: 'flexio-commandbar',
         mode: 'flexio-commandbar',
         placeholder: 'Type a command...'
