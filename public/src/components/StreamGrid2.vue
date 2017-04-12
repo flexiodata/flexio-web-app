@@ -1,16 +1,24 @@
 <template>
-  <div class="flex flex-column relative h-100 sg-container">
+  <div
+    class="flex flex-column relative h-100 sg-container"
+    @mousedown="onMousedown"
+    @mouseup="onMouseup"
+    @mousemove="onMousemove"
+  >
     <div class="flex-none overflow-hidden bg-near-white">
       <div
         ref="thead-tr"
         class="flex flex-row nowrap relative"
       >
+        <div class="flex-none db overflow-hidden ba sg-td">
+          <div class="db lh-1 sg-th-inner light-silver tr bg-near-white" :style="'width: 60px'"></div>
+        </div>
         <div class="flex-none db overflow-hidden ba bg-near-white tc relative sg-th" v-for="c in columns">
-          <div :style="'width: '+c.pixel_width+'px'">{{c.name}}</div>
+          <div class="db lh-1 sg-th-inner" :style="'width: '+c.pixel_width+'px'">{{c.name}}</div>
           <div
-            class="absolute top-0 bottom-0 right-0 bg-black"
+            class="absolute top-0 bottom-0 right-0 cursor-resize-ew"
             style="width: 4px"
-            @click="onColumnResizerClick(c)"
+            @mousedown="onColumnResizerMousedown(c)"
           ></div>
         </div>
       </div>
@@ -20,9 +28,12 @@
       class="flex-fill overflow-auto"
       @scroll="onScroll"
     >
-      <div class="flex flex-row nowrap" v-for="r in rows">
+      <div class="flex flex-row nowrap" v-for="(r, index) in rows">
+        <div class="flex-none db overflow-hidden ba sg-td">
+          <div class="db lh-1 sg-td-inner light-silver tr bg-near-white" :style="'width: 60px'">{{start+index+1}}</div>
+        </div>
         <div class="flex-none db overflow-hidden ba sg-td" v-for="c in columns">
-          <div :style="'width: '+c.pixel_width+'px'">{{r[c.name]}}</div>
+          <div class="db lh-1 sg-td-inner" :style="'width: '+c.pixel_width+'px'">{{r[c.name]}}</div>
         </div>
       </div>
     </div>
@@ -33,7 +44,7 @@
   import $ from 'jquery'
 
   const default_column_info = {
-    pixel_width: 120
+    pixel_width: 130
   }
 
   export default {
@@ -52,17 +63,26 @@
         total_row_count: 0,
 
         columns: [],
+        resize_col: null,
         rows: [],
         cached_rows: {},
 
         scroll_top: 0,
-        scroll_left: 0
+        scroll_left: 0,
+
+        mousedown_x: 0,
+        mousedown_y: 0,
+        mouse_x: 0,
+        mouse_y: 0
       }
     },
     computed: {
       fetch_url() {
         var url = this.contentUrl+'?start='+this.start+'&limit=+'+this.limit
         return this.inited ? url : url + '&metadata=true'
+      },
+      resize_delta() {
+        return this.mousedown_x == -1 ? 0 : this.mouse_x - this.mousedown_x
       }
     },
     mounted() {
@@ -118,7 +138,6 @@
         if (!this.inited)
           return false
 
-        console.log(this.$refs)
         var missing_rows = false
         var start = this.start
         var limit = this.limit
@@ -149,6 +168,29 @@
         return true
       },
 
+      onMousedown(evt) {
+        this.mousedown_x = evt.pageX
+        this.mousedown_y = evt.pageY
+      },
+
+      onColumnResizerMousedown(col) {
+        this.resize_col = _.cloneDeep(col)
+      },
+
+      onMouseup(evt) {
+        this.mousedown_x = -1
+        this.mousedown_y = -1
+        this.resize_col = null
+      },
+
+      onMousemove(evt) {
+        this.mouse_x = evt.pageX
+        this.mouse_y = evt.pageY
+
+        if (!_.isNil(this.resize_col))
+          this.resizeColumn()
+      },
+
       onScroll: _.throttle(function(evt) {
         // vertical scrolls
         if (this.scroll_top != this.$refs['tbody'].scrollTop)
@@ -166,20 +208,23 @@
         }
       }, 10),
 
-      onColumnResizerClick(col) {
-        var lookup_col = _.find(this.columns, { name: col.name })
+      resizeColumn: _.throttle(function(evt) {
+        var lookup_col = _.find(this.columns, { name: _.get(this.resize_col, 'name') })
         if (!_.isNil(lookup_col))
         {
           var temp_cols = _.map(this.columns, (col) => {
             if (_.get(col, 'name') == _.get(lookup_col, 'name'))
-              return _.assign({}, lookup_col, { pixel_width: _.get(lookup_col, 'pixel_width', 120) + 50 })
+            {
+              var old_width = _.get(this.resize_col, 'pixel_width', 120)
+              return _.assign({}, lookup_col, { pixel_width: old_width + this.resize_delta })
+            }
 
             return col
           })
 
           this.columns = [].concat(temp_cols)
         }
-      }
+      }, 20)
     }
   }
 </script>
@@ -193,11 +238,16 @@
 
   .sg-th,
   .sg-td {
-    min-width: 30px;
     height: 24px;
-    padding: 5px 4px 4px;
     margin-top: -1px;
     margin-left: -1px;
     border-color: #ddd;
+  }
+
+  .sg-th-inner,
+  .sg-td-inner {
+    min-width: 30px;
+    max-width: 1200px;
+    padding: 5px 5px 4px;
   }
 </style>

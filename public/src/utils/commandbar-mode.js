@@ -3,28 +3,25 @@
 
 (function(mod) {
   if (typeof exports == 'object' && typeof module == 'object') // CommonJS
-    mod(require('../../node_modules/codemirror/lib/codemirror'), require('../utils/parser'));
+    mod(require('../../node_modules/codemirror/lib/codemirror'), require('../utils/parser'))
   else if (typeof define == 'function' && define.amd) // AMD
-    define(['../../node_modules/codemirror/lib/codemirror', '../utils/parser'], mod);
+    define(['../../node_modules/codemirror/lib/codemirror', '../utils/parser'], mod)
   else // Plain browser env
-    mod(CodeMirror, CommandBarParser);
+    mod(CodeMirror, CommandBarParser)
 })(function(CodeMirror, parser) {
-  'use strict';
-
-
+  'use strict'
 
   function wordRegexp(words) {
-    return new RegExp("^((" + words.join(")|(") + "))\\b");
+    return new RegExp("^((" + words.join(")|(") + "))\\b")
   }
   function argRegexp(words) {
-    return new RegExp("^((" + words.join(")|(") + "))[:]");
+    return new RegExp("^((" + words.join(")|(") + "))[:]")
   }
 
   CodeMirror.defineMode('flexio-commandbar', function(conf, parserConf) {
-
-    var cmds = parser.getHintableCommands();
-    var cmds_regexp = wordRegexp(cmds);
-    //var operator_regexp = /[+\-*&%=<>!?|~^]/;
+    var cmds = parser.getHintableCommands()
+    var cmds_regexp = wordRegexp(cmds)
+    //var operator_regexp = /[+\-*&%=<>!?|~^]/
 
     var external = {
       startState: function(basecolumn) {
@@ -39,41 +36,41 @@
 
         function tokenString(quote) {
           return function(stream, state) {
-            var escaped = false, next;
-            while ((next = stream.next()) != null) {
+            var escaped = false
+            var next = null
 
+            while ((next = stream.next()) != null)
+            {
               if (next == quote)
               {
                 if (stream.peek() == quote)
                 {
                   // escaped quote -- consume it and move on
-                  stream.next();
+                  stream.next()
                 }
                  else
                 {
-                  break;
+                  break
                 }
               }
 
-              //if (next == quote && !escaped) break;
-              //escaped = !escaped && next == "\\";
+              //if (next == quote && !escaped) break
+              //escaped = !escaped && next == "\\"
             }
-            if (!escaped) {
-              state.tokenize = null;
-            }
+
+            if (!escaped)
+              state.tokenize = null
+
             return 'string'
-          };
+          }
         }
 
-
         if (state.tokenize)
-          return state.tokenize(stream.state);
-
-
+          return state.tokenize(stream.state)
 
         var peek_ch = stream.peek()
-
-        if (peek_ch == '"' || peek_ch == "'") {
+        if (peek_ch == '"' || peek_ch == "'")
+        {
           peek_ch = stream.next()
           state.tokenize = tokenString(peek_ch)
           return state.tokenize(stream, state)
@@ -89,7 +86,7 @@
           // is used. e.g. "convert"
           state.verb = res[0]
           var args = parser.getVerbArguments(state.verb)
-          state.args_regexp = (_.isArray(args) && args.length > 0) ? argRegexp(args) : null;
+          state.args_regexp = (_.isArray(args) && args.length > 0) ? argRegexp(args) : null
           return 'def'
         }
 
@@ -102,20 +99,19 @@
         if (state.args_regexp && stream.match(state.args_regexp) !== null)
           return 'def'
 
-
         // eat an entire word (starting with a word break); also prevents
         // embedded digits from being highlighted as numbers
         if (stream.match(/\b\w+/))
-          return null;
+          return null
 
         var ch = stream.next()
 
-        return null;
+        return null
       }
+    }
 
-    };
-    return external;
-  });
+    return external
+  })
 
-  CodeMirror.defineMIME('text/x-flexio-commandbar', 'flexio-commandbar');
-});
+  CodeMirror.defineMIME('text/x-flexio-commandbar', 'flexio-commandbar')
+})
