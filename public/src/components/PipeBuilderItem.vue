@@ -57,7 +57,7 @@
 
       <!-- main content -->
       <div
-        class="flex-fill relative pa3 bg-white bl br b--white-box"
+        class="flex-fill relative pv3 ph3a bg-white bl br b--white-box"
         :class="[ content_cls, index==0?'':'pt2' ]"
       >
         <!-- task name -->
@@ -88,7 +88,7 @@
           <!-- collapser -->
           <div
             class="absolute cursor-default"
-            style="top: 6px; left: -27px"
+            style="top: 6px; left: -31px"
             v-if="active_stream_eid.length > 0"
           >
             <div
@@ -427,6 +427,11 @@
   .slide-fade-leave-to {
     transform: translateY(-20px);
     opacity: 0;
+  }
+
+  .ph3a {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 
   .pb4a {
