@@ -3,28 +3,26 @@
 
 (function(mod) {
   if (typeof exports == 'object' && typeof module == 'object') // CommonJS
-    mod(require('../../node_modules/codemirror/lib/codemirror'), require('../utils/parser'));
+    mod(require('../../node_modules/codemirror/lib/codemirror'), require('../utils/parser'))
   else if (typeof define == 'function' && define.amd) // AMD
-    define(['../../node_modules/codemirror/lib/codemirror', '../utils/parser'], mod);
+    define(['../../node_modules/codemirror/lib/codemirror', '../utils/parser'], mod)
   else // Plain browser env
-    mod(CodeMirror, CommandBarParser);
+    mod(CodeMirror, CommandBarParser)
 })(function(CodeMirror, parser) {
-  'use strict';
-
-
+  'use strict'
 
   function wordRegexp(words) {
-    return new RegExp("^((" + words.join(")|(") + "))\\b");
+    return new RegExp("^((" + words.join(")|(") + "))\\b")
   }
   function argRegexp(words) {
-    return new RegExp("^((" + words.join(")|(") + "))[:]");
+    return new RegExp("^((" + words.join(")|(") + "))[:]")
   }
 
   CodeMirror.defineMode('flexio-commandbar', function(conf, parserConf) {
 
-    var cmds = parser.getHintableCommands();
-    var cmds_regexp = wordRegexp(cmds);
-    //var operator_regexp = /[+\-*&%=<>!?|~^]/;
+    var cmds = parser.getHintableCommands()
+    var cmds_regexp = wordRegexp(cmds)
+    //var operator_regexp = /[+\-*&%=<>!?|~^]/
 
     var external = {
       startState: function(basecolumn) {
@@ -39,7 +37,9 @@
 
         function tokenString(quote) {
           return function(stream, state) {
-            var escaped = false, next;
+            var escaped = false
+            var next = null
+
             while ((next = stream.next()) != null) {
 
               if (next == quote)
