@@ -21,7 +21,8 @@
   export default {
     props: {
       'title': {
-        type: String
+        type: String,
+        default: ''
       },
       'cancel-cls': {
         type: String,
@@ -45,7 +46,7 @@
     },
     computed: {
       has_title() {
-        return _.has(this, 'title')
+        return _.get(this, 'title', '').length > 0
       }
     },
     methods: {

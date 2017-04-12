@@ -1,6 +1,7 @@
 <template>
   <div class="pa4">
     <div class="flex flex-row flex-wrap">
+      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openAlertModal">Alert Modal</btn></div>
       <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openConfirmModal">Confirm Modal</btn></div>
       <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewProjectPropsModal">New Project Modal</btn></div>
       <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditProjectPropsModal">Edit Project Modal</btn></div>
@@ -13,6 +14,15 @@
       <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEmailSupportModal">Email Support Modal</btn></div>
       <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openMemberAddModal">Member Add Modal</btn></div>
     </div>
+
+    <alert-modal
+      ref="modal-alert"
+      title="Error"
+      @hide="show_alert_modal = false"
+      v-if="show_alert_modal"
+    >
+      <div class="lh-copy">There was an error with something you entered. Please fix the error to continue.</div>
+    </alert-modal>
 
     <confirm-modal
       ref="modal-confirm"
@@ -71,6 +81,7 @@
 <script>
   import { CONNECTION_TYPE_MYSQL } from '../constants/connection-type'
   import Btn from './Btn.vue'
+  import AlertModal from './AlertModal.vue'
   import ConfirmModal from './ConfirmModal.vue'
   import ProjectPropsModal from './ProjectPropsModal.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
@@ -105,6 +116,7 @@
   export default {
     components: {
       Btn,
+      AlertModal,
       ConfirmModal,
       ProjectPropsModal,
       ConnectionPropsModal,
@@ -116,6 +128,7 @@
     },
     data() {
       return {
+        show_alert_modal: false,
         show_confirm_modal: false,
         show_project_props_modal: false,
         show_connection_props_modal: false,
@@ -127,6 +140,11 @@
       }
     },
     methods: {
+      openAlertModal() {
+        this.show_alert_modal = true
+        this.$nextTick(() => { this.$refs['modal-alert'].open() })
+      },
+
       openConfirmModal() {
         this.show_confirm_modal = true
         this.$nextTick(() => { this.$refs['modal-confirm'].open() })
