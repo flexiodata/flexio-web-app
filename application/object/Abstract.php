@@ -31,16 +31,4 @@ interface IObject
 
     public function setStatus(string $status);
     public function getStatus();
-
-    public function setOwner(string $user_eid);
-    public function getOwner();
-
-    public function setCreatedBy(string $user_eid);
-    public function getCreatedBy();
-
-    public function allows(string $user_eid, string $action_type);
-    public function setRights(array $rights);
-
-    public function addComment(string $comment_eid);
-    public function getComments();
 }

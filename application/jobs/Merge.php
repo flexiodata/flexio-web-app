@@ -63,9 +63,15 @@ class Merge extends \Flexio\Jobs\Base
         $input = $this->getInput()->enum();
         foreach ($input as $instream)
         {
-            $instream->read(function ($data) use (&$streamwriter) {
+            $streamreader = \Flexio\Object\StreamReader::create($instream);
+            while (true)
+            {
+                $data = $streamreader->read();
+                if ($data === false)
+                    break;
+
                 $streamwriter->write($data);
-            });
+            }
         }
 
         $streamwriter->close();
@@ -97,10 +103,15 @@ class Merge extends \Flexio\Jobs\Base
         $input = $this->getInput()->enum();
         foreach ($input as $instream)
         {
-            $instream->read(function ($data) use (&$streamwriter, $row_template) {
-                $row = \Flexio\Base\Util::mapArray($row_template, $data);
+            $streamreader = \Flexio\Object\StreamReader::create($instream);
+            while (true)
+            {
+                $row = $streamreader->readRow();
+                if ($row === false)
+                    break;
+                $row = \Flexio\Base\Util::mapArray($row_template, $row);
                 $streamwriter->write($row);
-            });
+            }
         }
 
         $streamwriter->close();

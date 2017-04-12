@@ -59,10 +59,6 @@ class Pipe
         // create the object
         $pipe_properties = $params;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // set the owner and creator
         $pipe->setOwner($requesting_user_eid);
         $pipe->setCreatedBy($requesting_user_eid);
 
@@ -115,10 +111,6 @@ class Pipe
         $new_pipe_properties['task'] = $original_pipe_properties['task'];
 
         $new_pipe = \Flexio\Object\Pipe::create($new_pipe_properties);
-        if ($new_pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // set the owner and creator
         $new_pipe->setOwner($requesting_user_eid);
         $new_pipe->setCreatedBy($requesting_user_eid);
 
@@ -329,10 +321,6 @@ class Pipe
         // STEP 1: create a new process
         $process_properties = array();
         $process = \Flexio\Object\Process::create($process_properties);
-
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
         $process->setOwner($requesting_user_eid);
         $process->setCreatedBy($requesting_user_eid);
         $pipe->addProcess($process);
@@ -355,20 +343,16 @@ class Pipe
             if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
             {
                 $stream = \Flexio\Object\Stream::create();
-                if ($stream)
-                {
-                    // stream name will be the post variable name, not the multipart filename
-                    // TODO: should we be using filename in the path and form name in the name?
-                    $stream_info = array();
-                    $stream_info['name'] = $name;
-                    //$stream_info['name'] = $filename; // TODO: test
-                    $stream_info['mime_type'] = $content_type;
-                    $stream->set($stream_info);
 
-                    $streamwriter = \Flexio\Object\StreamWriter::create($stream);
-                    if ($streamwriter === false)
-                        $stream = false;
-                }
+                // stream name will be the post variable name, not the multipart filename
+                // TODO: should we be using filename in the path and form name in the name?
+                $stream_info = array();
+                $stream_info['name'] = $name;
+                //$stream_info['name'] = $filename; // TODO: test
+                $stream_info['mime_type'] = $content_type;
+                $stream->set($stream_info);
+
+                $streamwriter = \Flexio\Object\StreamWriter::create($stream);
             }
              else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_DATA)
             {
@@ -467,6 +451,52 @@ class Pipe
         */
     }
 
+    public static function validate(array $params, \Flexio\Api\Request $request) : array
+    {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid'   => array('type' => 'identifier', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $pipe_identifier = $params['eid'];
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // load the object
+        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
+        if ($pipe === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // get the tasks
+        $pipe_info = $pipe->get();
+        $task = $pipe_info['task'];
+
+        // iterate through the task steps an validate each one
+        $result = array();
+        foreach ($task as $t)
+        {
+
+            // TODO: validate the step
+
+
+            // push back any steps with an error
+            $task_error = array();
+            $task_error[] = array(
+                'eid' => $t['eid'], // task eid
+                'error' => '', // error code
+                'message' => '' // error message
+            );
+
+            $result[] = $task_error;
+        }
+
+        return $result;
+    }
+
     public static function addTaskStep(array $params, \Flexio\Api\Request $request) : array
     {
         // the params that are posted is the task step; note: tasks don't
@@ -531,7 +561,7 @@ class Pipe
         return true;
     }
 
-    public static function setTaskStep(array $params, \Flexio\Api\Request $request) : array
+    public static function setTaskStep(array $params, \Flexio\Api\Request $request) /* : array */ // TODO: set function return type
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -566,7 +596,7 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function getTaskStep(array $params, \Flexio\Api\Request $request) : array
+    public static function getTaskStep(array $params, \Flexio\Api\Request $request) /* : array */ // TODO: set function return type
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(

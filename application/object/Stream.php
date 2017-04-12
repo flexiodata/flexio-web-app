@@ -25,10 +25,6 @@ class Stream extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_STREAM);
     }
 
-    ////////////////////////////////////////////////////////////
-    // IObject interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $properties = null) : \Flexio\Object\Stream
     {
         // structure is stored as json string; it needs to be validated
@@ -87,22 +83,13 @@ class Stream extends \Flexio\Object\Base
         return $this;
     }
 
-    public function get()
+    public function get() : array
     {
-        if ($this->isCached() === true)
-            return $this->properties;
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        if ($this->populateCache() === true)
-            return $this->properties;
-
-        return false;
+        return $this->properties;
     }
-
-
-
-    ////////////////////////////////////////////////////////////
-    // additional functions
-    ////////////////////////////////////////////////////////////
 
     public function setName(string $name) : \Flexio\Object\Stream
     {
@@ -111,13 +98,10 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getName()
+    public function getName() : string
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         return $this->properties['name'];
     }
@@ -129,13 +113,10 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getPath()
+    public function getPath() : string
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         return $this->properties['path'];
     }
@@ -147,12 +128,9 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getSize()
+    public function getSize() // TODO: add return type (size can be null)
     {
         $local_file_info = $this->getFileInfo();
-        if ($local_file_info === false)
-            return false;
-
         return $local_file_info['size'];
     }
 
@@ -163,13 +141,10 @@ class Stream extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getMimeType()
+    public function getMimeType() : string
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         return $this->properties['mime_type'];
     }
@@ -179,34 +154,25 @@ class Stream extends \Flexio\Object\Base
         if (!($structure instanceof \Flexio\Object\Structure))
             $structure = \Flexio\Object\Structure::create($structure);
 
-        if ($structure === false)
-            return $this;
-
         $properties = array();
         $properties['structure'] = $structure->enum();
         return $this->set($properties);
     }
 
-    public function getStructure()
+    public function getStructure() : \Flexio\Object\Structure
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         $s = $this->properties['structure'];
         $structure = \Flexio\Object\Structure::create($s);
         return $structure;
     }
 
-    public function getFileInfo()
+    public function getFileInfo() : array
     {
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         $info = array();
         $info['name'] = $this->properties['name'];
@@ -221,86 +187,12 @@ class Stream extends \Flexio\Object\Base
         return $info;
     }
 
-
-
-    ////////////////////////////////////////////////////////////
-    // read/write functions
-    ////////////////////////////////////////////////////////////
-
-    public function read(callable $callback)
-    {
-        $service = $this->getService();
-        if ($service === false)
-            return;
-
-        $is_internal_table = false;
-        if ($this->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            $is_internal_table = true;
-        $structure = $this->getStructure()->enum();
-
-        $params = array();
-        $params['path'] = $this->getPath();
-        $service->read($params, function ($data) use (&$callback, &$is_internal_table, $structure) {
-
-            // if we have an internal table, convert the data keys from
-            // the store_name to the application name
-
-            $data_to_write = false;
-            if ($is_internal_table !== true)
-            {
-                $data_to_write = $data;
-            }
-             else
-            {
-                $data_to_write = array();
-                foreach ($structure as $col)
-                    $data_to_write[$col['name']] = $data[$col['store_name']] ?? null;
-            }
-
-            $callback($data_to_write);
-        });
-    }
-
-    public function write(callable $data)
-    {
-        // TODO: make sure the output table
-
-        $service = $this->getService();
-        if ($service === false)
-            return;
-
-        $structure = $this->getStructure()->enum();
-        $data_to_write = false;
-
-        if ($this->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-        {
-            $data_to_write = $data;
-        }
-            else
-        {
-            $data_to_write = array();
-            foreach ($structure as $col)
-                $data_to_write[$col['name']] = $data[$col['store_name']] ?? null;
-        }
-
-        // TODO: this looks like a problem, since the service write function takes
-        // parameters and a callback; is this legacy and unused?
-        $service->write($data_to_write);
-    }
-
-    public function writePostContent()
-    {
-    }
-
     public function content($start, $limit, $columns = true, $metadata = false, $handle = 'create') // TODO: add input parameter types
     {
         // returns the requested content for the given stream
 
         if ($this->isCached() === false)
             $this->populateCache();
-
-        if ($this->isCached() === false)
-            return false;
 
         $local_properties = $this->properties;
         $mime_type = $local_properties['mime_type'];
@@ -405,29 +297,16 @@ class Stream extends \Flexio\Object\Base
         return $result;
     }
 
-    public function getConnection()
+    public function getService()
     {
         $stream_info = $this->get();
         $connection_eid = $stream_info['connection_eid'];
 
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($connection === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        return $connection;
-    }
-
-    public function getService()
-    {
-        $connection = $this->getConnection();
-        if ($connection === false)
-            return false;
-
-        $service = $connection->getService();
-        if (!$service)
-            return false;
-
-        return $service;
+        return $connection->getService();
     }
 
     private function isCached() : bool
@@ -448,16 +327,12 @@ class Stream extends \Flexio\Object\Base
     private function populateCache() : bool
     {
         $local_properties = $this->getProperties();
-        if ($local_properties === false)
-            return false;
-
-        // save the properties
         $this->properties = $local_properties;
         $this->eid_status = $local_properties['eid_status'];
         return true;
     }
 
-    private function getProperties()
+    private function getProperties() : array
     {
         $query = '
         {
@@ -481,7 +356,7 @@ class Stream extends \Flexio\Object\Base
         $query = json_decode($query);
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if ($properties === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the structure json
         $structure = @json_decode($properties['structure'],true);

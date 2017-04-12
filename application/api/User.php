@@ -91,10 +91,6 @@ class User
 
             // create the user
             $user = \Flexio\Object\User::create($new_user_info);
-            if ($user === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, _('Unable to create the user.'));
-
-            // set the owner and creator
             $user_eid = $user->getEid();
             $user->setOwner($user_eid);
             $user->setCreatedBy($user_eid);

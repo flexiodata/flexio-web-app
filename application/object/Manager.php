@@ -64,29 +64,27 @@ class Manager
             $pipe_properties = $pipe->get();
             unset($pipe_properties['ename']);
             $process = \Flexio\Object\Process::create($pipe_properties);
-            if ($process !== false)
-            {
-                // set an environment variable (parameter) with the "from" email address
-                $from_addresses = $parser->getFrom();
-                if (count($from_addresses) > 0)
-                {
-                    $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
-                    $params = array('email-from' => $from_addresses[0]['email'],
-                                    'email-from-display' => $from_addresses[0]['display']);
-                    $process->setParams($params);
-                }
 
-                // save the email attachments as streams, and if there
-                // are any attachments, run the pipe with the attachments
-                $streams = self::saveAttachmentsToStreams($parser, $process);
-            /*
-                foreach ($streams as $s)
-                {
-                    $process->addInput($s);
-                }
-*/
-                $process->run(false); // handleEmail should be run in background from email processing script
+            // set an environment variable (parameter) with the "from" email address
+            $from_addresses = $parser->getFrom();
+            if (count($from_addresses) > 0)
+            {
+                $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
+                $params = array('email-from' => $from_addresses[0]['email'],
+                                'email-from-display' => $from_addresses[0]['display']);
+                $process->setParams($params);
             }
+
+            // save the email attachments as streams, and if there
+            // are any attachments, run the pipe with the attachments
+            $streams = self::saveAttachmentsToStreams($parser, $process);
+        /*
+            foreach ($streams as $s)
+            {
+                $process->addInput($s);
+            }
+*/
+            $process->run(false); // handleEmail should be run in background from email processing script
         }
 
         // STEP 5: delete the temporary file
@@ -112,15 +110,13 @@ class Manager
                 'name' => $attachment['name'] ?? 'content.dat',
                 'mime_type' => $attachment['mime_type'] ?? 'application/octet-stream'
             );
+
             $outstream = \Flexio\Object\Stream::create($outstream_properties);
             $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+            $streamwriter->write($attachment['content']);
+            //$streams[] = array('eid' => $outstream->getEid());
 
-            if ($streamwriter !== false)
-            {
-                $streamwriter->write($attachment['content']);
-                //$streams[] = array('eid' => $outstream->getEid());
-                $process->addInput($outstream);
-            }
+            $process->addInput($outstream);
         }
 
         return $streams;

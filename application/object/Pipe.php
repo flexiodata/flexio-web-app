@@ -88,13 +88,10 @@ class Pipe extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getTask()
+    public function getTask() : array
     {
         // shorthand for getting task info
         $local_properties = $this->get();
-        if (!isset($local_properties['task']))
-            return false;
-
         return $local_properties['task'];
     }
 
@@ -129,7 +126,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getTaskStep(string $task_eid)
+    public function getTaskStep(string $task_eid) // TODO: add function return type
     {
         $task_array = $this->getTask();
         $task = \Flexio\Object\Task::create($task_array);
@@ -148,7 +145,7 @@ class Pipe extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getSchedule()
+    public function getSchedule() // add function return type
     {
         // shorthand for getting schedule info
         $local_properties = $this->get();
@@ -185,15 +182,12 @@ class Pipe extends \Flexio\Object\Base
         return $result;
     }
 
-    public function get()
+    public function get() : array
     {
-        if ($this->isCached() === true)
-            return $this->properties;
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        if ($this->populateCache() === true)
-            return $this->properties;
-
-        return false;
+        return $this->properties;
     }
 
     private function isCached() : bool
@@ -215,16 +209,12 @@ class Pipe extends \Flexio\Object\Base
     {
         // get the properties
         $local_properties = $this->getProperties();
-        if ($local_properties === false)
-            return false;
-
-        // save the properties
         $this->properties = $local_properties;
         $this->eid_status = $local_properties['eid_status'];
         return true;
     }
 
-    private function getProperties()
+    private function getProperties() : array
     {
         $query = '
         {
@@ -268,12 +258,14 @@ class Pipe extends \Flexio\Object\Base
         $query = json_decode($query);
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if (!$properties)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the task json
         $task = @json_decode($properties['task'],true);
         if ($task !== false)
             $properties['task'] = $task;
+             else
+            $properties['task'] = array();
 
         // unpack the schedule json
         $schedule = @json_decode($properties['schedule'],true);

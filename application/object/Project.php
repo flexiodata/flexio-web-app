@@ -46,15 +46,12 @@ class Project extends \Flexio\Object\Base
         return $this;
     }
 
-    public function get()
+    public function get() : array
     {
-        if ($this->isCached() === true)
-            return $this->properties;
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        if ($this->populateCache() === true)
-            return $this->properties;
-
-        return false;
+        return $this->properties;
     }
 
     public function addMember(\Flexio\Object\Base $object) : \Flexio\Object\Project
@@ -109,16 +106,12 @@ class Project extends \Flexio\Object\Base
     {
         // get the properties
         $local_properties = $this->getProperties();
-        if ($local_properties === false)
-            return false;
-
-        // save the properties
         $this->properties = $local_properties;
         $this->eid_status = $local_properties['eid_status'];
         return true;
     }
 
-    private function getProperties()
+    private function getProperties() : array
     {
         $query = '
         {
@@ -155,7 +148,7 @@ class Project extends \Flexio\Object\Base
         $query = json_decode($query);
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if (!$properties)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // populate the follower count
         $follower_count = $this->getModel()->assoc_count($this->getEid(),

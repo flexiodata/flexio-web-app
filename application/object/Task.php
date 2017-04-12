@@ -198,7 +198,7 @@ class Task
         return $object;
     }
 
-    public function get()
+    public function get() : array
     {
         // returns the list of commands
         return $this->task;
@@ -319,7 +319,7 @@ class Task
         return $this;
     }
 
-    public function getTaskStep(string $task_eid)
+    public function getTaskStep(string $task_eid) // TODO: add function return type
     {
         // iterate through the tasks; if the eid of the task step
         // matches the existing task, return the task

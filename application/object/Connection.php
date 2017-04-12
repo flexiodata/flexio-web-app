@@ -26,19 +26,17 @@ class Connection extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_CONNECTION);
     }
 
-    public static function getDatastoreConnectionEid()
+    public static function getDatastoreConnectionEid() : string
     {
         $registry_model = \Flexio\Object\Store::getModel()->registry;
         $connection_eid = $registry_model->getString('', self::PROCESS_DATASTORE_1);
 
-        if ($connection_eid === false)
-            $connection_eid = self::createDatastoreConnection();
+        if ($connection_eid !== false)
+            return $connection_eid;
 
-        if ($connection_eid === false)
-            return false;
-
+        $connection_eid = self::createDatastoreConnection();
         if ($registry_model->setString('', self::PROCESS_DATASTORE_1, $connection_eid) === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $connection_eid;
     }
@@ -66,15 +64,12 @@ class Connection extends \Flexio\Object\Base
         return $this;
     }
 
-    public function get()
+    public function get() : array
     {
-        if ($this->isCached() === true)
-            return $this->properties;
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        if ($this->populateCache() === true)
-            return $this->properties;
-
-        return false;
+        return $this->properties;
     }
 
     public function connect() : \Flexio\Object\Connection
@@ -112,7 +107,7 @@ class Connection extends \Flexio\Object\Base
         return $this;
     }
 
-    public function authenticate(array $params)
+    public function authenticate(array $params) // TODO: add function return type
     {
         // TODO: this was moved from \Flexio\Api\Connection::authenticate() which functioned
         // somewhat like a static method so that everything was passed to the function;
@@ -202,19 +197,15 @@ class Connection extends \Flexio\Object\Base
         return true;
     }
 
-    public function getService()
+    public function getService() // TODO: add function return type
     {
         // get the connection info
         $connection_info = $this->get();
-        if ($connection_info === false)
-            return false;
 
-        // load the services from the services store: TODO: should introduce
-        // namespaces for services and other classes so that the services
-        // store can be more readily distinguished from the object store
+        // load the services from the services store
         $service = \Flexio\Services\Store::load($connection_info);
         if ($service === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         // for some of the connections, refresh the token
         $connection_type = $connection_info['connection_type'] ?? '';
@@ -263,16 +254,12 @@ class Connection extends \Flexio\Object\Base
     {
         // get the properties
         $local_properties = $this->getProperties();
-        if ($local_properties === false)
-            return false;
-
-        // save the properties
         $this->properties = $local_properties;
         $this->eid_status = $local_properties['eid_status'];
         return true;
     }
 
-    private function getProperties()
+    private function getProperties() : array
     {
         $query = '
         {
@@ -323,7 +310,7 @@ class Connection extends \Flexio\Object\Base
         $query = json_decode($query);
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if (!$properties)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         return $properties;
     }

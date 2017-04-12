@@ -39,10 +39,6 @@ class Project
 
         // create the object
         $project = \Flexio\Object\Project::create($params);
-        if ($project === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // set the owner
         $project->setOwner($requesting_user_eid);
         $project->setCreatedBy($requesting_user_eid);
 

@@ -101,7 +101,7 @@ class Collection
         return $this->objects;
     }
 
-    public function find(string $name)
+    public function find(string $name) // TODO: add return type
     {
         // returns the first object with a given name; if no object are found, returns false
         foreach ($this->objects as $object)

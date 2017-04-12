@@ -141,7 +141,7 @@ class Structure
         return $object_copy;
     }
 
-    public function push(array $column)
+    public function push(array $column) // TODO: add return type
     {
         // note: returns the added column, or false if the column couldn't be added
 

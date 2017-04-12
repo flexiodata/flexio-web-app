@@ -157,9 +157,15 @@ class Convert extends \Flexio\Jobs\Base
 
         // read the pdf into a buffer
         $buffer = '';
-        $instream->read(function ($data) use (&$buffer) {
+        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        while (true)
+        {
+            $data = $streamreader->read();
+            if ($data === false)
+                break;
+
             $buffer .= $data;
-        });
+        }
 
         // parse the pdf
         try
@@ -194,9 +200,15 @@ class Convert extends \Flexio\Jobs\Base
 
         // read the json into a buffer
         $buffer = '';
-        $instream->read(function ($data) use (&$buffer) {
+        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        while (true)
+        {
+            $data = $streamreader->read();
+            if ($data === false)
+                break;
+
             $buffer .= $data;
-        });
+        }
 
         // flatten the json
         $items = \Flexio\Base\Mapper::flatten($buffer);
