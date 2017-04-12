@@ -39,8 +39,8 @@
             var escaped = false
             var next = null
 
-            while ((next = stream.next()) != null) {
-
+            while ((next = stream.next()) != null)
+            {
               if (next == quote)
               {
                 if (stream.peek() == quote)
@@ -57,9 +57,10 @@
               //if (next == quote && !escaped) break
               //escaped = !escaped && next == "\\"
             }
-            if (!escaped) {
+
+            if (!escaped)
               state.tokenize = null
-            }
+
             return 'string'
           }
         }
@@ -68,8 +69,8 @@
           return state.tokenize(stream.state)
 
         var peek_ch = stream.peek()
-
-        if (peek_ch == '"' || peek_ch == "'") {
+        if (peek_ch == '"' || peek_ch == "'")
+        {
           peek_ch = stream.next()
           state.tokenize = tokenString(peek_ch)
           return state.tokenize(stream, state)
@@ -97,7 +98,6 @@
 
         if (state.args_regexp && stream.match(state.args_regexp) !== null)
           return 'def'
-
 
         // eat an entire word (starting with a word break); also prevents
         // embedded digits from being highlighted as numbers
