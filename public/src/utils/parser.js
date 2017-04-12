@@ -12,6 +12,7 @@
       var keyword = this.getKeyword(str).toLowerCase()
 
       this.json = null
+      this.errors = []
 
       if (this.keywords.hasOwnProperty(keyword))
       {
@@ -20,58 +21,45 @@
       }
        else
       {
-        throw { "code": "unknown_command", "message": "Unknown command: '" + keyword +"'", "offset": 0, "length": keyword.length }
+        this.errors.push({ "code": "unknown_command", "message": "Unknown command: '" + keyword +"'", "offset": 0, "length": keyword.length });
       }
     }
 
     this.toJSON = function(cmdbar)
     {
-      try
-      {
-        this.parse(cmdbar);
+      this.parse(cmdbar)
+      if (this.errors.length > 0)
+        return null;
+          else
         return this.json
-      }
-      catch (e)
-      {
-        // error occurred -- return null
-      }
-
-      return null;
     }
 
     this.validate = function(cmdbar)
     {
-        try
+      this.parse(cmdbar)
+
+      // check if there are any invalid/unknown arguments
+      if (this.args.hasOwnProperty(this.command))
+      {
+        var args = this.args[this.command];
+
+        var match, offset, re = /([a-zA-Z]+):/g;
+        while (match = re.exec(cmdbar))
         {
-          this.parse(cmdbar)
-
-          // check if there are any invalid/unknown arguments
-          if (this.args.hasOwnProperty(this.command))
+          if ((offset = this.findToplevel(cmdbar, match[0], 0)) != -1)
           {
-            var args = this.args[this.command];
-
-            var match, offset, re = /([a-zA-Z]+):/g;
-            while (match = re.exec(cmdbar))
+            if (!this.contains(args,match[1]))
             {
-              if ((offset = this.findToplevel(cmdbar, match[0], 0)) != -1)
-              {
-                if (!this.contains(args,match[1]))
-                {
-                  throw { "code": "unknown_argument", "message": "Unknown argument: '" + match[1] +"'", offset: offset, length: match[0].length }
-                }
-              }
+              this.errors.push({ "code": "unknown_argument", "message": "Unknown argument: '" + match[1] +"'", offset: offset, length: match[0].length })
             }
           }
-
-
-          return true
         }
-        catch (e)
-        {
-          // return error object
-          //console.log(e.message + " offset: " + e.offset + " length: " + e.length);
-          return [ e ]
-        }
+      }
+
+      if (this.errors.length == 0)
+        return true
+         else
+        return this.errors
     }
 
     this.toCmdbar = function(json)
@@ -436,10 +424,10 @@
         else if (from_format == 'pdf')
           json.params.input.format = 'pdf';
         else
-          throw { "code":     "invalid_value",
-                  "message":  "Invalid value: '" + from_format +"'",
-                  "offset":   params['from'].offset,
-                  "length":   params['from'].length }
+          this.errors.push({ "code":     "invalid_value",
+                             "message":  "Invalid value: '" + from_format +"'",
+                             "offset":   params['from'].offset,
+                             "length":   params['from'].length })
 
       }
 
@@ -464,10 +452,10 @@
         else if (to_format == 'text')
           json.params.output.format = 'text';
         else
-          throw { "code":     "invalid_value",
-                  "message":  "Invalid value: '" + to_format +"'",
-                  "offset":   params['to'].offset,
-                  "length":   params['to'].length }
+          this.errors.push({ "code":     "invalid_value",
+                             "message":  "Invalid value: '" + to_format +"'",
+                             "offset":   params['to'].offset,
+                             "length":   params['to'].length })
       }
 
       if (params.hasOwnProperty('delimiter'))
@@ -550,10 +538,10 @@
           }
           catch (e)
           {
-            throw { "code":     "invalid_value",
-                    "message":  "Invalid value: " + qualifier,
-                    "offset":   params['qualifier'].offset,
-                    "length":   params['qualifier'].length }
+            this.errors.push({ "code":     "invalid_value",
+                               "message":  "Invalid value: " + qualifier,
+                               "offset":   params['qualifier'].offset,
+                               "length":   params['qualifier'].length })
           }
         }
       }
@@ -564,10 +552,10 @@
 
         if (header != 'true' && header != 'false')
         {
-            throw { "code":     "invalid_value",
-                    "message":  "Invalid value: '" + header + "'",
-                    "offset":   params['header'].offset,
-                    "length":   params['header'].length }
+            this.errors.push({ "code":     "invalid_value",
+                               "message":  "Invalid value: '" + header + "'",
+                               "offset":   params['header'].offset,
+                               "length":   params['header'].length })
         }
 
         if (from_format == 'delimited') json.params.input.header  = (header == 'true' ? true : false);
@@ -683,10 +671,10 @@
       }
        else
       {
-          throw { "code":     "missing_parameter",
-                  "message":  "Missing parameter 'name:'",
-                  "offset":   this.getKeyword(str).length,
-                  "length":   1 }
+          this.errors.push({ "code":     "missing_parameter",
+                             "message":  "Missing parameter 'name:'",
+                             "offset":   this.getKeyword(str).length,
+                             "length":   1 })
       }
 
       if (params.hasOwnProperty('type'))
@@ -695,18 +683,18 @@
 
         if (!this.contains(this.hints.calc['type'], json.params.type))
         {
-          throw { "code":     "invalid_value",
-                  "message":  "Invalid value: '" + to_format +"'",
-                  "offset":   params['type'].offset,
-                  "length":   params['type'].length }
+          this.errors.push({ "code":     "invalid_value",
+                             "message":  "Invalid value: '" + to_format +"'",
+                             "offset":   params['type'].offset,
+                             "length":   params['type'].length })
         }
       }
        else
       {
-          throw { "code":     "missing_parameter",
-                  "message":  "Missing parameter 'type:'",
-                  "offset":   str.length-1,
-                  "length":   1 }
+          this.errors.push({ "code":     "missing_parameter",
+                             "message":  "Missing parameter 'type:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
       }
 
       if (params.hasOwnProperty('decimal'))
@@ -720,10 +708,10 @@
       }
        else
       {
-          throw { "code":     "missing_parameter",
-                  "message":  "Missing parameter 'formula:'",
-                  "offset":   str.length-1,
-                  "length":   1 }
+          this.errors.push({ "code":     "missing_parameter",
+                             "message":  "Missing parameter 'formula:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
       }
 
 
@@ -897,18 +885,18 @@
 
         if (!this.contains(this.hints.execute['lang'], json.params.lang))
         {
-          throw { "code":     "invalid_value",
-                  "message":  "Invalid value: '" + json.params.lang +"'",
-                  "offset":   params['lang'].offset,
-                  "length":   params['lang'].length }
+          this.errors.push({ "code":     "invalid_value",
+                             "message":  "Invalid value: '" + json.params.lang +"'",
+                             "offset":   params['lang'].offset,
+                             "length":   params['lang'].length })
         }
       }
        else
       {
-          throw { "code":     "missing_parameter",
-                  "message":  "Missing parameter 'lang:'",
-                  "offset":   str.length-1,
-                  "length":   1 }
+          this.errors.push({ "code":     "missing_parameter",
+                             "message":  "Missing parameter 'lang:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
       }
 
       if (params.hasOwnProperty('code'))
@@ -1140,10 +1128,10 @@
       }
        else
       {
-          throw { "code":     "missing_parameter",
-                  "message":  "Missing parameter 'value:'",
-                  "offset":   str.length-1,
-                  "length":   1 }
+          this.errors.push({ "code":     "missing_parameter",
+                             "message":  "Missing parameter 'value:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
       }
 
       return json;
