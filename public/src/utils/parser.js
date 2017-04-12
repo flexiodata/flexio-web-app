@@ -70,7 +70,7 @@
         {
           // return error object
           console.log(e.message + " offset: " + e.offset + " length: " + e.length);
-          return e
+          return [ e ]
         }
     }
 
