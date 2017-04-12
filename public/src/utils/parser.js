@@ -212,7 +212,9 @@
           offset += keywords[i].length;
           if (offset < str.length && str[offset] == ':')
             offset++;
-          results[ keywords[i] ] = str.substr(offset, ending-offset).trim();
+          results[ keywords[i] ] = { "value": str.substr(offset, ending-offset).trim(),
+                                     "offset": offset,
+                                     "length": ending-offset }
         }
       }
 
@@ -410,23 +412,24 @@
 
       // convert from: delimited to: table delimiter: "," qualifier: '"' header: 1
 
-      var params = this.split(str, this.args.convert);
+      var params = this.split(str, this.args.convert)
       var from_format = '';
       var to_format = '';
+      var delimiter, qualifier;
 
       if (params.hasOwnProperty('from'))
       {
-        from_format = params['from'];
+        from_format = params['from'].value;
 
         json.params.input = {};
 
-        if (params['from'] == 'delimited')
+        if (from_format == 'delimited')
           json.params.input.format = 'delimited';
-        else if (params['from'] == 'json')
+        else if (from_format == 'json')
           json.params.input.format = 'json';
-        else if (params['from'] == 'table')
+        else if (from_format == 'table')
           json.params.input.format = 'table';
-        else if (params['from'] == 'pdf')
+        else if (from_format == 'pdf')
           json.params.input.format = 'pdf';
         else
           return json;  // unknown from: type
@@ -441,16 +444,16 @@
 
       if (params.hasOwnProperty('to'))
       {
-        to_format = params['to'];
+        to_format = params['to'].value;
 
         json.params.output = {};
-        if (params['to'] == 'delimited')
+        if (to_format == 'delimited')
           json.params.output.format = 'delimited';
-        else if (params['to'] == 'json')
+        else if (to_format == 'json')
           json.params.output.format = 'json';
-        else if (params['to'] == 'table')
+        else if (to_format == 'table')
           json.params.output.format = 'table';
-        else if (params['to'] == 'text')
+        else if (to_format == 'text')
           json.params.output.format = 'text';
         else
           return json;  // unknown to: type
@@ -458,27 +461,29 @@
 
       if (params.hasOwnProperty('delimiter'))
       {
-        if (params['delimiter'] == 'none')
+        delimiter = params['delimiter'].value;
+
+        if (delimiter == 'none')
         {
           if (from_format == 'delimited') json.params.input.delimiter  = "{none}";
           if (to_format   == 'delimited') json.params.output.delimiter = "{none}";
         }
-        else if (params['delimiter'] == 'comma' || params['delimiter'] == '","' || params['delimiter'] == "','" || params['delimiter'] == ',')
+        else if (delimiter == 'comma' || delimiter == '","' || delimiter == "','" || delimiter == ',')
         {
           if (from_format == 'delimited') json.params.input.delimiter  = "{comma}";
           if (to_format   == 'delimited') json.params.output.delimiter = "{comma}";
         }
-        else if (params['delimiter'] == 'tab')
+        else if (delimiter == 'tab')
         {
           if (from_format == 'delimited') json.params.input.delimiter  = "{tab}";
           if (to_format   == 'delimited') json.params.output.delimiter = "{tab}";
         }
-        else if (params['delimiter'] == 'pipe')
+        else if (delimiter == 'pipe')
         {
           if (from_format == 'delimited') json.params.input.delimiter  = "{pipe}";
           if (to_format   == 'delimited') json.params.output.delimiter = "{pipe}";
         }
-        else if (params['delimiter'] == 'semicolon')
+        else if (delimiter == 'semicolon')
         {
           if (from_format == 'delimited') json.params.input.delimiter  = "{semicolon}";
           if (to_format   == 'delimited') json.params.output.delimiter = "{semicolon}";
@@ -487,7 +492,7 @@
         {
           try
           {
-            var delimiter = JSON.parse(params['delimiter']);
+            var delimiter = JSON.parse(delimiter);
             if (from_format == 'delimited') json.params.input.delimiter  = delimiter;
             if (to_format   == 'delimited') json.params.output.delimiter = delimiter;
           }
@@ -499,17 +504,19 @@
 
       if (params.hasOwnProperty('qualifier'))
       {
-        if (params['qualifier'] == 'none')
+        qualifier = params['qualifier'].value;
+
+        if (qualifier == 'none')
         {
           if (from_format == 'delimited') json.params.input.qualifier  = "{none}";
           if (to_format   == 'delimited') json.params.output.qualifier = "{none}";
         }
-         else if (params['qualifier'] == 'double-quote' || params['qualifier'] == "'\"'" )
+         else if (qualifier == 'double-quote' || qualifier == "'\"'" )
         {
           if (from_format == 'delimited') json.params.input.qualifier  = "{double-quote}";
           if (to_format   == 'delimited') json.params.output.qualifier = "{double-quote}";
         }
-         else if (params['qualifier'] == 'single-quote' || params['qualifier'] == "\"'\"")
+         else if (qualifier == 'single-quote' || qualifier == "\"'\"")
         {
           if (from_format == 'delimited') json.params.input.qualifier  = "{single-quote}";
           if (to_format   == 'delimited') json.params.output.qualifier = "{single-quote}";
@@ -518,7 +525,7 @@
         {
           try
           {
-            var qualifier = JSON.parse(params['qualifier']);
+            var qualifier = JSON.parse(qualifier);
             if (from_format == 'delimited') json.params.input.qualifier  = qualifier;
             if (to_format   == 'delimited') json.params.output.qualifier = qualifier;
           }
@@ -530,7 +537,7 @@
 
       if (params.hasOwnProperty('header'))
       {
-        var header = this.toBoolean(params['header']);
+        var header = this.toBoolean(params['header'].value);
 
         if (from_format == 'delimited') json.params.input.header  = header;
         if (to_format   == 'delimited') json.params.output.header = header;
@@ -639,28 +646,24 @@
 
       var params = this.split(str, this.args.calc);
 
-      if (params.hasOwnProperty('name') || params.hasOwnProperty('as'))
+      if (params.hasOwnProperty('name'))
       {
-        var arg = params.hasOwnProperty('name') ? params['name'] : params['as'];
-        json.params.name = arg;
+        json.params.name = params['name'].value;
       }
 
       if (params.hasOwnProperty('type'))
       {
-        var arg = params['type'];
-        json.params.type = arg;
+        json.params.type = params['type'].value;
       }
 
-      if (params.hasOwnProperty('decimal') || params.hasOwnProperty('decimals'))
+      if (params.hasOwnProperty('decimal'))
       {
-        var arg = params.hasOwnProperty('decimals') ? params['decimals'] : params['decimal'];
-        json.params.decimals = parseInt(arg);
+        json.params.decimals = parseInt(params['decimal'].value);
       }
 
-      if (params.hasOwnProperty('formula') || params.hasOwnProperty('value'))
+      if (params.hasOwnProperty('formula'))
       {
-        var arg = params.hasOwnProperty('formula') ? params['formula'] : params['value'];
-        json.params.expression = arg;
+        json.params.expression = params['formula'].value;
       }
 
       return json;
@@ -720,32 +723,32 @@
 
       if (params.hasOwnProperty('to'))
       {
-        json.params.to = this.parseCommaList(params['to']);
+        json.params.to = this.parseCommaList(params['to'].value);
       }
 
       if (params.hasOwnProperty('from'))
       {
-        json.params.from = params['from'];
+        json.params.from = params['from'].value;
       }
 
       if (params.hasOwnProperty('subject'))
       {
-        json.params.subject = params['subject'];
+        json.params.subject = params['subject'].value;
       }
 
       if (params.hasOwnProperty('body'))
       {
-        json.params.body_text = params['body'];
+        json.params.body_text = params['body'].value;
       }
 
       if (params.hasOwnProperty('html'))
       {
-        json.params.body_html = params['html'];
+        json.params.body_html = params['html'].value;
       }
 
       if (params.hasOwnProperty('data'))
       {
-        json.params.data = params['data'];
+        json.params.data = params['data'].value;
       }
 
       return json;
@@ -829,12 +832,12 @@
 
       if (params.hasOwnProperty('lang'))
       {
-        json.params.lang = params['lang'];
+        json.params.lang = params['lang'].value;
       }
 
       if (params.hasOwnProperty('code'))
       {
-        json.params.code = params['code'];
+        json.params.code = params['code'].value;
       }
 
       return json;
@@ -880,23 +883,23 @@
 
       if (params.hasOwnProperty('url'))
       {
-        json.params.items.push({"name": "file1", "path": params['url']});
+        json.params.items.push({"name": "file1", "path": params['url'].value});
         json.params.connection.connection_type = "http.api";
       }
 
       if (params.hasOwnProperty('from'))
       {
-        json.params.connection = params['from'];
+        json.params.connection = params['from'].value;
       }
 
       if (params.hasOwnProperty('location'))
       {
-        json.params.location = params['location'];
+        json.params.location = params['location'].value;
       }
 
       if (params.hasOwnProperty('file'))
       {
-        var arr = this.parseList(params['file']);
+        var arr = this.parseList(params['file'].value);
 
         json.params.items = [];
 
@@ -1000,12 +1003,12 @@
 
       if (params.hasOwnProperty('code'))
       {
-        json.params.code = params['code'];
+        json.params.code = params['code'].value;
       }
 
       if (params.hasOwnProperty('message'))
       {
-        json.params.message = params['message'];
+        json.params.message = params['message'].value;
       }
 
       return json;
@@ -1052,12 +1055,12 @@
 
       if (params.hasOwnProperty('sample'))
       {
-        json.params.sample = params['sample'];
+        json.params.sample = params['sample'].value;
       }
 
       if (params.hasOwnProperty('value'))
       {
-        json.params.value = parseInt(params['value']);
+        json.params.value = parseInt(params['value'].value);
       }
 
       return json;
@@ -1125,7 +1128,7 @@
 
       if (params.hasOwnProperty('value'))
       {
-        json.params.value = parseInt(params['value']);
+        json.params.value = parseInt(params['value'].value);
       }
 
       return json;
@@ -1164,17 +1167,17 @@
 
       if (params.hasOwnProperty('to'))
       {
-        json.params.connection = params['to'];
+        json.params.connection = params['to'].value;
       }
 
       if (params.hasOwnProperty('location'))
       {
-        json.params.location = params['location'];
+        json.params.location = params['location'].value;
       }
 
       if (params.hasOwnProperty('file'))
       {
-        var arr = this.parseList(params['file']);
+        var arr = this.parseList(params['file'].value);
 
         json.params.items = [];
 
@@ -1281,17 +1284,17 @@
       {
         json.params.files = [];
 
-        var i, files = this.parseList(params['file']);
+        var i, files = this.parseList(params['file'].value);
         for (i = 0; i < files.length; ++i)
         {
           json.params.files.push(files[i]);
         }
       }
 
-      if (params.hasOwnProperty('col') || params.hasOwnProperty('columns') || params.hasOwnProperty('column'))
+      if (params.hasOwnProperty('col'))
       {
         json.params.columns = [];
-        var i, columns = this.parseColumns(params.hasOwnProperty('col') ? params['col'] : (params.hasOwnProperty('columns') ? params['columns'] : params['column']));
+        var i, columns = this.parseColumns(params['col'].value)
         for (i = 0; i < columns.length; ++i)
         {
           json.params.columns.push(columns[i]);
@@ -1360,7 +1363,7 @@
 
       if (params.hasOwnProperty('file'))
       {
-        var arr = this.parseList(params['file']);
+        var arr = this.parseList(params['file'].value);
 
         json.params.files = [];
         for (var i = 0; i < arr.length; ++i)
@@ -1382,9 +1385,9 @@
         }
       }
 
-      if (params.hasOwnProperty('col') || params.hasOwnProperty('columns') || params.hasOwnProperty('column'))
+      if (params.hasOwnProperty('col'))
       {
-        var arr = this.parseList(params.hasOwnProperty('col') ? params['col'] : (params.hasOwnProperty('columns') ? params['columns'] : params['column']));
+        var arr = this.parseList(params['col'].value)
 
         json.params.columns = [];
         for (var i = 0; i < arr.length; ++i)
@@ -1480,9 +1483,9 @@
 
       var params = this.split(str, this.args.sort);
 
-      if (params.hasOwnProperty('col') || params.hasOwnProperty('columns') || params.hasOwnProperty('column'))
+      if (params.hasOwnProperty('col'))
       {
-        var i, columns = this.parseColumns(params.hasOwnProperty('col') ? params['col'] : (params.hasOwnProperty('columns') ? params['columns'] : params['column']));
+        var i, columns = this.parseColumns(params['col'].value)
         for (i = 0; i < columns.length; ++i)
         {
           var col = columns[i].trim();
@@ -1556,9 +1559,9 @@
 
       var params = this.split(str, this.args.transform);
 
-      if (params.hasOwnProperty('col') || params.hasOwnProperty('columns') || params.hasOwnProperty('column'))
+      if (params.hasOwnProperty('col'))
       {
-        var columns = this.parseColumns(params.hasOwnProperty('col') ? params['col'] : (params.hasOwnProperty('columns') ? params['columns'] : params['column']));
+        var columns = this.parseColumns(params['col'].value)
 
         json.params.columns = columns;
       }
@@ -1567,7 +1570,7 @@
 
       if (params.hasOwnProperty('case'))
       {
-        var xcase = params['case'].toLowerCase();
+        var xcase = params['case'].value;
         if (xcase == 'lower' || xcase == 'upper')
         {
           json.params.operations.push({ "operation":"case", "case":xcase });
@@ -1576,7 +1579,7 @@
 
       if (params.hasOwnProperty('trim'))
       {
-        var arg = params['trim'].toLowerCase();
+        var arg = params['trim'].value;
         if (arg == 'leading' || arg == 'trailing' || arg == 'leading-trailing')
         {
           json.params.operations.push({ "operation":"trim", "location": arg });
@@ -1588,7 +1591,7 @@
         var location = params.hasOwnProperty('location') ? params.location : 'all';
         if (location == 'all' || location == 'leading' || location == 'trailing' || location == 'leading-trailing')
         {
-          var arg = params['clean'].toLowerCase();
+          var arg = params['clean'].value;
           json.params.operations.push({ "operation":"clean", "location": location });
         }
       }
@@ -1677,14 +1680,14 @@
 
       var params = this.split(str, this.args.filter);
 
-      if (params.hasOwnProperty('where') || params.hasOwnProperty('on'))
+      if (params.hasOwnProperty('where'))
       {
-        json.params.where = (params.hasOwnProperty('where') ? params['where'] : params['on']);
+        json.params.where = params['where'].value;
       }
 
       if (params.hasOwnProperty('exclude'))
       {
-        json.params.exclude = this.toBoolean(params['exclude']);
+        json.params.exclude = this.toBoolean(params['exclude'].value);
       }
 
       return json;
