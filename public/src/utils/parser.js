@@ -673,7 +673,7 @@
       {
           this.errors.push({ "code":     "missing_parameter",
                              "message":  "Missing parameter 'name:'",
-                             "offset":   this.getKeyword(str).length,
+                             "offset":   str.length-1,
                              "length":   1 })
       }
 
