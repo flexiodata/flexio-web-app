@@ -55,17 +55,7 @@
             {
               if ((offset = this.findToplevel(cmdbar, match[0], 0)) != -1)
               {
-                var found = false;
-                for (var i = 0; i < args.length; ++i)
-                {
-                  if (args[i] == match[1])
-                  {
-                    found = true;
-                    break;
-                  }
-                }
-
-                if (!found)
+                if (!!_.contains(args,match[1]))
                 {
                   throw { "code": "unknown_argument", "message": "Unknown argument: '" + match[1] +"'", offset: offset, length: match[0].length }
                 }
@@ -665,6 +655,14 @@
       if (params.hasOwnProperty('type'))
       {
         json.params.type = params['type'].value;
+
+        if (!_.contains(this.hints.calc['type'], json.params.type))
+        {
+          throw { "code":     "invalid_value",
+                  "message":  "Invalid value: '" + to_format +"'",
+                  "offset":   params['type'].offset,
+                  "length":   params['type'].length }
+        }
       }
 
       if (params.hasOwnProperty('decimal'))
