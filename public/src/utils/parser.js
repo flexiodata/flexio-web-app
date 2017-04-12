@@ -20,7 +20,7 @@
       }
        else
       {
-        throw { "code": "unknown_command", "message": "Unknown command: '" + keyword +"'" }
+        throw { "code": "unknown_command", "message": "Unknown command: '" + keyword +"'", "offset": 0, "length": keyword.length }
       }
     }
 
@@ -50,10 +50,10 @@
           {
             var args = this.args[this.command];
 
-            var match, re = /([a-zA-Z]+):/g;
+            var match, offset, re = /([a-zA-Z]+):/g;
             while (match = re.exec(cmdbar))
             {
-              if (this.findToplevel(cmdbar, match[0], 0) != -1)
+              if ((offset = this.findToplevel(cmdbar, match[0], 0)) != -1)
               {
                 var found = false;
                 for (var i = 0; i < args.length; ++i)
@@ -67,7 +67,7 @@
 
                 if (!found)
                 {
-                  throw { "code": "unknown_argument", "message": "Unknown argument: '" + match[1] +"'" }
+                  throw { "code": "unknown_argument", "message": "Unknown argument: '" + match[1] +"'", offset: offset, length: match[0].length }
                 }
               }
             }
@@ -79,7 +79,7 @@
         catch (e)
         {
           // return error object
-          //console.log(e.message);
+          console.log(e.message + " offset: " + e.offset + " length: " + e.length);
           return e
         }
     }
