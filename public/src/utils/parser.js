@@ -55,7 +55,7 @@
             {
               if ((offset = this.findToplevel(cmdbar, match[0], 0)) != -1)
               {
-                if (!!_.contains(args,match[1]))
+                if (!this.contains(args,match[1]))
                 {
                   throw { "code": "unknown_argument", "message": "Unknown argument: '" + match[1] +"'", offset: offset, length: match[0].length }
                 }
@@ -374,6 +374,16 @@
       else          return false;
     }
 
+    this.contains = function (arr,value)
+    {
+      for (var i = 0; i < arr.length; ++i)
+      {
+        if (arr[i] == value)
+          return true;
+      }
+      return false;
+    }
+
     // keyword parsers are specified here
     this.args = {};
     this.hints = {};
@@ -656,7 +666,7 @@
       {
         json.params.type = params['type'].value;
 
-        if (!_.contains(this.hints.calc['type'], json.params.type))
+        if (!this.contains(this.hints.calc['type'], json.params.type))
         {
           throw { "code":     "invalid_value",
                   "message":  "Invalid value: '" + to_format +"'",
