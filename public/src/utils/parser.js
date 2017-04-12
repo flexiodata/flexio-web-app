@@ -634,7 +634,7 @@
           else if (delimiter == '{semicolon}')
             res = this.append(res, "delimiter: semicolon");
           else
-          res = this.append(res, "delimiter: " + JSON.stringify(delimiter));
+            res = this.append(res, "delimiter: " + JSON.stringify(delimiter));
         }
 
         if (obj.hasOwnProperty('qualifier'))
@@ -894,6 +894,21 @@
       if (params.hasOwnProperty('lang'))
       {
         json.params.lang = params['lang'].value;
+
+        if (!this.contains(this.hints.execute['lang'], json.params.lang))
+        {
+          throw { "code":     "invalid_value",
+                  "message":  "Invalid value: '" + json.params.lang +"'",
+                  "offset":   params['lang'].offset,
+                  "length":   params['lang'].length }
+        }
+      }
+       else
+      {
+          throw { "code":     "missing_parameter",
+                  "message":  "Missing parameter 'lang:'",
+                  "offset":   str.length-1,
+                  "length":   1 }
       }
 
       if (params.hasOwnProperty('code'))
