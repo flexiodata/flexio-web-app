@@ -661,6 +661,13 @@
       {
         json.params.name = params['name'].value;
       }
+       else
+      {
+          throw { "code":     "missing_parameter",
+                  "message":  "Missing parameter 'name:'",
+                  "offset":   this.getKeyword(str).length,
+                  "length":   1 }
+      }
 
       if (params.hasOwnProperty('type'))
       {
@@ -674,6 +681,13 @@
                   "length":   params['type'].length }
         }
       }
+       else
+      {
+          throw { "code":     "missing_parameter",
+                  "message":  "Missing parameter 'type:'",
+                  "offset":   str.length-1,
+                  "length":   1 }
+      }
 
       if (params.hasOwnProperty('decimal'))
       {
@@ -684,6 +698,14 @@
       {
         json.params.expression = params['formula'].value;
       }
+       else
+      {
+          throw { "code":     "missing_parameter",
+                  "message":  "Missing parameter 'formula:'",
+                  "offset":   str.length-1,
+                  "length":   1 }
+      }
+
 
       return json;
     };
