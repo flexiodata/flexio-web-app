@@ -16,7 +16,9 @@
   import CodeMirror from 'codemirror'
   import {} from '../../node_modules/codemirror/addon/hint/show-hint'
   import {} from '../../node_modules/codemirror/addon/display/placeholder'
+  import {} from '../../node_modules/codemirror/addon/lint/lint'
   import {} from '../utils/commandbar-mode'
+  import {} from '../utils/commandbar-lint'
   import parser from '../utils/parser'
 
   // simple way to accomplish jQuery.data()
@@ -173,6 +175,7 @@
       var opts = _.assign({
         lineNumbers: false,
         lineWrapping: true,
+        lint: { delay: 1000 },
         theme: 'flexio-commandbar',
         mode: 'flexio-commandbar',
         placeholder: 'Type a command...'
