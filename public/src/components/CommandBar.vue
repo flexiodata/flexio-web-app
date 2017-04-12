@@ -477,11 +477,11 @@
           }
 
           // store item data with the DOM node
-          $.data(child_el, 'item', hints.items[i])
+          $.data(child_el, 'item', _.cloneDeep(hints.items[i]))
 
           // update the command bar text when the user clicks on a dropdown item
           child_el.addEventListener('mousedown', function(evt) {
-            me.replaceFromDropdownItem(evt.target)
+            me.replaceFromDropdownItem(this)
           })
         }
 
