@@ -31,7 +31,7 @@
       var error = errors[i]
       var startLine = 0
       var endLine = 0
-      var startCol = error.offset - 1
+      var startCol = error.offset
       var endCol = error.offset+error.length
 
       found.push({
