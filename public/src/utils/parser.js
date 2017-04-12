@@ -432,7 +432,11 @@
         else if (from_format == 'pdf')
           json.params.input.format = 'pdf';
         else
-          return json;  // unknown from: type
+          throw { "code":     "invalid_value",
+                  "message":  "Invalid value: '" + from_format +"'",
+                  "offset":   params['from'].offset,
+                  "length":   params['from'].length }
+
       }
 
       if (from_format == '' && (params.hasOwnProperty('delimiter') || params.hasOwnProperty('qualifier') || params.hasOwnProperty('header')))
@@ -456,7 +460,10 @@
         else if (to_format == 'text')
           json.params.output.format = 'text';
         else
-          return json;  // unknown to: type
+          throw { "code":     "invalid_value",
+                  "message":  "Invalid value: '" + to_format +"'",
+                  "offset":   params['to'].offset,
+                  "length":   params['to'].length }
       }
 
       if (params.hasOwnProperty('delimiter'))
