@@ -127,6 +127,12 @@
             </div>
           </transition>
           <transition name="slide-fade">
+            <div class="flex flex-row mt2" v-if="show_syntax_error">
+              <div class="flex-fill">&nbsp;</div>
+              <div class="flex-none f7 dark-red">There is an error in the command syntax</div>
+            </div>
+          </transition>
+          <transition name="slide-fade">
             <pipe-content
               class="mt2 relative"
               :stream-eid="active_stream_eid"
@@ -137,15 +143,6 @@
         </div>
       </div>
     </div>
-
-    <alert-modal
-      ref="modal-alert"
-      title="Syntax Error"
-      @hide="show_alert_modal = false"
-      v-if="show_alert_modal"
-    >
-      <div class="lh-copy">{{alert_msg}}</div>
-    </alert-modal>
   </div>
 </template>
 
@@ -155,7 +152,6 @@
   import { mapGetters } from 'vuex'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
-  import AlertModal from './AlertModal.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import CodeEditor from './CodeEditor.vue'
   import CommandBar from './CommandBar.vue'
@@ -179,7 +175,6 @@
     mixins: [taskItemHelper],
     components: {
       Btn,
-      AlertModal,
       ConnectionIcon,
       CodeEditor,
       CommandBar,
@@ -207,8 +202,7 @@
       return {
         is_inited: false,
         show_preview: this.showPreview,
-        show_alert_modal: false,
-        alert_msg: '',
+        show_syntax_error: false,
         description: _.get(this, 'item.description', ''),
         edit_json: this.getOrigJson(),
         edit_cmd: this.getOrigCmd(),
@@ -362,15 +356,9 @@
         var edit_attrs = _.pick(edit_json, ['metadata', 'type', 'params'])
         var task_type = _.get(this, 'item.type')
 
-        var perror = parser.validate(this.edit_cmd)
-        if (perror !== true)
+        if (parser.validate(this.edit_cmd) !== true)
         {
-          var msg = ''
-          _.each(perror, (e) => { msg += e.message+'\r\n' })
-
-          this.alert_msg = msg
-          this.show_alert_modal = true
-          this.$nextTick(() => { this.$refs['modal-alert'].open() })
+          this.showSyntaxError()
           return
         }
 
@@ -407,6 +395,10 @@
         }
 
         this.editTaskSingleton(edit_attrs)
+      },
+      showSyntaxError() {
+        this.show_syntax_error = true
+        setTimeout(() => { this.show_syntax_error = false }, 4000)
       },
       insertNewTask(insert_idx) {
         var idx = _.defaultTo(insert_idx, this.index+1)
