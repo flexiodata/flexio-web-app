@@ -264,12 +264,19 @@ class Pipe
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
+                'eid' => array('type' => 'identifier', 'required' => true),
+                'start'    => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false),
+                'order'    => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
+
+        $start = isset($params['start']) ? (int)$params['start'] : null;
+        $limit = isset($params['limit']) ? (int)$params['limit'] : null;
+        $order = isset($params['order']) ? (string)$params['order'] : null;
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -281,7 +288,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the processes
-        $result = array();
+        $processes_accessible = array();
         $processes = $pipe->getProcesses();
         foreach ($processes as $p)
         {
@@ -290,9 +297,11 @@ class Pipe
             if ($p->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
                 continue;
 
-            $result[] = $p->get();
+            $processes_accessible[] = $p->get();
         }
 
+        // filter/order the result items
+        $result = self::filter($processes_accessible, $start, $limit, $order);
         return $result;
     }
 
@@ -620,5 +629,52 @@ class Pipe
 
         // get the task
         return $pipe->getTaskStep($task_identifier);
+    }
+
+    private static function filter(array $processes_accessible, int $start = null, int $limit = null, string $order = null) : array
+    {
+        // TODO: generalize this function so it can be used for other API endpoints
+        // that involve lists
+
+        if (isset($order))
+        {
+            $desc = false;
+            if (substr($order,0,1) === '-' && strlen($order) > 1)
+            {
+                // if the field starts with a -, sort in descending order
+                $desc = true;
+                $order = substr($order, 1);
+            }
+
+            if ($desc === true)
+                \Flexio\Base\Util::sortByFieldDesc($processes_accessible, $order);
+                 else
+                \Flexio\Base\Util::sortByFieldAsc($processes_accessible, $order);
+        }
+
+        $start = $start ?? 0;
+        $limit = $limit ?? pow(2,24);
+
+        if ($start < 0)
+            $start = 0;
+        if ($limit < 0)
+            $limit = 0;
+
+        $row = 0;
+        $result = array();
+        foreach ($processes_accessible as $p)
+        {
+            $row++;
+
+            if ($row < $start + 1)
+                continue;
+
+            if ($row > $start + $limit)
+                break;
+
+            $result[] = $p;
+        }
+
+        return $result;
     }
 }
