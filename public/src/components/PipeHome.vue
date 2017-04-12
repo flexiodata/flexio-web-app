@@ -63,8 +63,6 @@
     data() {
       return {
         eid: this.$route.params.eid,
-        show_choose_input_modal: false,
-        show_add_connection_modal: false,
         pipe_view: 'transfer'
       }
     },

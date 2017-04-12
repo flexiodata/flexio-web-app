@@ -137,6 +137,15 @@
         </div>
       </div>
     </div>
+
+    <alert-modal
+      ref="modal-alert"
+      title="Syntax Error"
+      @hide="show_alert_modal = false"
+      v-if="show_alert_modal"
+    >
+      <div class="lh-copy">{{alert_msg}}</div>
+    </alert-modal>
   </div>
 </template>
 
@@ -146,6 +155,7 @@
   import { mapGetters } from 'vuex'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
+  import AlertModal from './AlertModal.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import CodeEditor from './CodeEditor.vue'
   import CommandBar from './CommandBar.vue'
@@ -169,6 +179,7 @@
     mixins: [taskItemHelper],
     components: {
       Btn,
+      AlertModal,
       ConnectionIcon,
       CodeEditor,
       CommandBar,
@@ -196,6 +207,8 @@
       return {
         is_inited: false,
         show_preview: this.showPreview,
+        show_alert_modal: false,
+        alert_msg: '',
         description: _.get(this, 'item.description', ''),
         edit_json: this.getOrigJson(),
         edit_cmd: this.getOrigCmd(),
@@ -352,7 +365,12 @@
         var perror = parser.validate(this.edit_cmd)
         if (perror !== true)
         {
-          alert(perror.message)
+          var msg = ''
+          _.each(perror, (e) => { msg += e.message+'\r\n' })
+
+          this.alert_msg = msg
+          this.show_alert_modal = true
+          this.$nextTick(() => { this.$refs['modal-alert'].open() })
           return
         }
 
