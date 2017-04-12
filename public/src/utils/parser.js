@@ -212,9 +212,13 @@
           offset += keywords[i].length;
           if (offset < str.length && str[offset] == ':')
             offset++;
-          results[ keywords[i] ] = { "value": str.substr(offset, ending-offset).trim(),
+          while (offset < str.length && str[offset] == ' ')
+            offset++;
+          while (ending > offset && str[ending-1] == ' ')
+            ending--;
+          results[ keywords[i] ] = { "value": str.substr(offset, ending-offset),
                                      "offset": offset,
-                                     "length": ending-offset }
+                                     "length": Math.max(1,ending-offset) }
         }
       }
 
