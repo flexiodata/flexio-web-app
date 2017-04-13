@@ -65,6 +65,10 @@ class User
         if (!\Flexio\Base\Identifier::isValid($user_name))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('This username is invalid.  Please try another.'));
 
+        // make sure the password is valid
+        if (\Flexio\Base\Util::isValidPassword($password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The password is invalid.  Please try another.'));
+
         // configuration fields we don't want to pass on
         $send_email = $params['send_email'];
         $create_sample_project = $params['create_sample_project'];
@@ -210,6 +214,14 @@ class User
         $user_identifier = $params['eid'];
         $requesting_user_eid = $request->getRequestingUser();
 
+        // if a user_name is specified, make sure it's valid
+        if (isset($params['user_name']) && !\Flexio\Base\Identifier::isValid($params['user_name']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        // if a password is specified, make sure it's valid
+        if (isset($params['password']) && \Flexio\Base\Util::isValidPassword($params['password']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         // load the user
         $user = \Flexio\Object\User::load($user_identifier);
         if ($user === false)
@@ -315,6 +327,10 @@ class User
         $requesting_user_eid = $request->getRequestingUser();
         $old_password = $params['old_password'];
         $new_password = $params['new_password'];
+
+        // make sure the new password is valid
+        if (\Flexio\Base\Util::isValidPassword($new_password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // load the object
         $user = \Flexio\Object\User::load($user_identifier);
@@ -431,6 +447,10 @@ class User
         $email = $params['email'];
         $password = $params['password'];
         $code = $params['verify_code'];
+
+        // make sure the new password is valid
+        if (\Flexio\Base\Util::isValidPassword($password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user = \Flexio\Object\User::load($email);
         if ($user === false)
