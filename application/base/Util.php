@@ -467,7 +467,7 @@ class Util
         usort($arr, create_function('$a,$b',$code));
     }
 
-    public static function getDaysDiff($dt1, $dt2)
+    public static function getDaysDiff(string $dt1, string $dt2)
     {
         // note: input are two strings of form YYYY-MM-DD
         $time1 = strtotime($dt1);
@@ -494,7 +494,7 @@ class Util
     }
     */
 
-    public static function isPositiveInteger($value)
+    public static function isPositiveInteger($value) : bool
     {
         // verifies if an id is a positive integer
         $value_pure = (int)$value;
@@ -504,7 +504,7 @@ class Util
         return true;
     }
 
-    public static function isValidDateTime($value)
+    public static function isValidDateTime($value) : bool
     {
         // verifies if the value is a valid ISO 8601 datetime
         if (!is_string($value))
@@ -520,7 +520,7 @@ class Util
         return false;
     }
 
-    public static function isValidEmail($value)
+    public static function isValidEmail($value) : bool
     {
         // verifies if a value is a valid email
         if (!is_string($value))
@@ -533,7 +533,7 @@ class Util
         return false;
     }
 
-    public static function isValidHostName($value)
+    public static function isValidHostName($value) : bool
     {
         // verifies if a value is a valid hostname, per RFC 1034, section 3.1
         if (!is_string($value))
@@ -565,7 +565,7 @@ class Util
         return true;
     }
 
-    public static function isValidIPV4($value)
+    public static function isValidIPV4($value) : bool
     {
         // verifies if a value is a valid ipv4 address
         if (!is_string($value))
@@ -578,7 +578,7 @@ class Util
         return false;
     }
 
-    public static function isValidIPV6($value)
+    public static function isValidIPV6($value) : bool
     {
         // verifies if a value is a valid ipv4 address
         if (!is_string($value))
@@ -591,7 +591,7 @@ class Util
         return false;
     }
 
-    public static function isValidUrl($value)
+    public static function isValidUrl($value) : bool
     {
         // verifies if a value is a valid url
         if (!is_string($value))
@@ -604,7 +604,7 @@ class Util
         return false;
     }
 
-    public static function isValidPassword($value)
+    public static function isValidPassword($value) : bool
     {
         // make sure a password is a string that's a minimum
         // of 8 characters
@@ -622,7 +622,7 @@ class Util
         return true;
     }
 
-    public static function generateRandomString($length)
+    public static function generateRandomString(int $length) : string
     {
         $result = '';
         $chars = 'bcdfghjkmnpqrstvwxyz';  // characters to draw from
@@ -637,12 +637,12 @@ class Util
         return $result;
     }
 
-    public static function generateHandle()
+    public static function generateHandle() : string
     {
         return self::generateRandomString(20);
     }
 
-    public static function generatePassword()
+    public static function generatePassword() : string
     {
         $pw = self::generateRandomString(10);
         $pw[2] = ''.random_int(0, 9);
