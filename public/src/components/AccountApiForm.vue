@@ -55,13 +55,11 @@
       ...mapState([
         'active_user_eid'
       ]),
-      computed: {
-        is_fetched() {
-          return _.get(_.find(this.getAllUsers(), { eid: this.active_user_eid }), 'tokens_fetched', false)
-        },
-        is_fetching() {
-          return _.get(_.find(this.getAllUsers(), { eid: this.active_user_eid }), 'tokens_fetching', true)
-        }
+      is_fetched() {
+        return _.get(_.find(this.getAllUsers(), { eid: this.active_user_eid }), 'tokens_fetched', false)
+      },
+      is_fetching() {
+        return _.get(_.find(this.getAllUsers(), { eid: this.active_user_eid }), 'tokens_fetching', true)
       },
       tokens() {
         return this.getOurTokens()
