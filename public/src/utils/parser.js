@@ -684,18 +684,12 @@
         if (!this.contains(this.hints.calc['type'], json.params.type))
         {
           this.errors.push({ "code":     "invalid_value",
-                             "message":  "Invalid value: '" + to_format +"'",
+                             "message":  "Invalid value: '" + json.params.type +"'",
                              "offset":   params['type'].offset,
                              "length":   params['type'].length })
         }
       }
-       else
-      {
-          this.errors.push({ "code":     "missing_parameter",
-                             "message":  "Missing parameter 'type:'",
-                             "offset":   str.length-1,
-                             "length":   1 })
-      }
+
 
       if (params.hasOwnProperty('decimal'))
       {
