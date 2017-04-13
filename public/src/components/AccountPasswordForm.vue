@@ -59,8 +59,7 @@
       Btn
     },
     watch: {
-      new_password: function(val, old_val) { this.validateForm('new_password') },
-      new_password2: function(val, old_val) { this.validateForm('new_password2') }
+      new_password: function(val, old_val) { this.validateForm('new_password') }
     },
     data() {
       return {
@@ -110,19 +109,18 @@
         this.old_password = ''
         this.new_password = ''
         this.new_password2 = ''
-        this.ss_errors = _.assign({}, {})
+        this.error_msg = ''
+        this.ss_errors = _.assign({})
       },
       trySaveChanges() {
         // this will show errors below each input
         this.validateForm(null, () => {
-            debugger
           if (this.new_password_error.length > 0)
             return
 
           var eid = this.active_user_eid
           var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
           this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
-            debugger
             if (response.ok)
             {
               this.show_success = true
