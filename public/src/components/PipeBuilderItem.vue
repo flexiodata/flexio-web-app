@@ -57,8 +57,8 @@
 
       <!-- main content -->
       <div
-        class="flex-fill relative pv3 ph3a bg-white bl br b--white-box"
-        :class="[ content_cls, index==0?'':'pt2' ]"
+        class="flex-fill relative ph3a bg-white bl br b--white-box"
+        :class="[ content_cls, index==0?'pt3':'pt2' ]"
       >
         <!-- task name -->
         <inline-edit-text
