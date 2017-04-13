@@ -23,13 +23,43 @@
           <input v-model="verify_code" type="hidden">
         </div>
         <div class="mv3">
-          <input v-model="password" v-focus :class="input_cls" placeholder="Password" type="password" autocomplete=off spellcheck="false">
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            autocomplete=off
+            spellcheck="false"
+            :class="input_cls"
+            v-model="password"
+            v-focus
+            v-validate
+            data-vv-as="password"
+            data-vv-name="password"
+            data-vv-value-path="password"
+            data-vv-rules="required"
+          >
+          <span class="f8 dark-red" v-show="has_password_error">{{password_error}}</span>
         </div>
         <div class="mv3">
-          <input v-model="password2" @keyup.enter="changePassword" :class="input_cls" placeholder="Retype Password" type="password" autocomplete=off spellcheck="false">
+          <input
+            type="password"
+            name="password2"
+            placeholder="Retype Password"
+            autocomplete=off
+            spellcheck="false"
+            :class="input_cls"
+            @keyup.enter="tryChangePassword"
+            v-model="password2"
+            v-validate
+            data-vv-as="password"
+            data-vv-name="password2"
+            data-vv-value-path="password2"
+            data-vv-rules="required|confirmed:password"
+          >
+          <span class="f8 dark-red" v-show="has_confirm_password_error">{{confirm_password_error}}</span>
         </div>
         <div class="mv3">
-          <btn btn-lg btn-primary :disabled="is_submitting" @click="changePassword" class="b ttu w-100">
+          <btn btn-lg btn-primary :disabled="is_submitting" @click="tryChangePassword" class="b ttu w-100">
             <span v-if="is_submitting">Submitting...</span>
             <span v-else>Change password</span>
           </btn>
@@ -57,6 +87,12 @@
         vm.$router.replace(to.path)
       })
     },
+    watch: {
+      password: function(val, old_val) {
+        if (val.length > 0)
+          this.validateForm('password')
+      }
+    },
     data() {
       return {
         email: '',
@@ -66,8 +102,15 @@
         is_submitting: false,
         is_sent: false,
         error_msg: '',
+        ss_errors: {},
         input_cls: 'input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue lh-title ph3 pv2a w-100'
       }
+    },
+    computed: {
+      password_error() { return _.get(this.ss_errors, 'password.message', '') },
+      confirm_password_error() { return _.defaultTo(this.errors.first('password2'), '') },
+      has_password_error() { return this.password_error.length > 0 },
+      has_confirm_password_error() { return this.confirm_password_error.length > 0 }
     },
     methods: {
       getAttrs() {
@@ -78,20 +121,55 @@
           .omitBy(_.isEmpty)
           .value()
       },
-      changePassword() {
-        var me = this
-        var attrs = this.getAttrs()
+      validateForm: _.debounce(function(validate_key, callback) {
+        var validate_attrs = [{
+          key: 'password',
+          value: this.password,
+          type: 'password'
+        }]
 
-        this.is_submitting = true
+        // if a validation key is provided; only run validation on that key
+        if (!_.isNil(validate_key))
+        {
+          validate_attrs = _.filter(validate_attrs, (attr) => {
+            return attr.key == validate_key || _.has(this.ss_errors, attr.key)
+          })
+        }
 
-        api.resetPassword({ attrs }).then((response) => {
-          // success callback
-          me.is_submitting = false
-          me.is_sent = true
+        api.validate({ attrs: validate_attrs }).then((response) => {
+          this.ss_errors = _.keyBy(response.body, 'key')
+
+          if (_.isFunction(callback))
+            callback.call(this)
         }, (response) => {
           // error callback
-          me.is_submitting = false
-          me.showErrors(_.get(response, 'data.errors'))
+        })
+      }, 300),
+      tryChangePassword() {
+        this.$validator.validateAll().then(success => {
+          // client-side validation failed; bail out
+          if (!success)
+            return
+
+          // this will show errors below each input
+          this.validateForm(null, () => {
+            if (this.has_password_error)
+              return
+
+            var attrs = this.getAttrs()
+
+            this.is_submitting = true
+
+            api.resetPassword({ attrs }).then(response => {
+              // success callback
+              this.is_submitting = false
+              this.is_sent = true
+            }, (response) => {
+              // error callback
+              this.is_submitting = false
+              this.showErrors(_.get(response, 'data.errors'))
+            })
+          })
         })
       },
       showErrors: function(errors) {
