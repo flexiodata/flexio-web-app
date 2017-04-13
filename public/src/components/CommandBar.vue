@@ -453,6 +453,18 @@
         if (_.isNil(hints) || !_.isArray(hints.items) || hints.items.length == 0)
           return
 
+        if (hints.items.length == 1)
+        {
+          if (hints.type == 'commands' ||
+              hints.type == 'values'   ||
+              hints.type == 'arguments')
+          {
+            // don't show single item dropdowns for complete words
+            if (hints.items[0] == hints.current_word)
+              return
+          }
+        }
+
         var tip = createEl('div', null)
         for (var i = 0; i < hints.items.length; ++i)
         {
