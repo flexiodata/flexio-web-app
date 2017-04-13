@@ -453,6 +453,41 @@
         if (_.isNil(hints) || !_.isArray(hints.items) || hints.items.length == 0)
           return
 
+        // don't show dropdown if there's only one result
+        // and the current word is a full match
+        if (hints.items.length == 1)
+        {
+          if (hints.type == 'commands' ||
+              hints.type == 'values'   ||
+              hints.type == 'arguments')
+          {
+            if (hints.items[0] == hints.current_word)
+              return
+          }
+           else if (hints.type == 'connections')
+          {
+            var found = _
+              .chain(hints.items[0])
+              .pick(['eid', 'ename', 'name', 'description'])
+              .includes(hints.current_word)
+              .value()
+
+            if (found)
+              return
+          }
+           else if (hints.type == 'columns')
+          {
+            var found = _
+              .chain(hints.items[0])
+              .pick(['name'])
+              .includes(hints.current_word)
+              .value()
+
+            if (found)
+              return
+          }
+        }
+
         var tip = createEl('div', null)
         for (var i = 0; i < hints.items.length; ++i)
         {

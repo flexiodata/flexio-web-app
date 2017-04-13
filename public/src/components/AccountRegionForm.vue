@@ -17,7 +17,7 @@
       <btn
         btn-md
         btn-primary
-        class="b ttu"
+        class="b ttu mt3"
         @click="saveChanges"
       >Save Changes</btn>
     </form>

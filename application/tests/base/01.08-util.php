@@ -25,55 +25,19 @@ class Test
 
 
 
-        // TEST: \Flexio\Base\Util::zlstrpos() non-string input and empty strings
-
-        // BEGIN TEST
-        $pos = \Flexio\Base\Util::zlstrpos(null, null);
-        $actual = ($pos === false);
-        $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $pos = \Flexio\Base\Util::zlstrpos('', null);
-        $actual = ($pos === false);
-        $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $pos = \Flexio\Base\Util::zlstrpos(null, '');
-        $actual = ($pos === false);
-        $expected = true;
-        TestCheck::assertBoolean('A.3', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $pos = \Flexio\Base\Util::zlstrpos(false, false);
-        $actual = ($pos === false);
-        $expected = true;
-        TestCheck::assertBoolean('A.4', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $pos = \Flexio\Base\Util::zlstrpos('', false);
-        $actual = ($pos === false);
-        $expected = true;
-        TestCheck::assertBoolean('A.5', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $pos = \Flexio\Base\Util::zlstrpos(false, '');
-        $actual = ($pos === false);
-        $expected = true;
-        TestCheck::assertBoolean('A.6', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
+        // TEST: \Flexio\Base\Util::zlstrpos() empty strings
 
         // BEGIN TEST
         $pos = \Flexio\Base\Util::zlstrpos('', '');
         $actual = ($pos === false);
         $expected = true;
-        TestCheck::assertBoolean('A.7', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.1', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
 
         // BEGIN TEST
         $pos = \Flexio\Base\Util::zlstrpos('', '', 5);
         $actual = ($pos === false);
         $expected = true;
-        TestCheck::assertBoolean('A.8', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.2', '\Flexio\Base\Util::zlstrpos() non-string input and empty strings',  $actual, $expected, $results);
 
 
 

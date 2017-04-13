@@ -33,7 +33,7 @@ class Util
         return rmdir($dir);
     }
 
-    public static function beforeFirst($str, $search)
+    public static function beforeFirst(string $str, string $search) : string
     {
         if (strlen($search) == 0)
             return $str;
@@ -51,7 +51,7 @@ class Util
         return $chunk;
     }
 
-    public static function afterFirst($str, $search)
+    public static function afterFirst(string $str, string $search) : string
     {
         if (strlen($search) == 0)
             return $str;
@@ -69,7 +69,7 @@ class Util
         return $chunk;
     }
 
-    public static function beforeLast($str, $search)
+    public static function beforeLast(string $str, string $search) : string
     {
         if (strlen($search) == 0)
             return $str;
@@ -87,7 +87,7 @@ class Util
         return $chunk;
     }
 
-    public static function afterLast($str, $search)
+    public static function afterLast(string $str, string $search) : string
     {
         if (strlen($search) == 0)
             return $str;
@@ -105,17 +105,17 @@ class Util
         return $chunk;
     }
 
-    public static function lpad($str, $n, $ch = ' ')
+    public static function lpad(string $str, int $n, string $ch = ' ') : string
     {
         return str_pad($str, $n, $ch, STR_PAD_LEFT);
     }
 
-    public static function rpad($str, $n, $ch = ' ')
+    public static function rpad(string $str, int $n, string $ch = ' ') : string
     {
         return str_pad($str, $n, $ch, STR_PAD_RIGHT);
     }
 
-    public static function zlstrpos($haystack, $needle, $offset = 0)
+    public static function zlstrpos(string $haystack, string $needle, int $offset = 0) // TODO: add function return type
     {
         if ($needle == '')
             return false;
@@ -158,7 +158,7 @@ class Util
         return $offset;
     }
 
-    private static function json_strpos($haystack, $needle, $offset = 0)
+    private static function json_strpos(string $haystack, string $needle, int $offset = 0) // TODO: add function return type
     {
         if ($needle == '')
             return false;
@@ -213,7 +213,7 @@ class Util
         return $offset;
     }
 
-    public static function isAssociativeArray($arr)
+    public static function isAssociativeArray(array $arr) : bool
     {
         // tests whether or  not an array is sequential or associative;
         // (e.g. ["a","b","c"] or ["k1"=>"a","k2"=>"b","k3"=>"c"])
@@ -225,7 +225,7 @@ class Util
         return $is_associative;
     }
 
-    public static function diff($array1, $array2)
+    public static function diff(array $array1, array $array2) : array
     {
         // note: this function takes two arrays and finds the difference
         // between them and reports the results similarly to how a text
@@ -234,9 +234,6 @@ class Util
         //     Util::diff(array('b','c','d'),array('a','b','c','e'))
         // we get:
         //     [{"+":"a"},{"=":"b"},{"=":"c"},{"-":"d"},{"+":"e"}]
-
-        if (!is_array($array1) || !is_array($array2))
-            return null;
 
         // handle two empty arrays
         if (empty($array1) && empty($array2))
@@ -312,11 +309,8 @@ class Util
         );
     }
 
-    public static function filterChars($str, $allowed_chars)
+    public static function filterChars(string $str, string $allowed_chars) : string
     {
-        if (!is_string($str) || !is_string($allowed_chars))
-            return '';
-
         $result = '';
         $len = strlen($str);
         for ($i = 0; $i < $len; ++$i)
@@ -328,11 +322,8 @@ class Util
         return $result;
     }
 
-    public static function filterAlphaNumeric($str, $additional_allowed = '')
+    public static function filterAlphaNumeric(string $str, string $additional_allowed = '') : string
     {
-        if (!is_string($str) || !is_string($additional_allowed))
-            return '';
-
         $result = '';
         $len = strlen($str);
         for ($i = 0; $i < $len; ++$i)
@@ -344,11 +335,8 @@ class Util
         return $result;
     }
 
-    public static function filterDigits($str, $additional_allowed = '')
+    public static function filterDigits(string $str, string $additional_allowed = '') : string
     {
-        if (!is_string($str) || !is_string($additional_allowed))
-            return '';
-
         $result = '';
         $len = strlen($str);
         for ($i = 0; $i < $len; ++$i)
@@ -360,15 +348,12 @@ class Util
         return $result;
     }
 
-    public static function mapArray($arr1, $arr2)
+    public static function mapArray(array $arr1, array $arr2) : array
     {
         // returns an array with the values of $arr2 mapped onto $arr1 based
         // on keys; if $arr2 has keys that aren't in $arr1, they are excluded
         // from the output; if $arr1 has keys that aren't in $arr2, the key/value
         // pair as included as it exists in $arr1
-
-        if (!is_array($arr1) || !is_array($arr2))
-            return false;
 
         $result = array();
         foreach ($arr1 as $key => $value)
@@ -379,22 +364,22 @@ class Util
         return $result;
     }
 
-    public static function filterArray($arr, $allowed_keys)
+    public static function filterArray(array $arr, array $allowed_keys) : array
     {
         return array_intersect_key($arr, array_flip($allowed_keys));
     }
 
-    public static function filterArrayEmptyValues($arr)
+    public static function filterArrayEmptyValues(array $arr) : array
     {
         return array_filter($arr, 'strlen');
     }
 
-    public static function removeArrayKeys($arr, $remove_keys)
+    public static function removeArrayKeys(array $arr, array $remove_keys) : array
     {
         return array_diff_key($arr, array_flip($remove_keys));
     }
 
-    public static function filterArrayofArrays($arr, $allowed_keys)
+    public static function filterArrayofArrays(array $arr, array $allowed_keys) : array
     {
         $result = array();
         foreach ($arr as $a)
@@ -404,21 +389,19 @@ class Util
         return $result;
     }
 
-    public static function formatNumber($num, $dec = 0)
+    public static function formatNumber(float $num, int $dec = 0) : string
     {
-        if (is_null($num))
-            return null;
         global $g_store;
         return number_format($num, $dec, $g_store->decimal_separator, $g_store->thousands_separator);
     }
 
-    public static function formatDate($date)
+    public static function formatDate(string $date) : string
     {
         $datetime = new \DateTime($date);
         return $datetime->format(\DateTime::ISO8601);
     }
 
-    public static function formateDateDiff($date1, $date2)
+    public static function formateDateDiff(string $date1 = null, string $date2 = null) // TODO: set function return type
     {
         // returns the difference between two datetimes in seconds (including
         // fractions of a second)
@@ -452,7 +435,7 @@ class Util
     }
 
     // sorts an array in ascending order by a specified field
-    public static function sortByFieldAsc(&$arr, $field)
+    public static function sortByFieldAsc(array &$arr, string $field) // TODO: set function return type
     {
         $code="if (\$a['$field'] == \$b['$field']) return 0;".
             "return (\$a['$field'] < \$b['$field']) ? -1 : 1;";
@@ -460,14 +443,14 @@ class Util
     }
 
     // sorts an array in descending order by a specified field
-    public static function sortByFieldDesc(&$arr, $field)
+    public static function sortByFieldDesc(array &$arr, string $field) // TODO: set function return type
     {
         $code="if (\$a['$field'] == \$b['$field']) return 0;".
             "return (\$a['$field'] > \$b['$field']) ? -1 : 1;";
         usort($arr, create_function('$a,$b',$code));
     }
 
-    public static function getDaysDiff($dt1, $dt2)
+    public static function getDaysDiff(string $dt1, string $dt2) // TODO: set function return type
     {
         // note: input are two strings of form YYYY-MM-DD
         $time1 = strtotime($dt1);
@@ -494,7 +477,7 @@ class Util
     }
     */
 
-    public static function isPositiveInteger($value)
+    public static function isPositiveInteger($value) : bool
     {
         // verifies if an id is a positive integer
         $value_pure = (int)$value;
@@ -504,7 +487,7 @@ class Util
         return true;
     }
 
-    public static function isValidDateTime($value)
+    public static function isValidDateTime($value) : bool
     {
         // verifies if the value is a valid ISO 8601 datetime
         if (!is_string($value))
@@ -520,7 +503,7 @@ class Util
         return false;
     }
 
-    public static function isValidEmail($value)
+    public static function isValidEmail($value) : bool
     {
         // verifies if a value is a valid email
         if (!is_string($value))
@@ -533,7 +516,7 @@ class Util
         return false;
     }
 
-    public static function isValidHostName($value)
+    public static function isValidHostName($value) : bool
     {
         // verifies if a value is a valid hostname, per RFC 1034, section 3.1
         if (!is_string($value))
@@ -565,7 +548,7 @@ class Util
         return true;
     }
 
-    public static function isValidIPV4($value)
+    public static function isValidIPV4($value) : bool
     {
         // verifies if a value is a valid ipv4 address
         if (!is_string($value))
@@ -578,7 +561,7 @@ class Util
         return false;
     }
 
-    public static function isValidIPV6($value)
+    public static function isValidIPV6($value) : bool
     {
         // verifies if a value is a valid ipv4 address
         if (!is_string($value))
@@ -591,7 +574,7 @@ class Util
         return false;
     }
 
-    public static function isValidUrl($value)
+    public static function isValidUrl($value) : bool
     {
         // verifies if a value is a valid url
         if (!is_string($value))
@@ -604,7 +587,7 @@ class Util
         return false;
     }
 
-    public static function isValidPassword($value)
+    public static function isValidPassword($value) : bool
     {
         // make sure a password is a string that's a minimum
         // of 8 characters
@@ -622,7 +605,7 @@ class Util
         return true;
     }
 
-    public static function generateRandomString($length)
+    public static function generateRandomString(int $length) : string
     {
         $result = '';
         $chars = 'bcdfghjkmnpqrstvwxyz';  // characters to draw from
@@ -637,12 +620,12 @@ class Util
         return $result;
     }
 
-    public static function generateHandle()
+    public static function generateHandle() : string
     {
         return self::generateRandomString(20);
     }
 
-    public static function generatePassword()
+    public static function generatePassword() : string
     {
         $pw = self::generateRandomString(10);
         $pw[2] = ''.random_int(0, 9);
@@ -655,7 +638,7 @@ class Util
         return $pw;
     }
 
-    public static function encrypt($plaintext, $key)
+    public static function encrypt(string $plaintext, string $key = null) // TODO: set function return type
     {
         require_once dirname(dirname(__DIR__)) . '/library/sodium_compat/autoload.php';
 
@@ -684,12 +667,9 @@ class Util
         return 'ZZXV2/'.base64_encode($enc);
     }
 
-    public static function decrypt($ciphertext, $key)
+    public static function decrypt(string $ciphertext, string $key = null) // TODO: set function return type
     {
         require_once dirname(dirname(__DIR__)) . '/library/sodium_compat/autoload.php';
-
-        if (!is_string($ciphertext))
-            return null;
 
         if (substr($ciphertext,0,5) == 'ZZXV1')
             return self::oldDecrypt($ciphertext, $key);
@@ -723,11 +703,8 @@ class Util
         }
     }
 
-    public static function oldEncrypt($string, $key)
+    public static function oldEncrypt(string $string, string $key) : string
     {
-        if (is_null($string))
-            return null;
-
         if ($key == '') // empty keys not allowed in mcrypt
             $key = 'A';
 
@@ -740,13 +717,10 @@ class Util
         return 'ZZXV1'.base64_encode($enc);
     }
 
-    public static function oldDecrypt($string, $key)
+    public static function oldDecrypt(string $string, string $key) : string
     {
         if ($key == '') // empty keys not allowed in mcrypt
             $key = 'A';
-
-        if (is_null($string))
-            return null;
 
         if (substr($string,0,5) != 'ZZXV1')
             return '';
@@ -765,7 +739,7 @@ class Util
         return rtrim($data, "\0");
     }
 
-    public static function appendUrlPath($url, $part)
+    public static function appendUrlPath(string $url, string $part) : string
     {
         if (strlen($url) == 0)
             return $part;
@@ -782,7 +756,7 @@ class Util
     }
 
     // mode should be either 'inline' or 'download'
-    public static function headersPdf($output_filename, $file_location, $mode = 'inline')
+    public static function headersPdf(string $output_filename, string $file_location, string $mode = 'inline') : bool
     {
         if ($mode != 'inline' && $mode != 'download')
             return false;
@@ -814,9 +788,11 @@ class Util
             //     else
             header('Content-Disposition: attachment; filename="'.$output_filename.'"');
         }
+
+        return true;
     }
 
-    public static function headersCsv($output_filename)
+    public static function headersCsv(string $output_filename) : bool
     {
         $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
@@ -837,9 +813,11 @@ class Util
         {
             die('Invalid credentials.  Failure.');
         }
+
+        return true;
     }
 
-    public static function header_error($code, $text = null)
+    public static function header_error(int $code, string $text = null) : int
     {
         switch ($code) {
             default:
@@ -847,7 +825,7 @@ class Util
         }
 
         $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
-        header($protocol . ' ' . $code . ' ' . $text);
+        header($protocol . ' ' . (string)$code . ' ' . $text);
 
         return $code;
     }
