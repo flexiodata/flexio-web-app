@@ -9,7 +9,6 @@
     <div v-if="is_open">
       <form
         novalidate
-        data-vv-scope="form-delete"
         @submit.prevent="submit"
       >
         <p class="ma0 pb1 lh-copy">Are you sure you want to delete the <span class="b">{{original_project.name}}</span> project and all of its contents? To confirm and continue with this action, enter the project name below.</p>
