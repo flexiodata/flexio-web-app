@@ -401,10 +401,13 @@ class Util
         return $datetime->format(\DateTime::ISO8601);
     }
 
-    public static function formateDateDiff(string $date1, string $date2) // TODO: set function return type
+    public static function formateDateDiff(string $date1 = null, string $date2 = null) // TODO: set function return type
     {
         // returns the difference between two datetimes in seconds (including
         // fractions of a second)
+
+        if (!isset($date1) || !isset($date2))
+            return null;
 
         // get the difference between two dates, excluding the microtime portion
         $d1 = \DateTime::createFromFormat("Y-m-d H:i:s.u", $date1);
