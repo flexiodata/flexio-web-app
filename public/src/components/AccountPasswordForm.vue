@@ -13,36 +13,58 @@
       <ui-textbox
         type="password"
         autocomplete="off"
+        name="old_password"
         label="Current Password"
         floating-label
         help=" "
+        :error="errors.first('old_password')"
+        :invalid="errors.has('old_password')"
         v-model="old_password"
+        v-validate
+        data-vv-as="password"
+        data-vv-name="old_password"
+        data-vv-value-path="old_password"
+        data-vv-rules="required"
       >
       </ui-textbox>
       <ui-textbox
         type="password"
         autocomplete="off"
+        name="new_password"
         label="New Password"
         floating-label
         help=" "
+        :error="new_password_error.length > 0 ? new_password_error : errors.first('new_password')"
+        :invalid="new_password_error.length > 0 || errors.has('new_password')"
         v-model="new_password"
-        :error="new_password_error"
-        :invalid="new_password_error.length > 0"
+        v-validate
+        data-vv-as="password"
+        data-vv-name="new_password"
+        data-vv-value-path="new_password"
+        data-vv-rules="required"
       >
       </ui-textbox>
       <ui-textbox
         type="password"
         autocomplete="off"
+        name="new_password2"
         label="Confirm New Password"
         floating-label
         help=" "
+        :error="errors.first('new_password2')"
+        :invalid="errors.has('new_password2')"
         v-model="new_password2"
+        v-validate
+        data-vv-as="password"
+        data-vv-name="new_password2"
+        data-vv-value-path="new_password2"
+        data-vv-rules="required|confirmed:new_password"
       >
       </ui-textbox>
       <btn
         btn-md
         btn-primary
-        class="b ttu"
+        class="b ttu mt3"
         @click="trySaveChanges"
       >Save Changes</btn>
     </form>
@@ -59,7 +81,10 @@
       Btn
     },
     watch: {
-      new_password: function(val, old_val) { this.validateForm('new_password') }
+      new_password: function(val, old_val) {
+        if (val.length > 0)
+          this.validateForm('new_password')
+      }
     },
     data() {
       return {
@@ -113,27 +138,33 @@
         this.ss_errors = _.assign({})
       },
       trySaveChanges() {
-        // this will show errors below each input
-        this.validateForm(null, () => {
-          if (this.new_password_error.length > 0)
+        this.$validator.validateAll().then(success => {
+          // client-side validation failed; bail out
+          if (!success)
             return
 
-          var eid = this.active_user_eid
-          var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
-          this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
-            if (response.ok)
-            {
-              this.show_success = true
-              this.show_error = false
-              this.resetForm()
-              setTimeout(() => { this.show_success = false }, 3000)
-            }
-             else
-            {
-              this.show_success = false
-              this.show_error = true
-              this.showErrors(_.get(response, 'data.errors'))
-            }
+          // this will show errors below each input
+          this.validateForm(null, () => {
+            if (this.new_password_error.length > 0)
+              return
+
+            var eid = this.active_user_eid
+            var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
+            this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
+              if (response.ok)
+              {
+                this.show_success = true
+                this.show_error = false
+                this.resetForm()
+                setTimeout(() => { this.show_success = false }, 3000)
+              }
+               else
+              {
+                this.show_success = false
+                this.show_error = true
+                this.showErrors(_.get(response, 'data.errors'))
+              }
+            })
           })
         })
       },

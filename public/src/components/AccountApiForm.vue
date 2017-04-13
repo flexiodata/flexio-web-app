@@ -69,8 +69,9 @@
       this.tryFetchTokens()
     },
     methods: {
-      ...mapGetters([
-        'getAllTokens'
+      ...mapGetters([,
+        'getAllTokens',
+        'getAllUsers'
       ]),
       tryFetchTokens() {
         if (!this.is_fetched)
