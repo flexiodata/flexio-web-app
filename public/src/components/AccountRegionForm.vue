@@ -1,5 +1,11 @@
 <template>
   <div>
+    <ui-alert @dismiss="show_success = false" type="success" :dismissible="false" v-show="show_success">
+      Your regional settings were updated successfully.
+    </ui-alert>
+    <ui-alert @dismiss="show_error = false" type="error" v-show="show_error">
+      There was a problem updating your regional settings.
+    </ui-alert>
     <form novalidate @submit.prevent="submit">
       <ui-select
         label="Timezone"
@@ -9,7 +15,7 @@
       >
       </ui-select>
       <btn
-        btn-lg
+        btn-md
         btn-primary
         class="b ttu"
         @click="saveChanges"
@@ -30,7 +36,9 @@
     data() {
       return {
         timezone: '',
-        timezones: timezones
+        timezones: timezones,
+        show_success: false,
+        show_error: false
       }
     },
     watch: {
@@ -60,7 +68,17 @@
       saveChanges() {
         var eid = this.active_user_eid
         var attrs = _.pick(this.$data, ['timezone'])
-        this.$store.dispatch('updateUser', { eid, attrs })
+        this.$store.dispatch('updateUser', { eid, attrs }).then(response => {
+          if (response.ok)
+          {
+            this.show_success = true
+            setTimeout(() => { this.show_success = false }, 3000)
+          }
+           else
+          {
+            this.show_error = true
+          }
+        })
       }
     }
   }
