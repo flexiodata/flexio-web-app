@@ -20,6 +20,7 @@ module.exports = {
       'vuex',
       'vue-resource',
       'vue-router',
+      'vue2-grid',
       'vee-validate',
       'keen-ui',
       'filesize',
