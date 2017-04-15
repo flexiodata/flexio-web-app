@@ -106,6 +106,12 @@ EOT;
 
 
         $command = "$phpbin -f \"$tmpfname\"";
+        self::execute($command, $wait);
+    }
+
+
+    public static function execute(string $command, bool $wait = false)
+    {
         if (strtoupper(substr(PHP_OS, 0, 3)) == "WIN")
         {
             $wsh_shell = new \COM("WScript.Shell");
