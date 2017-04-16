@@ -1270,6 +1270,10 @@ css-color-names@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
+css-element-queries@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/css-element-queries/-/css-element-queries-0.4.0.tgz#cb5bcde9d980ac3699e7471f798e70600088d3de"
+
 css-loader@^0.25.0:
   version "0.25.0"
   resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.25.0.tgz#c3febc8ce28f4c83576b6b13707f47f90c390223"
@@ -5074,6 +5078,13 @@ vue-loader@^11.3.3:
     vue-style-loader "^2.0.0"
     vue-template-es2015-compiler "^1.2.2"
 
+vue-resize-directive@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/vue-resize-directive/-/vue-resize-directive-1.0.0.tgz#e1197131390ac8d5e20116198679b06eb6cec985"
+  dependencies:
+    css-element-queries "^0.4.0"
+    lodash.debounce "^4.0.8"
+
 vue-resource@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/vue-resource/-/vue-resource-1.0.3.tgz#8d52d0d8a9ed5f2ae704c68d530c84ceaf97be14"
@@ -5100,13 +5111,14 @@ vue-template-es2015-compiler@^1.2.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.3.2.tgz#c04080227514929ba540de7a7a93ac430467bdc0"
 
-vue2-grid@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/vue2-grid/-/vue2-grid-1.0.4.tgz#08e94b5296cb8a0917671f020715ee613e673024"
+vue2-grid@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/vue2-grid/-/vue2-grid-1.0.5.tgz#69b89fdeecf1f61fada96a0160095527a4f2c9d0"
   dependencies:
     axios "^0.16.1"
     lodash "^4.17.4"
     tachyons "^4.6.1"
+    vue-resize-directive "^1.0.0"
 
 vue@^2.2.6:
   version "2.2.6"

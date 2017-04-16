@@ -25,7 +25,7 @@
     "vue": "^2.2.6",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.1.0",
-    "vue2-grid": "^1.0.4",
+    "vue2-grid": "^1.0.5",
     "vuex": "^2.1.1"
   },
   "devDependencies": {
