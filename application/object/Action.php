@@ -25,9 +25,18 @@ class Action
         $this->initialize();
     }
 
-    public static function create(string $requesting_user, array $params) : \Flexio\Object\Action
+    public static function create() : \Flexio\Object\Action
     {
         return (new static);
     }
-}
 
+    public static function record(string $name, string $user_eid, array $params) : bool
+    {
+        $action_params = array(
+            'name' => $name,
+            'user_eid' => $user_eid,
+            'params' => json_encode($params)
+        );
+        \Flexio\System\System::getModel()->action->record($action_params);
+    }
+}
