@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Pipe
 {
-    public static function create(array $params, \Flexio\Api\Request $request) : array
+    public static function create(array $params, string $requesting_user_eid) : array
     {
         $params_original = $params;
         $validator = \Flexio\Base\Validator::create();
@@ -36,13 +36,12 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = isset($params['parent_eid']) ? $params['parent_eid'] : false;
-        $requesting_user_eid = $request->getRequestingUser();
 
         // if the copy_eid parameter is set, then copy the pipe,
         // using the original parameters; this simply allows us to reuse
         // the create api call, even though the two functions are distinct
         if (isset($params['copy_eid']))
-            return self::copy($params_original, $request);
+            return self::copy($params_original, $requesting_user_eid);
 
         // check rights
         $project = false;
@@ -70,7 +69,7 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function copy(array $params, \Flexio\Api\Request $request) : array
+    public static function copy(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -81,7 +80,6 @@ class Pipe
 
         $original_pipe_identifier = $params['copy_eid'];
         $project_identifier = isset($params['parent_eid']) ? $params['parent_eid'] : false;
-        $requesting_user_eid = $request->getRequestingUser();
 
         // make sure we can read the pipe
         $original_pipe = \Flexio\Object\Pipe::load($original_pipe_identifier);
@@ -121,7 +119,7 @@ class Pipe
         return $new_pipe->get();
     }
 
-    public static function delete(array $params, \Flexio\Api\Request $request) : bool
+    public static function delete(array $params, string $requesting_user_eid) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -130,7 +128,6 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -145,7 +142,7 @@ class Pipe
         return true;
     }
 
-    public static function set(array $params, \Flexio\Api\Request $request) : array
+    public static function set(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -161,7 +158,6 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -177,7 +173,7 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function get(array $params, \Flexio\Api\Request $request) : array
+    public static function get(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -186,7 +182,6 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -201,11 +196,8 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function listall(array $params, \Flexio\Api\Request $request) : array
+    public static function listall(array $params, string $requesting_user_eid) : array
     {
-        // get the pipes for the requesting user
-        $requesting_user_eid = $request->getRequestingUser();
-
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
@@ -229,7 +221,7 @@ class Pipe
         return $result;
     }
 
-    public static function comments(array $params, \Flexio\Api\Request $request) : array
+    public static function comments(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -238,7 +230,6 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -260,7 +251,7 @@ class Pipe
         return $result;
     }
 
-    public static function processes(array $params, \Flexio\Api\Request $request) : array
+    public static function processes(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -272,8 +263,6 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
-
         $start = isset($params['start']) ? (int)$params['start'] : null;
         $limit = isset($params['limit']) ? (int)$params['limit'] : null;
         $order = isset($params['order']) ? (string)$params['order'] : null;
@@ -305,7 +294,7 @@ class Pipe
         return $result;
     }
 
-    public static function run(array $params, \Flexio\Api\Request $request) // TODO: add return type
+    public static function run(array $params, string $requesting_user_eid) // TODO: add return type
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -314,7 +303,6 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
         $background = false;
 
         // load the object
@@ -456,11 +444,11 @@ class Pipe
         $p['run'] = true;
         $p['params'] = $_POST;
 
-        return Process::create($p, $request);
+        return Process::create($p, $requesting_user_eid);
         */
     }
 
-    public static function validate(array $params, \Flexio\Api\Request $request) : array
+    public static function validate(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -469,7 +457,6 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -506,7 +493,7 @@ class Pipe
         return $result;
     }
 
-    public static function addTaskStep(array $params, \Flexio\Api\Request $request) : array
+    public static function addTaskStep(array $params, string $requesting_user_eid) : array
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -519,7 +506,6 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $pipe_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -543,7 +529,7 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function deleteTaskStep(array $params, \Flexio\Api\Request $request) : bool
+    public static function deleteTaskStep(array $params, string $requesting_user_eid) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -554,7 +540,6 @@ class Pipe
 
         $task_identifier = $params['eid'];
         $pipe_identifier = $params['parent_eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -570,7 +555,7 @@ class Pipe
         return true;
     }
 
-    public static function setTaskStep(array $params, \Flexio\Api\Request $request) /* : array */ // TODO: set function return type
+    public static function setTaskStep(array $params, string $requesting_user_eid) /* : array */ // TODO: set function return type
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -585,7 +570,6 @@ class Pipe
 
         $task_identifier = $params['eid'];
         $pipe_identifier = $params['parent_eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -605,7 +589,7 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function getTaskStep(array $params, \Flexio\Api\Request $request) /* : array */ // TODO: set function return type
+    public static function getTaskStep(array $params, string $requesting_user_eid) /* : array */ // TODO: set function return type
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -616,7 +600,6 @@ class Pipe
 
         $task_identifier = $params['eid'];
         $pipe_identifier = $params['parent_eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);

@@ -18,15 +18,15 @@ namespace Flexio\Api;
 
 class Process
 {
-    public static function create(array $params, \Flexio\Api\Request $request) : array
+    public static function create(array $params, string $requesting_user_eid) : array
     {
-        $process = self::create_internal($params, $request);
+        $process = self::create_internal($params, $requesting_user_eid);
         if ($process === false)
             return false;  // API error was set by create_internal
         return $process->get();
     }
 
-    public static function debug(array $params, \Flexio\Api\Request $request) : array
+    public static function debug(array $params, string $requesting_user_eid) : array
     {
         // allow in debug mode or on test site
         if (!IS_DEBUG() && !IS_TESTSITE())
@@ -35,7 +35,7 @@ class Process
         // run the specified job in blocking mode
         $params['background'] = $params['background'] ?? false;
         $params['debug'] = true;
-        $process = self::create_internal($params, $request);
+        $process = self::create_internal($params, $requesting_user_eid);
         if ($process === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
@@ -43,7 +43,7 @@ class Process
         return $properties;
     }
 
-    private static function create_internal(array $params, \Flexio\Api\Request $request) : \Flexio\Object\Process
+    private static function create_internal(array $params, string $requesting_user_eid) : \Flexio\Object\Process
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -61,7 +61,6 @@ class Process
         $background = toBoolean($params['background']);
         $debug = toBoolean($params['debug']);
         $autorun = toBoolean($params['run']);
-        $requesting_user_eid = $request->getRequestingUser();
 
         // check rights
         $pipe = false;
@@ -111,7 +110,7 @@ class Process
         return $process;
     }
 
-    public static function delete(array $params, \Flexio\Api\Request $request) : bool
+    public static function delete(array $params, string $requesting_user_eid) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -120,7 +119,6 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -135,7 +133,7 @@ class Process
         return true;
     }
 
-    public static function set(array $params, \Flexio\Api\Request $request) : array
+    public static function set(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -146,7 +144,6 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -171,7 +168,7 @@ class Process
         return $process->get();
     }
 
-    public static function get(array $params, \Flexio\Api\Request $request) : array
+    public static function get(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -183,7 +180,6 @@ class Process
 
         $process_identifier = $params['eid'];
         $process_info_only = toBoolean($params['status']);
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -232,7 +228,7 @@ class Process
         return $process_info;
     }
 
-    public static function run(array $params, \Flexio\Api\Request $request) : array
+    public static function run(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -243,7 +239,6 @@ class Process
 
         $process_identifier = $params['eid'];
         $background = toBoolean($params['background']);
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -257,7 +252,7 @@ class Process
         return $process->run($background)->get();
     }
 
-    public static function cancel(array $params, \Flexio\Api\Request $request) : array
+    public static function cancel(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -266,7 +261,6 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -280,7 +274,7 @@ class Process
         return $process->cancel()->get();
     }
 
-    public static function pause(array $params, \Flexio\Api\Request $request) : array
+    public static function pause(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -289,7 +283,6 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -303,7 +296,7 @@ class Process
         return $process->pause()->get();
     }
 
-    public static function addInput(array $params, \Flexio\Api\Request $request) : array
+    public static function addInput(array $params, string $requesting_user_eid) : array
     {
         // TODO: handle manual streams that are added so that proces inputs
         // can come from files that are directly uploaded as well as from
@@ -316,7 +309,6 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -336,7 +328,7 @@ class Process
         return $process->addInput($stream)->get();
     }
 
-    public static function getInput(array $params, \Flexio\Api\Request $request)
+    public static function getInput(array $params, string $requesting_user_eid)
     {
         // return the process input before any tasks; these will only be
         // streams that are added via addInput(); otherwise, the result
@@ -353,7 +345,6 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -364,7 +355,7 @@ class Process
         return self::echoStreamInfo($process_streams, $params);
     }
 
-    public static function getOutput(array $params, \Flexio\Api\Request $request)
+    public static function getOutput(array $params, string $requesting_user_eid)
     {
         // return the process output after the last task; this will be
         // empty if the process hasn't run
@@ -379,7 +370,6 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -390,7 +380,7 @@ class Process
         return self::echoStreamInfo($process_streams, $params);
     }
 
-    public static function getTaskInputInfo(array $params, \Flexio\Api\Request $request) : array
+    public static function getTaskInputInfo(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -401,7 +391,6 @@ class Process
 
         $process_identifier = $params['parent_eid'];
         $task_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
@@ -424,7 +413,7 @@ class Process
         return $merged_structure->enum();
     }
 
-    public static function getTaskOutputInfo(array $params, \Flexio\Api\Request $request) : array
+    public static function getTaskOutputInfo(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -435,7 +424,6 @@ class Process
 
         $process_identifier = $params['parent_eid'];
         $task_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
@@ -458,11 +446,9 @@ class Process
         return $merged_structure->enum();
     }
 
-    public static function getStatistics(array $params, \Flexio\Api\Request $request) : array
+    public static function getStatistics(array $params, string $requesting_user_eid) : array
     {
         // only allow users from flex.io to get this info
-
-        $requesting_user_eid = $request->getRequestingUser();
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);

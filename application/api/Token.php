@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Token
 {
-    public static function create(array $params, \Flexio\Api\Request $request) : array
+    public static function create(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -27,7 +27,6 @@ class Token
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
@@ -48,7 +47,7 @@ class Token
         return $token->get();
     }
 
-    public static function delete(array $params, \Flexio\Api\Request $request) : bool
+    public static function delete(array $params, string $requesting_user_eid) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -57,7 +56,6 @@ class Token
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // TODO: temporarily disabled; need to add notion of ownership to user object
         // before this will work
@@ -77,7 +75,7 @@ class Token
         return true;
     }
 
-    public static function get(array $params, \Flexio\Api\Request $request) : array
+    public static function get(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -86,7 +84,6 @@ class Token
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the user and check the rights
         $user = \Flexio\Object\User::load($user_identifier);
@@ -106,7 +103,7 @@ class Token
         return $properties;
     }
 
-    public static function listall(array $params, \Flexio\Api\Request $request) : array
+    public static function listall(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -115,7 +112,6 @@ class Token
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the user and check the rights
         $user = \Flexio\Object\User::load($user_identifier);

@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Stream
 {
-    public static function create(array $params, \Flexio\Api\Request $request) : array
+    public static function create(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -38,7 +38,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function set(array $params, \Flexio\Api\Request $request) : array
+    public static function set(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -62,7 +62,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function get(array $params, \Flexio\Api\Request $request) : array
+    public static function get(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -71,7 +71,6 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $stream_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // check the rights on the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
@@ -85,7 +84,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function content(array $params, \Flexio\Api\Request $request)
+    public static function content(array $params, string $requesting_user_eid)
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -97,8 +96,6 @@ class Stream
                 'handle'   => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $requesting_user_eid = $request->getRequestingUser();
 
         $stream_identifier = $params['eid'];
         $start = isset($params['start']) ? $params['start'] : 0;  // start isn't specified, start at the beginning
@@ -138,7 +135,7 @@ class Stream
         exit(0);
     }
 
-    public static function upload(array $params, \Flexio\Api\Request $request) : array
+    public static function upload(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -293,7 +290,7 @@ class Stream
         return $stream->set($stream_info);
     }
 
-    public static function download(array $params, \Flexio\Api\Request $request)
+    public static function download(array $params, string $requesting_user_eid)
     {
         // note: function adapted from the content function; first part of
         // the function is the same but then changes to convert to the flexio
@@ -309,8 +306,6 @@ class Stream
                 'handle'   => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $requesting_user_eid = $request->getRequestingUser();
 
         $stream_identifier = $params['eid'];
         $start = isset($params['start']) ? $params['start'] : 0;  // start isn't specified, start at the beginning

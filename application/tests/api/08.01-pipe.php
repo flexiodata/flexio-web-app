@@ -32,8 +32,7 @@ class Test
         }
         ',true);
         $user_eid = TestUtil::getDefaultTestUser();
-        $request = \Flexio\Api\Request::create()->setRequestingUser($user_eid);
-        $actual = \Flexio\Api\Pipe::create($params, $request);
+        $actual = \Flexio\Api\Pipe::create($params, $user_eid);
         $expected = '
         {
             "eid_type": "'.\Model::TYPE_PIPE.'",
