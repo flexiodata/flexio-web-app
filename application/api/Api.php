@@ -164,7 +164,7 @@ class Api
         $url_param_count = count($url_params);
         if ($url_param_count < 1)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
-
+/*
         // save the request parameters; TODO: create action/history object
         $action_params_to_save = array(
             'user_eid' => $requesting_user_eid,
@@ -173,7 +173,7 @@ class Api
             'query_params' => json_encode($query_params)
         );
         \Flexio\System\System::getModel()->action->record($action_params_to_save);
-
+*/
 
         // ROUTE 1: try to route the request "as is" before looking for any
         // eids or identifiers in the path; if we can route the request,

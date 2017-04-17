@@ -40,7 +40,6 @@ class Rights
 
         // TODO: temporarily allow read access to pipes for embedded pipes
         if ($object_type === \Model::TYPE_PIPE &&
-              !self::issystem($object_eid, $user_eid) &&
               !self::isowned($object_eid, $user_eid) &&
               !self::ismember($object_eid, $user_eid))
         {
@@ -55,7 +54,6 @@ class Rights
 
         // TODO: temporarily allow read/write access to processes
         if ($object_type === \Model::TYPE_PROCESS &&
-              !self::issystem($object_eid, $user_eid) &&
               !self::isowned($object_eid, $user_eid) &&
               !self::ismember($object_eid, $user_eid))
         {
@@ -80,11 +78,9 @@ class Rights
             return self::response($user_eid, $rights);
         }
 
-        // RIGHTS BY SYSTEM: if the user is the system, then
-        // the user automatically has full access to the object
         // RIGHTS BY OWNERSHIP: if the user owns the object, then
         // the user automatically has full access to the object
-        if (self::issystem($object_eid, $user_eid) || self::isowned($object_eid, $user_eid))
+        if (self::isowned($object_eid, $user_eid))
         {
             $rights = array(
                 self::ACTION_READ => true,
@@ -123,15 +119,6 @@ class Rights
             self::ACTION_DELETE => false
         );
         return self::response($user_eid, $rights);
-    }
-
-    public static function issystem(string $object_eid, string $user_eid) : bool
-    {
-        // the system user has rights to everything
-        if ($user_eid === \Flexio\Object\User::USER_SYSTEM)
-            return true;
-
-        return false;
     }
 
     public static function isowned(string $object_eid, string $user_eid) : bool
