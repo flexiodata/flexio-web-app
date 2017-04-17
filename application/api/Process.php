@@ -328,7 +328,7 @@ class Process
         return $process->addInput($stream)->get();
     }
 
-    public static function getInput(array $params, string $requesting_user_eid)
+    public static function getInput(array $params, string $requesting_user_eid) // TODO: set function return type
     {
         // return the process input before any tasks; these will only be
         // streams that are added via addInput(); otherwise, the result
@@ -355,7 +355,7 @@ class Process
         return self::echoStreamInfo($process_streams, $params);
     }
 
-    public static function getOutput(array $params, string $requesting_user_eid)
+    public static function getOutput(array $params, string $requesting_user_eid) // TODO: set function return type
     {
         // return the process output after the last task; this will be
         // empty if the process hasn't run
@@ -459,7 +459,7 @@ class Process
         return \Flexio\System\System::getModel()->process->getProcessStatistics();
     }
 
-    private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change)
+    private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change) // TODO: set function return type
     {
         // TODO: move part of implemention to some type of function
         // on the object?  e.g. $object->hasChanged() so we can cache

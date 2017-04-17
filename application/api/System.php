@@ -107,16 +107,13 @@ class System
         return $result;
     }
 
-    public static function validateObject(string $key, string $value, $type) : array
+    public static function validateObject(string $key, string $value, string $type) : array
     {
         $valid = false;
         $message = '';
 
         switch ($type)
         {
-            default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
             case 'identifier':
             case 'username':
             case 'ename':

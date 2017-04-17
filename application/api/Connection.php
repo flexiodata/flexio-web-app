@@ -182,7 +182,7 @@ class Connection
         return $result;
     }
 
-    public static function describe($params, $requesting_user_eid )
+    public static function describe(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -219,7 +219,7 @@ class Connection
         return $result;
     }
 
-    public static function connect($params, $requesting_user_eid)
+    public static function connect(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -246,7 +246,7 @@ class Connection
         return $properties;
     }
 
-    public static function disconnect($params, $requesting_user_eid)
+    public static function disconnect(array $params, string $requesting_user_eid) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -271,7 +271,7 @@ class Connection
         return $properties;
     }
 
-    private static function filterProperties($properties)
+    private static function filterProperties(array $properties) : array
     {
         // TODO: figure out a way to make public/private properties
         // on the object so we can use the full object internally,
