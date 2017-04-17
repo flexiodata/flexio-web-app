@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Project
 {
-    public static function create(array $params, string $requesting_user_eid) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -44,7 +44,7 @@ class Project
         return $project->get();
     }
 
-    public static function delete(array $params, string $requesting_user_eid) : bool
+    public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -67,7 +67,7 @@ class Project
         return true;
     }
 
-    public static function set(array $params, string $requesting_user_eid) : array
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -94,7 +94,7 @@ class Project
         return $project->get();
     }
 
-    public static function get(array $params, string $requesting_user_eid) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -121,7 +121,7 @@ class Project
         return $properties;
     }
 
-    public static function listall(array $params, string $requesting_user_eid) : array
+    public static function listall(array $params, string $requesting_user_eid = null) : array
     {
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
@@ -146,7 +146,7 @@ class Project
         return $result;
     }
 
-    public static function pipes(array $params, string $requesting_user_eid) : array
+    public static function pipes(array $params, string $requesting_user_eid = null) : array
     {
         // eid is the project
         $validator = \Flexio\Base\Validator::create();
@@ -171,7 +171,7 @@ class Project
         return self::getMembersByType($project, \Model::TYPE_PIPE, $filter_list);
     }
 
-    public static function connections(array $params, string $requesting_user_eid) : array
+    public static function connections(array $params, string $requesting_user_eid = null) : array
     {
         // eid is the project
         $validator = \Flexio\Base\Validator::create();
@@ -196,7 +196,7 @@ class Project
         return self::getMembersByType($project, \Model::TYPE_CONNECTION, $filter_list);
     }
 
-    public static function trashed(array $params, string $requesting_user_eid) : array
+    public static function trashed(array $params, string $requesting_user_eid = null) : array
     {
         // eid is the parent container
         $validator = \Flexio\Base\Validator::create();
@@ -239,7 +239,7 @@ class Project
         return $result;
     }
 
-    public static function addTrash(array $params, string $requesting_user_eid) : bool
+    public static function addTrash(array $params, string $requesting_user_eid = null) : bool
     {
         // eid is the project; currently, not checked
         $validator = \Flexio\Base\Validator::create();
@@ -290,7 +290,7 @@ class Project
         return true;
     }
 
-    public static function unTrash(array $params, string $requesting_user_eid) : bool
+    public static function unTrash(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -342,7 +342,7 @@ class Project
         return true;
     }
 
-    public static function clearTrash(array $params, string $requesting_user_eid) : bool
+    public static function clearTrash(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(

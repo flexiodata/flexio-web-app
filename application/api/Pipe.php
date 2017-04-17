@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Pipe
 {
-    public static function create(array $params, string $requesting_user_eid) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $params_original = $params;
         $validator = \Flexio\Base\Validator::create();
@@ -69,7 +69,7 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function copy(array $params, string $requesting_user_eid) : array
+    public static function copy(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -119,7 +119,7 @@ class Pipe
         return $new_pipe->get();
     }
 
-    public static function delete(array $params, string $requesting_user_eid) : bool
+    public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -142,7 +142,7 @@ class Pipe
         return true;
     }
 
-    public static function set(array $params, string $requesting_user_eid) : array
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -173,7 +173,7 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function get(array $params, string $requesting_user_eid) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -196,7 +196,7 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function listall(array $params, string $requesting_user_eid) : array
+    public static function listall(array $params, string $requesting_user_eid = null) : array
     {
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
@@ -221,7 +221,7 @@ class Pipe
         return $result;
     }
 
-    public static function comments(array $params, string $requesting_user_eid) : array
+    public static function comments(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -251,7 +251,7 @@ class Pipe
         return $result;
     }
 
-    public static function processes(array $params, string $requesting_user_eid) : array
+    public static function processes(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -294,7 +294,7 @@ class Pipe
         return $result;
     }
 
-    public static function run(array $params, string $requesting_user_eid) // TODO: add return type
+    public static function run(array $params, string $requesting_user_eid = null) // TODO: add return type
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -448,7 +448,7 @@ class Pipe
         */
     }
 
-    public static function validate(array $params, string $requesting_user_eid) : array
+    public static function validate(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -493,7 +493,7 @@ class Pipe
         return $result;
     }
 
-    public static function addTaskStep(array $params, string $requesting_user_eid) : array
+    public static function addTaskStep(array $params, string $requesting_user_eid = null) : array
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -529,7 +529,7 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function deleteTaskStep(array $params, string $requesting_user_eid) : bool
+    public static function deleteTaskStep(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -555,7 +555,7 @@ class Pipe
         return true;
     }
 
-    public static function setTaskStep(array $params, string $requesting_user_eid) /* : array */ // TODO: set function return type
+    public static function setTaskStep(array $params, string $requesting_user_eid = null) /* : array */ // TODO: set function return type
     {
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
@@ -589,7 +589,7 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function getTaskStep(array $params, string $requesting_user_eid) /* : array */ // TODO: set function return type
+    public static function getTaskStep(array $params, string $requesting_user_eid = null) /* : array */ // TODO: set function return type
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(

@@ -26,7 +26,7 @@ require_once 'humannameparser_init.php';
 
 class User
 {
-    public static function create(array $params, string $requesting_user_eid) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -181,7 +181,7 @@ class User
         return $user->get();
     }
 
-    public static function set(array $params, string $requesting_user_eid) : array
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -243,7 +243,7 @@ class User
         return $user->get();
     }
 
-    public static function get(array $params, string $requesting_user_eid) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -265,7 +265,7 @@ class User
         return $user->get();
     }
 
-    public static function statistics(array $params, string $requesting_user_eid) : array
+    public static function statistics(array $params, string $requesting_user_eid = null) : array
     {
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
@@ -289,7 +289,7 @@ class User
         return $properties;
     }
 
-    public static function about(array $params, string $requesting_user_eid) : array
+    public static function about(array $params, string $requesting_user_eid = null) : array
     {
         // returns the information for the currently logged-in user or an empty eid
         // if the user isn't logged in
@@ -305,7 +305,7 @@ class User
         return $user->get();
     }
 
-    public static function changepassword(array $params, string $requesting_user_eid) : array
+    public static function changepassword(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -342,7 +342,7 @@ class User
         return $user->get();
     }
 
-    public static function activate(array $params, string $requesting_user_eid) : bool
+    public static function activate(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -370,7 +370,7 @@ class User
         return true;
     }
 
-    public static function resendverify(array $params, string $requesting_user_eid) : bool
+    public static function resendverify(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -399,7 +399,7 @@ class User
         return true;
     }
 
-    public static function requestpasswordreset(array $params, string $requesting_user_eid) : bool
+    public static function requestpasswordreset(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -425,7 +425,7 @@ class User
         return true;
     }
 
-    public static function resetpassword(array $params, string $requesting_user_eid) : bool
+    public static function resetpassword(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -477,7 +477,7 @@ class User
         */
     }
 
-    public static function resetConfig(array $params, string $requesting_user_eid) : bool
+    public static function resetConfig(array $params, string $requesting_user_eid = null) : bool
     {
         // note: this is an API endpoint function for debugging; this allows
         // the user configuration to be reset so that items like a welcome page
@@ -493,7 +493,7 @@ class User
         return true;
     }
 
-    public static function createSample(array $params, string $requesting_user_eid) : bool
+    public static function createSample(array $params, string $requesting_user_eid = null) : bool
     {
         // note: this is an API endpoint function for debugging; internally,
         // createSampleProject() is used when a user is created so that the owner

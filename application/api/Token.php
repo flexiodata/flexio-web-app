@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Token
 {
-    public static function create(array $params, string $requesting_user_eid) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -47,7 +47,7 @@ class Token
         return $token->get();
     }
 
-    public static function delete(array $params, string $requesting_user_eid) : bool
+    public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -75,7 +75,7 @@ class Token
         return true;
     }
 
-    public static function get(array $params, string $requesting_user_eid) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -103,7 +103,7 @@ class Token
         return $properties;
     }
 
-    public static function listall(array $params, string $requesting_user_eid) : array
+    public static function listall(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(

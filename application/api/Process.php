@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Process
 {
-    public static function create(array $params, string $requesting_user_eid) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $process = self::create_internal($params, $requesting_user_eid);
         if ($process === false)
@@ -26,7 +26,7 @@ class Process
         return $process->get();
     }
 
-    public static function debug(array $params, string $requesting_user_eid) : array
+    public static function debug(array $params, string $requesting_user_eid = null) : array
     {
         // allow in debug mode or on test site
         if (!IS_DEBUG() && !IS_TESTSITE())
@@ -43,7 +43,7 @@ class Process
         return $properties;
     }
 
-    private static function create_internal(array $params, string $requesting_user_eid) : \Flexio\Object\Process
+    private static function create_internal(array $params, string $requesting_user_eid = null) : \Flexio\Object\Process
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -110,7 +110,7 @@ class Process
         return $process;
     }
 
-    public static function delete(array $params, string $requesting_user_eid) : bool
+    public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -133,7 +133,7 @@ class Process
         return true;
     }
 
-    public static function set(array $params, string $requesting_user_eid) : array
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -168,7 +168,7 @@ class Process
         return $process->get();
     }
 
-    public static function get(array $params, string $requesting_user_eid) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -228,7 +228,7 @@ class Process
         return $process_info;
     }
 
-    public static function run(array $params, string $requesting_user_eid) : array
+    public static function run(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -252,7 +252,7 @@ class Process
         return $process->run($background)->get();
     }
 
-    public static function cancel(array $params, string $requesting_user_eid) : array
+    public static function cancel(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -274,7 +274,7 @@ class Process
         return $process->cancel()->get();
     }
 
-    public static function pause(array $params, string $requesting_user_eid) : array
+    public static function pause(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -296,7 +296,7 @@ class Process
         return $process->pause()->get();
     }
 
-    public static function addInput(array $params, string $requesting_user_eid) : array
+    public static function addInput(array $params, string $requesting_user_eid = null) : array
     {
         // TODO: handle manual streams that are added so that proces inputs
         // can come from files that are directly uploaded as well as from
@@ -328,7 +328,7 @@ class Process
         return $process->addInput($stream)->get();
     }
 
-    public static function getInput(array $params, string $requesting_user_eid) // TODO: set function return type
+    public static function getInput(array $params, string $requesting_user_eid = null) // TODO: set function return type
     {
         // return the process input before any tasks; these will only be
         // streams that are added via addInput(); otherwise, the result
@@ -355,7 +355,7 @@ class Process
         return self::echoStreamInfo($process_streams, $params);
     }
 
-    public static function getOutput(array $params, string $requesting_user_eid) // TODO: set function return type
+    public static function getOutput(array $params, string $requesting_user_eid = null) // TODO: set function return type
     {
         // return the process output after the last task; this will be
         // empty if the process hasn't run
@@ -380,7 +380,7 @@ class Process
         return self::echoStreamInfo($process_streams, $params);
     }
 
-    public static function getTaskInputInfo(array $params, string $requesting_user_eid) : array
+    public static function getTaskInputInfo(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -413,7 +413,7 @@ class Process
         return $merged_structure->enum();
     }
 
-    public static function getTaskOutputInfo(array $params, string $requesting_user_eid) : array
+    public static function getTaskOutputInfo(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -446,7 +446,7 @@ class Process
         return $merged_structure->enum();
     }
 
-    public static function getStatistics(array $params, string $requesting_user_eid) : array
+    public static function getStatistics(array $params, string $requesting_user_eid = null) : array
     {
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);

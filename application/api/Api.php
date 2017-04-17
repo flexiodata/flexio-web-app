@@ -78,7 +78,7 @@ class Api
             // get the requesting user
             $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
             if (!\Flexio\Base\Eid::isValid($requesting_user_eid))
-                $requesting_user_eid = \Flexio\Object\User::USER_PUBLIC;
+                $requesting_user_eid = null; // public user
 
             // send the response
             $response = self::processRequest($method, $url_params, $query_params, $requesting_user_eid);
@@ -145,7 +145,7 @@ class Api
         }
     }
 
-    private static function processRequest(string $request_method, array $url_params, array $query_params, string $requesting_user_eid)
+    private static function processRequest(string $request_method, array $url_params, array $query_params, string $requesting_user_eid = null)
     {
         // make sure we have a valid request method
         switch ($request_method)

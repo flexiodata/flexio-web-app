@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Stream
 {
-    public static function create(array $params, string $requesting_user_eid) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -38,7 +38,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function set(array $params, string $requesting_user_eid) : array
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -62,7 +62,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function get(array $params, string $requesting_user_eid) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -84,7 +84,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function content(array $params, string $requesting_user_eid) // TODO: set function return type
+    public static function content(array $params, string $requesting_user_eid = null) // TODO: set function return type
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -135,7 +135,7 @@ class Stream
         exit(0);
     }
 
-    public static function upload(array $params, string $requesting_user_eid) : array
+    public static function upload(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -290,7 +290,7 @@ class Stream
         return $stream->set($stream_info);
     }
 
-    public static function download(array $params, string $requesting_user_eid) // TODO: set function return type
+    public static function download(array $params, string $requesting_user_eid = null) // TODO: set function return type
     {
         // note: function adapted from the content function; first part of
         // the function is the same but then changes to convert to the flexio

@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Connection
 {
-    public static function create(array $params, string $requesting_user_eid) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -66,7 +66,7 @@ class Connection
         return $properties;
     }
 
-    public static function delete(array $params, string $requesting_user_eid) : bool
+    public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -89,7 +89,7 @@ class Connection
         return true;
     }
 
-    public static function set(array $params, string $requesting_user_eidt) : array
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -128,7 +128,7 @@ class Connection
         return $properties;
     }
 
-    public static function get(array $params, string $requesting_user_eid) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -152,7 +152,7 @@ class Connection
         return $properties;
     }
 
-    public static function comments(array $params, string $requesting_user_eid) : array
+    public static function comments(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -182,7 +182,7 @@ class Connection
         return $result;
     }
 
-    public static function describe(array $params, string $requesting_user_eid) : array
+    public static function describe(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -219,7 +219,7 @@ class Connection
         return $result;
     }
 
-    public static function connect(array $params, string $requesting_user_eid) : array
+    public static function connect(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -246,7 +246,7 @@ class Connection
         return $properties;
     }
 
-    public static function disconnect(array $params, string $requesting_user_eid) : array
+    public static function disconnect(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
