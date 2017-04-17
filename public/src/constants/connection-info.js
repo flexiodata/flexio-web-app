@@ -102,6 +102,16 @@ const MYSQL = {
   service_description: "The world's most popular open source database"
 }
 
+const PIPELINEDEALS = {
+  is_service: true,
+  is_input: true,
+  is_output: false,
+  connection_type: types.CONNECTION_TYPE_PIPELINEDEALS,
+  icon: require('../assets/icon/icon-pipelinedeals-128.png'),
+  service_name: 'PipelineDeals',
+  service_description: 'CRM software to start, develop and grow your business'
+}
+
 const POSTGRES = {
   is_service: true,
   is_input: true,
@@ -160,16 +170,6 @@ const STDOUT = {
   icon: require('../assets/icon/icon-console-128.png'),
   service_name: 'Stdout',
   service_description: 'Standard Out'
-}
-
-const PIPELINEDEALS = {
-  is_service: true,
-  is_input: true,
-  is_output: false,
-  connection_type: types.CONNECTION_TYPE_PIPELINEDEALS,
-  icon: require('../assets/icon/icon-pipelinedeals-128.png'),
-  service_name: 'PipelineDeals',
-  service_description: 'CRM software to start, develop and grow your business'
 }
 
 const UPLOAD = {
