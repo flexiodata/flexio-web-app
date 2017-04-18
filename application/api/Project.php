@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Project
 {
-    public static function create(array $params, \Flexio\Api\Request $request) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -27,8 +27,6 @@ class Project
                 'description'  => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $requesting_user_eid = $request->getRequestingUser();
 
         // right now, only allow a project to be created by an actual user since
         // we have no other way of knowing who the intended owner is (until we allow
@@ -46,7 +44,7 @@ class Project
         return $project->get();
     }
 
-    public static function delete(array $params, \Flexio\Api\Request $request) : bool
+    public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -55,7 +53,6 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
@@ -70,7 +67,7 @@ class Project
         return true;
     }
 
-    public static function set(array $params, \Flexio\Api\Request $request) : array
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -82,7 +79,6 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
@@ -98,7 +94,7 @@ class Project
         return $project->get();
     }
 
-    public static function get(array $params, \Flexio\Api\Request $request) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -107,7 +103,6 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
@@ -126,11 +121,8 @@ class Project
         return $properties;
     }
 
-    public static function listall(array $params, \Flexio\Api\Request $request) : array
+    public static function listall(array $params, string $requesting_user_eid = null) : array
     {
-        // get the projects for the requesting user
-        $requesting_user_eid = $request->getRequestingUser();
-
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
@@ -154,7 +146,7 @@ class Project
         return $result;
     }
 
-    public static function pipes(array $params, \Flexio\Api\Request $request) : array
+    public static function pipes(array $params, string $requesting_user_eid = null) : array
     {
         // eid is the project
         $validator = \Flexio\Base\Validator::create();
@@ -166,7 +158,6 @@ class Project
 
         $project_identifier = $params['eid'];
         $filter_list = $params['pipe_eid'] ?? null;
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the project
         $project = \Flexio\Object\Project::load($project_identifier);
@@ -180,7 +171,7 @@ class Project
         return self::getMembersByType($project, \Model::TYPE_PIPE, $filter_list);
     }
 
-    public static function connections(array $params, \Flexio\Api\Request $request) : array
+    public static function connections(array $params, string $requesting_user_eid = null) : array
     {
         // eid is the project
         $validator = \Flexio\Base\Validator::create();
@@ -192,7 +183,6 @@ class Project
 
         $project_identifier = $params['eid'];
         $filter_list = $params['connection_eid'] ?? null;
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the project
         $project = \Flexio\Object\Project::load($project_identifier);
@@ -206,7 +196,7 @@ class Project
         return self::getMembersByType($project, \Model::TYPE_CONNECTION, $filter_list);
     }
 
-    public static function trashed(array $params, \Flexio\Api\Request $request) : array
+    public static function trashed(array $params, string $requesting_user_eid = null) : array
     {
         // eid is the parent container
         $validator = \Flexio\Base\Validator::create();
@@ -217,7 +207,6 @@ class Project
 
         // see if the user has rights to this project
         $project_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
@@ -250,7 +239,7 @@ class Project
         return $result;
     }
 
-    public static function addTrash(array $params, \Flexio\Api\Request $request) : bool
+    public static function addTrash(array $params, string $requesting_user_eid = null) : bool
     {
         // eid is the project; currently, not checked
         $validator = \Flexio\Base\Validator::create();
@@ -259,8 +248,6 @@ class Project
                 'items' => array('type' => 'object', 'required' => true)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $requesting_user_eid = $request->getRequestingUser();
 
         $objects = self::filterEidItems($params['items']);
         if ($objects === false)
@@ -303,7 +290,7 @@ class Project
         return true;
     }
 
-    public static function unTrash(array $params, \Flexio\Api\Request $request) : bool
+    public static function unTrash(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -311,8 +298,6 @@ class Project
                 'items' => array('type' => 'object', 'required' => true)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $requesting_user_eid = $request->getRequestingUser();
 
         $project_identifier = $params['eid'];
         $objects = self::filterEidItems($params['items']);
@@ -357,7 +342,7 @@ class Project
         return true;
     }
 
-    public static function clearTrash(array $params, \Flexio\Api\Request $request) : bool
+    public static function clearTrash(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -365,8 +350,6 @@ class Project
                 'items' => array('type' => 'object', 'required' => true)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $requesting_user_eid = $request->getRequestingUser();
 
         $project_identifier = $params['eid'];
         $objects = self::filterEidItems($params['items']);

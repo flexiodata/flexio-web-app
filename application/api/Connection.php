@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Connection
 {
-    public static function create(array $params, \Flexio\Api\Request $request) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -39,7 +39,6 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $project_identifier = isset($params['parent_eid']) ? $params['parent_eid'] : false;
-        $requesting_user_eid = $request->getRequestingUser();
 
         // check rights
         $project = false;
@@ -67,7 +66,7 @@ class Connection
         return $properties;
     }
 
-    public static function delete(array $params, \Flexio\Api\Request $request) : bool
+    public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -76,7 +75,6 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -91,7 +89,7 @@ class Connection
         return true;
     }
 
-    public static function set(array $params, \Flexio\Api\Request $request) : array
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -112,7 +110,6 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -131,7 +128,7 @@ class Connection
         return $properties;
     }
 
-    public static function get(array $params, \Flexio\Api\Request $request) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -140,7 +137,6 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -156,7 +152,7 @@ class Connection
         return $properties;
     }
 
-    public static function comments(array $params, \Flexio\Api\Request $request) : array
+    public static function comments(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -165,7 +161,6 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -187,7 +182,7 @@ class Connection
         return $result;
     }
 
-    public static function describe($params, $request)
+    public static function describe(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -197,7 +192,6 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -225,7 +219,7 @@ class Connection
         return $result;
     }
 
-    public static function connect($params, $request)
+    public static function connect(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -234,7 +228,6 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -253,7 +246,7 @@ class Connection
         return $properties;
     }
 
-    public static function disconnect($params, $request)
+    public static function disconnect(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -262,7 +255,6 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $connection_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -279,7 +271,7 @@ class Connection
         return $properties;
     }
 
-    private static function filterProperties($properties)
+    private static function filterProperties(array $properties) : array
     {
         // TODO: figure out a way to make public/private properties
         // on the object so we can use the full object internally,

@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Follower
 {
-    public static function create(array $params, \Flexio\Api\Request $request) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         // TODO: this function is a bit outdated in the conventions
         // it uses; should be updated to be more consistent with other
@@ -34,7 +34,6 @@ class Follower
         $object_identifier = $params['eid'];
         $users = $params['users'];
         $message = $params['message'] ?? '';
-        $requesting_user_eid = $request->getRequestingUser();
 
         // make sure the users values are all strings
         foreach ($users as $value)
@@ -99,7 +98,7 @@ class Follower
                                        'require_verification' => true); // require verification to give user a chance to fill out their info
 
                 // if the user isn't invited, create the user; if something went wrong, move on
-                $user_info = \Flexio\Api\User::create($new_user_info, $request);
+                $user_info = \Flexio\Api\User::create($new_user_info, $requesting_user_eid);
                 if (!isset($user_info) || $user_info === false)
                     continue;
 
@@ -180,7 +179,7 @@ class Follower
         return $result;
     }
 
-    public static function delete(array $params, \Flexio\Api\Request $request) : bool
+    public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         // TODO: make unfollow work with multiple users; same as share
         $validator = \Flexio\Base\Validator::create();
@@ -190,7 +189,6 @@ class Follower
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $requesting_user_eid = $request->getRequestingUser();
         $parent_identifier = $params['parent_eid'];
         $user_identifier = $params['eid'];
 
@@ -218,7 +216,7 @@ class Follower
         return true;
     }
 
-    public static function listall(array $params, \Flexio\Api\Request $request) : array
+    public static function listall(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -227,7 +225,6 @@ class Follower
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $object_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $object = \Flexio\Object\Store::load($object_identifier);

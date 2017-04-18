@@ -26,7 +26,7 @@ require_once 'humannameparser_init.php';
 
 class User
 {
-    public static function create(array $params, \Flexio\Api\Request $request) : array
+    public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -181,7 +181,7 @@ class User
         return $user->get();
     }
 
-    public static function set(array $params, \Flexio\Api\Request $request) : array
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -212,7 +212,6 @@ class User
         // type of workflow (such as when sharing with a user that doesn't exist)
 
         $user_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // if a user_name is specified, make sure it's valid
         if (isset($params['user_name']) && !\Flexio\Base\Identifier::isValid($params['user_name']))
@@ -244,7 +243,7 @@ class User
         return $user->get();
     }
 
-    public static function get(array $params, \Flexio\Api\Request $request) : array
+    public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -253,7 +252,6 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
 
         // load the object
         $user = \Flexio\Object\User::load($user_identifier);
@@ -267,11 +265,8 @@ class User
         return $user->get();
     }
 
-    public static function statistics(array $params, \Flexio\Api\Request $request) : array
+    public static function statistics(array $params, string $requesting_user_eid = null) : array
     {
-        // returns useage statistics for the current user
-        $requesting_user_eid = $request->getRequestingUser();
-
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
@@ -294,13 +289,10 @@ class User
         return $properties;
     }
 
-    public static function about(array $params, \Flexio\Api\Request $request) : array
+    public static function about(array $params, string $requesting_user_eid = null) : array
     {
         // returns the information for the currently logged-in user or an empty eid
         // if the user isn't logged in
-
-        $requesting_user_eid = $request->getRequestingUser();
-
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
         {
@@ -313,7 +305,7 @@ class User
         return $user->get();
     }
 
-    public static function changepassword(array $params, \Flexio\Api\Request $request) : array
+    public static function changepassword(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -324,7 +316,6 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user_identifier = $params['eid'];
-        $requesting_user_eid = $request->getRequestingUser();
         $old_password = $params['old_password'];
         $new_password = $params['new_password'];
 
@@ -351,7 +342,7 @@ class User
         return $user->get();
     }
 
-    public static function activate(array $params, \Flexio\Api\Request $request) : bool
+    public static function activate(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -379,7 +370,7 @@ class User
         return true;
     }
 
-    public static function resendverify(array $params, \Flexio\Api\Request $request) : bool
+    public static function resendverify(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -408,7 +399,7 @@ class User
         return true;
     }
 
-    public static function requestpasswordreset(array $params, \Flexio\Api\Request $request) : bool
+    public static function requestpasswordreset(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -434,7 +425,7 @@ class User
         return true;
     }
 
-    public static function resetpassword(array $params, \Flexio\Api\Request $request) : bool
+    public static function resetpassword(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -486,7 +477,7 @@ class User
         */
     }
 
-    public static function resetConfig(array $params, \Flexio\Api\Request $request) : bool
+    public static function resetConfig(array $params, string $requesting_user_eid = null) : bool
     {
         // note: this is an API endpoint function for debugging; this allows
         // the user configuration to be reset so that items like a welcome page
@@ -497,14 +488,12 @@ class User
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $eid = $request->getRequestingUser();
-
-        $params = array('eid' => $eid, 'config' => []);
-        self::set($params, $request);
+        $params = array('eid' => $requesting_user_eid, 'config' => []);
+        self::set($params, $requesting_user_eid);
         return true;
     }
 
-    public static function createSample(array $params, \Flexio\Api\Request $request) : bool
+    public static function createSample(array $params, string $requesting_user_eid = null) : bool
     {
         // note: this is an API endpoint function for debugging; internally,
         // createSampleProject() is used when a user is created so that the owner
@@ -516,8 +505,7 @@ class User
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $user_eid = $request->getRequestingUser();
-        $project = self::createSampleProject($user_eid, 'Sample Project');
+        $project = self::createSampleProject($requesting_user_eid, 'Sample Project');
         return true;
     }
 

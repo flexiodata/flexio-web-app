@@ -41,17 +41,7 @@ class Api
         if (isset($urlpart6)) $params['apiparam5']  = $urlpart6;
         if (isset($urlpart7)) $params['apiparam6']  = $urlpart7;
 
-
-        // STEP 1: create the request object
-        $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
-        if (!\Flexio\Base\Eid::isValid($requesting_user_eid))
-            $requesting_user_eid = \Flexio\Object\User::USER_PUBLIC;
-
-        $request = Request::create();
-        $request->setRequestingUser($requesting_user_eid);
-
-
-        // STEP 2: process the request
+        // process the request
         try
         {
             // if we're testing a failure, throw an error right away
@@ -85,8 +75,13 @@ class Api
             unset($query_params['apiparam5']);
             unset($query_params['apiparam6']);
 
+            // get the requesting user
+            $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
+            if (!\Flexio\Base\Eid::isValid($requesting_user_eid))
+                $requesting_user_eid = null; // public user
+
             // send the response
-            $response = self::processRequest($method, $url_params, $query_params, $request);
+            $response = self::processRequest($method, $url_params, $query_params, $requesting_user_eid);
             if ($echo === false)
                 return $response;
 
@@ -150,7 +145,7 @@ class Api
         }
     }
 
-    private static function processRequest(string $request_method, array $url_params, array $query_params, \Flexio\Api\Request $request)
+    private static function processRequest(string $request_method, array $url_params, array $query_params, string $requesting_user_eid = null)
     {
         // make sure we have a valid request method
         switch ($request_method)
@@ -169,16 +164,16 @@ class Api
         $url_param_count = count($url_params);
         if ($url_param_count < 1)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
-
+/*
         // save the request parameters; TODO: create action/history object
         $action_params_to_save = array(
-            'user_eid' => $request->getRequestingUser(),
+            'user_eid' => $requesting_user_eid,
             'request_method' => $request_method,
             'url_params' => json_encode($url_params),
             'query_params' => json_encode($query_params)
         );
         \Flexio\System\System::getModel()->action->record($action_params_to_save);
-
+*/
 
         // ROUTE 1: try to route the request "as is" before looking for any
         // eids or identifiers in the path; if we can route the request,
@@ -189,7 +184,7 @@ class Api
 
         $function = self::getApiEndpoint($api_path);
         if (is_callable($function) === true)
-            return $function($query_params, $request);
+            return $function($query_params, $requesting_user_eid);
 
 
         // ROUTE 2: if we weren't able to route the request "as is", try to
@@ -230,7 +225,7 @@ class Api
 
         $function = self::getApiEndpoint($api_path);
         if (is_callable($function) === true)
-            return $function($query_params, $request);
+            return $function($query_params, $requesting_user_eid);
 
         // we can't find the specified api endpoint
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);

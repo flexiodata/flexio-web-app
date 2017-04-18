@@ -36,8 +36,7 @@ class Test
             "comment": "Test comment"
         }
         ',true);
-        $request = \Flexio\Api\Request::create()->setRequestingUser($user_eid);
-        $actual = \Flexio\Api\Comment::create($params, $request);
+        $actual = \Flexio\Api\Comment::create($params, $user_eid);
 
         $expected = '
         {

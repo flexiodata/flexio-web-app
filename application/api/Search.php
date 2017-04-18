@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Search
 {
-    public static function search(array $params, \Flexio\Api\Request $request) : array
+    public static function search(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -27,8 +27,8 @@ class Search
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $requesting_user_eid = $request->getRequestingUser();
-
+        if (!isset($requesting_user_eid))
+            return array();
 
         // TODO: right now; pipes aren't public; so if we're looking for pipes other
         // than those owned by the requesting user, return an empty array

@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class System
 {
-    public static function login(array $params, \Flexio\Api\Request $request) : bool
+    public static function login(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
@@ -40,7 +40,7 @@ class System
         return true;
     }
 
-    public static function logout(array $params, \Flexio\Api\Request $request) : bool
+    public static function logout(array $params, string $requesting_user_eid = null) : bool
     {
         // validation placeholder; no parameters are used
         $validator = \Flexio\Base\Validator::create();
@@ -54,7 +54,7 @@ class System
         return true;
     }
 
-    public static function validate(array $params, \Flexio\Api\Request $request) : array
+    public static function validate(array $params, string $requesting_user_eid = null) : array
     {
         // the input for a validation is an array of objects that each
         // have a key, value and type; only 10 items can be validated at a time
@@ -107,16 +107,13 @@ class System
         return $result;
     }
 
-    public static function validateObject(string $key, string $value, $type) : array
+    public static function validateObject(string $key, string $value, string $type) : array
     {
         $valid = false;
         $message = '';
 
         switch ($type)
         {
-            default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
             case 'identifier':
             case 'username':
             case 'ename':
