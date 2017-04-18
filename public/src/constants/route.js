@@ -1,4 +1,5 @@
 export const ROUTE_ACCOUNT        = 'account'
+export const ROUTE_COPYPIPE       = 'copypipe'
 export const ROUTE_DEVHOME        = 'devhome'
 export const ROUTE_EMBEDHOME      = 'embedhome'
 export const ROUTE_FORGOTPASSWORD = 'forgotpassword'
