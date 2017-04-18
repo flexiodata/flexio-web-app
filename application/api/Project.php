@@ -60,7 +60,7 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
+        if ($project->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $project->delete();
@@ -86,7 +86,7 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($project->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the project params
@@ -110,7 +110,7 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($project->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // fill out the properties with additional info
@@ -129,7 +129,7 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the projects
@@ -137,7 +137,7 @@ class Project
         $projects = $user->getProjects();
         foreach ($projects as $p)
         {
-            if ($p->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+            if ($p->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
                 continue;
 
             $result[] = $p->get();
@@ -165,7 +165,7 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check rights for the project
-        if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($project->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return self::getMembersByType($project, \Model::TYPE_PIPE, $filter_list);
@@ -190,7 +190,7 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check rights for the project
-        if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($project->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return self::getMembersByType($project, \Model::TYPE_CONNECTION, $filter_list);
@@ -214,7 +214,7 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($project->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the trashed items
@@ -264,7 +264,7 @@ class Project
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
-            if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
+            if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -315,7 +315,7 @@ class Project
                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
-            if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
+            if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -367,7 +367,7 @@ class Project
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
-            if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
+            if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 

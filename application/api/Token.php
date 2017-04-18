@@ -33,7 +33,7 @@ class Token
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the token object
@@ -65,7 +65,7 @@ class Token
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 */
         $token = \Flexio\Object\Token::load($user_identifier);
@@ -90,7 +90,7 @@ class Token
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $token = \Flexio\Object\Token::load($user_identifier);
@@ -118,7 +118,7 @@ class Token
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $user->getTokens();

@@ -35,7 +35,7 @@ class Comment
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the parent
-        if ($parent->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($parent->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the comment
@@ -66,7 +66,7 @@ class Comment
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($comment->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
+        if ($comment->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // delete the object
@@ -91,7 +91,7 @@ class Comment
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($comment->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($comment->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // update the object
@@ -115,7 +115,7 @@ class Comment
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($comment->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($comment->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the object

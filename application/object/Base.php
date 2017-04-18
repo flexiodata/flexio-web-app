@@ -232,7 +232,7 @@ class Base implements IObject
         // find out all operations the specified user can take on the
         // object in question
         if ($this->rights === false)
-            $this->rights = \Flexio\Object\Rights::listall($user_eid, $this->getEid());
+            $this->rights = \Flexio\Object\Rights::create()->get(listall$user_eid, $this->getEid());
 
         // if the rights exist and are set to true, allow the action
         if (isset($this->rights[$action_type]) && $this->rights[$action_type] === true)
