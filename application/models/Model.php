@@ -858,6 +858,66 @@ class Model
                      'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
+    public function setRights(string $eid, string $rights) : bool
+    {
+        // behavior is to return true if an object that isn't deleted is set with
+        // valid parameters, to return false if the object can't be found (paralleling delete)
+        // or is deleted, and to throw an Exception if the parameters that are attempting to
+        // be set are invalid
+
+        // if the eid isn't valid, the object doesn't exist
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $db = $this->getDatabase();
+
+        // if an item is deleted, don't allow it to be edited
+        $existing_status = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
+        if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
+            return false;
+
+        // set the updated timestamp so it'll stay in sync with whatever
+        // object is being edited
+        $timestamp = \Flexio\System\System::getTimestamp();
+        $process_arr = array(
+            'updated'       => $timestamp
+        );
+
+        if (isset($params['rights']))
+            $process_arr['rights'] = $rights;
+
+        $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+        return true; // established object exists, which is enough for returning true
+    }
+
+    public function getRights(string $eid) // TODO: add return type
+    {
+        // behavior for get is to return the object rights if the eid exists
+        // and false if the eid doesn't exist
+
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false; // don't flag an error, but acknowledge that object doesn't exist
+
+        $row = false;
+        try
+        {
+            $row = $this->getDatabase()->fetchRow("select tob.eid as eid,
+                                                        tob.rights as rights
+                                                from tbl_object tob
+                                                where tob.eid = ?
+                                                ", $eid);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        if (!$row)
+            return false; // don't flag an error, but acknowledge that object doesn't exist
+
+        return $row['rights'];
+    }
+
     public function setDbVersionNumber(string $version) : bool
     {
         if (strlen($version) == 0)

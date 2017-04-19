@@ -31,7 +31,6 @@ class Project extends \Flexio\Object\Base
 
         $object->setModel($model);
         $object->setEid($local_eid);
-        $object->setRights();
         $object->clearCache();
         return $object;
     }

@@ -23,7 +23,6 @@ class Base implements IObject
     private $model;
     private $eid;
     private $eid_type;
-    private $rights;
 
     // properties for derived classes
     protected $eid_status;
@@ -51,7 +50,6 @@ class Base implements IObject
 
         $object->setModel($model);
         $object->setEid($local_eid);
-        $object->setRights();
         $object->clearCache();
         return $object;
     }
@@ -86,7 +84,6 @@ class Base implements IObject
 
         $object->setModel($model);
         $object->setEid($eid);
-        $object->setRights();
         $object->clearCache();
         return $object;
     }
@@ -229,24 +226,32 @@ class Base implements IObject
 
     public function allows(string $user_eid, string $action_type) : bool
     {
-        // find out all operations the specified user can take on the
-        // object in question
-        if ($this->rights === false)
-            $this->rights = \Flexio\Object\Rights::create()->get(listall$user_eid, $this->getEid());
+        // note: like the status, read the rights fresh everytime to make
+        // sure we have the most current information
 
-        // if the rights exist and are set to true, allow the action
-        if (isset($this->rights[$action_type]) && $this->rights[$action_type] === true)
-            return true;
+        // get the rights for this object
+        $rights = $this->getModel()->getRights($this->getEid());
+        if ($rights === false)
+            return false;
+
+        $rights = json_decode($rights,true);
+
+
+        // TODO: iterate through the rights and see if the action is allowed
+
 
         return false;
     }
 
     public function setRights(array $rights = null) : \Flexio\Object\Base
     {
-        // TODO: set the rights
+        // TODO: perform validation on the rights?
 
-        // reset the rights cache
-        $this->rights = false;
+        // if the rights parameter isn't set, reset the rights
+        if (!isset($rights))
+            $rights = array();
+
+        $this->getModel()->setRights($this->getEid(), $rights);
         return $this;
     }
 

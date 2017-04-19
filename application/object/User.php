@@ -51,7 +51,6 @@ class User extends \Flexio\Object\Base
 
         $object->setModel($model);
         $object->setEid($local_eid);
-        $object->setRights();
         $object->clearCache();
         return $object;
     }
@@ -91,7 +90,6 @@ class User extends \Flexio\Object\Base
 
         $object->setModel($model);
         $object->setEid($eid);
-        $object->setRights();
         $object->clearCache();
         return $object;
     }
