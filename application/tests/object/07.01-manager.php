@@ -59,7 +59,7 @@ class Test
         $content = getSampleEmailWithAttachment();
         $file = \Flexio\Base\File::getTempFilename('txt');
         file_put_contents($file, $content);
-        $process_info = \Flexio\Api\Manager::handleEmail($file, $pipe->getEid());
+        $process_info = \Flexio\Api\Trigger::handleEmail($file, $pipe->getEid());
         unlink($file);
         $process_eid = $process_info['eid'];
         $actual = TestUtil::getProcessSingleOutputRowResult($process_eid);

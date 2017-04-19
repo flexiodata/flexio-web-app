@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Api;
 
 
-class Manager
+class Trigger
 {
     public static function handleEmail($stream, string $pipe_eid = null) // TODO: add function parameter
     {
