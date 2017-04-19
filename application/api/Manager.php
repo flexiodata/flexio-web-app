@@ -8,12 +8,12 @@
  * Created:  2016-08-02
  *
  * @package flexio
- * @subpackage Object
+ * @subpackage Api
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Object;
+namespace Flexio\Api;
 
 
 class Manager
