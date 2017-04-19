@@ -270,8 +270,8 @@ class Scheduler
 
     private static function runPipe(string $pipe_eid)
     {
-        // TODO: following run code is similar to \Flexio\Api\Process::create() and
-        // \Trigger::runJob(); should factor; for example, the \Flexio\Api\Process::create()
+        // TODO: following run code is similar to \Flexio\Api\Process::create()
+        // should factor; for example, the \Flexio\Api\Process::create()
         // adds on the parent and owner
 
         // TODO: check permissions based on the owner of the pipe
