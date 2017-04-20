@@ -221,36 +221,6 @@ class Pipe
         return $result;
     }
 
-    public static function comments(array $params, string $requesting_user_eid = null) : array
-    {
-        $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $pipe_identifier = $params['eid'];
-
-        // load the object
-        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // get the comments
-        $result = array();
-        $comments = $pipe->getComments();
-        foreach ($comments as $c)
-        {
-            $result[] = $c->get();
-        }
-
-        return $result;
-    }
-
     public static function processes(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();

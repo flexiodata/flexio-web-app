@@ -152,36 +152,6 @@ class Connection
         return $properties;
     }
 
-    public static function comments(array $params, string $requesting_user_eid = null) : array
-    {
-        $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $connection_identifier = $params['eid'];
-
-        // load the object
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // get the comments
-        $result = array();
-        $comments = $connection->getComments();
-        foreach ($comments as $c)
-        {
-            $result[] = $c->get();
-        }
-
-        return $result;
-    }
-
     public static function describe(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();

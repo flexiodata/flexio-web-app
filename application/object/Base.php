@@ -255,40 +255,6 @@ class Base implements IObject
         return $this;
     }
 
-    public function addComment(string $comment_eid) : \Flexio\Object\Base
-    {
-        // make sure we have a comment
-        $comment = \Flexio\Object\Comment::load($comment_eid);
-        if ($comment === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // add the comment association
-        $object_eid = $this->getEid();
-        $result1 = $this->getModel()->assoc_add($object_eid, \Model::EDGE_HAS_COMMENT, $comment_eid);
-        $result2 = $this->getModel()->assoc_add($comment_eid, \Model::EDGE_COMMENT_ON, $object_eid);
-        return $this;
-    }
-
-    public function getComments() : array
-    {
-        $result = array();
-
-        $object_eid = $this->getEid();
-        $res = $this->getModel()->assoc_range($object_eid, \Model::EDGE_HAS_COMMENT, [\Model::STATUS_AVAILABLE]);
-
-        foreach ($res as $item)
-        {
-            $comment_eid = $item['eid'];
-            $comment = \Flexio\Object\Comment::load($comment_eid);
-            if ($comment === false)
-                continue;
-
-            $result[] = $comment;
-        }
-
-        return $result;
-    }
-
     protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type
     {
         $this->model = $model;

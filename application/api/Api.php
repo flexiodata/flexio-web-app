@@ -287,7 +287,6 @@ class Api
             case 'POS /pipes/:eid'                     : return '\Flexio\Api\Pipe::set';
             case 'GET /pipes/:eid'                     : return '\Flexio\Api\Pipe::get';
             case 'DEL /pipes/:eid'                     : return '\Flexio\Api\Pipe::delete';
-            case 'GET /pipes/:eid/comments'            : return '\Flexio\Api\Pipe::comments';
             case 'POS /pipes/:eid/tasks'               : return '\Flexio\Api\Pipe::addTaskStep';
             case 'DEL /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::deleteTaskStep';
             case 'POS /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::setTaskStep';
@@ -304,7 +303,6 @@ class Api
             case 'POS /connections/:eid'               : return '\Flexio\Api\Connection::set';
             case 'GET /connections/:eid'               : return '\Flexio\Api\Connection::get';
             case 'DEL /connections/:eid'               : return '\Flexio\Api\Connection::delete';
-            case 'GET /connections/:eid/comments'      : return '\Flexio\Api\Connection::comments';
             case 'GET /connections/:eid/describe'      : return '\Flexio\Api\Connection::describe';
             case 'POS /connections/:eid/connect'       : return '\Flexio\Api\Connection::connect';
             case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\Connection::disconnect';
@@ -332,9 +330,6 @@ class Api
             case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
             case 'GET /streams/:eid/download'          : return '\Flexio\Api\Stream::download';
             case 'POS /streams/:eid/upload'            : return '\Flexio\Api\Stream::upload';
-
-            // comments
-            case 'POS /comments'                       : return '\Flexio\Api\Comment::create';
 
             // test suite
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
