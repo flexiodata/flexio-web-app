@@ -202,6 +202,8 @@ class Base implements IObject
 
     public function setCreatedBy(string $user_eid) : \Flexio\Object\Base
     {
+        // TODO: deprecated; move this information over to an action log
+
         // TODO: remove previous created by, if any
 
         // TODO: do we want to do more checking? have to be careful because
@@ -215,6 +217,8 @@ class Base implements IObject
 
     public function getCreatedBy() : string
     {
+        // TODO: deprecated; move this information over to an action log
+
         $object_eid = $this->getEid();
         $result = $this->getModel()->assoc_range($object_eid, \Model::EDGE_CREATED_BY);
 
@@ -224,7 +228,7 @@ class Base implements IObject
         return $result[0]['eid'];
     }
 
-    public function allows(string $user_eid, string $action_type) : bool
+    public function allows(string $user_eid, string $action) : bool
     {
         // note: like the status, read the rights fresh everytime to make
         // sure we have the most current information
@@ -235,22 +239,51 @@ class Base implements IObject
             return false;
 
         $rights = json_decode($rights,true);
+        if ($rights === false)
+            return false;
 
+        // find out if we're the owner or not; TODO: add support for groups
+        $requesting_member = \Flexio\Object\User::MEMBER_PUBLIC; // default
+        if ($this->getOwner() === $user_eid)
+            $member = \Flexio\Object\User::MEMBER_OWNER;
 
-        // TODO: iterate through the rights and see if the action is allowed
+        foreach ($rights as $r)
+        {
+            $member = $r['member'] ?? '';
+            $right = $r['right'] ?? '';
 
+            // if the requesting user is a member of the class granted a specific
+            // right, return true
+            if ($requesting_member === $member && $right === $action)
+                return true;
+        }
 
         return false;
     }
 
-    public function setRights(array $rights = null) : \Flexio\Object\Base
+    public function grant(array $rights = null) : \Flexio\Object\Base
     {
-        // TODO: perform validation on the rights?
-
         // if the rights parameter isn't set, reset the rights
         if (!isset($rights))
             $rights = array();
 
+        // validate the rights
+        foreach ($rights as $r)
+        {
+            if (!isset($r['member']) || !isset($r['right']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $member = $r['member'];
+            $right = $r['right'];
+
+            if (\Flexio\Object\User::isValidMemberType($member) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (\Flexio\Object\User::isValidActionType($member) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        }
+
+        // set the rights
+        $rights = json_encode($rights);
         $this->getModel()->setRights($this->getEid(), $rights);
         return $this;
     }

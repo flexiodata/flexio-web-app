@@ -31,4 +31,10 @@ interface IObject
 
     public function setStatus(string $status);
     public function getStatus();
+
+    public function setOwner(string $user_eid);
+    public function getOwner();
+
+    public function allows(string $user_eid, string $action_type);
+    public function grant(array $rights = null);
 }

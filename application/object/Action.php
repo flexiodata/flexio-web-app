@@ -34,6 +34,24 @@ class Action
         $this->initialize();
     }
 
+    public static function isValidActionType(string $action) : bool
+    {
+        switch ($action)
+        {
+            default:
+            case TYPE_UNDEFINED:
+                return false;
+
+            case TYPE_READ:
+            case TYPE_WRITE:
+            case TYPE_DELETE:
+            case TYPE_EXECUTE:
+            case TYPE_READ_RIGHTS:
+            case TYPE_WRITE_RIGHTS:
+                return true;
+        }
+    }
+
     public static function create() : \Flexio\Object\Action
     {
         return (new static);

@@ -18,9 +18,29 @@ namespace Flexio\Object;
 
 class User extends \Flexio\Object\Base
 {
+    const MEMBER_UNDEFINED = '';
+    const MEMBER_OWNER     = 'O';
+    const MEMBER_GROUP     = 'G';
+    const MEMBER_PUBLIC    = 'P';
+
     public function __construct()
     {
         $this->setType(\Model::TYPE_USER);
+    }
+
+    public static function isValidMemberType(string $member) : bool
+    {
+        switch ($member)
+        {
+            default:
+            case MEMBER_UNDEFINED:
+                return false;
+
+            case MEMBER_OWNER:
+            case MEMBER_GROUP:
+            case MEMBER_PUBLIC:
+                return true;
+        }
     }
 
     public static function create(array $properties = null) : \Flexio\Object\User
