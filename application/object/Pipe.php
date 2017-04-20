@@ -36,7 +36,7 @@ class Pipe extends \Flexio\Object\Base
         if (isset($properties) && isset($properties['schedule']))
         {
             $schedule = $properties['schedule'];
-            if (\Flexio\Base\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
+            if (\Flexio\Base\ValidatorSchema::check($schedule, self::SCHEDULE_SCHEMA)->hasErrors())
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
             $properties['schedule'] = json_encode($schedule);
@@ -67,7 +67,7 @@ class Pipe extends \Flexio\Object\Base
         if (isset($properties) && isset($properties['schedule']))
         {
             $schedule = $properties['schedule'];
-            if (\Flexio\Base\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
+            if (\Flexio\Base\ValidatorSchema::check($schedule, self::SCHEDULE_SCHEMA)->hasErrors())
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $properties['schedule'] = json_encode($schedule);
@@ -135,7 +135,7 @@ class Pipe extends \Flexio\Object\Base
     public function setSchedule(array $schedule) : \Flexio\Object\Pipe
     {
         // make sure the schedule format is valid
-        if (\Flexio\Base\ValidatorSchema::check($schedule, \Flexio\Object\Scheduler::SCHEMA)->hasErrors())
+        if (\Flexio\Base\ValidatorSchema::check($schedule, self::SCHEDULE_SCHEMA)->hasErrors())
             return $this;
 
         // shorthand for setting schedule info
@@ -274,4 +274,60 @@ class Pipe extends \Flexio\Object\Base
         // return the properties
         return $properties;
     }
+
+    // schedule info
+    const SCHEDULE_TEMPLATE = <<<EOD
+    {
+        "frequency": "",
+        "timezone": "",
+        "days": [],
+        "times": [
+            {
+                "hour": 0,
+                "minute": 0
+            }
+        ]
+    }
+EOD;
+    const SCHEDULE_SCHEMA = <<<EOD
+    {
+        "type": "object",
+        "required": ["frequency","timezone","days","times"],
+        "properties": {
+            "frequency": {
+                "type": "string",
+                "enum": ["one-minute","five-minutes","thirty-minutes","hourly","daily","weekly","monthly"]
+            },
+            "timezone": {
+                "type": "string"
+            },
+            "days": {
+                "type": "array",
+                "items": {
+                    "type": ["number","string"],
+                    "enum": ["mon","tue","wed","thu","fri","sat","sun","last",1,15]
+                }
+            },
+            "times": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["hour","minute"],
+                    "properties": {
+                        "hour": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 24
+                        },
+                        "minute": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 60
+                        }
+                    }
+                }
+            }
+        }
+    }
+EOD;
 }
