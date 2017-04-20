@@ -409,7 +409,7 @@ class Process
         }
 
         // create a merged structure
-        $merged_structure = \Flexio\Object\Structure::union($structures);
+        $merged_structure = \Flexio\Base\Structure::union($structures);
         return $merged_structure->enum();
     }
 
@@ -442,7 +442,7 @@ class Process
         }
 
         // create a merged structure
-        $merged_structure = \Flexio\Object\Structure::union($structures);
+        $merged_structure = \Flexio\Base\Structure::union($structures);
         return $merged_structure->enum();
     }
 

@@ -33,7 +33,7 @@ class Stream extends \Flexio\Object\Base
         {
             // if the structure is set, make sure it's valid
             $structure = $properties['structure'];
-            $structure_object = \Flexio\Object\Structure::create($structure);
+            $structure_object = \Flexio\Base\Structure::create($structure);
             $structure = $structure_object->enum();
             $properties['structure'] = json_encode($structure);
         }
@@ -71,7 +71,7 @@ class Stream extends \Flexio\Object\Base
         {
             // if the structure is set, make sure it's valid
             $structure = $properties['structure'];
-            $structure_object = \Flexio\Object\Structure::create($structure);
+            $structure_object = \Flexio\Base\Structure::create($structure);
             $structure = $structure_object->enum();
             $properties['structure'] = json_encode($structure);
         }
@@ -150,21 +150,21 @@ class Stream extends \Flexio\Object\Base
 
     public function setStructure($structure) : \Flexio\Object\Stream // TODO: add input parameter types
     {
-        if (!($structure instanceof \Flexio\Object\Structure))
-            $structure = \Flexio\Object\Structure::create($structure);
+        if (!($structure instanceof \Flexio\Base\Structure))
+            $structure = \Flexio\Base\Structure::create($structure);
 
         $properties = array();
         $properties['structure'] = $structure->enum();
         return $this->set($properties);
     }
 
-    public function getStructure() : \Flexio\Object\Structure
+    public function getStructure() : \Flexio\Base\Structure
     {
         if ($this->isCached() === false)
             $this->populateCache();
 
         $s = $this->properties['structure'];
-        $structure = \Flexio\Object\Structure::create($s);
+        $structure = \Flexio\Base\Structure::create($s);
         return $structure;
     }
 

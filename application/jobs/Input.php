@@ -290,7 +290,7 @@ class Input extends \Flexio\Jobs\Base
         $this->getOutput()->push($outstream);
 
         $rownum = 0;
-        $structure = \Flexio\Object\Structure::create();
+        $structure = \Flexio\Base\Structure::create();
 
         $streamwriter = false;
         $params = array();

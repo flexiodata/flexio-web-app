@@ -339,7 +339,7 @@ class Socrata implements \Flexio\Services\IConnection
             return array();
 
         // generate output structure
-        $structure = \Flexio\Object\Structure::create();
+        $structure = \Flexio\Base\Structure::create();
 
         foreach ($table_schema['columns'] as $col)
         {
