@@ -51,6 +51,17 @@ class Base implements IObject
         $object->setModel($model);
         $object->setEid($local_eid);
         $object->clearCache();
+
+        // by default, grant the owner full rights
+        $object->grant(
+            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_READ),
+            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_WRITE),
+            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_DELETE),
+            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_EXECUTE),
+            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_READ_RIGHTS),
+            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_WRITE_RIGHTS)
+        );
+
         return $object;
     }
 
