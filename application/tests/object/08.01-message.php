@@ -23,22 +23,22 @@ class Test
         // TEST: Message object constant tests
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
+        $actual = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
         $expected = 'email_welcome';
         TestCheck::assertString('A.1', 'Message error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Message::TYPE_EMAIL_RESET_PASSWORD;
+        $actual = \Flexio\Api\Message::TYPE_EMAIL_RESET_PASSWORD;
         $expected = 'email_reset_password';
         TestCheck::assertString('A.2', 'Message error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Message::TYPE_EMAIL_SHARE;
+        $actual = \Flexio\Api\Message::TYPE_EMAIL_SHARE;
         $expected = 'email_share';
         TestCheck::assertString('A.3', 'Message error constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Message::TYPE_EMAIL_PIPE;
+        $actual = \Flexio\Api\Message::TYPE_EMAIL_PIPE;
         $expected = 'email_pipe';
         TestCheck::assertString('A.4', 'Message error constant',  $actual, $expected, $results);
     }

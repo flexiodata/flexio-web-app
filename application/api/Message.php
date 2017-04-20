@@ -8,12 +8,12 @@
  * Created:  2016-12-30
  *
  * @package flexio
- * @subpackage Object
+ * @subpackage Api
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Object;
+namespace Flexio\Api;
 
 
 class Message
@@ -31,7 +31,7 @@ class Message
         $this->initialize();
     }
 
-    public static function create(string $type, array $params) : \Flexio\Object\Message
+    public static function create(string $type, array $params) : \Flexio\Api\Message
     {
         switch ($type)
         {

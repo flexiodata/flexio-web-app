@@ -124,7 +124,7 @@ class Follower
             if (strlen($last_name) > 0)
                 $sender_name = $sender_name . ' ' . $last_name;
 
-            $message_type = \Flexio\Object\Message::TYPE_EMAIL_SHARE;
+            $message_type = \Flexio\Api\Message::TYPE_EMAIL_SHARE;
             $from_name = $sender_name;
             $from_email = \Flexio\System\System::getCurrentUserEmail();
 
@@ -136,7 +136,7 @@ class Follower
             $email_params['object_eid'] = $object->getEid();
             $email_params['message'] = $message;
 
-            $email = \Flexio\Object\Message::create($message_type, $email_params);
+            $email = \Flexio\Api\Message::create($message_type, $email_params);
             $email->send();
 
             // regardless of whether or not they're a new user, add a sharing association

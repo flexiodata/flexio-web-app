@@ -102,9 +102,9 @@ class User
             // if appropriate, send an email
             if ($send_email === true)
             {
-                $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
+                $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
                 $email_params = array('email' => $email, 'verify_code' => $verify_code);
-                $message = \Flexio\Object\Message::create($message_type, $email_params);
+                $message = \Flexio\Api\Message::create($message_type, $email_params);
                 $message->send();
             }
 
@@ -171,9 +171,9 @@ class User
         // if appropriate, send an email
         if ($send_email === true)
         {
-            $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
+            $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
             $email_params = array('email' => $email, 'verify_code' => $new_verify_code);
-            $message = \Flexio\Object\Message::create($message_type, $email_params);
+            $message = \Flexio\Api\Message::create($message_type, $email_params);
             $message->send();
         }
 
@@ -391,9 +391,9 @@ class User
         if (!isset($verify_code))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing verification code'));
 
-        $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
+        $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
         $email_params = array('email' => $email, 'verify_code' => $verify_code);
-        $message = \Flexio\Object\Message::create($message_type, $email_params);
+        $message = \Flexio\Api\Message::create($message_type, $email_params);
         $message->send();
 
         return true;
@@ -417,9 +417,9 @@ class User
         if ($user->set(array('verify_code' => $verify_code)) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not send password reset email at this time'));
 
-        $message_type = \Flexio\Object\Message::TYPE_EMAIL_RESET_PASSWORD;
+        $message_type = \Flexio\Api\Message::TYPE_EMAIL_RESET_PASSWORD;
         $email_params = array('email' => $email, 'verify_code' => $verify_code);
-        $message = \Flexio\Object\Message::create($message_type, $email_params);
+        $message = \Flexio\Api\Message::create($message_type, $email_params);
         $message->send();
 
         return true;
