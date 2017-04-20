@@ -288,6 +288,8 @@ class Cron
 
         // STEP 2: create the process
         $process = \Flexio\Object\Process::create($pipe_properties);
+        $process->setOwner($pipe->getOwner());
+        $process->setCreatedBy($pipe->getOwner());
 
         // STEP 3: run the process
         $process->run();

@@ -64,6 +64,7 @@ class Process
 
         // check rights
         $pipe = false;
+        $pipe_owner = false;
         if ($pipe_identifier !== false)
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -82,14 +83,28 @@ class Process
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
             if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+            $pipe_owner = $pipe->getOwner();
         }
 
         // STEP 1: create a new process job with the default task
         $process_properties = $params;
         unset($process_properties['params']);
         $process = \Flexio\Object\Process::create($process_properties);
-        $process->setOwner($requesting_user_eid);
-        $process->setCreatedBy($requesting_user_eid);
+
+        if ($pipe_owner !== false)
+        {
+            // if the process is created from a pipe, it runs with pipe owner privileges
+            $process->setOwner($pipe_owner);
+            $process->setCreatedBy($pipe_owner);
+        }
+         else
+        {
+            // if the process is created independent of a pipe, it runs with requesting
+            // user privileges
+            $process->setOwner($requesting_user_eid);
+            $process->setCreatedBy($requesting_user_eid);
+        }
 
         if (isset($params['params']))
             $process->setParams($params['params']);
