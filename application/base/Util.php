@@ -462,6 +462,20 @@ class Util
         return $days_diff;
     }
 
+    public static function getDateTimeParts(int $t = null, string $tz = null) : array
+    {
+        if (is_null($tz))
+            $tz = date_default_timezone_get();
+
+        $dt = new \DateTime('now', new \DateTimeZone($tz));
+        $dt->setTimestamp(is_null($t) ? time() : $t);
+        $s = $dt->format('s:i:G:j:w:n:Y:z:l:w:F:U');
+
+        $k = array('seconds','minutes','hours','mday','wday','mon','year','yday','weekday','nweekday','month',0);
+
+        return array_combine($k, explode(":", $s));
+    }
+
     /* // works, but currently not in use
     public static function getCurrentTimezoneOffset()
     {
