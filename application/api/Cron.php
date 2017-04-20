@@ -188,7 +188,7 @@ class Cron
 
     private function refreshSchedulerTable()
     {
-        $pipe_model = \Flexio\Object\Store::getModel()->pipe;
+        $pipe_model = \Flexio\System\System::getModel()->pipe;
         $current_update = $pipe_model->getLastSchedulerUpdateTime();
 
         print("Current update time " . $current_update . "; Last update time " . $this->last_update . "\n");
