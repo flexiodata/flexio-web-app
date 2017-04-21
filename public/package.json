@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "autosize": "^3.0.20",
+    "axios": "^0.16.1",
     "clipboard": "^1.5.16",
     "codemirror": "^5.23.0",
     "filesize": "^3.3.0",
