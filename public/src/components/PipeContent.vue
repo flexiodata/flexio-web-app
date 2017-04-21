@@ -11,10 +11,10 @@
   <div v-else-if="is_json || is_text" class="bg-white ba b--black-10" style="height: 360px">
     <stream-text :stream-eid="streamEid" :content-url="stream_content_url" :is-json="is_json"></stream-text>
   </div>
-  <div v-else-if="is_table && false" class="bg-white ba b--black-10" style="height: 360px">
+  <div v-else-if="is_table" class="bg-white ba b--black-10" style="height: 360px">
     <stream-grid :stream-eid="streamEid" :content-url="stream_content_url" :task-json="taskJson"></stream-grid>
   </div>
-  <div v-else-if="is_table" class="bg-white ba b--black-10" style="height: 360px">
+  <div v-else-if="is_table && false" class="bg-white ba b--black-10" style="height: 360px">
     <grid
       :data-url="stream_content_url"
       :live-scroll="false"
