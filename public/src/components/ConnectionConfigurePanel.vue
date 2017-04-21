@@ -181,7 +181,7 @@
         return this.is_s3 ? 'Secret Key' : 'Password'
       },
       database_label() {
-        return this.is_s3 ? 'Bucket' : this.is_sftp ? 'Base Directory' : 'Database'
+        return this.is_s3 ? 'Bucket' : this.is_sftp ? 'Base Directory (optional)' : 'Database'
       }
     },
     methods: {
