@@ -65,6 +65,7 @@
     },
     methods: {
       tryCreatePipe(attrs) {
+        return
         // TODO: remove hard-coding
         var attrs = _.assign({}, attrs, { parent_eid: 'q57nw82zl3gm' })
 
