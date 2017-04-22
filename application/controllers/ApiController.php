@@ -51,6 +51,18 @@ class ApiController extends \Flexio\System\FxControllerAction
                 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
                 header('Access-Control-Allow-Headers: authorization');
             }
+
+            // TODO: review this policy; add cross-origin access to stream calls
+            //       on the test site, but not production
+            if (IS_TESTSITE())
+            {
+                if (0 == strncmp($request->REQUEST_URI, '/api/v1/streams/', 16))
+                {
+                    header('Access-Control-Allow-Origin: *');
+                    header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
+                    header('Access-Control-Allow-Headers: authorization');
+                }
+            }
         }
 
         if ($method == 'OPTIONS')
