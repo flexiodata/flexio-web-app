@@ -12,18 +12,26 @@
 
 <script>
   import { ROUTE_PIPEHOME } from '../constants/route'
+  import { mapGetters } from 'vuex'
   import Spinner from './Spinner.vue'
   import axios from 'axios'
   import marked from 'marked'
+  import setActiveProject from './mixins/set-active-project'
 
   export default {
+    mixins: [setActiveProject],
     components: {
       Spinner
+    },
+    watch: {
+      default_project(val, old_val) {
+        this.tryCreatePipe(this.pipe_json)
+      }
     },
     data() {
       return {
         is_loading: true,
-        pipe_json: '',
+        pipe_json: {},
         error_markdown: ''
       }
     },
@@ -35,16 +43,26 @@
         var idx = this.json_filename.lastIndexOf('/')
         return this.json_filename.substring(idx > 0 ? idx+1 : 0)
       },
+      default_project() {
+        return _
+          .chain(this.getActiveUserProjects())
+          .sortBy([ function(p) { return new Date(p.created) } ])
+          .first()
+          .value()
+      },
       error_markup() {
         return marked(this.error_markdown)
       }
+    },
+    created() {
+      this.tryFetchProjects()
     },
     mounted() {
       if (this.json_filename.length > 0)
       {
         axios.get(this.json_filename).then(response => {
-          this.pipe_json = JSON.stringify(response.data, null, 2)
-          this.tryCreatePipe(JSON.parse(this.pipe_json))
+          this.pipe_json = _.assign({}, response.data)
+          this.tryCreatePipe(this.pipe_json)
         }).catch(response => {
           this.is_loading = false
           this.error_markdown =
@@ -64,10 +82,25 @@
         }
     },
     methods: {
+      ...mapGetters([
+        'hasProjects',
+        'getActiveUserProjects'
+      ]),
+      tryFetchProjects() {
+        if (!this.hasProjects())
+          this.$store.dispatch('fetchProjects')
+      },
       tryCreatePipe(attrs) {
-        return
-        // TODO: remove hard-coding
-        var attrs = _.assign({}, attrs, { parent_eid: 'q57nw82zl3gm' })
+        var parent_eid = _.get(this.default_project, 'eid', '')
+
+        if (parent_eid.length == 0 || _.size(attrs) == 0)
+          return
+
+        // start in the target project
+        this.setActiveProject(parent_eid)
+
+        // add (project) parent eid to the create attributes
+        _.assign(attrs, { parent_eid })
 
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok)
