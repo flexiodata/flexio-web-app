@@ -312,7 +312,7 @@ class Project
             // load the object
             $object = \Flexio\Object\Store::load($eid);
             if ($object === false)
-               throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
             if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
