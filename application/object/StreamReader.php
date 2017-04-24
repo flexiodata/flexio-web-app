@@ -388,7 +388,7 @@ class StreamTableReader
         {
             $ret = $this->read_buffer;
             $this->read_buffer = '';
-            return $ret;
+            return strlen($ret) > 0 ? $ret : false;
         }
          else
         {
