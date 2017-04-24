@@ -16,11 +16,21 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-if (!isset($GLOBALS['phpseclib_included']))
-{
-    $GLOBALS['phpseclib_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'phpseclib'));
-}
+
+spl_autoload_register(function ($class) {
+    $class = ltrim($class, '\\');
+    if (strpos($class, 'phpseclib\\') === 0)
+    {
+        $class = str_replace('\\', '/', $class);
+        $class = dirname(dirname(__DIR__)) . '/library/phpseclib/' . $class . '.php';
+        if (file_exists($class))
+        {
+            require_once $class;
+            return true;
+        }
+        return false;
+    }
+});
 
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';

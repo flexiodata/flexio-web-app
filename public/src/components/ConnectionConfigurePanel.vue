@@ -149,6 +149,9 @@
       is_s3() {
         return this.ctype == types.CONNECTION_TYPE_AMAZONS3
       },
+      is_sftp() {
+        return this.ctype == types.CONNECTION_TYPE_SFTP
+      },
       cls() {
         return this.is_connected ? 'b--dark-green' : 'b--blue'
       },
@@ -168,10 +171,18 @@
         }
         return false
       },
-      host_label()     { return this.is_s3 ? 'Region'     : 'Host'     },
-      username_label() { return this.is_s3 ? 'Access Key' : 'Username' },
-      password_label() { return this.is_s3 ? 'Secret Key' : 'Password' },
-      database_label() { return this.is_s3 ? 'Bucket'     : 'Database' }
+      host_label()     {
+        return this.is_s3 ? 'Region'     : 'Host'
+      },
+      username_label() {
+        return this.is_s3 ? 'Access Key' : 'Username'
+      },
+      password_label() {
+        return this.is_s3 ? 'Secret Key' : 'Password'
+      },
+      database_label() {
+        return this.is_s3 ? 'Bucket' : this.is_sftp ? 'Base Directory (optional)' : 'Database'
+      }
     },
     methods: {
       cinfo() {

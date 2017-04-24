@@ -97,7 +97,7 @@
         return _.get(task, 'metadata.connection_type')
       },
       openPipe() {
-        this.$router.push({ name: ROUTE_PIPEHOME, params: { eid: this.item.eid }})
+        this.$router.push({ name: ROUTE_PIPEHOME, params: { eid: this.item.eid } })
       },
       trashPipe() {
         var attrs = {

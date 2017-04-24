@@ -112,7 +112,7 @@
         'getAllProjects'
       ]),
       openPipe(eid) {
-        this.$router.push({ name: ROUTE_PIPEHOME, params: { eid }})
+        this.$router.push({ name: ROUTE_PIPEHOME, params: { eid } })
       },
       openPipeAddModal(ref, attrs) {
         this.show_pipe_add_modal = true

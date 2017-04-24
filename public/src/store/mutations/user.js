@@ -17,6 +17,11 @@ export default {
 
   [types.FETCHED_USER]: (state, user) => {
     addUser(state, user, { is_fetched: true })
+
+    // set our fetched flag so we know we've queried the backend for the active user
+    state.user_fetched = true
+
+    // store the active user eid
     state.active_user_eid = user.eid
   },
 
