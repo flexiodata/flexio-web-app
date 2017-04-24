@@ -33,17 +33,17 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Object\User::MEMBER_OWNER;
-        $expected = 'O';
+        $expected = 'owner';
         TestCheck::assertString('A.2', 'User member type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\User::MEMBER_GROUP;
-        $expected = 'G';
+        $expected = 'group';
         TestCheck::assertString('A.3', 'User member type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\User::MEMBER_PUBLIC;
-        $expected = 'P';
+        $expected = 'public';
         TestCheck::assertString('A.4', 'User member type',  $actual, $expected, $results);
     }
 }

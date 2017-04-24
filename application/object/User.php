@@ -19,9 +19,9 @@ namespace Flexio\Object;
 class User extends \Flexio\Object\Base
 {
     const MEMBER_UNDEFINED = '';
-    const MEMBER_OWNER     = 'O';
-    const MEMBER_GROUP     = 'G';
-    const MEMBER_PUBLIC    = 'P';
+    const MEMBER_OWNER     = 'owner';
+    const MEMBER_GROUP     = 'group';
+    const MEMBER_PUBLIC    = 'public';
 
     public function __construct()
     {
