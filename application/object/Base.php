@@ -52,15 +52,24 @@ class Base implements IObject
         $object->setEid($local_eid);
         $object->clearCache();
 
-        // by default, grant the owner full rights
-        $object->grant(
-            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_READ),
-            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_WRITE),
-            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_DELETE),
-            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_EXECUTE),
-            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_READ_RIGHTS),
-            array('member' => \Flexio\Base\User::MEMBER_OWNER, 'right' => \Flexio\Base\Action::TYPE_WRITE_RIGHTS)
-        );
+        // set the default rights; give the owner everything; give group members
+        // everything except the ability to change rights
+        $acl = \Flexio\Object\Acl::create();
+
+        $acl->add(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
+        $acl->add(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
+
+        $acl->add(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
+        $acl->add(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
+        $acl->add(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
+        $acl->add(\Flexio\Base\Action::TYPE_EXECUTE, \Flexio\Base\User::MEMBER_OWNER);
+
+        $acl->add(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_GROUP);
+        $acl->add(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_GROUP);
+        $acl->add(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_GROUP);
+        $acl->add(\Flexio\Base\Action::TYPE_EXECUTE, \Flexio\Base\User::MEMBER_GROUP);
+
+        $object->rights($acl);
 
         return $object;
     }
@@ -253,48 +262,56 @@ class Base implements IObject
         if ($rights === false)
             return false;
 
-        // find out if we're the owner or not; TODO: add support for groups
-        $requesting_member = \Flexio\Object\User::MEMBER_PUBLIC; // default
-        if ($this->getOwner() === $user_eid)
-            $member = \Flexio\Object\User::MEMBER_OWNER;
+        $acl = \Flexio\Object\Acl::create($rights);
+        $acl_items = $acl->get();
 
-        foreach ($rights as $r)
+        if (!isset($acl_items[$action]))
+            return false;
+
+        // the action is in the list of allowed actions; see if the action is public
+        // first to avoid having to do a user lookup
+        $owner_allowed = false;
+        $group_allowed = false;
+
+        $user_list = $acl_items[$action];
+        foreach ($user_list as $user)
         {
-            $member = $r['member'] ?? '';
-            $right = $r['right'] ?? '';
-
-            // if the requesting user is a member of the class granted a specific
-            // right, return true
-            if ($requesting_member === $member && $right === $action)
+            // public rights exist for the action in question; we're done
+            if ($user === \Flexio\Object\User::MEMBER_PUBLIC)
                 return true;
+
+            if ($user === \Flexio\Object\User::MEMBER_OWNER)
+                $owner_allowed = true;
+
+            if ($user === \Flexio\Object\User::MEMBER_GROUP)
+                $group_allowed = true;
         }
 
+        // public rights don't exist for the action in question; see if the owner
+        // is allowed next since it's a faster lookup than group membership
+        if ($owner_allowed === true && $this->getOwner() === $user_eid)
+            return true;
+
+        if ($group_allowed === true)
+        {
+            // TODO: lookup if the user is a member of the group; return true
+            // if they are and false otherwise
+            return false;
+        }
+
+        // user isn't the owner or part of the group
         return false;
     }
 
-    public function grant(array $rights = null) : \Flexio\Object\Base
+    public function rights(\Flexio\Object\Acl $acl = null) : \Flexio\Object\Base
     {
-        // if the rights parameter isn't set, reset the rights
-        if (!isset($rights))
-            $rights = array();
+        // if rights aren't specified, create a default set of rights without
+        // any users/actions specified; this allows us to reset the rights
+        if (!isset($acl))
+            $acl = \Flexio\Object\Acl::create();
 
-        // validate the rights
-        foreach ($rights as $r)
-        {
-            if (!isset($r['member']) || !isset($r['right']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $member = $r['member'];
-            $right = $r['right'];
-
-            if (\Flexio\Object\User::isValidType($member) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Object\User::isValidType($member) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
-
-        // set the rights
-        $rights = json_encode($rights);
+        // save the rights
+        $rights = json_encode($acl->get());
         $this->getModel()->setRights($this->getEid(), $rights);
         return $this;
     }

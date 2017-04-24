@@ -20,7 +20,7 @@ class Acl
 {
     private $acl = array();
 
-    public static function create(array $acl) : \Flexio\Object\Acl
+    public static function create(array $acl = null) : \Flexio\Object\Acl
     {
         // note: user acl is a list of enumerated rights in the form
         // {
@@ -35,6 +35,13 @@ class Acl
         //    ],
         //    ...
         // }
+
+        // if the acl is null, start with an empty set of rights
+        if (!isset($acl))
+        {
+            $this->acl = array();
+            return $this;
+        }
 
         // make sure the acl list we're using to serialize the object
         // is valid
