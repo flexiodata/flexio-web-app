@@ -34,7 +34,7 @@ class Action
         $this->initialize();
     }
 
-    public static function isValidActionType(string $action) : bool
+    public static function isValidType(string $action) : bool
     {
         switch ($action)
         {

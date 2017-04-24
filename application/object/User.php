@@ -28,7 +28,7 @@ class User extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_USER);
     }
 
-    public static function isValidMemberType(string $member) : bool
+    public static function isValidType(string $member) : bool
     {
         switch ($member)
         {

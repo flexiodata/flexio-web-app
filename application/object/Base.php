@@ -287,9 +287,9 @@ class Base implements IObject
             $member = $r['member'];
             $right = $r['right'];
 
-            if (\Flexio\Object\User::isValidMemberType($member) === false)
+            if (\Flexio\Object\User::isValidType($member) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Object\User::isValidActionType($member) === false)
+            if (\Flexio\Object\User::isValidType($member) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
