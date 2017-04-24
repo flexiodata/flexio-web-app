@@ -52,23 +52,8 @@ class Base implements IObject
         $object->setEid($local_eid);
         $object->clearCache();
 
-        // set the default rights; give the owner everything; give group members
-        // everything except the ability to change rights
+        // TODO: for now, don't allow any rights by default; change?
         $acl = \Flexio\Object\Acl::create();
-
-        $acl->add(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-        $acl->add(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-
-        $acl->add(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
-        $acl->add(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
-        $acl->add(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
-        $acl->add(\Flexio\Base\Action::TYPE_EXECUTE, \Flexio\Base\User::MEMBER_OWNER);
-
-        $acl->add(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_GROUP);
-        $acl->add(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_GROUP);
-        $acl->add(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_GROUP);
-        $acl->add(\Flexio\Base\Action::TYPE_EXECUTE, \Flexio\Base\User::MEMBER_GROUP);
-
         $object->rights($acl);
 
         return $object;

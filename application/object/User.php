@@ -72,6 +72,21 @@ class User extends \Flexio\Object\Base
         $object->setModel($model);
         $object->setEid($local_eid);
         $object->clearCache();
+
+        // set the default user rights
+        $acl = \Flexio\Object\Acl::create();
+
+        $acl->add(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
+        $acl->add(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
+
+        $acl->add(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
+        $acl->add(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
+        $acl->add(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
+
+        // turn of rights for group members for user person info
+
+        $object->rights($acl);
+
         return $object;
     }
 
