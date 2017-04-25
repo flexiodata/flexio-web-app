@@ -74,7 +74,7 @@
               :label="database_label"
               floating-label
               v-model.trim="info.database"
-              v-if="showInput('database')"
+              v-if="showInput('database') && !is_sftp"
             ></ui-textbox>
             <div class="mt3 css-btn-test">
               <btn btn-lg btn-primary class="w-100 ttu b" @click="onTestClick">Test connection</btn>
@@ -181,7 +181,7 @@
         return this.is_s3 ? 'Secret Key' : 'Password'
       },
       database_label() {
-        return this.is_s3 ? 'Bucket' : this.is_sftp ? 'Base Directory (optional)' : 'Database'
+        return this.is_s3 ? 'Bucket' : 'Database'
       }
     },
     methods: {
