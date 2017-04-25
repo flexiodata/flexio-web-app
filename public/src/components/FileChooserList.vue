@@ -160,8 +160,9 @@
       },
       refreshList() {
         var path = _.defaultTo(this.path, '/')
+        var eid = this.connection_eid
 
-        if (this.connection_eid.length == 0)
+        if (eid.length == 0)
           return
 
         this.is_fetching = true
