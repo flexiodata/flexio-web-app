@@ -1,6 +1,8 @@
 <template>
   <div v-if="is_fetching">
-    <spinner size="medium" show-text loading-text="Loading members..."></spinner>
+    <div class="flex flex-column justify-center h-100">
+      <spinner size="large" message="Loading members..."></spinner>
+    </div>
   </div>
   <div v-else>
     <!-- control bar -->
@@ -39,7 +41,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import MemberList from './MemberList.vue'
   import MemberAddModal from './MemberAddModal.vue'
   import Btn from './Btn.vue'

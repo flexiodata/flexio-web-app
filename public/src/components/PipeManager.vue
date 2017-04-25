@@ -66,7 +66,7 @@
   import { mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import PipeList from './PipeList.vue'
   import PipePropsModal from './PipePropsModal.vue'
   import PipeShareModal from './PipeShareModal.vue'

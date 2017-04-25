@@ -39,7 +39,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import TrashList from './TrashList.vue'
   import ConfirmModal from './ConfirmModal.vue'
   import Btn from './Btn.vue'
