@@ -9,7 +9,7 @@
         >chevron_right</i>
       </span>
       <span class="f4 mr2">{{item.id}}</span>
-      <spinner size="tiny" inline v-if="item.is_running"></spinner>
+      <spinner :size="24" v-if="item.is_running"></spinner>
       <div class="flex-fill">&nbsp;</div>
       <div class="tr pl3 f6 fw6">{{item.message}}</div>
       <div class="f3 pl3 tr monospace ttu b dark-green" v-if="has_details && is_passed===true">Passed</div>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
 
   export default {
     props: ['item'],
