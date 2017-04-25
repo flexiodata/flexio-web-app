@@ -1,16 +1,20 @@
-var path = require('path')
-var webpack = require('webpack')
-var WebpackMd5Hash = require('webpack-md5-hash')
-var AssetsPlugin = require('assets-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+'use strict'
 
-// debug vs. production constants
-var IS_DEBUG = (process.env.NODE_ENV === 'production') ? false : true
-var OUTPUT_FILENAME = IS_DEBUG ? '[name].js' : '[name]-[chunkhash].js'
-var EXTRACT_TEXT_FILENAME = IS_DEBUG ? 'css/style.css' : 'css/style-[contenthash].css'
-var SHOW_BUNDLE_ANALYZER = false
+const path = require('path')
+const webpack = require('webpack')
+const options = require('./options')
+
+// webpack plugins
+const WebpackMd5Hash = require('webpack-md5-hash')
+const AssetsPlugin = require('assets-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
+// constants
+const OUTPUT_FILENAME = options.isProduction ? '[name]-[chunkhash].js' : '[name].js'
+const EXTRACT_TEXT_FILENAME = options.isProduction ? 'css/style-[contenthash].css' : 'css/style.css'
+const SHOW_BUNDLE_ANALYZER = false
 
 module.exports = {
   entry: {
@@ -30,10 +34,10 @@ module.exports = {
       'tinycolor2',
       'codemirror'
     ],
-    app: './src/main.js'
+    app: options.paths.resolve('src/main.js')
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: options.paths.output.main,
     publicPath: '/dist/',
     filename: OUTPUT_FILENAME
   },
@@ -127,7 +131,7 @@ module.exports.plugins = (module.exports.plugins || []).concat([
   }),
   new WebpackMd5Hash(), // use standard md5 hash when using [chunkfile]
   new webpack.optimize.UglifyJsPlugin({
-    sourceMap: true,
+    //sourceMap: true,
     compress: {
       warnings: false
     }
@@ -137,23 +141,23 @@ module.exports.plugins = (module.exports.plugins || []).concat([
     minimize: true
   }),
   new AssetsPlugin({
-    filename: './src/build/assets.json',
+    filename: options.paths.resolve('src/build/assets.json'),
     prettyPrint: true
   }),
   new ExtractTextPlugin({
     filename: EXTRACT_TEXT_FILENAME
   }),
   new HtmlWebpackPlugin({
-    template: path.resolve(__dirname, './src/index-template.ejs'), // load a custom template (ejs by default see the FAQ for details)
-    filename: path.resolve(__dirname, './src/build/index-template.html')
+    template: options.paths.resolve('src/index-template.ejs'), // load a custom template (ejs by default see the FAQ for details)
+    filename: options.paths.resolve('src/build/index-template.html')
   }),
   new HtmlWebpackPlugin({
-    template: path.resolve(__dirname, './src/index-template.ejs'), // load a custom template (ejs by default see the FAQ for details)
-    filename: path.resolve(__dirname, '../application/views/layout.phtml')
+    template: options.paths.resolve('src/index-template.ejs'), // load a custom template (ejs by default see the FAQ for details)
+    filename: options.paths.resolve('../application/views/layout.phtml')
   })
 ])
 
-if (IS_DEBUG)
+if (!options.isProduction)
 {
   /* debug-only plugins */
   if (SHOW_BUNDLE_ANALYZER)

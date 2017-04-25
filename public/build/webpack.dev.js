@@ -1,5 +1,11 @@
-var path = require('path')
-var webpack = require('webpack')
+'use strict'
+
+const path = require('path')
+const webpack = require('webpack')
+const options = require('./options')
+
+// constants
+const OUTPUT_FILENAME = '[name].js'
 
 module.exports = {
   entry: {
@@ -18,12 +24,12 @@ module.exports = {
       'tinycolor2',
       'codemirror'
     ],
-    app: './src/main.js'
+    app: options.paths.resolve('src/main.js'),
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: options.paths.output.main,
     publicPath: '/dist/',
-    filename: '[name].js'
+    filename: OUTPUT_FILENAME
   },
   module: {
     rules: [
@@ -86,7 +92,7 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: {
-      index: './src/index-dev.html'
+      index: options.paths.resolve('src/index-dev.html')
     },
     noInfo: true
   },
