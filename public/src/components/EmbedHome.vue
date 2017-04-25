@@ -1,8 +1,6 @@
 <template>
   <div v-if="is_fetching">
-    <div class="pa2">
-      <spinner size="small" inline></spinner>
-    </div>
+    <spinner class="pa2" size="medium"></spinner>
   </div>
   <div v-else>
     <pipe-embed-item :item="pipe"></pipe-embed-item>
@@ -10,7 +8,7 @@
 </template>
 
 <script>
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import PipeEmbedItem from './PipeEmbedItem.vue'
 
   export default {
