@@ -26,7 +26,7 @@
       </ui-popover>
     </div>
     <div class="ma3">
-      <div class="tl" v-if="is_dropbox || is_google_drive">
+      <div class="tl" v-if="is_dropbox || is_google_drive || is_sftp">
         <div class="lh-copy mid-gray f6 mb2">Files will be output to the following folder:</div>
         <div class="flex flex-row items-stretch">
           <div class="flex-fill f6 pa2 black bt bb bl b--black-10 br1 br--left">
@@ -71,12 +71,6 @@
             aria-label="Copy to Clipboard"
             :data-clipboard-target="'#'+code_id"
           ><span class="ttu b">Copy</span></btn>
-        </div>
-      </div>
-      <div class="tl" v-else-if="is_sftp">
-        <div class="lh-copy mid-gray f6 mb3 i">
-          <span v-if="host.length == 0 || database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files via {{service_name}}.</span>
-          <span v-else>Files will be output to the <span class="b black fs-normal">{{database}}</span> database on <span class="b black fs-normal">{{host}}</span>.</span>
         </div>
       </div>
     </div>

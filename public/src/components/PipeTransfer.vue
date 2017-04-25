@@ -118,8 +118,15 @@
 </template>
 
 <script>
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
-  import { CONNECTION_TYPE_DROPBOX, CONNECTION_TYPE_GOOGLEDRIVE } from '../constants/connection-type'
+  import {
+    TASK_TYPE_INPUT,
+    TASK_TYPE_OUTPUT
+  } from '../constants/task-type'
+  import {
+    CONNECTION_TYPE_DROPBOX,
+    CONNECTION_TYPE_GOOGLEDRIVE ,
+    CONNECTION_TYPE_SFTP
+  } from '../constants/connection-type'
   import Btn from './Btn.vue'
   import PipeTransferInputList from './PipeTransferInputList.vue'
   import PipeTransferInputChooser from './PipeTransferInputChooser.vue'
@@ -222,7 +229,7 @@
           _.set(attrs, 'params.connection', conn_identifier)
 
         // add default output location for connections that need this
-        if (ctype == CONNECTION_TYPE_DROPBOX || ctype == CONNECTION_TYPE_GOOGLEDRIVE)
+        if (ctype == CONNECTION_TYPE_DROPBOX || ctype == CONNECTION_TYPE_GOOGLEDRIVE || ctype == CONNECTION_TYPE_SFTP)
           _.set(attrs, 'params.location', '/')
 
         // add output task
