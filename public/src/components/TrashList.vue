@@ -1,6 +1,8 @@
 <template>
   <div v-if="is_fetching">
-    <spinner size="medium" show-text loading-text="Loading trash..."></spinner>
+    <div class="flex flex-column justify-center h-100">
+      <spinner size="large" message="Loading trash..."></spinner>
+    </div>
   </div>
   <empty-item v-else-if="trash_items.length == 0 && filter.length > 0">
     <i slot="icon" class="material-icons">delete</i>
@@ -21,7 +23,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import TrashItem from './TrashItem.vue'
   import EmptyItem from './EmptyItem.vue'
   import commonFilter from './mixins/common-filter'

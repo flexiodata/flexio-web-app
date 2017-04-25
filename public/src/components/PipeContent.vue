@@ -1,9 +1,9 @@
 <template>
-  <div v-if="is_fetching" class="bg-white ba b--black-10" style="min-height: 160px">
-    <spinner size="medium" show-text loading-text="Loading preview..."></spinner>
+  <div class="flex flex-column justify-center bg-white ba b--black-10" style="height: 200px" v-if="is_fetching">
+    <spinner message="Loading preview..."></spinner>
   </div>
   <div v-else-if="is_image">
-    <img :stream-eid="streamEid" :src="stream_content_url" class="dib max-h-100" style="max-height: 360px">
+    <img :stream-eid="streamEid" :src="stream_content_url" class="dib" style="max-height: 360px">
   </div>
   <div v-else-if="is_pdf" class="bg-white relative overflow-hidden" style="height: 360px">
     <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
@@ -25,7 +25,7 @@
 <script>
   import * as mt from '../constants/mimetype'
   import { Grid } from 'vue2-grid'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import StreamText from './StreamText.vue'
   import StreamGrid from './StreamGrid.vue'
   import { API_ROOT } from '../api/resources'

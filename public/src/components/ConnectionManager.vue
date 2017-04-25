@@ -1,6 +1,8 @@
 <template>
   <div v-if="is_fetching">
-    <spinner size="medium" show-text loading-text="Loading connections..."></spinner>
+    <div class="flex flex-column justify-center h-100">
+      <spinner size="large" message="Loading connections..."></spinner>
+    </div>
   </div>
   <div v-else>
     <!-- control bar -->
@@ -40,7 +42,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import ConnectionList from './ConnectionList.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
   import Btn from './Btn.vue'

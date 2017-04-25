@@ -1,6 +1,8 @@
 <template>
   <div v-if="is_fetching">
-    <spinner size="medium" show-text loading-text="Loading pipes..."></spinner>
+    <div class="flex flex-column justify-center h-100">
+      <spinner size="large" message="Loading pipes..."></spinner>
+    </div>
   </div>
   <empty-item v-else-if="pipes.length == 0 && filter.length > 0">
     <i slot="icon" class="material-icons">storage</i>
@@ -26,7 +28,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import PipeItem from './PipeItem.vue'
   import EmptyItem from './EmptyItem.vue'
   import commonFilter from './mixins/common-filter'

@@ -1,6 +1,6 @@
 <template>
-  <div v-if="is_fetching">
-    <spinner size="medium" show-text loading-text="Loading projects..."></spinner>
+  <div class="flex flex-column justify-center h-100" v-if="is_fetching">
+    <spinner size="large" message="Loading projects..."></spinner>
   </div>
   <empty-item v-else-if="projects.length == 0 && filter.length > 0">
     <i slot="icon" class="material-icons">assignment</i>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import ProjectItem from './ProjectItem.vue'
   import EmptyItem from './EmptyItem.vue'
   import { mapState, mapGetters } from 'vuex'

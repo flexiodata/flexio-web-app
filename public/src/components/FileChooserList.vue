@@ -2,12 +2,12 @@
   <div>
     <div v-if="is_fetching">
       <div class="pa1 flex flex-row items-center">
-        <spinner size="mini" inline></spinner>
-        <span class="ml2 f7">Loading...</span>
+        <spinner size="small"></spinner>
+        <span class="ml2 f6">Loading...</span>
       </div>
     </div>
-    <div class="pa1 f7 i" v-else-if="items.length == 0">
-      This folder is either empty or does not exist
+    <div class="pa1 f7 silver i" v-else-if="items.length == 0">
+      {{empty_folder_message}}
     </div>
     <table v-else class="f6 w-100">
       <tbody class="lh-copy f6">
@@ -28,13 +28,17 @@
 
 <script>
   import api from '../api'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import FileChooserItem from './FileChooserItem.vue'
 
   export default {
     props: {
       'connection': {},
       'path': {},
+      'empty-folder-message': {
+        default: '',
+        type: String
+      },
       'folders-only': {
         default: false,
         type: Boolean
@@ -53,11 +57,17 @@
       FileChooserItem
     },
     data() {
+      var empty_msg = this.emptyFolderMessage.length > 0 ?
+                      this.emptyFolderMessage : this.foldersOnly ?
+                      'This folder has no subfolders' :
+                      'This folder is empty'
+
       return {
         is_fetching: false,
         is_inited: false,
         last_selected_item: {},
-        items: []
+        items: [],
+        empty_folder_message: empty_msg
       }
     },
     watch: {

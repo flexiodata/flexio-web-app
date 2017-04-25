@@ -1,7 +1,12 @@
 <template>
-  <div>
+  <div v-if="is_fetching">
+    <div class="flex flex-column justify-center h-100">
+      <spinner size="large" message="Loading trash..."></spinner>
+    </div>
+  </div>
+  <div v-else>
     <!-- control bar -->
-    <div v-if="!is_fetching" class="flex-none flex flex-row ph2 ph0-l mh0 mh3-l pt2 pt3-l pb2 bb bb-0-l b--black-10">
+    <div class="flex-none flex flex-row ph2 ph0-l mh0 mh3-l pt2 pt3-l pb2 bb bb-0-l b--black-10">
       <div class="flex-fill">
         <input
           type="text"
@@ -39,7 +44,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import TrashList from './TrashList.vue'
   import ConfirmModal from './ConfirmModal.vue'
   import Btn from './Btn.vue'

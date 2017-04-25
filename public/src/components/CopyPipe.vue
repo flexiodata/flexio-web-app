@@ -1,8 +1,9 @@
 <template>
   <div class="flex flex-row items-center justify-center">
     <div v-if="is_loading">
-      <spinner class="mb5" size="large"></spinner>
-      <div class="f5 fw6 mid-gray">Loading "{{short_json_filename}}"</div>
+      <div class="flex flex-column justify-center h-100">
+        <spinner size="large" :message="loading_message"></spinner>
+      </div>
     </div>
     <div class="mw8 mt4 self-start">
       <div class="dark-gray marked" v-html="error_markup" v-if="error_markdown.length > 0"></div>
@@ -13,7 +14,7 @@
 <script>
   import { ROUTE_PIPEHOME } from '../constants/route'
   import { mapGetters } from 'vuex'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import axios from 'axios'
   import marked from 'marked'
   import setActiveProject from './mixins/set-active-project'
@@ -49,6 +50,9 @@
           .sortBy([ function(p) { return new Date(p.created) } ])
           .first()
           .value()
+      },
+      loading_message() {
+        return 'Loading '+this.short_json_filename+'...'
       },
       error_markup() {
         return marked(this.error_markdown)

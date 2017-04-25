@@ -1,7 +1,12 @@
 <template>
-  <div>
+  <div v-if="is_fetching">
+    <div class="flex flex-column justify-center h-100">
+      <spinner size="large" message="Loading pipes..."></spinner>
+    </div>
+  </div>
+  <div v-else>
     <!-- control bar -->
-    <div v-if="!is_fetching" class="flex-none flex flex-row ph2 ph0-l mh0 mh3-l pt2 pt3-l pb2 bb bb-0-l b--black-10">
+    <div class="flex-none flex flex-row ph2 ph0-l mh0 mh3-l pt2 pt3-l pb2 bb bb-0-l b--black-10">
       <div class="flex-fill">
         <input
           type="text"
@@ -66,7 +71,7 @@
   import { mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import PipeList from './PipeList.vue'
   import PipePropsModal from './PipePropsModal.vue'
   import PipeShareModal from './PipeShareModal.vue'
