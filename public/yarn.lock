@@ -5097,6 +5097,10 @@ vue-router@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.1.1.tgz#10c31bbdcb6da92bd3e0223fa12345e73018625a"
 
+vue-simple-spinner@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/vue-simple-spinner/-/vue-simple-spinner-1.2.1.tgz#14da4648ecef9c9674845c39316ed7dac1086879"
+
 vue-style-loader@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-2.0.4.tgz#4fc19e18bf162225338aac3b17d0fd0e1cfb7439"
