@@ -1,14 +1,15 @@
 {
   "name": "Flex.io",
+  "version": "1.1.6",
   "description": "Flex.io Client Web Application",
   "author": "David Z. Williams <dave@flex.io>",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=debug webpack-dev-server --config webpack.config.dev.js --open --inline --hot",
     "build": "cross-env NODE_ENV=debug webpack --config webpack.config.build.js --progress --hide-modules",
-    "build-debug": "cross-env NODE_ENV=debug webpack --config webpack.config.build.js --progress --hide-modules",
-    "build-release": "cross-env NODE_ENV=production webpack --config webpack.config.build.js --progress --hide-modules",
-    "build-production": "cross-env NODE_ENV=production webpack --config webpack.config.build.js --progress --hide-modules"
+    "build:debug": "cross-env NODE_ENV=debug webpack --config webpack.config.build.js --progress --hide-modules",
+    "build:release": "cross-env NODE_ENV=production webpack --config webpack.config.build.js --progress --hide-modules",
+    "build:production": "cross-env NODE_ENV=production webpack --config webpack.config.build.js --progress --hide-modules"
   },
   "dependencies": {
     "autosize": "^3.0.20",
