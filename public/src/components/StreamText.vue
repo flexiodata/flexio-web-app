@@ -1,6 +1,6 @@
 <template>
-  <div v-if="state.is_fetching && !state.has_fetched">
-    <spinner size="medium" show-text :loading-text="state.loading_text"></spinner>
+  <div class="flex flex-column justify-center h-100" v-if="state.is_fetching && !state.has_fetched">
+    <spinner :message="state.loading_text"></spinner>
   </div>
   <code-editor
     class="h-100 overflow-y-auto"
@@ -14,7 +14,7 @@
 
 <script>
   import $ from 'jquery'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
 
   var initial_data = {
