@@ -1,6 +1,6 @@
 <template>
-  <div v-if="is_fetching">
-    <spinner size="medium" show-text loading-text="Loading projects..."></spinner>
+  <div class="flex flex-column justify-center h-100" v-if="is_fetching">
+    <spinner size="large" message="Loading projects..."></spinner>
   </div>
   <div v-else>
     <!-- control bar -->
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import ProjectList from './ProjectList.vue'
   import ProjectPropsModal from './ProjectPropsModal.vue'
   import ProjectDeleteModal from './ProjectDeleteModal.vue'
