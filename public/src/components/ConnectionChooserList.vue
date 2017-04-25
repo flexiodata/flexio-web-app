@@ -1,6 +1,7 @@
 <template>
-  <div v-if="is_fetching">
+  <div class="flex flex-row justify-center items-center min-h3" v-if="is_fetching">
     <spinner size="medium"></spinner>
+    <span class="ml2 f5">Loading...</span>
   </div>
   <div v-else>
     <connection-chooser-item
@@ -23,14 +24,14 @@
         <div class="f6 fw6 mt2 ph2">New Connection</div>
       </div>
     </article>
-    </div>
+  </div>
 </template>
 
 <script>
   import { CONNECTION_TYPE_BLANK_PIPE } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import { mapGetters } from 'vuex'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import ConnectionChooserItem from './ConnectionChooserItem.vue'
   import EmptyItem from './EmptyItem.vue'
 
