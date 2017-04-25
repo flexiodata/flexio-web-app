@@ -2,8 +2,8 @@
   <div>
     <div v-if="is_fetching">
       <div class="pa1 flex flex-row items-center">
-        <spinner size="mini" inline></spinner>
-        <span class="ml2 f7">Loading...</span>
+        <spinner size="small"></spinner>
+        <span class="ml2 f6">Loading...</span>
       </div>
     </div>
     <div class="pa1 f7 i" v-else-if="items.length == 0">
@@ -28,7 +28,7 @@
 
 <script>
   import api from '../api'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import FileChooserItem from './FileChooserItem.vue'
 
   export default {
