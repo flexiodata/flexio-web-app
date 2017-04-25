@@ -1,5 +1,5 @@
 # flexio
-Flex.io Web App
+The Flex.io Web App
 
 ## Getting Started
 
