@@ -91,7 +91,7 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: {
-      index: options.paths.resolve('src/index-dev.html')
+      index: './src/index-dev.html'
     },
     noInfo: true
   },
