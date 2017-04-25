@@ -7,7 +7,7 @@ To set up the Flex.io web app for development or build purposes, all of the nece
 
 > NPM can be downloaded from: **https://nodejs.org/en/download/** (download the Windows 64-bit version)
 
-We will also be utilizing Yarn (a deterministic package manager similar to NPM). If you have not yet install Yarn, do so now:
+We will also be utilizing Yarn (a deterministic package manager similar to NPM). If you have not yet installed Yarn, do so now:
 
 > Yarn can be downloaded from: **https://yarnpkg.com/en/docs/install**
   
