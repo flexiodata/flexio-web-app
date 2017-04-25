@@ -1,6 +1,6 @@
 <template>
-  <div v-if="is_fetching">
-    <spinner size="medium" show-text loading-text="Loading pipe..."></spinner>
+  <div class="flex flex-column justify-center h-100" v-if="is_fetching">
+    <spinner size="large" message="Loading pipe..."></spinner>
   </div>
   <div v-else class="flex flex-column items-stretch mh2 mh3-m mh5-ns">
 
@@ -168,7 +168,7 @@
   import setActiveProject from './mixins/set-active-project'
 
   import Btn from './Btn.vue'
-  import Spinner from './Spinner.vue'
+  import Spinner from 'vue-simple-spinner'
   import TaskList from './TaskList.vue'
   import CommandBar from './CommandBar.vue'
   import InputList from './InputList.vue'
