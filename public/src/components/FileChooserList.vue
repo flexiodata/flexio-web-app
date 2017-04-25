@@ -6,8 +6,8 @@
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>
-    <div class="pa1 f7 i" v-else-if="items.length == 0">
-      This folder is either empty or does not exist
+    <div class="pa1 f7 silver i" v-else-if="items.length == 0">
+      {{empty_folder_message}}
     </div>
     <table v-else class="f6 w-100">
       <tbody class="lh-copy f6">
@@ -35,6 +35,10 @@
     props: {
       'connection': {},
       'path': {},
+      'empty-folder-message': {
+        default: '',
+        type: String
+      },
       'folders-only': {
         default: false,
         type: Boolean
@@ -53,11 +57,17 @@
       FileChooserItem
     },
     data() {
+      var empty_msg = this.emptyFolderMessage.length > 0 ?
+                      this.emptyFolderMessage : this.foldersOnly ?
+                      'This folder has no subfolders' :
+                      'This folder is empty'
+
       return {
         is_fetching: false,
         is_inited: false,
         last_selected_item: {},
-        items: []
+        items: [],
+        empty_folder_message: empty_msg
       }
     },
     watch: {
