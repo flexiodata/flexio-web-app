@@ -51,8 +51,7 @@ After running either of the above build commands, it is important to do a `git s
 In general, from the `/public` folder, you can simply enter the following commands:
 
 ```
-git add dist/*
-git commit -m "Release build."
+git commit -a -m "Release build."
 git push
 ```
 
