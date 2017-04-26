@@ -94,7 +94,7 @@ class Test
         $result = TestUtil::getProcessResult($process,0,50);
         $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
         $expected = 'GIVENNAME,SURNAME,STREETADDRESS,CITY,STATE,ZIPCODE';
-        TestCheck::assertString('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
