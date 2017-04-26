@@ -325,7 +325,7 @@ class Output extends \Flexio\Jobs\Base
         $streamreader = \Flexio\Object\StreamReader::create($instream);
 
         // create the output
-        $outstream = self::createOutputStream($instream, $service, $output_info);
+        $outstream = self::createOutputStream($instream, $output_info);
         // note: don't add to the output stream since the input was passed on
         // $this->getOutput()->push($outstream);
 
@@ -333,10 +333,7 @@ class Output extends \Flexio\Jobs\Base
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        $foldername = $outstream->getPath();
         $filename = $outstream->getName();
-        if (strlen($foldername) > 0)
-            $filename = $foldername . "/" . $filename;
 
         $spreadsheet = $service->createFile($filename);
         if (!$spreadsheet)
