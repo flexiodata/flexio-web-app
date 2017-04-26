@@ -95,3 +95,4 @@ git commit -a -m "Release build."
 git push
 ```
 
+Once the push is complete, open up the [Flex.io Web App](https://github.com/flexiodata/flexio) on GitHub and go to the `Releases` tab and click 'Draft a new release' button. Name the release the same thing as the version number in the `package.json` file, but prefixed with the letter 'v' (e.g. for version 1.1.6, both the tag version and the Release title would be 'v1.1.6').. Add any pertinent release notes and click the 'Publish release' button to finalize the release.
