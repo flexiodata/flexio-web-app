@@ -54,6 +54,23 @@ Once the development server has loaded, a new tab with location `localhost:8080`
 
 ## Building the Flex.io Web App
 
+Before building the web app, it's important to make sure that all of the node module dependencies have been loaded and updated. To do this, got to the `/public` folder and enter the following command:
+
+`yarn`
+
+Once that process is complete, you will need to update the version of the app in the `package.json` file. This ensures that any version information that is used in the build process is up-to-date with what the release version will be when it is tagged on GitHub.
+
+```
+{
+  "name": "Flex.io",
+  "version": "1.1.6",
+  "description": "Flex.io Client Web Application",
+  ...
+}
+```
+
+Once the `package.json` file has been edited and saved, you're ready to actually build the app.
+
 In order to build the web app in debug mode, enter the following command:
 
 ```
@@ -66,9 +83,7 @@ In order to build the web app in release mode, enter the following command:
 yarn run build:release
 ```
 
-Each of the above commands will run a webpack build script -- these scripts are located in the `/public/build` folder. It's not terribly important to understand these build scripts, but it is nice to have a good handle on what happens when the above commands are run.
-
-**NOTE:** Before running any of the above commands, it is generally good practice to update the version in the `package.json` file to whatever the release version will be. This will keep the `package.json` version in sync with the release version that gets tagged in the Git repository.
+Each of the above commands will run a webpack build script -- these scripts are located in the `/public/build` folder. It's not terribly important to understand these build scripts, but it is nice to have a good handle on what happens when the above commands are run. The primary difference between the two build modes is that debug mode will not add cache busting hash strings to the files that are output.
 
 After running either of the above build commands, it is important to do a `git status` to see what files have changed. For release builds, there will always be new files in the `/dist` folder that need to be added to the git repository using `git add` due to the fact that we add cache busting hash values to the end of our files now.
 
