@@ -23,24 +23,6 @@ class Test
         $model = TestUtil::getModel();
 
 
-        // BEGIN TEST
-        $task = json_decode('
-        [{
-            "params": "${v1}"
-        }]
-        ',true);
-        $variables = [
-        ];
-        $actual = \Flexio\Object\Task::create($task)->setParams($variables)->get();
-        $expected = '
-        [{
-            "params": ""
-        }]
-        ';
-        TestCheck::assertInArray('A.2', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results);
-
-
-
         // TEST: Task::setParams(); variable serialization with single variable
 
         // BEGIN TEST
@@ -74,7 +56,7 @@ class Test
             "params": ""
         }]
         ';
-        TestCheck::assertInArray('A.2', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results);
+        TestCheck::assertInArray('A.2', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -91,7 +73,7 @@ class Test
             "params": ""
         }]
         ';
-        TestCheck::assertInArray('A.3', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results);
+        TestCheck::assertInArray('A.3', 'Task::setParams(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -142,7 +124,7 @@ class Test
             "params": ""
         }]
         ';
-        TestCheck::assertInArray('A.6', 'Task::setParams(); basic replacement of single variable; case-sensitive check', $actual, $expected, $results);
+        TestCheck::assertInArray('A.6', 'Task::setParams(); basic replacement of single variable; case-sensitive check', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -278,7 +260,7 @@ class Test
             "params": "test@flex.io"
         }]
         ';
-        TestCheck::assertInArray('A.14', 'Task::setParams(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
+        TestCheck::assertInArray('A.14', 'Task::setParams(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -401,7 +383,7 @@ class Test
             "params": null
         }]
         ';
-        TestCheck::assertInArray('B.1', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.1', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -435,7 +417,7 @@ class Test
             "params": null
         }]
         ';
-        TestCheck::assertInArray('B.3', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.3', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -486,7 +468,7 @@ class Test
             "params": null
         }]
         ';
-        TestCheck::assertInArray('B.6', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.6', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -537,7 +519,7 @@ class Test
             "params": null
         }]
         ';
-        TestCheck::assertInArray('B.9', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.9', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -571,7 +553,7 @@ class Test
             "params": null
         }]
         ';
-        TestCheck::assertInArray('B.11', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        TestCheck::assertInArray('B.11', 'Task::setParams(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -605,7 +587,7 @@ class Test
             "params": "The value is:  units."
         }]
         ';
-        TestCheck::assertInArray('B.13', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
+        TestCheck::assertInArray('B.13', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -639,7 +621,7 @@ class Test
             "params": "The statement is ."
         }]
         ';
-        TestCheck::assertInArray('B.15', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
+        TestCheck::assertInArray('B.15', 'Task::setParams(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -879,7 +861,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertInArray('D.1', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
+        TestCheck::assertInArray('D.1', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -917,7 +899,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertInArray('D.2', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
+        TestCheck::assertInArray('D.2', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('
@@ -954,7 +936,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertInArray('D.3', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
+        TestCheck::assertInArray('D.3', 'Task::setParams(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $task = json_decode('

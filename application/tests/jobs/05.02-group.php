@@ -146,7 +146,7 @@ class Test
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[[15,"-4","5","15","1"]]';
-        TestCheck::assertArray('C.1', 'Group Job; aggregate functions on numeric column with no group parameters',  $actual, $expected, $results);
+        TestCheck::assertArray('C.1', 'Group Job; aggregate functions on numeric column with no group parameters',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -186,7 +186,7 @@ class Test
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[[15,"-4","5","15","1"]]';
-        TestCheck::assertArray('E.1', 'Group Job; aggregate functions on integer column with no group parameters',  $actual, $expected, $results);
+        TestCheck::assertArray('E.1', 'Group Job; aggregate functions on integer column with no group parameters',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -288,7 +288,7 @@ class Test
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["15",false,true]]';
-        TestCheck::assertArray('H.1', 'Group Job; aggregate functions on boolean column with no group parameters',  $actual, $expected, $results);
+        TestCheck::assertArray('H.1', 'Group Job; aggregate functions on boolean column with no group parameters',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $params = [

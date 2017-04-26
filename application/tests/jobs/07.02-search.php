@@ -69,7 +69,7 @@ class Test
 		[
 		]
         ';
-		TestCheck::assertArray('A.1', 'Search Job; return no rows if no search values are specified',  $actual, $expected, $results);
+		TestCheck::assertArray('A.1', 'Search Job; return no rows if no search values are specified',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 		// BEGIN TEST
         $params = [
@@ -82,7 +82,7 @@ class Test
 		[
 		]
         ';
-		TestCheck::assertArray('A.2', 'Search Job; don\'t match the "null" search term to null values in rows',  $actual, $expected, $results);
+		TestCheck::assertArray('A.2', 'Search Job; don\'t match the "null" search term to null values in rows',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 		// BEGIN TEST
         $params = [
@@ -372,6 +372,6 @@ class Test
 			["0% ",",.?","1","4.56","2000-01-01",null]
 		]
         ';
-		TestCheck::assertArray('F.1', 'Search Job; if multiple search parameters are specified, look for these across the specified columns',  $actual, $expected, $results);
+		TestCheck::assertArray('F.1', 'Search Job; if multiple search parameters are specified, look for these across the specified columns',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
     }
 }
