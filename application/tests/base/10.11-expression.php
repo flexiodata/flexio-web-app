@@ -1173,7 +1173,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('pow(10,1000)');
         $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('M.3', 'Expression; fail on numeric overflow',  $actual, $expected, $results);
+        TestCheck::assertString('M.3', 'Expression; fail on numeric overflow',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('pow(100,0)');

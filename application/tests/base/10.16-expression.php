@@ -42,22 +42,22 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('1 % 0');
         $expected = NAN;
-        TestCheck::assertNaN('A.1', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
+        TestCheck::assertNaN('A.1', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('1 % sin(0)');
         $expected = NAN;
-        TestCheck::assertNaN('A.2', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
+        TestCheck::assertNaN('A.2', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('1 % sign(0)');
         $expected = NAN;
-        TestCheck::assertNaN('A.3', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
+        TestCheck::assertNaN('A.3', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('mod(1.0,floor(0))');
         $expected = NAN;
-        TestCheck::assertNaN('A.4', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
+        TestCheck::assertNaN('A.4', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('log(cos(pi()))');
@@ -72,12 +72,12 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('1.23456789e300*1.23456789e300');
         $expected = NAN;
-        TestCheck::assertNaN('A.7', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
+        TestCheck::assertNaN('A.7', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('pow(10,1000)');
         $expected = NAN;
-        TestCheck::assertNaN('A.8', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
+        TestCheck::assertNaN('A.8', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -93,7 +93,7 @@ class Test
         $expr = '"' . chr(0) . '"'; // null char
         $actual = TestUtil::evalExpression($expr);
         $expected = chr(0);
-        TestCheck::assertString('B.2', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        TestCheck::assertString('B.2', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $expr = chr(10); // line feed
@@ -153,7 +153,7 @@ class Test
         $expr = '"' . chr(255) . '"'; // nbsp
         $actual = TestUtil::evalExpression($expr);
         $expected = chr(255);
-        TestCheck::assertString('B.12', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        TestCheck::assertString('B.12', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -238,7 +238,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('"+" ~ "+"');
         $expected = true;
-        TestCheck::assertBoolean('D.1', 'Expression; make sure injected code doesn\'t run when evaluating expressions',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.1', 'Expression; make sure injected code doesn\'t run when evaluating expressions',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('"{}" ~ "{"');
