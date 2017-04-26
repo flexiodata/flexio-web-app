@@ -30,7 +30,7 @@ class Test
                 "type": "flexio.input",
                 "params": {
                     "connection" : {
-                        "connection_type": "upload.api"
+                        "connection_type": "upload"
                     },
                     "items" : [
                     ]

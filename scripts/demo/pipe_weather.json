@@ -6,7 +6,7 @@
     {
       "type": "flexio.input",
       "metadata": {
-        "connection_type": "http.api"
+        "connection_type": "http"
       },
       "params": {
         "items": [
