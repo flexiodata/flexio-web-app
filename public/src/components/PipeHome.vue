@@ -37,7 +37,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
-  import { PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome-view'
+  import { PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
   import setActiveProject from './mixins/set-active-project'
@@ -109,9 +109,13 @@
       setPipeView(view) {
         if (_.includes([PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER], view))
         {
-          var eid = this.eid
           this.pipe_view = view
-          this.$router.replace({ name: ROUTE_PIPEHOME, params: { eid, view } })
+          var eid = this.eid
+          var params = { eid, view }
+          if (view == PIPEHOME_VIEW_BUILDER)
+            _.assign(params, { state: _.get(this.$route, 'params.state', undefined) })
+
+          this.$router.replace({ name: ROUTE_PIPEHOME, params })
         }
       },
 

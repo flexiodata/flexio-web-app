@@ -81,7 +81,7 @@
 </template>
 
 <script>
-  import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome-view'
+  import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_TYPE_INPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
