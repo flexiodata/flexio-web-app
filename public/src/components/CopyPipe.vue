@@ -119,7 +119,7 @@
         })
       },
       openPipe(eid) {
-        this.$router.replace({ name: ROUTE_PIPEHOME, params: { eid, mode: PIPEHOME_VIEW_BUILDER } })
+        this.$router.replace({ name: ROUTE_PIPEHOME, params: { eid, view: PIPEHOME_VIEW_BUILDER } })
       }
     }
   }

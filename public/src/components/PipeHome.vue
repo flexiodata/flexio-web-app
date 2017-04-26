@@ -19,7 +19,7 @@
       :project-eid="project_eid"
       :pipe-eid="eid"
       :tasks="tasks"
-      @open-builder="showBuilder"
+      @open-builder="showBuilderView"
       v-if="is_transfer_view">
     </pipe-transfer>
 
@@ -36,6 +36,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import { ROUTE_PIPEHOME } from '../constants/route'
   import { PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome-view'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
@@ -93,12 +94,11 @@
       this.tryFetchPipe()
       this.tryFetchProcesses()
       this.tryFetchConnections()
-    },
-    mounted() {
-      if (_.get(this.$route, 'params.mode') == PIPEHOME_VIEW_BUILDER)
-        this.showBuilder()
+
+      if (_.get(this.$route, 'params.view') == PIPEHOME_VIEW_BUILDER)
+        this.setPipeView(PIPEHOME_VIEW_BUILDER)
          else
-        this.showTransfer()
+        this.setPipeView(PIPEHOME_VIEW_TRANSFER)
     },
     methods: {
       ...mapGetters([
@@ -108,14 +108,14 @@
 
       setPipeView(view) {
         if (_.includes([PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER], view))
+        {
+          var eid = this.eid
           this.pipe_view = view
+          this.$router.replace({ name: ROUTE_PIPEHOME, params: { eid, view } })
+        }
       },
 
-      showTransfer() {
-        this.setPipeView(PIPEHOME_VIEW_TRANSFER)
-      },
-
-      showBuilder() {
+      showBuilderView() {
         this.setPipeView(PIPEHOME_VIEW_BUILDER)
       },
 

@@ -38,8 +38,8 @@
     <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
       <div
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
-        :class="[pipeView=='transfer'?'b--blue':'b--transparent']"
-        @click="setPipeView('transfer')"
+        :class="[pipeView=='overview'?'b--blue':'b--transparent']"
+        @click="setPipeView('overview')"
       >Pipe Overview</div>
       <div
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
@@ -68,8 +68,8 @@
       </div>
       <div
         class="f7 fw6 dark-gray pointer mt2 db dn-ns bb bw1 ttu css-nav-text"
-        :class="[pipeView=='transfer'?'b--blue':'b--transparent']"
-        @click="setPipeView('transfer')"
+        :class="[pipeView=='overview'?'b--blue':'b--transparent']"
+        @click="setPipeView('overview')"
       >Pipe Overview</div>
       <div
         class="f7 fw6 dark-gray pointer mt2 db dn-ns bb bw1 ttu css-nav-text"
@@ -87,7 +87,18 @@
   import InlineEditText from './InlineEditText.vue'
 
   export default {
-    props: ['pipe-eid', 'pipe-view', 'process-running'],
+    props: {
+      'pipe-eid': {
+        type: String,
+        required: true
+      },
+      'pipe-view': {
+        type: String
+      },
+      'process-running': {
+        type: Boolean
+      }
+    },
     components: {
       Btn,
       InlineEditText
