@@ -40,7 +40,7 @@ class Test
         $actual = $reader->read();
         $reader->close();
         $expected = "";
-        TestCheck::assertString('A.1', 'StreamReader/StreamWriter; check basic file read/write ',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'StreamReader/StreamWriter; check basic file read/write ',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $stream_info = array();

@@ -154,7 +154,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["SchwÃ¤bische SoftwarelÃ¶sungen AG"]]';
-        TestCheck::assertArray('C.3', 'Convert; troublesome characters in content',  $actual, $expected, $results);
+        TestCheck::assertArray('C.3', 'Convert; troublesome characters in content',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -192,7 +192,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["1"]]';
-        TestCheck::assertArray('D.2', 'Convert Job; numeric range check',  $actual, $expected, $results);
+        TestCheck::assertArray('D.2', 'Convert Job; numeric range check',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD
@@ -436,7 +436,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["1.1000"],["0.0001"],["-0.0001"]]';
-        TestCheck::assertArray('E.7', 'Convert Job; numeric range check',  $actual, $expected, $results);
+        TestCheck::assertArray('E.7', 'Convert Job; numeric range check',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -552,7 +552,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["1999-12-31"]]';
-        TestCheck::assertArray('G.3', 'Convert Job; valid date values should load',  $actual, $expected, $results);
+        TestCheck::assertArray('G.3', 'Convert Job; valid date values should load',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD
@@ -569,7 +569,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["2001-01-01"]]';
-        TestCheck::assertArray('G.4', 'Convert Job; valid date values should load',  $actual, $expected, $results);
+        TestCheck::assertArray('G.4', 'Convert Job; valid date values should load',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD
@@ -586,7 +586,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["1999-12-31"]]';
-        TestCheck::assertArray('G.5', 'Convert Job; valid date values should load',  $actual, $expected, $results);
+        TestCheck::assertArray('G.5', 'Convert Job; valid date values should load',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD
@@ -603,7 +603,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["2001-01-01"]]';
-        TestCheck::assertArray('G.6', 'Convert Job; valid date values should load',  $actual, $expected, $results);
+        TestCheck::assertArray('G.6', 'Convert Job; valid date values should load',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -625,7 +625,7 @@ EOD;
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = '[["1969-07-20"],["1970-01-01"]]';
-        TestCheck::assertArray('H.1', 'Convert Job; valid date values should load if the format is recognized',  $actual, $expected, $results);
+        TestCheck::assertArray('H.1', 'Convert Job; valid date values should load if the format is recognized',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD

@@ -211,7 +211,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('now()');
         $expected = \Flexio\System\System::getTimestamp();
-        TestCheck::assertDateApprox('F.2', 'Expression; now() date function',  $actual, $expected, $results);
+        TestCheck::assertDateApprox('F.2', 'Expression; now() date function',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 

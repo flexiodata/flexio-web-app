@@ -68,7 +68,7 @@ class Test
             ["31","BOISE FIELDS","699 JACKSON","#500","NAMPA","ID","83686","","","30","0","2013/03/07"],
             ["53","CRUNCHIES","PO BOX 5800","","ATLANTA","GA","30320","A","","30","0","2013/01/13"]
         ]';
-        TestCheck::assertArray('A.1', 'Trigger::handleEmail(); test to see if an email is inserted into a process when it runs', $actual, $expected, $results);
+        TestCheck::assertArray('A.1', 'Trigger::handleEmail(); test to see if an email is inserted into a process when it runs', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
     }
 }
 

@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="pa1 f7 silver i" v-else-if="items.length == 0">
-      {{empty_folder_message}}
+      {{empty_message}}
     </div>
     <table v-else class="f6 w-100">
       <tbody class="lh-copy f6">
@@ -35,7 +35,7 @@
     props: {
       'connection': {},
       'path': {},
-      'empty-folder-message': {
+      'empty-message': {
         default: '',
         type: String
       },
@@ -57,17 +57,11 @@
       FileChooserItem
     },
     data() {
-      var empty_msg = this.emptyFolderMessage.length > 0 ?
-                      this.emptyFolderMessage : this.foldersOnly ?
-                      'This folder has no subfolders' :
-                      'This folder is empty'
-
       return {
         is_fetching: false,
         is_inited: false,
         last_selected_item: {},
-        items: [],
-        empty_folder_message: empty_msg
+        items: []
       }
     },
     watch: {
@@ -76,12 +70,27 @@
       }
     },
     computed: {
+      connection_eid() {
+        return _.get(this.connection, 'eid', '')
+      },
       selected_items() {
         var items = this.allowMultiple
           ? _.filter(this.items, { is_selected: true })
           : this.last_selected_item
 
         return this.allowFolders ? items : _.reject(items, { is_dir: true })
+      },
+      empty_message() {
+        if (this.connection_eid.length == 0)
+          return "This connection cannot be found or no longer exists"
+
+        if (this.emptyMessage.length > 0)
+          return this.emptyMessage
+
+        if (this.foldersOnly)
+          return 'This folder has no subfolders'
+
+        return 'This folder is empty'
       }
     },
     mounted() {
@@ -151,7 +160,7 @@
       },
       refreshList() {
         var path = _.defaultTo(this.path, '/')
-        var eid = _.get(this.connection, 'eid', '')
+        var eid = this.connection_eid
 
         if (eid.length == 0)
           return

@@ -495,7 +495,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('initcap("text separated by delimiters: a b,c, d;e.f_g-h+i/j(k)l!m@n#o$p%q^r&s*t")');
         $expected = 'Text Separated By Delimiters: A B,C, D;E.F_G-H+I/J(K)L!M@N#O$P%Q^R&S*T';
-        TestCheck::assertString('D.7', 'Expression; initcap() text function with delimiters',  $actual, $expected, $results);
+        TestCheck::assertString('D.7', 'Expression; initcap() text function with delimiters',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('initcap(123)');
@@ -540,7 +540,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('initcap("international characters: â, ê,î,ô,û,ð and Â, Ê,Î,Ô,Û,Ð (are there others?)")');
         $expected = "International Characters: Â, Ê,Î,Ô,Û,Ð And Â, Ê,Î,Ô,Û,Ð (Are There Others?)";
-        TestCheck::assertString('D.16', 'Expression; initcap() text function; international chars',  $actual, $expected, $results);
+        TestCheck::assertString('D.16', 'Expression; initcap() text function; international chars',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -1103,12 +1103,12 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('regexp_replace("Apples","+","")');
         $expected = null;
-        TestCheck::assertNull('K.4', 'Expression; regexp_replace() text function; return null if a bad regex is passed',  $actual, $expected, $results);
+        TestCheck::assertNull('K.4', 'Expression; regexp_replace() text function; return null if a bad regex is passed',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('regexp_replace("Apples","\","")');
         $expected = null;
-        TestCheck::assertNull('K.5', 'Expression; regexp_replace() text function; return null if a bad regex is passed',  $actual, $expected, $results);
+        TestCheck::assertNull('K.5', 'Expression; regexp_replace() text function; return null if a bad regex is passed',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('regexp_replace("Apples","A","a")');
@@ -1335,7 +1335,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('regexp_replace("ABABAbaBAB","a","","CIG")');
         $expected = 'BBbBB';
-        TestCheck::assertString('K.50', 'Expression; regexp_replace() text function; match parameters',  $actual, $expected, $results);
+        TestCheck::assertString('K.50', 'Expression; regexp_replace() text function; match parameters',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
         // TEST: text function: replace()
