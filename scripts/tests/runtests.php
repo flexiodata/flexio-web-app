@@ -33,18 +33,37 @@ try
 
     for ($i = 1; $i <= $iterations; ++$i)
     {
+        $failed_count = 0; // failed tests
+        $known_count = 0;  // known failures
+
         // run through each test
         $t1 = time();
         echo("Starting tests (iteration $i of $iterations)...\n\n");
         foreach ($tests as $t)
         {
             $cmd = "$php runtestfile.php $t $show_failures_only"; // true/false indicates whether to show failures only; for now, show everything
-            passthru($cmd);
+            $f = popen($cmd, 'r');
+            $str = '';
+            while (!feof($f))
+            {
+                $piece = fread($f, 1024);
+                $str .= $piece;
+                echo $piece;
+            }
+            pclose($f);
+
+            $failed_count += substr_count($str, '[FAILED]');
+            $known_count  += substr_count($str, '[KNOWN ]');
         }
 
+
         $t2 = time();
-        echo("\n\nFinished tests (iteration $i of $iterations.  Duration ".($t2-$t1)." seconds).");
+
+        echo("\n\nFailed test count: $failed_count\n");
+        echo("Finished tests (iteration $i of $iterations.  Duration ".($t2-$t1)." seconds).\n");
     }
+
+    exit($failed_count == 0 ? 0 : 1);
 }
 catch (\Exception $e)
 {
