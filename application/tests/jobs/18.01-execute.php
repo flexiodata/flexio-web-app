@@ -48,6 +48,6 @@ EOD;
         $result = TestUtil::getProcessResult($process,0,50);
         $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
         $expected = 'Hello, world.';
-        TestCheck::assertString('A.1', 'Execute Job; check basic functionality',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'Execute Job; check basic functionality',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
     }
 }
