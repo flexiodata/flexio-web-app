@@ -81,6 +81,7 @@
 </template>
 
 <script>
+  import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome-view'
   import { TASK_TYPE_INPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
@@ -92,12 +93,29 @@
       InlineEditText
     },
     computed: {
-      pipe()              { return _.get(this.$store, 'state.objects.'+this.pipeEid, {}) },
-      pipe_name()         { return _.get(this.pipe, 'name', '') },
-      pipe_ename()        { return _.get(this.pipe, 'ename', '') },
-      pipe_description()  { return _.get(this.pipe, 'description', '') },
-      tasks()             { return _.get(this.pipe, 'task', []) },
-      input_tasks()       { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
+      pipe() {
+        return _.get(this.$store, 'state.objects.'+this.pipeEid, {})
+      },
+
+      pipe_name() {
+        return _.get(this.pipe, 'name', '')
+      },
+
+      pipe_ename() {
+        return _.get(this.pipe, 'ename', '')
+      },
+
+      pipe_description() {
+        return _.get(this.pipe, 'description', '')
+      },
+
+      tasks() {
+        return _.get(this.pipe, 'task', [])
+      },
+
+      input_tasks() {
+        return _.filter(this.tasks, { type: TASK_TYPE_INPUT })
+      },
 
       is_run_allowed() {
         if (this.input_tasks.length == 0)
@@ -119,7 +137,7 @@
         input.endEdit()
       },
       runPipe() {
-        this.setPipeView('builder')
+        this.setPipeView(PIPEHOME_VIEW_BUILDER)
         this.$emit('run-pipe')
       },
       cancelProcess() {

@@ -19,8 +19,8 @@
       :project-eid="project_eid"
       :pipe-eid="eid"
       :tasks="tasks"
-      @open-builder="pipe_view = 'builder'"
-      v-if="pipe_view == 'transfer'">
+      @open-builder="showBuilder"
+      v-if="is_transfer_view">
     </pipe-transfer>
 
     <pipe-builder-list
@@ -36,6 +36,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import { PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome-view'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
   import setActiveProject from './mixins/set-active-project'
@@ -63,7 +64,7 @@
     data() {
       return {
         eid: this.$route.params.eid,
-        pipe_view: 'transfer'
+        pipe_view: PIPEHOME_VIEW_TRANSFER
       }
     },
     computed: {
@@ -78,6 +79,9 @@
       is_process_running()   { return _.get(this.active_process, 'process_status', '') == PROCESS_STATUS_RUNNING },
       is_process_run_mode()  { return _.get(this.active_process, 'process_mode', '') == PROCESS_MODE_RUN },
 
+      is_transfer_view() { return this.pipe_view == PIPEHOME_VIEW_TRANSFER },
+      is_builder_view()  { return this.pipe_view == PIPEHOME_VIEW_BUILDER },
+
       project_connections() { return this.getOurConnections() }
     },
     watch: {
@@ -90,6 +94,12 @@
       this.tryFetchProcesses()
       this.tryFetchConnections()
     },
+    mounted() {
+      if (_.get(this.$route, 'params.mode') == PIPEHOME_VIEW_BUILDER)
+        this.showBuilder()
+         else
+        this.showTransfer()
+    },
     methods: {
       ...mapGetters([
         'getAllConnections',
@@ -97,8 +107,16 @@
       ]),
 
       setPipeView(view) {
-        if (_.includes(['transfer', 'builder'], view))
+        if (_.includes([PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER], view))
           this.pipe_view = view
+      },
+
+      showTransfer() {
+        this.setPipeView(PIPEHOME_VIEW_TRANSFER)
+      },
+
+      showBuilder() {
+        this.setPipeView(PIPEHOME_VIEW_BUILDER)
       },
 
       runPipe() {
