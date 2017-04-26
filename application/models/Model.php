@@ -74,29 +74,6 @@ class Model
     const CONNECTION_CONFIG_TYPE_DATABASE = 'database';
     const CONNECTION_CONFIG_TYPE_OAUTH2   = 'oauth2';
 
-    const CONNECTION_TYPE_FLEXIO        = 'flexio';
-    const CONNECTION_TYPE_FLEXIO_LOCAL  = 'flexio.local';
-    const CONNECTION_TYPE_FTP           = 'ftp';
-    const CONNECTION_TYPE_SFTP          = 'sftp';
-    const CONNECTION_TYPE_MYSQL         = 'mysql';
-    const CONNECTION_TYPE_POSTGRES      = 'postgres';
-    const CONNECTION_TYPE_DROPBOX       = 'dropbox.oauth2';
-    const CONNECTION_TYPE_GOOGLEDRIVE   = 'googledrive.oauth2';
-    const CONNECTION_TYPE_GOOGLESHEETS  = 'googlesheets.oauth2';
-    const CONNECTION_TYPE_AMAZONS3      = 'amazons3';
-    const CONNECTION_TYPE_UPLOAD        = 'upload';
-    const CONNECTION_TYPE_DOWNLOAD      = 'download';
-    const CONNECTION_TYPE_STDIN         = 'stdin';
-    const CONNECTION_TYPE_STDOUT        = 'stdout';
-    const CONNECTION_TYPE_EMAIL         = 'email';
-    const CONNECTION_TYPE_HTTP          = 'http';
-    const CONNECTION_TYPE_RSS           = 'rss';
-    const CONNECTION_TYPE_SOCRATA       = 'socrata';
-    const CONNECTION_TYPE_PIPELINEDEALS = 'pipelinedeals';
-    const CONNECTION_TYPE_MAILJET       = 'mailjet';
-    const CONNECTION_TYPE_TWILIO        = 'twilio';
-
-/*
     const CONNECTION_TYPE_FLEXIO        = 'flexio.api';
     const CONNECTION_TYPE_FLEXIO_LOCAL  = 'flexio.local';
     const CONNECTION_TYPE_FTP           = 'ftp.api';
@@ -118,7 +95,6 @@ class Model
     const CONNECTION_TYPE_PIPELINEDEALS = 'pipelinedeals.api';
     const CONNECTION_TYPE_MAILJET       = 'mailjet.api';
     const CONNECTION_TYPE_TWILIO        = 'twilio.api';
-*/
 
     const PIPE_STATUS_ACTIVE   = 'A';
     const PIPE_STATUS_INACTIVE = 'I';
