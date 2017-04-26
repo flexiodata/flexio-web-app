@@ -47,7 +47,7 @@ yarn run <script name>
 In order to run the development server, enter the following command:
 
 ```
-yarn run build:debug
+yarn run dev
 ```
 
 Once the development server has loaded, a new tab with location `localhost:8080` should open in your browser.
