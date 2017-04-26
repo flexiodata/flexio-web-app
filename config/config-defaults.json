@@ -33,8 +33,6 @@
     "/debug_error_log": "<put path here>",
 
     "analytics": false,
-    "show_raw_json_definition": false,
-    "show_custom_job_option": false,
 
     "ses_access_key": "",
     "ses_secret_key": "",
