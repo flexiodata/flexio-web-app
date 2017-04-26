@@ -72,7 +72,7 @@ echo '{ "success": true, "msg": "Operation completed successfully." }';
 function updateConnectionTypesInConnectionTable($db)
 {
     // STEP 1: get the existing information
-    $query_sql = 'select eid, connection_type tbl_connection';
+    $query_sql = 'select eid, connection_type from tbl_connection';
     $result = $db->query($query_sql);
 
     // STEP 2: for each item, update the connection type
@@ -100,7 +100,7 @@ function updateConnectionTypesInConnectionTable($db)
 function updateConnectionTypesInPipeTable($db)
 {
     // STEP 1: get the existing information
-    $query_sql = 'select eid, task tbl_pipe';
+    $query_sql = 'select eid, task from tbl_pipe';
     $result = $db->query($query_sql);
 
     // STEP 2: for each item, update the connection type
@@ -124,15 +124,12 @@ function updateConnectionTypesInPipeTable($db)
         }
 
         $pipe_task = json_encode($pipe_task);
-        if ($connection_type_new !== false)
-        {
-            $sql = "update tbl_pipe ".
-                "    set ".
-                "        task = '$pipe_task' ".
-                "    where eid = '$pipe_eid';";
+        $sql = "update tbl_pipe ".
+            "    set ".
+            "        task = ". $db->quote($pipe_task). "".
+            "    where eid = ". $db->quote($pipe_eid). ";";
 
-            $db->exec($sql);
-        }
+        $db->exec($sql);
     }
 }
 
