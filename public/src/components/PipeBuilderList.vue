@@ -20,6 +20,8 @@
         :item="task"
         :index="index"
         :tasks="tasks"
+        :prompt-mode="promptMode"
+        :variable-prompts="variablePrompts"
         :active-process="activeProcess"
         :is-scrolling="is_scrolling"
         :show-preview="show_all_previews"
@@ -36,7 +38,32 @@
   import PipeBuilderItem from './PipeBuilderItem.vue'
 
   export default {
-    props: ['pipe-eid', 'tasks', 'active-process', 'project-connections'],
+    props: {
+      'pipe-eid': {
+        type: String,
+        required: true
+      },
+      'tasks': {
+        type: Array,
+        required: true
+      },
+      'prompt-mode': {
+        type: Boolean,
+        default: false
+      },
+      'variable-prompts': {
+        type: Array,
+        default: () => { return [] }
+      },
+      'active-process': {
+        type: Object
+      },
+      'project-connections': {
+        type: Array,
+        default: () => { return [] }
+      }
+    },
+
     components: {
       Btn,
       PipeBuilderItem

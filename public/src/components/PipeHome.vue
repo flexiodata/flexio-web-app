@@ -27,6 +27,8 @@
       class="flex-fill pv4 pl4-l bt b--black-10"
       :pipe-eid="eid"
       :tasks="tasks"
+      :prompt-mode="prompt_mode"
+      :variable-prompts="variable_prompts"
       :active-process="active_process"
       :project-connections="project_connections"
       v-else>
@@ -65,25 +67,76 @@
     data() {
       return {
         eid: this.$route.params.eid,
-        pipe_view: PIPEHOME_VIEW_TRANSFER
+        pipe_view: PIPEHOME_VIEW_TRANSFER,
+        prompt_mode: false
       }
     },
     computed: {
-      pipe()              { return _.get(this.$store, 'state.objects.'+this.eid, {}) },
-      is_fetched()        { return _.get(this.pipe, 'is_fetched', false) },
-      is_fetching()       { return _.get(this.pipe, 'is_fetching', false) },
-      processes_fetched() { return _.get(this.pipe, 'processes_fetched', false) },
-      tasks()             { return _.get(this.pipe, 'task', []) },
-      project_eid()       { return _.get(this.pipe, 'project.eid', '') },
+      pipe() {
+        return _.get(this.$store, 'state.objects.'+this.eid, {})
+      },
+      is_fetched() {
+        return _.get(this.pipe, 'is_fetched', false)
+      },
+      is_fetching() {
+        return _.get(this.pipe, 'is_fetching', false)
+      },
+      processes_fetched() {
+        return _.get(this.pipe, 'processes_fetched', false)
+      },
+      tasks() {
+        return _.get(this.pipe, 'task', [])
+      },
+      variable_prompts() {
+        var var_tasks = _.map(this.tasks, (task) => {
+          var json = ''
 
-      active_process()       { return _.last(this.getActiveDocumentProcesses()) },
-      is_process_running()   { return _.get(this.active_process, 'process_status', '') == PROCESS_STATUS_RUNNING },
-      is_process_run_mode()  { return _.get(this.active_process, 'process_mode', '') == PROCESS_MODE_RUN },
+          // parse the JSON to get a JSON string
+          try {
+            json = JSON.stringify(task)
+          } catch(e) {}
 
-      is_transfer_view() { return this.pipe_view == PIPEHOME_VIEW_TRANSFER },
-      is_builder_view()  { return this.pipe_view == PIPEHOME_VIEW_BUILDER },
+          // try to find variables that match ${...}
+          var regex = /\$\{[a-zA-Z_-][a-zA-Z0-9_-]*:?[a-zA-Z0-9_-]*\}/gi
 
-      project_connections() { return this.getOurConnections() }
+          // add the array of variables to the output
+          var matched_vars = json.match(regex)
+          if (_.isArray(matched_vars) && matched_vars.length > 0)
+          {
+            return _.assign({
+              has_variable: true,
+              variables: matched_vars
+            }, task)
+          }
+           else
+          {
+            return task
+          }
+        })
+
+        return _.filter(var_tasks, { has_variable: true })
+      },
+      project_eid() {
+        return _.get(this.pipe, 'project.eid', '')
+      },
+      active_process() {
+        return _.last(this.getActiveDocumentProcesses())
+      },
+      is_process_running() {
+        return _.get(this.active_process, 'process_status', '') == PROCESS_STATUS_RUNNING
+      },
+      is_process_run_mode() {
+        return _.get(this.active_process, 'process_mode', '') == PROCESS_MODE_RUN
+      },
+      is_transfer_view() {
+        return this.pipe_view == PIPEHOME_VIEW_TRANSFER
+      },
+      is_builder_view()  {
+        return this.pipe_view == PIPEHOME_VIEW_BUILDER
+      },
+      project_connections() {
+        return this.getOurConnections()
+      }
     },
     watch: {
       project_eid: function(val, old_val) {
@@ -124,6 +177,12 @@
       },
 
       runPipe() {
+        if (this.variable_prompts.length > 0)
+        {
+          this.prompt_mode = true
+          return
+        }
+
         var attrs = {
           parent_eid: this.eid,
           process_mode: PROCESS_MODE_RUN,

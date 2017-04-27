@@ -60,6 +60,12 @@
         class="flex-fill relative ph3a bg-white bl br b--white-box"
         :class="[ content_cls, index==0?'pt3':'pt2' ]"
       >
+        <div v-if="our_variables.length > 0">
+          This steps requires the following information...
+          <span class="code ph2" v-for="(v, index) in our_variables">{{v}}</span>
+          <div class="bt b--black-10 pt2 mt2"></div>
+        </div>
+
         <!-- task name -->
         <inline-edit-text
           class="flex-fill f5 lh-title"
@@ -162,14 +168,36 @@
 
   export default {
     props: {
-      'item': {},
-      'index': {},
-      'tasks': {},
-      'active-process': {},
-      'is-scrolling': {},
+      'item': {
+        type: Object,
+        required: true
+      },
+      'index': {
+        type: Number,
+        required: true
+      },
+      'tasks': {
+        type: Array,
+        required: true
+      },
+      'prompt-mode': {
+        type: Boolean,
+        default: false
+      },
+      'variable-prompts': {
+        type: Array,
+        default: () => { return [] }
+      },
+      'active-process': {
+        type: Object
+      },
+      'is-scrolling': {
+        type: Boolean,
+        default: false
+      },
       'show-preview': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
       },
     },
     mixins: [taskItemHelper],
@@ -261,6 +289,13 @@
           .get('subprocesses')
           .find((s) => { return _.get(s, 'task.eid') == this.eid })
           .value()
+      },
+      our_variables() {
+        var prompt_task = _.find(this.variablePrompts, (prompt) => {
+          return _.get(prompt, 'eid') == _.get(this.task, 'eid')
+        })
+
+        return _.get(prompt_task, 'variables', [])
       },
       our_inputs() {
         var inputs = _.get(this.active_subprocess, 'output', [])
