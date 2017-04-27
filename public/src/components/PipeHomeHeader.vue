@@ -40,17 +40,19 @@
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
         :class="[pipeView=='overview'?'b--blue':'b--transparent']"
         @click="setPipeView('overview')"
+        v-if="!isPrompting && !processRunning"
       >Pipe Overview</div>
       <div
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
         :class="[pipeView=='builder'?'b--blue':'b--transparent']"
         @click="setPipeView('builder')"
+        v-if="!isPrompting && !processRunning"
       >Pipe Builder</div>
       <btn
         btn-md
         btn-primary
         class="ttu b"
-        v-if="processRunning"
+        v-if="isPrompting || processRunning"
         @click="cancelProcess"
       >Cancel</btn>
       <div
@@ -94,6 +96,10 @@
       },
       'pipe-view': {
         type: String
+      },
+      'is-prompting': {
+        type: Boolean,
+        default: false
       },
       'process-running': {
         type: Boolean

@@ -30,7 +30,7 @@
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 46px; bottom: 36px; left: 19px"
         :class="[ index==0?'mt2':'' ]"
-        v-show="!show_progress && !this.promptMode"
+        v-show="!show_progress && !this.isPrompting"
       ></div>
 
       <!-- insert before button -->
@@ -38,7 +38,7 @@
         class="absolute"
         style="top: -24px; left: 8px"
         v-show="!show_progress"
-        v-if="index==0 && !show_progress && !this.promptMode && false"
+        v-if="index==0 && !show_progress && !this.isPrompting && false"
       >
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
           <i class="db material-icons f3">add_circle</i>
@@ -49,7 +49,7 @@
       <div
         class="absolute"
         style="bottom: 5px; left: 8px"
-        v-show="!show_progress && !this.promptMode">
+        v-show="!show_progress && !this.isPrompting">
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
           <i class="db material-icons f3">add_circle</i>
         </div>
@@ -78,7 +78,7 @@
 
         <!-- 2. show prompt/configure -->
 
-        <div v-else-if="promptMode === true">
+        <div v-else-if="isPrompting === true">
           <!-- static task name -->
           <div class="f5 lh-title">{{display_name}}</div>
 
@@ -218,7 +218,7 @@
         type: Array,
         required: true
       },
-      'prompt-mode': {
+      'is-prompting': {
         type: Boolean,
         default: false
       },

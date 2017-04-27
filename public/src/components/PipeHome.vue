@@ -8,6 +8,7 @@
       style="background-color: #f3f3f3"
       :pipe-eid="eid"
       :pipe-view="pipe_view"
+      :is-prompting="is_prompting"
       :process-running="is_process_running"
       @set-pipe-view="setPipeView"
       @run-pipe="runPipe"
@@ -27,7 +28,7 @@
       class="flex-fill pv4 pl4-l bt b--black-10"
       :pipe-eid="eid"
       :tasks="tasks"
-      :prompt-mode="prompt_mode"
+      :is-prompting="is_prompting"
       :variable-prompts="variable_prompts"
       :active-process="active_process"
       :project-connections="project_connections"
@@ -68,7 +69,7 @@
       return {
         eid: this.$route.params.eid,
         pipe_view: PIPEHOME_VIEW_TRANSFER,
-        prompt_mode: false
+        is_prompting: false
       }
     },
     computed: {
@@ -179,7 +180,7 @@
       runPipe() {
         if (this.variable_prompts.length > 0)
         {
-          this.prompt_mode = true
+          this.is_prompting = true
           return
         }
 
@@ -193,6 +194,9 @@
       },
 
       cancelProcess() {
+        if (this.is_prompting)
+          this.is_prompting = false
+
         if (this.is_process_running)
         {
           var eid = _.get(this.active_process, 'eid', '')

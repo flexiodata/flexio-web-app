@@ -20,7 +20,7 @@
         :item="task"
         :index="index"
         :tasks="tasks"
-        :prompt-mode="promptMode"
+        :is-prompting="isPrompting"
         :variable-prompts="variablePrompts"
         :active-process="activeProcess"
         :is-scrolling="is_scrolling"
@@ -47,7 +47,7 @@
         type: Array,
         required: true
       },
-      'prompt-mode': {
+      'is-prompting': {
         type: Boolean,
         default: false
       },
