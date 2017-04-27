@@ -170,12 +170,6 @@ class Stream
 
     public static function handleStreamUpload(array $params, \Flexio\Object\Stream $stream) : \Flexio\Object\Stream
     {
-        // get the stream and the service
-        $path = $stream->getPath();
-        $service = $stream->getService();
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
         // create the output
         $streamwriter = \Flexio\Object\StreamWriter::create($stream);
 
