@@ -134,6 +134,20 @@ class Stream extends \Flexio\Object\Base
         return $local_file_info['size'];
     }
 
+    public function getRowCount() : int
+    {
+        // TODO: store the row count
+
+        $path = $this->getPath();
+        $service = $this->getService();
+
+        $iter = $service->query(array('table' => $path));
+        if (!$iter)
+            return 0;
+
+        return $iter->row_count;
+    }
+
     public function setMimeType(string $mime_type) : \Flexio\Object\Stream
     {
         $properties = array();
@@ -187,10 +201,9 @@ class Stream extends \Flexio\Object\Base
         return $info;
     }
 
-    public function content(int $start, int $limit, bool $metadata = false) // TODO: add function return type
+    public function content(int $start, int $limit) // TODO: add function return type
     {
         // returns the requested content for the given stream
-
         if ($this->isCached() === false)
             $this->populateCache();
 
@@ -213,29 +226,6 @@ class Stream extends \Flexio\Object\Base
             $start = 0;
         if ($limit < 0)
             $limit = 0;
-        $metadata = \toBoolean($metadata);
-
-        // if a list of columns is specified, get the list
-        $columns_specified = false;
-        if (isset($columns))
-            $columns_specified = array_flip(array_values($columns));
-
-        // get the structure for the output; if columns are specified, only
-        // include the columns in the list
-        $output_structure = array();
-
-        $structure = $this->getStructure()->enum();
-        foreach ($structure as $col)
-        {
-            $column_name = $col['name'];
-            if ($columns_specified !== false)
-            {
-                if (array_key_exists($column_name, $columns_specified) === false)
-                    continue;
-            }
-
-            $output_structure[] = $col;
-        }
 
         if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
@@ -255,26 +245,16 @@ class Stream extends \Flexio\Object\Base
         if (!$iter)
             return false;
 
+        $structure = $this->getStructure()->enum();
         $content = $iter->getRows($start, $limit);
 
         $result = array();
-        $result['success'] = true;
-        $result['total_count'] = $iter->row_count;
-        if (IS_DEBUG())
-        {
-            $result['table'] = $path;
-        }
-
-        if ($metadata === true)
-            $result['columns'] = $output_structure;
-
-        $result['rows'] = array();
         foreach ($content as $row)
         {
             // map the data from the service that's stored using the store_name
             // back to the object structure that references the data with the
             // logical name
-            $result['rows'][] = self::convertStoreNameToName($row, $output_structure);
+            $result[] = self::convertStoreNameToName($row, $structure);
         }
 
         return $result;

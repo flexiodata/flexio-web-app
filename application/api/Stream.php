@@ -98,7 +98,7 @@ class Stream
         $stream_identifier = $params['eid'];
         $start = isset($params['start']) ? (int)$params['start'] : 0;  // start isn't specified, start at the beginning
         $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
-        $metadata = isset($params['metadata']) ? $params['metadata'] : false;
+        $metadata = isset($params['metadata']) ? \toBoolean($params['metadata']) : false;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
@@ -113,22 +113,32 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
-        $content = $stream->content($start, $limit, $metadata);
-
         if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // return content as-is
             header('Content-Type: ' . $mime_type);
+            $result = $stream->content($start, $limit);
+            echo($result);
+            exit(0);
         }
          else
         {
             // flexio table; return application/json in place of internal mime
             header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON);
-            $content = json_encode($content);
-        }
 
-        echo($content);
-        exit(0);
+            $result = array();
+            $result['success'] = true;
+            $result['total_count'] = $stream->getRowCount(); // TODO: fill out
+
+            if ($metadata === true)
+                $result['columns'] = $stream->getStructure()->get();
+
+            $result['rows'] = $stream->content($start, $limit);
+            $result = json_encode($result);
+
+            echo($result);
+            exit(0);
+        }
     }
 
     public static function upload(array $params, string $requesting_user_eid = null) : array
@@ -296,15 +306,13 @@ class Stream
         if (($params = $validator->check($params, array(
                 'eid'      => array('type' => 'identifier', 'required' => true),
                 'start'    => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'metadata' => array('type' => 'string', 'required' => false)
+                'limit'    => array('type' => 'integer', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $stream_identifier = $params['eid'];
         $start = isset($params['start']) ? (int)$params['start'] : 0;  // start isn't specified, start at the beginning
         $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
-        $metadata = isset($params['metadata']) ? $params['metadata'] : false;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
@@ -355,7 +363,7 @@ class Stream
         if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // get the content in one chunk and return it as-is
-            $content = $stream->content($start, $limit, $metadata);
+            $content = $stream->content($start, $limit);
             $out = fopen('php://output', 'w');
             fwrite($out, $content);
             fclose($out);
@@ -380,14 +388,13 @@ class Stream
                     break;
 
                 // get the rows
-                $content = $stream->content($current_offset, $rowreadsize, $metadata);
-                $rows = $content['rows'];
+                $content = $stream->content($current_offset, $rowreadsize);
 
                 // if we've run out of rows, we're done
-                if (count($rows) === 0)
+                if (count($content) === 0)
                     break;
 
-                foreach ($rows as $row)
+                foreach ($content as $row)
                 {
                     if ($first)
                     {

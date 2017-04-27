@@ -396,8 +396,7 @@ class Pipe
                     $mime_type = $stream_info['mime_type'];
                     $start = 0;
                     $limit = PHP_INT_MAX;
-                    $metadata = false;
-                    $content = $stream->content($start, $limit, $metadata);
+                    $content = $stream->content($start, $limit);
 
                     if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
                     {

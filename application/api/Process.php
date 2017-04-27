@@ -600,8 +600,7 @@ class Process
         {
             $start = 0;
             $limit = $contentlimit === false ? PHP_INT_MAX : (int)$contentlimit;
-            $metadata = false;
-            $content = $stream->content($start, $limit, $metadata);
+            $content = $stream->content($start, $limit);
         }
 
         // return the output
