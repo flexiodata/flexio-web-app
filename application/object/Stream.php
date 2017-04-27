@@ -187,7 +187,7 @@ class Stream extends \Flexio\Object\Base
         return $info;
     }
 
-    public function content($start, $limit, $columns = true, $metadata = false, $handle = 'create') // TODO: add input parameter types
+    public function content($start, $limit, $columns = true, $metadata = false) // TODO: add input parameter types
     {
         // returns the requested content for the given stream
 
@@ -251,22 +251,6 @@ class Stream extends \Flexio\Object\Base
             return $content;
         }
 
-        $iter = false;
-        if ($handle !== 'create')
-        {
-            $iter = $service->getIteratorFromHandle($handle);
-            if (!$iter)
-                return false;
-        }
-         else
-        {
-            $iter = $service->query(array('table' => $path));
-            if (!$iter)
-                return false;
-
-            $handle = $iter->getHandle();
-        }
-
         $iter = $service->query(array('table' => $path));
         if (!$iter)
             return false;
@@ -275,7 +259,6 @@ class Stream extends \Flexio\Object\Base
 
         $result = array();
         $result['success'] = true;
-        $result['handle'] = $handle;
         $result['total_count'] = $iter->row_count;
         if (IS_DEBUG())
         {

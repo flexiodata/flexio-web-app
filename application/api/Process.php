@@ -602,8 +602,7 @@ class Process
             $limit = $contentlimit === false ? pow(2,24) : (int)$contentlimit;
             $columns = true;
             $metadata = false;
-            $handle = 'create';
-            $content = $stream->content($start, $limit, $columns, $metadata, $handle);
+            $content = $stream->content($start, $limit, $columns, $metadata);
         }
 
         // return the output

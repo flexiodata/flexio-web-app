@@ -398,8 +398,7 @@ class Pipe
                     $limit = pow(2,24);
                     $columns = true;
                     $metadata = false;
-                    $handle = 'create';
-                    $content = $stream->content($start, $limit, $columns, $metadata, $handle);
+                    $content = $stream->content($start, $limit, $columns, $metadata);
 
                     if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
                     {
