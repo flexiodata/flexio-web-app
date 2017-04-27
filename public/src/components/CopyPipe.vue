@@ -13,6 +13,7 @@
 
 <script>
   import { ROUTE_PIPEHOME } from '../constants/route'
+  import { PIPEHOME_VIEW_BUILDER, PIPEHOME_STATUS_CONFIGURE } from '../constants/pipehome'
   import { mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import axios from 'axios'
@@ -118,7 +119,14 @@
         })
       },
       openPipe(eid) {
-        this.$router.push({ name: ROUTE_PIPEHOME, params: { eid } })
+        this.$router.replace({
+          name: ROUTE_PIPEHOME,
+          params: {
+            eid,
+            view: PIPEHOME_VIEW_BUILDER,
+            state: PIPEHOME_STATUS_CONFIGURE
+          }
+        })
       }
     }
   }
