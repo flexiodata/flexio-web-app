@@ -47,6 +47,7 @@
     "image-webpack-loader": "^3.0.0",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
+    "mjml": "^3.3.2",
     "semantic-ui-css": "^2.2.4",
     "style-loader": "^0.13.1",
     "vue-loader": "^11.3.3",
