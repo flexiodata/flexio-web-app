@@ -21,7 +21,7 @@
       <div class="css-connection-inner-border absolute absolute--fill ba bw1 br2 b--black-10 b--dashed"></div>
       <div class="tc css-valign cursor-default">
         <i slot="icon" class="material-icons md-48">add_circle</i>
-        <div class="f6 fw6 mt2 ph2">New Connection</div>
+        <div class="f6 fw6 mt2 ph2">{{add_button_label}}</div>
       </div>
     </article>
   </div>
@@ -45,17 +45,21 @@
         type: String,
         required: false
       },
-      'show-add': {
-        type: Boolean,
-        default: true
-      },
-      'show-blank-pipe': {
-        type: Boolean,
-        default: true
-      },
       'list-type': {
         type: String,
         default: 'input'
+      },
+      'show-add': {
+        type: Boolean,
+        default: false
+      },
+      'add-button-label': {
+        type: String,
+        default: ''
+      },
+      'show-blank-pipe': {
+        type: Boolean,
+        default: false
       },
       'type-filter': {
       },
@@ -100,6 +104,9 @@
       },
       is_fetching() {
         return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetching', true)
+      },
+      add_button_label() {
+        return this.addButtonLabel.length > 0 ? this.addButtonLabel : 'New Connection'
       }
     },
     created() {
