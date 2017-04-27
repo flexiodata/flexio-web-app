@@ -132,7 +132,7 @@ class Execute extends \Flexio\Jobs\Base
         $done_writing = false; // "done writing input to process"
         $done_reading = false; // "done reading result from process"
         $first_chunk = true;
-        $chunk = '';
+        $readbuf = '';
 
         //$tot = 0;
         //$totw = 0;
@@ -145,8 +145,9 @@ class Execute extends \Flexio\Jobs\Base
 
             if (!$is_running && !$done_writing)
             {
+                // can't write to a process that's not running
                 $process->closeWrite();
-                $done_writing = true; // can't write to a process that's not running
+                $done_writing = true; 
             }
 
             if ($is_running && !$done_writing)
@@ -196,9 +197,9 @@ class Execute extends \Flexio\Jobs\Base
 
                         if ($len > 0)
                         {
-                            //fxdebug("\n\n\n\nWriting to process: ".$buf."***");
+                            fxdebug("\n\n\n\nWriting to process: ".$buf."***");
                             $process->write($buf);
-                            //fxdebug("\nBlock finished.\n\n");
+                            fxdebug("\nBlock finished.\n\n");
                         }
 
                         //$totw += $len;
@@ -210,14 +211,14 @@ class Execute extends \Flexio\Jobs\Base
 
             if (!$done_reading)
             {
-                //fxdebug("Reading... IsRunning=".($is_running?"Yes":"No")." DoneReading=".($done_reading?"Yes":"No")." DoneWriting=".($done_writing?"Yes":"No")."\n");
-                $readbuf = $process->read(1024);
-                //fxdebug("Read from process: len=".($readbuf===false?"false":"".strlen($readbuf))." Data=$readbuf\n\n\n");
+                fxdebug("Reading... IsRunning=".($is_running?"Yes":"No")." DoneReading=".($done_reading?"Yes":"No")." DoneWriting=".($done_writing?"Yes":"No")."\n");
+                $chunk = $process->read(1024);
+                fxdebug("Read from process: len=".($chunk===false?"false":"".strlen($chunk))." Data=$chunk\n\n\n");
 
-                if ($readbuf !== false)
-                    $chunk .= $readbuf;
+                if ($chunk !== false)
+                    $readbuf .= $chunk;
 
-                if (strlen($chunk) == 0)
+                if (strlen($readbuf) == 0)
                 {
                     if (!$is_running)
                     {
@@ -231,11 +232,11 @@ class Execute extends \Flexio\Jobs\Base
                         $content_type = 'application/octet-stream';
                         $structure = null;
 
-                        $end = strpos($chunk, "\r\n\r\n");
+                        $end = strpos($readbuf, "\r\n\r\n");
 
-                        if ($chunk[0] == '{' && $end !== false)
+                        if ($readbuf[0] == '{' && $end !== false)
                         {
-                            $header = @json_decode(substr($chunk, 0, $end), true);
+                            $header = @json_decode(substr($readbuf, 0, $end), true);
                             if (!is_null($header))
                             {
                                 if (isset($header['content_type']))
@@ -244,7 +245,7 @@ class Execute extends \Flexio\Jobs\Base
                                 }
                                 $structure = $header['structure'] ?? null;
                             }
-                            $chunk = substr($chunk, $end+4);
+                            $readbuf = substr($readbuf, $end+4);
                         }
 
                         if ($content_type == \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
@@ -266,32 +267,32 @@ class Execute extends \Flexio\Jobs\Base
                         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
                     }
 
-                    // var_dump($chunk);
+                    // var_dump($readbuf);
 
                     //ob_start();
-                    //var_dump($chunk);
+                    //var_dump($readbuf);
                     //$s = ob_get_clean();
                     //fxdebug("From process: ".$s."***\n\n\n\n");
 
-                    //fxdebug("Writing " . strlen($chunk) . " bytes\n");
-                    //$tot += strlen($chunk);
+                    //fxdebug("Writing " . strlen($readbuf) . " bytes\n");
+                    //$tot += strlen($readbuf);
 
                     if ($is_output_table)
                     {
                         $offset = 0;
                         while (true)
                         {
-                            $eolpos = \Flexio\Jobs\Convert::indexOfLineTerminator($chunk, '"', $offset);
+                            $eolpos = \Flexio\Jobs\Convert::indexOfLineTerminator($readbuf, '"', $offset);
                             if ($eolpos === false)
                             {
-                                $chunk = substr($chunk, $offset);
+                                $readbuf = substr($readbuf, $offset);
                                 break;
                             }
 
-                            $line = substr($chunk, $offset, $eolpos - $offset);
+                            $line = substr($readbuf, $offset, $eolpos - $offset);
 
                             $offset = $eolpos+1;
-                            if ($chunk[$offset-1] == "\r" && ($chunk[$offset] ?? '') == "\n")
+                            if ($readbuf[$offset-1] == "\r" && ($readbuf[$offset] ?? '') == "\n")
                                 $offset++;
 
                             $row = str_getcsv($line);
@@ -306,8 +307,8 @@ class Execute extends \Flexio\Jobs\Base
                     }
                      else
                     {
-                        $streamwriter->write($chunk);
-                        $chunk = '';
+                        $streamwriter->write($readbuf);
+                        $readbuf = '';
                     }
                 }
 
@@ -322,12 +323,12 @@ class Execute extends \Flexio\Jobs\Base
         // write any remaining data from process
         while (true)
         {
-            $chunk = $process->read(1024);
-            if (strlen($chunk) == 0)
+            $readbuf = $process->read(1024);
+            if (strlen($readbuf) == 0)
                 break;
-            //fxdebug("Writing (after process ended)  " . strlen($chunk) . " bytes\n");
-            //$tot += strlen($chunk);
-            $streamwriter->write($chunk);
+            //fxdebug("Writing (after process ended)  " . strlen($readbuf) . " bytes\n");
+            //$tot += strlen($readbuf);
+            $streamwriter->write($readbuf);
         }
 */
 
@@ -335,8 +336,8 @@ class Execute extends \Flexio\Jobs\Base
 
         $err = $process->getError();
 
-        //var_dump($err);
-        //die();
+        var_dump($err);
+        die();
 
         if (isset($err))
         {
