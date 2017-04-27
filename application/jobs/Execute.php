@@ -63,21 +63,31 @@ class Execute extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $input_structure = $instream->getStructure();
 
+
+        // get the code from the template
+        // $code contains the base64-encoded program source
+        $code = $job_definition['params']['code'] ?? '';
+        if (strlen($code) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+
+
         // determine what program to load
         $program_type = false;
         $program_extension = false;
         switch ($job_definition['params']['lang'])
         {
-            case 'r':
-                $program_type = 'r';
-                $program_extension = 'r';
-                break;
-
             case 'python':
                 $program_type = 'python';
                 $program_extension = 'py';
+                $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+                if (is_null($dockerbin))
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+               // $cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c '(echo $code | base64 -d > /tmp/script.py && python3 /tmp/script.py)'";
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c 'runscript $code'";
+
                 break;
 
+/*
             case 'javascript':
                 $program_type = 'javascript';
                 $program_extension = 'js';
@@ -87,40 +97,24 @@ class Execute extends \Flexio\Jobs\Base
                 $program_type = 'go';
                 $program_extension = 'go';
                 break;
+            case 'r':
+                $program_type = 'r';
+                $program_extension = 'r';
+                break;
+*/
+            default:
+                // unknown language
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
-
-        if ($program_type === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $program_path = \Flexio\System\System::getBinaryPath($program_type);
-        if (!isset($program_path))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // get the code from the template
-        $code = $job_definition['params']['code'] ?? '';
-        if (strlen($code) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = null; // created below
 
-
-        // the code is base64 encoded, so decode it and write it out
-        // to a temporary file
-        $code = base64_decode($code);
-        $filename = \Flexio\Base\File::createTempFile('fxscript', $program_extension);
-        file_put_contents($filename, $code);
-
-        $cmd = $program_path . ' ' . "\"$filename\"";
         $cwd = sys_get_temp_dir();
 
-
-        $env = array('PYTHONPATH' => dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'python_include');
-
         $process = new \Flexio\Base\ProcessPipe;
-        if (!$process->exec($cmd, $cwd, $env))
+        if (!$process->exec($cmd, $cwd))
         {
-            @unlink($filename);
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
 
@@ -148,6 +142,12 @@ class Execute extends \Flexio\Jobs\Base
             $is_running = $process->isRunning();
 
             // read chunk of data from input stream and write it to the process
+
+            if (!$is_running && !$done_writing)
+            {
+                $process->closeWrite();
+                $done_writing = true; // can't write to a process that's not running
+            }
 
             if ($is_running && !$done_writing)
             {
@@ -195,7 +195,11 @@ class Execute extends \Flexio\Jobs\Base
                         $len = strlen($buf);
 
                         if ($len > 0)
+                        {
+                            //fxdebug("\n\n\n\nWriting to process: ".$buf."***");
                             $process->write($buf);
+                            //fxdebug("\nBlock finished.\n\n");
+                        }
 
                         //$totw += $len;
                     }
@@ -206,8 +210,9 @@ class Execute extends \Flexio\Jobs\Base
 
             if (!$done_reading)
             {
-                //fxdebug("Reading...\n");
+                //fxdebug("Reading... IsRunning=".($is_running?"Yes":"No")." DoneReading=".($done_reading?"Yes":"No")." DoneWriting=".($done_writing?"Yes":"No")."\n");
                 $readbuf = $process->read(1024);
+                //fxdebug("Read from process: len=".($readbuf===false?"false":"".strlen($readbuf))." Data=$readbuf\n\n\n");
 
                 if ($readbuf !== false)
                     $chunk .= $readbuf;
@@ -312,6 +317,7 @@ class Execute extends \Flexio\Jobs\Base
 
         } while (!$done_writing || !$done_reading);
 
+        //fxdebug("Loop done");
 /*
         // write any remaining data from process
         while (true)
@@ -328,7 +334,10 @@ class Execute extends \Flexio\Jobs\Base
         //fxdebug("Total bytes written: " . $tot);
 
         $err = $process->getError();
-       // var_dump($err);
+
+        //var_dump($err);
+        //die();
+
         if (isset($err))
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
