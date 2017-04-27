@@ -30,7 +30,7 @@
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 46px; bottom: 36px; left: 19px"
         :class="[ index==0?'mt2':'' ]"
-        v-show="!show_progress"
+        v-show="!show_progress && !this.promptMode"
       ></div>
 
       <!-- insert before button -->
@@ -38,7 +38,7 @@
         class="absolute"
         style="top: -24px; left: 8px"
         v-show="!show_progress"
-        v-if="index==0 && false"
+        v-if="index==0 && !show_progress && !this.promptMode && false"
       >
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
           <i class="db material-icons f3">add_circle</i>
@@ -49,7 +49,7 @@
       <div
         class="absolute"
         style="bottom: 5px; left: 8px"
-        v-show="!show_progress">
+        v-show="!show_progress && !this.promptMode">
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
           <i class="db material-icons f3">add_circle</i>
         </div>
@@ -60,92 +60,129 @@
         class="flex-fill relative ph3a bg-white bl br b--white-box"
         :class="[ content_cls, index==0?'pt3':'pt2' ]"
       >
-        <div v-if="our_variables.length > 0">
-          This steps requires the following information...
-          <span class="code ph2" v-for="(v, index) in our_variables">{{v}}</span>
-          <div class="bt b--black-10 pt2 mt2"></div>
+        <!-- 1. show progress -->
+
+        <div v-if="show_progress">
+          <!-- static task name -->
+          <div class="f5 lh-title">{{display_name}}</div>
+
+          <!-- static task description -->
+          <div class="f7 lh-title gray mt1" v-if="description.length > 0">{{description}}</div>
+
+          <!-- process progress item -->
+          <process-progress-item
+            class="mt2 pt2 bt b--black-10"
+            :item="active_subprocess">
+          </process-progress-item>
         </div>
 
-        <!-- task name -->
-        <inline-edit-text
-          class="flex-fill f5 lh-title"
-          edit-button-tooltip-cls="hint--top-left"
-          input-key="name"
-          :val="display_name"
-          @save="editTaskSingleton">
-        </inline-edit-text>
+        <!-- 2. show prompt/configure -->
 
-        <!-- task description -->
-        <inline-edit-text
-          class="f7 lh-title gray mt1"
-          placeholder="Add a description"
-          placeholder-cls="fw6 black-20 hover-black-40"
-          edit-button-tooltip-cls="hint--top-left"
-          input-key="description"
-          :val="description"
-          @save="editTaskSingleton">
-        </inline-edit-text>
+        <div v-else-if="promptMode === true">
+          <!-- static task name -->
+          <div class="f5 lh-title">{{display_name}}</div>
 
-        <div class="mt2 pt2 bt b--black-10" v-if="show_progress">
-          <process-progress-item :item="active_subprocess"></process-progress-item>
+          <!-- static task description -->
+          <div class="f7 lh-title gray mt1" v-if="description.length > 0">{{description}}</div>
+
+          <!-- task configure item -->
+          <task-configure-item
+            class="f7 lh-title gray mt2"
+            :item="item"
+            :variables="our_variables"
+            v-if="our_variables.length > 0"
+          ></task-configure-item>
         </div>
-        <div class="relative" v-else>
 
-          <!-- collapser -->
-          <div
-            class="absolute cursor-default"
-            style="top: 6px; left: -31px"
-            v-if="active_stream_eid.length > 0"
-          >
+        <!-- 3. show normal builder item -->
+
+        <div v-else>
+          <!-- task name -->
+          <inline-edit-text
+            class="f5 lh-title"
+            edit-button-tooltip-cls="hint--top-left"
+            input-key="name"
+            :val="display_name"
+            @save="editTaskSingleton">
+          </inline-edit-text>
+
+          <!-- task description -->
+          <inline-edit-text
+            class="f7 lh-title gray mt1"
+            placeholder="Add a description"
+            placeholder-cls="fw6 black-20 hover-black-40"
+            edit-button-tooltip-cls="hint--top-left"
+            input-key="description"
+            :val="description"
+            @save="editTaskSingleton">
+          </inline-edit-text>
+
+          <div class="relative">
+            <!-- collapser -->
             <div
-              class="pointer moon-gray bg-white ba b--white-box br-100 hover-blue hover-b--blue hint--top-right"
-              :aria-label="collapse_tooltip"
-              @click="togglePreview"
+              class="absolute cursor-default"
+              style="top: 6px; left: -31px"
+              v-if="active_stream_eid.length > 0"
             >
-              <i class="db material-icons md-18 trans-t" :class="{ 'rotate-90': show_preview }">chevron_right</i>
+              <div
+                class="pointer moon-gray bg-white ba b--white-box br-100 hover-blue hover-b--blue hint--top-right"
+                :aria-label="collapse_tooltip"
+                @click="togglePreview"
+              >
+                <i class="db material-icons md-18 trans-t" :class="{ 'rotate-90': show_preview }">chevron_right</i>
+              </div>
             </div>
-          </div>
 
-          <command-bar
-            ref="commandbar"
-            class="mt2 pa1 ba b--black-10 bg-white"
-            :val="orig_cmd"
-            :orig-json="task"
-            :is-scrolling="isScrolling"
-            :active-process="activeProcess"
-            @change="updateCmd"
-            @revert="cancelEdit"
-            @save="saveChanges"
-          ></command-bar>
-          <code-editor
-            ref="code"
-            class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
-            :val="orig_code"
-            :lang="code_lang"
-            @change="updateCode"
-            v-if="is_task_execute"
-          ></code-editor>
-          <transition name="slide-fade">
-            <div class="flex flex-row mt2" v-show="is_changed">
-              <div class="flex-fill">&nbsp;</div>
-              <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
-              <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
-            </div>
-          </transition>
-          <transition name="slide-fade">
-            <div class="flex flex-row mt2" v-if="show_syntax_error">
-              <div class="flex-fill">&nbsp;</div>
-              <div class="flex-none f7 dark-red">There is an error in the command syntax</div>
-            </div>
-          </transition>
-          <transition name="slide-fade">
-            <pipe-content
-              class="mt2 relative"
-              :stream-eid="active_stream_eid"
-              :task-json="task"
-              v-if="show_preview && active_stream_eid.length > 0"
-            ></pipe-content>
-          </transition>
+            <!-- command bar -->
+            <command-bar
+              ref="commandbar"
+              class="mt2 pa1 ba b--black-10 bg-white"
+              :val="orig_cmd"
+              :orig-json="task"
+              :is-scrolling="isScrolling"
+              :active-process="activeProcess"
+              @change="updateCmd"
+              @revert="cancelEdit"
+              @save="saveChanges"
+            ></command-bar>
+
+            <!-- code editor -->
+            <code-editor
+              ref="code"
+              class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
+              :val="orig_code"
+              :lang="code_lang"
+              @change="updateCode"
+              v-if="is_task_execute"
+            ></code-editor>
+
+            <!-- cancel/save buttons -->
+            <transition name="slide-fade">
+              <div class="flex flex-row mt2" v-show="is_changed">
+                <div class="flex-fill">&nbsp;</div>
+                <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
+                <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
+              </div>
+            </transition>
+
+            <!-- error message (below buttons) -->
+            <transition name="slide-fade">
+              <div class="flex flex-row mt2" v-if="show_syntax_error">
+                <div class="flex-fill">&nbsp;</div>
+                <div class="flex-none f7 dark-red">There is an error in the command syntax</div>
+              </div>
+            </transition>
+
+            <!-- preview -->
+            <transition name="slide-fade">
+              <pipe-content
+                class="mt2 relative"
+                :stream-eid="active_stream_eid"
+                :task-json="task"
+                v-if="show_preview && active_stream_eid.length > 0"
+              ></pipe-content>
+            </transition>
+          </div>
         </div>
       </div>
     </div>
@@ -164,6 +201,7 @@
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
   import ProcessProgressItem from './ProcessProgressItem.vue'
+  import TaskConfigureItem from './TaskConfigureItem.vue'
   import taskItemHelper from './mixins/task-item-helper'
 
   export default {
@@ -208,7 +246,8 @@
       CommandBar,
       InlineEditText,
       PipeContent,
-      ProcessProgressItem
+      ProcessProgressItem,
+      TaskConfigureItem
     },
     inject: ['pipeEid'],
     watch: {

@@ -1,10 +1,16 @@
-// common helpers for task items (requires that the calling object has a `task` property)
+// common helpers for task items (requires that the calling object has an `item` property)
 
 import * as types from '../../constants/task-type'
 import * as tasks from '../../constants/task-info'
 
 export default {
   computed: {
+    task() {
+      return _.get(this, 'item', {})
+    },
+    task_icon() {
+      return _.result(this, 'tinfo.icon', 'build')
+    },
     task_icon() {
       return _.result(this, 'tinfo.icon', 'build')
     },
