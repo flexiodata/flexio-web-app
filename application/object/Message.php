@@ -94,8 +94,8 @@ class Message
         $activation_link = self::getBaseUrl() . '/app/signin?ref=verification_email&email='.urlencode($to).'&verify_code='.$verify_code;
 
         // get templates from the application res directory
-        $msg_text = self::getTextEmail('template-account-verify', [ 'activation_link' => $activation_link ]);
-        $msg_html = self::getHtmlEmail('template-account-verify', [ 'activation_link' => $activation_link ]);
+        $msg_text = self::getTextEmail('account-verify', [ 'activation_link' => $activation_link ]);
+        $msg_html = self::getHtmlEmail('account-verify', [ 'activation_link' => $activation_link ]);
 
         // send an email that the user's account was created
         $email = \Flexio\Services\Email::create(array(
@@ -124,8 +124,8 @@ class Message
         $reset_link = self::getBaseUrl() . '/app/resetpassword?email='.urlencode($to).'&verify_code='.$verify_code;
 
         // get templates from the application res directory
-        $msg_text = self::getTextEmail('template-forgot-password', [ 'reset_link' => $reset_link ]);
-        $msg_html = self::getHtmlEmail('template-forgot-password', [ 'reset_link' => $reset_link ]);
+        $msg_text = self::getTextEmail('forgot-password', [ 'reset_link' => $reset_link ]);
+        $msg_html = self::getHtmlEmail('forgot-password', [ 'reset_link' => $reset_link ]);
 
         // send an email that the user's account was created
         $email = \Flexio\Services\Email::create(array(
@@ -162,7 +162,7 @@ class Message
         $share_link = self::getBaseUrl() . '/a/shareauth?ref=share_email&email='.urlencode($to).'&object_eid='. $object_eid . $verify_code_str;
 
         // get text template from the application res directory
-        $msg_text = self::getTextEmail('template-project-share', [
+        $msg_text = self::getTextEmail('project-share', [
             'name' => $from_name,
             'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "\n$message\n",
@@ -171,7 +171,7 @@ class Message
         ]);
 
         // get html template from the application res directory
-        $msg_html = self::getHtmlEmail('template-project-share', [
+        $msg_html = self::getHtmlEmail('project-share', [
             'name' => $from_name,
             'from_email' => $from_email,
             'message' => (strlen($message) == 0) ? '' : "$message<br><br>",
@@ -209,7 +209,7 @@ class Message
         $share_link = self::getBaseUrl() . "/app/pipe/$object_eid";
 
         // get text template from the application res directory
-        $msg_text = self::getTextEmail('template-pipe-share', [
+        $msg_text = self::getTextEmail('pipe-share', [
             'name' => $from_name,
             'message' => (strlen($message) == 0) ? '' : "\n$message\n",
             'object_name' => $object_name,
@@ -217,7 +217,7 @@ class Message
         ]);
 
         // get html template from the application res directory
-        $msg_html = self::getHtmlEmail('template-pipe-share', [
+        $msg_html = self::getHtmlEmail('pipe-share', [
             'name' => $from_name,
             'message' => (strlen($message) == 0) ? '' : "$message<br><br>",
             'object_name' => $object_name,
@@ -236,22 +236,16 @@ class Message
 
     private static function getHtmlEmail(string $template_file, array $replacement_strs) : string
     {
-        $res_dir = \Flexio\System\System::getResDirectory();
-
-        $btn_primary_style = file_get_contents($res_dir . DIRECTORY_SEPARATOR . 'template-btn-primary.html');
-        $msg_template = file_get_contents($res_dir . DIRECTORY_SEPARATOR . 'template-html-email.html');
+        $email_dir = \Flexio\System\System::getEmailTemplateDirectory();
 
         // load template file contents
-        $msg = file_get_contents($res_dir . DIRECTORY_SEPARATOR . "$template_file.html");
-
-        // replace message and button tokens from template files
-        $msg = str_replace('${html_message}', $msg, $msg_template);
-        $msg = str_replace('${btn_primary_style}', $btn_primary_style, $msg);
+        $msg = file_get_contents($email_dir . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . "$template_file.html");
 
         // now replace all tokens that are in the message
         foreach ($replacement_strs as $k => $v)
         {
             $msg = str_replace('${'.$k.'}', $v, $msg);
+            $msg = str_replace('&#36;{'.$k.'}', $v, $msg); // MJML compiler HTML-encodes the '$' character
         }
 
         return $msg;
@@ -259,10 +253,10 @@ class Message
 
     private static function getTextEmail(string $template_file, array $replacement_strs) : string
     {
-        $res_dir = \Flexio\System\System::getResDirectory();
+        $email_dir = \Flexio\System\System::getEmailTemplateDirectory();
 
         // load template file contents
-        $msg = file_get_contents($res_dir . DIRECTORY_SEPARATOR . "$template_file.txt");
+        $msg = file_get_contents($email_dir . DIRECTORY_SEPARATOR . 'text' . DIRECTORY_SEPARATOR . "$template_file.txt");
 
         // now replace all tokens that are in the message
         foreach ($replacement_strs as $k => $v)

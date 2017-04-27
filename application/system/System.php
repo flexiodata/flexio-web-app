@@ -568,9 +568,9 @@ class System
         return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'config';
     }
 
-    public static function getResDirectory() : string
+    public static function getEmailTemplateDirectory() : string
     {
-        return \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'res';
+        return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'email';
     }
 
     public static function getUpdateDirectory() : string
