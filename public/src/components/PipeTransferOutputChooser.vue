@@ -8,8 +8,6 @@
         list-type="output"
         item-layout="list"
         :project-eid="projectEid"
-        :show-add="false"
-        :show-blank-pipe="false"
         @item-activate="chooseConnection"
       ></connection-chooser-list>
     </div>

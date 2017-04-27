@@ -17,11 +17,17 @@ export default {
     ctype() {
       return _.get(this, 'task.metadata.connection_type', '')
     },
+    is_input_task() {
+      return _.get(this, 'task.type') == types.TASK_TYPE_INPUT
+    },
+    is_output_task() {
+      return _.get(this, 'task.type') == types.TASK_TYPE_OUTPUT
+    },
     show_connection_icon() {
       if (this.ctype.length == 0)
         return false
 
-      switch (_.get(this, 'task.type', ''))
+      switch (_.get(this, 'task.type'))
       {
         case types.TASK_TYPE_INPUT:
         case types.TASK_TYPE_OUTPUT:

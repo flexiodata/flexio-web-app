@@ -46,19 +46,18 @@
         required: false
       },
       'show-add': {
-        default: true,
         type: Boolean,
-        required: false
+        default: true
       },
       'show-blank-pipe': {
-        default: true,
         type: Boolean,
-        required: false
+        default: true
       },
       'list-type': {
-        default: 'input',
         type: String,
-        required: false
+        default: 'input'
+      },
+      'type-filter': {
       },
       'item-layout': {
       }
@@ -89,7 +88,12 @@
         return items
       },
       input_services() {
-        return [].concat(this.default_connections, this.getOurConnections())
+        var items = [].concat(this.default_connections, this.getOurConnections())
+
+        if (_.isNil(this.typeFilter))
+          return items
+
+        return _.filter(items, { connection_type: this.typeFilter })
       },
       is_fetched() {
         return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetched', true)
