@@ -318,7 +318,7 @@ class TestUtil
         $result = array();
         foreach ($streams as $s)
         {
-            $result[] = $s->content($start, $limit, null, true); // limit test data to 100 rows
+            $result[] = $s->content($start, $limit, true); // limit test data to 100 rows
         }
 
         return $result;

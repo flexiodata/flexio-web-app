@@ -187,7 +187,7 @@ class Stream extends \Flexio\Object\Base
         return $info;
     }
 
-    public function content(int $start, int $limit, array $columns = null, bool $metadata = false) // TODO: add function return type
+    public function content(int $start, int $limit, bool $metadata = false) // TODO: add function return type
     {
         // returns the requested content for the given stream
 

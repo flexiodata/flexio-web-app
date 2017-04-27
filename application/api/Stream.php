@@ -91,7 +91,6 @@ class Stream
                 'eid'      => array('type' => 'identifier', 'required' => true),
                 'start'    => array('type' => 'integer', 'required' => false),
                 'limit'    => array('type' => 'integer', 'required' => false),
-                'columns'  => array('type' => 'string', 'array' => true, 'required' => false),
                 'metadata' => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -99,7 +98,6 @@ class Stream
         $stream_identifier = $params['eid'];
         $start = isset($params['start']) ? (int)$params['start'] : 0;  // start isn't specified, start at the beginning
         $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
-        $columns = isset($params['columns']) ? $params['columns'] : null;  // if columns aren't specified, return all columns
         $metadata = isset($params['metadata']) ? $params['metadata'] : false;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
@@ -115,7 +113,7 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
-        $content = $stream->content($start, $limit, $columns, $metadata);
+        $content = $stream->content($start, $limit, $metadata);
 
         if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
@@ -299,7 +297,6 @@ class Stream
                 'eid'      => array('type' => 'identifier', 'required' => true),
                 'start'    => array('type' => 'integer', 'required' => false),
                 'limit'    => array('type' => 'integer', 'required' => false),
-                'columns'  => array('type' => 'string', 'array' => true, 'required' => false),
                 'metadata' => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -307,7 +304,6 @@ class Stream
         $stream_identifier = $params['eid'];
         $start = isset($params['start']) ? (int)$params['start'] : 0;  // start isn't specified, start at the beginning
         $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
-        $columns = isset($params['columns']) ? $params['columns'] : null;  // if columns aren't specified, return all columns
         $metadata = isset($params['metadata']) ? $params['metadata'] : false;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
@@ -359,7 +355,7 @@ class Stream
         if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // get the content in one chunk and return it as-is
-            $content = $stream->content($start, $limit, $columns, $metadata);
+            $content = $stream->content($start, $limit, $metadata);
             $out = fopen('php://output', 'w');
             fwrite($out, $content);
             fclose($out);
@@ -384,7 +380,7 @@ class Stream
                     break;
 
                 // get the rows
-                $content = $stream->content($current_offset, $rowreadsize, null, $metadata);
+                $content = $stream->content($current_offset, $rowreadsize, $metadata);
                 $rows = $content['rows'];
 
                 // if we've run out of rows, we're done
