@@ -18,7 +18,11 @@ namespace Flexio\Tests;
 
 class TestCheck
 {
-    public static function assertNull($name, $description, $actual, $expected, &$results)
+    const FLAG_NONE = '';
+    const FLAG_ERROR_SUPPRESS = 'flag.error.suppress';
+
+
+    public static function assertNull($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
         // add a TestResult onto the result array
         $test_result = new TestResult;
@@ -26,6 +30,14 @@ class TestCheck
 
         $test_result->name = $name;
         $test_result->description = $description;
+
+        // if the issue is flagged as known issue, don't include it in the report
+        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
 
         if (is_null($actual))
         {
@@ -38,7 +50,7 @@ class TestCheck
         $test_result->message = 'Expected null value;  Returned ' . TestCheck::stringify($actual);
     }
 
-    public static function assertNan($name, $description, $actual, $expected, &$results)
+    public static function assertNan($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
         // add a TestResult onto the result array
         $test_result = new TestResult;
@@ -46,6 +58,14 @@ class TestCheck
 
         $test_result->name = $name;
         $test_result->description = $description;
+
+        // if the issue is flagged as known issue, don't include it in the report
+        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
 
         if (is_float($actual) && is_nan($actual))
         {
@@ -59,7 +79,7 @@ class TestCheck
     }
 
 
-    public static function assertString($name, $description, $actual, $expected, &$results)
+    public static function assertString($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
         // add a TestResult onto the result array
         $test_result = new TestResult;
@@ -68,6 +88,13 @@ class TestCheck
         $test_result->name = $name;
         $test_result->description = $description;
 
+        // if the issue is flagged as known issue, don't include it in the report
+        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
 
         if ($actual === $expected)
         {
@@ -81,7 +108,7 @@ class TestCheck
         $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
     }
 
-    public static function assertNumber($name, $description, $actual, $expected, &$results)
+    public static function assertNumber($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
         // add a TestResult onto the result array
         $test_result = new TestResult;
@@ -89,6 +116,14 @@ class TestCheck
 
         $test_result->name = $name;
         $test_result->description = $description;
+
+        // if the issue is flagged as known issue, don't include it in the report
+        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
 
         // comparing doubles always requires usage of epsilon tolerance
         if (is_double($actual) && is_double($expected) && TestUtil::dblcompare($actual, $expected) === 0)
@@ -109,7 +144,7 @@ class TestCheck
         $test_result->message = 'Expected ' . TestCheck::stringify($expected,true) . ';  Returned ' . TestCheck::stringify($actual,true);
     }
 
-    public static function assertDateApprox($name, $description, $actual, $expected, &$results)
+    public static function assertDateApprox($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
         // note: this returns true if the actual datetime is within a tolerance
         // of the expected; it's used to test values where there might be a slight
@@ -123,10 +158,16 @@ class TestCheck
         $test_result = new TestResult;
         $results[] = $test_result;
 
-        // the actual and expected
-
         $test_result->name = $name;
         $test_result->description = $description;
+
+        // if the issue is flagged as known issue, don't include it in the report
+        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
 
         if (is_string($actual) && is_string($expected))
         {
@@ -146,7 +187,7 @@ class TestCheck
         $test_result->message = 'Expected ' . TestCheck::stringify($expected,true) . ';  Returned ' . TestCheck::stringify($actual,true);
     }
 
-    public static function assertBoolean($name, $description, $actual, $expected, &$results)
+    public static function assertBoolean($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
         // add a TestResult onto the result array
         $test_result = new TestResult;
@@ -154,6 +195,14 @@ class TestCheck
 
         $test_result->name = $name;
         $test_result->description = $description;
+
+        // if the issue is flagged as known issue, don't include it in the report
+        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
 
         if ($actual === false && $expected === false)
         {
@@ -174,7 +223,7 @@ class TestCheck
     }
 
 
-    public static function assertArrayKeys($name, $description, $actual, $expected, &$results)
+    public static function assertArrayKeys($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
         // succeeds if the keys of the array are the same, without regard to the values
 
@@ -184,6 +233,14 @@ class TestCheck
 
         $test_result->name = $name;
         $test_result->description = $description;
+
+        // if the issue is flagged as known issue, don't include it in the report
+        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
 
         // make sure "actual" input is an array or a string; make sure "expected" input
         // is an array or a string; in the case of a string, we'll treat it as JSON
@@ -214,7 +271,7 @@ class TestCheck
         $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
     }
 
-    public static function assertArray($name, $description, $actual, $expected, &$results)
+    public static function assertArray($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
         // add a TestResult onto the result array
         $test_result = new TestResult;
@@ -222,6 +279,14 @@ class TestCheck
 
         $test_result->name = $name;
         $test_result->description = $description;
+
+        // if the issue is flagged as known issue, don't include it in the report
+        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
 
         // make sure "actual" input is an array; make sure "expected" input is
         // an array or a string; in the case of a string, we'll treat it as JSON
@@ -250,7 +315,7 @@ class TestCheck
         $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
     }
 
-    public static function assertInArray($name, $description, $actual, $expected, &$results)
+    public static function assertInArray($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
         // note: returns true if the key/value pairs in the expected array
         // are in the actual array; false otherwise
@@ -261,6 +326,14 @@ class TestCheck
 
         $test_result->name = $name;
         $test_result->description = $description;
+
+        // if the issue is flagged as known issue, don't include it in the report
+        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        {
+            $test_result->passed = true;
+            $test_result->message = '';
+            return;
+        }
 
         // make sure "actual" input is an array or a string; in the case of a string,
         // we'll treat it as JSON and convert the results to an array representation

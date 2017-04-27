@@ -258,7 +258,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function getFileId(string $folder) : string
+    public function getFileId(string $folder)  // TODO: set function return type   (: ?string)
     {
         if (is_null($folder) || $folder == '' || $folder == '/')
             return 'root';

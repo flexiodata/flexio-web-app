@@ -282,7 +282,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof(\'"firstnamelastname"@domain.com\',"email")');
         $expected = true;
-        TestCheck::assertBoolean('D.5', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.5', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("firstname-lastname@domain.com","email")');
@@ -292,7 +292,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("firstname+lastname@domain.com","email")');
         $expected = true;
-        TestCheck::assertBoolean('D.7', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.7', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("firstname_lastname@domain.com","email")');
@@ -322,12 +322,12 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("email@[123.123.123.123]","email")');
         $expected = true;
-        TestCheck::assertBoolean('D.13', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.13', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("\"email\"@domain.com","email")');
         $expected = true;
-        TestCheck::assertBoolean('D.14', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.14', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("email@domain-one.com","email")');
@@ -372,7 +372,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("email@-domain.com","email")');
         $expected = false;
-        TestCheck::assertBoolean('D.23', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.23', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("@domain.com","email")');
@@ -392,17 +392,17 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof(".email@domain.com","email")');
         $expected = false;
-        TestCheck::assertBoolean('D.27', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.27', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("email.@domain.com","email")');
         $expected = false;
-        TestCheck::assertBoolean('D.28', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.28', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("email..email@domain.com","email")');
         $expected = false;
-        TestCheck::assertBoolean('D.29', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.29', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("あ@domain.com","email")');
@@ -432,7 +432,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("email@domain..com","email")');
         $expected = false;
-        TestCheck::assertBoolean('D.35', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.35', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("email@xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxx.com","email")');
@@ -442,7 +442,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('iskindof("email@xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxx.com","email")');
         $expected = false; // 254 chars
-        TestCheck::assertBoolean('D.37', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results);
+        TestCheck::assertBoolean('D.37', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 

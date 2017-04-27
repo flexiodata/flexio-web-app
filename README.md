@@ -24,27 +24,66 @@ After running `yarn`, if you do a directory listing, you'll notice that there is
 
 **NOTE:** The `node_modules` folder is created from the list of dependencies in the `package.json` (see below). You should never manually add or remove files/folders from this folder and, of utmost importance, this folder should **NEVER** be committed or pushed to the git repository.
 
-## Building the Flex.io Web App
+## Folder Structure
 
-Understanding the basic folder structure and flow of the build files is important to being able to build the Flex.io web app. The following files and folders are pertinent for the build process:
+Understanding the basic folder structure and flow of the build files is important to being able to build the Flex.io web app. It's also important to know this information in order to run the development server.
+
+The following files and folders are pertinent for understanding the build process:
 
 * /public/package.json
 * /public/build
 
-All executables that can be run from the command prompt for building are listed in the `scripts: {}` node in the `package.json` file. Command are entered from the command line as follows:
+## NPM and Yarn
+
+All executables that can be run from the command prompt for running the development server or building the app are listed in the `scripts` node in the `package.json` file. Command are entered from the command line as follows:
 
 ```
 npm run <script name>
 yarn run <script name>
 ```
 
-* `yarn run dev` :  Run the development server
-* `yarn run build:debug` : Perform a debug build
-* `yarn run build:release` : Perform a release build
+## Running the Development Server
 
-Each of the above commands will run a webpack build script -- these scripts are located in the `/public/build` folder. It's not terribly important to understand these build scripts, but it is nice to have a good handle on what happens when the above commands are run.
+In order to run the development server, enter the following command:
 
-**NOTE:** Before running any of the above commands, it is generally good practice to update the version in the `package.json` file to whatever the release version will be. This will keep the `package.json` version in sync with the release version that gets tagged in the Git repository.
+```
+yarn run dev
+```
+
+Once the development server has loaded, a new tab with location `localhost:8080` should open in your browser.
+
+## Building the Flex.io Web App
+
+Before building the web app, it's important to make sure that all of the node module dependencies have been loaded and updated. To do this, got to the `/public` folder and enter the following command:
+
+`yarn`
+
+Once that process is complete, you will need to update the version of the app in the `package.json` file. This ensures that any version information that is used in the build process is up-to-date with what the release version will be when it is tagged on GitHub.
+
+```
+{
+  "name": "Flex.io",
+  "version": "1.1.6",
+  "description": "Flex.io Client Web Application",
+  ...
+}
+```
+
+Once the `package.json` file has been edited and saved, you're ready to actually build the app.
+
+In order to build the web app in debug mode, enter the following command:
+
+```
+yarn run build:debug
+```
+
+In order to build the web app in release mode, enter the following command:
+
+```
+yarn run build:release
+```
+
+Each of the above commands will run a webpack build script -- these scripts are located in the `/public/build` folder. It's not terribly important to understand these build scripts, but it is nice to have a good handle on what happens when the above commands are run. The primary difference between the two build modes is that debug mode will not add cache busting hash strings to the files that are output.
 
 After running either of the above build commands, it is important to do a `git status` to see what files have changed. For release builds, there will always be new files in the `/dist` folder that need to be added to the git repository using `git add` due to the fact that we add cache busting hash values to the end of our files now.
 
@@ -52,7 +91,8 @@ In general, from the `/public` folder, you can simply enter the following comman
 
 ```
 git add dist/*
-git commit -m "Release build."
+git commit -a -m "Release build."
 git push
 ```
 
+Once the push is complete, open up the [Flex.io Web App](https://github.com/flexiodata/flexio) on GitHub and go to the `Releases` tab and click 'Draft a new release' button. Name the release the same thing as the version number in the `package.json` file, but prefixed with the letter 'v' (e.g. for version 1.1.6, both the Tag version and the Release title would be 'v1.1.6').. Add any pertinent release notes and click the 'Publish release' button to finalize the release.

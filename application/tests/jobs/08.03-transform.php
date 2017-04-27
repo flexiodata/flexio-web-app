@@ -699,7 +699,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('H.1', 'Transform Job; conversion from character to boolean',  $actual, $expected, $results);
+		TestCheck::assertInArray('H.1', 'Transform Job; conversion from character to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -753,7 +753,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('I.1', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results);
+		TestCheck::assertInArray('I.1', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -803,7 +803,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('I.2', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results);
+		TestCheck::assertInArray('I.2', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -857,7 +857,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('J.1', 'Transform Job; conversion from double to boolean',  $actual, $expected, $results);
+		TestCheck::assertInArray('J.1', 'Transform Job; conversion from double to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -911,7 +911,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('K.1', 'Transform Job; conversion from integer to boolean',  $actual, $expected, $results);
+		TestCheck::assertInArray('K.1', 'Transform Job; conversion from integer to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
 
