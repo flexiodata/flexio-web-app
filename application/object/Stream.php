@@ -203,61 +203,47 @@ class Stream extends \Flexio\Object\Base
 
     public function content(int $start, int $limit) // TODO: add function return type
     {
-        // returns the requested content for the given stream
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        $local_properties = $this->properties;
-        $mime_type = $local_properties['mime_type'];
-        $connection_eid = $local_properties['connection_eid'];
-        $path = $local_properties['path'];
-
-        $connection = \Flexio\Object\Connection::load($connection_eid);
-        if ($connection === false)
-            return false;
-
-        $service = $connection->getService();
-        if (!$service)
-            return false;
-
-        $start = (int)$start;
-        $limit = (int)$limit;
         if ($start < 0 )
             $start = 0;
         if ($limit < 0)
             $limit = 0;
 
+        $idx = 0;
+        $streamreader = \Flexio\Object\StreamReader::create($this);
+        $mime_type = $this->getMimeType();
+
         if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
-            $handle = $service->openFile($path);
+            // read non-table content
 
-            if (!$handle)
-                return false;
-
+            // if we're not starting at the beginning, read enough to set
+            // the starting location
             if ($start > 0)
-                $handle->seek($start);
+                $streamreader->read($start);
 
-            $content = $handle->read($limit);
-            return $content;
+            return $streamreader->read($limit);
         }
-
-        $iter = $service->query(array('table' => $path));
-        if (!$iter)
-            return false;
-
-        $structure = $this->getStructure()->enum();
-        $content = $iter->getRows($start, $limit);
-
-        $result = array();
-        foreach ($content as $row)
+         else
         {
-            // map the data from the service that's stored using the store_name
-            // back to the object structure that references the data with the
-            // logical name
-            $result[] = self::convertStoreNameToName($row, $structure);
-        }
+            // read table content
+            $result = array();
+            while (true)
+            {
+                $row = $streamreader->readRow();
+                if ($row === false)
+                    break;
 
-        return $result;
+                if ($idx >= $start + $limit)
+                    break;
+
+                if ($idx >= $start)
+                    $result[] = $row;
+
+                $idx++;
+            }
+
+            return $result;
+        }
     }
 
     public function getService()
