@@ -599,8 +599,8 @@ class Process
         if ($include_content === true)
         {
             $start = 0;
-            $limit = $contentlimit === false ? pow(2,24) : (int)$contentlimit;
-            $columns = true;
+            $limit = $contentlimit === false ? PHP_INT_MAX : (int)$contentlimit;
+            $columns = null;
             $metadata = false;
             $content = $stream->content($start, $limit, $columns, $metadata);
         }

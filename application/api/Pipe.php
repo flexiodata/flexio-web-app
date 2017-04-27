@@ -395,8 +395,8 @@ class Pipe
 
                     $mime_type = $stream_info['mime_type'];
                     $start = 0;
-                    $limit = pow(2,24);
-                    $columns = true;
+                    $limit = PHP_INT_MAX;
+                    $columns = null;
                     $metadata = false;
                     $content = $stream->content($start, $limit, $columns, $metadata);
 
@@ -640,7 +640,7 @@ class Pipe
         }
 
         $start = $start ?? 0;
-        $limit = $limit ?? pow(2,24);
+        $limit = $limit ?? PHP_INT_MAX;
 
         if ($start < 0)
             $start = 0;

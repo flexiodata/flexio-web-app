@@ -187,7 +187,7 @@ class Stream extends \Flexio\Object\Base
         return $info;
     }
 
-    public function content($start, $limit, $columns = true, $metadata = false) // TODO: add input parameter types
+    public function content(int $start, int $limit, array $columns = null, bool $metadata = false) // TODO: add function return type
     {
         // returns the requested content for the given stream
 
@@ -217,7 +217,7 @@ class Stream extends \Flexio\Object\Base
 
         // if a list of columns is specified, get the list
         $columns_specified = false;
-        if (is_array($columns))
+        if (isset($columns))
             $columns_specified = array_flip(array_values($columns));
 
         // get the structure for the output; if columns are specified, only

@@ -97,14 +97,14 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $stream_identifier = $params['eid'];
-        $start = isset($params['start']) ? $params['start'] : 0;  // start isn't specified, start at the beginning
-        $limit = isset($params['limit']) ? $params['limit'] : pow(2,24);  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
-        $columns = isset($params['columns']) ? $params['columns'] : true;  // if columns aren't specified, return all columns
+        $start = isset($params['start']) ? (int)$params['start'] : 0;  // start isn't specified, start at the beginning
+        $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
+        $columns = isset($params['columns']) ? $params['columns'] : null;  // if columns aren't specified, return all columns
         $metadata = isset($params['metadata']) ? $params['metadata'] : false;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
-           throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
@@ -305,9 +305,9 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $stream_identifier = $params['eid'];
-        $start = isset($params['start']) ? $params['start'] : 0;  // start isn't specified, start at the beginning
-        $limit = isset($params['limit']) ? $params['limit'] : pow(2,24);  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
-        $columns = isset($params['columns']) ? $params['columns'] : true;  // if columns aren't specified, return all columns
+        $start = isset($params['start']) ? (int)$params['start'] : 0;  // start isn't specified, start at the beginning
+        $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
+        $columns = isset($params['columns']) ? $params['columns'] : null;  // if columns aren't specified, return all columns
         $metadata = isset($params['metadata']) ? $params['metadata'] : false;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
@@ -377,14 +377,14 @@ class Stream
             {
                 // find out how many rows to read; either the read chunk, or what's
                 // left over if it's less than the read chunk size
-                $rowreadsize = min($end_offset - $current_offset, $read_chunk);
+                $rowreadsize = (int)min($end_offset - $current_offset, $read_chunk);
 
                 // if there's nothing left to read, we're done
                 if ($rowreadsize <= 0)
                     break;
 
                 // get the rows
-                $content = $stream->content($current_offset, $rowreadsize, $metadata);
+                $content = $stream->content($current_offset, $rowreadsize, null, $metadata);
                 $rows = $content['rows'];
 
                 // if we've run out of rows, we're done
