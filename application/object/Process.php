@@ -543,48 +543,6 @@ class Process extends \Flexio\Object\Base
 
     private function execute()
     {
-        /*
-        global $g_procerr_info;
-
-        // this shutdown function should only be registered once
-        if (!isset($g_procerr_info))
-        {
-            // turn off all error reporting, as it will be handled by this error handler
-            error_reporting(0);
-
-            $current_process_eid = $this->getEid();
-            $current_subprocess_eid = $this->getCurrentExecutingSubProcess();
-
-            $g_procerr_info = array(
-                'current_process_eid' => $current_process_eid,
-                'current_subprocess_eid' => $current_subprocess_eid
-            );
-
-            register_shutdown_function(function() {
-
-                global $g_procerr_info;
-
-                // did a fatal PHP error happen?
-                $err = error_get_last();
-                if (isset($err))
-                {
-                    // yes -- set the process state to failed
-                    $process_model = $this->getModel()->process;
-
-                    $subprocess_params = array();
-                    $subprocess_params['process_status'] = \Model::PROCESS_STATUS_FAILED;
-                    $process_model->set($g_procerr_info['current_subprocess_eid'], $subprocess_params);
-
-                    $process_params = array();
-                    $process_params['process_info'] = json_encode($err);
-                    $process_params['process_status'] = \Model::PROCESS_STATUS_FAILED;
-                    $process_model->set($g_procerr_info['current_process_eid'], $process_params);
-                }
-            });
-        }
-        */
-
-
         // TODO: set appropriate status for failures
 
         // track what version of the task implementation we're using

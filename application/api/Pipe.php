@@ -449,7 +449,8 @@ class Pipe
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid'   => array('type' => 'identifier', 'required' => true)
+                'eid'      => array('type' => 'identifier', 'required' => true),
+                'task_eid' => array('type' => 'identifier', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -472,19 +473,62 @@ class Pipe
         $result = array();
         foreach ($task as $t)
         {
+            $task_eid = $t['eid'] ?? '';
+            if (strlen($task_eid) > 0 && isset($params['task_eid']))
+            {
+                // user wants to validate only one step of a pipe (e.g. an execute job/script)
+                if ($params['task_eid'] != $task_eid)
+                    continue;
+            }
 
-            // TODO: validate the step
+
+            $task_errors = array();
+
+            $type = $t['type'] ?? '';
+            $job_params = $t['params'] ?? array();
+
+            if (empty($type))
+            {
+                $task_errors[] = array(
+                    'error' => 'missing_parameter',
+                    'message' => 'Job type parameter is missing'
+                );
+            }
+
+
+            if ($type == 'flexio.execute')
+            {
+                $lang = $job_params['lang'] ?? '';
+                $code = base64_decode($job_params['code'] ?? '');
+                $code = is_null($code) ? '' : $code;
+
+                try
+                {
+                    $err = \Flexio\Jobs\Execute::checkScript($lang, $code);
+                    if ($err !== true)
+                    {
+                        $task_errors[] = array(
+                            'error' => 'compile_error',
+                            'message' => $err
+                        );
+                    }
+                }
+                catch (\Flexio\Base\Exception $e)
+                {
+                    $task_errors[] = array(
+                        'error' => 'unknown_language',
+                        'message' => 'The scripting language specified is unknown'
+                    );
+                }
+            }
 
 
             // push back any steps with an error
-            $task_error = array();
-            $task_error[] = array(
-                'eid' => $t['eid'], // task eid
-                'error' => '', // error code
-                'message' => '' // error message
-            );
-
-            $result[] = $task_error;
+            if (count($task_errors) > 0)
+            {
+                $result[] = array('task_eid' => $task_eid,
+                                  'errors' => $task_errors);
+            }
         }
 
         return $result;
