@@ -123,7 +123,7 @@
             <div class="flex flex-row items-start mt2" v-show="is_changed">
               <div class="flex-fill mr4">
                 <transition name="slide-fade">
-                  <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
+                  <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
                 </transition>
               </div>
               <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
