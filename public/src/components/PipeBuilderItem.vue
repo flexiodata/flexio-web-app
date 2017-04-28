@@ -248,7 +248,7 @@
         return 'Insert a new step after step ' + (this.index+1)
       },
       collapse_tooltip() {
-        return this.show_preview ? 'Hide preview' : 'Show preview'
+        return this.show_preview ? 'Hide preview (Ctrl+Click to hide all)' : 'Show preview (Ctrl+Click to show all)'
       },
       code_lang() {
         return _.get(this, 'task.params.lang', 'python')
