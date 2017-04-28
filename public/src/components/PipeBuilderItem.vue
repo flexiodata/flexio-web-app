@@ -89,7 +89,6 @@
           <task-configure-item
             :item="item"
             :variables="variables"
-            @choose-output="onConfigureChooseOutput"
             v-if="variables.length > 0"
           ></task-configure-item>
         </div>
@@ -487,17 +486,6 @@
       togglePreview(evt) {
         this.show_preview = !this.show_preview
         this.$emit('toggle-preview', this.show_preview, evt.ctrlKey /* toggle all */)
-      },
-      onConfigureChooseOutput(item) {
-        var conn_identifier = _.get(item, 'ename', '')
-        conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(item, 'eid', '')
-
-        var edit_json = _.cloneDeep(this.edit_json)
-        _.set(edit_json, 'params.connection', conn_identifier)
-        _.set(edit_json, 'params.location', '/Dump')
-        this.edit_json = _.assign({}, edit_json)
-
-        this.saveChanges()
       }
     }
   }
