@@ -129,13 +129,19 @@
       },
 
       is_run_allowed() {
+        // only allow run after a step has been added
+        return this.tasks.length > 0
+
+        /*
         if (this.input_tasks.length == 0)
           return false
         return true
+        */
       },
 
       run_button_tooltip() {
-        return this.is_run_allowed ? '' : 'Pipes must have an input or execute step in order to be run'
+        return ''
+        // return this.is_run_allowed ? '' : 'Pipes must have an input or execute step in order to be run'
       }
     },
     methods: {
