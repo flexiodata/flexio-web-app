@@ -124,7 +124,7 @@
           params: {
             eid,
             view: PIPEHOME_VIEW_BUILDER,
-            state: PIPEHOME_STATUS_CONFIGURE
+            state: PIPEHOME_STATUS_CONFIGURE // jump right into configuration
           }
         })
       }

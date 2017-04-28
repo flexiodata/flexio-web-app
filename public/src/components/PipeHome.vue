@@ -9,7 +9,7 @@
       :pipe-eid="eid"
       :pipe-view="pipe_view"
       :is-prompting="is_prompting"
-      :process-running="is_process_running"
+      :is-process-running="is_process_running"
       @set-pipe-view="setPipeView"
       @run-pipe="runPipe"
       @cancel-process="cancelProcess">
@@ -27,9 +27,8 @@
     <pipe-builder-list
       class="flex-fill pv4 pl4-l bt b--black-10"
       :pipe-eid="eid"
-      :tasks="tasks"
+      :tasks="is_prompting ? prompt_tasks : tasks"
       :is-prompting="is_prompting"
-      :variable-prompts="variable_prompts"
       :active-process="active_process"
       :project-connections="project_connections"
       v-else>
@@ -40,7 +39,11 @@
 <script>
   import { mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
-  import { PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
+  import {
+    PIPEHOME_VIEW_TRANSFER,
+    PIPEHOME_VIEW_BUILDER,
+    PIPEHOME_STATUS_CONFIGURE
+  } from '../constants/pipehome'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
   import setActiveProject from './mixins/set-active-project'
@@ -88,8 +91,8 @@
       tasks() {
         return _.get(this.pipe, 'task', [])
       },
-      variable_prompts() {
-        var var_tasks = _.map(this.tasks, (task) => {
+      prompt_tasks() {
+        return _.map(this.tasks, (task) => {
           var json = ''
 
           // parse the JSON to get a JSON string
@@ -114,8 +117,9 @@
             return task
           }
         })
-
-        return _.filter(var_tasks, { has_variable: true })
+      },
+      has_prompt_tasks() {
+        return _.filter(this.prompt_tasks, { has_variable: true }).length > 0
       },
       project_eid() {
         return _.get(this.pipe, 'project.eid', '')
@@ -178,9 +182,14 @@
       },
 
       runPipe() {
-        if (this.variable_prompts.length > 0)
+        if (this.has_prompt_tasks)
         {
           this.is_prompting = true
+
+          // update the route
+          var new_route = _.pick(this.$route, ['eid', 'name', 'params'])
+          _.set(new_route, 'params.state', PIPEHOME_STATUS_CONFIGURE)
+          this.$router.replace(new_route)
           return
         }
 
@@ -194,9 +203,16 @@
       },
 
       cancelProcess() {
+        // exit prompt mode
         if (this.is_prompting)
           this.is_prompting = false
 
+        // update the route
+        var new_route = _.pick(this.$route, ['eid', 'name', 'params'])
+        _.set(new_route, 'params.state', null)
+        this.$router.replace(new_route)
+
+        // cancel the process if it is still running
         if (this.is_process_running)
         {
           var eid = _.get(this.active_process, 'eid', '')

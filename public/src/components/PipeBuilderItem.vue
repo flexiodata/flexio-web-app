@@ -221,10 +221,6 @@
         type: Boolean,
         default: false
       },
-      'variable-prompts': {
-        type: Array,
-        default: () => { return [] }
-      },
       'active-process': {
         type: Object
       },
@@ -389,11 +385,7 @@
         try { return btoa(code) } catch(e) { return '' }
       },
       getVariables() {
-        var prompt_task = _.find(this.variablePrompts, (prompt) => {
-          return _.get(prompt, 'eid') == _.get(this.item, 'eid')
-        })
-
-        return _.get(prompt_task, 'variables', [])
+        return _.get(this, 'item.variables', [])
       },
       updateCmd(cmd, json) {
         this.edit_cmd = cmd

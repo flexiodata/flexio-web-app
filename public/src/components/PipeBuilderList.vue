@@ -21,7 +21,6 @@
         :index="index"
         :tasks="tasks"
         :is-prompting="isPrompting"
-        :variable-prompts="variablePrompts"
         :active-process="activeProcess"
         :is-scrolling="is_scrolling"
         :show-preview="show_all_previews"
@@ -50,10 +49,6 @@
       'is-prompting': {
         type: Boolean,
         default: false
-      },
-      'variable-prompts': {
-        type: Array,
-        default: () => { return [] }
       },
       'active-process': {
         type: Object

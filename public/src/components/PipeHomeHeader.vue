@@ -40,19 +40,19 @@
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
         :class="[pipeView=='overview'?'b--blue':'b--transparent']"
         @click="setPipeView('overview')"
-        v-if="!isPrompting && !processRunning"
+        v-if="!isPrompting && !isProcessRunning"
       >Pipe Overview</div>
       <div
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
         :class="[pipeView=='builder'?'b--blue':'b--transparent']"
         @click="setPipeView('builder')"
-        v-if="!isPrompting && !processRunning"
+        v-if="!isPrompting && !isProcessRunning"
       >Pipe Builder</div>
       <btn
         btn-md
         btn-primary
         class="ttu b"
-        v-if="isPrompting || processRunning"
+        v-if="isPrompting || isProcessRunning"
         @click="cancelProcess"
       >Cancel</btn>
       <div
@@ -101,7 +101,7 @@
         type: Boolean,
         default: false
       },
-      'process-running': {
+      'is-process-running': {
         type: Boolean
       }
     },
