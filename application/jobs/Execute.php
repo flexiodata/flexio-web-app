@@ -132,7 +132,8 @@ class Execute extends \Flexio\Jobs\Base
         $done_writing = false; // "done writing input to process"
         $done_reading = false; // "done reading result from process"
         $first_chunk = true;
-        $readbuf = '';
+        $readbuf = '';         // read from process buffer
+        $writebuf = '';        // write to process buffer
 
         //$tot = 0;
         //$totw = 0;
@@ -178,14 +179,24 @@ class Execute extends \Flexio\Jobs\Base
                 }
                  else
                 {
-                    $buf = $streamreader->read(1024);
-
+                    // fill our to-write buffer with data from input stream,
+                    // if it isn't already full of data waiting to be written
+                    if (strlen($writebuf) < 65536)
+                    {
+                        $chunk = $streamreader->read(1024);
+                        if ($chunk !== false)
+                        {
+                            $writebuf .= $chunk;
+                        }
+                    }
+                     
                     //ob_start();
                     //var_dump($buf);
                     //$s = ob_get_clean();
                     //fxdebug("\n\n\n\nStream Reader: ".$s."***");
 
-                    if ($buf === false)
+                    $writebuflen = strlen($writebuf);
+                    if ($writebuflen == 0)
                     {
                         $process->closeWrite();
                         $done_writing = true;
@@ -193,14 +204,19 @@ class Execute extends \Flexio\Jobs\Base
                     }
                      else
                     {
-                        $len = strlen($buf);
 
-                        if ($len > 0)
+                       // fxdebug("\n\n\n\nWriting to process: ".$writebuf."***");
+                        $written = $process->write($writebuf);
+                        if ($written == $writebuflen)
                         {
-                            fxdebug("\n\n\n\nWriting to process: ".$buf."***");
-                            $process->write($buf);
-                            fxdebug("\nBlock finished.\n\n");
+                            $writebuf = '';
                         }
+                        else
+                        {
+                            $writebuf = substr($writebuf, $written);
+                        }
+                        
+                       // fxdebug("\nBlock finished.\n\n");
 
                         //$totw += $len;
                     }
@@ -336,8 +352,15 @@ class Execute extends \Flexio\Jobs\Base
 
         $err = $process->getError();
 
-        var_dump($err);
-        die();
+
+
+        if (isset($err))
+        {
+            $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
+            if (strlen($err) == 0)
+                $err = null;
+        }
+
 
         if (isset($err))
         {
