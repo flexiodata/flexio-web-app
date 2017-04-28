@@ -61,9 +61,11 @@
         type: Boolean,
         default: false
       },
-      'type-filter': {
+      'connection-type-filter': {
+        type: String
       },
       'item-layout': {
+        type: String // 'list' or 'grid'
       }
     },
     components: {
@@ -94,10 +96,10 @@
       input_services() {
         var items = [].concat(this.default_connections, this.getOurConnections())
 
-        if (_.isNil(this.typeFilter))
+        if (_.isNil(this.connectionTypeFilter))
           return items
 
-        return _.filter(items, { connection_type: this.typeFilter })
+        return _.filter(items, { connection_type: this.connectionTypeFilter })
       },
       is_fetched() {
         return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetched', true)

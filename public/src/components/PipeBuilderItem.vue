@@ -80,14 +80,13 @@
 
         <div v-else-if="isPrompting === true">
           <!-- static task name -->
-          <div class="f5 lh-title">{{display_name}}</div>
+          <div class="f5 lh-title" v-if="our_variables.length == 0">{{display_name}}</div>
 
           <!-- static task description -->
-          <div class="f7 lh-title gray mt1" v-if="description.length > 0">{{description}}</div>
+          <div class="f7 lh-title gray mt1" v-if="our_variables.length == 0">{{description}}</div>
 
           <!-- task configure item -->
           <task-configure-item
-            class="f7 lh-title gray mt2"
             :item="item"
             :variables="our_variables"
             v-if="our_variables.length > 0"

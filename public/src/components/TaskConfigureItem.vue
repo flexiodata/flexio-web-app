@@ -1,29 +1,38 @@
 <template>
-  <div>
-    <div v-if="is_input_task">
-      Input task...
-    </div>
-    <div v-else-if="is_output_task">
-      <connection-chooser-list
-        list-type="output"
+  <div v-if="is_input_task">
+    Input task...
+  </div>
+  <div v-else-if="is_output_task">
+    <div
+    <div class="mw6">
+      <pipe-transfer-output-chooser
+        ref="output-chooser"
+        class="bg-white bt b--light-gray"
         :project-eid="active_project_eid"
-        :type-filter="ctype"
-        :show-add="true"
-        :add-button-label="add_button_label"
-        @item-activate="chooseConnection"
-        @add="addConnection"
-      ></connection-chooser-list>
+        :show-connection-chooser-title="false"
+        :show-service-list="false"
+        :connection-type-filter="ctype"
+      ></pipe-transfer-output-chooser>
+      <div class="mt3">
+        <btn
+          btn-md
+          btn-primary
+          class="ttu b"
+          @click="addOutput()"
+        >{{add_button_label}}</btn>
+      </div>
     </div>
-    <div v-else>
-      Other task...
-    </div>
+  </div>
+  <div v-else>
+    Other task...
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex'
   import * as connections from '../constants/connection-info'
-  import ConnectionChooserList from './ConnectionChooserList.vue'
+  import Btn from './Btn.vue'
+  import PipeTransferOutputChooser from './PipeTransferOutputChooser.vue'
   import taskItemHelper from './mixins/task-item-helper'
 
   export default {
@@ -39,7 +48,8 @@
     },
     mixins: [taskItemHelper],
     components: {
-      ConnectionChooserList
+      Btn,
+      PipeTransferOutputChooser
     },
     computed: {
       ...mapState([
@@ -50,15 +60,12 @@
       },
       add_button_label() {
         var name = _.result(this.cinfo, 'service_name', '')
-        return 'Connect to '+name
+        return 'Add New '+name+' Connection'
       }
     },
     methods: {
-      chooseConnection() {
-        alert('Choose connection!')
-      },
-      addConnection() {
-        alert('Add connection!')
+      addOutput() {
+        this.$emit(this.ctype)
       }
     }
   }
