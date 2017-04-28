@@ -120,16 +120,14 @@
             v-if="is_task_execute"
           ></code-editor>
           <transition name="slide-fade">
-            <div class="flex flex-row mt2" v-show="is_changed">
-              <div class="flex-fill">&nbsp;</div>
+            <div class="flex flex-row items-start mt2" v-show="is_changed">
+              <div class="flex-fill mr4">
+                <transition name="slide-fade">
+                  <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
+                </transition>
+              </div>
               <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
               <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
-            </div>
-          </transition>
-          <transition name="slide-fade">
-            <div class="flex flex-row mt2" v-if="show_syntax_error">
-              <div class="flex-fill">&nbsp;</div>
-              <div class="flex-none f7 dark-red">There is an error in the command syntax</div>
             </div>
           </transition>
           <transition name="slide-fade">
@@ -150,6 +148,7 @@
   import { PROCESS_STATUS_RUNNING } from '../constants/process'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT, TASK_TYPE_EXECUTE } from '../constants/task-type'
   import { mapGetters } from 'vuex'
+  import api from '../api'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
@@ -201,9 +200,9 @@
 
       return {
         is_inited: false,
-        show_preview: this.showPreview,
-        show_syntax_error: false,
         description: _.get(this, 'item.description', ''),
+        show_preview: this.showPreview,
+        syntax_msg: '',
         edit_json: this.getOrigJson(),
         edit_cmd: this.getOrigCmd(),
         edit_code: this.getOrigCode()
@@ -328,11 +327,31 @@
       updateCode(code) {
         this.edit_code = code
       },
+      validateCode(code, callback) {
+        var base64_code = this.getBase64Code(code)
+
+        var validate_attrs = [{
+          key: 'code',
+          value: base64_code,
+          type: 'python'
+        }]
+
+        api.validate({ attrs: validate_attrs }).then((response) => {
+          var result = _.get(response.body, '[0]', {})
+
+          if (_.isFunction(callback))
+            callback.call(this, result)
+        }, (response) => {
+          // error callback
+        })
+      },
       editTaskSingleton(attrs, input) {
         var eid = this.pipeEid
         var task_eid = this.eid
         var attrs = _.assign({}, this.task, attrs)
-        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs })
+        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {
+          this.clearSyntaxError()
+        })
 
         if (!_.isNil(input))
           input.endEdit()
@@ -350,6 +369,9 @@
         var code_editor = this.$refs['code']
         if (!_.isNil(code_editor))
           code_editor.reset()
+
+        // remove all syntax errors
+        this.clearSyntaxError()
       },
       saveChanges() {
         var edit_json = _.cloneDeep(this.edit_json)
@@ -358,7 +380,7 @@
 
         if (parser.validate(this.edit_cmd) !== true)
         {
-          this.showSyntaxError()
+          this.showSyntaxError('There is an error in the command syntax', 4000)
           return
         }
 
@@ -372,8 +394,27 @@
             edit_attrs.params = {}
 
           _.set(edit_attrs, 'params.code', this.getBase64Code(this.edit_code))
+
+          // only validate python right now
+          if (this.code_lang == 'python')
+          {
+            this.validateCode(this.edit_code, (res) => {
+              if (res.valid === false)
+                this.showSyntaxError(res.message)
+                 else
+                this.editTaskSingleton(edit_attrs)
+            })
+          }
+           else
+          {
+            this.editTaskSingleton(edit_attrs)
+          }
+
+          // we're done
+          return
         }
-         else if (task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT)
+
+        if (task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT)
         {
           var connection_identifier = _.get(edit_attrs, 'params.connection', '')
 
@@ -396,9 +437,14 @@
 
         this.editTaskSingleton(edit_attrs)
       },
-      showSyntaxError() {
-        this.show_syntax_error = true
-        setTimeout(() => { this.show_syntax_error = false }, 4000)
+      showSyntaxError(msg, hide_timeout) {
+        this.syntax_msg = msg
+
+        if (_.isNumber(hide_timeout))
+          setTimeout(() => { this.syntax_msg = '' }, hide_timeout)
+      },
+      clearSyntaxError() {
+        this.syntax_msg = ''
       },
       insertNewTask(insert_idx) {
         var idx = _.defaultTo(insert_idx, this.index+1)

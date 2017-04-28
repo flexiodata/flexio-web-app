@@ -97,7 +97,7 @@ class System
         $result = array();
         foreach ($params as $p)
         {
-            $result[] = self::validateObject($p['key'], $p['value'], $p['type']);
+            $result[] = self::validateObject($p['key'], $p['value'], $p['type'], $requesting_user_eid);
         }
 
         return $result;

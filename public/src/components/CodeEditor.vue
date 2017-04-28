@@ -11,7 +11,6 @@
 </template>
 
 <script>
-  import api from '../api'
   import CodeMirror from 'codemirror'
   import {} from 'codemirror/mode/javascript/javascript'
   import {} from 'codemirror/mode/python/python'
@@ -45,9 +44,6 @@
       this.code_text = this.val
     },
     mounted() {
-      // create debounced validate function
-      this.validateDebounced = _.debounce(this.validate, 1000)
-
       var opts = {
         lineNumbers: true,
         mode: this.lang
@@ -66,10 +62,6 @@
       this.editor.on('change', (cm) => {
         this.code_text = cm.getValue()
         this.$emit('change', this.code_text, this.base64_code)
-
-        // only validate python right now
-        if (this.lang == 'python')
-          this.validateDebounced()
       })
     },
     methods: {
@@ -80,22 +72,6 @@
       reset() {
         this.code_text = this.val
         this.editor.setValue(this.val)
-      },
-      validate(callback) {
-        var validate_attrs = [{
-          key: 'code',
-          value: this.base64_code,
-          type: 'python'
-        }]
-
-        api.validate({ attrs: validate_attrs }).then((response) => {
-          this.ss_errors = _.keyBy(response.body, 'key')
-
-          if (_.isFunction(callback))
-            callback()
-        }, (response) => {
-          // error callback
-        })
       }
     }
   }
