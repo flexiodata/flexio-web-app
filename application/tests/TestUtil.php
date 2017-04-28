@@ -318,7 +318,17 @@ class TestUtil
         $result = array();
         foreach ($streams as $s)
         {
-            $result[] = $s->content($start, $limit, true, true); // limit test data to 100 rows
+            if ($s->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            {
+                $result[] = $s->content($start, $limit);
+            }
+             else
+            {
+                $r = array();
+                $r['columns'] = $s->getStructure()->get();
+                $r['rows'] = $s->content($start, $limit);
+                $result[] = $r;
+            }
         }
 
         return $result;

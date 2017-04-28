@@ -599,11 +599,8 @@ class Process
         if ($include_content === true)
         {
             $start = 0;
-            $limit = $contentlimit === false ? pow(2,24) : (int)$contentlimit;
-            $columns = true;
-            $metadata = false;
-            $handle = 'create';
-            $content = $stream->content($start, $limit, $columns, $metadata, $handle);
+            $limit = $contentlimit === false ? PHP_INT_MAX : (int)$contentlimit;
+            $content = $stream->content($start, $limit);
         }
 
         // return the output

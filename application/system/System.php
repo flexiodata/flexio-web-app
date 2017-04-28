@@ -673,6 +673,7 @@ class System
             switch ($bin)
             {
                 case 'grep':        return 'grep';
+                case 'docker':      return 'docker';
                 case 'python':      return 'python3';
                 case 'javascript':  return 'nodejs';
                 case 'go':          return 'go run';
