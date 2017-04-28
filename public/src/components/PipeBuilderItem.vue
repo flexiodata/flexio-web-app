@@ -325,7 +325,6 @@
         this.edit_json = _.assign({}, json)
       },
       updateCode(code) {
-        this.clearSyntaxError()
         this.edit_code = code
       },
       validateCode(code, callback) {
@@ -350,7 +349,9 @@
         var eid = this.pipeEid
         var task_eid = this.eid
         var attrs = _.assign({}, this.task, attrs)
-        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs })
+        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {
+          this.clearSyntaxError()
+        })
 
         if (!_.isNil(input))
           input.endEdit()
@@ -368,6 +369,9 @@
         var code_editor = this.$refs['code']
         if (!_.isNil(code_editor))
           code_editor.reset()
+
+        // remove all syntax errors
+        this.clearSyntaxError()
       },
       saveChanges() {
         var edit_json = _.cloneDeep(this.edit_json)
