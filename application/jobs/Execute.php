@@ -369,6 +369,38 @@ class Execute extends \Flexio\Jobs\Base
     }
 
 
+    // checks a script for compile errors;  If script compiles cleanly, returns true,
+    // otherwise returns the error as a textual string
+    
+    public static function checkScript(string $lang, string $code)
+    {
+        // only python supported for now
+        if ($lang == 'python')
+        {
+            $code = base64_encode($code);
+
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run --net none --rm -i fxpython python3 -c 'import py_compile; import base64; code=base64.b64decode(\"$code\"); f=open(\"script.py\",\"wb\"); f.write(code); f.close(); py_compile.compile(\"script.py\");'";
+
+            $f = popen($cmd . ' 2>&1' /*grab stderr*/, 'r');
+            $str = fread($f, 8192);
+            pclose($f);
+
+            if ($str === false || strlen(trim($str)) == 0)
+                return true;
+
+            return $str;
+        }
+         else
+        {
+            // unknown language
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        }
+    }
+
     // job definition info
     const MIME_TYPE = 'flexio.execute';
     const TEMPLATE = <<<EOD

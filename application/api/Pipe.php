@@ -475,7 +475,6 @@ class Pipe
         $result = array();
         foreach ($task as $t)
         {
-
             // TODO: validate the step
 
 
