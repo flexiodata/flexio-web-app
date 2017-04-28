@@ -485,15 +485,14 @@ class Pipe
             }
 
 
-            $task_error = array();
+            $task_errors = array();
 
             $type = $t['type'] ?? '';
             $job_params = $t['params'] ?? array();
 
             if (empty($type))
             {
-                $task_error[] = array(
-                    'eid' => $task_eid,
+                $task_errors[] = array(
                     'error' => 'missing_parameter',
                     'message' => 'Job type parameter is missing'
                 );
@@ -511,8 +510,7 @@ class Pipe
                     $err = \Flexio\Jobs\Execute::checkScript($lang, $code);
                     if ($err !== true)
                     {
-                        $task_error[] = array(
-                            'eid' => $task_eid,
+                        $task_errors[] = array(
                             'error' => 'compile_error',
                             'message' => $err
                         );
@@ -520,8 +518,7 @@ class Pipe
                 }
                 catch (\Flexio\Base\Exception $e)
                 {
-                    $task_error[] = array(
-                        'eid' => $task_eid,
+                    $task_errors[] = array(
                         'error' => 'unknown_language',
                         'message' => 'The scripting language specified is unknown'
                     );
@@ -530,9 +527,10 @@ class Pipe
 
 
             // push back any steps with an error
-            if (count($task_error) > 0)
+            if (count($task_errors) > 0)
             {
-                $result[] = $task_error;
+                $result[] = array('task_eid' => $task_eid,
+                                  'errors' => $task_errors);
             }
         }
 
