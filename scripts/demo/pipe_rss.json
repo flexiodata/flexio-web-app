@@ -6,7 +6,7 @@
     {
       "type": "flexio.input",
       "metadata":
-        "connection_type": "rss.api"
+        "connection_type": "rss"
       },
       "params": {
         "items": [

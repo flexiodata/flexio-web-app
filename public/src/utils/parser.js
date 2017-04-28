@@ -529,7 +529,7 @@
               throw {}
             if (qualifier[0] == "'") // json can only parse double-quoted strings
               qualifier = qualifier.replace(/"/g,"\\\"").replace(/'/g,"\"");
-            
+
             var qualifier = JSON.parse(qualifier);
             if (qualifier.length != 1)
               throw {}
@@ -942,7 +942,7 @@
       if (params.hasOwnProperty('url'))
       {
         json.params.items.push({"name": "file1", "path": params['url'].value});
-        json.params.connection.connection_type = "http.api";
+        json.params.connection.connection_type = "http";
       }
 
       if (params.hasOwnProperty('from'))

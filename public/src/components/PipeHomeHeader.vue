@@ -38,8 +38,8 @@
     <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
       <div
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
-        :class="[pipeView=='transfer'?'b--blue':'b--transparent']"
-        @click="setPipeView('transfer')"
+        :class="[pipeView=='overview'?'b--blue':'b--transparent']"
+        @click="setPipeView('overview')"
       >Pipe Overview</div>
       <div
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
@@ -68,8 +68,8 @@
       </div>
       <div
         class="f7 fw6 dark-gray pointer mt2 db dn-ns bb bw1 ttu css-nav-text"
-        :class="[pipeView=='transfer'?'b--blue':'b--transparent']"
-        @click="setPipeView('transfer')"
+        :class="[pipeView=='overview'?'b--blue':'b--transparent']"
+        @click="setPipeView('overview')"
       >Pipe Overview</div>
       <div
         class="f7 fw6 dark-gray pointer mt2 db dn-ns bb bw1 ttu css-nav-text"
@@ -81,23 +81,52 @@
 </template>
 
 <script>
+  import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_TYPE_INPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
 
   export default {
-    props: ['pipe-eid', 'pipe-view', 'process-running'],
+    props: {
+      'pipe-eid': {
+        type: String,
+        required: true
+      },
+      'pipe-view': {
+        type: String
+      },
+      'process-running': {
+        type: Boolean
+      }
+    },
     components: {
       Btn,
       InlineEditText
     },
     computed: {
-      pipe()              { return _.get(this.$store, 'state.objects.'+this.pipeEid, {}) },
-      pipe_name()         { return _.get(this.pipe, 'name', '') },
-      pipe_ename()        { return _.get(this.pipe, 'ename', '') },
-      pipe_description()  { return _.get(this.pipe, 'description', '') },
-      tasks()             { return _.get(this.pipe, 'task', []) },
-      input_tasks()       { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
+      pipe() {
+        return _.get(this.$store, 'state.objects.'+this.pipeEid, {})
+      },
+
+      pipe_name() {
+        return _.get(this.pipe, 'name', '')
+      },
+
+      pipe_ename() {
+        return _.get(this.pipe, 'ename', '')
+      },
+
+      pipe_description() {
+        return _.get(this.pipe, 'description', '')
+      },
+
+      tasks() {
+        return _.get(this.pipe, 'task', [])
+      },
+
+      input_tasks() {
+        return _.filter(this.tasks, { type: TASK_TYPE_INPUT })
+      },
 
       is_run_allowed() {
         // always allow for now
@@ -124,7 +153,7 @@
         input.endEdit()
       },
       runPipe() {
-        this.setPipeView('builder')
+        this.setPipeView(PIPEHOME_VIEW_BUILDER)
         this.$emit('run-pipe')
       },
       cancelProcess() {

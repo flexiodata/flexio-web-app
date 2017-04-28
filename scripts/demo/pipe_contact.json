@@ -7,7 +7,7 @@
             "type": "flexio.input",
             "description": "Read CSV file from GitHub url",
             "metadata": {
-                "connection_type": "http.api"
+                "connection_type": "http"
             },
             "params": {
                 "items": [
