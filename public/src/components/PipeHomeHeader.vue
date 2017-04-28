@@ -100,9 +100,14 @@
       input_tasks()       { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
 
       is_run_allowed() {
+        // always allow for now
+        return true
+
+        /*
         if (this.input_tasks.length == 0)
           return false
         return true
+        */
       },
 
       run_button_tooltip() {
