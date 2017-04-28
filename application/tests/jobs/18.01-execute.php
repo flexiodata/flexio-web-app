@@ -34,8 +34,14 @@ EOD;
             {
                 "type": "flexio.create",
                 "params": {
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
-                    "content": "abc"
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                    "columns": [
+                        { "name": "c1", "type": "character", "width": 3 }
+                    ],
+                    "content": [
+                        {"c1" : "a"},
+                        {"c1" : "b"}
+                    ]
                 }
             },
             {
