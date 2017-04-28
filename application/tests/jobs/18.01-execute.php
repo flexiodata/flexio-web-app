@@ -32,6 +32,13 @@ EOD;
         $task = json_decode('
         [
             {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
+                    "content": "abc"
+                }
+            },
+            {
                 "type": "flexio.execute",
                 "params": {
                     "lang": "python",
