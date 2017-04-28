@@ -26,8 +26,8 @@ class Test
 
         $script = <<<EOD
 import flexio
-flexioext.output.content_type = "text/plain"
-flexioext.output.stream.write("Hello, world.")
+flexio.output.content_type = "text/plain"
+flexio.output.stream.write("Hello, world.")
 EOD;
         $task = json_decode('
         [
