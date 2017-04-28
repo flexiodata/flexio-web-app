@@ -82,8 +82,8 @@ class Execute extends \Flexio\Jobs\Base
                 $dockerbin = \Flexio\System\System::getBinaryPath('docker');
                 if (is_null($dockerbin))
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-               // $cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c '(echo $code | base64 -d > /tmp/script.py && python3 /tmp/script.py)'";
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c 'runscript $code'";
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c '(echo $code | base64 -d > /tmp/script.py && python3 /tmp/script.py)'";
+                //$cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c 'runscript $code'";
 
                 break;
 
