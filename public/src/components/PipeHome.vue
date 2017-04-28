@@ -93,20 +93,55 @@
       },
       prompt_tasks() {
         return _.map(this.tasks, (task) => {
-          var json = ''
+          var params = _.get(task, 'params', {})
 
-          // parse the JSON to get a JSON string
-          try {
-            json = JSON.stringify(task)
-          } catch(e) {}
+          // try to find variables that match ${...} for each parameter
+          var regex = /\$\{((string|boolean|integer|number|connection|column)[ ])?([a-z_-][a-z0-9_-]*)(:([^}]*))?\}/gi
 
-          // try to find variables that match ${...}
-          var regex = /\$\{[a-zA-Z_-][a-zA-Z0-9_-]*:?[a-zA-Z0-9_-]*\}/gi
+          var matched_vars = []
+
+          function getChildVariables(obj, set_key) {
+            _.each(obj, (v, k) => {
+              set_key += '.'+k
+
+              // recurse over the array to find any variables in it
+              if (_.isArray(v))
+                return _.each(v, (item, idx) => { getChildVariables(v[idx], set_key+'['+idx+']') })
+
+              // recurse over the object to find any variables in it
+              if (_.isObject(v))
+                return getChildVariables(v, set_key)
+
+              // if we find any matches, add them to our set of matched variables
+              if (_.isString(v))
+              {
+                var m
+
+                do {
+                  m = regex.exec(v)
+                  if (m)
+                  {
+                    matched_vars.push({
+                      task_eid: _.get(task, 'eid'),
+                      set_key: set_key,
+                      type: m[2],
+                      variable_name: m[3],
+                      default_val: m[5]
+                    })
+                  }
+                } while (m)
+              }
+            })
+          }
+
+          // start traversing the task params object
+          getChildVariables(params, 'params')
 
           // add the array of variables to the output
-          var matched_vars = json.match(regex)
-          if (_.isArray(matched_vars) && matched_vars.length > 0)
+          if (matched_vars.length > 0 || true)
           {
+            //console.log(matched_vars)
+
             return _.assign({
               has_variable: true,
               variables: matched_vars

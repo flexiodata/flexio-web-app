@@ -261,7 +261,6 @@
       return {
         is_inited: false,
         description: _.get(this, 'item.description', ''),
-        variables: this.getVariables(),
         show_preview: this.showPreview,
         syntax_msg: '',
         edit_json: this.getOrigJson(),
@@ -332,6 +331,9 @@
         // ...otherwise, use the output array from the active subprocess
         return inputs
       },
+      variables() {
+        return _.get(this, 'task.variables', [])
+      },
       active_stream_eid() {
         var stream = _.head(this.our_inputs)
         return _.get(stream, 'eid', '')
@@ -380,9 +382,6 @@
       },
       getBase64Code(code) {
         try { return btoa(code) } catch(e) { return '' }
-      },
-      getVariables() {
-        return _.get(this, 'item.variables', [])
       },
       updateCmd(cmd, json) {
         this.edit_cmd = cmd
