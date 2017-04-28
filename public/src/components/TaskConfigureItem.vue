@@ -65,7 +65,7 @@
     },
     methods: {
       addOutput() {
-        this.$emit(this.ctype)
+        this.$refs['output-chooser'].createPendingConnection(this.cinfo)
       }
     }
   }
