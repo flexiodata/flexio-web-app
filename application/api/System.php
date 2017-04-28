@@ -100,10 +100,6 @@ class System
             $result[] = self::validateObject($p['key'], $p['value'], $p['type']);
         }
 
-        // wait 100 milliseconds to prevent large numbers of calls to mine for information
-        $wait_interval = 100;
-        usleep($wait_interval*1000);
-
         return $result;
     }
 
