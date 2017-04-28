@@ -80,16 +80,17 @@
 
         <div v-else-if="isPrompting === true">
           <!-- static task name -->
-          <div class="f5 lh-title" v-if="our_variables.length == 0">{{display_name}}</div>
+          <div class="f5 lh-title" v-if="variables.length == 0">{{display_name}}</div>
 
           <!-- static task description -->
-          <div class="f7 lh-title gray mt1" v-if="our_variables.length == 0">{{description}}</div>
+          <div class="f7 lh-title gray mt1" v-if="variables.length == 0">{{description}}</div>
 
           <!-- task configure item -->
           <task-configure-item
             :item="item"
-            :variables="our_variables"
-            v-if="our_variables.length > 0"
+            :variables="variables"
+            @choose-output="onConfigureChooseOutput"
+            v-if="variables.length > 0"
           ></task-configure-item>
         </div>
 
@@ -270,6 +271,7 @@
         show_preview: this.showPreview,
         show_syntax_error: false,
         description: _.get(this, 'item.description', ''),
+        variables: this.getVariables(),
         edit_json: this.getOrigJson(),
         edit_cmd: this.getOrigCmd(),
         edit_code: this.getOrigCode()
@@ -327,13 +329,6 @@
           .get('subprocesses')
           .find((s) => { return _.get(s, 'task.eid') == this.eid })
           .value()
-      },
-      our_variables() {
-        var prompt_task = _.find(this.variablePrompts, (prompt) => {
-          return _.get(prompt, 'eid') == _.get(this.task, 'eid')
-        })
-
-        return _.get(prompt_task, 'variables', [])
       },
       our_inputs() {
         var inputs = _.get(this.active_subprocess, 'output', [])
@@ -393,6 +388,13 @@
       },
       getBase64Code(code) {
         try { return btoa(code) } catch(e) { return '' }
+      },
+      getVariables() {
+        var prompt_task = _.find(this.variablePrompts, (prompt) => {
+          return _.get(prompt, 'eid') == _.get(this.item, 'eid')
+        })
+
+        return _.get(prompt_task, 'variables', [])
       },
       updateCmd(cmd, json) {
         this.edit_cmd = cmd
@@ -485,6 +487,17 @@
       togglePreview(evt) {
         this.show_preview = !this.show_preview
         this.$emit('toggle-preview', this.show_preview, evt.ctrlKey /* toggle all */)
+      },
+      onConfigureChooseOutput(item) {
+        var conn_identifier = _.get(item, 'ename', '')
+        conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(item, 'eid', '')
+
+        var edit_json = _.cloneDeep(this.edit_json)
+        _.set(edit_json, 'params.connection', conn_identifier)
+        _.set(edit_json, 'params.location', '/Dump')
+        this.edit_json = _.assign({}, edit_json)
+
+        this.saveChanges()
       }
     }
   }

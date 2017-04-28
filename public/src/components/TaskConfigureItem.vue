@@ -3,15 +3,15 @@
     Input task...
   </div>
   <div v-else-if="is_output_task">
-    <div
     <div class="mw6">
       <pipe-transfer-output-chooser
         ref="output-chooser"
         class="bg-white bt b--light-gray"
         :project-eid="active_project_eid"
+        :connection-type-filter="ctype"
         :show-connection-chooser-title="false"
         :show-service-list="false"
-        :connection-type-filter="ctype"
+        @choose-output="chooseOutput"
       ></pipe-transfer-output-chooser>
       <div class="mt3">
         <btn
@@ -64,6 +64,9 @@
       }
     },
     methods: {
+      chooseOutput(item) {
+        this.$emit('choose-output', item)
+      },
       addOutput() {
         this.$refs['output-chooser'].createPendingConnection(this.cinfo)
       }
