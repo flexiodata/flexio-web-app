@@ -100,15 +100,22 @@ class System
             $result[] = self::validateObject($p['key'], $p['value'], $p['type']);
         }
 
-        // wait 100 milliseconds to prevent large numbers of calls to mine for information
-        $wait_interval = 100;
-        usleep($wait_interval*1000);
-
         return $result;
     }
 
-    public static function validateObject(string $key, string $value, string $type) : array
+    public static function validateObject(string $key, string $value, string $type, string $requesting_user_eid = null) : array
     {
+        // make sure the user is logged in for certain kinds of validation checks
+        if (\Flexio\Base\Eid::isValid($requesting_user_eid) === false)
+        {
+            switch ($type)
+            {
+                case 'python':
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+            }
+        }
+
+        // continue with the validation checks
         $valid = false;
         $message = '';
 
@@ -201,6 +208,7 @@ class System
                 }
                 break;
 
+            // python requires an active user to validate
             case 'python':
                 {
                     $code = base64_decode($value);
