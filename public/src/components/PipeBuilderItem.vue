@@ -58,7 +58,7 @@
       <!-- main content -->
       <div
         class="flex-fill relative ph3a bg-white bl br b--white-box"
-        :class="[ content_cls, index==0?'pt3':'pt2' ]"
+        :class="[ content_cls, index==0?'pt3':'pt2', isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':'' ]"
       >
         <!-- 1. show progress -->
 
@@ -89,6 +89,8 @@
           <task-configure-item
             :item="item"
             :variables="variables"
+            :active-prompt-idx="activePromptIdx"
+            :is-active-prompt-task="is_active_prompt_task"
             v-if="variables.length > 0"
           ></task-configure-item>
         </div>
@@ -214,6 +216,10 @@
         type: Array,
         required: true
       },
+      'active-prompt-idx': {
+        type: Number,
+        default: 0
+      },
       'is-prompting': {
         type: Boolean,
         default: false
@@ -280,6 +286,14 @@
       },
       is_task_execute() {
         return this.task_type == TASK_TYPE_EXECUTE
+      },
+      active_prompt() {
+        return _.find(_.get(this, 'task.variables'), (v) => {
+          return _.get(v, 'prompt_idx') == this.activePromptIdx
+        })
+      },
+      is_active_prompt_task() {
+        return !_.isNil(this.active_prompt)
       },
       orig_cmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')

@@ -28,6 +28,7 @@
       class="flex-fill pv4 pl4-l bt b--black-10"
       :pipe-eid="eid"
       :tasks="is_prompting ? prompt_tasks : tasks"
+      :active-prompt-idx="active_prompt"
       :is-prompting="is_prompting"
       :active-process="active_process"
       :project-connections="project_connections"
@@ -72,6 +73,8 @@
       return {
         eid: this.$route.params.eid,
         pipe_view: PIPEHOME_VIEW_TRANSFER,
+        prompt_tasks: [],
+        active_prompt: 0,
         is_prompting: false
       }
     },
@@ -90,68 +93,6 @@
       },
       tasks() {
         return _.get(this.pipe, 'task', [])
-      },
-      prompt_tasks() {
-        return _.map(this.tasks, (task) => {
-          var params = _.get(task, 'params', {})
-
-          // try to find variables that match ${...} for each parameter
-          var regex = /\$\{((string|boolean|integer|number|connection|column)[ ])?([a-z_-][a-z0-9_-]*)(:([^}]*))?\}/gi
-
-          var matched_vars = []
-
-          function getChildVariables(obj, set_key) {
-            _.each(obj, (v, k) => {
-              set_key += '.'+k
-
-              // recurse over the array to find any variables in it
-              if (_.isArray(v))
-                return _.each(v, (item, idx) => { getChildVariables(v[idx], set_key+'['+idx+']') })
-
-              // recurse over the object to find any variables in it
-              if (_.isObject(v))
-                return getChildVariables(v, set_key)
-
-              // if we find any matches, add them to our set of matched variables
-              if (_.isString(v))
-              {
-                var m
-
-                do {
-                  m = regex.exec(v)
-                  if (m)
-                  {
-                    matched_vars.push({
-                      task_eid: _.get(task, 'eid'),
-                      set_key: set_key,
-                      type: m[2],
-                      variable_name: m[3],
-                      default_val: m[5]
-                    })
-                  }
-                } while (m)
-              }
-            })
-          }
-
-          // start traversing the task params object
-          getChildVariables(params, 'params')
-
-          // add the array of variables to the output
-          if (matched_vars.length > 0 || true)
-          {
-            //console.log(matched_vars)
-
-            return _.assign({
-              has_variable: true,
-              variables: matched_vars
-            }, task)
-          }
-           else
-          {
-            return task
-          }
-        })
       },
       has_prompt_tasks() {
         return _.filter(this.prompt_tasks, { has_variable: true }).length > 0
@@ -216,7 +157,82 @@
         this.setPipeView(PIPEHOME_VIEW_BUILDER)
       },
 
+      getPromptTasks() {
+        var task_idx = 0
+        var prompt_idx = 0
+
+        return _.map(this.tasks, (task) => {
+          var params = _.get(task, 'params', {})
+
+          // try to find variables that match ${...} for each parameter
+          var regex = /\$\{((string|boolean|integer|number|connection|column)[ ])?([a-z_-][a-z0-9_-]*)(:([^}]*))?\}/gi
+
+          var matched_vars = []
+
+          function getChildVariables(obj, set_key) {
+            _.each(obj, (v, k) => {
+              set_key += '.'+k
+
+              // recurse over the array to find any variables in it
+              if (_.isArray(v))
+                return _.each(v, (item, idx) => { getChildVariables(v[idx], set_key+'['+idx+']') })
+
+              // recurse over the object to find any variables in it
+              if (_.isObject(v))
+                return getChildVariables(v, set_key)
+
+              // if we find any matches, add them to our set of matched variables
+              if (_.isString(v))
+              {
+                var m
+
+                do {
+                  m = regex.exec(v)
+                  if (m)
+                  {
+                    matched_vars.push({
+                      task_eid: _.get(task, 'eid'),
+                      task_idx,
+                      prompt_idx,
+                      set_key,
+                      type: m[2],
+                      variable_name: m[3],
+                      default_val: m[5],
+                      val: m[5]
+                    })
+
+                    prompt_idx++
+                  }
+                } while (m)
+              }
+            })
+          }
+
+          // start traversing the task params object
+          getChildVariables(params, 'task['+task_idx+'].params')
+
+          // increment our task index
+          task_idx++
+
+          // add the array of variables to the output
+          if (matched_vars.length > 0)
+          {
+            return _.assign({
+              has_variable: true,
+              variables: matched_vars
+            }, task)
+          }
+           else
+          {
+            return task
+          }
+        })
+      },
+
       runPipe() {
+        this.prompt_tasks = [].concat(this.getPromptTasks())
+        this.active_prompt = 0
+
         if (this.has_prompt_tasks)
         {
           this.is_prompting = true

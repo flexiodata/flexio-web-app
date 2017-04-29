@@ -20,6 +20,7 @@
         :item="task"
         :index="index"
         :tasks="tasks"
+        :active-prompt-idx="activePromptIdx"
         :is-prompting="isPrompting"
         :active-process="activeProcess"
         :is-scrolling="is_scrolling"
@@ -45,6 +46,10 @@
       'tasks': {
         type: Array,
         required: true
+      },
+      'active-prompt-idx': {
+        type: Number,
+        default: 0
       },
       'is-prompting': {
         type: Boolean,

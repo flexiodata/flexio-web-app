@@ -1,30 +1,42 @@
 <template>
-  <div v-if="is_input_task">
-    Input task...
-  </div>
-  <div v-else-if="is_output_task">
-    <div class="mw6">
-      <pipe-transfer-output-chooser
-        ref="output-chooser"
-        class="bg-white bt b--light-gray"
-        :project-eid="active_project_eid"
-        :connection-type-filter="ctype"
-        :show-connection-chooser-title="false"
-        :show-service-list="false"
-        @choose-output="chooseOutput"
-      ></pipe-transfer-output-chooser>
-      <div class="mt3">
-        <btn
-          btn-md
-          btn-primary
-          class="ttu b"
-          @click="addOutput()"
-        >{{add_button_label}}</btn>
+  <div>
+    <div v-if="is_input_task">
+      Input task...
+    </div>
+    <div v-else-if="is_output_task">
+      <div class="mw6">
+        <pipe-transfer-output-chooser
+          ref="output-chooser"
+          class="bg-white bt b--light-gray"
+          :project-eid="active_project_eid"
+          :connection-type-filter="ctype"
+          :show-connection-chooser-title="false"
+          :show-service-list="false"
+          @choose-output="chooseOutput"
+        ></pipe-transfer-output-chooser>
+        <div class="mt3">
+          <btn btn-md btn-primary class="ttu b" @click="addOutput()"{{add_button_label}}</btn>
+        </div>
       </div>
     </div>
-  </div>
-  <div v-else>
-    Other task...
+    <div v-else>
+      <div class="mb2" v-for="(v, index) in variables">
+        <div>Enter the value for <span class="b">{{v.variable_name}}</span>:</div>
+        <ui-textbox
+          class="mw6"
+          autocomplete="off"
+          :label="v.variable_name"
+          floating-label
+          help=" "
+          value=""
+        ></ui-textbox>
+      </div>
+    </div>
+    <div class="flex flex-row items-center mt2" v-if="isActivePromptTask">
+      <div class="flex-fill"></div>
+      <btn btn-md class="b ttu blue mr2" @click="$emit('prev-prompt')">Back</btn>
+      <btn btn-md class="b ttu white bg-blue" @click="$emit('next-prompt')">Next</btn>
+    </div>
   </div>
 </template>
 
@@ -44,6 +56,14 @@
       'variables': {
         type: Array,
         required: true
+      },
+      'active-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'is-active-prompt-task': {
+        type: Boolean,
+        default: false
       }
     },
     mixins: [taskItemHelper],
