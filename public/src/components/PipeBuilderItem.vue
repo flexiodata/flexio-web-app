@@ -55,10 +55,25 @@
         </div>
       </div>
 
+      <!-- feedback icon when prompting -->
+      <div class="mr3" :class="[ index==0?'pt3':'pt2' ]" v-if="false">
+        <i
+          class="material-icons md-24"
+          style="margin-top: -1px"
+          :class="{
+            'dark-green': true
+          }"
+        >check_circle</i>
+      </div>
+
       <!-- main content -->
       <div
         class="flex-fill relative ph3a bg-white bl br b--white-box"
-        :class="[ content_cls, index==0?'pt3':'pt2', isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':'' ]"
+        :class="[
+          content_cls,
+          index==0?'pt3':'pt2',
+          isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':'b--blue'
+        ]"
       >
         <!-- 1. show progress -->
 
