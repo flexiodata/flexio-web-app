@@ -22,11 +22,13 @@
         :tasks="tasks"
         :active-prompt-idx="activePromptIdx"
         :is-prompting="isPrompting"
-        :active-process="activeProcess"
         :is-scrolling="is_scrolling"
+        :active-process="activeProcess"
         :show-preview="show_all_previews"
         @insert-task="insertNewTask"
         @toggle-preview="togglePreview"
+        @go-prev-prompt="$emit('go-prev-prompt')"
+        @go-next-prompt="$emit('go-next-prompt')"
       ></pipe-builder-item>
     </div>
   </div>
@@ -73,12 +75,6 @@
         is_scrolling: false,
         show_all_previews: true
       }
-    },
-    computed: {
-      input_tasks()  { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
-      output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
-      has_input()    { return this.input_tasks.length > 0 },
-      has_output()   { return this.output_tasks.length > 0 }
     },
     methods: {
       insertNewTask(idx) {

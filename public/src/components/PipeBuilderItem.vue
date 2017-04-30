@@ -107,6 +107,8 @@
             :variables="variables"
             :active-prompt-idx="activePromptIdx"
             :is-active-prompt-task="is_active_prompt_task"
+            @go-prev-prompt="$emit('go-prev-prompt')"
+            @go-next-prompt="$emit('go-next-prompt')"
             v-if="variables.length > 0"
           ></task-configure-item>
         </div>
@@ -240,12 +242,12 @@
         type: Boolean,
         default: false
       },
-      'active-process': {
-        type: Object
-      },
       'is-scrolling': {
         type: Boolean,
         default: false
+      },
+      'active-process': {
+        type: Object
       },
       'show-preview': {
         type: Boolean,

@@ -34,8 +34,8 @@
     </div>
     <div class="flex flex-row items-center mt2" v-if="isActivePromptTask">
       <div class="flex-fill"></div>
-      <btn btn-md class="b ttu blue mr2" @click="$emit('prev-prompt')">Back</btn>
-      <btn btn-md class="b ttu white bg-blue" @click="$emit('next-prompt')">Next</btn>
+      <btn btn-md class="b ttu blue mr2" @click="$emit('go-prev-prompt')">Back</btn>
+      <btn btn-md class="b ttu white bg-blue" @click="$emit('go-next-prompt')">Next</btn>
     </div>
   </div>
 </template>

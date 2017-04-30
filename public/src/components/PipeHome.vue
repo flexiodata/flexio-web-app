@@ -32,6 +32,8 @@
       :is-prompting="is_prompting"
       :active-process="active_process"
       :project-connections="project_connections"
+      @go-prev-prompt="goPrevPrompt"
+      @go-next-prompt="goNextPrompt"
       v-else>
     </pipe-builder-list>
   </div>
@@ -335,6 +337,14 @@
         var connections_fetched = _.get(this.$store, 'state.objects.'+this.project_eid+'.connections_fetched', false)
         if (!connections_fetched)
           this.$store.dispatch('fetchConnections', this.project_eid)
+      },
+
+      goPrevPrompt() {
+        this.active_prompt = Math.max(this.active_prompt-1, 0)
+      },
+
+      goNextPrompt() {
+        this.active_prompt++
       }
     }
   }
