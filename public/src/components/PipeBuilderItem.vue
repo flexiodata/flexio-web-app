@@ -72,8 +72,9 @@
         :class="[
           content_cls,
           index==0?'pt3':'pt2',
-          isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':'b--blue'
+          isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':''
         ]"
+        :style="content_style"
       >
         <!-- 1. show progress -->
 
@@ -91,7 +92,7 @@
           </process-progress-item>
         </div>
 
-        <!-- 2. show prompt/configure -->
+        <!-- 2. show prompt/configure item -->
 
         <div v-else-if="isPrompting === true">
           <!-- static task name -->
@@ -388,6 +389,12 @@
           return ['pb4a','br2','bb','br--bottom'].join(' ')
 
         return 'pb4a'
+      },
+      content_style() {
+        if (this.isPrompting && this.is_active_prompt_task)
+         return 'z-index:2; padding: 1.25rem; box-shadow: 0 0 20px rgba(0,0,0,0.2)'
+
+        return ''
       }
     },
     methods: {

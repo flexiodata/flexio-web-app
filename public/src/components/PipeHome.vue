@@ -197,8 +197,8 @@
                       set_key,
                       type: m[2],
                       variable_name: m[3],
-                      default_val: m[5],
-                      val: m[5]
+                      default_val: m[5] || '',
+                      val: m[5] || ''
                     })
 
                     prompt_idx++
