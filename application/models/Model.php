@@ -250,7 +250,7 @@ class Model
 
         // make sure the status is set to a valid value
         if (!\Model::isValidStatus($status))
-            throw new \Flexio\Base\Exception(\Flexio\Base\ERROR::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // make sure the object exists
         if (!\Flexio\Base\Eid::isValid($eid))
