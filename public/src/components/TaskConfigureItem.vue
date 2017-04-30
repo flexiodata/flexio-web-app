@@ -1,12 +1,23 @@
 <template>
   <div>
-    <div v-if="is_input_task">
-      Input task...
-    </div>
-    <div v-else-if="is_output_task">
-      <div class="mw6">
+    <div class="mb3" v-for="(v, index) in variables">
+      <div class="mb4 mw6" v-if="v.type=='connection' && is_input_task">
+        <div class="mb3" >Choose the connection for <span class="b">{{v.variable_name}}</span>:</div>
+        <pipe-transfer-input-chooser
+          class="bg-white bt b--light-gray"
+          :project-eid="active_project_eid"
+          :connection-type-filter="ctype"
+          :show-connection-chooser-title="false"
+          :show-service-list="false"
+          @choose-input="chooseOutput"
+        ></pipe-transfer-input-chooser>
+        <div class="mt3">
+          <btn btn-md btn-primary class="ttu b" @click="addInput">{{add_button_label}}</btn>
+        </div>
+      </div>
+      <div class="mb4 mw6" v-if="v.type=='connection' && is_output_task">
+        <div class="mb3" >Choose the connection for <span class="b">{{v.variable_name}}</span>:</div>
         <pipe-transfer-output-chooser
-          ref="output-chooser"
           class="bg-white bt b--light-gray"
           :project-eid="active_project_eid"
           :connection-type-filter="ctype"
@@ -15,12 +26,10 @@
           @choose-output="chooseOutput"
         ></pipe-transfer-output-chooser>
         <div class="mt3">
-          <btn btn-md btn-primary class="ttu b" @click="addOutput()"{{add_button_label}}</btn>
+          <btn btn-md btn-primary class="ttu b" @click="addOutput">{{add_button_label}}</btn>
         </div>
       </div>
-    </div>
-    <div v-else>
-      <div class="mb2" v-for="(v, index) in variables">
+      <div v-else>
         <div>Enter the value for <span class="b">{{v.variable_name}}</span>:</div>
         <ui-textbox
           class="mw6"
@@ -32,11 +41,23 @@
         ></ui-textbox>
       </div>
     </div>
+
     <div class="flex flex-row items-center mt2" v-if="isActivePromptTask">
       <div class="flex-fill"></div>
       <btn btn-md class="b ttu blue mr2" @click="$emit('go-prev-prompt')">Back</btn>
       <btn btn-md class="b ttu white bg-blue" @click="$emit('go-next-prompt')">Next</btn>
     </div>
+
+    <pipe-transfer-output-chooser
+      ref="output-chooser"
+      class="bg-white bt b--light-gray"
+      style="max-width: 1px; max-height: 1px; overflow: hidden"
+      :project-eid="active_project_eid"
+      :connection-type-filter="ctype"
+      :show-connection-chooser-title="false"
+      :show-service-list="false"
+      @choose-output="chooseOutput"
+    ></pipe-transfer-output-chooser>
   </div>
 </template>
 

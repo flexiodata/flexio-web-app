@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" style="max-width: 1574px">
+  <div class="relative" style="max-width: 1574px" :style="style">
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
 
       <!-- task icon -->
@@ -391,6 +391,12 @@
           return ['pb4a','br2','bb','br--bottom'].join(' ')
 
         return 'pb4a'
+      },
+      style() {
+        if (this.isPrompting && this.is_active_prompt_task)
+          return this.index == 0 ? 'margin-bottom: 1.25rem' : 'margin-top: 1.25rem; margin-bottom: 1.25rem'
+
+        return ''
       },
       content_style() {
         if (this.isPrompting && this.is_active_prompt_task)
