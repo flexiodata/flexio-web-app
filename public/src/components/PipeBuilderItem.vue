@@ -109,8 +109,11 @@
           <!-- task configure item -->
           <task-configure-item
             :item="item"
+            :index="index"
             :variables="variables"
             :active-prompt-idx="activePromptIdx"
+            :first-prompt-idx="firstPromptIdx"
+            :last-prompt-idx="lastPromptIdx"
             :is-active-prompt-task="is_active_prompt_task"
             @prompt-value-change="onPromptValueChange"
             @go-prev-prompt="$emit('go-prev-prompt')"
@@ -245,6 +248,14 @@
         required: true
       },
       'active-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'first-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'last-prompt-idx': {
         type: Number,
         default: 0
       },

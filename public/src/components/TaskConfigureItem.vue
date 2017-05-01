@@ -10,8 +10,11 @@
     ></task-configure-variable-item>
 
     <div class="flex flex-row items-center mt2" v-if="isActivePromptTask">
-      <btn btn-md class="b ttu blue mr2" @click="$emit('go-prev-prompt')">Back</btn>
-      <btn btn-md class="b ttu white bg-blue" @click="$emit('go-next-prompt')">Next</btn>
+      <div class="flex-fill"></div>
+      <btn btn-md class="b ttu blue mr2" @click="$emit('go-prev-prompt')" v-if="index != firstPromptIdx">Back</btn>
+      <btn btn-md class="b ttu white bg-blue" @click="$emit('go-next-prompt')" v-if="index != lastPromptIdx">Next</btn>
+      <btn btn-md class="b ttu white bg-blue mr2" @click="$emit('run-once')" v-if="index == lastPromptIdx">Run Once With These Values</btn>
+      <btn btn-md class="b ttu white bg-blue" @click="$emit('save-and-run')" v-if="index == lastPromptIdx">Save Values & Run</btn>
     </div>
   </div>
 </template>
@@ -27,13 +30,25 @@
         type: Object,
         required: true
       },
+      'index': {
+        type: Number,
+        required: true
+      },
       'variables': {
         type: Array,
         required: true
       },
       'active-prompt-idx': {
         type: Number,
-        default: 0
+        required: true
+      },
+      'first-prompt-idx': {
+        type: Number,
+        required: true
+      },
+      'last-prompt-idx': {
+        type: Number,
+        required: true
       },
       'is-active-prompt-task': {
         type: Boolean,

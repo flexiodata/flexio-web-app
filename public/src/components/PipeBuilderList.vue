@@ -21,6 +21,8 @@
         :index="index"
         :tasks="tasks"
         :active-prompt-idx="activePromptIdx"
+        :first-prompt-idx="first_prompt_idx"
+        :last-prompt-idx="last_prompt_idx"
         :is-prompting="isPrompting"
         :is-scrolling="is_scrolling"
         :active-process="activeProcess"
@@ -66,7 +68,6 @@
         default: () => { return [] }
       }
     },
-
     components: {
       Btn,
       PipeBuilderItem
@@ -75,6 +76,14 @@
       return {
         is_scrolling: false,
         show_all_previews: true
+      }
+    },
+    computed: {
+      first_prompt_idx() {
+        return _.findIndex(this.tasks, { has_variable: true })
+      },
+      last_prompt_idx() {
+        return _.findLastIndex(this.tasks, { has_variable: true })
       }
     },
     methods: {
