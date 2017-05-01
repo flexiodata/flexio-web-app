@@ -1,5 +1,10 @@
 <template>
-  <div class="relative" style="max-width: 1574px" :style="style">
+  <div
+    class="relative"
+    style="max-width: 1574px"
+    :style="style"
+    :id="eid"
+  >
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
 
       <!-- task icon -->

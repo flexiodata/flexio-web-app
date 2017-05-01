@@ -55,7 +55,6 @@
       :connection-type-filter="ctype"
       :show-connection-chooser-title="false"
       :show-service-list="false"
-      @choose-input="chooseInput"
     ></pipe-transfer-input-chooser>
 
     <pipe-transfer-output-chooser
@@ -66,7 +65,6 @@
       :connection-type-filter="ctype"
       :show-connection-chooser-title="false"
       :show-service-list="false"
-      @choose-output="chooseOutput"
     ></pipe-transfer-output-chooser>
   </div>
 </template>
@@ -117,7 +115,7 @@
       }
     },
     methods: {
-      chooseOutput(item) {
+      chooseInput(item) {
         this.$emit('choose-input', item)
       },
       chooseOutput(item) {

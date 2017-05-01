@@ -26,6 +26,7 @@
 
     <pipe-builder-list
       class="flex-fill pv4 pl4-l bt b--black-10"
+      :id="eid"
       :pipe-eid="eid"
       :tasks="is_prompting ? prompt_tasks : tasks"
       :active-prompt-idx="active_prompt_idx"
@@ -339,14 +340,34 @@
           this.$store.dispatch('fetchConnections', this.project_eid)
       },
 
+      scrollToTask(idx) {
+        // default to active task
+        idx = _.defaultTo(idx, this.active_prompt_idx)
+
+        var task = _.get(this.tasks, '['+idx+']', null)
+        if (_.isNil(task))
+          return
+
+        var options = {
+            container: '#'+this.eid,
+            duration: 400,
+            easing: 'ease-out',
+            offset: -60
+        }
+
+        this.$scrollTo('#'+task.eid, options)
+      },
+
       goPrevPrompt() {
         var start_idx = Math.max(this.active_prompt_idx-1, 0)
         this.active_prompt_idx = _.findLastIndex(this.prompt_tasks, { has_variable: true }, start_idx)
+        this.scrollToTask()
       },
 
       goNextPrompt() {
         var start_idx = Math.min(this.active_prompt_idx+1, _.size(this.prompt_tasks)-1)
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true }, start_idx)
+        this.scrollToTask()
       }
     }
   }
