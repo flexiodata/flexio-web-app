@@ -359,7 +359,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
                     return null; // refresh token is missing
                 $refresh_token = $params['refresh_token'];
 
-                $token = new \StdOAuth2Token($access_token, $refresh_token);
+                $token = new \OAuth\OAuth2\Token\StdOAuth2Token($access_token, $refresh_token);
                 if (isset($params['token_expires']) && !is_null($params['token_expires']) && $params['token_expires'] > 0)
                     $token->setEndOfLife($params['token_expires']);
 
