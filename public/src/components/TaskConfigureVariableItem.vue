@@ -75,11 +75,14 @@
     },
     watch: {
       val: function(val, old_val) {
-        console.log(val)
+        var set_key = _.get(this, 'item.set_key', '')
+        console.log(val, set_key)
+        this.$emit('value-change', val, set_key)
       }
     },
     data() {
       return {
+        connection: {},
         val: this.item.default_val
       }
     },
@@ -99,11 +102,21 @@
       }
     },
     methods: {
-      chooseInput(item) {
-        this.$emit('choose-input', item)
+      chooseInput(connection) {
+        var connection_identifier = _.get(connection, 'ename')
+        if (connection_identifier.length == 0)
+          connection_identifier = _.get(connection, 'eid')
+
+        this.connection = _.assign({}, connection)
+        this.val = connection_identifier
       },
-      chooseOutput(item) {
-        this.$emit('choose-output', item)
+      chooseOutput(connection) {
+        var connection_identifier = _.get(connection, 'ename')
+        if (connection_identifier.length == 0)
+          connection_identifier = _.get(connection, 'eid')
+
+        this.connection = _.assign({}, connection)
+        this.val = connection_identifier
       },
       addInput() {
         this.$refs['input-chooser'].createPendingConnection(this.cinfo)
