@@ -19,7 +19,7 @@ class Input(object):
         if 'content_type' in fx_header:
             self._content_type = fx_header['content_type']
         else:
-            self._content_type = 'application/octet-stream123'
+            self._content_type = 'application/octet-stream'
 
     @property
     def stream(self):
