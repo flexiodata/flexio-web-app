@@ -32,6 +32,8 @@
         @prompt-value-change="onPromptValueChange"
         @go-prev-prompt="$emit('go-prev-prompt')"
         @go-next-prompt="$emit('go-next-prompt')"
+        @run-once-with-values="$emit('run-once-with-values')"
+        @save-values-and-run="$emit('save-values-and-run')"
       ></pipe-builder-item>
     </div>
   </div>
@@ -101,8 +103,8 @@
           this.show_all_previews = show
       },
 
-      onPromptValueChange(val, set_key) {
-        this.$emit('prompt-value-change', val, set_key)
+      onPromptValueChange(val, variable_set_key) {
+        this.$emit('prompt-value-change', val, variable_set_key)
       },
 
       resetScroll: _.debounce(function() {

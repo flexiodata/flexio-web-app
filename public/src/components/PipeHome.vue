@@ -36,6 +36,8 @@
       @prompt-value-change="onPromptValueChange"
       @go-prev-prompt="goPrevPrompt"
       @go-next-prompt="goNextPrompt"
+      @run-once-with-values="runOnceWithPromptValues"
+      @save-values-and-run="savePromptValuesAndRun"
       v-else>
     </pipe-builder-list>
   </div>
@@ -57,6 +59,9 @@
   import PipeTransfer from './PipeTransfer.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
   import SetActiveProject from './mixins/set-active-project'
+
+  // try to find variables that match ${...} for each parameter
+  const variable_regex = /\$\{((string|boolean|integer|number|connection|column)[ ])?([a-z_-][a-z0-9_-]*)[ ]*(:([^}]*))?\}/gi
 
   export default {
     mixins: [SetActiveProject],
@@ -164,27 +169,25 @@
         var task_idx = 0
         var variable_idx = 0
         var variable_set_key = ''
+        var tmp_set_key = ''
 
         return _.map(this.tasks, (task) => {
           var params = _.get(task, 'params', {})
-
-          // try to find variables that match ${...} for each parameter
-          var regex = /\$\{((string|boolean|integer|number|connection|column)[ ])?([a-z_-][a-z0-9_-]*)(:([^}]*))?\}/gi
 
           var matched_vars = []
 
           function getChildVariables(obj, set_key) {
             _.each(obj, (v, k) => {
-              set_key += '.'+k
+              tmp_set_key = set_key+'.'+k
               variable_set_key = 'prompt_tasks['+task_idx+'].variables['+variable_idx+'].val'
 
               // recurse over the array to find any variables in it
               if (_.isArray(v))
-                return _.each(v, (item, idx) => { getChildVariables(v[idx], set_key+'['+idx+']') })
+                return _.each(v, (item, idx) => { getChildVariables(v[idx], tmp_set_key+'['+idx+']') })
 
               // recurse over the object to find any variables in it
               if (_.isObject(v))
-                return getChildVariables(v, set_key)
+                return getChildVariables(v, tmp_set_key)
 
               // if we find any matches, add them to our set of matched variables
               if (_.isString(v))
@@ -192,7 +195,7 @@
                 var m
 
                 do {
-                  m = regex.exec(v)
+                  m = variable_regex.exec(v)
                   if (m)
                   {
                     matched_vars.push({
@@ -200,7 +203,7 @@
                       task_idx,
                       variable_idx,
                       variable_set_key,
-                      set_key,
+                      set_key: tmp_set_key,
                       type: m[2],
                       variable_name: m[3],
                       default_val: m[5] || '',
@@ -215,7 +218,7 @@
           }
 
           // start traversing the task params object
-          getChildVariables(params, 'prompt_tasks['+task_idx+'].params')
+          getChildVariables(params, 'task['+task_idx+'].params')
 
           // increment our task index
           task_idx++
@@ -239,7 +242,7 @@
         this.prompt_tasks = [].concat(this.getPromptTasks())
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true })
 
-        if (this.has_prompt_tasks)
+        if (this.has_prompt_tasks && !this.is_prompting)
         {
           this.is_prompting = true
 
@@ -347,9 +350,15 @@
           this.$store.dispatch('fetchConnections', this.project_eid)
       },
 
-      // use the set key provided to set the appropriate value in the prompt task JSON
-      onPromptValueChange(val, set_key) {
-        _.set(this, set_key, val)
+      getAllVariables() {
+        return _.reduce(this.prompt_tasks, (result, task, index) => {
+          return result.concat(_.get(task, 'variables', []))
+        }, [])
+      },
+
+      // use the variable set key provided to set the appropriate value in the prompt task JSON
+      onPromptValueChange(val, variable_set_key) {
+        _.set(this, variable_set_key, val)
       },
 
       scrollToTask(idx) {
@@ -380,6 +389,35 @@
         var start_idx = Math.min(this.active_prompt_idx+1, _.size(this.prompt_tasks)-1)
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true }, start_idx)
         this.scrollToTask()
+      },
+
+      runOnceWithPromptValues() {
+        var variables = this.getAllVariables()
+
+        var run_pipe = _.cloneDeep(this.pipe)
+
+        _.each(variables, (v) => {
+          var str = _.get(run_pipe, v.set_key)
+          var m
+
+          do {
+            m = variable_regex.exec(str)
+            if (m)
+            {
+              if (v.variable_name == m[3] /* variable name */)
+                str = str.replace(m.input, v.val)
+            }
+          } while (m)
+
+          _.set(run_pipe, v.set_key, str)
+        })
+
+        console.log(run_pipe)
+        //this.runPipe()
+      },
+
+      savePromptValuesAndRun() {
+        alert('TODO')
       }
     }
   }

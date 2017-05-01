@@ -9,12 +9,12 @@
       v-for="(v, index) in variables"
     ></task-configure-variable-item>
 
-    <div class="flex flex-row items-center mt2" v-if="isActivePromptTask">
+    <div class="flex flex-row items-center mt3" v-if="isActivePromptTask">
       <div class="flex-fill"></div>
       <btn btn-md class="b ttu blue mr2" @click="$emit('go-prev-prompt')" v-if="index != firstPromptIdx">Back</btn>
       <btn btn-md class="b ttu white bg-blue" @click="$emit('go-next-prompt')" v-if="index != lastPromptIdx">Next</btn>
-      <btn btn-md class="b ttu white bg-blue mr2" @click="$emit('run-once')" v-if="index == lastPromptIdx">Run Once With These Values</btn>
-      <btn btn-md class="b ttu white bg-blue" @click="$emit('save-and-run')" v-if="index == lastPromptIdx">Save Values & Run</btn>
+      <btn btn-md class="b ttu white bg-blue mr2" @click="$emit('run-once-with-values')" v-if="index == lastPromptIdx">Run Once With These Values</btn>
+      <btn btn-md class="b ttu white bg-blue" @click="$emit('save-values-and-run')" v-if="index == lastPromptIdx">Save Values & Run</btn>
     </div>
   </div>
 </template>
@@ -60,8 +60,8 @@
       TaskConfigureVariableItem
     },
     methods: {
-      onValueChange(val, set_key) {
-        this.$emit('prompt-value-change', val, set_key)
+      onValueChange(val, variable_set_key) {
+        this.$emit('prompt-value-change', val, variable_set_key)
       }
     }
   }

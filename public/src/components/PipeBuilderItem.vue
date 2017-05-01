@@ -118,6 +118,8 @@
             @prompt-value-change="onPromptValueChange"
             @go-prev-prompt="$emit('go-prev-prompt')"
             @go-next-prompt="$emit('go-next-prompt')"
+            @run-once-with-values="$emit('run-once-with-values')"
+            @save-values-and-run="$emit('save-values-and-run')"
             v-if="variables.length > 0"
           ></task-configure-item>
         </div>
@@ -584,8 +586,8 @@
         this.show_preview = !this.show_preview
         this.$emit('toggle-preview', this.show_preview, evt.ctrlKey /* toggle all */)
       },
-      onPromptValueChange(val, set_key) {
-        this.$emit('prompt-value-change', val, set_key)
+      onPromptValueChange(val, variable_set_key) {
+        this.$emit('prompt-value-change', val, variable_set_key)
       }
     }
   }
