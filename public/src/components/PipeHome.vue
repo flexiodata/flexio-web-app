@@ -247,6 +247,10 @@
           var new_route = _.pick(this.$route, ['eid', 'name', 'params'])
           _.set(new_route, 'params.state', PIPEHOME_STATUS_CONFIGURE)
           this.$router.replace(new_route)
+
+          // make sure the active item is in the view
+          setTimeout(() => { this.scrollToTask() }, 1000)
+
           return
         }
 
