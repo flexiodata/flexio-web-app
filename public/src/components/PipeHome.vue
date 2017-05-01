@@ -340,11 +340,13 @@
       },
 
       goPrevPrompt() {
-        this.active_prompt_idx = _.findLastIndex(this.prompt_tasks, { has_variable: true }, this.active_prompt_idx-1)
+        var start_idx = Math.max(this.active_prompt_idx-1, 0)
+        this.active_prompt_idx = _.findLastIndex(this.prompt_tasks, { has_variable: true }, start_idx)
       },
 
       goNextPrompt() {
-        this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true }, this.active_prompt_idx+1)
+        var start_idx = Math.min(this.active_prompt_idx+1, _.size(this.prompt_tasks)-1)
+        this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true }, start_idx)
       }
     }
   }
