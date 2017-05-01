@@ -43,23 +43,22 @@
 <script>
   import { mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
+  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
   import {
     PIPEHOME_VIEW_TRANSFER,
     PIPEHOME_VIEW_BUILDER,
     PIPEHOME_STATUS_CONFIGURE
   } from '../constants/pipehome'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
-  import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
-  import setActiveProject from './mixins/set-active-project'
-
   import Btn from './Btn.vue'
   import Spinner from 'vue-simple-spinner'
   import PipeHomeHeader from './PipeHomeHeader.vue'
   import PipeTransfer from './PipeTransfer.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
+  import SetActiveProject from './mixins/set-active-project'
 
   export default {
-    mixins: [setActiveProject],
+    mixins: [SetActiveProject],
     components: {
       Btn,
       Spinner,

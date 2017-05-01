@@ -12,16 +12,16 @@
 </template>
 
 <script>
-  import { ROUTE_PIPEHOME } from '../constants/route'
-  import { PIPEHOME_VIEW_BUILDER, PIPEHOME_STATUS_CONFIGURE } from '../constants/pipehome'
-  import { mapGetters } from 'vuex'
-  import Spinner from 'vue-simple-spinner'
   import axios from 'axios'
   import marked from 'marked'
-  import setActiveProject from './mixins/set-active-project'
+  import { mapGetters } from 'vuex'
+  import { ROUTE_PIPEHOME } from '../constants/route'
+  import { PIPEHOME_VIEW_BUILDER, PIPEHOME_STATUS_CONFIGURE } from '../constants/pipehome'
+  import Spinner from 'vue-simple-spinner'
+  import SetActiveProject from './mixins/set-active-project'
 
   export default {
-    mixins: [setActiveProject],
+    mixins: [SetActiveProject],
     components: {
       Spinner
     },

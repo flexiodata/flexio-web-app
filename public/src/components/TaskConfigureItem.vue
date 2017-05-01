@@ -75,7 +75,7 @@
   import Btn from './Btn.vue'
   import PipeTransferInputChooser from './PipeTransferInputChooser.vue'
   import PipeTransferOutputChooser from './PipeTransferOutputChooser.vue'
-  import taskItemHelper from './mixins/task-item-helper'
+  import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
     props: {
@@ -96,7 +96,7 @@
         default: false
       }
     },
-    mixins: [taskItemHelper],
+    mixins: [TaskItemHelper],
     components: {
       Btn,
       PipeTransferInputChooser,

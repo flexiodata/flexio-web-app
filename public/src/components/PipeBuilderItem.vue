@@ -210,9 +210,13 @@
 </template>
 
 <script>
-  import { PROCESS_STATUS_RUNNING } from '../constants/process'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT, TASK_TYPE_EXECUTE } from '../constants/task-type'
   import { mapGetters } from 'vuex'
+  import { PROCESS_STATUS_RUNNING } from '../constants/process'
+  import {
+    TASK_TYPE_INPUT,
+    TASK_TYPE_OUTPUT,
+    TASK_TYPE_EXECUTE
+  } from '../constants/task-type'
   import api from '../api'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
@@ -223,7 +227,7 @@
   import PipeContent from './PipeContent.vue'
   import ProcessProgressItem from './ProcessProgressItem.vue'
   import TaskConfigureItem from './TaskConfigureItem.vue'
-  import taskItemHelper from './mixins/task-item-helper'
+  import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
     props: {
@@ -259,7 +263,7 @@
         default: true
       },
     },
-    mixins: [taskItemHelper],
+    mixins: [TaskItemHelper],
     components: {
       Btn,
       ConnectionIcon,

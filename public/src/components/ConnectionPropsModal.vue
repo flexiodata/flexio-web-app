@@ -108,18 +108,18 @@
 </template>
 
 <script>
-  import * as types from '../constants/connection-type'
-  import * as connections from '../constants/connection-info'
+  import { mapGetters } from 'vuex'
   import { HOSTNAME } from '../constants/common'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import { mapGetters } from 'vuex'
+  import * as types from '../constants/connection-type'
+  import * as connections from '../constants/connection-info'
   import api from '../api'
   import Btn from './Btn.vue'
   import ServiceList from './ServiceList.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
-  import validation from './mixins/validation'
-  import oauthPopup from './mixins/oauth-popup'
+  import Validation from './mixins/validation'
+  import OauthPopup from './mixins/oauth-popup'
 
   const DEFAULT_ATTRS = {
     eid: null,
@@ -140,7 +140,7 @@
         type: Boolean
       }
     },
-    mixins: [validation, oauthPopup],
+    mixins: [Validation, OauthPopup],
     components: {
       Btn,
       ServiceList,

@@ -163,10 +163,17 @@
   import { mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT, TASK_TYPE_EXECUTE } from '../constants/task-type'
-  import { PROCESS_STATUS_RUNNING, PROCESS_STATUS_FAILED, PROCESS_MODE_BUILD, PROCESS_MODE_RUN } from '../constants/process'
-  import setActiveProject from './mixins/set-active-project'
-
+  import {
+    TASK_TYPE_INPUT,
+    TASK_TYPE_OUTPUT,
+    TASK_TYPE_EXECUTE
+  } from '../constants/task-type'
+  import {
+    PROCESS_STATUS_RUNNING,
+    PROCESS_STATUS_FAILED,
+    PROCESS_MODE_BUILD,
+    PROCESS_MODE_RUN
+  } from '../constants/process'
   import Btn from './Btn.vue'
   import Spinner from 'vue-simple-spinner'
   import TaskList from './TaskList.vue'
@@ -177,6 +184,7 @@
   import ProcessProgressList from './ProcessProgressList.vue'
   import PipePropsModal from './PipePropsModal.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
+  import SetActiveProject from './mixins/set-active-project'
 
   const DEFAULT_INSERT_TASK = {
     inserting: true,
@@ -186,7 +194,7 @@
   }
 
   export default {
-    mixins: [setActiveProject],
+    mixins: [SetActiveProject],
     components: {
       Btn,
       Spinner,
