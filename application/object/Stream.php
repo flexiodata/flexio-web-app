@@ -244,35 +244,21 @@ class Stream extends \Flexio\Object\Base
                 if ($offset1 > $range2)
                     break;
 
-                $case = 0;
-
                 // case 1: chunk read is contained entirely in the range we want
                 if ($offset1 >= $range1 && $offset2 <= $range2)
-                {
-                    $case = 1;
                     $result .= $chunk;
-                }
 
                 // case 2: chunk read covers the range we want
                 if ($offset1 < $range1 && $offset2 > $range2)
-                {
-                    $case = 2;
                     $result .= substr($chunk, $range1 - $offset1, $range2 - $range1);
-                }
 
                 // case 3: chunk read covers first part of the range we want
                 if ($offset1 < $range1 && $offset2 <= $range2)
-                {
-                    $case = 3;
                     $result .= substr($chunk, $range1 - $offset1);
-                }
 
                 // case 4: chunk read covers second part of the range we want
                 if ($offset1 >= $range1 && $offset2 > $range2)
-                {
-                    $case = 4;
                     $result .= substr($chunk, 0, $range2 - $offset1);
-                }
 
                 // set the new starting offset position
                 $offset1 = $offset2;
