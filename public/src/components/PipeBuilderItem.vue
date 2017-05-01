@@ -305,13 +305,8 @@
       is_task_execute() {
         return this.task_type == TASK_TYPE_EXECUTE
       },
-      active_prompt() {
-        return _.find(_.get(this, 'task.variables'), (v) => {
-          return _.get(v, 'prompt_idx') == this.activePromptIdx
-        })
-      },
       is_active_prompt_task() {
-        return !_.isNil(this.active_prompt)
+        return this.index == this.activePromptIdx
       },
       orig_cmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
@@ -393,6 +388,8 @@
         return 'pb4a'
       },
       style() {
+        return ''
+
         if (this.isPrompting && this.is_active_prompt_task)
           return this.index == 0 ? 'margin-bottom: 1.25rem' : 'margin-top: 1.25rem; margin-bottom: 1.25rem'
 

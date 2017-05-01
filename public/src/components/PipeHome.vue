@@ -28,7 +28,7 @@
       class="flex-fill pv4 pl4-l bt b--black-10"
       :pipe-eid="eid"
       :tasks="is_prompting ? prompt_tasks : tasks"
-      :active-prompt-idx="active_prompt"
+      :active-prompt-idx="active_prompt_idx"
       :is-prompting="is_prompting"
       :active-process="active_process"
       :project-connections="project_connections"
@@ -76,7 +76,7 @@
         eid: this.$route.params.eid,
         pipe_view: PIPEHOME_VIEW_TRANSFER,
         prompt_tasks: [],
-        active_prompt: 0,
+        active_prompt_idx: 0,
         is_prompting: false
       }
     },
@@ -161,7 +161,7 @@
 
       getPromptTasks() {
         var task_idx = 0
-        var prompt_idx = 0
+        var variable_idx = 0
 
         return _.map(this.tasks, (task) => {
           var params = _.get(task, 'params', {})
@@ -195,7 +195,7 @@
                     matched_vars.push({
                       task_eid: _.get(task, 'eid'),
                       task_idx,
-                      prompt_idx,
+                      variable_idx,
                       set_key,
                       type: m[2],
                       variable_name: m[3],
@@ -203,7 +203,7 @@
                       val: m[5] || ''
                     })
 
-                    prompt_idx++
+                    variable_idx++
                   }
                 } while (m)
               }
@@ -233,7 +233,7 @@
 
       runPipe() {
         this.prompt_tasks = [].concat(this.getPromptTasks())
-        this.active_prompt = 0
+        this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true })
 
         if (this.has_prompt_tasks)
         {
@@ -340,11 +340,11 @@
       },
 
       goPrevPrompt() {
-        this.active_prompt = Math.max(this.active_prompt-1, 0)
+        this.active_prompt_idx = _.findLastIndex(this.prompt_tasks, { has_variable: true }, this.active_prompt_idx-1)
       },
 
       goNextPrompt() {
-        this.active_prompt++
+        this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true }, this.active_prompt_idx+1)
       }
     }
   }
