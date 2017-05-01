@@ -199,6 +199,9 @@ class Postgres implements \Flexio\Services\IConnection
             $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
+            $db->exec("SET SESSION TIME ZONE 'UTC'");
+            $db->exec("SET SESSION lc_monetary='en_US.UTF-8'");
+
             return $db;
         }
         catch (\Exception $e)
