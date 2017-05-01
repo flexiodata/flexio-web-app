@@ -9,13 +9,13 @@
           :connection-type-filter="ctype"
           :show-connection-chooser-title="false"
           :show-service-list="false"
-          @choose-input="chooseOutput"
+          @choose-input="chooseInput"
         ></pipe-transfer-input-chooser>
         <div class="mt3">
           <btn btn-md btn-primary class="ttu b" @click="addInput">{{add_button_label}}</btn>
         </div>
       </div>
-      <div class="mb4 mw6" v-if="v.type=='connection' && is_output_task">
+      <div class="mb4 mw6" v-else-if="v.type=='connection' && is_output_task">
         <div class="mb3" >Choose the connection for <span class="b">{{v.variable_name}}</span>:</div>
         <pipe-transfer-output-chooser
           class="bg-white bt b--light-gray"
@@ -48,6 +48,17 @@
       <btn btn-md class="b ttu white bg-blue" @click="$emit('go-next-prompt')">Next</btn>
     </div>
 
+    <pipe-transfer-input-chooser
+      ref="input-chooser"
+      class="bg-white bt b--light-gray"
+      style="max-width: 1px; max-height: 1px; overflow: hidden"
+      :project-eid="active_project_eid"
+      :connection-type-filter="ctype"
+      :show-connection-chooser-title="false"
+      :show-service-list="false"
+      @choose-input="chooseInput"
+    ></pipe-transfer-input-chooser>
+
     <pipe-transfer-output-chooser
       ref="output-chooser"
       class="bg-white bt b--light-gray"
@@ -65,6 +76,7 @@
   import { mapState } from 'vuex'
   import * as connections from '../constants/connection-info'
   import Btn from './Btn.vue'
+  import PipeTransferInputChooser from './PipeTransferInputChooser.vue'
   import PipeTransferOutputChooser from './PipeTransferOutputChooser.vue'
   import taskItemHelper from './mixins/task-item-helper'
 
@@ -90,6 +102,7 @@
     mixins: [taskItemHelper],
     components: {
       Btn,
+      PipeTransferInputChooser,
       PipeTransferOutputChooser
     },
     computed: {
@@ -106,7 +119,13 @@
     },
     methods: {
       chooseOutput(item) {
+        this.$emit('choose-input', item)
+      },
+      chooseOutput(item) {
         this.$emit('choose-output', item)
+      },
+      addInput() {
+        this.$refs['input-chooser'].createPendingConnection(this.cinfo)
       },
       addOutput() {
         this.$refs['output-chooser'].createPendingConnection(this.cinfo)

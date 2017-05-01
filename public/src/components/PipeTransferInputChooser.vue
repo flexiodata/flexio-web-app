@@ -1,22 +1,23 @@
 <template>
   <div>
-    <div class="pa2 bg-black-05">
+    <div class="pa2 bg-black-05" v-if="showConnectionChooserList && showConnectionChooserTitle">
       <div class="f6 fw6 ttu silver">My Connections</div>
     </div>
-    <div class="relative">
-      <connection-chooser-list
-        list-type="input"
-        item-layout="list"
-        :project-eid="projectEid"
-        @item-activate="chooseConnection"
-      ></connection-chooser-list>
-    </div>
-    <div class="pa2 bg-black-05">
+    <connection-chooser-list
+      list-type="input"
+      item-layout="list"
+      :project-eid="projectEid"
+      :connection-type-filter="connectionTypeFilter"
+      @item-activate="chooseConnection"
+      v-if="showConnectionChooserList"
+    ></connection-chooser-list>
+    <div class="pa2 bg-black-05" v-if="showServiceList && showServiceTitle">
       <div class="f6 fw6 ttu silver">Available Connections</div>
     </div>
     <service-list
       item-layout="list"
       @item-activate="createPendingConnection"
+      v-if="showServiceList"
     ></service-list>
 
     <!-- connection props modal -->
@@ -38,7 +39,30 @@
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
 
   export default {
-    props: ['project-eid'],
+    props: {
+      'project-eid': {
+        type: String
+      },
+      'show-connection-chooser-list': {
+        type: Boolean,
+        default: true
+      },
+      'show-connection-chooser-title': {
+        type: Boolean,
+        default: true
+      },
+      'show-service-list': {
+        type: Boolean,
+        default: true
+      },
+      'show-service-title': {
+        type: Boolean,
+        default: true
+      },
+      'connection-type-filter': {
+        type: String
+      }
+    },
     components: {
       ConnectionChooserList,
       ServiceList,
