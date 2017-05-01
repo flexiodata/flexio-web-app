@@ -5,6 +5,7 @@
       :item="v"
       :index="index"
       :task-item="item"
+      @value-change="onValueChange"
       v-for="(v, index) in variables"
     ></task-configure-variable-item>
 
@@ -42,6 +43,11 @@
     components: {
       Btn,
       TaskConfigureVariableItem
+    },
+    methods: {
+      onValueChange(val, set_key) {
+        this.$emit('prompt-value-change', val, set_key)
+      }
     }
   }
 </script>

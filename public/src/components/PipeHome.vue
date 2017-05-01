@@ -33,6 +33,7 @@
       :is-prompting="is_prompting"
       :active-process="active_process"
       :project-connections="project_connections"
+      @prompt-value-change="onPromptValueChange"
       @go-prev-prompt="goPrevPrompt"
       @go-next-prompt="goNextPrompt"
       v-else>
@@ -162,6 +163,7 @@
       getPromptTasks() {
         var task_idx = 0
         var variable_idx = 0
+        var variable_set_key = ''
 
         return _.map(this.tasks, (task) => {
           var params = _.get(task, 'params', {})
@@ -174,6 +176,7 @@
           function getChildVariables(obj, set_key) {
             _.each(obj, (v, k) => {
               set_key += '.'+k
+              variable_set_key = 'prompt_tasks['+task_idx+'].variables['+variable_idx+'].val'
 
               // recurse over the array to find any variables in it
               if (_.isArray(v))
@@ -196,10 +199,12 @@
                       task_eid: _.get(task, 'eid'),
                       task_idx,
                       variable_idx,
+                      variable_set_key,
                       set_key,
                       type: m[2],
                       variable_name: m[3],
-                      default_val: m[5] || 'test'
+                      default_val: m[5] || '',
+                      val: m[5] || ''
                     })
 
                     variable_idx++
@@ -210,7 +215,7 @@
           }
 
           // start traversing the task params object
-          getChildVariables(params, 'task['+task_idx+'].params')
+          getChildVariables(params, 'prompt_tasks['+task_idx+'].params')
 
           // increment our task index
           task_idx++
@@ -336,6 +341,11 @@
         var connections_fetched = _.get(this.$store, 'state.objects.'+this.project_eid+'.connections_fetched', false)
         if (!connections_fetched)
           this.$store.dispatch('fetchConnections', this.project_eid)
+      },
+
+      // use the set key provided to set the appropriate value in the prompt task JSON
+      onPromptValueChange(val, set_key) {
+        _.set(this, set_key, val)
       },
 
       scrollToTask(idx) {

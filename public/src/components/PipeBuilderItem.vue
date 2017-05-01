@@ -112,6 +112,7 @@
             :variables="variables"
             :active-prompt-idx="activePromptIdx"
             :is-active-prompt-task="is_active_prompt_task"
+            @prompt-value-change="onPromptValueChange"
             @go-prev-prompt="$emit('go-prev-prompt')"
             @go-next-prompt="$emit('go-next-prompt')"
             v-if="variables.length > 0"
@@ -571,6 +572,9 @@
       togglePreview(evt) {
         this.show_preview = !this.show_preview
         this.$emit('toggle-preview', this.show_preview, evt.ctrlKey /* toggle all */)
+      },
+      onPromptValueChange(val, set_key) {
+        this.$emit('prompt-value-change', val, set_key)
       }
     }
   }

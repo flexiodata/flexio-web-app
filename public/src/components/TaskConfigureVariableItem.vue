@@ -75,8 +75,7 @@
     },
     watch: {
       val: function(val, old_val) {
-        var set_key = _.get(this, 'item.set_key', '')
-        console.log(val, set_key)
+        var set_key = _.get(this, 'item.variable_set_key', '')
         this.$emit('value-change', val, set_key)
       }
     },

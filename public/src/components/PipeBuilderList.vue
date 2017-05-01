@@ -27,6 +27,7 @@
         :show-preview="show_all_previews"
         @insert-task="insertNewTask"
         @toggle-preview="togglePreview"
+        @prompt-value-change="onPromptValueChange"
         @go-prev-prompt="$emit('go-prev-prompt')"
         @go-next-prompt="$emit('go-next-prompt')"
       ></pipe-builder-item>
@@ -89,6 +90,10 @@
       togglePreview(show, toggle_all) {
         if (toggle_all)
           this.show_all_previews = show
+      },
+
+      onPromptValueChange(val, set_key) {
+        this.$emit('prompt-value-change', val, set_key)
       },
 
       resetScroll: _.debounce(function() {
