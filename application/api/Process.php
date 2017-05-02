@@ -94,11 +94,15 @@ class Process
         if (isset($params['params']))
             $process->setParams($params['params']);
 
-        // STEP 2: if a parent eid is specified, override the task with the parent's
-        // task info, and associate the process
+        // STEP 2: if a parent eid is specified, associate the process with the
+        // parent; if a task is specified, override the task of the parent (to
+        // allow runtime parameters to be set on the pipe that override the
+        // pipe variables); if a task isn't specified, use the parent's task
         if ($pipe !== false)
         {
-            $process_properties['task'] = $pipe->getTask();
+            if (!isset($process_properties['task']))
+                 $process_properties['task'] = $pipe->getTask();
+
             $process->set($process_properties);
             $pipe->addProcess($process);
         }
