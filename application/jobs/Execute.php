@@ -61,8 +61,6 @@ class Execute extends \Flexio\Jobs\Base
 
         // properties
         $job_definition = $this->getProperties();
-        $input_structure = $instream->getStructure();
-
 
         // get the code from the template
         // $code contains the base64-encoded program source
@@ -119,15 +117,20 @@ class Execute extends \Flexio\Jobs\Base
         }
 
         // first, write a json header record to the process, followed by \r\n\r\n
+        $structure = ($is_input_table ? $instream->getStructure() : null);
+        if (isset($structure))
+        {
+            $structure = $structure->get();
+        }
+
         $header = array(
             'name' => $instream->getName(),
             'size' => $instream->getSize(),
             'content_type' => $instream->getMimeType(),
-            'structure' => ($is_input_table ? $instream->getStructure() : null)
+            'structure' => $structure
         );
         $header_json = json_encode($header);
         $process->write($header_json . "\r\n\r\n");
-
 
         $done_writing = false; // "done writing input to process"
         $done_reading = false; // "done reading result from process"
