@@ -169,7 +169,7 @@
         var task_idx = 0
         var variable_idx = 0
         var variable_set_key = ''
-        var tmp_set_key = ''
+        var set_key = ''
 
         return _.map(this.tasks, (task) => {
           var params = _.get(task, 'params', {})
@@ -178,16 +178,16 @@
 
           function getChildVariables(obj, set_key) {
             _.each(obj, (v, k) => {
-              tmp_set_key = set_key+'.'+k
+              set_key += '.'+k
               variable_set_key = 'prompt_tasks['+task_idx+'].variables['+variable_idx+'].val'
 
               // recurse over the array to find any variables in it
               if (_.isArray(v))
-                return _.each(v, (item, idx) => { getChildVariables(v[idx], tmp_set_key+'['+idx+']') })
+                return _.each(v, (item, idx) => { getChildVariables(v[idx], set_key+'['+idx+']') })
 
               // recurse over the object to find any variables in it
               if (_.isObject(v))
-                return getChildVariables(v, tmp_set_key)
+                return _.each(v, (v2, k2) => { getChildVariables(v[k2], set_key) })
 
               // if we find any matches, add them to our set of matched variables
               if (_.isString(v))
@@ -203,13 +203,14 @@
                       task_idx,
                       variable_idx,
                       variable_set_key,
-                      set_key: tmp_set_key,
+                      set_key,
                       type: m[2],
                       variable_name: m[3],
                       default_val: m[5] || '',
                       val: m[5] || ''
                     })
 
+                    console.log(set_key)
                     variable_idx++
                   }
                 } while (m)
@@ -397,6 +398,9 @@
         var run_pipe = _.cloneDeep(this.pipe)
 
         _.each(variables, (v) => {
+          if (_.isNil(v))
+            return
+
           var str = _.get(run_pipe, v.set_key)
           var m
 
