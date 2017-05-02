@@ -49,7 +49,7 @@ class Process
         if (($params = $validator->check($params, array(
                 'parent_eid'   => array('type' => 'identifier', 'required' => false),
                 'process_mode' => array('type' => 'string', 'required' => false, 'default' => \Model::PROCESS_MODE_RUN),
-                'task'         => array('type' => 'object', 'required' => false, 'default' => []),
+                'task'         => array('type' => 'object', 'required' => false),
                 'params'       => array('type' => 'object', 'required' => false),
                 'background'   => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'debug'        => array('type' => 'boolean', 'required' => false, 'default' => false),
