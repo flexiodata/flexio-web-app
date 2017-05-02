@@ -427,7 +427,19 @@
       },
 
       savePromptValuesAndRun() {
+        var run_pipe = this.getRunPipe()
+        var attrs = _.pick(run_pipe, 'task')
 
+        this.$store.dispatch('updatePipe', { eid: this.eid, attrs }).then(response => {
+          if (response.ok)
+          {
+            this.runPipe(_.pick(run_pipe, 'task'))
+          }
+           else
+          {
+            // TODO: add error handling
+          }
+        })
       }
     }
   }
