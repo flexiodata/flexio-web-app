@@ -255,15 +255,16 @@
         }
          else
         {
-          this.is_prompting = false
-
           var attrs = _.assign({
             parent_eid: this.eid,
             process_mode: PROCESS_MODE_RUN,
             run: true // this will automatically run the process and start polling the process
           }, attrs)
 
-          this.$store.dispatch('createProcess', { attrs })
+          this.$store.dispatch('createProcess', { attrs }).then(response => {
+            if (response.ok)
+              this.$nextTick(() => { this.is_prompting = false })
+          })
         }
       },
 
