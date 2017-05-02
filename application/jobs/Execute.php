@@ -253,42 +253,50 @@ class Execute extends \Flexio\Jobs\Base
                 {
                     if ($first_chunk)
                     {
-                        $content_type = 'application/octet-stream';
-                        $structure = null;
-
                         $end = strpos($readbuf, "\r\n\r\n");
 
-                        if ($readbuf[0] == '{' && $end !== false)
+                        if ($end === false)
                         {
-                            $header = @json_decode(substr($readbuf, 0, $end), true);
-                            if (!is_null($header))
+                            // did not find response header end -- we need more data; however
+                            // if the response header size becomes unrealistically large, fail out
+                            if (strlen($readbuf) > 100000)
                             {
-                                if (isset($header['content_type']))
-                                {
-                                    $content_type = $header['content_type'];
-                                }
-                                $structure = $header['structure'] ?? null;
+                                // could not response header -- job failed
+                                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_GENERAL, "Script did not provide valid response header");
                             }
-                            $readbuf = substr($readbuf, $end+4);
-                        }
-
-                        if ($content_type == \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-                        {
-                            if (!isset($structure))
-                                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-                            $outstream->setMimeType($content_type);
-                            $outstream->setStructure($structure);
-                            $is_output_table = true;
                         }
                          else
                         {
-                            $outstream->setMimeType($content_type);
-                            $is_output_table = false;
-                        }
+                            $header = @json_decode(substr($readbuf, 0, $end), true);
+                            if (is_null($header))
+                            {
+                                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_GENERAL, "Script did not provide valid response header (invalid JSON)");
+                            }
 
-                        $first_chunk = false;
-                        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+
+                            $content_type = $header['content_type'] ?? 'application/octet-stream';
+                            $structure = $header['structure'] ?? null;
+
+                            $readbuf = substr($readbuf, $end+4);
+
+                            if ($content_type == \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+                            {
+                                if (!isset($structure))
+                                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+                                $outstream->setMimeType($content_type);
+                                $outstream->setStructure($structure);
+                                $is_output_table = true;
+                            }
+                            else
+                            {
+                                $outstream->setMimeType($content_type);
+                                $is_output_table = false;
+                            }
+
+                            $first_chunk = false;
+                            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+                        }
                     }
 
                     // var_dump($readbuf);
@@ -300,39 +308,41 @@ class Execute extends \Flexio\Jobs\Base
 
                     //fxdebug("Writing " . strlen($readbuf) . " bytes\n");
                     //$tot += strlen($readbuf);
-
-                    if ($is_output_table)
+                    if ($streamwriter)
                     {
-                        $offset = 0;
-                        while (true)
+                        if ($is_output_table)
                         {
-                            $eolpos = \Flexio\Jobs\Convert::indexOfLineTerminator($readbuf, '"', $offset);
-                            if ($eolpos === false)
+                            $offset = 0;
+                            while (true)
                             {
-                                $readbuf = substr($readbuf, $offset);
-                                break;
+                                $eolpos = \Flexio\Jobs\Convert::indexOfLineTerminator($readbuf, '"', $offset);
+                                if ($eolpos === false)
+                                {
+                                    $readbuf = substr($readbuf, $offset);
+                                    break;
+                                }
+
+                                $line = substr($readbuf, $offset, $eolpos - $offset);
+
+                                $offset = $eolpos+1;
+                                if ($readbuf[$offset-1] == "\r" && ($readbuf[$offset] ?? '') == "\n")
+                                    $offset++;
+
+                                $row = str_getcsv($line);
+
+                                if ($row !== false)
+                                {
+                                    $row = \Flexio\Jobs\Convert::conformValuesToStructure($structure, $row);
+                                    $streamwriter->write($row);
+                                }
+
                             }
-
-                            $line = substr($readbuf, $offset, $eolpos - $offset);
-
-                            $offset = $eolpos+1;
-                            if ($readbuf[$offset-1] == "\r" && ($readbuf[$offset] ?? '') == "\n")
-                                $offset++;
-
-                            $row = str_getcsv($line);
-
-                            if ($row !== false)
-                            {
-                                $row = \Flexio\Jobs\Convert::conformValuesToStructure($structure, $row);
-                                $streamwriter->write($row);
-                            }
-
                         }
-                    }
-                     else
-                    {
-                        $streamwriter->write($readbuf);
-                        $readbuf = '';
+                        else
+                        {
+                            $streamwriter->write($readbuf);
+                            $readbuf = '';
+                        }
                     }
                 }
 
