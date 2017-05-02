@@ -5023,7 +5023,7 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_date("2001-02-03"))');
         $expected = "2001-02-03";
-        TestCheck::assertString('AX.3', 'Expression; to_date() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        TestCheck::assertString('AX.3', 'Expression; to_date() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_date("12/31/1999","MM/DD/YYYY"))');
