@@ -546,7 +546,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         'substr'       => [ 'types' => [ 's(si[i])', 's(ni[i])', 's(bi[i])', 's(Ni[i])' ], 'func' => 'func_substr' ],
         'tan'          => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_tan' ],
         'to_char'      => [ 'types' => [ 's(s)', 's(n)', 's(d)', 's(t)', 's(b)', 's(N)', 's(ns)', 's(ds)', 's(ts)', 's(Ns)' ], 'func' => 'func_to_char' ],
-        'to_date'      => [ 'types' => [ 'd(ss)', 'd(ns)', 'd(ds)', 'd(bs)', 'd(Ns)' ], 'func' => 'func_to_date' ],
+        'to_date'      => [ 'types' => [ 'd(s[s])', 'd(n[s])', 'd(d[s])', 'd(b[s])', 'd(N[s])' ], 'func' => 'func_to_date' ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
         'to_number'    => [ 'types' => [ 'f(ss)', 'f(ns)', 'f(ds)', 'f(bs)', 'f(Ns)' ], 'func' => 'func_to_number' ],
         'to_timestamp' => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ],
@@ -849,7 +849,56 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     public function func_cast($func, $params, &$retval)
     {
-        // TODO: implement
+        if (!$this->doEval($params[0], $param0)) return false;
+        if (!$this->doEval($params[1], $param1)) return false;
+
+        switch ($param1)
+        {
+            case 'text':
+            case 'character':
+                $retval = (string)$param0;
+                return true;
+
+            case 'numeric':
+            case 'double':
+                $retval = floatval(''.$param0);
+                return true;
+
+            case 'integer':
+                $retval = intval(''.$param0);
+                return true;
+
+            case 'boolean':
+            {
+                     if ($param0 === true)  { $retval = true;  return true; }
+                else if ($param0 === false) { $retval = false; return true; }
+
+                $param0 = strtoupper($param0);
+                if ($param0 == '1' || $param0 == 'T' || $param0 == 'TRUE')
+                    $retval = true;
+                     else
+                    $retval = false;
+                return true;
+            }
+
+            case 'date':
+            case 'datetime':
+            {
+                $dt = new ExprDateTime();
+                if (!$dt->parse($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
+
+                if ($param1 == 'date')
+                    $dt->truncateTime();
+                
+                $retval = $dt;
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -2344,15 +2393,31 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     public function func_to_date($func, $params, &$retval)
     {
-        // TODO: do we want to pass dates as strings?
+        if (count($params) < 1)
+        {
+            $retval = null;
+            return true;
+        }
+
+        if (count($params) == 1)
+        {
+            // same as cast(fld, date)
+            $type_constant = new \Flexio\Base\ExprValue;
+            $type_constant->val = 'date';
+
+            $call_params = [ $params[0], $type_constant ];
+            return $this->func_cast($func, $call_params, $retval);
+        }
+
+
         if (!$this->doEval($params[0], $param0)) return false;
+        if (!$this->doEval($params[1], $param1)) return false;
 
-        // TODO: use format if specified:
-        //if (!$this->doEval($params[1], $param1)) return false;
-
-        $param0 = self::exprToString($param0);
-        $retval = date('Y-m-d', strtotime($param0));
-        return true;
+        // same as cast(fld, date)
+        $type_constant = new \Flexio\Base\ExprValue;
+        $type_constant->val = 'date';
+        $call_params = [ $params[0], $type_constant ];
+        return $this->func_cast($func, $call_params, $retval);
     }
 
     public function func_to_number($func, $params, &$retval)
@@ -2722,12 +2787,20 @@ class ExprDateTime
     {
         $dt = getdate();
         $this->values = [ 'year' => $dt['year'], 'month' => $dt['mon'], 'day' => $dt['mday'],
-                          'hour' => $dt['hours'], 'minute' => $dt['minutes'], $dt['seconds'] ];
+                          'hour' => $dt['hours'], 'minute' => $dt['minutes'], 'second' => $dt['seconds'] ];
     }
 
     public function hasTimePart()
     {
         return (isset($this->values['hour']) && $this->values['hour'] !== false);
+    }
+
+    public function truncateTime()
+    {
+        // makes a date out of a date time
+        unset($this->values['hour']);
+        unset($this->values['minute']);
+        unset($this->values['second']);
     }
 
     public function toString()
