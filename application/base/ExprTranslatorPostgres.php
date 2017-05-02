@@ -673,7 +673,7 @@ class ExprTranslatorPostgres
         'substr'       => [ 'types' => [ 's(si[i])', 's(ni[i])', 's(bi[i])', 's(Ni[i])' ], 'func' => 'func_substr' ],
         'tan'          => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ] ],
         'to_char'      => [ 'types' => [ 's(s)', 's(n)', 's(d)', 's(t)', 's(b)', 's(N)', 's(ns)', 's(ds)', 's(ts)', 's(Ns)' ], 'func' => 'func_to_char' ],
-        'to_date'      => [ 'types' => [ 'd(s[s])', 'd(n[s])', 'd(d[s])', 'd(b[s])', 'd(N[s])' ] ],
+        'to_date'      => [ 'types' => [ 'd(s[s])', 'd(n[s])', 'd(d[s])', 'd(b[s])', 'd(N[s])' ], 'func' => 'func_to_date' ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
         'to_timestamp' => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ],
         'to_number'    => [ 'types' => [ 'f(ss)', 'f(ns)', 'f(ds)', 'f(bs)', 'f(Ns)' ] ],
@@ -1282,8 +1282,36 @@ class ExprTranslatorPostgres
         }
     }
 
+    public function func_to_date($func, $params)
+    {
+        if ($this->getType($params[0]) == ExprParser::TYPE_NULL)
+            return "null::date";
+
+        if (count($params) == 1)
+        {
+            // to_date() with one parameter is the same as cast(fld, date)
+            $v = new ExprVariable;
+            $v->name = 'date';
+            $params[] = $v;
+            return $this->func_cast($func, $params);
+        }
+         else if (count($params) == 2)
+        {
+            $param0 = $this->printNode($params[0]);
+            $param1 = $this->printNode($params[1]);
+            return "to_date($param0,$param1)";
+        }
+         else
+        {
+            return false;
+        }
+    }
+
     public function func_to_timestamp($func, $params)
     {
+        if ($this->getType($params[0]) == ExprParser::TYPE_NULL)
+            return "null::timestamp";
+        
         if (count($params) == 1)
         {
             // to_timestamp() with one parameter is the same as cast(fld, datetime)
@@ -1292,14 +1320,16 @@ class ExprTranslatorPostgres
             $params[] = $v;
             return $this->func_cast($func, $params);
         }
-
-        $res = 'to_timestamp(';
-
-        $res .= $this->printNode($params[0]);
-        if (count($params) > 0)
-            $res .= ',' . $this->printNode($params[1]);
-
-        return $res . ')';
+         else if (count($params) == 2)
+        {
+            $param0 = $this->printNode($params[0]);
+            $param1 = $this->printNode($params[1]);
+            return "to_timestamp($param0,$param1)";
+        }
+         else
+        {
+            return false;
+        }
     }
 
 
