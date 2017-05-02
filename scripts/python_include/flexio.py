@@ -1,13 +1,13 @@
 import sys
 import json
 import csv
-
-
+import datetime
 
 
 class TableReader(object):
-    def __init__(self, reader):
+    def __init__(self, reader, casts):
         self.reader = reader
+        self.casts = casts
 
     def __iter__(self):
         return self
@@ -15,6 +15,8 @@ class TableReader(object):
     def __next__(self):
         row = next(self.reader)
         if row:
+            for key,value in self.casts.items():
+                row[key] = value(row[key])
             return row
         else:
             raise StopIteration
@@ -75,11 +77,34 @@ class Input(object):
         if not self.inited:
             self.initialize()
         if dict:
-            fieldnames = [col['name'] for col in self.structure]
+            fieldnames = []
+            casts = {}
+            for col in self.structure:
+                fieldnames.append(col['name'])
+                if col['type'] == 'numeric':
+                    casts[col['name']] = float
+                elif col['type'] == 'integer':
+                    casts[col['name']] = int
+                elif col['type'] == 'date':
+                    casts[col['name']] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
+                elif col['type'] == 'datetime':
+                    casts[col['name']] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
             reader = csv.DictReader(sys.stdin, fieldnames)
         else:
+            casts = {}
+            index = 0
+            for col in self.structure:
+                if col['type'] == 'numeric':
+                    casts[index] = float
+                elif col['type'] == 'integer':
+                    casts[index] = int
+                elif col['type'] == 'date':
+                    casts[index] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
+                elif col['type'] == 'datetime':
+                    casts[index] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
+                index = index + 1
             reader = csv.reader(sys.stdin)
-        return TableReader(reader)
+        return TableReader(reader, casts)
 
 
 class TableWriter(object):

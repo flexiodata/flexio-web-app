@@ -121,6 +121,11 @@ class Execute extends \Flexio\Jobs\Base
         if (isset($structure))
         {
             $structure = $structure->get();
+
+            // don't need/want to report store name to script
+            foreach ($structure as &$fld)
+                unset($fld['store_name']);
+            unset($fld);
         }
 
         $header = array(
