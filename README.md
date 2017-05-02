@@ -74,13 +74,13 @@ Once the `package.json` file has been edited and saved, you're ready to actually
 In order to build the web app in debug mode, enter the following command:
 
 ```
-yarn run build:debug
+yarn && yarn run build:debug
 ```
 
 In order to build the web app in release mode, enter the following command:
 
 ```
-yarn run build:release
+yarn && yarn run build:release
 ```
 
 Each of the above commands will run a webpack build script -- these scripts are located in the `/public/build` folder. It's not terribly important to understand these build scripts, but it is nice to have a good handle on what happens when the above commands are run. The primary difference between the two build modes is that debug mode will not add cache busting hash strings to the files that are output.
