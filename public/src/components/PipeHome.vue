@@ -178,16 +178,16 @@
 
           function getChildVariables(obj, set_key) {
             _.each(obj, (v, k) => {
-              set_key += '.'+k
+              variable_idx = _.size(matched_vars)
               variable_set_key = 'prompt_tasks['+task_idx+'].variables['+variable_idx+'].val'
 
               // recurse over the array to find any variables in it
               if (_.isArray(v))
-                return _.each(v, (item, idx) => { getChildVariables(v[idx], set_key+'['+idx+']') })
+                return _.each(v, (item, idx) => { getChildVariables(v[idx], set_key+'.'+k+'['+idx+']') })
 
               // recurse over the object to find any variables in it
               if (_.isObject(v))
-                return _.each(v, (v2, k2) => { getChildVariables(v[k2], set_key) })
+                return _.each(v, (v2, k2) => { getChildVariables(v[k2], set_key+'.'+k) })
 
               // if we find any matches, add them to our set of matched variables
               if (_.isString(v))
@@ -203,15 +203,12 @@
                       task_idx,
                       variable_idx,
                       variable_set_key,
-                      set_key,
+                      set_key: set_key+'.'+k,
                       type: m[2],
                       variable_name: m[3],
                       default_val: m[5] || '',
                       val: m[5] || ''
                     })
-
-                    console.log(set_key)
-                    variable_idx++
                   }
                 } while (m)
               }
@@ -254,7 +251,6 @@
 
           // make sure the active item is in the view
           setTimeout(() => { this.scrollToTask() }, 1000)
-
           return
         }
 
@@ -401,7 +397,7 @@
           if (_.isNil(v))
             return
 
-          var str = _.get(run_pipe, v.set_key)
+          var str = _.get(run_pipe, v.set_key, '')
           var m
 
           do {
@@ -409,11 +405,12 @@
             if (m)
             {
               if (v.variable_name == m[3] /* variable name */)
+              {
                 str = str.replace(m.input, v.val)
+                _.set(run_pipe, v.set_key, str)
+              }
             }
           } while (m)
-
-          _.set(run_pipe, v.set_key, str)
         })
 
         console.log(run_pipe)
