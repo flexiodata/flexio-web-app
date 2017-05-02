@@ -236,7 +236,7 @@
         })
       },
 
-      runPipe() {
+      runPipe(attrs) {
         this.prompt_tasks = [].concat(this.getPromptTasks())
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true })
 
@@ -253,14 +253,18 @@
           setTimeout(() => { this.scrollToTask() }, 1000)
           return
         }
+         else
+        {
+          this.is_prompting = false
 
-        var attrs = {
-          parent_eid: this.eid,
-          process_mode: PROCESS_MODE_RUN,
-          run: true // this will automatically run the process and start polling the process
+          var attrs = _.assign({
+            parent_eid: this.eid,
+            process_mode: PROCESS_MODE_RUN,
+            run: true // this will automatically run the process and start polling the process
+          }, attrs)
+
+          this.$store.dispatch('createProcess', { attrs })
         }
-
-        this.$store.dispatch('createProcess', { attrs })
       },
 
       cancelProcess() {
@@ -388,7 +392,8 @@
         this.scrollToTask()
       },
 
-      runOnceWithPromptValues() {
+      // returns a cloned pipe with all of the variables replaced with values
+      getRunPipe() {
         var variables = this.getAllVariables()
 
         var run_pipe = _.cloneDeep(this.pipe)
@@ -413,12 +418,16 @@
           } while (m)
         })
 
-        console.log(run_pipe)
-        //this.runPipe()
+        return run_pipe
+      },
+
+      runOnceWithPromptValues() {
+        var run_pipe = this.getRunPipe()
+        this.runPipe(_.pick(run_pipe, 'task'))
       },
 
       savePromptValuesAndRun() {
-        alert('TODO')
+
       }
     }
   }
