@@ -568,9 +568,9 @@ class System
         return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'config';
     }
 
-    public static function getResDirectory() : string
+    public static function getEmailTemplateDirectory() : string
     {
-        return \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'res';
+        return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'email';
     }
 
     public static function getUpdateDirectory() : string
@@ -673,6 +673,7 @@ class System
             switch ($bin)
             {
                 case 'grep':        return 'grep';
+                case 'docker':      return 'docker';
                 case 'python':      return 'python3';
                 case 'javascript':  return 'nodejs';
                 case 'go':          return 'go run';

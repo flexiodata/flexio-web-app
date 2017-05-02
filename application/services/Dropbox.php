@@ -78,7 +78,6 @@ class Dropbox implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         //execute post
         $result = curl_exec($ch);
@@ -127,12 +126,16 @@ class Dropbox implements \Flexio\Services\IConnection
     {
         $path = $params['path'] ?? '';
 
+
+        $dropbox_args = json_encode(array('path' => $path));
+
         // download the file
         $ch = curl_init();
 
         $filename = rawurlencode($path);
-        curl_setopt($ch, CURLOPT_URL, "https://api-content.dropbox.com/1/files/auto/$filename?access_token=" . $this->access_token);
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_URL, "https://content.dropboxapi.com/2/files/download");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: "));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback) {
@@ -150,22 +153,26 @@ class Dropbox implements \Flexio\Services\IConnection
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
-        // put the file
+        $dropbox_args = json_encode(array('path' => $path, 'mode' => 'overwrite'));
+
+        // upload/write the file
         $ch = curl_init();
 
         $filename = rawurlencode($path);
-        curl_setopt($ch, CURLOPT_URL, "https://api-content.dropbox.com/1/files_put/auto/$filename?access_token=" . $this->access_token);
-        curl_setopt($ch, CURLOPT_UPLOAD, 1);
+        curl_setopt($ch, CURLOPT_URL, "https://content.dropboxapi.com/2/files/upload");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: application/octet-stream"));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_SSLVERSION, 1);
         curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$callback) {
             $res = $callback($length);
+            fxdebug($res);
             if ($res === false) return '';
             return $res;
         });
         $result = curl_exec($ch);
+        fxdebug($result);
         curl_close($ch);
     }
 

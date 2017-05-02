@@ -12,7 +12,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import setActiveProject from './mixins/set-active-project'
+  import SetActiveProject from './mixins/set-active-project'
 
   const nav_items = [
     {
@@ -38,7 +38,7 @@
   ]
 
   export default {
-    mixins: [setActiveProject],
+    mixins: [SetActiveProject],
     data() {
       return {
         eid: this.$route.params.eid,

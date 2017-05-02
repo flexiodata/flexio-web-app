@@ -76,8 +76,7 @@ function echoResult($result, $show_failures_only)
 
 
         $message = '';
-        $message .= $passed === true ? "Passed" : "Failed";
-        $message .= ". ";
+        $message .= $passed === true ? "[PASSED] " : "[FAILED] "; // use "[KNOWN ] " for known errors
         $message .= "$name $description";
         $message .= "\n";
 

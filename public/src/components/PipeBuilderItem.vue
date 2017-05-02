@@ -1,5 +1,10 @@
 <template>
-  <div class="relative" style="max-width: 1574px">
+  <div
+    class="relative"
+    style="max-width: 1574px"
+    :style="style"
+    :id="eid"
+  >
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
 
       <!-- task icon -->
@@ -30,7 +35,7 @@
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 46px; bottom: 36px; left: 19px"
         :class="[ index==0?'mt2':'' ]"
-        v-show="!show_progress"
+        v-show="!show_progress && !this.isPrompting"
       ></div>
 
       <!-- insert before button -->
@@ -38,7 +43,7 @@
         class="absolute"
         style="top: -24px; left: 8px"
         v-show="!show_progress"
-        v-if="index==0 && false"
+        v-if="index==0 && !show_progress && !this.isPrompting && false"
       >
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
           <i class="db material-icons f3">add_circle</i>
@@ -49,97 +54,161 @@
       <div
         class="absolute"
         style="bottom: 5px; left: 8px"
-        v-show="!show_progress">
+        v-show="!show_progress && !this.isPrompting">
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
           <i class="db material-icons f3">add_circle</i>
         </div>
       </div>
 
+      <!-- feedback icon when prompting -->
+      <div class="mr3" :class="[ index==0?'pt3':'pt2' ]" v-if="false">
+        <i
+          class="material-icons md-24"
+          style="margin-top: -1px"
+          :class="{
+            'dark-green': true
+          }"
+        >check_circle</i>
+      </div>
+
       <!-- main content -->
       <div
         class="flex-fill relative ph3a bg-white bl br b--white-box"
-        :class="[ content_cls, index==0?'pt3':'pt2' ]"
+        :class="[
+          content_cls,
+          index==0?'pt3':'pt2',
+          isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':''
+        ]"
+        :style="content_style"
       >
-        <!-- task name -->
-        <inline-edit-text
-          class="flex-fill f5 lh-title"
-          edit-button-tooltip-cls="hint--top-left"
-          input-key="name"
-          :val="display_name"
-          @save="editTaskSingleton">
-        </inline-edit-text>
+        <!-- 1. show progress -->
 
-        <!-- task description -->
-        <inline-edit-text
-          class="f7 lh-title gray mt1"
-          placeholder="Add a description"
-          placeholder-cls="fw6 black-20 hover-black-40"
-          edit-button-tooltip-cls="hint--top-left"
-          input-key="description"
-          :val="description"
-          @save="editTaskSingleton">
-        </inline-edit-text>
+        <div v-if="show_progress">
+          <!-- static task name -->
+          <div class="f5 lh-title">{{display_name}}</div>
 
-        <div class="mt2 pt2 bt b--black-10" v-if="show_progress">
-          <process-progress-item :item="active_subprocess"></process-progress-item>
+          <!-- static task description -->
+          <div class="f7 lh-title gray mt1" v-if="description.length > 0">{{description}}</div>
+
+          <!-- process progress item -->
+          <process-progress-item
+            class="mt2 pt2 bt b--black-10"
+            :item="active_subprocess">
+          </process-progress-item>
         </div>
-        <div class="relative" v-else>
 
-          <!-- collapser -->
-          <div
-            class="absolute cursor-default"
-            style="top: 6px; left: -31px"
-            v-if="active_stream_eid.length > 0"
-          >
+        <!-- 2. show prompt/configure item -->
+
+        <div v-else-if="isPrompting === true">
+          <!-- static task name -->
+          <div class="f5 lh-title" v-if="variables.length == 0">{{display_name}}</div>
+
+          <!-- static task description -->
+          <div class="f7 lh-title gray mt1" v-if="variables.length == 0">{{description}}</div>
+
+          <!-- task configure item -->
+          <task-configure-item
+            :item="item"
+            :index="index"
+            :variables="variables"
+            :active-prompt-idx="activePromptIdx"
+            :first-prompt-idx="firstPromptIdx"
+            :last-prompt-idx="lastPromptIdx"
+            :is-active-prompt-task="is_active_prompt_task"
+            @prompt-value-change="onPromptValueChange"
+            @go-prev-prompt="$emit('go-prev-prompt')"
+            @go-next-prompt="$emit('go-next-prompt')"
+            @run-once-with-values="$emit('run-once-with-values')"
+            @save-values-and-run="$emit('save-values-and-run')"
+            v-if="variables.length > 0"
+          ></task-configure-item>
+        </div>
+
+        <!-- 3. show normal builder item -->
+
+        <div v-else>
+          <!-- task name -->
+          <inline-edit-text
+            class="f5 lh-title"
+            edit-button-tooltip-cls="hint--top-left"
+            input-key="name"
+            :val="display_name"
+            @save="editTaskSingleton">
+          </inline-edit-text>
+
+          <!-- task description -->
+          <inline-edit-text
+            class="f7 lh-title gray mt1"
+            placeholder="Add a description"
+            placeholder-cls="fw6 black-20 hover-black-40"
+            edit-button-tooltip-cls="hint--top-left"
+            input-key="description"
+            :val="description"
+            @save="editTaskSingleton">
+          </inline-edit-text>
+
+          <div class="relative">
+            <!-- collapser -->
             <div
-              class="pointer moon-gray bg-white ba b--white-box br-100 hover-blue hover-b--blue hint--top-right"
-              :aria-label="collapse_tooltip"
-              @click="togglePreview"
+              class="absolute cursor-default"
+              style="top: 6px; left: -31px"
+              v-if="active_stream_eid.length > 0"
             >
-              <i class="db material-icons md-18 trans-t" :class="{ 'rotate-90': show_preview }">chevron_right</i>
+              <div
+                class="pointer moon-gray bg-white ba b--white-box br-100 hover-blue hover-b--blue hint--top-right"
+                :aria-label="collapse_tooltip"
+                @click="togglePreview"
+              >
+                <i class="db material-icons md-18 trans-t" :class="{ 'rotate-90': show_preview }">chevron_right</i>
+              </div>
             </div>
-          </div>
 
-          <command-bar
-            ref="commandbar"
-            class="mt2 pa1 ba b--black-10 bg-white"
-            :val="orig_cmd"
-            :orig-json="task"
-            :is-scrolling="isScrolling"
-            :active-process="activeProcess"
-            @change="updateCmd"
-            @revert="cancelEdit"
-            @save="saveChanges"
-          ></command-bar>
-          <code-editor
-            ref="code"
-            class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
-            :val="orig_code"
-            :lang="code_lang"
-            @change="updateCode"
-            v-if="is_task_execute"
-          ></code-editor>
-          <transition name="slide-fade">
-            <div class="flex flex-row mt2" v-show="is_changed">
-              <div class="flex-fill">&nbsp;</div>
-              <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
-              <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
-            </div>
-          </transition>
-          <transition name="slide-fade">
-            <div class="flex flex-row mt2" v-if="show_syntax_error">
-              <div class="flex-fill">&nbsp;</div>
-              <div class="flex-none f7 dark-red">There is an error in the command syntax</div>
-            </div>
-          </transition>
-          <transition name="slide-fade">
-            <pipe-content
-              class="mt2 relative"
-              :stream-eid="active_stream_eid"
-              :task-json="task"
-              v-if="show_preview && active_stream_eid.length > 0"
-            ></pipe-content>
-          </transition>
+            <!-- command bar -->
+            <command-bar
+              ref="commandbar"
+              class="mt2 pa1 ba b--black-10 bg-white"
+              :val="orig_cmd"
+              :orig-json="task"
+              :is-scrolling="isScrolling"
+              :active-process="activeProcess"
+              @change="updateCmd"
+              @revert="cancelEdit"
+              @save="saveChanges"
+            ></command-bar>
+
+            <!-- code editor -->
+            <code-editor
+              ref="code"
+              class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
+              :val="orig_code"
+              :lang="code_lang"
+              @change="updateCode"
+              v-if="is_task_execute"
+            ></code-editor>
+
+            <!-- error message and cancel/save buttons -->
+            <transition name="slide-fade">
+              <div class="flex flex-row items-start mt2" v-show="is_changed">
+                <div class="flex-fill mr4">
+                  <transition name="slide-fade">
+                    <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
+                  </transition>
+                </div>
+                <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
+                <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
+              </div>
+            </transition>
+
+            <!-- preview -->
+            <transition name="slide-fade">
+              <pipe-content
+                class="mt2 relative"
+                :stream-eid="active_stream_eid"
+                :task-json="task"
+                v-if="show_preview && active_stream_eid.length > 0"
+              ></pipe-content>
+            </transition>
+          </div>
         </div>
       </div>
     </div>
@@ -147,9 +216,14 @@
 </template>
 
 <script>
-  import { PROCESS_STATUS_RUNNING } from '../constants/process'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT, TASK_TYPE_EXECUTE } from '../constants/task-type'
   import { mapGetters } from 'vuex'
+  import { PROCESS_STATUS_RUNNING } from '../constants/process'
+  import {
+    TASK_TYPE_INPUT,
+    TASK_TYPE_OUTPUT,
+    TASK_TYPE_EXECUTE
+  } from '../constants/task-type'
+  import api from '../api'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
@@ -158,21 +232,52 @@
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
   import ProcessProgressItem from './ProcessProgressItem.vue'
-  import taskItemHelper from './mixins/task-item-helper'
+  import TaskConfigureItem from './TaskConfigureItem.vue'
+  import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
     props: {
-      'item': {},
-      'index': {},
-      'tasks': {},
-      'active-process': {},
-      'is-scrolling': {},
+      'item': {
+        type: Object,
+        required: true
+      },
+      'index': {
+        type: Number,
+        required: true
+      },
+      'tasks': {
+        type: Array,
+        required: true
+      },
+      'active-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'first-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'last-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'is-prompting': {
+        type: Boolean,
+        default: false
+      },
+      'is-scrolling': {
+        type: Boolean,
+        default: false
+      },
+      'active-process': {
+        type: Object
+      },
       'show-preview': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
       },
     },
-    mixins: [taskItemHelper],
+    mixins: [TaskItemHelper],
     components: {
       Btn,
       ConnectionIcon,
@@ -180,7 +285,8 @@
       CommandBar,
       InlineEditText,
       PipeContent,
-      ProcessProgressItem
+      ProcessProgressItem,
+      TaskConfigureItem
     },
     inject: ['pipeEid'],
     watch: {
@@ -201,9 +307,9 @@
 
       return {
         is_inited: false,
-        show_preview: this.showPreview,
-        show_syntax_error: false,
         description: _.get(this, 'item.description', ''),
+        show_preview: this.showPreview,
+        syntax_msg: '',
         edit_json: this.getOrigJson(),
         edit_cmd: this.getOrigCmd(),
         edit_code: this.getOrigCode()
@@ -221,6 +327,9 @@
       },
       is_task_execute() {
         return this.task_type == TASK_TYPE_EXECUTE
+      },
+      is_active_prompt_task() {
+        return this.index == this.activePromptIdx
       },
       orig_cmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
@@ -249,7 +358,7 @@
         return 'Insert a new step after step ' + (this.index+1)
       },
       collapse_tooltip() {
-        return this.show_preview ? 'Hide preview' : 'Show preview'
+        return this.show_preview ? 'Hide preview (Ctrl+Click to hide all)' : 'Show preview (Ctrl+Click to show all)'
       },
       code_lang() {
         return _.get(this, 'task.params.lang', 'python')
@@ -271,6 +380,9 @@
 
         // ...otherwise, use the output array from the active subprocess
         return inputs
+      },
+      variables() {
+        return _.get(this, 'task.variables', [])
       },
       active_stream_eid() {
         var stream = _.head(this.our_inputs)
@@ -297,6 +409,20 @@
           return ['pb4a','br2','bb','br--bottom'].join(' ')
 
         return 'pb4a'
+      },
+      style() {
+        return ''
+
+        if (this.isPrompting && this.is_active_prompt_task)
+          return this.index == 0 ? 'margin-bottom: 1.25rem' : 'margin-top: 1.25rem; margin-bottom: 1.25rem'
+
+        return ''
+      },
+      content_style() {
+        if (this.isPrompting && this.is_active_prompt_task)
+         return 'z-index:2; padding: 1.25rem; box-shadow: 0 0 20px rgba(0,0,0,0.2)'
+
+        return ''
       }
     },
     methods: {
@@ -328,11 +454,31 @@
       updateCode(code) {
         this.edit_code = code
       },
+      validateCode(code, callback) {
+        var base64_code = this.getBase64Code(code)
+
+        var validate_attrs = [{
+          key: 'code',
+          value: base64_code,
+          type: 'python'
+        }]
+
+        api.validate({ attrs: validate_attrs }).then((response) => {
+          var result = _.get(response.body, '[0]', {})
+
+          if (_.isFunction(callback))
+            callback.call(this, result)
+        }, (response) => {
+          // error callback
+        })
+      },
       editTaskSingleton(attrs, input) {
         var eid = this.pipeEid
         var task_eid = this.eid
         var attrs = _.assign({}, this.task, attrs)
-        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs })
+        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {
+          this.clearSyntaxError()
+        })
 
         if (!_.isNil(input))
           input.endEdit()
@@ -350,6 +496,9 @@
         var code_editor = this.$refs['code']
         if (!_.isNil(code_editor))
           code_editor.reset()
+
+        // remove all syntax errors
+        this.clearSyntaxError()
       },
       saveChanges() {
         var edit_json = _.cloneDeep(this.edit_json)
@@ -358,7 +507,7 @@
 
         if (parser.validate(this.edit_cmd) !== true)
         {
-          this.showSyntaxError()
+          this.showSyntaxError('There is an error in the command syntax', 4000)
           return
         }
 
@@ -372,8 +521,27 @@
             edit_attrs.params = {}
 
           _.set(edit_attrs, 'params.code', this.getBase64Code(this.edit_code))
+
+          // only validate python right now
+          if (this.code_lang == 'python')
+          {
+            this.validateCode(this.edit_code, (res) => {
+              if (res.valid === false)
+                this.showSyntaxError(res.message)
+                 else
+                this.editTaskSingleton(edit_attrs)
+            })
+          }
+           else
+          {
+            this.editTaskSingleton(edit_attrs)
+          }
+
+          // we're done
+          return
         }
-         else if (task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT)
+
+        if (task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT)
         {
           var connection_identifier = _.get(edit_attrs, 'params.connection', '')
 
@@ -396,9 +564,14 @@
 
         this.editTaskSingleton(edit_attrs)
       },
-      showSyntaxError() {
-        this.show_syntax_error = true
-        setTimeout(() => { this.show_syntax_error = false }, 4000)
+      showSyntaxError(msg, hide_timeout) {
+        this.syntax_msg = msg
+
+        if (_.isNumber(hide_timeout))
+          setTimeout(() => { this.syntax_msg = '' }, hide_timeout)
+      },
+      clearSyntaxError() {
+        this.syntax_msg = ''
       },
       insertNewTask(insert_idx) {
         var idx = _.defaultTo(insert_idx, this.index+1)
@@ -412,6 +585,9 @@
       togglePreview(evt) {
         this.show_preview = !this.show_preview
         this.$emit('toggle-preview', this.show_preview, evt.ctrlKey /* toggle all */)
+      },
+      onPromptValueChange(val, variable_set_key) {
+        this.$emit('prompt-value-change', val, variable_set_key)
       }
     }
   }

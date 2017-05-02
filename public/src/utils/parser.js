@@ -267,6 +267,21 @@
 
     this.parseColumns = this.parseFilenames = this.parseCommaList = function(str)
     {
+      var off = 0, end, results = []
+      while (off < str.length)
+      {
+        end = this.findToplevel(str, ',', off)
+        if (end == -1)
+        {
+          end = str.length
+        }
+        results.push(this.dequoteColumn(str.substr(off, end-off).trim()))
+        off = end+1
+      }
+
+      return results
+
+      /*
       var i, parts = str.split(/,(?![^\(\[]*[\]\)])/), results = [];
       for (i = 0; i < parts.length; ++i)
       {
@@ -277,6 +292,7 @@
         }
       }
       return results;
+      */
     }
 
     this.parseListObject = function(str)

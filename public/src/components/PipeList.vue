@@ -31,11 +31,11 @@
   import Spinner from 'vue-simple-spinner'
   import PipeItem from './PipeItem.vue'
   import EmptyItem from './EmptyItem.vue'
-  import commonFilter from './mixins/common-filter'
+  import CommonFilter from './mixins/common-filter'
 
   export default {
     props: ['filter', 'project-eid'],
-    mixins: [commonFilter],
+    mixins: [CommonFilter],
     components: {
       Spinner,
       PipeItem,

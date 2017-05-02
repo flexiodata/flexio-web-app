@@ -25,12 +25,25 @@ class Test
         // SETUP
 
         $script = <<<EOD
-import flexioext
-flexioext.output.content_type = "text/plain"
-flexioext.output.stream.write("Hello, world.")
+import flexio
+flexio.output.content_type = "text/plain"
+flexio.output.stream.write("Hello, world.")
 EOD;
         $task = json_decode('
         [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                    "columns": [
+                        { "name": "c1", "type": "character", "width": 3 }
+                    ],
+                    "content": [
+                        {"c1" : "a"},
+                        {"c1" : "b"}
+                    ]
+                }
+            },
             {
                 "type": "flexio.execute",
                 "params": {
@@ -48,6 +61,6 @@ EOD;
         $result = TestUtil::getProcessResult($process,0,50);
         $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
         $expected = 'Hello, world.';
-        TestCheck::assertString('A.1', 'Execute Job; check basic functionality',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        TestCheck::assertString('A.1', 'Execute Job; check basic functionality',  $actual, $expected, $results);
     }
 }

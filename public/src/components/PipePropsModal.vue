@@ -70,6 +70,7 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import {
     CONNECTION_TYPE_BLANK_PIPE,
     CONNECTION_TYPE_HTTP,
@@ -79,14 +80,13 @@
   } from '../constants/connection-type'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
-  import { mapGetters } from 'vuex'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
   import UrlInputList from './UrlInputList.vue'
-  import validation from './mixins/validation'
+  import Validation from './mixins/validation'
 
   const defaultAttrs = () => {
     return {
@@ -99,7 +99,7 @@
 
   export default {
     props: ['project-eid'],
-    mixins: [validation],
+    mixins: [Validation],
     components: {
       Btn,
       ConnectionIcon,

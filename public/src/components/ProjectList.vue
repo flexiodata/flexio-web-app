@@ -24,15 +24,15 @@
 </template>
 
 <script>
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import ProjectItem from './ProjectItem.vue'
   import EmptyItem from './EmptyItem.vue'
-  import { mapState, mapGetters } from 'vuex'
-  import commonFilter from './mixins/common-filter'
+  import CommonFilter from './mixins/common-filter'
 
   export default {
     props: ['filter'],
-    mixins: [commonFilter],
+    mixins: [CommonFilter],
     components: {
       Spinner,
       ProjectItem,

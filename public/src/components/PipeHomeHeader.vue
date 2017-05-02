@@ -40,17 +40,19 @@
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
         :class="[pipeView=='overview'?'b--blue':'b--transparent']"
         @click="setPipeView('overview')"
+        v-if="!isPrompting && !isProcessRunning"
       >Pipe Overview</div>
       <div
         class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
         :class="[pipeView=='builder'?'b--blue':'b--transparent']"
         @click="setPipeView('builder')"
+        v-if="!isPrompting && !isProcessRunning"
       >Pipe Builder</div>
       <btn
         btn-md
         btn-primary
         class="ttu b"
-        v-if="processRunning"
+        v-if="isPrompting || isProcessRunning"
         @click="cancelProcess"
       >Cancel</btn>
       <div
@@ -95,7 +97,11 @@
       'pipe-view': {
         type: String
       },
-      'process-running': {
+      'is-prompting': {
+        type: Boolean,
+        default: false
+      },
+      'is-process-running': {
         type: Boolean
       }
     },
@@ -129,13 +135,19 @@
       },
 
       is_run_allowed() {
+        // only allow run after a step has been added
+        return this.tasks.length > 0
+
+        /*
         if (this.input_tasks.length == 0)
           return false
         return true
+        */
       },
 
       run_button_tooltip() {
-        return this.is_run_allowed ? '' : 'Pipes must have an input or execute step in order to be run'
+        return ''
+        // return this.is_run_allowed ? '' : 'Pipes must have an input or execute step in order to be run'
       }
     },
     methods: {
