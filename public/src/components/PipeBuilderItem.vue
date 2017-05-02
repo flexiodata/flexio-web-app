@@ -217,7 +217,11 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { PROCESS_STATUS_RUNNING } from '../constants/process'
+  import {
+    PROCESS_STATUS_PENDING,
+    PROCESS_STATUS_WAITING,
+    PROCESS_STATUS_RUNNING
+  } from '../constants/process'
   import {
     TASK_TYPE_INPUT,
     TASK_TYPE_OUTPUT,
@@ -389,7 +393,11 @@
         return _.get(stream, 'eid', '')
       },
       show_progress() {
-        return _.get(this.activeProcess, 'process_status') == PROCESS_STATUS_RUNNING
+        return _.includes([
+          PROCESS_STATUS_PENDING,
+          PROCESS_STATUS_WAITING,
+          PROCESS_STATUS_RUNNING
+        ], _.get(this.activeProcess, 'process_status'))
       },
       number_cls() {
         // compensate for content top border

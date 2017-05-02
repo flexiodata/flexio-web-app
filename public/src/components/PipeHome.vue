@@ -142,6 +142,10 @@
          else
         this.setPipeView(PIPEHOME_VIEW_TRANSFER)
     },
+    mounted() {
+      if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_CONFIGURE)
+        this.runPipe()
+    },
     methods: {
       ...mapGetters([
         'getAllConnections',
