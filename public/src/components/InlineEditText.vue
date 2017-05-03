@@ -44,11 +44,13 @@
       ><i class="db material-icons f6">edit</i>
       </button>
     </div>
-    <div class="flex flex-row items-start mt2" v-show="show_buttons">
-      <div class="flex-fill"></div>
-      <btn btn-sm class="b ttu blue mr2" @click="endEdit(false)">Cancel</btn>
-      <btn btn-sm class="b ttu white bg-blue" @click="save">Save Changes</btn>
-    </div>
+    <transition name="slide-fade">
+      <div class="flex flex-row items-start mt2" v-show="show_buttons">
+        <div class="flex-fill"></div>
+        <btn btn-sm class="b ttu blue mr2" @click="endEdit(false)">Cancel</btn>
+        <btn btn-sm class="b ttu white bg-blue" @click="save">Save Changes</btn>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -122,8 +124,12 @@
     },
     data() {
       return {
+        before_edit_val: this.val,
         edit_val: this.val,
         is_editing: false,
+        // this allows us to let the hide transition finish
+        // before we swap out the edit text for the static text
+        keep_buttons_alive: false,
         autosize_initialized: false
       }
     },
@@ -132,7 +138,7 @@
         return marked(this.edit_val)
       },
       show_buttons() {
-        return this.is_editing && (this.showSaveCancelButtons || this.isMarkdown)
+        return this.is_editing && this.keep_buttons_alive && (this.showSaveCancelButtons || this.isMarkdown)
       }
     },
     mounted() {
@@ -148,10 +154,12 @@
     },
     methods: {
       save() {
+        this.before_edit_val = this.edit_val
         this.$emit('save', { [this.inputKey]: this.edit_val }, this)
       },
       startEdit() {
         this.is_editing = true
+        this.keep_buttons_alive = true
 
         this.$nextTick(() => {
           var ta = this.$refs['textarea']
@@ -161,10 +169,16 @@
         })
       },
       endEdit(save) {
-        if (save === false)
-          this.edit_val = this.val
+        this.keep_buttons_alive = false
 
-        this.is_editing = false
+        if (save === false)
+          this.edit_val = this.before_edit_val
+
+        // allow time for transition to finish
+        if (this.showSaveCancelButtons || this.isMarkdown)
+          setTimeout(() => { this.is_editing = false }, 450)
+           else
+          this.is_editing = false
       },
       onEnterKeydown() {
         if (!this.isMarkdown && !this.isMultiline)
