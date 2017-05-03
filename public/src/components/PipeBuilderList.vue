@@ -16,6 +16,7 @@
     <div class="pb3 ml2-m ml3-l" v-else>
       <pipe-builder-item
         v-for="(task, index) in tasks"
+        :key="task.eid"
         :pipe-eid="pipeEid"
         :item="task"
         :index="index"

@@ -77,7 +77,7 @@
         class="flex-fill relative ph3a bg-white bl br b--white-box"
         :class="[
           content_cls,
-          index==0?'pt3':'pt2',
+          index==0?'pt3':'',
           isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':''
         ]"
         :style="content_style"
