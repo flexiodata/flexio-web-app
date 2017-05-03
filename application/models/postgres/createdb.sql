@@ -12,7 +12,6 @@ CREATE TABLE tbl_object (
   eid_type varchar(3) NOT NULL default '',
   eid_status varchar(1) NOT NULL default '',
   ename varchar(40) NOT NULL default '',
-  rights json,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),

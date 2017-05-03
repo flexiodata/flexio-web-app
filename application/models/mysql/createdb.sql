@@ -30,7 +30,6 @@ CREATE TABLE tbl_object (
   eid_type char(3) NOT NULL default '',
   eid_status char(1) NOT NULL default '',
   ename varchar(40) NOT NULL default '',
-  rights text default '',
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
