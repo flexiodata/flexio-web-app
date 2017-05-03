@@ -143,8 +143,14 @@
         this.setPipeView(PIPEHOME_VIEW_TRANSFER)
     },
     mounted() {
-      if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_CONFIGURE)
-        this.runPipe()
+      // only start in configure mode if we have a pipe and it's already been fetched;
+      // if not, do this check one the pipe has been fetched in tryFetchPipe()
+      if (_.isObject(this.pipe) && _.get(this.pipe, 'is_fetched'))
+      {
+        // if we're starting in configure mode, start the prompting
+        if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_CONFIGURE)
+          this.runPipe()
+      }
     },
     methods: {
       ...mapGetters([
@@ -327,6 +333,10 @@
             {
               if (this.project_eid.length > 0)
                 this.setActiveProject(this.project_eid)
+
+              // if we're starting in configure mode, start the prompting
+              if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_CONFIGURE)
+                this.runPipe()
             }
              else
             {
