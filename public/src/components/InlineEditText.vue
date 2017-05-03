@@ -6,9 +6,9 @@
       autocomplete="off"
       rows="1"
       @keydown.esc="endEdit(false)"
-      @keydown.enter="!isMarkdown && save"
       @keydown.enter.ctrl="save"
-      @blur="!isMarkdown && save"
+      @keydown.enter="onEnterKeydown"
+      @blur="onBlur"
       v-model="edit_val"
       v-show="is_editing"
       v-deferred-focus
@@ -80,6 +80,10 @@
       'is-markdown': {
         type: Boolean,
         default: false
+      },
+      'is-multiline': {
+        type: Boolean,
+        default: false
       }
     },
     components: {
@@ -99,14 +103,10 @@
     },
     computed: {
       markdown_val() {
-        // this eliminates the need to for the markdown to be compiled with every keystroke
-        if (this.is_editing)
-          return ''
-
         return marked(this.edit_val)
       },
       show_buttons() {
-        return this.is_editing && this.isMarkdown
+        return this.is_editing && (this.showSaveCancelButtons || this.isMarkdown)
       }
     },
     mounted() {
@@ -139,6 +139,14 @@
           this.edit_val = this.val
 
         this.is_editing = false
+      },
+      onEnterKeydown() {
+        if (!this.isMarkdown && !this.isMultiline)
+          this.save()
+      },
+      onBlur() {
+        if (!this.show_buttons)
+          this.save()
       }
     }
   }
