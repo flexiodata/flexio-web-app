@@ -127,24 +127,17 @@
         <!-- 3. show normal builder item -->
 
         <div v-else>
-          <!-- task name -->
-          <inline-edit-text
-            class="f5 lh-title"
-            edit-button-tooltip-cls="hint--top-left"
-            input-key="name"
-            :val="display_name"
-            @save="editTaskSingleton">
-          </inline-edit-text>
-
           <!-- task description -->
           <inline-edit-text
-            class="f7 lh-title gray mt1"
+            class="db lh-title mid-gray mt1"
             placeholder="Add a description"
             placeholder-cls="fw6 black-20 hover-black-40"
             edit-button-tooltip-cls="hint--top-left"
             input-key="description"
+            static-cls="hover-bg-near-white"
             :val="description"
             :is-markdown="true"
+            :is-block="true"
             @save="editTaskSingleton">
           </inline-edit-text>
 
@@ -312,7 +305,7 @@
 
       return {
         is_inited: false,
-        description: _.get(this, 'item.description', ''),
+        description: _.get(this, 'item.description', this.display_name),
         show_preview: this.showPreview,
         syntax_msg: '',
         edit_json: this.getOrigJson(),

@@ -2,9 +2,10 @@
   <div>
     <textarea
       ref="textarea"
-      class="w-100 pa1 ba b--black-30 resize-none input-reset lh-title focus-outline-transparent"
       autocomplete="off"
       rows="1"
+      class="w-100 pa1 ba b--black-30 resize-none input-reset lh-title focus-outline-transparent"
+      :class="isBlock ? 'db' : ''"
       @keydown.esc="endEdit(false)"
       @keydown.enter.ctrl="save"
       @keydown.enter="onEnterKeydown"
@@ -13,24 +14,41 @@
       v-show="is_editing"
       v-deferred-focus
     ></textarea>
-    <div class="flex flex-row items-center hide-child hover-black" v-if="!is_editing">
-      <div @click="startEdit" v-html="markdown_val" v-if="isMarkdown && markdown_val.length > 0"></div>
-      <div @click="startEdit" v-else-if="!isMarkdown && edit_val.length > 0">{{edit_val}}</div>
-      <div :class="placeholderCls" @click="startEdit" v-else>{{placeholder}}</div>
+    <div class="flex flex-row items-center hide-child hover-black" :class="staticCls" v-if="!is_editing">
+      <div
+        :class="isBlock ? 'flex-fill' : ''"
+        @click="startEdit"
+        v-html="markdown_val"
+        v-if="isMarkdown && markdown_val.length > 0">
+      </div>
+      <div
+        :class="isBlock ? 'flex-fill' : ''"
+        @click="startEdit"
+        v-else-if="!isMarkdown && edit_val.length > 0"
+      >
+        {{edit_val}}
+      </div>
+      <div
+        :class="[placeholderCls, isBlock ? 'flex-fill' : '']"
+        @click="startEdit"
+        v-else
+      >
+        {{placeholder}}
+      </div>
       <button
-        class="ml1 pa0 br1 child"
-        :class="editButtonTooltipCls"
+        class="ma1 pa1 br1 child"
+        :class="[editButtonTooltipCls, isBlock ? 'self-start' : '']"
         :aria-label="editButtonLabel"
         @click="startEdit"
         v-if="!is_editing && showEditButton"
       ><i class="db material-icons f6">edit</i>
       </button>
     </div>
-      <div class="flex flex-row items-start mt2" v-show="show_buttons">
-        <div class="flex-fill"></div>
-        <btn btn-sm class="b ttu blue mr2" @click="endEdit(false)">Cancel</btn>
-        <btn btn-sm class="b ttu white bg-blue" @click="save">Save Changes</btn>
-      </div>
+    <div class="flex flex-row items-start mt2" v-show="show_buttons">
+      <div class="flex-fill"></div>
+      <btn btn-sm class="b ttu blue mr2" @click="endEdit(false)">Cancel</btn>
+      <btn btn-sm class="b ttu white bg-blue" @click="save">Save Changes</btn>
+    </div>
   </div>
 </template>
 
@@ -73,6 +91,10 @@
         type: Boolean,
         default: false
       },
+      'static-cls': {
+        type: String,
+        default: ''
+      },
       'autosize': {
         type: Boolean,
         default: true
@@ -82,6 +104,10 @@
         default: false
       },
       'is-multiline': {
+        type: Boolean,
+        default: false
+      },
+      'is-block': {
         type: Boolean,
         default: false
       }
