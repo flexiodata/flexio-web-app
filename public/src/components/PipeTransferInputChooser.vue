@@ -77,9 +77,11 @@
       chooseConnection(item) {
         this.$emit('choose-input', item)
       },
-      createPendingConnection(item) {
+      openConnectionModal(attrs) {
         this.show_connection_props_modal = true
-
+        this.$nextTick(() => { this.$refs['modal-connection-props'].open(attrs) })
+      },
+      createPendingConnection(item) {
         var attrs = _.extend({}, this.connection, {
           name: item.service_name,
           connection_type: item.connection_type,
@@ -90,7 +92,7 @@
         this.$store.dispatch('createConnection', { attrs }).then(response => {
           if (response.ok)
           {
-            this.$refs['modal-connection-props'].open(response.body)
+            this.openConnectionModal(response.body)
           }
            else
           {

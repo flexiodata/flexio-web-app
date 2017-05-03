@@ -118,10 +118,16 @@
         this.val = connection_identifier
       },
       addInput() {
-        this.$refs['input-chooser'].createPendingConnection(this.cinfo)
+        if (_.isObject(this.cinfo))
+          this.$refs['input-chooser'].createPendingConnection(this.cinfo)
+           else
+          this.$refs['input-chooser'].openConnectionModal()
       },
       addOutput() {
-        this.$refs['output-chooser'].createPendingConnection(this.cinfo)
+        if (_.isObject(this.cinfo))
+          this.$refs['output-chooser'].createPendingConnection(this.cinfo)
+           else
+          this.$refs['output-chooser'].openConnectionModal()
       }
     }
   }

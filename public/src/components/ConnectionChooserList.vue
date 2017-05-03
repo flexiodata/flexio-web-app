@@ -62,7 +62,8 @@
         default: false
       },
       'connection-type-filter': {
-        type: String
+        type: String,
+        default: ''
       },
       'item-layout': {
         type: String // 'list' or 'grid'
@@ -96,7 +97,7 @@
       input_services() {
         var items = [].concat(this.default_connections, this.getOurConnections())
 
-        if (_.isNil(this.connectionTypeFilter))
+        if (this.connectionTypeFilter.length == 0)
           return items
 
         return _.filter(items, { connection_type: this.connectionTypeFilter })

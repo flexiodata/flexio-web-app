@@ -108,6 +108,7 @@
         <!-- option 2. show task configure item, or... -->
 
         <task-configure-item
+          class="mt2"
           :item="item"
           :index="index"
           :variables="variables"
