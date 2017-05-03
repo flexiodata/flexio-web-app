@@ -50,7 +50,7 @@ try
 {
     // STEP 1: get a list of all objects
     $sql = 'select eid from tbl_object';
-    $result = $db_application->query($sql);
+    $result = $db->query($sql);
 
 
     // STEP 2: iterate through each of the objects and populate the
