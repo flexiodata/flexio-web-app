@@ -26,7 +26,7 @@
 
     <pipe-builder-list
       class="flex-fill pv4 pl4-l bt b--black-10"
-      style="padding-bottom: 300px"
+      style="padding-bottom: 240px"
       :id="eid"
       :pipe-eid="eid"
       :tasks="is_prompting ? prompt_tasks : tasks"
