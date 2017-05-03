@@ -53,7 +53,7 @@
       <!-- insert before button -->
       <div
         class="absolute"
-        style="top: -24px; left: 8px"
+        style="top: -16px; left: 8px"
         v-show="!show_progress"
         v-if="index==0 && !show_progress && !this.isPrompting && false"
       >
@@ -82,128 +82,110 @@
         ]"
         :style="content_style"
       >
-        <!-- 1. show progress -->
+        <!-- always task description -->
+        <inline-edit-text
+          class="db lh-title mid-gray"
+          placeholder="Add a description"
+          placeholder-cls="fw6 black-20 hover-black-40"
+          edit-button-tooltip-cls="hint--top-left"
+          input-key="description"
+          static-cls="hover-bg-near-white"
+          :val="description"
+          :allow-edit="!show_progress && !isPrompting"
+          :is-markdown="true"
+          :is-block="true"
+          @save="editTaskSingleton">
+        </inline-edit-text>
 
-        <div v-if="show_progress">
-          <!-- static task name -->
-          <div class="f5 lh-title">{{display_name}}</div>
+        <!-- option 1. show process progress item, or... -->
 
-          <!-- static task description -->
-          <div class="f7 lh-title gray mt1" v-if="description.length > 0">{{description}}</div>
+        <process-progress-item
+          class="mt2 pt2 bt b--black-10"
+          :item="active_subprocess"
+          v-if="show_progress">
+        </process-progress-item>
 
-          <!-- process progress item -->
-          <process-progress-item
-            class="mt2 pt2 bt b--black-10"
-            :item="active_subprocess">
-          </process-progress-item>
-        </div>
+        <!-- option 2. show task configure item, or... -->
 
-        <!-- 2. show prompt/configure item -->
+        <task-configure-item
+          :item="item"
+          :index="index"
+          :variables="variables"
+          :active-prompt-idx="activePromptIdx"
+          :first-prompt-idx="firstPromptIdx"
+          :last-prompt-idx="lastPromptIdx"
+          :is-active-prompt-task="is_active_prompt_task"
+          @prompt-value-change="onPromptValueChange"
+          @go-prev-prompt="$emit('go-prev-prompt')"
+          @go-next-prompt="$emit('go-next-prompt')"
+          @run-once-with-values="$emit('run-once-with-values')"
+          @save-values-and-run="$emit('save-values-and-run')"
+          v-else-if="isPrompting && variables.length > 0"
+        ></task-configure-item>
 
-        <div v-else-if="isPrompting === true">
-          <!-- static task name -->
-          <div class="f5 lh-title" v-if="variables.length == 0">{{display_name}}</div>
+        <!-- option 3. show normal builder item -->
 
-          <!-- static task description -->
-          <div class="f7 lh-title gray mt1" v-if="variables.length == 0">{{description}}</div>
-
-          <!-- task configure item -->
-          <task-configure-item
-            :item="item"
-            :index="index"
-            :variables="variables"
-            :active-prompt-idx="activePromptIdx"
-            :first-prompt-idx="firstPromptIdx"
-            :last-prompt-idx="lastPromptIdx"
-            :is-active-prompt-task="is_active_prompt_task"
-            @prompt-value-change="onPromptValueChange"
-            @go-prev-prompt="$emit('go-prev-prompt')"
-            @go-next-prompt="$emit('go-next-prompt')"
-            @run-once-with-values="$emit('run-once-with-values')"
-            @save-values-and-run="$emit('save-values-and-run')"
-            v-if="variables.length > 0"
-          ></task-configure-item>
-        </div>
-
-        <!-- 3. show normal builder item -->
-
-        <div v-else>
-          <!-- task description -->
-          <inline-edit-text
-            class="db lh-title mid-gray"
-            placeholder="Add a description"
-            placeholder-cls="fw6 black-20 hover-black-40"
-            edit-button-tooltip-cls="hint--top-left"
-            input-key="description"
-            static-cls="hover-bg-near-white"
-            :val="description"
-            :is-markdown="true"
-            :is-block="true"
-            @save="editTaskSingleton">
-          </inline-edit-text>
-
-          <div class="relative">
-            <!-- collapser -->
+        <div class="relative" v-else>
+          <!-- collapser -->
+          <div
+            class="absolute cursor-default"
+            style="top: 6px; left: -31px"
+            v-if="active_stream_eid.length > 0"
+          >
             <div
-              class="absolute cursor-default"
-              style="top: 6px; left: -31px"
-              v-if="active_stream_eid.length > 0"
+              class="pointer moon-gray bg-white ba b--white-box br-100 hover-blue hover-b--blue hint--top-right"
+              :aria-label="collapse_tooltip"
+              @click="togglePreview"
             >
-              <div
-                class="pointer moon-gray bg-white ba b--white-box br-100 hover-blue hover-b--blue hint--top-right"
-                :aria-label="collapse_tooltip"
-                @click="togglePreview"
-              >
-                <i class="db material-icons md-18 trans-t" :class="{ 'rotate-90': show_preview }">chevron_right</i>
-              </div>
+              <i class="db material-icons md-18 trans-t" :class="{ 'rotate-90': show_preview }">chevron_right</i>
             </div>
-
-            <!-- command bar -->
-            <command-bar
-              ref="commandbar"
-              class="mt2 pa1 ba b--black-10 bg-white"
-              :val="orig_cmd"
-              :orig-json="task"
-              :is-scrolling="isScrolling"
-              :active-process="activeProcess"
-              @change="updateCmd"
-              @revert="cancelEdit"
-              @save="saveChanges"
-            ></command-bar>
-
-            <!-- code editor -->
-            <code-editor
-              ref="code"
-              class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
-              :val="orig_code"
-              :lang="code_lang"
-              @change="updateCode"
-              v-if="is_task_execute"
-            ></code-editor>
-
-            <!-- error message and cancel/save buttons -->
-            <transition name="slide-fade">
-              <div class="flex flex-row items-start mt2" v-show="is_changed">
-                <div class="flex-fill mr4">
-                  <transition name="slide-fade">
-                    <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
-                  </transition>
-                </div>
-                <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
-                <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
-              </div>
-            </transition>
-
-            <!-- preview -->
-            <transition name="slide-fade">
-              <pipe-content
-                class="mt2 relative"
-                :stream-eid="active_stream_eid"
-                :task-json="task"
-                v-if="show_preview && active_stream_eid.length > 0"
-              ></pipe-content>
-            </transition>
           </div>
+
+          <!-- command bar -->
+          <command-bar
+            ref="commandbar"
+            class="mt2 pa1 ba b--black-10 bg-white"
+            :val="orig_cmd"
+            :orig-json="task"
+            :is-scrolling="isScrolling"
+            :active-process="activeProcess"
+            @change="updateCmd"
+            @revert="cancelEdit"
+            @save="saveChanges"
+          ></command-bar>
+
+          <!-- code editor -->
+          <code-editor
+            ref="code"
+            class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
+            :val="orig_code"
+            :lang="code_lang"
+            @change="updateCode"
+            v-if="is_task_execute"
+          ></code-editor>
+
+          <!-- error message and cancel/save buttons -->
+          <transition name="slide-fade">
+            <div class="flex flex-row items-start mt2" v-show="is_changed">
+              <div class="flex-fill mr4">
+                <transition name="slide-fade">
+                  <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
+                </transition>
+              </div>
+              <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
+              <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
+            </div>
+          </transition>
+
+          <!-- preview -->
+          <transition name="slide-fade">
+            <pipe-content
+              class="mt2 relative"
+              :stream-eid="active_stream_eid"
+              :task-json="task"
+              v-if="show_preview && active_stream_eid.length > 0"
+            ></pipe-content>
+          </transition>
         </div>
       </div>
     </div>

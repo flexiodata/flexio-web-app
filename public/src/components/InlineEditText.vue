@@ -14,7 +14,10 @@
       v-show="is_editing"
       v-deferred-focus
     ></textarea>
-    <div class="flex flex-row items-center hide-child hover-black" :class="staticCls" v-if="!is_editing">
+    <div class="flex flex-row items-center hide-child" :class="[
+      allowEdit ? staticCls : '',
+      allowEdit ? 'hover-black' : ''
+    ]" v-if="!is_editing">
       <div
         class="marked"
         :class="{ 'flex-fill': isBlock }"
@@ -41,7 +44,7 @@
         :class="[editButtonTooltipCls, isBlock ? 'self-start' : '']"
         :aria-label="editButtonLabel"
         @click="startEdit"
-        v-if="!is_editing && showEditButton"
+        v-if="!is_editing && showEditButton && allowEdit"
       ><i class="db material-icons f6">edit</i>
       </button>
     </div>
@@ -102,6 +105,10 @@
         type: Boolean,
         default: true
       },
+      'allow-edit': {
+        type: Boolean,
+        default: true
+      },
       'is-markdown': {
         type: Boolean,
         default: false
@@ -120,6 +127,7 @@
     },
     watch: {
       val: function(val, old_val) {
+        this.before_edit_val = val
         this.edit_val = val
       }
     },
@@ -139,7 +147,7 @@
         return marked(this.edit_val)
       },
       show_buttons() {
-        return this.is_editing && this.keep_buttons_alive && (this.showSaveCancelButtons || this.isMarkdown)
+        return this.allowEdit && this.is_editing && this.keep_buttons_alive && (this.showSaveCancelButtons || this.isMarkdown)
       }
     },
     mounted() {
@@ -159,6 +167,9 @@
         this.$emit('save', { [this.inputKey]: this.edit_val }, this)
       },
       startEdit() {
+        if (!this.allowEdit)
+          return
+
         this.is_editing = true
         this.keep_buttons_alive = true
 
