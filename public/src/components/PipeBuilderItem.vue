@@ -129,7 +129,7 @@
         <div v-else>
           <!-- task description -->
           <inline-edit-text
-            class="db lh-title mid-gray mt1"
+            class="db lh-title mid-gray"
             placeholder="Add a description"
             placeholder-cls="fw6 black-20 hover-black-40"
             edit-button-tooltip-cls="hint--top-left"

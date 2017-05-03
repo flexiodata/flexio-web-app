@@ -16,7 +16,8 @@
     ></textarea>
     <div class="flex flex-row items-center hide-child hover-black" :class="staticCls" v-if="!is_editing">
       <div
-        :class="isBlock ? 'flex-fill' : ''"
+        class="marked"
+        :class="{ 'flex-fill': isBlock }"
         @click="startEdit"
         v-html="markdown_val"
         v-if="isMarkdown && markdown_val.length > 0">
