@@ -866,7 +866,11 @@ class Model
         // make sure the rights are in the correct format
         foreach ($rights as $r)
         {
-            if (!isset($r['access_type']) || !isset($r['access_code']) || !isset($r['action']))
+            if (!isset($r['access_type']) || !is_string($r['access_type']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (!isset($r['access_code']) || !is_string($r['access_code']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (!isset($r['action']) || !is_string($r['action']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
@@ -887,7 +891,7 @@ class Model
             {
                 $timestamp = \Flexio\System\System::getTimestamp();
                 $process_arr = array(
-                    'object_eid'    => $r['eid'],
+                    'object_eid'    => $eid,
                     'access_type'   => $r['access_type'],
                     'access_code'   => $r['access_code'],
                     'action'        => $r['action'],
@@ -917,7 +921,11 @@ class Model
         // make sure the rights are in the correct format
         foreach ($rights as $r)
         {
-            if (!isset($r['access_type']) || !isset($r['access_code']) || !isset($r['action']))
+            if (!isset($r['access_type']) || !is_string($r['access_type']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (!isset($r['access_code']) || !is_string($r['access_code']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (!isset($r['action']) || !is_string($r['action']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
@@ -963,11 +971,10 @@ class Model
                                                   tac.object_eid as object_eid,
                                                   tac.access_type as access_type,
                                                   tac.access_code as access_code,
-                                                  tac.action as action,
-                                                  tac.created as created,
-                                                  tac.updated as updated
+                                                  tac.action as action
                                             from tbl_acl tac
                                             where tac.object_eid = ?
+                                            order by tac.id
                                             ", $eid);
 
         if ($rows === false)
