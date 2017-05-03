@@ -122,6 +122,10 @@ class TestController extends \Flexio\System\FxControllerAction
 
 echo "<pre>";
 
+        $actual = \Flexio\Tests\TestUtil::evalExpression('to_char(to_date("2001-02-03"))');
+        var_dump($actual);
+
+/*
         $result2 = \Flexio\Tests\TestUtil::evalExpressionPostgres('iskindof(\'"firstnamelastname"@domain.com\',"email")');
         var_dump($result2);
         die();
@@ -190,6 +194,7 @@ echo "<pre>";
         $actual = \Flexio\Tests\TestUtil::evalExpressionNative($expr);
         echo "<br>" . $expr. "<br>";
         var_dump($actual);
+*/
     }
 
     public function uploadAction()

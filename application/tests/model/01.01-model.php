@@ -319,107 +319,102 @@ class Test
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_FLEXIO;
-        $expected = 'flexio.api';
+        $expected = 'flexio';
         TestCheck::assertString('H.1', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::CONNECTION_TYPE_FLEXIO_LOCAL;
-        $expected = 'flexio.local';
-        TestCheck::assertString('H.2', 'Connection type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_FTP;
-        $expected = 'ftp.api';
+        $expected = 'ftp';
         TestCheck::assertString('H.3', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_SFTP;
-        $expected = 'sftp.api';
+        $expected = 'sftp';
         TestCheck::assertString('H.4', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_MYSQL;
-        $expected = 'mysql.api';
+        $expected = 'mysql';
         TestCheck::assertString('H.5', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_POSTGRES;
-        $expected = 'postgres.api';
+        $expected = 'postgres';
         TestCheck::assertString('H.6', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_DROPBOX;
-        $expected = 'dropbox.oauth2';
+        $expected = 'dropbox';
         TestCheck::assertString('H.7', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_GOOGLEDRIVE;
-        $expected = 'googledrive.oauth2';
+        $expected = 'googledrive';
         TestCheck::assertString('H.8', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_GOOGLESHEETS;
-        $expected = 'googlesheets.oauth2';
+        $expected = 'googlesheets';
         TestCheck::assertString('H.9', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_AMAZONS3;
-        $expected = 'amazons3.api';
+        $expected = 'amazons3';
         TestCheck::assertString('H.10', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_UPLOAD;
-        $expected = 'upload.api';
+        $expected = 'upload';
         TestCheck::assertString('H.11', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_DOWNLOAD;
-        $expected = 'download.api';
+        $expected = 'download';
         TestCheck::assertString('H.12', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_STDIN;
-        $expected = 'stdin.api';
+        $expected = 'stdin';
         TestCheck::assertString('H.13', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_STDOUT;
-        $expected = 'stdout.api';
+        $expected = 'stdout';
         TestCheck::assertString('H.14', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_EMAIL;
-        $expected = 'email.api';
+        $expected = 'email';
         TestCheck::assertString('H.15', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_HTTP;
-        $expected = 'http.api';
+        $expected = 'http';
         TestCheck::assertString('H.16', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_RSS;
-        $expected = 'rss.api';
+        $expected = 'rss';
         TestCheck::assertString('H.17', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_SOCRATA;
-        $expected = 'socrata.api';
+        $expected = 'socrata';
         TestCheck::assertString('H.18', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_PIPELINEDEALS;
-        $expected = 'pipelinedeals.api';
+        $expected = 'pipelinedeals';
         TestCheck::assertString('H.19', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_MAILJET;
-        $expected = 'mailjet.api';
+        $expected = 'mailjet';
         TestCheck::assertString('H.20', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_TWILIO;
-        $expected = 'twilio.api';
+        $expected = 'twilio';
         TestCheck::assertString('H.21', 'Connection type constant',  $actual, $expected, $results);
 
 

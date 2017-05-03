@@ -45,9 +45,13 @@ class ProcessPipe
             return false;
         }
 
-        //stream_set_blocking($this->pipes[0], false);
+        stream_set_blocking($this->pipes[0], true);
         stream_set_blocking($this->pipes[1], false);
 
+        //stream_set_blocking($this->pipes[0], false);
+        //stream_set_blocking($this->pipes[1], false);
+        //stream_set_blocking($this->pipes[0], true);
+        //stream_set_blocking($this->pipes[1], true);
         return true;
     }
 
@@ -89,11 +93,14 @@ class ProcessPipe
     }
 
 
-
     public function write($buf)
     {
-        fwrite($this->pipes[0], $buf);
+        //fxdebug("Want to write " . strlen($buf) . " bytes");
+
+        $b = fwrite($this->pipes[0], $buf);
+        //fxdebug("Actually wrote $b bytes");
         //fflush($this->pipes[0]);
+        return $b;
     }
 
     public function read($size)

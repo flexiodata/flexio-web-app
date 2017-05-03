@@ -1,15 +1,45 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="no-js" lang="">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Chicago Crime By Year</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,700">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.6.1/tachyons.min.css" integrity="sha256-eu1dpzpUytdOAUmB67Qi3mBb6HFjruP8BoAzk4lKiSc=" crossorigin="anonymous" />
+
+    <!-- site css goes here -->
     <style>
+      html, body {
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: 0;
+        height: 100%;
+        color: #333;
+      }
+
+      /* Browser Upgrade Prompt from HTML5 Boilerplate (https://html5boilerplate.com) */
+
+      .browserupgrade {
+          margin: 0.2em 0;
+          background: #ccc;
+          color: #000;
+          padding: 0.2em 0;
+      }
+
+      /* Same as .flex-auto in Tachyons except without the 'auto' flex-basis */
+
       .flex-fill {
         flex: 1 1;
         min-width: 0; /* 1 */
         min-height: 0; /* 1 */
       }
+
+      /* Button hover */
 
       .darken-10:hover,
       .darken-10:focus {
@@ -22,107 +52,135 @@
     </style>
   </head>
   <body>
-      <div class="flex flex-column fixed absolute--fill overflow-hidden">
-        <div class="flex flex-row items-center pa3 bb b--black-20">
-          <div class="f4 dib" style="margin: 0">Chicago Homicides By Year</div>
-          <form class="dib ml3">
-            <input class="input-reset ba b--black-20 pa2 f6 tr w3" name="year" value="2016" />
-            <button type="button" class="btn-submit border-box no-select ba ttu b f6 ph3 pv2 br1 white bg-blue b--blue darken-10">Submit</button>
-          </form>
-        </div>
-        <div id="map" class="flex-fill"></div>
+    <!--[if lt IE 8]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- site content goes here -->
+    <div class="flex flex-column fixed absolute--fill overflow-hidden">
+      <div class="flex flex-row items-center pa3 bb b--black-20">
+        <div class="flex-none f4 fw6 ma0">Chicago Homicides By Year</div>
+        <form class="flex flex-row ml3">
+          <select class="year-select ba b--black-20 pv1 ph2 f6" name="year"></select>
+          <button type="button" class="btn-submit border-box no-select ba ttu b f6 ph3 pv2 br1 white bg-blue b--blue darken-10 ml2">Submit</button>
+        </form>
       </div>
+      <div id="map" class="flex-fill"></div>
     </div>
 
-  	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <!-- external javascript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+
+    <!-- site javascript goes here -->
     <script>
-	  var g_map;
-	  var g_markers = [];
+      var g_map
+      var g_markers = []
 
-      $(function () {
+      function initMap()
+      {
+        var chicago = {
+          lat: 41.8781,
+          lng:-87.6378
+        }
 
+        g_map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 11,
+          center: chicago
+        })
+      }
+
+      $(function() {
         var $btn = $('.btn-submit')
+
+        // fill out select with years
+
+        var cur_year = new Date().getFullYear()
+        var opts = ''
+
+        for (var y = 2001; y < cur_year; ++y)
+        {
+          opts += '<option value="'+y+'">'+y+'</option>'
+        }
+
+        $('.year-select').append(opts).val(cur_year-1)
 
         var doSubmit = function()
         {
           // disable submit button
-          $btn.addClass('o-40').text('Loading...').prop('disabled', 'true');
+          $btn.addClass('o-40').text('Loading...').prop('disabled', 'true')
 
           // clear all existing markers
           for (var i = 0; i < g_markers.length; ++i)
           {
-            g_markers[i].setMap(null);
+            g_markers[i].setMap(null)
           }
-          g_markers = [];
+          g_markers = []
 
           $.ajax({
-            type: 'post',
-            url: 'https://www.flex.io/api/v1/pipes/chicago-homicides-v1/run?stream=0',
+            type: 'POST',
+            url: 'https://www.flex.io/api/v1/pipes/flexio-chicago-crime-v1/run?stream=0',
             beforeSend: function(xhr) {
-              xhr.setRequestHeader('Authorization', 'Bearer wtxvdvwcwynhyjykvvjv');
+              xhr.setRequestHeader('Authorization', 'Bearer nmgzsqppgwqbvkfhjdjd')
             },
             data: $('form').serialize(),
             dataType: "json",
             success: function (coords) {
+              // enable submit button
+              $btn.removeClass('o-40').text('Submit').removeProp('disabled')
 
               // add new markers
-              var marker;
+              var marker
 
               for (var i = 0; i < coords.length; ++i)
               {
-                var coord = {lat: parseFloat(coords[i].latitude), lng: parseFloat(coords[i].longitude)};
+                var coord = {
+                  lat: parseFloat(coords[i].latitude),
+                  lng: parseFloat(coords[i].longitude)
+                }
 
                 marker = new google.maps.Marker({
                   position: coord,
                   map: g_map
-                });
+                })
 
                 marker.info = new google.maps.InfoWindow({
                   content: "<p><b>"+coords[i].description+"</b><br/>"+
                            coords[i].date+"</p>" +
                            "<p>"+coords[i].block+"<br/>"+
                            coords[i]['location description']+"</p>"
-                });
+                })
 
                 marker.addListener('click', function() {
-                  this.info.open(this.getMap(), this);
-                });
+                  this.info.open(this.getMap(), this)
+                })
 
-                g_markers.push(marker);
-
-                // enable submit button
-                $btn.removeClass('o-40').text('Submit').removeProp('disabled');
+                g_markers.push(marker)
               }
 
+              // feedback for user if no results
+              if (coords.length == 0)
+                alert("There are no results for that year.")
             },
             error: function () {
-              alert('post failed');
+              alert("Something went wrong and we couldn't complete the request.")
             }
-          });
+          })
         }
 
         $('form').on('submit', function (evt) {
-          evt.preventDefault();
-          doSubmit();
+          evt.preventDefault()
+          doSubmit()
         })
 
         $('.btn-submit').click(function(evt) {
-          doSubmit();
-        });
-      });
+          doSubmit()
+        })
+
+        // start off by doing an inital submit for the current year
+        doSubmit()
+      })
     </script>
 
-    <script>
-      function initMap() {
-        var chicago = {lat: 41.8781, lng:-87.6378};
-        g_map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 11,
-          center: chicago
-        });
-      }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxfb6JACKlfD6IJLQlmvj3Gwo_ynvbXt4&callback=initMap">
-    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxfb6JACKlfD6IJLQlmvj3Gwo_ynvbXt4&callback=initMap"></script>
   </body>
 </html>

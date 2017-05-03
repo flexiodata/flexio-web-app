@@ -33,7 +33,6 @@
 </template>
 
 <script>
-  import { ROUTE_PIPEHOME } from '../constants/route'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import ConnectionIcon from './ConnectionIcon.vue'
 

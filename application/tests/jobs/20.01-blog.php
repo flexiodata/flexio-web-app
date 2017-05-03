@@ -40,7 +40,7 @@ class Test
                     ]
                 },
                 "metadata": {
-                    "connection_type": "http.api"
+                    "connection_type": "http"
                 }
             },
             {
@@ -121,7 +121,7 @@ class Test
                         }
                     ],
                     "connection": {
-                        "connection_type": "http.api"
+                        "connection_type": "http"
                     }
                 },
                 "description": "Add source files and tables for pipe processing."
@@ -220,7 +220,7 @@ class Test
                     ]
                 },
                 "metadata": {
-                    "connection_type": "http.api"
+                    "connection_type": "http"
                 },
                 "eid": "k01ckt2m9d9n"
             },

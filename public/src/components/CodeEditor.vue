@@ -31,7 +31,13 @@
     data() {
       return {
         code_text: '',
-        editor: null
+        editor: null,
+        ss_errors: {}
+      }
+    },
+    computed: {
+      base64_code() {
+        try { return btoa(this.code_text) } catch(e) { return '' }
       }
     },
     created() {
@@ -55,7 +61,7 @@
 
       this.editor.on('change', (cm) => {
         this.code_text = cm.getValue()
-        this.$emit('change', this.code_text)
+        this.$emit('change', this.code_text, this.base64_code)
       })
     },
     methods: {

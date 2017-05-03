@@ -7,7 +7,7 @@
             "type": "flexio.input",
             "description": "Read 3 repository commit histories from GitHub API",
             "metadata": {
-                "connection_type": "http.api"
+                "connection_type": "http"
             },
             "params": {
                 "items": [

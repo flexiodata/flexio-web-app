@@ -133,6 +133,20 @@ class Stream extends \Flexio\Object\Base
         return $local_file_info['size'];
     }
 
+    public function getRowCount() : int
+    {
+        // TODO: store the row count
+
+        $path = $this->getPath();
+        $service = $this->getService();
+
+        $iter = $service->query(array('table' => $path));
+        if (!$iter)
+            return 0;
+
+        return $iter->row_count;
+    }
+
     public function setMimeType(string $mime_type) : \Flexio\Object\Stream
     {
         $properties = array();
@@ -186,114 +200,92 @@ class Stream extends \Flexio\Object\Base
         return $info;
     }
 
-    public function content($start, $limit, $columns = true, $metadata = false, $handle = 'create') // TODO: add input parameter types
+    public function content(int $start, int $limit, int $readsize = 1024 /* testing */) // TODO: add function return type
     {
-        // returns the requested content for the given stream
-
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        $local_properties = $this->properties;
-        $mime_type = $local_properties['mime_type'];
-        $connection_eid = $local_properties['connection_eid'];
-        $path = $local_properties['path'];
-
-        $connection = \Flexio\Object\Connection::load($connection_eid);
-        if ($connection === false)
-            return false;
-
-        $service = $connection->getService();
-        if (!$service)
-            return false;
-
-        $start = (int)$start;
-        $limit = (int)$limit;
         if ($start < 0 )
             $start = 0;
         if ($limit < 0)
             $limit = 0;
-        $metadata = \toBoolean($metadata);
+        if ($readsize <= 0)
+            $readsize = 1;
 
-        // if a list of columns is specified, get the list
-        $columns_specified = false;
-        if (is_array($columns))
-            $columns_specified = array_flip(array_values($columns));
-
-        // get the structure for the output; if columns are specified, only
-        // include the columns in the list
-        $output_structure = array();
-
-        $structure = $this->getStructure()->enum();
-        foreach ($structure as $col)
-        {
-            $column_name = $col['name'];
-            if ($columns_specified !== false)
-            {
-                if (array_key_exists($column_name, $columns_specified) === false)
-                    continue;
-            }
-
-            $output_structure[] = $col;
-        }
+        $idx = 0;
+        $streamreader = \Flexio\Object\StreamReader::create($this);
+        $mime_type = $this->getMimeType();
 
         if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
-            $handle = $service->openFile($path);
+            // read table content
+            $offset1 = 0;
+            $offset2 = 0;
 
-            if (!$handle)
-                return false;
+            // the starting and ending position we want
+            $range1 = $start;
+            $range2 = $start + $limit;
 
-            if ($start > 0)
-                $handle->seek($start);
+            $result = '';
+            while (true)
+            {
+                $chunk = $streamreader->read($readsize);
+                if ($chunk === false)
+                    break;
 
-            $content = $handle->read($limit);
-            return $content;
-        }
+                $offset2 = $offset1 + strlen($chunk);
 
-        $iter = false;
-        if ($handle !== 'create')
-        {
-            $iter = $service->getIteratorFromHandle($handle);
-            if (!$iter)
-                return false;
+                // if we haven't reached the part we want, keep reading
+                if ($offset2 < $range1)
+                {
+                    $offset1 = $offset2;
+                    continue;
+                }
+
+                // if we're past the part we want, we're done
+                if ($offset1 > $range2)
+                    break;
+
+                // case 1: chunk read is contained entirely in the range we want
+                if ($offset1 >= $range1 && $offset2 <= $range2)
+                    $result .= $chunk;
+
+                // case 2: chunk read covers the range we want
+                if ($offset1 < $range1 && $offset2 > $range2)
+                    $result .= substr($chunk, $range1 - $offset1, $range2 - $range1);
+
+                // case 3: chunk read covers first part of the range we want
+                if ($offset1 < $range1 && $offset2 <= $range2)
+                    $result .= substr($chunk, $range1 - $offset1);
+
+                // case 4: chunk read covers second part of the range we want
+                if ($offset1 >= $range1 && $offset2 > $range2)
+                    $result .= substr($chunk, 0, $range2 - $offset1);
+
+                // set the new starting offset position
+                $offset1 = $offset2;
+            }
+
+            return $result;
         }
          else
         {
-            $iter = $service->query(array('table' => $path));
-            if (!$iter)
-                return false;
+            // read table content
+            $result = array();
+            while (true)
+            {
+                $row = $streamreader->readRow();
+                if ($row === false)
+                    break;
 
-            $handle = $iter->getHandle();
+                if ($idx >= $start + $limit)
+                    break;
+
+                if ($idx >= $start)
+                    $result[] = $row;
+
+                $idx++;
+            }
+
+            return $result;
         }
-
-        $iter = $service->query(array('table' => $path));
-        if (!$iter)
-            return false;
-
-        $content = $iter->getRows($start, $limit);
-
-        $result = array();
-        $result['success'] = true;
-        $result['handle'] = $handle;
-        $result['total_count'] = $iter->row_count;
-        if (IS_DEBUG())
-        {
-            $result['table'] = $path;
-        }
-
-        if ($metadata === true)
-            $result['columns'] = $output_structure;
-
-        $result['rows'] = array();
-        foreach ($content as $row)
-        {
-            // map the data from the service that's stored using the store_name
-            // back to the object structure that references the data with the
-            // logical name
-            $result['rows'][] = self::convertStoreNameToName($row, $output_structure);
-        }
-
-        return $result;
     }
 
     public function getService()
