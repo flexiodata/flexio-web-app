@@ -9,18 +9,19 @@
       @keydown.enter="save"
       @blur="save"
       v-model="edit_val"
-      v-show="editing"
+      v-show="is_editing"
       v-deferred-focus
     ></textarea>
-    <div class="flex flex-row items-center hide-child hover-black" v-if="!editing">
-      <div @click="startEdit" v-if="edit_val.length > 0">{{edit_val}}</div>
+    <div class="flex flex-row items-center hide-child hover-black" v-if="!is_editing">
+      <div @click="startEdit" v-html="markdown_val" v-if="isMarkdown && markdown_val.length > 0"></div>
+      <div @click="startEdit" v-else-if="!isMarkdown && edit_val.length > 0">{{edit_val}}</div>
       <div :class="placeholderCls" @click="startEdit" v-else>{{placeholder}}</div>
       <button
         class="ml1 pa0 br1 child"
         :class="editButtonTooltipCls"
         :aria-label="editButtonLabel"
         @click="startEdit"
-        v-if="!editing && showEditButton"
+        v-if="!is_editing && showEditButton"
       ><i class="db material-icons f6">edit</i>
       </button>
     </div>
@@ -29,52 +30,66 @@
 
 <script>
   import autosize from 'autosize'
+  import marked from 'marked'
 
   export default {
     props: {
       'input-key': {
-        required: true,
-        type: String
+        type: String,
+        required: true
       },
       'val': {
-        default: '',
-        type: String
+        type: String,
+        default: ''
       },
       'placeholder': {
-        default: 'Click here to edit',
-        type: String
+        type: String,
+        default: 'Click here to edit'
       },
       'placeholder-cls': {
-        default: '',
-        type: String
+        type: String,
+        default: ''
       },
       'edit-button-label': {
-        default: 'Click to edit',
-        type: String
+        type: String,
+        default: 'Click to edit'
       },
       'edit-button-tooltip-cls': {
-        default: 'hint--top',
-        type: String
+        type: String,
+        default: 'hint--top'
       },
       'show-edit-button': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
       },
       'autosize': {
-        default: true,
-        type: Boolean
-      }
-    },
-    data() {
-      return {
-        edit_val: this.val,
-        editing: false,
-        autosize_initialized: false
+        type: Boolean,
+        default: true
+      },
+      'is-markdown': {
+        type: Boolean,
+        default: false
       }
     },
     watch: {
       val: function(val, old_val) {
         this.edit_val = val
+      }
+    },
+    data() {
+      return {
+        edit_val: this.val,
+        is_editing: false,
+        autosize_initialized: false
+      }
+    },
+    computed: {
+      markdown_val() {
+        // this eliminates the need to for the markdown to be compiled with every keystroke
+        if (this.is_editing)
+          return ''
+
+        return marked(this.edit_val)
       }
     },
     mounted() {
@@ -93,7 +108,7 @@
         this.$emit('save', { [this.inputKey]: this.edit_val }, this)
       },
       startEdit() {
-        this.editing = true
+        this.is_editing = true
 
         this.$nextTick(() => {
           var ta = this.$refs['textarea']
@@ -106,7 +121,7 @@
         if (save === false)
           this.edit_val = this.val
 
-        this.editing = false
+        this.is_editing = false
       }
     }
   }

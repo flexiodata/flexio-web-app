@@ -144,6 +144,7 @@
             edit-button-tooltip-cls="hint--top-left"
             input-key="description"
             :val="description"
+            :is-markdown="true"
             @save="editTaskSingleton">
           </inline-edit-text>
 
