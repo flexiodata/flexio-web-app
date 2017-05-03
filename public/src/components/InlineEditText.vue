@@ -6,8 +6,9 @@
       autocomplete="off"
       rows="1"
       @keydown.esc="endEdit(false)"
-      @keydown.enter="save"
-      @blur="save"
+      @keydown.enter="!isMarkdown && save"
+      @keydown.enter.ctrl="save"
+      @blur="!isMarkdown && save"
       v-model="edit_val"
       v-show="is_editing"
       v-deferred-focus
@@ -25,12 +26,18 @@
       ><i class="db material-icons f6">edit</i>
       </button>
     </div>
+      <div class="flex flex-row items-start mt2" v-show="show_buttons">
+        <div class="flex-fill"></div>
+        <btn btn-sm class="b ttu blue mr2" @click="endEdit(false)">Cancel</btn>
+        <btn btn-sm class="b ttu white bg-blue" @click="save">Save Changes</btn>
+      </div>
   </div>
 </template>
 
 <script>
   import autosize from 'autosize'
   import marked from 'marked'
+  import Btn from './Btn.vue'
 
   export default {
     props: {
@@ -62,6 +69,10 @@
         type: Boolean,
         default: true
       },
+      'show-save-cancel-buttons': {
+        type: Boolean,
+        default: false
+      },
       'autosize': {
         type: Boolean,
         default: true
@@ -70,6 +81,9 @@
         type: Boolean,
         default: false
       }
+    },
+    components: {
+      Btn
     },
     watch: {
       val: function(val, old_val) {
@@ -90,6 +104,9 @@
           return ''
 
         return marked(this.edit_val)
+      },
+      show_buttons() {
+        return this.is_editing && this.isMarkdown
       }
     },
     mounted() {

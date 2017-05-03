@@ -603,17 +603,6 @@
 </script>
 
 <style lang="less">
-  .slide-fade-enter-active,
-  .slide-fade-leave-active {
-    transition: all .3s ease;
-  }
-
-  .slide-fade-enter,
-  .slide-fade-leave-to {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-
   .ph3a {
     padding-left: 1.25rem;
     padding-right: 1.25rem;

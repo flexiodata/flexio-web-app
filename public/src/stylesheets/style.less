@@ -14,6 +14,19 @@
 @import "../vendor/biggrid-2.0.0/less/biggrid.less";
 @import "../vendor/biggrid-2.0.0/less/biggrid-theme-default.less";
 
+// -- Vue.js transition classes --
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
 // -- hint.css --
 
 // turn off transitions for all hint.css tooltips
