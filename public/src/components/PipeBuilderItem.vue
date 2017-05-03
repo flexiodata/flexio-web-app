@@ -7,34 +7,46 @@
   >
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
 
-      <!-- task icon -->
-      <div class="flex-none">
-        <div :class="[ index==0?'mt2':'' ]" @click="deleteTask">
-          <div class="swap-child" v-if="show_connection_icon">
-            <connection-icon
-              class="mr2 mr3-ns br1 pointer child"
-              style="width: 40px; height: 40px"
-              :type="ctype"
-            ></connection-icon>
-            <div class="pointer pa2 mr2 mr3-ns br1 bg-light-silver white tc relative other-child">
+      <div class="flex-none" :class="[ index==0?'mt3':'' ]" >
+        <div class="flex flex-row items-center">
+          <!-- task icon -->
+          <div @click="deleteTask">
+            <div class="swap-child" v-if="show_connection_icon">
+              <connection-icon
+                class="mr2 mr3-ns br1 pointer child"
+                style="width: 40px; height: 40px"
+                :type="ctype"
+              ></connection-icon>
+              <div class="pointer pa2 mr2 mr3-ns br1 bg-light-silver white tc relative other-child">
+                <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
+              </div>
+            </div>
+            <div class="pointer pa2 mr2 mr3-ns br1 white tc relative swap-child" :class="[ bg_color ]" v-else>
+              <i class="db material-icons f3 child">{{task_icon}}</i>
               <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
             </div>
           </div>
-          <div class="pointer pa2 mr2 mr3-ns br1 white tc relative swap-child" :class="[ bg_color ]" v-else>
-            <i class="db material-icons f3 child">{{task_icon}}</i>
-            <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
+
+          <!-- feedback icon when prompting -->
+          <div class="mr1" v-if="false">
+            <i
+              class="material-icons md-24"
+              :class="{
+                'dark-green': true
+              }"
+            >check_circle</i>
           </div>
+
+          <!-- task number -->
+          <div class="f5 lh-title mr2 mr3-ns">{{index+1}}.</div>
         </div>
       </div>
-
-      <!-- task number -->
-      <div class="f5 lh-title mr2 mr3-ns" :class="[number_cls, index==0?'pt3':'pt2' ]">{{index+1}}.</div>
 
       <!-- vertical line -->
       <div
         class="bl bw1 b--black-10 pl3 absolute"
-        style="top: 46px; bottom: 36px; left: 19px"
-        :class="[ index==0?'mt2':'' ]"
+        style="top: 45px; bottom: 35px; left: 19px"
+        :class="[ index==0?'mt3':'' ]"
         v-show="!show_progress && !this.isPrompting"
       ></div>
 
@@ -58,17 +70,6 @@
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
           <i class="db material-icons f3">add_circle</i>
         </div>
-      </div>
-
-      <!-- feedback icon when prompting -->
-      <div class="mr3" :class="[ index==0?'pt3':'pt2' ]" v-if="false">
-        <i
-          class="material-icons md-24"
-          style="margin-top: -1px"
-          :class="{
-            'dark-green': true
-          }"
-        >check_circle</i>
       </div>
 
       <!-- main content -->
