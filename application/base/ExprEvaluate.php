@@ -2775,8 +2775,8 @@ class ExprDateTime
 
         if (isset($format))
         {
-            $format = str_replace(['YYYY', 'MM', 'DD', 'HH24', 'HH12'],
-                                  ['Y'   , 'm',  'd',  'H',    'h'],
+            $format = str_replace(['YYYY', 'MM', 'DD', 'HH24', 'HH12', 'HH', 'MI', 'SS'],
+                                  ['Y'   , 'm',  'd',  'H',    'h',    'h',  'i',  's'],
                                   $format);
             $arr = date_parse_from_format($format, (string)$value);
         }
