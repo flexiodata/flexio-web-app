@@ -864,9 +864,43 @@ TODO: remove deprecated implementation; following was split into two functions,
     public function func_cast($func, $params, &$retval)
     {
         if (!$this->doEval($params[0], $param0)) return false;
-        if (!$this->doEval($params[1], $param1)) return false;
+        //if (!$this->doEval($params[1], $param1)) return false;
 
-        switch ($param1)
+        if ($params[1]->getNodeType() == ExprParser::NODETYPE_FUNCTION && ($params[1]->name == 'text' || $params[1]->name == 'character'))
+        {
+            $func = $params[1];
+            if ($func->params[0]->getNodeType() != ExprParser::NODETYPE_VALUE)
+                return false; // can't specify variable width
+            $type = 'text';
+            $width = $func->params[0]->val;
+        }
+         else if ($params[1]->getNodeType() == ExprParser::NODETYPE_FUNCTION && $params[1]->name == 'numeric')
+        {
+            $func = $params[1];
+            if ($func->params[0]->getNodeType() != ExprParser::NODETYPE_VALUE)
+                return false; // can't specify variable width
+            $type = 'numeric';
+            $width = $func->params[0]->val;
+            if (count($func->params) > 1)
+            {
+                if ($func->params[1]->getNodeType() != ExprParser::NODETYPE_VALUE)
+                    return false; // can't specify variable scale
+                $scale = $func->params[1]->val;
+            }
+        }
+         else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE)
+        {
+            $type = $params[1]->name;
+            $width = null;
+            $scale = null;
+        }
+         else
+        {
+            // must be one of text, numeric, numeric(x,y), etc
+            return false;
+        }
+
+        switch ($type)
         {
             case 'text':
             case 'character':
@@ -917,7 +951,14 @@ TODO: remove deprecated implementation; following was split into two functions,
                 }
                 else
                 {
-                    $retval = floatval(''.$param0);
+                    if (isset($scale))
+                    {
+                        $retval = round(floatval(''.$param0),$scale);
+                    }
+                     else
+                    {
+                        $retval = floatval(''.$param0);
+                    }
                 }
                 return true;
 
@@ -965,7 +1006,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                     return true;
                 }
 
-                if ($param1 == 'date')
+                if ($type == 'date')
                     $dt->truncateTime();
                 else
                     $dt->makeDateTime();
@@ -2491,8 +2532,8 @@ TODO: remove deprecated implementation; following was split into two functions,
         if (count($params) == 1)
         {
             // same as cast(fld, date)
-            $type_constant = new \Flexio\Base\ExprValue;
-            $type_constant->val = 'date';
+            $type_constant = new \Flexio\Base\ExprVariable;
+            $type_constant->name = 'date';
 
             $call_params = [ $params[0], $type_constant ];
             return $this->func_cast($func, $call_params, $retval);
@@ -2525,8 +2566,8 @@ TODO: remove deprecated implementation; following was split into two functions,
         if (count($params) == 1)
         {
             // same as cast(fld, datetime)
-            $type_constant = new \Flexio\Base\ExprValue;
-            $type_constant->val = 'numeric';
+            $type_constant = new \Flexio\Base\ExprVariable;
+            $type_constant->name = 'numeric';
 
             $call_params = [ $params[0], $type_constant ];
             return $this->func_cast($func, $call_params, $retval);
@@ -2557,8 +2598,8 @@ TODO: remove deprecated implementation; following was split into two functions,
         if (count($params) == 1)
         {
             // same as cast(fld, datetime)
-            $type_constant = new \Flexio\Base\ExprValue;
-            $type_constant->val = 'datetime';
+            $type_constant = new \Flexio\Base\ExprVariable;
+            $type_constant->name = 'datetime';
 
             $call_params = [ $params[0], $type_constant ];
             return $this->func_cast($func, $call_params, $retval);
