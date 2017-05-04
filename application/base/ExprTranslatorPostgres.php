@@ -503,7 +503,7 @@ class ExprTranslatorPostgres
                 if ($old_type == 'date')
                     $expr = "to_char($expr,'YYYY-MM-DD')::$cast";
                 else if ($old_type == 'datetime')
-                    $expr = "to_char($expr,'YYYY-MM-DD HH24:MI:SS')::$cast";
+                    $expr = "to_char($expr,'YYYY-MM-DD HH24:MI:SSOF')::$cast";
                 else
                     $expr = "($expr)::$cast";
 

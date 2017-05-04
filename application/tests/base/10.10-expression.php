@@ -5169,7 +5169,30 @@ class Test
 
         $actual = TestUtil::evalExpression('cast("abc",text)');
         $expected = 'abc';
-        TestCheck::assertString('AAC.8', 'Expression; cast() conversion function; cast null to text',  $actual, $expected, $results);
+        TestCheck::assertString('AB.2', 'Expression; cast() conversion function; cast string to text',  $actual, $expected, $results);
 
+        $actual = TestUtil::evalExpression('cast(123,text)');
+        $expected = "123";
+        TestCheck::assertString('AB.3', 'Expression; cast() conversion function; cast int to text',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast(-123.45,text)');
+        $expected = "-123.45";
+        TestCheck::assertString('AB.4', 'Expression; cast() conversion function; cast float to text',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast(true,text)');
+        $expected = "true";
+        TestCheck::assertString('AB.5', 'Expression; cast() conversion function; cast bool (true) to text',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast(false,text)');
+        $expected = "false";
+        TestCheck::assertString('AB.6', 'Expression; cast() conversion function; cast bool (false) to text',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast(to_date("2001-02-03"),text)');
+        $expected = "2001-02-03";
+        TestCheck::assertString('AB.7', 'Expression; cast() conversion function; cast date to text',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast(to_timestamp("2001-02-03 04:05:06"),text)');
+        $expected = "2001-02-03 04:05:06+00";
+        TestCheck::assertString('AB.8', 'Expression; cast() conversion function; cast timestamp to text',  $actual, $expected, $results);
     }
 }

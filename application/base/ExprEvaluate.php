@@ -870,7 +870,31 @@ TODO: remove deprecated implementation; following was split into two functions,
         {
             case 'text':
             case 'character':
-                $retval = is_null($param0) ? null : (string)$param0;
+                if (is_null($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
+
+                if (is_bool($param0))
+                {
+                    $retval = $param0 ? "true":"false";
+                }
+                else if ($param0 instanceof ExprDateTime)
+                {
+                    if ($param0->hasTimePart())
+                    {
+                        $retval = sprintf("%04d-%02d-%02d %02d:%02d:%02d+00", $param0->values['year'], $param0->values['month'], $param0->values['day'], $param0->values['hour'], $param0->values['minute'], $param0->values['second']);
+                    }
+                    else
+                    {
+                        $retval = sprintf("%04d-%02d-%02d", $param0->values['year'], $param0->values['month'], $param0->values['day']);
+                    }
+                }
+                else
+                {
+                    $retval = is_null($param0) ? null : (string)$param0;
+                }
                 return true;
 
             case 'numeric':
@@ -2481,7 +2505,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         {
             $param0 = str_replace(',','', $param0);
         }
-        
+
         $retval = (double)$param0;
         return true;
     }
