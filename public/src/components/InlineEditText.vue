@@ -40,8 +40,8 @@
         {{placeholder}}
       </div>
       <button
-        class="ma1 pa1 br1 child"
-        :class="[editButtonTooltipCls, isBlock ? 'self-start' : '']"
+        class="br1 child"
+        :class="[editButtonTooltipCls, isBlock ? 'ma1 pa1 self-start' : '']"
         :aria-label="editButtonLabel"
         @click="startEdit"
         v-if="!is_editing && showEditButton && allowEdit"
