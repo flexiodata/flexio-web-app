@@ -1154,7 +1154,12 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
         $param0 = self::exprToDate($param0);
-        $retval = ($param0 !== false && $param0->hasTimePart()) ? (double)$param0->getHour() : null;
+        if ($param0 === false)
+        {
+            $retval = null;
+            return true;
+        }
+        $retval = (double)($param0->hasTimePart() ? $param0->getHour() : 0);
         return true;
     }
 
@@ -1331,7 +1336,12 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
         $param0 = self::exprToDate($param0);
-        $retval = ($param0 !== false && $param0->hasTimePart()) ? (double)$param0->getMinute() : null;
+        if ($param0 === false)
+        {
+            $retval = null;
+            return true;
+        }
+        $retval = (double)($param0->hasTimePart() ? $param0->getMinute() : 0);
         return true;
     }
 
@@ -1600,7 +1610,12 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
         $param0 = self::exprToDate($param0);
-        $retval = ($param0 !== false && $param0->hasTimePart()) ? (double)$param0->getSecond() : null;
+        if ($param0 === false)
+        {
+            $retval = null;
+            return true;
+        }
+        $retval = (double)($param0->hasTimePart() ? $param0->getSecond() : 0);
         return true;
     }
 
