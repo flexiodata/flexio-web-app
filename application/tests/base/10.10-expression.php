@@ -5026,10 +5026,14 @@ class Test
         TestCheck::assertString('AX.3', 'Expression; to_date() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('to_char(to_date("12/31/1999","MM/DD/YYYY"))');
-        $expected = "1999-12-31";
+        $actual = TestUtil::evalExpression('to_char(to_date("12/11/1999","MM/DD/YYYY"))');
+        $expected = "1999-12-11";
         TestCheck::assertString('AX.4', 'Expression; to_date() conversion function',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('to_char(to_date("12/11/1999","DD/MM/YYYY"))');
+        $expected = "1999-11-12";
+        TestCheck::assertString('AX.5', 'Expression; to_date() conversion function',  $actual, $expected, $results);
 
 
         // TEST: text function: to_datetime()
