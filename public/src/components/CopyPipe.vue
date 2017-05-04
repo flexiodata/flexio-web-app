@@ -25,11 +25,6 @@
     components: {
       Spinner
     },
-    watch: {
-      default_project(val, old_val) {
-        this.tryCreatePipe(this.pipe_json)
-      }
-    },
     data() {
       return {
         is_loading: true,
@@ -59,32 +54,8 @@
         return marked(this.error_markdown)
       }
     },
-    created() {
-      this.tryFetchProjects()
-    },
     mounted() {
-      if (this.json_filename.length > 0)
-      {
-        axios.get(this.json_filename).then(response => {
-          this.pipe_json = _.assign({}, response.data)
-          this.tryCreatePipe(this.pipe_json)
-        }).catch(response => {
-          this.is_loading = false
-          this.error_markdown =
-            '# File not found\n\n' +
-            'We were unable to load the pipe from the following file:\n' +
-            '##### '+this.json_filename+'\n' +
-            'To copy the pipe to your project, make sure the file exists and that you have access to it.'
-        })
-      }
-       else
-      {
-        this.is_loading = false
-        this.error_markdown =
-          '# No file specified\n\n' +
-          'We were unable to load the pipe because no file was specified.\n\n' +
-          'To copy the pipe to your project, make sure a filename is specified in the `path` query parameter.'
-        }
+      this.tryFetchProjects()
     },
     methods: {
       ...mapGetters([
@@ -93,7 +64,16 @@
       ]),
       tryFetchProjects() {
         if (!this.hasProjects())
-          this.$store.dispatch('fetchProjects')
+        {
+          this.$store.dispatch('fetchProjects').then(response => {
+            if (response.ok)
+              this.loadPipeFromJsonFile()
+          })
+        }
+         else
+        {
+          this.loadPipeFromJsonFile()
+        }
       },
       tryCreatePipe(attrs) {
         var parent_eid = _.get(this.default_project, 'eid', '')
@@ -117,6 +97,30 @@
             // TODO: add error handling
           }
         })
+      },
+      loadPipeFromJsonFile() {
+        if (this.json_filename.length > 0)
+        {
+          axios.get(this.json_filename).then(response => {
+            this.pipe_json = _.assign({}, response.data)
+            this.tryCreatePipe(this.pipe_json)
+          }).catch(response => {
+            this.is_loading = false
+            this.error_markdown =
+              '# File not found\n\n' +
+              'We were unable to load the pipe from the following file:\n' +
+              '##### '+this.json_filename+'\n' +
+              'To copy the pipe to your project, make sure the file exists and that you have access to it.'
+          })
+        }
+         else
+        {
+          this.is_loading = false
+          this.error_markdown =
+            '# No file specified\n\n' +
+            'We were unable to load the pipe because no file was specified.\n\n' +
+            'To copy the pipe to your project, make sure a filename is specified in the `path` query parameter.'
+        }
       },
       openPipe(eid) {
         this.$router.replace({
