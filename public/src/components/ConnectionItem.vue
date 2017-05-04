@@ -2,7 +2,7 @@
   <article class="css-connection-item ma0 ma3-ns pv3 pv2a-ns ph3 bb ba-ns br2-ns cursor-default no-select shadow-sui-segment-ns trans-pm">
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
-        <connection-icon :type="item.connection_type" class="dib v-mid br2 fx-square-3 fx-square-4-ns"></connection-icon>
+        <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3 square-4-ns"></connection-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns black-60 mv0 lh-title">
         <h1 class="f6 f5-ns fw6 lh-title black mv0">{{item.name}}</h1>

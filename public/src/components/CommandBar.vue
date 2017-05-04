@@ -625,7 +625,7 @@
         var name = _.result(cinfo, 'service_name', '')
 
         if (icon !== false)
-          icon = '<img src="'+icon+'" alt="'+name+'" title="'+name+'" class="flex-none mr1 br2 fx-square-2">'
+          icon = '<img src="'+icon+'" alt="'+name+'" title="'+name+'" class="flex-none mr1 br2 square-2">'
 
         var html = '' +
           '<div class="flex flex-row items-center">' +

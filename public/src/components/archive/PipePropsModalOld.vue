@@ -21,7 +21,7 @@
       <div v-if="show_file_chooser">
         <div class="flex flex-row mt1 mb3 pt2 bt b--black-10">
           <div class="flex-fill flex flex-row items-center">
-            <connection-icon :type="ctype" class="dib v-top br2 fx-square-3"></connection-icon>
+            <connection-icon :type="ctype" class="dib v-top br2 square-3"></connection-icon>
             <div class="ml2 mid-gray f5 fw6">{{cname}}</div>
           </div>
           <div class="mid-gray" v-if="mode != 'edit-pipe'">

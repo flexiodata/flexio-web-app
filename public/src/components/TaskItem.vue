@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row relative hide-child">
-    <div class="flex flex-column relative cursor-default ba bw2 mh1 pv1 fx-square-6 fx-square-7-ns trans-wh"
+    <div class="flex flex-column relative cursor-default ba bw2 mh1 pv1 square-6 square-7-ns trans-wh"
       :class="[
         isGhost?'css-task-ghost black-40 b--transparent fw6':'white',
         (isDisabled && !is_insert_item)?'css-disabled o-50':'darken-10',

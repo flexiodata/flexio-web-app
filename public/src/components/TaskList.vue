@@ -1,7 +1,7 @@
 cv<template>
   <div class="flex flex-row">
     <div v-if="false" class="flex flex-row relative">
-      <div class="flex flex-column relative pointer b--transparent mh2 fx-square-6 fx-square-7-ns tc justify-center  trans-wh"
+      <div class="flex flex-column relative pointer b--transparent mh2 square-6 square-7-ns tc justify-center  trans-wh"
       >
         <div class="absolute absolute--fill b--dashed b--black-20 black-20 ma1 darken-10">
           <i class="material-icons f1">input</i>
