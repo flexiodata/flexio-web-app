@@ -122,7 +122,7 @@ class TestController extends \Flexio\System\FxControllerAction
 
 echo "<pre>";
 
-        $actual = \Flexio\Tests\TestUtil::evalExpression('cast(null,text)');
+        $actual = \Flexio\Tests\TestUtil::evalExpression('to_char(to_date("2001-02-03"))');
         var_dump($actual);
 
 /*

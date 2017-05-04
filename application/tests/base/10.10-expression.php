@@ -5069,23 +5069,23 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_datetime("2001-02-03"))');
-        $expected = "2001-02-03 00:00:00";
-        TestCheck::assertString('AAA.3', 'Expression; to_datetime() conversion function; support conversion of a string to a timestamp without a format',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 00:00:00+00";
+        TestCheck::assertString('AAA.3', 'Expression; to_datetime() conversion function; support conversion of a string to a timestamp without a format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_datetime("2001-02-03 04:05:06"))');
-        $expected = "2001-02-03 04:05:06";
-        TestCheck::assertString('AAA.4', 'Expression; to_datetime() conversion function; support conversion of a string to a timestamp without a format',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 04:05:06+00";
+        TestCheck::assertString('AAA.4', 'Expression; to_datetime() conversion function; support conversion of a string to a timestamp without a format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_datetime("2001-02-03 04:05:06","YYYY-MM-DD HH:MI:SS"))');
-        $expected = "2001-02-03 04:05:06";
-        TestCheck::assertString('AAA.5', 'Expression; to_datetime() conversion function',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 04:05:06+00";
+        TestCheck::assertString('AAA.5', 'Expression; to_datetime() conversion function',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_datetime("2001-02-03 23:05:06","YYYY-MM-DD HH24:MI:SS"))');
-        $expected = "2001-02-03 23:05:06";
-        TestCheck::assertString('AAA.6', 'Expression; to_datetime() conversion function',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 23:05:06+00";
+        TestCheck::assertString('AAA.6', 'Expression; to_datetime() conversion function',  $actual, $expected, $results);
 
 
         // TEST: text function: to_number()
@@ -5103,17 +5103,17 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_number("1")');
         $expected = 1;
-        TestCheck::assertNumber('AAB.3', 'Expression; support conversion of a string to a number without a format',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        TestCheck::assertNumber('AAB.3', 'Expression; support conversion of a string to a number without a format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_number("-1.23")');
         $expected = -1.23;
-        TestCheck::assertNumber('AAB.4', 'Expression; support conversion of a string to a number without a format',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        TestCheck::assertNumber('AAB.4', 'Expression; support conversion of a string to a number without a format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_number("-12,345.67","S99,999.99")');
         $expected = -12345.67;
-        TestCheck::assertNumber('AAB.5', 'Expression; to_number() conversion function',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        TestCheck::assertNumber('AAB.5', 'Expression; to_number() conversion function',  $actual, $expected, $results);
 
 
 
@@ -5131,33 +5131,33 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp("2001-02-03"))');
-        $expected = "2001-02-03 00:00:00";
-        TestCheck::assertString('AAC.3', 'Expression; to_timestamp() conversion function; support conversion of a string to a timestamp without a format',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 00:00:00+00";
+        TestCheck::assertString('AAC.3', 'Expression; to_timestamp() conversion function; support conversion of a string to a timestamp without a format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp("2001-02-03 04:05:06"))');
-        $expected = "2001-02-03 04:05:06";
-        TestCheck::assertString('AAC.4', 'Expression; to_timestamp() conversion function; support conversion of a string to a timestamp without a format',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 04:05:06+00";
+        TestCheck::assertString('AAC.4', 'Expression; to_timestamp() conversion function; support conversion of a string to a timestamp without a format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp("2001-02-03 04:05:06","YYYY-MM-DD HH:MI:SS"))');
-        $expected = "2001-02-03 04:05:06";
-        TestCheck::assertString('AAC.5', 'Expression; to_timestamp() conversion function',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 04:05:06+00";
+        TestCheck::assertString('AAC.5', 'Expression; to_timestamp() conversion function',  $actual, $expected, $results);
         
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp("03-2001-02 06:05:04","DD-YYYY-MM SS:MI:HH24"))');
-        $expected = "2001-02-03 04:05:06";
-        TestCheck::assertString('AAC.6', 'Expression; to_timestamp() conversion function; non-standard order with format',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 04:05:06+00";
+        TestCheck::assertString('AAC.6', 'Expression; to_timestamp() conversion function; non-standard order with format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp("20010203040506","YYYYMMDDHH24MISS"))');
-        $expected = "2001-02-03 04:05:06";
-        TestCheck::assertString('AAC.7', 'Expression; to_timestamp() conversion function; no separators',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 04:05:06+00";
+        TestCheck::assertString('AAC.7', 'Expression; to_timestamp() conversion function; no separators',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_char(to_timestamp("2001-02-03 23:05:06","YYYYMMDDHHMISS"))');
-        $expected = "2001-02-03 23:05:06";
-        TestCheck::assertString('AAC.8', 'Expression; to_timestamp() conversion function; HH24 hour specified with HH specifier',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $expected = "2001-02-03 23:05:06+00";
+        TestCheck::assertString('AAC.8', 'Expression; to_timestamp() conversion function; HH24 hour specified with HH specifier',  $actual, $expected, $results);
 
 
         // TEST: cast to text: cast(various, text)
@@ -5165,7 +5165,11 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression('cast(null,text)');
         $expected = null;
-        TestCheck::assertNull('A.8', 'Expression; cast() conversion function; cast null to text',  $actual, $expected, $results);
+        TestCheck::assertNull('AB.1', 'Expression; cast() conversion function; cast null to text',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast("abc",text)');
+        $expected = 'abc';
+        TestCheck::assertString('AAC.8', 'Expression; cast() conversion function; cast null to text',  $actual, $expected, $results);
 
     }
 }

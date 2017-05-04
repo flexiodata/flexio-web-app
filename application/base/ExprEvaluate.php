@@ -907,7 +907,9 @@ TODO: remove deprecated implementation; following was split into two functions,
 
                 if ($param1 == 'date')
                     $dt->truncateTime();
-                
+                else
+                    $dt->makeDateTime();
+
                 $retval = $dt;
                 return true;
             }
@@ -2380,7 +2382,16 @@ TODO: remove deprecated implementation; following was split into two functions,
             else if (is_bool($param0))
                 $retval = $param0 ? 'true' : 'false';
             else if ($param0 instanceof ExprDateTime)
-                $retval = $param0->toString();
+            {
+                if ($param0->hasTimePart())
+                {
+                    $retval = sprintf("%04d-%02d-%02d %02d:%02d:%02d+00", $param0->values['year'], $param0->values['month'], $param0->values['day'], $param0->values['hour'], $param0->values['minute'], $param0->values['second']);
+                }
+                 else
+                {
+                    $retval = sprintf("%04d-%02d-%02d", $param0->values['year'], $param0->values['month'], $param0->values['day']);
+                }
+            }
             else
                 $retval = '' . $param0;
             return true;
@@ -2813,7 +2824,14 @@ class ExprDateTime
         if (!isset($arr['year']) || !isset($arr['month']) || !isset($arr['day']))
             return false;
 
-        $this->values = $arr;
+        $this->values = [ 'year' => $arr['year'], 'month' => $arr['month'], 'day' => $arr['day'] ];
+
+        if (($arr['hour']??false) !== false && ($arr['minute']??false) !== false && ($arr['second']??false) !== false)
+        {
+            $this->values['hour'] = $arr['hour'];
+            $this->values['minute'] = $arr['minute'];
+            $this->values['second'] = $arr['second'];
+        }
 
         return true;
     }
@@ -2856,11 +2874,28 @@ class ExprDateTime
         return !isset($this->values['year']);
     }
 
-    public function getYear()   { return $this->values['year']; }
-    public function getMonth()  { return $this->values['month']; }
-    public function getDay()    { return $this->values['day']; }
-    public function getHour()   { return $this->values['hour']; }
-    public function getMinute() { return $this->values['minute']; }
-    public function getSecond() { return $this->values['second']; }
+    public function getYear()     { return $this->values['year']; }
+    public function getMonth()    { return $this->values['month']; }
+    public function getDay()      { return $this->values['day']; }
+    public function getHour()     { return $this->values['hour']; }
+    public function getMinute()   { return $this->values['minute']; }
+    public function getSecond()   { return $this->values['second']; }
 
+    public function setYear($v)   { $this->values['year'] = $v; }
+    public function setMonth($v)  { $this->values['month'] = $v; }
+    public function setDay($v)    { $this->values['day'] = $v; }
+
+    public function makeDateTime()
+    {
+        if (!isset($this->values['hour']))
+            $this->values['hour'] = 0;
+        if (!isset($this->values['minute']))
+            $this->values['minute'] = 0;
+        if (!isset($this->values['second']))
+            $this->values['second'] = 0;
+    }
+
+    public function setHour($v)   { $this->values['hour'] = $v;   $this->makeDateTime(); }
+    public function setMinute($v) { $this->values['minute'] = $v; $this->makeDateTime(); }
+    public function setSecond($v) { $this->values['second'] = $v; $this->makeDateTime(); }
 }
