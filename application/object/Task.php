@@ -40,6 +40,12 @@ class Task
                 'verb' => 'Processing'
             ),
             array(
+                'type' => \Flexio\Jobs\Comment::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Comment',
+                'name' => '',
+                'verb' => 'Processing'
+            ),
+            array(
                 'type' => \Flexio\Jobs\Convert::MIME_TYPE,
                 'class' => '\Flexio\Jobs\Convert',
                 'name' => 'Convert File',
