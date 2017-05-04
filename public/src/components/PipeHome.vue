@@ -2,10 +2,9 @@
   <div class="flex flex-column justify-center h-100" v-if="is_fetching">
     <spinner size="large" message="Loading pipe..."></spinner>
   </div>
-  <div v-else class="flex flex-column items-stretch" style="background-color: #f9f9f9">
+  <div v-else class="flex flex-column items-stretch bg-nearer-white">
     <pipe-home-header
-      class="flex-none pv2a ph3 ph4-l"
-      style="background-color: #f3f3f3"
+      class="flex-none pv2a ph3 ph4-l bg-near-white"
       :pipe-eid="eid"
       :pipe-view="pipe_view"
       :is-prompting="is_prompting"
