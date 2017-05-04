@@ -205,7 +205,7 @@
     TASK_TYPE_INPUT,
     TASK_TYPE_OUTPUT,
     TASK_TYPE_EXECUTE,
-    TASK_TYPE_NOP
+    TASK_TYPE_COMMENT
   } from '../constants/task-type'
   import api from '../api'
   import parser from '../utils/parser'
@@ -316,7 +316,7 @@
         return this.index == this.activePromptIdx
       },
       show_command_bar() {
-        return this.task_type != TASK_TYPE_NOP
+        return this.task_type != TASK_TYPE_COMMENT
       },
       orig_cmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
