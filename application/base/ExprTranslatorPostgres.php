@@ -184,7 +184,7 @@ class ExprTranslatorPostgres
                 switch ($this->values[$key]['type'])
                 {
                     case 's': return ExprParser::TYPE_STRING;
-                    case 'n': return ExprParser::TYPE_FLOAT;
+                    case 'f': return ExprParser::TYPE_FLOAT;
                     case 'd': return ExprParser::TYPE_DATE;
                     case 't': return ExprParser::TYPE_DATETIME;
                     case 'b': return ExprParser::TYPE_BOOLEAN;
@@ -503,7 +503,7 @@ class ExprTranslatorPostgres
                 if ($old_type == 'date')
                     $expr = "to_char($expr,'YYYY-MM-DD')::$cast";
                 else if ($old_type == 'datetime')
-                    $expr = "to_char($expr,'YYYY-MM-DD HH24:MI:SS')::$cast";
+                    $expr = "to_char($expr,'YYYY-MM-DD HH24:MI:SSOF')::$cast";
                 else
                     $expr = "($expr)::$cast";
 
@@ -676,12 +676,13 @@ class ExprTranslatorPostgres
         'to_date'      => [ 'types' => [ 'd(s[s])', 'd(n[s])', 'd(d[s])', 'd(b[s])', 'd(N[s])' ], 'func' => 'func_to_date' ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
         'to_timestamp' => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ],
-        'to_number'    => [ 'types' => [ 'f(ss)', 'f(ns)', 'f(ds)', 'f(bs)', 'f(Ns)' ] ],
+        'to_number'    => [ 'types' => [ 'f(s[s])', 'f(n[s])', 'f(d[s])', 'f(b[s])', 'f(N[s])' ], 'func' => 'func_to_number' ],
         'trim'         => [ 'types' => [ 's(s)', 's(ss)', 's(n)', 's(ns)', 's(b)', 's(bs)', 's(N)', 's(Ns)' ], 'func' => 'func_trim' ],
         'trunc'        => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_generic_numfunc' ],
         'upper'        => [ 'types' => [ 's(s)', 's(n)', 's(b)', 's(N)' ], 'func' => 'func_upper' ],
         'year'         => [ 'types' => [ 'f(d)', 'f(t)', 'f(N)', 'f(s)' ], 'func' => 'func_year' ],
 
+        // used by cast() -- for example cast(fld, numeric(10,2))
         'text'         => [ 'types' => [ 's(i)' ] ],
         'character'    => [ 'types' => [ 's(i)' ] ],
         'numeric'      => [ 'types' => [ 'f(i)', 'f(ii)' ] ]
@@ -690,7 +691,7 @@ class ExprTranslatorPostgres
 
     public $values = [
         'current_date' => [ 'type' => 'd', 'name' => 'current_date' ],
-        'pi'           => [ 'type' => 'd', 'name' => 'pi()' ],
+        'pi'           => [ 'type' => 'f', 'name' => 'pi()' ],
 
         'text'         => [ 'type' => 's', 'name' => "'text'" ],
         'character'    => [ 'type' => 's', 'name' => "'character'" ],
@@ -801,6 +802,9 @@ class ExprTranslatorPostgres
             return false;
         $old_type = $this->getType($params[0]);
 
+        if ($old_type == ExprParser::TYPE_NULL)
+            return 'null';
+        
         $type = null;
         $width = null;
         $scale = null;
@@ -827,24 +831,31 @@ class ExprTranslatorPostgres
                 $scale = $func->params[1]->val;
             }
         }
-        if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && ($params[1]->name == 'text' || $params[1]->name == 'character'))
-            $type = 'text';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'numeric')
-            $type = 'numeric';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'double')
-            $type = 'double';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'integer')
-            $type = 'integer';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'date')
-            $type = 'date';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'datetime')
-            $type = 'datetime';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'boolean')
-            $type = 'boolean';
+
+        if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE)
+        {
+            switch ($params[1]->name)
+            {
+                case 'character':
+                case 'text':
+                    $type = 'text';
+                    break;
+                case 'numeric':
+                case 'double':
+                case 'integer':
+                case 'date':
+                case 'datetime':
+                case 'boolean':
+                    $type = $params[1]->name;
+                    break;
+                default:
+                    return false; // unknown type
+            }
+        }
 
         switch ($old_type)
         {
-            case ExprParser::TYPE_STRING:    $old_type = 'character'; break;
+            case ExprParser::TYPE_STRING:    $old_type = 'text'; break;
             case ExprParser::TYPE_INTEGER:   $old_type = 'integer'; break;
             case ExprParser::TYPE_FLOAT:     $old_type = 'float'; break;
             case ExprParser::TYPE_BOOLEAN:   $old_type = 'boolean'; break;
@@ -852,6 +863,7 @@ class ExprTranslatorPostgres
             case ExprParser::TYPE_DATETIME:  $old_type = 'datetime'; break;
             default: return false;
         }
+
 
         return self::getCastExpression($param, $old_type, $type, $width, $scale);
     }
@@ -1275,6 +1287,31 @@ class ExprTranslatorPostgres
             $param0 = $this->printNode($params[0]);
             $param1 = $this->printNode($params[1]);
             return "to_char($param0,$param1)";
+        }
+         else
+        {
+            return false;
+        }
+    }
+
+    public function func_to_number($func, $params)
+    {
+        if ($this->getType($params[0]) == ExprParser::TYPE_NULL)
+            return "null::numeric";
+
+        if (count($params) == 1)
+        {
+            // to_number() with one parameter is the same as cast(fld, numeric)
+            $v = new ExprVariable;
+            $v->name = 'numeric';
+            $params[] = $v;
+            return $this->func_cast($func, $params);
+        }
+         else if (count($params) == 2)
+        {
+            $param0 = $this->printNode($params[0]);
+            $param1 = $this->printNode($params[1]);
+            return "to_number($param0,$param1)";
         }
          else
         {
