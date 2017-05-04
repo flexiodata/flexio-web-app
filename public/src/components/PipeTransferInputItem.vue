@@ -1,7 +1,7 @@
 <template>
   <article class="mb3">
     <div class="flex flex-row items-center pa2 bg-black-05">
-      <connection-icon :type="ctype" class="v-mid br1 fx-square-2 mr2"></connection-icon>
+      <connection-icon :type="ctype" class="v-mid br1 square-2 mr2"></connection-icon>
       <div class="f6 fw6 ttu silver">{{title}}</div>
       <div class="flex-fill"></div>
       <a

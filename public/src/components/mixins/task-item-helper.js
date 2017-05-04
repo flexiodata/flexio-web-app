@@ -1,21 +1,34 @@
-// common helpers for task items (requires that the calling object has a `task` property)
+// common helpers for task items (requires that the calling object has
+// an `item` computed property or provides their own `task` computed property)
 
 import * as types from '../../constants/task-type'
 import * as tasks from '../../constants/task-info'
 
 export default {
   computed: {
+    task() {
+      return _.get(this, 'item', {})
+    },
+    task_icon() {
+      return _.result(this, 'tinfo.icon', 'build')
+    },
     task_icon() {
       return _.result(this, 'tinfo.icon', 'build')
     },
     ctype() {
       return _.get(this, 'task.metadata.connection_type', '')
     },
+    is_input_task() {
+      return _.get(this, 'task.type') == types.TASK_TYPE_INPUT
+    },
+    is_output_task() {
+      return _.get(this, 'task.type') == types.TASK_TYPE_OUTPUT
+    },
     show_connection_icon() {
       if (this.ctype.length == 0)
         return false
 
-      switch (_.get(this, 'task.type', ''))
+      switch (_.get(this, 'task.type'))
       {
         case types.TASK_TYPE_INPUT:
         case types.TASK_TYPE_OUTPUT:

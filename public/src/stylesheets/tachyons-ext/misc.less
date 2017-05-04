@@ -10,7 +10,11 @@
 .bg-blue { background-color: @blue; }
 .b--blue { border-color: @blue; }
 
+// -- other colors --
+
 .b--white-box { border-color: #e5e6e9 #dfe0e4 #d0d1d5; }
+
+.bg-nearer-white { background-color: #f9f9f9; }
 
 // -- task colors --
 
@@ -19,23 +23,6 @@
 .bg-task-green  { background-color: @task-green;  }
 .bg-task-orange { background-color: @task-orange; }
 .bg-task-purple { background-color: @task-purple; }
-
-// -- selection --
-
-.no-select { user-select: none; }
-
-// -- resize (textarea) --
-
-.resize-horizontal { resize: horizontal; }
-.resize-vertical { resize: vertical; }
-.resize-both { resize: both; }
-.resize-none { resize: none; }
-
-// -- cursors --
-
-.cursor-default { cursor: default; }
-.cursor-text { cursor: text; }
-.cursor-resize-ew { cursor: ew-resize; }
 
 // -- hover effects --
 
@@ -63,57 +50,6 @@
   box-shadow: inset 9999px 9999px rgba(0,0,0,0.20)
 }
 
-// -- inverse hide --
-
-.swap-child .child {
-  display: inherit;
-}
-.swap-child:hover  .child,
-.swap-child:focus  .child,
-.swap-child:active .child {
-  display: none;
-}
-
-.swap-child .other-child {
-  display: none;
-}
-.swap-child:hover  .other-child,
-.swap-child:focus  .other-child,
-.swap-child:active .other-child {
-  display: inherit;
-}
-
-// -- focus styles --
-
-:focus {
-  .focus-outline& { outline: 1px solid !important; }
-  .focus-outline-transparent& { outline: 1px solid transparent !important; }
-  .focus-outline-0& { outline: 0 !important; }
-
-  .focus-ow0& { outline-width: 0 !important; }
-  .focus-ow1& { outline-width: .125rem !important; }
-  .focus-ow2& { outline-width: .25rem !important; }
-  .focus-ow3& { outline-width: .5rem !important; }
-  .focus-ow4& { outline-width: 1rem !important; }
-  .focus-ow5& { outline-width: 2rem !important; }
-
-  .focus-o--transparent& { outline-color: transparent !important; }
-  .focus-o--blue& { outline-color: #357edd !important; }
-
-  .focus-b--transparent& { border-color: transparent; }
-  .focus-b--blue& { border-color: #357edd; }
-}
-
-// -- positioning --
-
-// TODO: these styles *CANNOT* be responsive; since their CSS
-// specificity is the same as the fonts in tachyons.min.css,
-// even their media queries would override those styles
-.top-auto    { top: auto;    }
-.right-auto  { right: auto;  }
-.bottom-auto { bottom: auto; }
-.left-auto   { left: auto;   }
-
 // -- font family, sizing and letter spacing --
 
 .font-default {
@@ -134,6 +70,70 @@
 
 .f7 { font-size: .8125rem; }
 .f8 { font-size: .75rem; }
+
+// -- focus styles --
+
+:focus {
+  .focus-outline& { outline: 1px solid !important; }
+  .focus-outline-transparent& { outline: 1px solid transparent !important; }
+
+  .focus-ow1& { outline-width: .125rem !important; }
+
+  .focus-o--blue& { outline-color: @blue !important; }
+
+  .focus-b--transparent& { border-color: transparent; }
+}
+
+// -- selection --
+
+.no-select { user-select: none; }
+
+// -- pointer events --
+
+.no-pointer-events { pointer-events: none; }
+
+// -- resize (textarea) --
+
+.resize-horizontal { resize: horizontal; }
+.resize-vertical { resize: vertical; }
+.resize-both { resize: both; }
+.resize-none { resize: none; }
+
+// -- positioning --
+
+// TODO: these styles *CANNOT* be responsive; since their CSS
+// specificity is the same as the fonts in tachyons.min.css,
+// even their media queries would override those styles
+.top-auto    { top: auto;    }
+.right-auto  { right: auto;  }
+.bottom-auto { bottom: auto; }
+.left-auto   { left: auto;   }
+
+// -- cursors --
+
+.cursor-default { cursor: default; }
+.cursor-text { cursor: text; }
+.cursor-resize-ew { cursor: ew-resize; }
+
+// -- inverse hide --
+
+.swap-child .child {
+  display: inherit;
+}
+.swap-child:hover  .child,
+.swap-child:focus  .child,
+.swap-child:active .child {
+  display: none;
+}
+
+.swap-child .other-child {
+  display: none;
+}
+.swap-child:hover  .other-child,
+.swap-child:focus  .other-child,
+.swap-child:active .other-child {
+  display: inherit;
+}
 
 // -- transitions --
 

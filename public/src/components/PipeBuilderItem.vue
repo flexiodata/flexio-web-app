@@ -1,44 +1,61 @@
 <template>
-  <div class="relative" style="max-width: 1574px">
+  <div
+    class="relative"
+    style="max-width: 1574px"
+    :style="style"
+    :id="eid"
+  >
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
 
-      <!-- task icon -->
-      <div class="flex-none">
-        <div :class="[ index==0?'mt2':'' ]" @click="deleteTask">
-          <div class="swap-child" v-if="show_connection_icon">
-            <connection-icon
-              class="mr2 mr3-ns br1 pointer child"
-              style="width: 40px; height: 40px"
-              :type="ctype"
-            ></connection-icon>
-            <div class="pointer pa2 mr2 mr3-ns br1 bg-light-silver white tc relative other-child">
+      <div class="flex-none" :class="[ index==0?'mt3':'' ]" >
+        <div class="flex flex-row items-center">
+          <!-- task icon -->
+          <div @click="deleteTask">
+            <div class="swap-child" v-if="show_connection_icon">
+              <connection-icon
+                class="mr2 mr3-ns br1 pointer child"
+                style="width: 40px; height: 40px"
+                :type="ctype"
+              ></connection-icon>
+              <div class="pointer pa2 mr2 mr3-ns br1 bg-light-silver white tc relative other-child">
+                <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
+              </div>
+            </div>
+            <div class="pointer pa2 mr2 mr3-ns br1 white tc relative swap-child" :class="[ bg_color ]" v-else>
+              <i class="db material-icons f3 child">{{task_icon}}</i>
               <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
             </div>
           </div>
-          <div class="pointer pa2 mr2 mr3-ns br1 white tc relative swap-child" :class="[ bg_color ]" v-else>
-            <i class="db material-icons f3 child">{{task_icon}}</i>
-            <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
+
+          <!-- feedback icon when prompting -->
+          <div class="mr1" v-if="false">
+            <i
+              class="material-icons md-24"
+              :class="{
+                'dark-green': true
+              }"
+            >check_circle</i>
           </div>
+
+          <!-- task number -->
+          <div class="f5 lh-title mr2 mr3-ns">{{index+1}}.</div>
         </div>
       </div>
-
-      <!-- task number -->
-      <div class="f5 lh-title mr2 mr3-ns" :class="[number_cls, index==0?'pt3':'pt2' ]">{{index+1}}.</div>
 
       <!-- vertical line -->
       <div
         class="bl bw1 b--black-10 pl3 absolute"
-        style="top: 46px; bottom: 36px; left: 19px"
-        :class="[ index==0?'mt2':'' ]"
-        v-show="!show_progress"
+        style="top: 45px; bottom: 35px; left: 19px"
+        :class="[ index==0?'mt3':'' ]"
+        v-show="!show_progress && !this.isPrompting"
       ></div>
 
       <!-- insert before button -->
       <div
         class="absolute"
-        style="top: -24px; left: 8px"
+        style="top: -16px; left: 8px"
         v-show="!show_progress"
-        v-if="index==0 && false"
+        v-if="index==0 && !show_progress && !this.isPrompting && false"
       >
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
           <i class="db material-icons f3">add_circle</i>
@@ -49,7 +66,7 @@
       <div
         class="absolute"
         style="bottom: 5px; left: 8px"
-        v-show="!show_progress">
+        v-show="!show_progress && !this.isPrompting">
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
           <i class="db material-icons f3">add_circle</i>
         </div>
@@ -58,33 +75,58 @@
       <!-- main content -->
       <div
         class="flex-fill relative ph3a bg-white bl br b--white-box"
-        :class="[ content_cls, index==0?'pt3':'pt2' ]"
+        :class="[
+          content_cls,
+          index==0?'pt3':'',
+          isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':''
+        ]"
+        :style="content_style"
       >
-        <!-- task name -->
+        <!-- always task description -->
         <inline-edit-text
-          class="flex-fill f5 lh-title"
-          edit-button-tooltip-cls="hint--top-left"
-          input-key="name"
-          :val="display_name"
-          @save="editTaskSingleton">
-        </inline-edit-text>
-
-        <!-- task description -->
-        <inline-edit-text
-          class="f7 lh-title gray mt1"
+          class="db lh-title mid-gray"
           placeholder="Add a description"
-          placeholder-cls="fw6 black-20 hover-black-40"
+          placeholder-cls="f6 fw6 black-20 hover-black-40"
           edit-button-tooltip-cls="hint--top-left"
           input-key="description"
+          static-cls="hover-bg-near-white"
           :val="description"
+          :allow-edit="!show_progress && !isPrompting"
+          :is-markdown="true"
+          :is-block="true"
           @save="editTaskSingleton">
         </inline-edit-text>
 
-        <div class="mt2 pt2 bt b--black-10" v-if="show_progress">
-          <process-progress-item :item="active_subprocess"></process-progress-item>
-        </div>
-        <div class="relative" v-else>
+        <!-- option 1. show process progress item, or... -->
 
+        <process-progress-item
+          class="mt2 pt2 bt b--black-10"
+          :item="active_subprocess"
+          v-if="show_progress">
+        </process-progress-item>
+
+        <!-- option 2. show task configure item, or... -->
+
+        <task-configure-item
+          class="mt2"
+          :item="item"
+          :index="index"
+          :variables="variables"
+          :active-prompt-idx="activePromptIdx"
+          :first-prompt-idx="firstPromptIdx"
+          :last-prompt-idx="lastPromptIdx"
+          :is-active-prompt-task="is_active_prompt_task"
+          @prompt-value-change="onPromptValueChange"
+          @go-prev-prompt="$emit('go-prev-prompt')"
+          @go-next-prompt="$emit('go-next-prompt')"
+          @run-once-with-values="$emit('run-once-with-values')"
+          @save-values-and-run="$emit('save-values-and-run')"
+          v-else-if="isPrompting && variables.length > 0"
+        ></task-configure-item>
+
+        <!-- option 3. show normal builder item -->
+
+        <div class="relative" v-else>
           <!-- collapser -->
           <div
             class="absolute cursor-default"
@@ -100,6 +142,7 @@
             </div>
           </div>
 
+          <!-- command bar -->
           <command-bar
             ref="commandbar"
             class="mt2 pa1 ba b--black-10 bg-white"
@@ -110,7 +153,10 @@
             @change="updateCmd"
             @revert="cancelEdit"
             @save="saveChanges"
+            v-if="show_command_bar"
           ></command-bar>
+
+          <!-- code editor -->
           <code-editor
             ref="code"
             class="mb2 bl br bb b--black-10 bg-white max-h5 overflow-y-auto"
@@ -119,6 +165,8 @@
             @change="updateCode"
             v-if="is_task_execute"
           ></code-editor>
+
+          <!-- error message and cancel/save buttons -->
           <transition name="slide-fade">
             <div class="flex flex-row items-start mt2" v-show="is_changed">
               <div class="flex-fill mr4">
@@ -130,6 +178,8 @@
               <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
             </div>
           </transition>
+
+          <!-- preview -->
           <transition name="slide-fade">
             <pipe-content
               class="mt2 relative"
@@ -145,9 +195,18 @@
 </template>
 
 <script>
-  import { PROCESS_STATUS_RUNNING } from '../constants/process'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT, TASK_TYPE_EXECUTE } from '../constants/task-type'
   import { mapGetters } from 'vuex'
+  import {
+    PROCESS_STATUS_PENDING,
+    PROCESS_STATUS_WAITING,
+    PROCESS_STATUS_RUNNING
+  } from '../constants/process'
+  import {
+    TASK_TYPE_INPUT,
+    TASK_TYPE_OUTPUT,
+    TASK_TYPE_EXECUTE,
+    TASK_TYPE_NOP
+  } from '../constants/task-type'
   import api from '../api'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
@@ -157,21 +216,52 @@
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
   import ProcessProgressItem from './ProcessProgressItem.vue'
-  import taskItemHelper from './mixins/task-item-helper'
+  import TaskConfigureItem from './TaskConfigureItem.vue'
+  import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
     props: {
-      'item': {},
-      'index': {},
-      'tasks': {},
-      'active-process': {},
-      'is-scrolling': {},
+      'item': {
+        type: Object,
+        required: true
+      },
+      'index': {
+        type: Number,
+        required: true
+      },
+      'tasks': {
+        type: Array,
+        required: true
+      },
+      'active-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'first-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'last-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'is-prompting': {
+        type: Boolean,
+        default: false
+      },
+      'is-scrolling': {
+        type: Boolean,
+        default: false
+      },
+      'active-process': {
+        type: Object
+      },
       'show-preview': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
       },
     },
-    mixins: [taskItemHelper],
+    mixins: [TaskItemHelper],
     components: {
       Btn,
       ConnectionIcon,
@@ -179,7 +269,8 @@
       CommandBar,
       InlineEditText,
       PipeContent,
-      ProcessProgressItem
+      ProcessProgressItem,
+      TaskConfigureItem
     },
     inject: ['pipeEid'],
     watch: {
@@ -200,7 +291,7 @@
 
       return {
         is_inited: false,
-        description: _.get(this, 'item.description', ''),
+        description: _.get(this, 'item.description', this.display_name),
         show_preview: this.showPreview,
         syntax_msg: '',
         edit_json: this.getOrigJson(),
@@ -220,6 +311,12 @@
       },
       is_task_execute() {
         return this.task_type == TASK_TYPE_EXECUTE
+      },
+      is_active_prompt_task() {
+        return this.index == this.activePromptIdx
+      },
+      show_command_bar() {
+        return this.task_type != TASK_TYPE_NOP
       },
       orig_cmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
@@ -271,12 +368,19 @@
         // ...otherwise, use the output array from the active subprocess
         return inputs
       },
+      variables() {
+        return _.get(this, 'task.variables', [])
+      },
       active_stream_eid() {
         var stream = _.head(this.our_inputs)
         return _.get(stream, 'eid', '')
       },
       show_progress() {
-        return _.get(this.activeProcess, 'process_status') == PROCESS_STATUS_RUNNING
+        return _.includes([
+          PROCESS_STATUS_PENDING,
+          PROCESS_STATUS_WAITING,
+          PROCESS_STATUS_RUNNING
+        ], _.get(this.activeProcess, 'process_status'))
       },
       number_cls() {
         // compensate for content top border
@@ -296,6 +400,20 @@
           return ['pb4a','br2','bb','br--bottom'].join(' ')
 
         return 'pb4a'
+      },
+      style() {
+        return ''
+
+        if (this.isPrompting && this.is_active_prompt_task)
+          return this.index == 0 ? 'margin-bottom: 1.25rem' : 'margin-top: 1.25rem; margin-bottom: 1.25rem'
+
+        return ''
+      },
+      content_style() {
+        if (this.isPrompting && this.is_active_prompt_task)
+         return 'z-index:2; padding: 1.25rem; box-shadow: 0 0 20px rgba(0,0,0,0.2)'
+
+        return ''
       }
     },
     methods: {
@@ -458,23 +576,15 @@
       togglePreview(evt) {
         this.show_preview = !this.show_preview
         this.$emit('toggle-preview', this.show_preview, evt.ctrlKey /* toggle all */)
+      },
+      onPromptValueChange(val, variable_set_key) {
+        this.$emit('prompt-value-change', val, variable_set_key)
       }
     }
   }
 </script>
 
 <style lang="less">
-  .slide-fade-enter-active,
-  .slide-fade-leave-active {
-    transition: all .3s ease;
-  }
-
-  .slide-fade-enter,
-  .slide-fade-leave-to {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-
   .ph3a {
     padding-left: 1.25rem;
     padding-right: 1.25rem;

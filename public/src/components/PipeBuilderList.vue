@@ -16,15 +16,25 @@
     <div class="pb3 ml2-m ml3-l" v-else>
       <pipe-builder-item
         v-for="(task, index) in tasks"
+        :key="task.eid"
         :pipe-eid="pipeEid"
         :item="task"
         :index="index"
         :tasks="tasks"
-        :active-process="activeProcess"
+        :active-prompt-idx="activePromptIdx"
+        :first-prompt-idx="first_prompt_idx"
+        :last-prompt-idx="last_prompt_idx"
+        :is-prompting="isPrompting"
         :is-scrolling="is_scrolling"
+        :active-process="activeProcess"
         :show-preview="show_all_previews"
         @insert-task="insertNewTask"
         @toggle-preview="togglePreview"
+        @prompt-value-change="onPromptValueChange"
+        @go-prev-prompt="$emit('go-prev-prompt')"
+        @go-next-prompt="$emit('go-next-prompt')"
+        @run-once-with-values="$emit('run-once-with-values')"
+        @save-values-and-run="$emit('save-values-and-run')"
       ></pipe-builder-item>
     </div>
   </div>
@@ -36,7 +46,31 @@
   import PipeBuilderItem from './PipeBuilderItem.vue'
 
   export default {
-    props: ['pipe-eid', 'tasks', 'active-process', 'project-connections'],
+    props: {
+      'pipe-eid': {
+        type: String,
+        required: true
+      },
+      'tasks': {
+        type: Array,
+        required: true
+      },
+      'active-prompt-idx': {
+        type: Number,
+        default: 0
+      },
+      'is-prompting': {
+        type: Boolean,
+        default: false
+      },
+      'active-process': {
+        type: Object
+      },
+      'project-connections': {
+        type: Array,
+        default: () => { return [] }
+      }
+    },
     components: {
       Btn,
       PipeBuilderItem
@@ -48,10 +82,12 @@
       }
     },
     computed: {
-      input_tasks()  { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
-      output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
-      has_input()    { return this.input_tasks.length > 0 },
-      has_output()   { return this.output_tasks.length > 0 }
+      first_prompt_idx() {
+        return _.findIndex(this.tasks, { has_variable: true })
+      },
+      last_prompt_idx() {
+        return _.findLastIndex(this.tasks, { has_variable: true })
+      }
     },
     methods: {
       insertNewTask(idx) {
@@ -66,6 +102,10 @@
       togglePreview(show, toggle_all) {
         if (toggle_all)
           this.show_all_previews = show
+      },
+
+      onPromptValueChange(val, variable_set_key) {
+        this.$emit('prompt-value-change', val, variable_set_key)
       },
 
       resetScroll: _.debounce(function() {

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import KeenUi from 'keen-ui'
 import VeeValidate from 'vee-validate'
+import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
@@ -14,6 +15,10 @@ Vue.use(VeeValidate)
 // setup for KeenUi
 
 Vue.use(KeenUi)
+
+// setup for VueScrollTo (programmatic scrolling)
+
+Vue.use(VueScrollTo)
 
 // global directives (move to a new file if we get too many here)
 

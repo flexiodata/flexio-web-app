@@ -21,7 +21,7 @@
       <div class="css-connection-inner-border absolute absolute--fill ba bw1 br2 b--black-10 b--dashed"></div>
       <div class="tc css-valign cursor-default">
         <i slot="icon" class="material-icons md-48">add_circle</i>
-        <div class="f6 fw6 mt2 ph2">New Connection</div>
+        <div class="f6 fw6 mt2 ph2">{{add_button_label}}</div>
       </div>
     </article>
   </div>
@@ -45,22 +45,28 @@
         type: String,
         required: false
       },
+      'list-type': {
+        type: String,
+        default: 'input'
+      },
       'show-add': {
-        default: true,
         type: Boolean,
-        required: false
+        default: false
+      },
+      'add-button-label': {
+        type: String,
+        default: ''
       },
       'show-blank-pipe': {
-        default: true,
         type: Boolean,
-        required: false
+        default: false
       },
-      'list-type': {
-        default: 'input',
+      'connection-type-filter': {
         type: String,
-        required: false
+        default: ''
       },
       'item-layout': {
+        type: String // 'list' or 'grid'
       }
     },
     components: {
@@ -89,13 +95,21 @@
         return items
       },
       input_services() {
-        return [].concat(this.default_connections, this.getOurConnections())
+        var items = [].concat(this.default_connections, this.getOurConnections())
+
+        if (this.connectionTypeFilter.length == 0)
+          return items
+
+        return _.filter(items, { connection_type: this.connectionTypeFilter })
       },
       is_fetched() {
         return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetched', true)
       },
       is_fetching() {
         return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetching', true)
+      },
+      add_button_label() {
+        return this.addButtonLabel.length > 0 ? this.addButtonLabel : 'New Connection'
       }
     },
     created() {

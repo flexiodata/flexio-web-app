@@ -58,11 +58,11 @@
   import Btn from './Btn.vue'
   import ToggleButton from './ToggleButton.vue'
   import DevTestItem from './DevTestItem.vue'
-  import commonFilter from './mixins/common-filter'
-  import getResponseText from './mixins/get-response-text'
+  import CommonFilter from './mixins/common-filter'
+  import GetResponseText from './mixins/get-response-text'
 
   export default {
-    mixins: [commonFilter],
+    mixins: [CommonFilter, GetResponseText],
     components: {
       Btn,
       ToggleButton,

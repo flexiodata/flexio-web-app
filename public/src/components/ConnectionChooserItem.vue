@@ -4,11 +4,11 @@
     @click="onClick"
   >
     <div class="flex flex-row items-center" v-if="layout == 'list'">
-      <connection-icon :type="item.connection_type" class="br1 fx-square-3 mr3"></connection-icon>
+      <connection-icon :type="item.connection_type" class="br1 square-3 mr3"></connection-icon>
       <div class="mid-gray f5 fw6 cursor-default">{{item.name}}</div>
     </div>
     <div class="tc css-valign" v-else>
-      <connection-icon :type="item.connection_type" class="dib v-mid br2 fx-square-5"></connection-icon>
+      <connection-icon :type="item.connection_type" class="dib v-mid br2 square-5"></connection-icon>
       <div class="mid-gray f6 fw6 mt2 cursor-default">{{item.name}}</div>
     </div>
   </article>

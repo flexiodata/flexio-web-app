@@ -12,23 +12,18 @@
 </template>
 
 <script>
-  import { ROUTE_PIPEHOME } from '../constants/route'
-  import { PIPEHOME_VIEW_BUILDER, PIPEHOME_STATUS_CONFIGURE } from '../constants/pipehome'
-  import { mapGetters } from 'vuex'
-  import Spinner from 'vue-simple-spinner'
   import axios from 'axios'
   import marked from 'marked'
-  import setActiveProject from './mixins/set-active-project'
+  import { mapGetters } from 'vuex'
+  import { ROUTE_PIPEHOME } from '../constants/route'
+  import { PIPEHOME_VIEW_BUILDER, PIPEHOME_STATUS_CONFIGURE } from '../constants/pipehome'
+  import Spinner from 'vue-simple-spinner'
+  import SetActiveProject from './mixins/set-active-project'
 
   export default {
-    mixins: [setActiveProject],
+    mixins: [SetActiveProject],
     components: {
       Spinner
-    },
-    watch: {
-      default_project(val, old_val) {
-        this.tryCreatePipe(this.pipe_json)
-      }
     },
     data() {
       return {
@@ -59,32 +54,8 @@
         return marked(this.error_markdown)
       }
     },
-    created() {
-      this.tryFetchProjects()
-    },
     mounted() {
-      if (this.json_filename.length > 0)
-      {
-        axios.get(this.json_filename).then(response => {
-          this.pipe_json = _.assign({}, response.data)
-          this.tryCreatePipe(this.pipe_json)
-        }).catch(response => {
-          this.is_loading = false
-          this.error_markdown =
-            '# File not found\n\n' +
-            'We were unable to load the pipe from the following file:\n' +
-            '##### '+this.json_filename+'\n' +
-            'To copy the pipe to your project, make sure the file exists and that you have access to it.'
-        })
-      }
-       else
-      {
-        this.is_loading = false
-        this.error_markdown =
-          '# No file specified\n\n' +
-          'We were unable to load the pipe because no file was specified.\n\n' +
-          'To copy the pipe to your project, make sure a filename is specified in the `path` query parameter.'
-        }
+      this.tryFetchProjects()
     },
     methods: {
       ...mapGetters([
@@ -93,7 +64,16 @@
       ]),
       tryFetchProjects() {
         if (!this.hasProjects())
-          this.$store.dispatch('fetchProjects')
+        {
+          this.$store.dispatch('fetchProjects').then(response => {
+            if (response.ok)
+              this.loadPipeFromJsonFile()
+          })
+        }
+         else
+        {
+          this.loadPipeFromJsonFile()
+        }
       },
       tryCreatePipe(attrs) {
         var parent_eid = _.get(this.default_project, 'eid', '')
@@ -118,60 +98,40 @@
           }
         })
       },
+      loadPipeFromJsonFile() {
+        if (this.json_filename.length > 0)
+        {
+          axios.get(this.json_filename).then(response => {
+            this.pipe_json = _.assign({}, response.data)
+            this.tryCreatePipe(this.pipe_json)
+          }).catch(response => {
+            this.is_loading = false
+            this.error_markdown =
+              '# File not found\n\n' +
+              'We were unable to load the pipe from the following file:\n' +
+              '##### '+this.json_filename+'\n' +
+              'To copy the pipe to your project, make sure the file exists and that you have access to it.'
+          })
+        }
+         else
+        {
+          this.is_loading = false
+          this.error_markdown =
+            '# No file specified\n\n' +
+            'We were unable to load the pipe because no file was specified.\n\n' +
+            'To copy the pipe to your project, make sure a filename is specified in the `path` query parameter.'
+        }
+      },
       openPipe(eid) {
         this.$router.replace({
           name: ROUTE_PIPEHOME,
           params: {
             eid,
             view: PIPEHOME_VIEW_BUILDER,
-            state: PIPEHOME_STATUS_CONFIGURE
+            state: PIPEHOME_STATUS_CONFIGURE // jump right into configuration
           }
         })
       }
     }
   }
 </script>
-
-<style lang="less">
-  .marked {
-    h1 {
-      font-weight: normal;
-      margin-top: 0;
-    }
-
-    h2,
-    h3,
-    h4 {
-      font-weight: 600;
-    }
-
-    p {
-      line-height: 1.5;
-    }
-
-    p + h3,
-    ul + h3 {
-      margin-top: 3rem;
-    }
-
-    ul > li {
-      line-height: 1.5;
-    }
-
-    code {
-      padding: 0;
-      padding-top: 0.2rem;
-      padding-bottom: 0.2rem;
-      margin: 0;
-      font-size: 85%;
-      background-color: rgba(27,31,35,0.05);
-      border-radius: 3px;
-
-      &::before,
-      &::after {
-        letter-spacing: -0.2em;
-        content: "\00a0";
-      }
-    }
-  }
-</style>

@@ -2,79 +2,152 @@
   <div>
     <textarea
       ref="textarea"
-      class="w-100 pa1 ba b--black-30 resize-none input-reset lh-title focus-outline-transparent"
       autocomplete="off"
       rows="1"
+      class="w-100 pa1 ba b--black-30 resize-none input-reset lh-title focus-outline-transparent"
+      :class="isBlock ? 'db' : ''"
       @keydown.esc="endEdit(false)"
-      @keydown.enter="save"
-      @blur="save"
+      @keydown.enter.ctrl="save"
+      @keydown.enter="onEnterKeydown"
+      @blur="onBlur"
       v-model="edit_val"
-      v-show="editing"
+      v-show="is_editing"
       v-deferred-focus
     ></textarea>
-    <div class="flex flex-row items-center hide-child hover-black" v-if="!editing">
-      <div @click="startEdit" v-if="edit_val.length > 0">{{edit_val}}</div>
-      <div :class="placeholderCls" @click="startEdit" v-else>{{placeholder}}</div>
+    <div class="flex flex-row items-center hide-child" :class="[
+      allowEdit ? staticCls : '',
+      allowEdit ? 'hover-black' : ''
+    ]" v-if="!is_editing">
+      <div
+        class="marked"
+        :class="{ 'flex-fill': isBlock }"
+        @click="startEdit"
+        v-html="markdown_val"
+        v-if="isMarkdown && markdown_val.length > 0">
+      </div>
+      <div
+        :class="isBlock ? 'flex-fill' : ''"
+        @click="startEdit"
+        v-else-if="!isMarkdown && edit_val.length > 0"
+      >
+        {{edit_val}}
+      </div>
+      <div
+        :class="[placeholderCls, isBlock ? 'flex-fill' : '']"
+        @click="startEdit"
+        v-else
+      >
+        {{placeholder}}
+      </div>
       <button
-        class="ml1 pa0 br1 child"
-        :class="editButtonTooltipCls"
+        class="br1 child"
+        :class="[editButtonTooltipCls, isBlock ? 'ma1 pa1 self-start' : '']"
         :aria-label="editButtonLabel"
         @click="startEdit"
-        v-if="!editing && showEditButton"
+        v-if="!is_editing && showEditButton && allowEdit"
       ><i class="db material-icons f6">edit</i>
       </button>
     </div>
+    <transition name="slide-fade">
+      <div class="flex flex-row items-start mt2" v-show="show_buttons">
+        <div class="flex-fill"></div>
+        <btn btn-sm class="b ttu blue mr2" @click="endEdit(false)">Cancel</btn>
+        <btn btn-sm class="b ttu white bg-blue" @click="save">Save Changes</btn>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
   import autosize from 'autosize'
+  import marked from 'marked'
+  import Btn from './Btn.vue'
 
   export default {
     props: {
       'input-key': {
-        required: true,
-        type: String
+        type: String,
+        required: true
       },
       'val': {
-        default: '',
-        type: String
+        type: String,
+        default: ''
       },
       'placeholder': {
-        default: 'Click here to edit',
-        type: String
+        type: String,
+        default: 'Click here to edit'
       },
       'placeholder-cls': {
-        default: '',
-        type: String
+        type: String,
+        default: ''
       },
       'edit-button-label': {
-        default: 'Click to edit',
-        type: String
+        type: String,
+        default: 'Click to edit'
       },
       'edit-button-tooltip-cls': {
-        default: 'hint--top',
-        type: String
+        type: String,
+        default: 'hint--top'
       },
       'show-edit-button': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
+      },
+      'show-save-cancel-buttons': {
+        type: Boolean,
+        default: false
+      },
+      'static-cls': {
+        type: String,
+        default: ''
       },
       'autosize': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
+      },
+      'allow-edit': {
+        type: Boolean,
+        default: true
+      },
+      'is-markdown': {
+        type: Boolean,
+        default: false
+      },
+      'is-multiline': {
+        type: Boolean,
+        default: false
+      },
+      'is-block': {
+        type: Boolean,
+        default: false
+      }
+    },
+    components: {
+      Btn
+    },
+    watch: {
+      val: function(val, old_val) {
+        this.before_edit_val = val
+        this.edit_val = val
       }
     },
     data() {
       return {
+        before_edit_val: this.val,
         edit_val: this.val,
-        editing: false,
+        is_editing: false,
+        // this allows us to let the hide transition finish
+        // before we swap out the edit text for the static text
+        keep_buttons_alive: false,
         autosize_initialized: false
       }
     },
-    watch: {
-      val: function(val, old_val) {
-        this.edit_val = val
+    computed: {
+      markdown_val() {
+        return marked(this.edit_val)
+      },
+      show_buttons() {
+        return this.allowEdit && this.is_editing && this.keep_buttons_alive && (this.showSaveCancelButtons || this.isMarkdown)
       }
     },
     mounted() {
@@ -90,10 +163,15 @@
     },
     methods: {
       save() {
+        this.before_edit_val = this.edit_val
         this.$emit('save', { [this.inputKey]: this.edit_val }, this)
       },
       startEdit() {
-        this.editing = true
+        if (!this.allowEdit)
+          return
+
+        this.is_editing = true
+        this.keep_buttons_alive = true
 
         this.$nextTick(() => {
           var ta = this.$refs['textarea']
@@ -103,10 +181,24 @@
         })
       },
       endEdit(save) {
-        if (save === false)
-          this.edit_val = this.val
+        this.keep_buttons_alive = false
 
-        this.editing = false
+        if (save === false)
+          this.edit_val = this.before_edit_val
+
+        // allow time for transition to finish
+        if (this.showSaveCancelButtons || this.isMarkdown)
+          setTimeout(() => { this.is_editing = false }, 450)
+           else
+          this.is_editing = false
+      },
+      onEnterKeydown() {
+        if (!this.isMarkdown && !this.isMultiline)
+          this.save()
+      },
+      onBlur() {
+        if (!this.show_buttons)
+          this.save()
       }
     }
   }

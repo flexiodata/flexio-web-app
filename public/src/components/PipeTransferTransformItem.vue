@@ -28,11 +28,11 @@
 
 <script>
   import ConnectionIcon from './ConnectionIcon.vue'
-  import taskItemHelper from './mixins/task-item-helper'
+  import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
     props: ['item', 'index'],
-    mixins: [taskItemHelper],
+    mixins: [TaskItemHelper],
     components: {
       ConnectionIcon
     },
