@@ -1126,8 +1126,8 @@ TODO: remove deprecated implementation; following was split into two functions,
             $retval = null;
             return true;
         }
-        $param0 = strtotime($param0);
-        $retval = (double)date('d', $param0);
+        $param0 = self::exprToDate($param0);
+        $retval = $param0 !== false ? (double)$param0->getDay() : null;
         return true;
     }
 
@@ -1154,7 +1154,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
         $param0 = self::exprToDate($param0);
-        $retval = $param0 !== false ? (double)$param0->getHour() : null;
+        $retval = ($param0 !== false && $param0->hasTimePart()) ? (double)$param0->getHour() : null;
         return true;
     }
 
@@ -1331,7 +1331,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
         $param0 = self::exprToDate($param0);
-        $retval = $param0 !== false ? (double)$param0->getMinute() : null;
+        $retval = ($param0 !== false && $param0->hasTimePart()) ? (double)$param0->getMinute() : null;
         return true;
     }
 
@@ -1367,8 +1367,8 @@ TODO: remove deprecated implementation; following was split into two functions,
             $retval = null;
             return true;
         }
-        $param0 = strtotime($param0);
-        $retval = (double)date('m', $param0);
+        $param0 = self::exprToDate($param0);
+        $retval = $param0 !== false ? (double)$param0->getMonth() : null;
         return true;
     }
 
@@ -1600,7 +1600,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
         $param0 = self::exprToDate($param0);
-        $retval = $param0 !== false ? (double)$param0->getSecond() : null;
+        $retval = ($param0 !== false && $param0->hasTimePart()) ? (double)$param0->getSecond() : null;
         return true;
     }
 
@@ -2703,9 +2703,8 @@ TODO: remove deprecated implementation; following was split into two functions,
             $retval = null;
             return true;
         }
-
-        $param0 = strtotime($param0);
-        $retval = (double)date('Y', $param0);
+        $param0 = self::exprToDate($param0);
+        $retval = $param0 !== false ? (double)$param0->getYear() : null;
         return true;
     }
 
