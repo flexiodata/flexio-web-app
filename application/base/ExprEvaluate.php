@@ -2437,32 +2437,35 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     public function func_to_timestamp($func, $params, &$retval)
     {
-        // TODO: do we want to pass dates as strings?
-        if (!$this->doEval($params[0], $param0)) return false;
-
-        if (trim($param0) == '')
+        if (count($params) < 1)
         {
             $retval = null;
             return true;
         }
 
-        $e = new ExprDateTime();
-        if (!$e->parse($param0))
+        if (count($params) == 1)
         {
-            return false;
+            // same as cast(fld, datetime)
+            $type_constant = new \Flexio\Base\ExprValue;
+            $type_constant->val = 'datetime';
+
+            $call_params = [ $params[0], $type_constant ];
+            return $this->func_cast($func, $call_params, $retval);
         }
 
-        $retval = $e;
-        return true;
 
-/*
-        // TODO: use format if specified:
-        //if (!$this->doEval($params[1], $param1)) return false;
+        if (!$this->doEval($params[0], $param0)) return false;
+        if (!$this->doEval($params[1], $param1)) return false;
 
-        $param0 = self::exprToString($param0);
-        $retval = date('Y-m-d H:i:s', strtotime($param0));
+        $dt = new ExprDateTime();
+        if (!$dt->parse($param0, $param1))
+        {
+            $retval = null;
+            return true;
+        }
+      
+        $retval = $dt;
         return true;
-*/
     }
 
     public function func_trim($func, $params, &$retval)
@@ -2773,6 +2776,10 @@ class ExprDateTime
             return true;
         }
 
+        // if date is empty, return null
+        if (trim($value) == '')
+            return false;
+        
         if (isset($format))
         {
             $format = str_replace(['YYYY', 'MM', 'DD', 'HH24', 'HH12', 'HH', 'MI', 'SS'],

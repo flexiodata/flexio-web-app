@@ -5082,6 +5082,10 @@ class Test
         $expected = "2001-02-03 04:05:06";
         TestCheck::assertString('AAA.5', 'Expression; to_datetime() conversion function',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('to_char(to_datetime("2001-02-03 23:05:06","YYYY-MM-DD HH24:MI:SS"))');
+        $expected = "2001-02-03 23:05:06";
+        TestCheck::assertString('AAA.6', 'Expression; to_datetime() conversion function',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
         // TEST: text function: to_number()
@@ -5139,5 +5143,21 @@ class Test
         $actual = TestUtil::evalExpression('to_char(to_timestamp("2001-02-03 04:05:06","YYYY-MM-DD HH:MI:SS"))');
         $expected = "2001-02-03 04:05:06";
         TestCheck::assertString('AAC.5', 'Expression; to_timestamp() conversion function',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('to_char(to_timestamp("03-2001-02 06:05:04","DD-YYYY-MM SS:MI:HH24"))');
+        $expected = "2001-02-03 04:05:06";
+        TestCheck::assertString('AAC.6', 'Expression; to_timestamp() conversion function; non-standard order with format',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('to_char(to_timestamp("20010203040506","YYYYMMDDHH24MISS"))');
+        $expected = "2001-02-03 04:05:06";
+        TestCheck::assertString('AAC.7', 'Expression; to_timestamp() conversion function; no separators',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('to_char(to_timestamp("2001-02-03 23:05:06","YYYYMMDDHHMISS"))');
+        $expected = "2001-02-03 23:05:06";
+        TestCheck::assertString('AAC.8', 'Expression; to_timestamp() conversion function; HH24 hour specified with HH specifier',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+
     }
 }
