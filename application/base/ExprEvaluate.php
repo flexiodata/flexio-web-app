@@ -284,7 +284,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                 switch ($this->values[$key]['type'])
                 {
                     case 's': return ExprParser::TYPE_STRING;
-                    case 'n': return ExprParser::TYPE_FLOAT;
+                    case 'f': return ExprParser::TYPE_FLOAT;
                     case 'd': return ExprParser::TYPE_DATE;
                     case 't': return ExprParser::TYPE_DATETIME;
                     case 'b': return ExprParser::TYPE_BOOLEAN;
@@ -372,6 +372,20 @@ TODO: remove deprecated implementation; following was split into two functions,
             if (array_key_exists($key, $this->data))
             {
                 $retval = $this->data[$key];
+                return true;
+            }
+             else if (array_key_exists($key, $this->values))
+            {
+                if (isset($this->values[$key]['func']))
+                {
+                    // for pi and current_date
+                    return call_user_func_array([ $this, $this->values[$key]['func'] ], [ '', [], &$retval ] );
+                }
+                 else
+                {
+                    // built-in values (used for cast function)
+                    $retval = $this->values[$key]['name'];
+                }
                 return true;
             }
              else
@@ -562,17 +576,17 @@ TODO: remove deprecated implementation; following was split into two functions,
 
 
     public $values = [
-        'current_date' => [ 'type' => 'd', 'name' => 'current_date' ],
-        'pi'           => [ 'type' => 'd', 'name' => 'pi()' ],
+        'current_date' => [ 'type' => 'd', 'func' => 'func_current_date' ],
+        'pi'           => [ 'type' => 'f', 'func' => 'func_pi' ],
 
-        'text'         => [ 'type' => 's', 'name' => "'text'" ],
-        'character'    => [ 'type' => 's', 'name' => "'character'" ],
-        'numeric'      => [ 'type' => 'f', 'name' => "'numeric'" ],
-        'double'       => [ 'type' => 'f', 'name' => "'double'" ],
-        'integer'      => [ 'type' => 'i', 'name' => "'integer'" ],
-        'boolean'      => [ 'type' => 'b', 'name' => "'boolean'" ],
-        'date'         => [ 'type' => 'd', 'name' => "'date'" ],
-        'datetime'     => [ 'type' => 't', 'name' => "'datetime'" ]
+        'text'         => [ 'type' => 's', 'name' => 'text' ],
+        'character'    => [ 'type' => 's', 'name' => 'character' ],
+        'numeric'      => [ 'type' => 'f', 'name' => 'numeric' ],
+        'double'       => [ 'type' => 'f', 'name' => 'double' ],
+        'integer'      => [ 'type' => 'i', 'name' => 'integer' ],
+        'boolean'      => [ 'type' => 'b', 'name' => 'boolean' ],
+        'date'         => [ 'type' => 'd', 'name' => 'date' ],
+        'datetime'     => [ 'type' => 't', 'name' => 'datetime' ]
     ];
 
     public function oper_and($oper, $params, &$retval)
@@ -856,7 +870,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         {
             case 'text':
             case 'character':
-                $retval = (string)$param0;
+                $retval = is_null($param0) ? null : (string)$param0;
                 return true;
 
             case 'numeric':
@@ -897,6 +911,10 @@ TODO: remove deprecated implementation; following was split into two functions,
                 $retval = $dt;
                 return true;
             }
+
+            default:
+                // unknown type
+                return false;
         }
 
         return false;

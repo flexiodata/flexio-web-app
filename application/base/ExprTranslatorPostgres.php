@@ -184,7 +184,7 @@ class ExprTranslatorPostgres
                 switch ($this->values[$key]['type'])
                 {
                     case 's': return ExprParser::TYPE_STRING;
-                    case 'n': return ExprParser::TYPE_FLOAT;
+                    case 'f': return ExprParser::TYPE_FLOAT;
                     case 'd': return ExprParser::TYPE_DATE;
                     case 't': return ExprParser::TYPE_DATETIME;
                     case 'b': return ExprParser::TYPE_BOOLEAN;
@@ -690,7 +690,7 @@ class ExprTranslatorPostgres
 
     public $values = [
         'current_date' => [ 'type' => 'd', 'name' => 'current_date' ],
-        'pi'           => [ 'type' => 'd', 'name' => 'pi()' ],
+        'pi'           => [ 'type' => 'f', 'name' => 'pi()' ],
 
         'text'         => [ 'type' => 's', 'name' => "'text'" ],
         'character'    => [ 'type' => 's', 'name' => "'character'" ],

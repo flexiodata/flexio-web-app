@@ -5159,5 +5159,13 @@ class Test
         $expected = "2001-02-03 23:05:06";
         TestCheck::assertString('AAC.8', 'Expression; to_timestamp() conversion function; HH24 hour specified with HH specifier',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
+
+        // TEST: cast to text: cast(various, text)
+
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('cast(null,text)');
+        $expected = null;
+        TestCheck::assertNull('A.8', 'Expression; cast() conversion function; cast null to text',  $actual, $expected, $results);
+
     }
 }
