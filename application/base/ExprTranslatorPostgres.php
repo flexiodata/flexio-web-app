@@ -682,6 +682,7 @@ class ExprTranslatorPostgres
         'upper'        => [ 'types' => [ 's(s)', 's(n)', 's(b)', 's(N)' ], 'func' => 'func_upper' ],
         'year'         => [ 'types' => [ 'f(d)', 'f(t)', 'f(N)', 'f(s)' ], 'func' => 'func_year' ],
 
+        // used by cast() -- for example cast(fld, numeric(10,2))
         'text'         => [ 'types' => [ 's(i)' ] ],
         'character'    => [ 'types' => [ 's(i)' ] ],
         'numeric'      => [ 'types' => [ 'f(i)', 'f(ii)' ] ]
@@ -801,6 +802,9 @@ class ExprTranslatorPostgres
             return false;
         $old_type = $this->getType($params[0]);
 
+        if ($old_type == ExprParser::TYPE_NULL)
+            return 'null';
+        
         $type = null;
         $width = null;
         $scale = null;
@@ -827,24 +831,31 @@ class ExprTranslatorPostgres
                 $scale = $func->params[1]->val;
             }
         }
-        if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && ($params[1]->name == 'text' || $params[1]->name == 'character'))
-            $type = 'text';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'numeric')
-            $type = 'numeric';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'double')
-            $type = 'double';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'integer')
-            $type = 'integer';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'date')
-            $type = 'date';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'datetime')
-            $type = 'datetime';
-        else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE && $params[1]->name == 'boolean')
-            $type = 'boolean';
+
+        if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE)
+        {
+            switch ($params[1]->name)
+            {
+                case 'character':
+                case 'text':
+                    $type = 'text';
+                    break;
+                case 'numeric':
+                case 'double':
+                case 'integer':
+                case 'date':
+                case 'datetime':
+                case 'boolean':
+                    $type = $params[1]->name;
+                    break;
+                default:
+                    return false; // unknown type
+            }
+        }
 
         switch ($old_type)
         {
-            case ExprParser::TYPE_STRING:    $old_type = 'character'; break;
+            case ExprParser::TYPE_STRING:    $old_type = 'text'; break;
             case ExprParser::TYPE_INTEGER:   $old_type = 'integer'; break;
             case ExprParser::TYPE_FLOAT:     $old_type = 'float'; break;
             case ExprParser::TYPE_BOOLEAN:   $old_type = 'boolean'; break;
@@ -852,6 +863,7 @@ class ExprTranslatorPostgres
             case ExprParser::TYPE_DATETIME:  $old_type = 'datetime'; break;
             default: return false;
         }
+
 
         return self::getCastExpression($param, $old_type, $type, $width, $scale);
     }
