@@ -2413,11 +2413,16 @@ TODO: remove deprecated implementation; following was split into two functions,
         if (!$this->doEval($params[0], $param0)) return false;
         if (!$this->doEval($params[1], $param1)) return false;
 
-        // same as cast(fld, date)
-        $type_constant = new \Flexio\Base\ExprValue;
-        $type_constant->val = 'date';
-        $call_params = [ $params[0], $type_constant ];
-        return $this->func_cast($func, $call_params, $retval);
+        $dt = new ExprDateTime();
+        if (!$dt->parse($param0, $param1))
+        {
+            $retval = null;
+            return true;
+        }
+
+        $dt->truncateTime();        
+        $retval = $dt;
+        return true;
     }
 
     public function func_to_number($func, $params, &$retval)
@@ -2760,7 +2765,7 @@ class ExprDateTime
 {
     public $values = null;
 
-    public function parse($value)
+    public function parse($value, $format = null)
     {
         if (is_a($value, '\Flexio\Base\ExprDateTime'))
         {
@@ -2768,7 +2773,18 @@ class ExprDateTime
             return true;
         }
 
-        $arr = date_parse((string)$value);
+        if (isset($format))
+        {
+            $format = str_replace(['YYYY', 'MM', 'DD', 'HH24', 'HH12'],
+                                  ['Y'   , 'm',  'd',  'H',    'h'],
+                                  $format);
+            $arr = date_parse_from_format($format, (string)$value);
+        }
+         else
+        {
+            $arr = date_parse((string)$value);
+        }
+
         if (!isset($arr['year']) || !isset($arr['month']) || !isset($arr['day']))
             return false;
 
