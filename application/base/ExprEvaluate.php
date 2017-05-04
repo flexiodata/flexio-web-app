@@ -899,15 +899,45 @@ TODO: remove deprecated implementation; following was split into two functions,
 
             case 'numeric':
             case 'double':
-                $retval = floatval(''.$param0);
+                if (is_null($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
+                else if ($param0 instanceof ExprDateTime)
+                {
+                    if ($param0->hasTimePart())
+                    {
+                        $retval = (float)sprintf("%04d%02d%02d%02d%02d%02d", $param0->values['year'], $param0->values['month'], $param0->values['day'], $param0->values['hour'], $param0->values['minute'], $param0->values['second']);
+                    }
+                    else
+                    {
+                        $retval = (float)sprintf("%04d%02d%02d", $param0->values['year'], $param0->values['month'], $param0->values['day']);
+                    }
+                }
+                else
+                {
+                    $retval = floatval(''.$param0);
+                }
                 return true;
 
             case 'integer':
+                if (is_null($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
                 $retval = intval(''.$param0);
                 return true;
 
             case 'boolean':
             {
+                if (is_null($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
+
                      if ($param0 === true)  { $retval = true;  return true; }
                 else if ($param0 === false) { $retval = false; return true; }
 
@@ -922,6 +952,12 @@ TODO: remove deprecated implementation; following was split into two functions,
             case 'date':
             case 'datetime':
             {
+                if (is_null($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
+
                 $dt = new ExprDateTime();
                 if (!$dt->parse($param0))
                 {

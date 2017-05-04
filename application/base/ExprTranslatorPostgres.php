@@ -527,6 +527,8 @@ class ExprTranslatorPostgres
                     $expr = "(substring(translate(($expr),',%$# ','') from '^[+-]*(?:[0-9]{1,$width}|[0-9]{1,$width}[.][0-9]*|[0-9]{0,$width}[.][0-9]+)$'))::$cast";
                 else if ($old_type == 'numeric' || $old_type == 'double' || $old_type == 'float' || $old_type == 'real' || $old_type == 'integer')
                     $expr = "(CASE WHEN ($expr) > 10^$width THEN NULL ELSE ($expr) END)::$cast";
+                else if ($old_type == 'boolean')
+                    $expr = "(CASE WHEN ($expr) THEN 1 ELSE 0 END)::$cast";
                 else if ($old_type == 'date')
                     $expr = "to_char($expr, 'YYYYMMDD')::numeric";
                 else if ($old_type == 'datetime')
