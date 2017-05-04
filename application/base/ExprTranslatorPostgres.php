@@ -551,10 +551,12 @@ class ExprTranslatorPostgres
                     $expr = "round((substring(translate(($expr),',%$# ','') from '^[+-]*(?:[0-9]{1,$width}|[0-9]{1,$width}[.][0-9]*|[0-9]{0,$width}[.][0-9]+)$'))::numeric,0)";
                 else if ($old_type == 'numeric' || $old_type == 'double' || $old_type == 'float' || $old_type == 'real' || $old_type == 'integer')
                     $expr = "round(($expr),0)::integer";
+                else if ($old_type == 'boolean')
+                    $expr = "(CASE WHEN ($expr) THEN 1 ELSE 0 END)::integer";
                 else if ($old_type == 'date')
-                    $expr = "to_char($expr, 'YYYYMMDD')::integer";
+                    $expr = "to_char($expr, 'YYYYMMDD')::numeric";
                 else if ($old_type == 'datetime')
-                    $expr = "to_char($expr, 'YYYYMMDDHH24MISS')::integer";
+                    $expr = "to_char($expr, 'YYYYMMDDHH24MISS')::numeric";
                 else
                     return false;
                 break;

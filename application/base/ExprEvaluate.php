@@ -968,7 +968,26 @@ TODO: remove deprecated implementation; following was split into two functions,
                     $retval = null;
                     return true;
                 }
-                $retval = intval(''.$param0);
+                else if ($param0 instanceof ExprDateTime)
+                {
+                    if ($param0->hasTimePart())
+                    {
+                        $retval = (float)sprintf("%04d%02d%02d%02d%02d%02d", $param0->values['year'], $param0->values['month'], $param0->values['day'], $param0->values['hour'], $param0->values['minute'], $param0->values['second']);
+                    }
+                    else
+                    {
+                        $retval = (float)sprintf("%04d%02d%02d", $param0->values['year'], $param0->values['month'], $param0->values['day']);
+                    }
+                }
+                else if (is_bool($param0))
+                {
+                    $retval = $param0 ? 1 : 0;
+                }
+                else
+                {
+                    // cast to float for consistency with postgres engine
+                    $retval = (float)intval(''.$param0);
+                }
                 return true;
 
             case 'boolean':

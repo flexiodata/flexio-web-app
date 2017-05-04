@@ -5223,6 +5223,32 @@ class Test
 
         $actual = TestUtil::evalExpression('cast(to_timestamp("2001-02-03 04:05:06"),numeric)');
         $expected = (float)20010203040506;
-        TestCheck::assertNumber('AB.7', 'Expression; cast() conversion function; cast timestamp to text',  $actual, $expected, $results);
+        TestCheck::assertNumber('AB.7', 'Expression; cast() conversion function; cast timestamp to numeric',  $actual, $expected, $results);
+
+
+
+        $actual = TestUtil::evalExpression('cast(null,integer)');
+        $expected = null;
+        TestCheck::assertNull('AC.1', 'Expression; cast() conversion function; cast null to integer',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast("-123.49",integer)');
+        $expected = (float)-123;
+        TestCheck::assertNumber('AC.2', 'Expression; cast() conversion function; cast string to integer',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast(true,integer)');
+        $expected = 1;
+        TestCheck::assertNumber('AC.4', 'Expression; cast() conversion function; cast bool (true) to integer',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast(false,integer)');
+        $expected = 0;
+        TestCheck::assertNumber('AC.5', 'Expression; cast() conversion function; cast bool (false) to integer',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast(to_date("2001-02-03"),integer)');
+        $expected = (float)20010203;
+        TestCheck::assertNumber('AC.6', 'Expression; cast() conversion function; cast date to integer',  $actual, $expected, $results);
+
+        $actual = TestUtil::evalExpression('cast(to_timestamp("2001-02-03 04:05:06"),integer)');
+        $expected = (float)20010203040506;
+        TestCheck::assertNumber('AC.7', 'Expression; cast() conversion function; cast timestamp to integer',  $actual, $expected, $results);
     }
 }
