@@ -1113,6 +1113,33 @@
 
 
 
+    this.args.nop = [];
+    this.hints.nop = {};
+    this.keywords.nop = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.nop",
+          "params": { }
+        };
+
+      return json;
+    };
+
+
+    this.templates["flexio.nop"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "nop";
+      return res;
+    };
+
+
+
+
+
     this.args.limit = ['sample','value'];
     this.hints.limit = {
       "sample":       [ 'top', 'bottom', 'random' ]
@@ -1814,7 +1841,8 @@
         //'email', // removed for release
         'execute',
         'transform',
-        'merge'
+        'merge',
+        'nop'
       ]
     },
 

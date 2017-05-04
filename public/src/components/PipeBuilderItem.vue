@@ -86,7 +86,7 @@
         <inline-edit-text
           class="db lh-title mid-gray"
           placeholder="Add a description"
-          placeholder-cls="fw6 black-20 hover-black-40"
+          placeholder-cls="f6 fw6 black-20 hover-black-40"
           edit-button-tooltip-cls="hint--top-left"
           input-key="description"
           static-cls="hover-bg-near-white"
@@ -153,6 +153,7 @@
             @change="updateCmd"
             @revert="cancelEdit"
             @save="saveChanges"
+            v-if="show_command_bar"
           ></command-bar>
 
           <!-- code editor -->
@@ -203,7 +204,8 @@
   import {
     TASK_TYPE_INPUT,
     TASK_TYPE_OUTPUT,
-    TASK_TYPE_EXECUTE
+    TASK_TYPE_EXECUTE,
+    TASK_TYPE_NOP
   } from '../constants/task-type'
   import api from '../api'
   import parser from '../utils/parser'
@@ -312,6 +314,9 @@
       },
       is_active_prompt_task() {
         return this.index == this.activePromptIdx
+      },
+      show_command_bar() {
+        return this.task_type != TASK_TYPE_NOP
       },
       orig_cmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
