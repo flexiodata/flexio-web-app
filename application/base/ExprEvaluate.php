@@ -562,7 +562,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         'to_char'      => [ 'types' => [ 's(s)', 's(n)', 's(d)', 's(t)', 's(b)', 's(N)', 's(ns)', 's(ds)', 's(ts)', 's(Ns)' ], 'func' => 'func_to_char' ],
         'to_date'      => [ 'types' => [ 'd(s[s])', 'd(n[s])', 'd(d[s])', 'd(b[s])', 'd(N[s])' ], 'func' => 'func_to_date' ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
-        'to_number'    => [ 'types' => [ 'f(ss)', 'f(ns)', 'f(ds)', 'f(bs)', 'f(Ns)' ], 'func' => 'func_to_number' ],
+        'to_number'    => [ 'types' => [ 'f(s[s])', 'f(n[s])', 'f(d[s])', 'f(b[s])', 'f(N[s])' ], 'func' => 'func_to_number' ],
         'to_timestamp' => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ],
         'trim'         => [ 'types' => [ 's(s)', 's(ss)', 's(n)', 's(ns)', 's(b)', 's(bs)', 's(N)', 's(Ns)' ], 'func' => 'func_trim' ],
         'trunc'        => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_trunc' ],
@@ -2456,10 +2456,32 @@ TODO: remove deprecated implementation; following was split into two functions,
 
     public function func_to_number($func, $params, &$retval)
     {
+        if (count($params) < 1)
+        {
+            $retval = null;
+            return true;
+        }
+
+        if (count($params) == 1)
+        {
+            // same as cast(fld, datetime)
+            $type_constant = new \Flexio\Base\ExprValue;
+            $type_constant->val = 'numeric';
+
+            $call_params = [ $params[0], $type_constant ];
+            return $this->func_cast($func, $call_params, $retval);
+        }
+
         if (!$this->doEval($params[0], $param0)) return false;
         if (!$this->doEval($params[1], $param1)) return false;
 
         // TODO: make database-conformant implementation, nail down with test suite
+
+        if (is_string($param0))
+        {
+            $param0 = str_replace(',','', $param0);
+        }
+        
         $retval = (double)$param0;
         return true;
     }

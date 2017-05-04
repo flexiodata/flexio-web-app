@@ -5102,7 +5102,7 @@ class Test
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression('to_number("1")');
-        $expected = 1;
+        $expected = (float)1;
         TestCheck::assertNumber('AAB.3', 'Expression; support conversion of a string to a number without a format',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -5155,9 +5155,9 @@ class Test
         TestCheck::assertString('AAC.7', 'Expression; to_timestamp() conversion function; no separators',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('to_char(to_timestamp("2001-02-03 23:05:06","YYYYMMDDHHMISS"))');
+        $actual = TestUtil::evalExpression('to_char(to_timestamp("20010203230506","YYYYMMDDHHMISS"))');
         $expected = "2001-02-03 23:05:06+00";
-        TestCheck::assertString('AAC.8', 'Expression; to_timestamp() conversion function; HH24 hour specified with HH specifier',  $actual, $expected, $results);
+        TestCheck::assertString('AAC.8', 'Expression; to_timestamp() conversion function; HH24 hour specified with HH specifier',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
 
         // TEST: cast to text: cast(various, text)

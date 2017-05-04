@@ -676,7 +676,7 @@ class ExprTranslatorPostgres
         'to_date'      => [ 'types' => [ 'd(s[s])', 'd(n[s])', 'd(d[s])', 'd(b[s])', 'd(N[s])' ], 'func' => 'func_to_date' ],
         'to_datetime'  => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ], // alias for to_timestamp
         'to_timestamp' => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ],
-        'to_number'    => [ 'types' => [ 'f(ss)', 'f(ns)', 'f(ds)', 'f(bs)', 'f(Ns)' ] ],
+        'to_number'    => [ 'types' => [ 'f(s[s])', 'f(n[s])', 'f(d[s])', 'f(b[s])', 'f(N[s])' ], 'func' => 'func_to_number' ],
         'trim'         => [ 'types' => [ 's(s)', 's(ss)', 's(n)', 's(ns)', 's(b)', 's(bs)', 's(N)', 's(Ns)' ], 'func' => 'func_trim' ],
         'trunc'        => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_generic_numfunc' ],
         'upper'        => [ 'types' => [ 's(s)', 's(n)', 's(b)', 's(N)' ], 'func' => 'func_upper' ],
@@ -1287,6 +1287,31 @@ class ExprTranslatorPostgres
             $param0 = $this->printNode($params[0]);
             $param1 = $this->printNode($params[1]);
             return "to_char($param0,$param1)";
+        }
+         else
+        {
+            return false;
+        }
+    }
+
+    public function func_to_number($func, $params)
+    {
+        if ($this->getType($params[0]) == ExprParser::TYPE_NULL)
+            return "null::numeric";
+
+        if (count($params) == 1)
+        {
+            // to_number() with one parameter is the same as cast(fld, numeric)
+            $v = new ExprVariable;
+            $v->name = 'numeric';
+            $params[] = $v;
+            return $this->func_cast($func, $params);
+        }
+         else if (count($params) == 2)
+        {
+            $param0 = $this->printNode($params[0]);
+            $param1 = $this->printNode($params[1]);
+            return "to_number($param0,$param1)";
         }
          else
         {
