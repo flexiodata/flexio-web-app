@@ -1,4 +1,5 @@
 export const TASK_TYPE_CALC          = 'flexio.calc'
+export const TASK_TYPE_COMMENT       = 'flexio.comment'
 export const TASK_TYPE_CONVERT       = 'flexio.convert'
 export const TASK_TYPE_COPY          = 'flexio.copy'
 export const TASK_TYPE_CUSTOM        = 'flexio.custom'

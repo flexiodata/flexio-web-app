@@ -91,17 +91,23 @@ class Api
         {
             $info = $e->getMessage(); // exception info is packaged up in message
             $info = json_decode($info,true);
-            $file = $e->getFile();
-            $line = $e->getLine();
-            $code = $info['code'];
-            $trace = json_encode($e->getTrace());
-            $message = $info['message'] . (IS_DEBUG() === false ? '' : "; exception thrown in file $file on line $line; trace: $trace");
+
+            $error = array();
+            $error['code'] = $info['code'];
+            $error['message'] = $info['message'];
+
+            if (IS_DEBUG() !== false)
+            {
+                $file = $e->getFile();
+                $line = $e->getLine();
+                $error['type'] = 'flexio exception';
+                $error['file'] = $file;
+                $error['line'] = $line;
+                $error['trace'] = $e->getTrace();
+            }
 
             $response = array();
-            $response['errors'][] = array(
-                'code' => $code,
-                'message' => $message
-            );
+            $response['errors'][] = $error;
             if ($echo === false)
                 return $response;
 
@@ -109,17 +115,22 @@ class Api
         }
         catch (\Exception $e)
         {
-            $file = $e->getFile();
-            $line = $e->getLine();
-            $code = \Flexio\Base\Error::GENERAL;
-            $trace = json_encode($e->getTrace());
-            $message = (IS_DEBUG() === false ? '' : "exception thrown in file $file on line $line; trace: $trace");
+            $error = array();
+            $error['code'] = \Flexio\Base\Error::GENERAL;
+            $error['message'] = '';
+
+            if (IS_DEBUG() !== false)
+            {
+                $file = $e->getFile();
+                $line = $e->getLine();
+                $error['type'] = 'php exception';
+                $error['file'] = $file;
+                $error['line'] = $line;
+                $error['trace'] = $e->getTrace();
+            }
 
             $response = array();
-            $response['errors'][] = array(
-                'code' => $code,
-                'message' => $message
-            );
+            $response['errors'][] = $error;
             if ($echo === false)
                 return $response;
 
@@ -127,17 +138,22 @@ class Api
         }
         catch (\Error $e)
         {
-            $file = $e->getFile();
-            $line = $e->getLine();
-            $code = \Flexio\Base\Error::GENERAL;
-            $trace = json_encode($e->getTrace());
-            $message = (IS_DEBUG() === false ? '' : "error thrown in file $file on line $line; trace: $trace");
+            $error = array();
+            $error['code'] = \Flexio\Base\Error::GENERAL;
+            $error['message'] = '';
+
+            if (IS_DEBUG() !== false)
+            {
+                $file = $e->getFile();
+                $line = $e->getLine();
+                $error['type'] = 'php error';
+                $error['file'] = $file;
+                $error['line'] = $line;
+                $error['trace'] = $e->getTrace();
+            }
 
             $response = array();
-            $response['errors'][] = array(
-                'code' => $code,
-                'message' => $message
-            );
+            $response['errors'][] = $error;
             if ($echo === false)
                 return $response;
 

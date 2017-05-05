@@ -1113,13 +1113,13 @@
 
 
 
-    this.args.nop = [];
-    this.hints.nop = {};
-    this.keywords.nop = function(str)
+    this.args.comment = [];
+    this.hints.comment = {};
+    this.keywords.comment = function(str)
     {
       var json =
         {
-          "type": "flexio.nop",
+          "type": "flexio.comment",
           "params": { }
         };
 
@@ -1127,12 +1127,12 @@
     };
 
 
-    this.templates["flexio.nop"] = function(json)
+    this.templates["flexio.comment"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
 
-      var res = "nop";
+      var res = "comment";
       return res;
     };
 
@@ -1842,7 +1842,7 @@
         'execute',
         'transform',
         'merge',
-        'nop'
+        'comment'
       ]
     },
 
