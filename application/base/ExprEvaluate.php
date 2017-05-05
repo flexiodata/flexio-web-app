@@ -1012,7 +1012,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             case 'date':
             case 'datetime':
             {
-                if (is_null($param0))
+                if (is_null($param0) || is_bool($param0))
                 {
                     $retval = null;
                     return true;
@@ -2961,8 +2961,10 @@ class ExprDateTime
             return true;
         }
 
+        $value = trim(''.$value);
+
         // if date is empty, return null
-        if (trim($value) == '')
+        if ($value == '')
             return false;
         
         if (isset($format))
@@ -2970,11 +2972,11 @@ class ExprDateTime
             $format = str_replace(['YYYY', 'MM', 'DD', 'HH24', 'HH12', 'HH', 'MI', 'SS'],
                                   ['Y'   , 'm',  'd',  'H',    'h',    'h',  'i',  's'],
                                   $format);
-            $arr = date_parse_from_format($format, (string)$value);
+            $arr = date_parse_from_format($format, $value);
         }
          else
         {
-            $arr = date_parse((string)$value);
+            $arr = date_parse($value);
         }
 
         if (!isset($arr['year']) || !isset($arr['month']) || !isset($arr['day']))

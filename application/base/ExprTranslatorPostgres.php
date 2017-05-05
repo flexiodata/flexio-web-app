@@ -577,6 +577,7 @@ class ExprTranslatorPostgres
                 $expr = "(CASE WHEN ($expr) ~ '^[0-9]{1,2}[-/. ][0-9]{1,2}[-/. ][0-9]{3,4}(?:[T ]?[0-9]{1,2}[:. ][0-9]{1,2}[:. ][0-9]{1,2})?' THEN to_timestamp(($expr),'MM DD YYYY HH24 MI SS')".
                         "      WHEN ($expr) ~ '^[0-9]{1,2}[-/. ][0-9]{1,2}[-/. ][0-9]{1,2}(?:[T ]?[0-9]{1,2}[:. ][0-9]{1,2}[:. ][0-9]{1,2})?' THEN to_timestamp(($expr),'MM DD YY HH24 MI SS')".
                         "      WHEN ($expr) ~ '^[0-9]{3,4}[-/. ][0-9]{1,2}[-/. ][0-9]{1,2}(?:[T ]?[0-9]{1,2}[:. ][0-9]{1,2}[:. ][0-9]{1,2})?' THEN to_timestamp(($expr),'YYYY MM DD HH24 MI SS')".
+                        "      WHEN ($expr) ~ '^[0-9]{14}'                                                                                    THEN to_timestamp(($expr),'YYYYMMDDHH24MISS')".
                         "      WHEN ($expr) ~ '^[0-9]{8}(?:[T ]?[0-9]{1,2}[:. ][0-9]{1,2}[:. ][0-9]{1,2})?'                                   THEN to_timestamp(($expr),'YYYYMMDD HH24 MI SS') ELSE NULL END)";
                 break;
 
