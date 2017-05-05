@@ -2881,7 +2881,7 @@ jodid25519@^1.0.0:
   dependencies:
     jsbn "~0.1.0"
 
-jquery@^3.1.1, jquery@x.*:
+jquery@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.1.1.tgz#347c1c21c7e004115e0a4da32cece041fad3c8a3"
 
@@ -4866,12 +4866,6 @@ select-hose@^2.0.0:
 select@^1.0.6:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/select/-/select-1.1.0.tgz#a6c520cd9ab919ad81c7d1a273e0452f504dd7a2"
-
-semantic-ui-css@^2.2.4:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/semantic-ui-css/-/semantic-ui-css-2.2.4.tgz#e886e6e55e2a16874bd5de49c25f26cd2eb720b7"
-  dependencies:
-    jquery x.*
 
 semver-regex@^1.0.0:
   version "1.0.0"
