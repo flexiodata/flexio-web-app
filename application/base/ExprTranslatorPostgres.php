@@ -509,8 +509,14 @@ class ExprTranslatorPostgres
 
                 break;
 
+            case 'double':
+            case 'real':
             case 'numeric':
-                if ($new_width == -1 || is_null($new_width))
+                if ($new_type == 'double' || $new_type == 'real')
+                {
+                    $cast = 'double precision';
+                }
+                 else if ($new_width == -1 || is_null($new_width))
                 {
                     $cast = 'numeric';
                 }
@@ -538,13 +544,7 @@ class ExprTranslatorPostgres
 
                 break;
 
-            case 'double':
-                $expr = "($expr)::double precision";
-                break;
-
-            case 'real':
-                $expr = "($expr)::real";
-                break;
+ 
 
             case 'integer':
                 if ($old_type == 'text' || $old_type == 'character' || $old_type == 'widecharacter')
