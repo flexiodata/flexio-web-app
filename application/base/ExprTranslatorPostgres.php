@@ -509,8 +509,14 @@ class ExprTranslatorPostgres
 
                 break;
 
+            case 'double':
+            case 'real':
             case 'numeric':
-                if ($new_width == -1 || is_null($new_width))
+                if ($new_type == 'double' || $new_type == 'real')
+                {
+                    $cast = 'double precision';
+                }
+                 else if ($new_width == -1 || is_null($new_width))
                 {
                     $cast = 'numeric';
                 }
@@ -527,6 +533,8 @@ class ExprTranslatorPostgres
                     $expr = "(substring(translate(($expr),',%$# ','') from '^[+-]*(?:[0-9]{1,$width}|[0-9]{1,$width}[.][0-9]*|[0-9]{0,$width}[.][0-9]+)$'))::$cast";
                 else if ($old_type == 'numeric' || $old_type == 'double' || $old_type == 'float' || $old_type == 'real' || $old_type == 'integer')
                     $expr = "(CASE WHEN ($expr) > 10^$width THEN NULL ELSE ($expr) END)::$cast";
+                else if ($old_type == 'boolean')
+                    $expr = "(CASE WHEN ($expr) THEN 1 ELSE 0 END)::$cast";
                 else if ($old_type == 'date')
                     $expr = "to_char($expr, 'YYYYMMDD')::numeric";
                 else if ($old_type == 'datetime')
@@ -536,23 +544,19 @@ class ExprTranslatorPostgres
 
                 break;
 
-            case 'double':
-                $expr = "($expr)::double precision";
-                break;
-
-            case 'real':
-                $expr = "($expr)::real";
-                break;
+ 
 
             case 'integer':
                 if ($old_type == 'text' || $old_type == 'character' || $old_type == 'widecharacter')
                     $expr = "round((substring(translate(($expr),',%$# ','') from '^[+-]*(?:[0-9]{1,$width}|[0-9]{1,$width}[.][0-9]*|[0-9]{0,$width}[.][0-9]+)$'))::numeric,0)";
                 else if ($old_type == 'numeric' || $old_type == 'double' || $old_type == 'float' || $old_type == 'real' || $old_type == 'integer')
                     $expr = "round(($expr),0)::integer";
+                else if ($old_type == 'boolean')
+                    $expr = "(CASE WHEN ($expr) THEN 1 ELSE 0 END)::integer";
                 else if ($old_type == 'date')
-                    $expr = "to_char($expr, 'YYYYMMDD')::integer";
+                    $expr = "to_char($expr, 'YYYYMMDD')::numeric";
                 else if ($old_type == 'datetime')
-                    $expr = "to_char($expr, 'YYYYMMDDHH24MISS')::integer";
+                    $expr = "to_char($expr, 'YYYYMMDDHH24MISS')::numeric";
                 else
                     return false;
                 break;
@@ -573,6 +577,7 @@ class ExprTranslatorPostgres
                 $expr = "(CASE WHEN ($expr) ~ '^[0-9]{1,2}[-/. ][0-9]{1,2}[-/. ][0-9]{3,4}(?:[T ]?[0-9]{1,2}[:. ][0-9]{1,2}[:. ][0-9]{1,2})?' THEN to_timestamp(($expr),'MM DD YYYY HH24 MI SS')".
                         "      WHEN ($expr) ~ '^[0-9]{1,2}[-/. ][0-9]{1,2}[-/. ][0-9]{1,2}(?:[T ]?[0-9]{1,2}[:. ][0-9]{1,2}[:. ][0-9]{1,2})?' THEN to_timestamp(($expr),'MM DD YY HH24 MI SS')".
                         "      WHEN ($expr) ~ '^[0-9]{3,4}[-/. ][0-9]{1,2}[-/. ][0-9]{1,2}(?:[T ]?[0-9]{1,2}[:. ][0-9]{1,2}[:. ][0-9]{1,2})?' THEN to_timestamp(($expr),'YYYY MM DD HH24 MI SS')".
+                        "      WHEN ($expr) ~ '^[0-9]{14}'                                                                                    THEN to_timestamp(($expr),'YYYYMMDDHH24MISS')".
                         "      WHEN ($expr) ~ '^[0-9]{8}(?:[T ]?[0-9]{1,2}[:. ][0-9]{1,2}[:. ][0-9]{1,2})?'                                   THEN to_timestamp(($expr),'YYYYMMDD HH24 MI SS') ELSE NULL END)";
                 break;
 
