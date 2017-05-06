@@ -14,7 +14,7 @@
 <script>
   import axios from 'axios'
   import marked from 'marked'
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
   import { PIPEHOME_VIEW_BUILDER, PIPEHOME_STATUS_CONFIGURE } from '../constants/pipehome'
   import Spinner from 'vue-simple-spinner'
@@ -25,14 +25,24 @@
     components: {
       Spinner
     },
+    watch: {
+      active_user_eid: function(val, old_val) {
+        this.tryFetchProjects()
+      }
+    },
     data() {
       return {
         is_loading: true,
+        is_pipe_created: false,
+        is_project_fetched: false,
         pipe_json: {},
         error_markdown: ''
       }
     },
     computed: {
+      ...mapState([
+        'active_user_eid'
+      ]),
       json_filename() {
         return _.get(this.$route, 'query.path', '')
       },
@@ -55,7 +65,8 @@
       }
     },
     mounted() {
-      this.tryFetchProjects()
+      if (this.active_user_eid.length > 0)
+        this.tryFetchProjects()
     },
     methods: {
       ...mapGetters([
@@ -63,19 +74,31 @@
         'getActiveUserProjects'
       ]),
       tryFetchProjects() {
+        // only fetch projects once
+        if (this.is_project_fetched)
+          return
+
         if (!this.hasProjects())
         {
           this.$store.dispatch('fetchProjects').then(response => {
             if (response.ok)
+            {
+              this.is_project_fetched = true
               this.loadPipeFromJsonFile()
+            }
           })
         }
          else
         {
+          this.is_project_fetched = true
           this.loadPipeFromJsonFile()
         }
       },
       tryCreatePipe(attrs) {
+        // only create the pipe once
+        if (this.is_pipe_created)
+          return
+
         var parent_eid = _.get(this.default_project, 'eid', '')
 
         if (parent_eid.length == 0 || _.size(attrs) == 0)
@@ -90,6 +113,7 @@
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok)
           {
+            this.is_pipe_created = true
             this.openPipe(response.body.eid)
           }
            else
