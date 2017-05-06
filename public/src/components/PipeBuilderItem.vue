@@ -11,13 +11,13 @@
         <div class="flex flex-row items-center">
           <!-- task icon -->
           <div @click="deleteTask">
-            <div class="swap-child" v-if="show_connection_icon">
+            <div class="mr2 mr3-ns swap-child" v-if="show_connection_icon">
               <connection-icon
-                class="mr2 mr3-ns br1 pointer child"
+                class="br1 pointer child"
                 style="width: 40px; height: 40px"
                 :type="ctype"
               ></connection-icon>
-              <div class="pointer pa2 mr2 mr3-ns br1 bg-light-silver white tc relative other-child">
+              <div class="pointer pa2 br1 bg-task-gray white tc relative other-child">
                 <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
               </div>
             </div>
