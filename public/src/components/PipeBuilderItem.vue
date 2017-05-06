@@ -85,11 +85,11 @@
         <!-- always task description -->
         <inline-edit-text
           class="db lh-title mid-gray"
-          placeholder="Add a description"
-          placeholder-cls="f6 fw6 black-20 hover-black-40"
+          placeholder-cls="black-40 hover-mid-gray"
           edit-button-tooltip-cls="hint--top-left"
           input-key="description"
           static-cls="hover-bg-near-white"
+          :placeholder="display_name"
           :val="description"
           :allow-edit="!show_progress && !isPrompting"
           :is-markdown="true"
@@ -291,7 +291,7 @@
 
       return {
         is_inited: false,
-        description: _.get(this, 'item.description', this.display_name),
+        description: _.get(this, 'item.description', ''),
         show_preview: this.showPreview,
         syntax_msg: '',
         edit_json: this.getOrigJson(),
