@@ -5,6 +5,7 @@ import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
+import { ROUTE_SIGNIN } from './constants/route'
 import { CHANGE_ACTIVE_DOCUMENT } from './store/mutation-types'
 import './stylesheets/style.less' // common styles
 
@@ -58,8 +59,45 @@ router.beforeEach((to, from, next) => {
   // update the active document in the store
   store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.eid || to.name)
 
-  // move to the next route
-  next()
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires authentication
+
+    if (store.state.active_user_eid.length > 0)
+    {
+      // user is signed in; move to the next route
+      next()
+    }
+     else
+    {
+      // check if the user is signed in
+      store.dispatch('fetchCurrentUser').then(response => {
+        if (store.state.active_user_eid.length > 0)
+        {
+          // user is signed in; move to the next route
+          next()
+        }
+         else
+        {
+          // user is not signed in; redirect them to the sign in page
+          next({
+            name: ROUTE_SIGNIN,
+            query: { redirect: to.fullPath }
+          })
+        }
+      }, response => {
+        // error fetching current user; bail out
+        next({
+          name: ROUTE_SIGNIN,
+          query: { redirect: to.fullPath }
+        })
+      })
+    }
+  }
+   else
+  {
+    // this route does not require authentication; move to the next route
+    next()
+  }
 })
 
 // global clipboard access
@@ -99,13 +137,6 @@ copy.on('error', function(evt) {
       t.removeAttribute('aria-label')
   }, 4000)
 })
-
-// for now, we'll issue an XHR every time a page in Flex.io
-// is hard-loaded to identify the active user; in the future,
-// we should figure out how to store this in the localStorage
-// or in the PHP session variables
-
-store.dispatch('fetchCurrentUser')
 
 // initial view necessary to begin using Vue
 

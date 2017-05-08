@@ -135,6 +135,7 @@
       },
       signOut() {
         this.$store.dispatch('signOut').then(response => {
+          debugger
           if (response.ok)
           {
             this.$router.push({ name: ROUTE_SIGNIN })

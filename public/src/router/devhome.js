@@ -11,6 +11,7 @@ import DevPlayground from '../components/DevPlayground.vue'
 export default {
   path: '/dev',
   component: DevHome,
+  meta: { requiresAuth: true },
   children: [
     {
       // redirect to /dev/parser

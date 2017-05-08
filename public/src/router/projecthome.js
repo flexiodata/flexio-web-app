@@ -10,6 +10,7 @@ import TrashManager from '../components/TrashManager.vue'
 export default {
   path: '/project/:eid',
   component: ProjectHome,
+  meta: { requiresAuth: true },
   beforeEnter: (to, from, next) => {
     // update the active project in the store
     store.commit(types.CHANGE_ACTIVE_PROJECT, to.params.eid)
