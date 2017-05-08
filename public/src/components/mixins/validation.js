@@ -5,12 +5,12 @@ import api from '../../api'
 export default {
   methods: {
     validate: _.debounce(function(validate_attrs, callback) {
-      api.validate({ attrs: validate_attrs }).then((response) => {
+      api.validate({ attrs: validate_attrs }).then(response => {
         var errors = _.keyBy(response.body, 'key')
 
         if (_.isFunction(callback))
           callback(response, errors)
-      }, (response) => {
+      }, response => {
         // error callback
       })
     }, 300),

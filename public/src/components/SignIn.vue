@@ -83,7 +83,7 @@
 
         this.is_submitting = true
 
-        this.$store.dispatch('signIn', { attrs }).then((response) => {
+        this.$store.dispatch('signIn', { attrs }).then(response => {
           if (response.ok)
           {
             me.is_submitting = false

@@ -165,12 +165,12 @@
           })
         }
 
-        api.validate({ attrs: validate_attrs }).then((response) => {
+        api.validate({ attrs: validate_attrs }).then(response => {
           this.ss_errors = _.keyBy(response.body, 'key')
 
           if (_.isFunction(callback))
             callback()
-        }, (response) => {
+        }, response => {
           // error callback
         })
       }, 300),
@@ -189,11 +189,11 @@
             return
           }
 
-          this.$store.dispatch('signUp', { attrs }).then((response) => {
+          this.$store.dispatch('signUp', { attrs }).then(response => {
             // success callback
             me.is_submitting = false
             me.trySignIn()
-          }, (response) => {
+          }, response => {
             // error callback
             me.is_submitting = false
             me.password = ''
@@ -208,7 +208,7 @@
         this.label_submitting = 'Signing in...'
         this.is_submitting = true
 
-        this.$store.dispatch('signIn', { attrs }).then((response) => {
+        this.$store.dispatch('signIn', { attrs }).then(response => {
           if (response.ok)
           {
             me.is_submitting = false

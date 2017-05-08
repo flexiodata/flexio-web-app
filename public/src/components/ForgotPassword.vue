@@ -66,11 +66,11 @@
 
         this.is_submitting = true
 
-        api.requestPasswordReset({ attrs }).then((response) => {
+        api.requestPasswordReset({ attrs }).then(response => {
           // success callback
           me.is_submitting = false
           me.is_sent = true
-        }, (response) => {
+        }, response => {
           // error callback
           me.is_submitting = false
           me.showErrors(_.get(response, 'data.errors'))

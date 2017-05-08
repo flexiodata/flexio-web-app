@@ -454,12 +454,12 @@
           type: 'python'
         }]
 
-        api.validate({ attrs: validate_attrs }).then((response) => {
+        api.validate({ attrs: validate_attrs }).then(response => {
           var result = _.get(response.body, '[0]', {})
 
           if (_.isFunction(callback))
             callback.call(this, result)
-        }, (response) => {
+        }, response => {
           // error callback
         })
       },
