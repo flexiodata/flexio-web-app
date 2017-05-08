@@ -11,13 +11,13 @@
         <div class="flex flex-row items-center">
           <!-- task icon -->
           <div @click="deleteTask">
-            <div class="swap-child" v-if="show_connection_icon">
+            <div class="mr2 mr3-ns swap-child" v-if="show_connection_icon">
               <connection-icon
-                class="mr2 mr3-ns br1 pointer child"
+                class="br1 pointer child"
                 style="width: 40px; height: 40px"
                 :type="ctype"
               ></connection-icon>
-              <div class="pointer pa2 mr2 mr3-ns br1 bg-light-silver white tc relative other-child">
+              <div class="pointer pa2 br1 bg-task-gray white tc relative other-child">
                 <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
               </div>
             </div>
@@ -85,11 +85,11 @@
         <!-- always task description -->
         <inline-edit-text
           class="db lh-title mid-gray"
-          placeholder="Add a description"
-          placeholder-cls="f6 fw6 black-20 hover-black-40"
+          placeholder-cls="black-40 hover-mid-gray"
           edit-button-tooltip-cls="hint--top-left"
           input-key="description"
           static-cls="hover-bg-near-white"
+          :placeholder="display_name"
           :val="description"
           :allow-edit="!show_progress && !isPrompting"
           :is-markdown="true"
@@ -291,7 +291,7 @@
 
       return {
         is_inited: false,
-        description: _.get(this, 'item.description', this.display_name),
+        description: _.get(this, 'item.description', ''),
         show_preview: this.showPreview,
         syntax_msg: '',
         edit_json: this.getOrigJson(),
@@ -454,12 +454,12 @@
           type: 'python'
         }]
 
-        api.validate({ attrs: validate_attrs }).then((response) => {
+        api.validate({ attrs: validate_attrs }).then(response => {
           var result = _.get(response.body, '[0]', {})
 
           if (_.isFunction(callback))
             callback.call(this, result)
-        }, (response) => {
+        }, response => {
           // error callback
         })
       },

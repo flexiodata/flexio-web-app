@@ -359,13 +359,13 @@
           type: 'ename'
         }]
 
-        api.validate({ attrs: validate_attrs }).then((response) => {
+        api.validate({ attrs: validate_attrs }).then(response => {
           var errors = _.keyBy(response.body, 'key')
           this.ss_errors = _.get(this.pipe, 'ename', '').length > 0 && _.size(errors) > 0 ? _.assign({}, errors) : _.assign({})
 
           if (_.isFunction(callback))
             callback()
-        }, (response) => {
+        }, response => {
           // error callback
         })
       }, 300),

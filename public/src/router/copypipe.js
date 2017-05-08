@@ -4,5 +4,6 @@ import CopyPipe from '../components/CopyPipe.vue'
 export default {
   path: '/copypipe',
   name: ROUTE_COPYPIPE,
-  component: CopyPipe
+  component: CopyPipe,
+  meta: { requiresAuth: true }
 }
