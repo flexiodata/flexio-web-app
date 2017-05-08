@@ -27,7 +27,7 @@
       </div>
       <div class="tc f5 fw6 mv3">
         New to Flex.io?
-        <router-link to="/signup" class="link dib blue underline-hover db">Sign up</router-link>
+        <router-link :to="signup_link" class="link dib blue underline-hover db">Sign up</router-link>
       </div>
     </form>
   </main>
@@ -35,6 +35,7 @@
 
 <script>
   import api from '../api'
+  import { ROUTE_SIGNUP } from '../constants/route'
   import Btn from './Btn.vue'
   import Redirect from './mixins/redirect'
 
@@ -67,6 +68,15 @@
         error_msg: '',
         verify_code: '',
         input_cls: 'input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue lh-title ph3 pv2a w-100'
+      }
+    },
+    computed: {
+      signup_link() {
+        return {
+            name: ROUTE_SIGNUP,
+            query: this.$route.query
+
+        }
       }
     },
     methods: {

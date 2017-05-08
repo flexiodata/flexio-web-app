@@ -48,7 +48,7 @@
         </div>
       </div>
       <div class="tc f5 fw6 mt4 mb3">
-        Already have an account? <router-link to="/signin" class="link dib blue underline-hover db">Sign in</router-link>
+        Already have an account? <router-link :to="signin_link" class="link dib blue underline-hover db">Sign in</router-link>
       </div>
     </form>
   </main>
@@ -56,6 +56,7 @@
 
 <script>
   import api from '../api'
+  import { ROUTE_SIGNIN } from '../constants/route'
   import Btn from './Btn.vue'
   import Redirect from './mixins/redirect'
 
@@ -112,13 +113,34 @@
       password: function(val, old_val) { this.checkSignup('password') }
     },
     computed: {
-      is_valid_invite_code() { return _.includes(INVITE_CODES, this.invite_code) },
-      email_error() { return _.get(this.ss_errors, 'email.message', '') },
-      username_error() { return _.get(this.ss_errors, 'user_name.message', '') },
-      password_error() { return _.get(this.ss_errors, 'password.message', '') },
-      has_email_error() { return this.email_error.length > 0 },
-      has_username_error() { return this.username_error.length > 0 },
-      has_password_error() { return this.password_error.length > 0 },
+      signin_link() {
+        return {
+            name: ROUTE_SIGNIN,
+            query: this.$route.query
+
+        }
+      },
+      is_valid_invite_code() {
+        return _.includes(INVITE_CODES, this.invite_code)
+      },
+      email_error() {
+        return _.get(this.ss_errors, 'email.message', '')
+      },
+      username_error() {
+        return _.get(this.ss_errors, 'user_name.message', '')
+      },
+      password_error() {
+        return _.get(this.ss_errors, 'password.message', '')
+      },
+      has_email_error() {
+        return this.email_error.length > 0
+      },
+      has_username_error() {
+        return this.username_error.length > 0
+      },
+      has_password_error() {
+        return this.password_error.length > 0
+      },
     },
     methods: {
       getAttrs() {
