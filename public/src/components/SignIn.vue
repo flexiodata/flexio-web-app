@@ -35,10 +35,11 @@
 
 <script>
   import api from '../api'
-  import { ROUTE_HOME } from '../constants/route'
   import Btn from './Btn.vue'
+  import Redirect from './mixins/redirect'
 
   export default {
+    mixins: [Redirect],
     components: {
       Btn
     },
@@ -78,7 +79,6 @@
           .value()
       },
       trySignIn() {
-        var me = this
         var attrs = this.getAttrs()
 
         this.is_submitting = true
@@ -86,29 +86,16 @@
         this.$store.dispatch('signIn', { attrs }).then(response => {
           if (response.ok)
           {
-            me.is_submitting = false
-            me.doRedirect()
+            this.is_submitting = false
+            this.redirect()
           }
            else
           {
-            me.is_submitting = false
-            me.password = ''
-            me.showErrors(_.get(response, 'data.errors'))
+            this.is_submitting = false
+            this.password = ''
+            this.showErrors(_.get(response, 'data.errors'))
           }
         })
-      },
-      doRedirect() {
-        // grab the redirect from the query string if it exists
-        var redirect = _.get(this.$route, 'query.redirect', '')
-
-        // fix problem with /app/app when redirecting
-        if (redirect.substr(0, 5) == '/app/')
-          redirect = redirect.substr(4)
-
-        if (redirect && redirect.length > 0)
-          this.$router.push({ path: redirect })
-           else
-          this.$router.push({ name: ROUTE_HOME })
       },
       showErrors: function(errors) {
         if (_.isArray(errors) && errors.length > 0)
