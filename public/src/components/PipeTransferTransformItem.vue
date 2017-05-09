@@ -53,9 +53,6 @@
           return '<br>'
         })
 
-        if (s.indexOf('<br>') != -1)
-          return s.substr(0, s.indexOf('<br>'))
-
         return s
       }
     }
