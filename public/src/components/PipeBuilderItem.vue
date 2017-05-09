@@ -7,7 +7,10 @@
   >
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
 
-      <div class="flex-none" :class="[ index==0?'mt3':'' ]" >
+      <div
+        class="flex-none"
+        :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
+      >
         <div class="flex flex-row items-center">
           <!-- task icon -->
           <div @click="deleteTask">
@@ -46,7 +49,7 @@
       <div
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 45px; bottom: 35px; left: 19px"
-        :class="[ index==0?'mt3':'' ]"
+        :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
         v-show="!show_progress && !isPrompting"
       ></div>
 
@@ -77,7 +80,8 @@
         class="flex-fill relative ph3a bg-white bl br b--white-box"
         :class="[
           content_cls,
-          index==0?'pt3':'',
+          index == 0 ? 'pt3a' : '',
+          index != 0 && isPrompting ? 'pt3a' : '',
           isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':''
         ]"
         :style="content_style"
@@ -595,6 +599,14 @@
   .ph3a {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
+  }
+
+  .mt3a {
+    margin-top: 1.25rem;
+  }
+
+  .pt3a {
+    padding-top: 1.25rem;
   }
 
   .pb4a {
