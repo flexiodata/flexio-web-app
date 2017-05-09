@@ -20,7 +20,7 @@
         <div class="f5 lh-title mr1">{{index+1}}.</div>
         <div class="flex-fill f5 lh-title">{{display_name}}</div>
       </div>
-      <div class="f7 lh-title gray mt1" v-if="description.length > 0">{{description}}</div>
+      <div class="f7 lh-title gray mt1" v-html="short_description" v-if="description.length > 0"></div>
       </div>
     </div>
   </article>
@@ -45,6 +45,15 @@
       },
       title_style() {
         return this.description.length > 0 ? 'top: -3px' : 'top: 3px'
+      },
+      short_description() {
+        var s = this.description
+
+        s = s.replace(/[\r\n]+/g, function(s) {
+          return '<br>'
+        })
+
+        return s
       }
     }
   }

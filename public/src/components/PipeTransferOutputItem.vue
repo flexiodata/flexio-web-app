@@ -26,7 +26,10 @@
       </ui-popover>
     </div>
     <div class="ma3">
-      <div class="tl" v-if="is_dropbox || is_google_drive || is_sftp">
+      <div v-if="has_variables">
+        <div class="lh-copy mid-gray f6 mb2 i">This output will be configured when the pipe is run.</div>
+      </div>
+      <div class="tl" v-else-if="is_dropbox || is_google_drive || is_sftp">
         <div class="lh-copy mid-gray f6 mb2">Files will be output to the following folder:</div>
         <div class="flex flex-row items-stretch">
           <div class="flex-fill f6 pa2 black bt bb bl b--black-10 br1 br--left">
@@ -103,9 +106,11 @@
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import OutputChooserModal from './OutputChooserModal.vue'
+  import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
     props: ['item'],
+    mixins: [TaskItemHelper],
     components: {
       Btn,
       ConnectionIcon,
@@ -191,7 +196,7 @@
       menu_options() {
         var items = []
 
-        if (this.is_dropbox)
+        if ((this.is_dropbox || this.is_google_drive) && !this.has_variables)
         {
           items = [{
             id: 'change-folder',

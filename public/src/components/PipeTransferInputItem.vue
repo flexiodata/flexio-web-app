@@ -25,7 +25,10 @@
         ></ui-menu>
       </ui-popover>
     </div>
-    <div v-if="items.length > 0">
+    <div class="ma3" v-if="has_variables">
+      <div class="lh-copy mid-gray f6 mb2 i">This input will be configured when the pipe is run.</div>
+    </div>
+    <div v-else-if="items.length > 0">
       <div class="flex flex-row items-center pv1 ph2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
         <div class="flex-none mr1">
           <img v-if="isDir(item)" src="../assets/file-icon/folder-open-16.png" class="dib" alt="Folder">
@@ -52,7 +55,7 @@
         </div>
       </div>
       <div v-else>
-        <div class="lh-copy mid-gray f6 mb3 tc i">There are no files that have been selected from this connection.</div>
+        <div class="lh-copy mid-gray f6 mb3 i">There are no files that have been selected from this connection.</div>
         <div>
           <btn
             btn-md
@@ -84,9 +87,11 @@
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import FileChooserModal from './FileChooserModal.vue'
+  import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
     props: ['item'],
+    mixins: [TaskItemHelper],
     components: {
       Btn,
       ConnectionIcon,
@@ -153,7 +158,7 @@
       menu_options() {
         var items = []
 
-        if (!this.is_stdin)
+        if (!this.is_stdin && !this.has_variables)
         {
           items = [{
             id: 'add-items',

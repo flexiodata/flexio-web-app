@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div :class="{
+    'mb5': item.type=='connection'
+  }">
     <div class="mb4 mw6" v-if="item.type=='connection' && is_input_task">
       <div class="mb3" >Choose the connection for <span class="b">{{item.variable_name}}</span>:</div>
       <pipe-transfer-input-chooser

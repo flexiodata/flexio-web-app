@@ -40,13 +40,25 @@
       @save-values-and-run="savePromptValuesAndRun"
       v-else>
     </pipe-builder-list>
+
+    <pre ref="last-prompt" v-show="false">
+<div class="flex flex-row items-center justify-center">
+  <i class="material-icons f2 mr2 dark-green">check_circle</i><span class="f2">Your pipe is ready to be run!</span>
+</div>
+----
+### You've got options...
+  - Run the pipe once with the values you've chosen, but keep the placeholder variables for the next time the pipe is run.
+  - Save the values you've chosen and always run the pipe with those values.
+    </pre>
   </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import { VARIABLE_REGEX } from '../constants/common'
+  import { TASK_TYPE_COMMENT } from '../constants/task-type'
+  import { TASK_INFO_COMMENT } from '../constants/task-info'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
   import {
     PIPEHOME_VIEW_TRANSFER,
@@ -59,9 +71,6 @@
   import PipeTransfer from './PipeTransfer.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
   import SetActiveProject from './mixins/set-active-project'
-
-  // try to find variables that match ${...} for each parameter
-  const variable_regex = /\$\{((string|boolean|integer|number|connection|column)[ ])?([a-z_-][a-z0-9_-]*)[ ]*(:([^}]*))?\}/gi
 
   export default {
     mixins: [SetActiveProject],
@@ -103,7 +112,9 @@
         return _.get(this.pipe, 'task', [])
       },
       has_prompt_tasks() {
-        return _.filter(this.prompt_tasks, { has_variable: true }).length > 0
+        // even if we have tasks with `is_prompt` set to true, only show
+        // the prompting mode if we actually have variables to fill in
+        return _.filter(this.prompt_tasks, { has_variables: true }).length > 0
       },
       project_eid() {
         return _.get(this.pipe, 'project.eid', '')
@@ -181,7 +192,7 @@
         var variable_set_key = ''
         var set_key = ''
 
-        return _.map(this.tasks, (task) => {
+        var prompts = _.map(this.tasks, (task) => {
           var params = _.get(task, 'params', {})
 
           var matched_vars = []
@@ -205,7 +216,7 @@
                 var m
 
                 do {
-                  m = variable_regex.exec(v)
+                  m = VARIABLE_REGEX.exec(v)
                   if (m)
                   {
                     matched_vars.push({
@@ -235,20 +246,33 @@
           if (matched_vars.length > 0)
           {
             return _.assign({
-              has_variable: true,
+              is_prompt: true,
+              has_variables: true,
               variables: matched_vars
             }, task)
+          }
+           else if (_.get(task, 'type') == TASK_TYPE_COMMENT)
+          {
+            return _.assign({ is_prompt: true }, task)
           }
            else
           {
             return task
           }
         })
+
+        // add the final step for running the pipe
+        prompts.push(_.assign({
+          is_prompt: true,
+          description: this.$refs['last-prompt'].innerHTML
+        }, TASK_INFO_COMMENT))
+
+        return prompts
       },
 
       runPipe(attrs) {
         this.prompt_tasks = [].concat(this.getPromptTasks())
-        this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true })
+        this.active_prompt_idx = _.findIndex(this.prompt_tasks, { is_prompt: true })
 
         if (this.has_prompt_tasks && !this.is_prompting)
         {
@@ -294,24 +318,6 @@
           var eid = _.get(this.active_process, 'eid', '')
           this.$store.dispatch('cancelProcess', { eid })
         }
-      },
-
-      addInput(attrs, modal) {
-        // insert input after any existing inputs
-        var input_idx = _.findIndex(this.tasks, (t) => { return _.get(t, 'type') == TASK_TYPE_INPUT })
-
-        // if there are no inputs, insert at the beginning of the pipe
-        if (input_idx == -1)
-          input_idx = 0
-
-        var eid = this.eid
-        var attrs = _.assign({}, _.get(attrs, 'task[0]', {}))
-        var attrs = _.omit(attrs, 'eid')
-
-        // add input task
-        this.$store.dispatch('createPipeTask', { eid, attrs })
-
-        modal.close()
       },
 
       getOurConnections() {
@@ -397,13 +403,13 @@
 
       goPrevPrompt() {
         var start_idx = Math.max(this.active_prompt_idx-1, 0)
-        this.active_prompt_idx = _.findLastIndex(this.prompt_tasks, { has_variable: true }, start_idx)
+        this.active_prompt_idx = _.findLastIndex(this.prompt_tasks, { is_prompt: true }, start_idx)
         this.scrollToTask()
       },
 
       goNextPrompt() {
         var start_idx = Math.min(this.active_prompt_idx+1, _.size(this.prompt_tasks)-1)
-        this.active_prompt_idx = _.findIndex(this.prompt_tasks, { has_variable: true }, start_idx)
+        this.active_prompt_idx = _.findIndex(this.prompt_tasks, { is_prompt: true }, start_idx)
         this.scrollToTask()
       },
 
@@ -421,7 +427,7 @@
           var m
 
           do {
-            m = variable_regex.exec(str)
+            m = VARIABLE_REGEX.exec(str)
             if (m)
             {
               if (v.variable_name == m[3] /* variable name */)

@@ -7,7 +7,10 @@
   >
     <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
 
-      <div class="flex-none" :class="[ index==0?'mt3':'' ]" >
+      <div
+        class="flex-none"
+        :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
+      >
         <div class="flex flex-row items-center">
           <!-- task icon -->
           <div @click="deleteTask">
@@ -46,8 +49,8 @@
       <div
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 45px; bottom: 35px; left: 19px"
-        :class="[ index==0?'mt3':'' ]"
-        v-show="!show_progress && !this.isPrompting"
+        :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
+        v-show="!show_progress && !isPrompting"
       ></div>
 
       <!-- insert before button -->
@@ -55,7 +58,7 @@
         class="absolute"
         style="top: -16px; left: 8px"
         v-show="!show_progress"
-        v-if="index==0 && !show_progress && !this.isPrompting && false"
+        v-if="index==0 && !show_progress && !isPrompting && showInsertBeforeFirstTask"
       >
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
           <i class="db material-icons f3">add_circle</i>
@@ -66,7 +69,7 @@
       <div
         class="absolute"
         style="bottom: 5px; left: 8px"
-        v-show="!show_progress && !this.isPrompting">
+        v-show="!show_progress && !isPrompting">
         <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
           <i class="db material-icons f3">add_circle</i>
         </div>
@@ -77,7 +80,8 @@
         class="flex-fill relative ph3a bg-white bl br b--white-box"
         :class="[
           content_cls,
-          index==0?'pt3':'',
+          index == 0 ? 'pt3a' : '',
+          index != 0 && isPrompting ? 'pt3a' : '',
           isPrompting && !is_active_prompt_task?'o-40 no-pointer-events':''
         ]"
         :style="content_style"
@@ -108,7 +112,7 @@
         <!-- option 2. show task configure item, or... -->
 
         <task-configure-item
-          class="mt2"
+          class="mt4"
           :item="item"
           :index="index"
           :variables="variables"
@@ -121,12 +125,12 @@
           @go-next-prompt="$emit('go-next-prompt')"
           @run-once-with-values="$emit('run-once-with-values')"
           @save-values-and-run="$emit('save-values-and-run')"
-          v-else-if="isPrompting && variables.length > 0"
+          v-else-if="isPrompting && is_prompt"
         ></task-configure-item>
 
         <!-- option 3. show normal builder item -->
 
-        <div class="relative" v-else>
+        <div class="relative min-h2" v-else>
           <!-- collapser -->
           <div
             class="absolute cursor-default"
@@ -260,6 +264,10 @@
         type: Boolean,
         default: true
       },
+      'show-insert-before-first-task': {
+        type: Boolean,
+        false
+      }
     },
     mixins: [TaskItemHelper],
     components: {
@@ -370,6 +378,9 @@
       },
       variables() {
         return _.get(this, 'task.variables', [])
+      },
+      is_prompt() {
+        return _.get(this, 'task.is_prompt', false)
       },
       active_stream_eid() {
         var stream = _.head(this.our_inputs)
@@ -588,6 +599,14 @@
   .ph3a {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
+  }
+
+  .mt3a {
+    margin-top: 1.25rem;
+  }
+
+  .pt3a {
+    padding-top: 1.25rem;
   }
 
   .pb4a {
