@@ -56,6 +56,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
+  import { VARIABLE_REGEX } from '../constants/common'
   import { TASK_TYPE_COMMENT } from '../constants/task-type'
   import { TASK_INFO_COMMENT } from '../constants/task-info'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
@@ -70,9 +71,6 @@
   import PipeTransfer from './PipeTransfer.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
   import SetActiveProject from './mixins/set-active-project'
-
-  // try to find variables that match ${...} for each parameter
-  const variable_regex = /\$\{((string|boolean|integer|number|connection|column)[ ])?([a-z_-][a-z0-9_-]*)[ ]*(:([^}]*))?\}/gi
 
   export default {
     mixins: [SetActiveProject],
@@ -218,7 +216,7 @@
                 var m
 
                 do {
-                  m = variable_regex.exec(v)
+                  m = VARIABLE_REGEX.exec(v)
                   if (m)
                   {
                     matched_vars.push({
@@ -429,7 +427,7 @@
           var m
 
           do {
-            m = variable_regex.exec(str)
+            m = VARIABLE_REGEX.exec(str)
             if (m)
             {
               if (v.variable_name == m[3] /* variable name */)
