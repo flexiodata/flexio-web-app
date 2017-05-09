@@ -5,9 +5,14 @@ import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
+import util from './utils'
 import { ROUTE_SIGNIN } from './constants/route'
 import { CHANGE_ACTIVE_DOCUMENT } from './store/mutation-types'
 import './stylesheets/style.less' // common styles
+
+// fallback css (if there's no Internet connection)
+
+util.fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
 
 // setup for VeeValidate (form validation)
 
