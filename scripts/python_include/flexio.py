@@ -159,5 +159,14 @@ class Output(object):
         self.header["structure"] = structure
         return TableWriter(structure, self.stream)
 
-input = Input()
-output = Output()
+
+
+class Context(object):
+    def __init__(self):
+        self.input = Input()
+        self.output = Output()
+
+def run(func):
+    context = Context()
+    func(context)
+

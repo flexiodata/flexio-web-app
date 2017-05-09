@@ -80,6 +80,26 @@ class Execute extends \Flexio\Jobs\Base
                 $dockerbin = \Flexio\System\System::getBinaryPath('docker');
                 if (is_null($dockerbin))
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+
+                $code = base64_decode($code);
+
+                if (strpos($code, "flexio_handler") !== false)
+                {
+                    // add code that invokes the main handler -- this is the preferred
+                    // way of coding python scripts
+                    if (false !== strpos($code, "\r\n"))
+                        $endl = "\r\n";
+                        else
+                        $endl = "\n";
+
+                    $code .= $endl . "import flexio as flexioext";
+                    $code .= $endl . "flexioext.run(flexio_handler)";
+                    $code .= $endl;
+                }
+
+                $code = base64_encode($code);
+
                 $cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c '(echo $code | base64 -d > /tmp/script.py && python3 /tmp/script.py)'";
                 //$cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c 'runscript $code'";
 
