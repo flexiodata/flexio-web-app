@@ -402,7 +402,7 @@ class Execute extends \Flexio\Jobs\Base
 
         if (isset($err))
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
         }
     }
 
