@@ -28,6 +28,7 @@
         :is-scrolling="is_scrolling"
         :active-process="activeProcess"
         :show-preview="show_all_previews"
+        :show-insert-before-first-task="false"
         @insert-task="insertNewTask"
         @toggle-preview="togglePreview"
         @prompt-value-change="onPromptValueChange"
@@ -119,10 +120,3 @@
     }
   }
 </script>
-
-<style>
-  .css-corner-title {
-    top: 0.5rem;
-    left: 0.625rem;
-  }
-</style>
