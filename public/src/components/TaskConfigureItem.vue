@@ -14,7 +14,7 @@
       <btn btn-md class="b ttu blue mr2" @click="$emit('go-prev-prompt')" v-if="index != firstPromptIdx">Back</btn>
       <btn btn-md class="b ttu white bg-blue" @click="$emit('go-next-prompt')" v-if="index != lastPromptIdx">Next</btn>
       <btn btn-md class="b ttu white bg-blue mr2" @click="$emit('run-once-with-values')" v-if="index == lastPromptIdx">Run Once With These Values</btn>
-      <btn btn-md class="b ttu white bg-blue" @click="$emit('save-values-and-run')" v-if="index == lastPromptIdx">Save Values & Run</btn>
+      <btn btn-md class="b ttu white bg-blue" @click="$emit('save-values-and-run')" v-if="index == lastPromptIdx">Save Values to Pipe & Run</btn>
     </div>
   </div>
 </template>

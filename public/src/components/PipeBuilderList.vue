@@ -84,10 +84,10 @@
     },
     computed: {
       first_prompt_idx() {
-        return _.findIndex(this.tasks, { has_variable: true })
+        return _.findIndex(this.tasks, { is_prompt: true })
       },
       last_prompt_idx() {
-        return _.findLastIndex(this.tasks, { has_variable: true })
+        return _.findLastIndex(this.tasks, { is_prompt: true })
       }
     },
     methods: {

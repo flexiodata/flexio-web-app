@@ -47,6 +47,7 @@ export default {
       {
         // blue tiles
         case types.TASK_TYPE_INPUT:
+        case types.TASK_TYPE_COMMENT:
         case types.TASK_TYPE_CONVERT:
         case types.TASK_TYPE_EMAIL_SEND:
         case types.TASK_TYPE_OUTPUT:

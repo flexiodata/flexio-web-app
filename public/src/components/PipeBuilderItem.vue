@@ -121,7 +121,7 @@
           @go-next-prompt="$emit('go-next-prompt')"
           @run-once-with-values="$emit('run-once-with-values')"
           @save-values-and-run="$emit('save-values-and-run')"
-          v-else-if="isPrompting && variables.length > 0"
+          v-else-if="isPrompting && is_prompt"
         ></task-configure-item>
 
         <!-- option 3. show normal builder item -->
@@ -374,6 +374,9 @@
       },
       variables() {
         return _.get(this, 'task.variables', [])
+      },
+      is_prompt() {
+        return _.get(this, 'task.is_prompt', false)
       },
       active_stream_eid() {
         var stream = _.head(this.our_inputs)
