@@ -1825,7 +1825,7 @@
         'sort',
         'filter',
         'calc',
-        //'email', // removed for release
+        'email',
         'execute',
         'transform',
         'merge',
