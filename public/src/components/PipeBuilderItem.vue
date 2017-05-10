@@ -86,6 +86,20 @@
         ]"
         :style="content_style"
       >
+        <!-- progress status icon -->
+        <div class="relative" v-if="show_progress">
+          <div
+            class="absolute cursor-default"
+            style="top: 8px; left: -33px"
+          >
+            <i
+              class="db material-icons"
+              style="font-size: 23px"
+              :class="status_icon_cls"
+            >{{status_icon}}</i>
+          </div>
+        </div>
+
         <!-- always task description -->
         <inline-edit-text
           class="db lh-title mid-gray"
@@ -103,6 +117,7 @@
 
         <!-- option 1. show process progress item, or... -->
 
+        <!-- progress bar -->
         <process-progress-item
           class="mt2 pt2 bt b--black-10"
           :item="active_subprocess"
@@ -134,10 +149,10 @@
           <!-- error icon -->
           <div
             class="absolute cursor-default"
-            style="top: 6px; left: -31px"
-            v-if="show_error"
+            style="top: 4px; left: -33px"
+            v-if="error_msg.length > 0"
           >
-            <i class="db material-icons md-18 dark-red">error</i>
+            <i class="db material-icons md-18 bg-white dark-red" style="font-size: 23px">error</i>
           </div>
 
           <!-- collapser -->
@@ -218,7 +233,10 @@
     PROCESS_STATUS_PENDING,
     PROCESS_STATUS_WAITING,
     PROCESS_STATUS_RUNNING,
-    PROCESS_STATUS_FAILED
+    PROCESS_STATUS_CANCELLED,
+    PROCESS_STATUS_PAUSED,
+    PROCESS_STATUS_FAILED,
+    PROCESS_STATUS_COMPLETED
   } from '../constants/process'
   import {
     TASK_TYPE_INPUT,
@@ -408,11 +426,42 @@
           PROCESS_STATUS_RUNNING
         ], _.get(this.activeProcess, 'process_status'))
       },
-      show_error() {
-        return _.get(this.active_subprocess, 'process_status', '') == PROCESS_STATUS_FAILED
+      our_status() {
+        return _.get(this.active_subprocess, 'process_status', '')
+      },
+      show_status_icon() {
+        return this.our_status == PROCESS_STATUS_FAILED || this.show_progress
       },
       error_msg() {
         return _.get(this.active_subprocess, 'process_info.error.message', '')
+      },
+      status_icon() {
+        switch (this.our_status)
+        {
+          case PROCESS_STATUS_PENDING:   return 'check_circle'
+          case PROCESS_STATUS_WAITING:   return ''
+          case PROCESS_STATUS_RUNNING:   return 'sync'
+          case PROCESS_STATUS_CANCELLED: return 'cancel'
+          case PROCESS_STATUS_PAUSED:    return ''
+          case PROCESS_STATUS_FAILED:    return 'error'
+          case PROCESS_STATUS_COMPLETED: return 'check_circle'
+        }
+
+        return ''
+      },
+      status_icon_cls() {
+        switch (this.our_status)
+        {
+          case PROCESS_STATUS_PENDING:   return 'bg-white moon-gray'
+          case PROCESS_STATUS_WAITING:   return ''
+          case PROCESS_STATUS_RUNNING:   return 'bg-white moon-gray spin'
+          case PROCESS_STATUS_CANCELLED: return 'bg-white dark-red'
+          case PROCESS_STATUS_PAUSED:    return ''
+          case PROCESS_STATUS_FAILED:    return 'bg-white dark-red'
+          case PROCESS_STATUS_COMPLETED: return 'bg-white dark-green'
+        }
+
+        return ''
       },
       content_cls() {
         var task_cnt = _.get(this, 'tasks', []).length
@@ -628,5 +677,14 @@
 
   .pb4a {
     padding-bottom: 3rem;
+  }
+
+  .spin {
+    animation: spinner 1.2s linear infinite;
+  }
+
+  @keyframes spinner {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
   }
 </style>
