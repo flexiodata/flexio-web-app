@@ -98,9 +98,7 @@ class Socrata implements \Flexio\Services\IConnection
             curl_setopt($ch, CURLOPT_URL, $info_url);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            curl_setopt($ch, CURLOPT_SSLVERSION, 1);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $table_schema_json = curl_exec($ch);
             curl_close($ch);
@@ -129,9 +127,7 @@ class Socrata implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_URL, $this->base_url . "/browse?limit=30");
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $html = curl_exec($ch);
         curl_close($ch);
@@ -217,9 +213,7 @@ class Socrata implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_URL, "$baseurl/resource/$id.json");
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$structure, &$first, &$buf) {
 
@@ -327,9 +321,7 @@ class Socrata implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_URL, "$baseurl/views/$id.json");
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $table_schema_json = curl_exec($ch);
         curl_close($ch);
