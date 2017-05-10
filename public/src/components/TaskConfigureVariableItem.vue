@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <div :class="{
+    'mb5': item.type=='connection'
+  }">
     <div class="mb4 mw6" v-if="item.type=='connection' && is_input_task">
-      <div class="mb3" >Choose the connection for <span class="b">{{item.variable_name}}</span>:</div>
+      <div class="mb3" >Choose the connection you'd like to use as your input:</div>
       <pipe-transfer-input-chooser
         ref="input-chooser"
         class="bg-white bt b--light-gray"
@@ -16,7 +18,7 @@
       </div>
     </div>
     <div class="mb4 mw6" v-else-if="item.type=='connection' && is_output_task">
-      <div class="mb3" >Choose the connection for <span class="b">{{item.variable_name}}</span>:</div>
+      <div class="mb3" >Choose the connection to which you'd like to output:</div>
       <pipe-transfer-output-chooser
         ref="output-chooser"
         class="bg-white bt b--light-gray"

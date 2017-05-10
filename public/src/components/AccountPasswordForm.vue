@@ -121,12 +121,12 @@
           })
         }
 
-        api.validate({ attrs: validate_attrs }).then((response) => {
+        api.validate({ attrs: validate_attrs }).then(response => {
           this.ss_errors = _.keyBy(response.body, 'key')
 
           if (_.isFunction(callback))
             callback.call(this)
-        }, (response) => {
+        }, response => {
           // error callback
         })
       }, 300),

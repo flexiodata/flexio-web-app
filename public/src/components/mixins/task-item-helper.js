@@ -3,6 +3,7 @@
 
 import * as types from '../../constants/task-type'
 import * as tasks from '../../constants/task-info'
+import { VARIABLE_REGEX } from '../../constants/common'
 
 export default {
   computed: {
@@ -47,6 +48,7 @@ export default {
       {
         // blue tiles
         case types.TASK_TYPE_INPUT:
+        case types.TASK_TYPE_COMMENT:
         case types.TASK_TYPE_CONVERT:
         case types.TASK_TYPE_EMAIL_SEND:
         case types.TASK_TYPE_OUTPUT:
@@ -81,6 +83,14 @@ export default {
 
       // default
       return 'bg-task-gray'
+    },
+    has_variables() {
+      try {
+        var str = JSON.stringify(this.task)
+        return str.match(VARIABLE_REGEX) ? true : false
+      } catch(e) {
+        return false
+      }
     }
   },
   methods: {

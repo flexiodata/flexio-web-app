@@ -8,6 +8,12 @@ const CALC_FIELD = {
   icon: 'flash_on'
 }
 
+const COMMENT = {
+  name: 'Comment',
+  type: types.TASK_TYPE_COMMENT,
+  icon: 'comment'
+}
+
 const CONVERT = {
   name: 'Convert',
   type: types.TASK_TYPE_CONVERT,
@@ -143,6 +149,7 @@ const TRANSFORM = {
 /* exports */
 
 export const TASK_INFO_CALC_FIELD    = CALC_FIELD
+export const TASK_INFO_COMMENT       = COMMENT
 export const TASK_INFO_CONVERT       = CONVERT
 export const TASK_INFO_COPY          = COPY
 export const TASK_INFO_CUSTOM        = CUSTOM

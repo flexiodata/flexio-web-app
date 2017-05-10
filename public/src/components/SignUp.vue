@@ -48,7 +48,7 @@
         </div>
       </div>
       <div class="tc f5 fw6 mt4 mb3">
-        Already have an account? <router-link to="/signin" class="link dib blue underline-hover db">Sign in</router-link>
+        Already have an account? <router-link :to="signin_link" class="link dib blue underline-hover db">Sign in</router-link>
       </div>
     </form>
   </main>
@@ -56,14 +56,16 @@
 
 <script>
   import api from '../api'
-  import { ROUTE_HOME } from '../constants/route'
+  import { ROUTE_SIGNIN } from '../constants/route'
   import Btn from './Btn.vue'
+  import Redirect from './mixins/redirect'
 
   const INVITE_CODES = [
     'e0miwu7qkv89h3rlrnst25e3jdxbbrpn'
   ]
 
   export default {
+    mixins: [Redirect],
     components: {
       Btn
     },
@@ -111,13 +113,34 @@
       password: function(val, old_val) { this.checkSignup('password') }
     },
     computed: {
-      is_valid_invite_code() { return _.includes(INVITE_CODES, this.invite_code) },
-      email_error() { return _.get(this.ss_errors, 'email.message', '') },
-      username_error() { return _.get(this.ss_errors, 'user_name.message', '') },
-      password_error() { return _.get(this.ss_errors, 'password.message', '') },
-      has_email_error() { return this.email_error.length > 0 },
-      has_username_error() { return this.username_error.length > 0 },
-      has_password_error() { return this.password_error.length > 0 },
+      signin_link() {
+        return {
+            name: ROUTE_SIGNIN,
+            query: this.$route.query
+
+        }
+      },
+      is_valid_invite_code() {
+        return _.includes(INVITE_CODES, this.invite_code)
+      },
+      email_error() {
+        return _.get(this.ss_errors, 'email.message', '')
+      },
+      username_error() {
+        return _.get(this.ss_errors, 'user_name.message', '')
+      },
+      password_error() {
+        return _.get(this.ss_errors, 'password.message', '')
+      },
+      has_email_error() {
+        return this.email_error.length > 0
+      },
+      has_username_error() {
+        return this.username_error.length > 0
+      },
+      has_password_error() {
+        return this.password_error.length > 0
+      },
     },
     methods: {
       getAttrs() {
@@ -165,17 +188,16 @@
           })
         }
 
-        api.validate({ attrs: validate_attrs }).then((response) => {
+        api.validate({ attrs: validate_attrs }).then(response => {
           this.ss_errors = _.keyBy(response.body, 'key')
 
           if (_.isFunction(callback))
             callback()
-        }, (response) => {
+        }, response => {
           // error callback
         })
       }, 300),
       trySignUp() {
-        var me = this
         var attrs = this.getAttrs()
 
         this.is_submitting = true
@@ -189,51 +211,37 @@
             return
           }
 
-          this.$store.dispatch('signUp', { attrs }).then((response) => {
+          this.$store.dispatch('signUp', { attrs }).then(response => {
             // success callback
-            me.is_submitting = false
-            me.trySignIn()
-          }, (response) => {
+            this.is_submitting = false
+            this.trySignIn()
+          }, response => {
             // error callback
-            me.is_submitting = false
-            me.password = ''
-            me.showErrors(_.get(response, 'data.errors'))
+            this.is_submitting = false
+            this.password = ''
+            this.showErrors(_.get(response, 'data.errors'))
           })
         })
       },
       trySignIn() {
-        var me = this
         var attrs = this.getSignInAttrs()
 
         this.label_submitting = 'Signing in...'
         this.is_submitting = true
 
-        this.$store.dispatch('signIn', { attrs }).then((response) => {
+        this.$store.dispatch('signIn', { attrs }).then(response => {
           if (response.ok)
           {
-            me.is_submitting = false
-            me.doRedirect()
+            this.is_submitting = false
+            this.redirect()
           }
            else
           {
-            me.is_submitting = false
-            me.password = ''
-            me.showErrors(_.get(response, 'data.errors'))
+            this.is_submitting = false
+            this.password = ''
+            this.showErrors(_.get(response, 'data.errors'))
           }
         })
-      },
-      doRedirect() {
-        // grab the redirect from the query string if it exists
-        var redirect = _.get(this.$route, 'query.redirect', '')
-
-        // fix problem with /app/app when redirecting
-        if (redirect.substr(0, 5) == '/app/')
-          redirect = redirect.substr(4)
-
-        if (redirect && redirect.length > 0)
-          this.$router.push({ path: redirect })
-           else
-          this.$router.push({ name: ROUTE_HOME })
       },
       showErrors: function(errors) {
         if (_.isArray(errors) && errors.length > 0)

@@ -13,6 +13,7 @@ export const home = {
   path: '/home',
   name: ROUTE_HOME,
   component: AppHome,
+  meta: { requiresAuth: true },
   beforeEnter: (to, from, next) => {
     // update the active project in the store
     store.commit(types.CHANGE_ACTIVE_PROJECT, '')

@@ -7,6 +7,7 @@ export default {
   path: '/account',
   name: ROUTE_ACCOUNT,
   component: Account,
+  meta: { requiresAuth: true },
   beforeEnter: (to, from, next) => {
     // update the active project in the store
     store.commit(CHANGE_ACTIVE_PROJECT, '')

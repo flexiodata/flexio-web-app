@@ -864,9 +864,43 @@ TODO: remove deprecated implementation; following was split into two functions,
     public function func_cast($func, $params, &$retval)
     {
         if (!$this->doEval($params[0], $param0)) return false;
-        if (!$this->doEval($params[1], $param1)) return false;
+        //if (!$this->doEval($params[1], $param1)) return false;
 
-        switch ($param1)
+        if ($params[1]->getNodeType() == ExprParser::NODETYPE_FUNCTION && ($params[1]->name == 'text' || $params[1]->name == 'character'))
+        {
+            $func = $params[1];
+            if ($func->params[0]->getNodeType() != ExprParser::NODETYPE_VALUE)
+                return false; // can't specify variable width
+            $type = 'text';
+            $width = $func->params[0]->val;
+        }
+         else if ($params[1]->getNodeType() == ExprParser::NODETYPE_FUNCTION && $params[1]->name == 'numeric')
+        {
+            $func = $params[1];
+            if ($func->params[0]->getNodeType() != ExprParser::NODETYPE_VALUE)
+                return false; // can't specify variable width
+            $type = 'numeric';
+            $width = $func->params[0]->val;
+            if (count($func->params) > 1)
+            {
+                if ($func->params[1]->getNodeType() != ExprParser::NODETYPE_VALUE)
+                    return false; // can't specify variable scale
+                $scale = $func->params[1]->val;
+            }
+        }
+         else if ($params[1]->getNodeType() == ExprParser::NODETYPE_VARIABLE)
+        {
+            $type = $params[1]->name;
+            $width = null;
+            $scale = null;
+        }
+         else
+        {
+            // must be one of text, numeric, numeric(x,y), etc
+            return false;
+        }
+
+        switch ($type)
         {
             case 'text':
             case 'character':
@@ -899,15 +933,71 @@ TODO: remove deprecated implementation; following was split into two functions,
 
             case 'numeric':
             case 'double':
-                $retval = floatval(''.$param0);
+                if (is_null($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
+                else if ($param0 instanceof ExprDateTime)
+                {
+                    if ($param0->hasTimePart())
+                    {
+                        $retval = (float)sprintf("%04d%02d%02d%02d%02d%02d", $param0->values['year'], $param0->values['month'], $param0->values['day'], $param0->values['hour'], $param0->values['minute'], $param0->values['second']);
+                    }
+                    else
+                    {
+                        $retval = (float)sprintf("%04d%02d%02d", $param0->values['year'], $param0->values['month'], $param0->values['day']);
+                    }
+                }
+                else
+                {
+                    if (isset($scale))
+                    {
+                        $retval = round(floatval(''.$param0),$scale);
+                    }
+                     else
+                    {
+                        $retval = floatval(''.$param0);
+                    }
+                }
                 return true;
 
             case 'integer':
-                $retval = intval(''.$param0);
+                if (is_null($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
+                else if ($param0 instanceof ExprDateTime)
+                {
+                    if ($param0->hasTimePart())
+                    {
+                        $retval = (float)sprintf("%04d%02d%02d%02d%02d%02d", $param0->values['year'], $param0->values['month'], $param0->values['day'], $param0->values['hour'], $param0->values['minute'], $param0->values['second']);
+                    }
+                    else
+                    {
+                        $retval = (float)sprintf("%04d%02d%02d", $param0->values['year'], $param0->values['month'], $param0->values['day']);
+                    }
+                }
+                else if (is_bool($param0))
+                {
+                    $retval = $param0 ? 1 : 0;
+                }
+                else
+                {
+                    // cast to float for consistency with postgres engine
+                    $retval = (float)intval(''.$param0);
+                }
                 return true;
 
             case 'boolean':
             {
+                if (is_null($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
+
                      if ($param0 === true)  { $retval = true;  return true; }
                 else if ($param0 === false) { $retval = false; return true; }
 
@@ -922,6 +1012,12 @@ TODO: remove deprecated implementation; following was split into two functions,
             case 'date':
             case 'datetime':
             {
+                if (is_null($param0) || is_bool($param0))
+                {
+                    $retval = null;
+                    return true;
+                }
+
                 $dt = new ExprDateTime();
                 if (!$dt->parse($param0))
                 {
@@ -929,7 +1025,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                     return true;
                 }
 
-                if ($param1 == 'date')
+                if ($type == 'date')
                     $dt->truncateTime();
                 else
                     $dt->makeDateTime();
@@ -1030,8 +1126,8 @@ TODO: remove deprecated implementation; following was split into two functions,
             $retval = null;
             return true;
         }
-        $param0 = strtotime($param0);
-        $retval = (double)date('d', $param0);
+        $param0 = self::exprToDate($param0);
+        $retval = $param0 !== false ? (double)$param0->getDay() : null;
         return true;
     }
 
@@ -1058,7 +1154,12 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
         $param0 = self::exprToDate($param0);
-        $retval = $param0 !== false ? (double)$param0->getHour() : null;
+        if ($param0 === false)
+        {
+            $retval = null;
+            return true;
+        }
+        $retval = (double)($param0->hasTimePart() ? $param0->getHour() : 0);
         return true;
     }
 
@@ -1235,7 +1336,12 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
         $param0 = self::exprToDate($param0);
-        $retval = $param0 !== false ? (double)$param0->getMinute() : null;
+        if ($param0 === false)
+        {
+            $retval = null;
+            return true;
+        }
+        $retval = (double)($param0->hasTimePart() ? $param0->getMinute() : 0);
         return true;
     }
 
@@ -1271,8 +1377,8 @@ TODO: remove deprecated implementation; following was split into two functions,
             $retval = null;
             return true;
         }
-        $param0 = strtotime($param0);
-        $retval = (double)date('m', $param0);
+        $param0 = self::exprToDate($param0);
+        $retval = $param0 !== false ? (double)$param0->getMonth() : null;
         return true;
     }
 
@@ -1504,7 +1610,12 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
         $param0 = self::exprToDate($param0);
-        $retval = $param0 !== false ? (double)$param0->getSecond() : null;
+        if ($param0 === false)
+        {
+            $retval = null;
+            return true;
+        }
+        $retval = (double)($param0->hasTimePart() ? $param0->getSecond() : 0);
         return true;
     }
 
@@ -2455,8 +2566,8 @@ TODO: remove deprecated implementation; following was split into two functions,
         if (count($params) == 1)
         {
             // same as cast(fld, date)
-            $type_constant = new \Flexio\Base\ExprValue;
-            $type_constant->val = 'date';
+            $type_constant = new \Flexio\Base\ExprVariable;
+            $type_constant->name = 'date';
 
             $call_params = [ $params[0], $type_constant ];
             return $this->func_cast($func, $call_params, $retval);
@@ -2489,8 +2600,8 @@ TODO: remove deprecated implementation; following was split into two functions,
         if (count($params) == 1)
         {
             // same as cast(fld, datetime)
-            $type_constant = new \Flexio\Base\ExprValue;
-            $type_constant->val = 'numeric';
+            $type_constant = new \Flexio\Base\ExprVariable;
+            $type_constant->name = 'numeric';
 
             $call_params = [ $params[0], $type_constant ];
             return $this->func_cast($func, $call_params, $retval);
@@ -2521,8 +2632,8 @@ TODO: remove deprecated implementation; following was split into two functions,
         if (count($params) == 1)
         {
             // same as cast(fld, datetime)
-            $type_constant = new \Flexio\Base\ExprValue;
-            $type_constant->val = 'datetime';
+            $type_constant = new \Flexio\Base\ExprVariable;
+            $type_constant->name = 'datetime';
 
             $call_params = [ $params[0], $type_constant ];
             return $this->func_cast($func, $call_params, $retval);
@@ -2607,9 +2718,8 @@ TODO: remove deprecated implementation; following was split into two functions,
             $retval = null;
             return true;
         }
-
-        $param0 = strtotime($param0);
-        $retval = (double)date('Y', $param0);
+        $param0 = self::exprToDate($param0);
+        $retval = $param0 !== false ? (double)$param0->getYear() : null;
         return true;
     }
 
@@ -2851,8 +2961,10 @@ class ExprDateTime
             return true;
         }
 
+        $value = trim(''.$value);
+
         // if date is empty, return null
-        if (trim($value) == '')
+        if ($value == '')
             return false;
         
         if (isset($format))
@@ -2860,11 +2972,11 @@ class ExprDateTime
             $format = str_replace(['YYYY', 'MM', 'DD', 'HH24', 'HH12', 'HH', 'MI', 'SS'],
                                   ['Y'   , 'm',  'd',  'H',    'h',    'h',  'i',  's'],
                                   $format);
-            $arr = date_parse_from_format($format, (string)$value);
+            $arr = date_parse_from_format($format, $value);
         }
          else
         {
-            $arr = date_parse((string)$value);
+            $arr = date_parse($value);
         }
 
         if (!isset($arr['year']) || !isset($arr['month']) || !isset($arr['day']))

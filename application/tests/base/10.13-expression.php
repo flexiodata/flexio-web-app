@@ -43,6 +43,11 @@ class Test
         $expected = substr(\Flexio\System\System::getTimestamp(), 0, 11);
         TestCheck::assertDateApprox('A.2', 'Expression; current_date() date function',  $actual, $expected, $results);
 
+        // BEGIN TEST -- this also works as a variable
+        $actual = TestUtil::evalExpression('current_date');
+        $expected = substr(\Flexio\System\System::getTimestamp(), 0, 11);
+        TestCheck::assertDateApprox('A.3', 'Expression; current_date date variable',  $actual, $expected, $results);
+
 
 
         // TEST: date function: day()

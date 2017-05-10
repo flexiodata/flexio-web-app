@@ -28,6 +28,7 @@
         :is-scrolling="is_scrolling"
         :active-process="activeProcess"
         :show-preview="show_all_previews"
+        :show-insert-before-first-task="false"
         @insert-task="insertNewTask"
         @toggle-preview="togglePreview"
         @prompt-value-change="onPromptValueChange"
@@ -83,10 +84,10 @@
     },
     computed: {
       first_prompt_idx() {
-        return _.findIndex(this.tasks, { has_variable: true })
+        return _.findIndex(this.tasks, { is_prompt: true })
       },
       last_prompt_idx() {
-        return _.findLastIndex(this.tasks, { has_variable: true })
+        return _.findLastIndex(this.tasks, { is_prompt: true })
       }
     },
     methods: {
@@ -119,10 +120,3 @@
     }
   }
 </script>
-
-<style>
-  .css-corner-title {
-    top: 0.5rem;
-    left: 0.625rem;
-  }
-</style>

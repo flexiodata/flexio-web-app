@@ -33,7 +33,7 @@ class Process extends \Flexio\Object\Base
     {
         $this->setType(\Model::TYPE_PROCESS);
         $this->debug = false;
-        $this->errors = array();
+        $this->error = array();
         $this->current_executing_subprocess_eid = false;
         $this->last_percentage_saved = false;
     }
@@ -456,22 +456,26 @@ class Process extends \Flexio\Object\Base
         return false;
     }
 
-    public function getErrors() : array
+    private function getError() : array
     {
-        return $this->errors;
+        return $this->error;
     }
 
-    public function hasErrors() : bool
+    private function hasError() : bool
     {
-        if (empty($this->errors))
+        if (empty($this->error))
             return false;
 
         return true;
     }
 
-    private function fail(string $code = '', string $message = null, string $file = null, int $line = null)
+    private function fail(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
     {
-        $this->errors[] = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line);
+        // only save the first error we come to
+        if ($this->hasError())
+            return;
+
+        $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
     }
 
     private function setCurrentExecutingSubProcess(string $subprocess = null)
@@ -598,7 +602,6 @@ class Process extends \Flexio\Object\Base
         }
 
         // STEP 4: iterate through the subprocesses and run each one
-        $has_errors = false;
         $cache_used_on_subprocess = false;
 
         foreach ($subprocesses as $sp)
@@ -628,13 +631,16 @@ class Process extends \Flexio\Object\Base
             {
                 $result_exists = $this->findCachedResult($implementation_revision, $task, $input, $output);
                 if ($result_exists)
+                {
                     $cache_used = true;
+                    $cache_used_on_subprocess = true; // flag for the overall process; set once
+                }
             }
 
             if ($result_exists === false)
             {
                 // execute the step and generate a result hash
-                $this->executeStep($task, $this, $input, $output);
+                $this->executeStep($task, $input, $output);
                 $process_hash = $this->generateTaskHash($implementation_revision, $task, $input);
             }
 
@@ -642,28 +648,39 @@ class Process extends \Flexio\Object\Base
             // unreliable; set an error so that the process fails
             $implementation_revision_update = \Flexio\System\System::getGitRevision();
             if ($implementation_revision !== $implementation_revision_update)
-                $this->fail(\Flexio\Base\Error::GENERAL, _(''), __FILE__, __LINE__);
-
-            // if there are errors, fail the job
-            $process_status = \Model::PROCESS_STATUS_COMPLETED;
-            if ($this->hasErrors())
-            {
-                $has_errors = true;
-                $process_hash = ''; // don't cache failures
-                $process_status = \Model::PROCESS_STATUS_FAILED;
-            }
-
-            // if the cache is used, track it for the overall process information
-            if ($cache_used === true)
-                $cache_used_on_subprocess = true;
+                $this->fail(\Flexio\Base\Error::GENERAL, '', __FILE__, __LINE__);
 
             // save the output from the last step
             $subprocess_params = array();
             $subprocess_params['output'] = self::stringifyCollectionEids($output);
             $subprocess_params['finished'] = self::getProcessTimestamp();
-            $subprocess_params['process_status'] = $process_status;
+            $subprocess_params['process_status'] = \Model::PROCESS_STATUS_COMPLETED;
             $subprocess_params['process_hash'] = $process_hash;
             $subprocess_params['cache_used'] = $cache_used === true ? 'Y' : 'N';
+
+            // if we have errors, use different values for some of the params
+            if ($this->hasError())
+            {
+                $error = $this->getError();
+                $subprocess_error_info = array();
+                $subprocess_error_info['code'] = $error['code'];
+                $subprocess_error_info['message'] = $error['message'];
+
+                if (IS_DEBUG())
+                {
+                    $subprocess_error_info['type'] = $error['type'];
+                    $subprocess_error_info['file'] = $error['file'];
+                    $subprocess_error_info['line'] = $error['line'];
+                    //$subprocess_error_info['trace'] = $error['trace']; // makes the error info verbose, but available if needed
+                }
+
+                $subprocess_params['process_status'] = \Model::PROCESS_STATUS_FAILED; // set the failed flag
+                $subprocess_params['process_hash'] = ''; // don't cache failures
+                $subprocess_params['process_info'] = json_encode(array(
+                    'error' => $subprocess_error_info
+                ));
+            }
+
             $this->getModel()->process->set($subprocess_eid, $subprocess_params);
 
             // set the input for the next job step to be the output from the previous
@@ -672,7 +689,7 @@ class Process extends \Flexio\Object\Base
             $output->clear();
 
             // if the step failed, stop the job
-            if ($has_errors === true)
+            if ($this->hasError())
                 break;
         }
 
@@ -682,23 +699,15 @@ class Process extends \Flexio\Object\Base
         // set final job status
         $process_params = array();
         $process_params['finished'] = self::getProcessTimestamp();
-        $process_params['process_status'] = $has_errors ? \Model::PROCESS_STATUS_FAILED : \Model::PROCESS_STATUS_COMPLETED;
+        $process_params['process_status'] = $this->hasError() ? \Model::PROCESS_STATUS_FAILED : \Model::PROCESS_STATUS_COMPLETED;
         $process_params['cache_used'] = $cache_used_on_subprocess === true ? 'Y' : 'N';
         $this->getModel()->process->set($this->getEid(), $process_params);
-
-        // if we're in debug mode and the process failed, set the error info in the process status
-        if (IS_DEBUG() && $has_errors === true)
-        {
-            $process_info = $this->getProcessInfo();
-            $process_info['errors'] = $this->getErrors();
-            $this->setProcessInfo($process_info);
-        }
 
         // clear the cache
         $this->clearCache();
     }
 
-    private function executeStep(array $task, \Flexio\Object\Process $process, \Flexio\Object\Collection $input, \Flexio\Object\Collection &$output)
+    private function executeStep(array $task, \Flexio\Object\Collection $input, \Flexio\Object\Collection &$output)
     {
         // if the process is something besides running, we're done
         $status = $this->getModel()->process->getProcessStatus($this->getEid());
@@ -743,13 +752,14 @@ class Process extends \Flexio\Object\Base
             $info = json_decode($info,true);
             $file = $e->getFile();
             $line = $e->getLine();
+            $trace = $e->getTrace();
             $code = $info['code'];
             $message = $info['message'];
+            $type = 'flexio exception';
+            $this->fail($code, $message, $file, $line, $type, $trace);
 
             if ($this->getDebug() === true)
                 die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
-                  else
-            return $process->fail($code, $message, $file, $line);
         }
         catch (\Exception $e)
         {
@@ -757,11 +767,12 @@ class Process extends \Flexio\Object\Base
 
             $file = $e->getFile();
             $line = $e->getLine();
+            $trace = $e->getTrace();
+            $type = 'php exception';
+            $this->fail(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
 
             if ($this->getDebug() === true)
                 die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
-                 else
-                return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
         }
         catch (\Error $e)
         {
@@ -769,11 +780,12 @@ class Process extends \Flexio\Object\Base
 
             $file = $e->getFile();
             $line = $e->getLine();
+            $trace = $e->getTrace();
+            $type = 'php error';
+            $this->fail(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
 
             if ($this->getDebug() === true)
                 die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
-                 else
-                return $process->fail(\Flexio\Base\Error::GENERAL, _(''), $file, $line);
         }
     }
 
@@ -834,6 +846,7 @@ class Process extends \Flexio\Object\Base
             "started_by" : null,
             "started" : null,
             "finished" : null,
+            "duration" : null,
             "process_info" : null,
             "process_status" : null,
             "cache_used" : null,
@@ -1124,9 +1137,10 @@ class Process extends \Flexio\Object\Base
     private static function getProcessTimestamp() : string
     {
         // return the timestamp as accurately as we can determine
-        $time = (int)microtime(true);
-        $time_micropart = sprintf("%06d", ($time - floor($time)) * 1000000);
-        $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, $time));
+        $time_exact = microtime(true);
+        $time_rounded = floor($time_exact);
+        $time_micropart = sprintf("%06d", ($time_exact - $time_rounded) * 1000000);
+        $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, (int)$time_rounded));
         return ($date->format("Y-m-d H:i:s.u"));
     }
 

@@ -1155,6 +1155,11 @@ class Test
         $expected = 3.14159265358979;
         TestCheck::assertNumber('L.2', 'Expression; pi() numeric function',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $actual = TestUtil::evalExpression('pi');
+        $expected = 3.14159265358979;
+        TestCheck::assertNumber('L.3', 'Expression; pi numeric variable',  $actual, $expected, $results);
+
 
 
         // TEST: numeric function: pow(number,number)

@@ -136,12 +136,12 @@
           })
         }
 
-        api.validate({ attrs: validate_attrs }).then((response) => {
+        api.validate({ attrs: validate_attrs }).then(response => {
           this.ss_errors = _.keyBy(response.body, 'key')
 
           if (_.isFunction(callback))
             callback.call(this)
-        }, (response) => {
+        }, response => {
           // error callback
         })
       }, 300),
@@ -164,7 +164,7 @@
               // success callback
               this.is_submitting = false
               this.is_sent = true
-            }, (response) => {
+            }, response => {
               // error callback
               this.is_submitting = false
               this.showErrors(_.get(response, 'data.errors'))
