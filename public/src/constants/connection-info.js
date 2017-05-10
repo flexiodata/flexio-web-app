@@ -45,7 +45,7 @@ const DROPBOX = {
 const EMAIL = {
   is_service: false,
   is_input: true,
-  is_output: false,
+  is_output: true,
   connection_type: types.CONNECTION_TYPE_EMAIL,
   icon: require('../assets/icon/icon-email-128.png'),
   service_name: 'Email',
