@@ -129,6 +129,10 @@ class Input extends \Flexio\Jobs\Base
             case \Model::CONNECTION_TYPE_UPLOAD:
                 return $this->runUpload($service, $file_info);
 
+            // upload
+            case \Model::CONNECTION_TYPE_EMAIL:
+                return $this->runEmail($service, $file_info);
+
             // database data
             case \Model::CONNECTION_TYPE_MYSQL:
             case \Model::CONNECTION_TYPE_POSTGRES:
@@ -164,6 +168,12 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $outstream = \Flexio\Object\Stream::create($stream_properties);
         $this->getOutput()->push($outstream);
+    }
+
+    private function runEmail($service, array $file_info) // TODO: set paramater type
+    {
+        // TODO: right now email is added at the beginning of the pipe, so
+        // the files are already added; instead, they should be inserted here
     }
 
     private function runDatabaseImport($service, array $file_info) // TODO: set paramater type
