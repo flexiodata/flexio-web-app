@@ -155,19 +155,27 @@
       }
     },
     computed: {
-      input_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
-      output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
-
+      input_tasks() {
+        return _.filter(this.tasks, { type: TASK_TYPE_INPUT })
+      },
+      output_tasks() {
+        return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT })
+      },
       transform_tasks() {
         return _.reject(this.tasks, (t) => {
           var task_type = _.get(t, 'type')
           return task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT
         })
       },
-
-      has_input()  { return this.input_tasks.length > 0 },
-      has_output() { return this.output_tasks.length > 0 },
-      has_tasks()  { return this.tasks.length > 0 }
+      has_input() {
+        return this.input_tasks.length > 0
+      },
+      has_output() {
+        return this.output_tasks.length > 0
+      },
+      has_tasks() {
+        return this.tasks.length > 0
+      }
     },
     methods: {
       deleteInput(input) {
@@ -223,7 +231,8 @@
             type: TASK_TYPE_EMAIL_SEND,
             params: {
               to: ['${email_address}'],
-              subject: 'Flex.io Pipe Email Output'
+              subject: 'Flex.io Pipe Email Output',
+              data: 'attachment'
             }
           }
 
