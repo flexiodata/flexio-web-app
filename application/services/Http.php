@@ -81,6 +81,7 @@ class Http implements \Flexio\Services\IConnection
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $path);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);  // 30 seconds connection timeout
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Flex.io');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
@@ -93,7 +94,25 @@ class Http implements \Flexio\Services\IConnection
             $callback($data);
             return $length;
         });
+
         $result = curl_exec($ch);
+        if ($result === false)
+        {
+            $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($http_response_code == 0)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Connection Error");
+                 else
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Connection Error. HTTP response code: $http_response_code");
+        }
+
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($http_response_code >= 400)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "HTTP Error. HTTP response code: $http_response_code");
+        }
+
         curl_close($ch);
     }
 
