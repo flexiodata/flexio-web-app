@@ -52,6 +52,11 @@
           <span v-else>Files will be output to the <span class="b black fs-normal">{{database}}</span> bucket.</span>
         </div>
       </div>
+      <div class="tl" v-else-if="is_email">
+        <div class="lh-copy mid-gray f6 mb3 i">
+          Files will be output to the email addresses specified in the pipe builder.
+        </div>
+      </div>
       <div class="tl" v-else-if="is_mysql || is_postgres">
         <div class="lh-copy mid-gray f6 mb3 i">
           <span v-if="host.length == 0 || database.length == 0">There's an error in the configuration of this connection. A host and database must be specified in order to output files to {{service_name}}.</span>
@@ -94,6 +99,7 @@
   import {
     CONNECTION_TYPE_AMAZONS3,
     CONNECTION_TYPE_DROPBOX,
+    CONNECTION_TYPE_EMAIL,
     CONNECTION_TYPE_GOOGLEDRIVE,
     CONNECTION_TYPE_GOOGLESHEETS,
     CONNECTION_TYPE_MYSQL,
@@ -102,6 +108,7 @@
     CONNECTION_TYPE_SFTP
   } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
+  import { TASK_TYPE_EMAIL_SEND } from '../constants/task-type'
   import { mapGetters } from 'vuex'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
@@ -131,6 +138,9 @@
         return this.item
       },
       ctype() {
+        if (_.get(this.task, 'type') == TASK_TYPE_EMAIL_SEND)
+          return CONNECTION_TYPE_EMAIL
+
         return _.get(this.task, 'metadata.connection_type', '')
       },
       conn_identifier() {
@@ -186,6 +196,7 @@
 
       is_amazon_s3()     { return this.ctype == CONNECTION_TYPE_AMAZONS3 },
       is_dropbox()       { return this.ctype == CONNECTION_TYPE_DROPBOX },
+      is_email()         { return this.ctype == CONNECTION_TYPE_EMAIL },
       is_google_drive()  { return this.ctype == CONNECTION_TYPE_GOOGLEDRIVE },
       is_google_sheets() { return this.ctype == CONNECTION_TYPE_GOOGLESHEETS },
       is_mysql()         { return this.ctype == CONNECTION_TYPE_MYSQL },

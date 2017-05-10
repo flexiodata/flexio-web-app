@@ -159,7 +159,12 @@
         return _.filter(this.tasks, { type: TASK_TYPE_INPUT })
       },
       output_tasks() {
-        return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT })
+        // this is somewhat of a kludge, but it works -- ideally, we'd have a full-fledged
+        // email output connection and/or figure out a way to make outputs and inputs
+        // a little less strict
+        return _.filter(this.tasks, (task) => {
+          return task.type == TASK_TYPE_OUTPUT || task.type == TASK_TYPE_EMAIL_SEND
+        })
       },
       transform_tasks() {
         return _.reject(this.tasks, (t) => {
