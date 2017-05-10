@@ -131,11 +131,20 @@
         <!-- option 3. show normal builder item -->
 
         <div class="relative min-h2" v-else>
+          <!-- error icon -->
+          <div
+            class="absolute cursor-default"
+            style="top: 6px; left: -31px"
+            v-if="show_error"
+          >
+            <i class="db material-icons md-18 dark-red">error</i>
+          </div>
+
           <!-- collapser -->
           <div
             class="absolute cursor-default"
             style="top: 6px; left: -31px"
-            v-if="active_stream_eid.length > 0"
+            v-else-if="active_stream_eid.length > 0"
           >
             <div
               class="pointer moon-gray bg-white ba b--white-box br-100 hover-blue hover-b--blue hint--top-right"
@@ -170,9 +179,9 @@
             v-if="is_task_execute"
           ></code-editor>
 
-          <!-- error message and cancel/save buttons -->
+          <!-- syntax error message and cancel/save buttons -->
           <transition name="slide-fade">
-            <div class="flex flex-row items-start mt2" v-show="is_changed">
+            <div class="flex flex-row items-start mt2" v-if="is_changed">
               <div class="flex-fill mr4">
                 <transition name="slide-fade">
                   <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
@@ -182,6 +191,11 @@
               <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
             </div>
           </transition>
+
+          <!-- error message -->
+          <div class="flex flex-row items-start mt2" v-if="!is_changed && error_msg.length > 0">
+            <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code">{{error_msg}}</div>
+          </div>
 
           <!-- preview -->
           <transition name="slide-fade">
@@ -203,7 +217,8 @@
   import {
     PROCESS_STATUS_PENDING,
     PROCESS_STATUS_WAITING,
-    PROCESS_STATUS_RUNNING
+    PROCESS_STATUS_RUNNING,
+    PROCESS_STATUS_FAILED
   } from '../constants/process'
   import {
     TASK_TYPE_INPUT,
@@ -393,9 +408,11 @@
           PROCESS_STATUS_RUNNING
         ], _.get(this.activeProcess, 'process_status'))
       },
-      number_cls() {
-        // compensate for content top border
-        return this.index == 0 ? 'bt b--transparent' : ''
+      show_error() {
+        return _.get(this.active_subprocess, 'process_status', '') == PROCESS_STATUS_FAILED
+      },
+      error_msg() {
+        return _.get(this.active_subprocess, 'process_info.error.message', '')
       },
       content_cls() {
         var task_cnt = _.get(this, 'tasks', []).length
