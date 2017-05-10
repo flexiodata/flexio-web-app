@@ -37,7 +37,7 @@ class Rights
         // get the object type
         $object_type = \Flexio\Object\Store::getModel()->getType($object_eid);
 
-
+/*
         // TODO: temporarily allow read access to pipes for embedded pipes
         if ($object_type === \Model::TYPE_PIPE &&
               !self::isowned($object_eid, $user_eid) &&
@@ -51,6 +51,7 @@ class Rights
 
                 return self::response($user_eid, $rights);
         }
+*/
 
         // TODO: temporarily allow read/write access to processes
         if ($object_type === \Model::TYPE_PROCESS &&
