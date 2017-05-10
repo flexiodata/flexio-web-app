@@ -205,6 +205,7 @@ class Test
             "started_by" : null,
             "started" : null,
             "finished" : null,
+            "duration" : null,
             "process_info" : {
             },
             "process_status" : null,
