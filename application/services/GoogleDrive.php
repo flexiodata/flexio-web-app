@@ -151,6 +151,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files/$fileid?alt=media");
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);  // 30 seconds connection timeout
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
@@ -390,9 +391,17 @@ class GoogleDrive implements \Flexio\Services\IConnection
                 if (isset($params['token_expires']) && !is_null($params['token_expires']) && $params['token_expires'] > 0)
                     $token->setEndOfLife($params['token_expires']);
 
-                $token = $oauth->refreshAccessToken($token);
-                if (!$token)
-                    return null;
+                try
+                {
+                    $token = $oauth->refreshAccessToken($token);
+                    if (!$token)
+                        return null;
+                }
+                catch (\OAuth\Common\Http\Exception\TokenResponseException $e)
+                {
+                    // this happens when offline
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");                    
+                }
 
                 $object = new self;
                 $object->access_token = $token->getAccessToken();
