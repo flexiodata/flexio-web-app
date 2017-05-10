@@ -107,7 +107,7 @@ class Api
             }
 
             $response = array();
-            $response['errors'][] = $error;
+            $response['error'] = $error;
             if ($echo === false)
                 return $response;
 
@@ -130,7 +130,7 @@ class Api
             }
 
             $response = array();
-            $response['errors'][] = $error;
+            $response['error'] = $error;
             if ($echo === false)
                 return $response;
 
@@ -153,7 +153,7 @@ class Api
             }
 
             $response = array();
-            $response['errors'][] = $error;
+            $response['error'] = $error;
             if ($echo === false)
                 return $response;
 
@@ -392,12 +392,7 @@ class Api
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
 
-
-        // TODO: don't try to set/return an array of errors
-        $error = end($response);
-
-
-        // get the error code and message
+        $error = $response['error'];
         $error_code = $error['code'] ?? '';
         $error_message = $error['message'] ?? '';
 
@@ -463,7 +458,6 @@ class Api
                 break;
         }
 
-/*
         // if a message isn't specified, supply a default message
         if (strlen($error_message ) == 0)
         {
@@ -490,10 +484,10 @@ class Api
                 case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:    $error_message = _('Size limit exceeded');         break;
             }
 
-            // TODO: set error message
+            $error['message'] = $error_message;
         }
-*/
 
+        $response['error'] = $error;
         $response = @json_encode($response, JSON_PRETTY_PRINT);
         echo $response;
     }
