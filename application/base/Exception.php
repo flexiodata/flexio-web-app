@@ -23,8 +23,12 @@ class Exception extends \Exception
     {
         if (isset($GLOBALS['g_config']->debug_error_log))
         {
+            // specifying DEBUG_BACKTRACE_IGNORE_ARGS avoids debug_print_backtrace()
+            // throwing an exception itself (for instance, when a closure such as
+            // service::read() is in the backtrace)
+            
             ob_start();
-            debug_print_backtrace();
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             $data = ob_get_clean();
 
             $excp = '';

@@ -192,9 +192,7 @@ class MailJet implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_HTTPGET, true);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_USERPWD, $apiauth);
         $result = curl_exec($ch);
@@ -247,9 +245,7 @@ class MailJet implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_POST, count($data_to_upload));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_to_upload);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_USERPWD, $apiauth);
         $result = curl_exec($ch);

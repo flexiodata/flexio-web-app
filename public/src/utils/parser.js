@@ -280,19 +280,6 @@
       }
 
       return results
-
-      /*
-      var i, parts = str.split(/,(?![^\(\[]*[\]\)])/), results = [];
-      for (i = 0; i < parts.length; ++i)
-      {
-        var str = parts[i].trim();
-        if (str.length > 0)
-        {
-          results.push(this.dequoteColumn(str));
-        }
-      }
-      return results;
-      */
     }
 
     this.parseListObject = function(str)
@@ -1838,7 +1825,7 @@
         'sort',
         'filter',
         'calc',
-        //'email', // removed for release
+        'email',
         'execute',
         'transform',
         'merge',

@@ -53,7 +53,7 @@ class Input extends \Flexio\Jobs\Base
         // paths and determining the appropriate connection type/eid for each item
         $items = $this->resolveInputItems($params);
         if ($items === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "No input items");
 
         // input job adds new streams; add streams onto inputs we've already received
         $this->getOutput()->merge($this->getInput());

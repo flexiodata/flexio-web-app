@@ -79,9 +79,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
         $result = curl_exec($ch);
         curl_close($ch);
 
@@ -147,20 +145,52 @@ class GoogleDrive implements \Flexio\Services\IConnection
         if (is_null($fileid) || strlen($fileid) == 0 || $fileid == 'root')
             return false; // bad filename / fileid
 
+        $http_response_code = false;
+        $error_payload = '';
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files/$fileid?alt=media");
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);  // 30 seconds connection timeout
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback) {
-            $length = strlen($data);
-            $callback($data);
-            return $length;
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$http_response_code, &$error_payload) {
+            if ($http_response_code === false)
+            {
+                $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            }
+            if ($http_response_code >= 400)
+            {
+                if (strlen($error_payload) < 65536)
+                    $error_payload .= $data;
+                return strlen($data);
+            }
+             else
+            {
+                $length = strlen($data);
+                $callback($data);
+                return $length;
+            }
         });
         $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        if ($http_response_code >= 400 || $result !== false)
+        {
+            $error_object = @json_decode($error_payload, true);
+            $message = $error_object['error']['message'] ?? '';
+
+            $exception_message = "Read failed";
+            if ($http_response_code >= 400)
+                $exception_message .= ". HTTP Code: $http_response_code";
+            if (strlen($message) > 0)
+                $exception_message .= ". Google API Error Message: $message";
+            
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $exception_message);
+        }
     }
 
     public function write(array $params, callable $callback)
@@ -282,9 +312,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            curl_setopt($ch, CURLOPT_SSLVERSION, 1);
             $result = curl_exec($ch);
 
             $result = @json_decode($result,true);
@@ -363,9 +391,17 @@ class GoogleDrive implements \Flexio\Services\IConnection
                 if (isset($params['token_expires']) && !is_null($params['token_expires']) && $params['token_expires'] > 0)
                     $token->setEndOfLife($params['token_expires']);
 
-                $token = $oauth->refreshAccessToken($token);
-                if (!$token)
-                    return null;
+                try
+                {
+                    $token = $oauth->refreshAccessToken($token);
+                    if (!$token)
+                        return null;
+                }
+                catch (\OAuth\Common\Http\Exception\TokenResponseException $e)
+                {
+                    // this happens when offline
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");                    
+                }
 
                 $object = new self;
                 $object->access_token = $token->getAccessToken();
