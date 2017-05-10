@@ -3,6 +3,7 @@
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver fw6 ttu">Command</div>
       <command-bar
+        ref="commandbar"
         class="input-reset border-box w-100 h-100 bn outline-0 m0 pa2 code resize-none"
         :val="cmd_text"
         @change="update"
@@ -51,6 +52,7 @@
     methods: {
       clear() {
         this.cmd_text = ''
+        this.$refs['commandbar'].setValue('')
       },
       update(cmd) {
         this.cmd_text = cmd
