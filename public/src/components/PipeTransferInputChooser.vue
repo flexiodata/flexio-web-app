@@ -8,6 +8,8 @@
       item-layout="list"
       :project-eid="projectEid"
       :connection-type-filter="connectionTypeFilter"
+      :show-selection="showConnectionChooserSelection"
+      :show-default-connections="showDefaultConnectionsInChooserList"
       @item-activate="chooseConnection"
       v-if="showConnectionChooserList"
     ></connection-chooser-list>
@@ -48,6 +50,14 @@
         default: true
       },
       'show-connection-chooser-title': {
+        type: Boolean,
+        default: true
+      },
+      'show-connection-chooser-selection': {
+        type: Boolean,
+        default: false
+      },
+      'show-default-connections-in-chooser-list': {
         type: Boolean,
         default: true
       },
