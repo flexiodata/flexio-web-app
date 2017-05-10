@@ -477,7 +477,7 @@ class Process extends \Flexio\Object\Base
             return;
 
         if (!isset($message))
-            $message = \Flexio\Base\Error::getDefaultMessage($error_code);
+            $message = \Flexio\Base\Error::getDefaultMessage($code);
 
         $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
     }
