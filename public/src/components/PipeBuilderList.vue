@@ -47,7 +47,7 @@
         :is-scrolling="is_scrolling"
         :active-process="activeProcess"
         :show-preview="show_all_previews"
-        :show-insert-before-first-task="false"
+        :show-insert-before-first-task="true"
         @insert-task="insertNewTask"
         @toggle-preview="togglePreview"
         @prompt-value-change="onPromptValueChange"
