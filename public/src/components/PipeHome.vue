@@ -197,7 +197,33 @@
 
           var matched_vars = []
 
+          function getVariable(val, set_key) {
+            var m
+
+            do {
+              m = VARIABLE_REGEX.exec(val)
+              if (m)
+              {
+                matched_vars.push({
+                  task_eid: _.get(task, 'eid'),
+                  task_idx,
+                  variable_idx,
+                  variable_set_key,
+                  set_key,
+                  type: m[2],
+                  variable_name: m[3],
+                  default_val: m[5] || '',
+                  val: m[5] || ''
+                })
+              }
+            } while (m)
+          }
+
           function getChildVariables(obj, set_key) {
+            // if the object is a string, try to find a variable in it
+            if (_.isString(obj))
+              return getVariable(obj, set_key)
+
             _.each(obj, (v, k) => {
               variable_idx = _.size(matched_vars)
               variable_set_key = 'prompt_tasks['+task_idx+'].variables['+variable_idx+'].val'
@@ -212,27 +238,7 @@
 
               // if we find any matches, add them to our set of matched variables
               if (_.isString(v))
-              {
-                var m
-
-                do {
-                  m = VARIABLE_REGEX.exec(v)
-                  if (m)
-                  {
-                    matched_vars.push({
-                      task_eid: _.get(task, 'eid'),
-                      task_idx,
-                      variable_idx,
-                      variable_set_key,
-                      set_key: set_key+'.'+k,
-                      type: m[2],
-                      variable_name: m[3],
-                      default_val: m[5] || '',
-                      val: m[5] || ''
-                    })
-                  }
-                } while (m)
-              }
+                return getVariable(v, set_key+'.'+k)
             })
           }
 
@@ -432,7 +438,7 @@
             {
               if (v.variable_name == m[3] /* variable name */)
               {
-                str = str.replace(m.input, v.val)
+                str = str.replace(m[0], v.val)
                 _.set(run_pipe, v.set_key, str)
               }
             }
