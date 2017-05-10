@@ -73,12 +73,8 @@
         }, response => {
           // error callback
           me.is_submitting = false
-          me.showErrors(_.get(response, 'data.errors'))
+          this.error_msg = _.get(response, 'data.error.message', '')
         })
-      },
-      showErrors: function(errors) {
-        if (_.isArray(errors) && errors.length > 0)
-          this.error_msg = errors[0].message
       }
     }
   }
