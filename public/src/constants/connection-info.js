@@ -44,8 +44,8 @@ const DROPBOX = {
 
 const EMAIL = {
   is_service: false,
-  is_input: false,
-  is_output: true,
+  is_input: true,
+  is_output: false,
   connection_type: types.CONNECTION_TYPE_EMAIL,
   icon: require('../assets/icon/icon-email-128.png'),
   service_name: 'Email',
@@ -188,7 +188,7 @@ const UPLOAD = {
 export const CONNECTION_INFO_STDIN         = STDIN
 // export const CONNECTION_INFO_UPLOAD        = UPLOAD
 export const CONNECTION_INFO_STDOUT        = STDOUT
-//export const CONNECTION_INFO_EMAIL         = EMAIL
+export const CONNECTION_INFO_EMAIL         = EMAIL
 //export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
 export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BLANK_PIPE    = BLANK_PIPE

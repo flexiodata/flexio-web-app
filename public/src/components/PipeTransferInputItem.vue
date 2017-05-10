@@ -28,6 +28,21 @@
     <div class="ma3" v-if="has_variables">
       <div class="lh-copy mid-gray f6 mb2 i">This input will be configured when the pipe is run.</div>
     </div>
+    <div class="ma3 tl" v-else-if="is_email">
+      <div class="lh-copy mid-gray f6 mb2 i">Input files by sending an email with an attachment to the following email address:</div>
+      <div class="flex flex-row items-stretch">
+        <div class="flex-fill pa2 f6 code bt bb bl b--black-10 br1 br--left" :id="email_id">
+          {{pipe_email}}
+        </div>
+        <btn
+          btn-md
+          btn-primary
+          class="br1 br--right hint--top-left clipboardjs"
+          aria-label="Copy to Clipboard"
+          :data-clipboard-target="'#'+email_id"
+        ><span class="ttu b">Copy</span></btn>
+      </div>
+    </div>
     <div v-else-if="items.length > 0">
       <div class="flex flex-row items-center pv1 ph2 f6 truncate bb b--light-gray hide-child" v-for="(item, index) in items">
         <div class="flex-none mr1">
@@ -40,9 +55,9 @@
     </div>
     <div class="ma3 tc" v-else>
       <div class="tl" v-if="is_stdin">
-        <div class="lh-copy mid-gray f6 mb2 i">Input files using the command line.</div>
+        <div class="lh-copy mid-gray f6 mb2 i">Input files using the following command from the Flex.io command line:</div>
         <div class="flex flex-row items-stretch">
-          <div class="flex-fill pa2 f6 code bt bb bl b--black-10 br1 br--left" :id="code_id">
+          <div class="flex-fill pa2 f6 code bt bb bl b--black-10 br1 br--left" :id="stdin_id">
             {{pipe_cmd_line_example}}
           </div>
           <btn
@@ -50,7 +65,7 @@
             btn-primary
             class="br1 br--right hint--top-left clipboardjs"
             aria-label="Copy to Clipboard"
-            :data-clipboard-target="'#'+code_id"
+            :data-clipboard-target="'#'+stdin_id"
           ><span class="ttu b">Copy</span></btn>
         </div>
       </div>
@@ -81,7 +96,7 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_STDIN } from '../constants/connection-type'
+  import { CONNECTION_TYPE_EMAIL, CONNECTION_TYPE_STDIN } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import { mapGetters } from 'vuex'
   import Btn from './Btn.vue'
@@ -100,7 +115,8 @@
     inject: ['pipeEid'],
     data() {
       return {
-        code_id: _.uniqueId('code-'),
+        email_id: _.uniqueId('email-'),
+        stdin_id: _.uniqueId('code-'),
         show_file_chooser_modal: false
       }
     },
@@ -123,6 +139,13 @@
       },
       pipe_cmd_line_example() {
         return 'flexio pipes run ' + this.pipe_identifier + ' myfile.txt'
+      },
+      pipe_email() {
+        var pipe_identifier = _.get(this.pipe, 'ename', '')
+        if (pipe_identifier.length == 0)
+          pipe_identifier = _.get(this.pipe, 'eid', '')
+
+        return pipe_identifier+'@pipes.flex.io'
       },
       connection() {
         var connection_identifier = _.get(this.task, 'params.connection', '')
@@ -152,13 +175,16 @@
         var name = _.get(this.connection, 'name', '')
         return name.length > 0 ? name : this.service_name
       },
+      is_email() {
+        return this.ctype == CONNECTION_TYPE_EMAIL
+      },
       is_stdin() {
         return this.ctype == CONNECTION_TYPE_STDIN
       },
       menu_options() {
         var items = []
 
-        if (!this.is_stdin && !this.has_variables)
+        if (!this.is_email && !this.is_stdin && !this.has_variables)
         {
           items = [{
             id: 'add-items',
