@@ -106,6 +106,14 @@
         {
           this.show_error = false
           this.show_success = false
+
+          var options = {
+            container: '#'+this.pipeEid,
+            duration: 400,
+            easing: 'ease-out'
+          }
+
+          this.$scrollTo('#'+this.pipeEid, options)
         }
          else if (old_val == PROCESS_STATUS_RUNNING)
         {
