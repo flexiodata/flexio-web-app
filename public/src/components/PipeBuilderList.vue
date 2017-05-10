@@ -1,5 +1,24 @@
 <template>
   <div class="overflow-y-auto" @scroll="onScroll">
+    <ui-alert
+      class="pl3 pr3 pr4-l relative"
+      style="top: -1rem; margin-bottom: 0"
+      type="success"
+      :dismissible="false"
+      @dismiss="show_success = false"
+       v-show="show_success"
+      >
+      The pipe was run successfully!
+    </ui-alert>
+    <ui-alert
+      class="pl3 pr3 pr4-l relative"
+      style="top: -1rem; margin-bottom: 0"
+      type="error"
+      @dismiss="show_error = false"
+      v-show="show_error"
+    >
+      An error occurred while running the pipe.
+    </ui-alert>
     <div class="pa4 ml4 ml0-l mr4 bg-white ba b--white-box br2 tc" v-if="tasks.length == 0">
       <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
       <div class="mt3">
@@ -42,6 +61,11 @@
 </template>
 
 <script>
+  import {
+    PROCESS_STATUS_RUNNING,
+    PROCESS_STATUS_FAILED,
+    PROCESS_STATUS_COMPLETED
+  } from '../constants/process'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
   import PipeBuilderItem from './PipeBuilderItem.vue'
@@ -76,10 +100,34 @@
       Btn,
       PipeBuilderItem
     },
+    watch: {
+      active_process_status: function(val, old_val) {
+        if (val == PROCESS_STATUS_RUNNING)
+        {
+          this.show_error = false
+          this.show_success = false
+        }
+         else if (old_val == PROCESS_STATUS_RUNNING)
+        {
+          if (val == PROCESS_STATUS_COMPLETED)
+          {
+            setTimeout(() => { this.show_success = true  }, 1000)
+            setTimeout(() => { this.show_success = false }, 6000)
+          }
+
+          if (val == PROCESS_STATUS_FAILED)
+          {
+            setTimeout(() => { this.show_error = true  }, 1000)
+          }
+        }
+      }
+    },
     data() {
       return {
         is_scrolling: false,
-        show_all_previews: true
+        show_all_previews: true,
+        show_success: false,
+        show_error: false
       }
     },
     computed: {
@@ -88,6 +136,9 @@
       },
       last_prompt_idx() {
         return _.findLastIndex(this.tasks, { is_prompt: true })
+      },
+      active_process_status() {
+        return _.get(this.activeProcess, 'process_status', '')
       }
     },
     methods: {
