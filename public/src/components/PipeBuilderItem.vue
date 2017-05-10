@@ -137,7 +137,7 @@
           :is-active-prompt-task="is_active_prompt_task"
           @prompt-value-change="onPromptValueChange"
           @go-prev-prompt="$emit('go-prev-prompt')"
-          @go-next-prompt="$emit('go-next-prompt')"
+          @go-next-prompt="emitGoNextPrompt"
           @run-once-with-values="$emit('run-once-with-values')"
           @save-values-and-run="$emit('save-values-and-run')"
           v-else-if="isPrompting && is_prompt"
@@ -656,6 +656,9 @@
       },
       onPromptValueChange(val, variable_set_key) {
         this.$emit('prompt-value-change', val, variable_set_key)
+      },
+      emitGoNextPrompt(task_eid) {
+        this.$emit('go-next-prompt', task_eid)
       }
     }
   }

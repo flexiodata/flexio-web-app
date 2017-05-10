@@ -52,7 +52,7 @@
         @toggle-preview="togglePreview"
         @prompt-value-change="onPromptValueChange"
         @go-prev-prompt="$emit('go-prev-prompt')"
-        @go-next-prompt="$emit('go-next-prompt')"
+        @go-next-prompt="emitGoNextPrompt"
         @run-once-with-values="$emit('run-once-with-values')"
         @save-values-and-run="$emit('save-values-and-run')"
       ></pipe-builder-item>
@@ -168,6 +168,10 @@
         this.$emit('prompt-value-change', val, variable_set_key)
       },
 
+      emitGoNextPrompt(task_eid) {
+        this.$emit('go-next-prompt', task_eid)
+      },
+
       resetScroll: _.debounce(function() {
         this.is_scrolling = false
       }, 200),
@@ -175,7 +179,7 @@
       onScroll: _.debounce(function() {
         this.is_scrolling = true
         this.resetScroll()
-      }, 50, { 'leading': true, 'trailing': false })
+      }, 20, { 'leading': true, 'trailing': false })
     }
   }
 </script>
