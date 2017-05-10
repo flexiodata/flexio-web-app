@@ -150,7 +150,7 @@
           <div
             class="absolute cursor-default"
             style="top: 4px; left: -33px"
-            v-if="error_msg.length > 0"
+            v-if="has_error"
           >
             <i class="db material-icons md-18 bg-white dark-red" style="font-size: 23px">error</i>
           </div>
@@ -431,6 +431,9 @@
       },
       show_status_icon() {
         return this.our_status == PROCESS_STATUS_FAILED || this.show_progress
+      },
+      has_error() {
+        return this.our_status == PROCESS_STATUS_FAILED
       },
       error_msg() {
         return _.get(this.active_subprocess, 'process_info.error.message', '')
