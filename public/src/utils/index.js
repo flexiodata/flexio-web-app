@@ -12,8 +12,6 @@ var isHidden = (el) => {
 }
 
 var fallbackCss = (el_id, href) => {
-  debugger
-
   var tmp_el = document.createElement('div')
   tmp_el.className = 'dn' // use Tachyons as our test case (if it's not loaded, it's likely nothing else is either)
 
