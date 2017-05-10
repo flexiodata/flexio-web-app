@@ -62,9 +62,9 @@
         <div class="lh-copy mid-gray f6 mb3 i">Each file will be output to Google Sheets as a single sheet.</div>
       </div>
       <div class="tl" v-else-if="is_stdout">
-        <div class="lh-copy mid-gray f6 mb2 i">Output files using the command line.</div>
+        <div class="lh-copy mid-gray f6 mb2 i">Output files using the following command from the Flex.io command line:</div>
         <div class="flex flex-row items-stretch">
-          <div class="flex-fill pa2 f6 code bt bb bl b--black-10 br1 br--left" :id="code_id">
+          <div class="flex-fill pa2 f6 code bt bb bl b--black-10 br1 br--left" :id="stdout_id">
             {{pipe_cmd_line_example}}
           </div>
           <btn
@@ -72,7 +72,7 @@
             btn-primary
             class="br1 br--right hint--top-left clipboardjs"
             aria-label="Copy to Clipboard"
-            :data-clipboard-target="'#'+code_id"
+            :data-clipboard-target="'#'+stdout_id"
           ><span class="ttu b">Copy</span></btn>
         </div>
       </div>
@@ -119,7 +119,7 @@
     inject: ['pipeEid'],
     data() {
       return {
-        code_id: _.uniqueId('code-'),
+        stdout_id: _.uniqueId('stdout-'),
         show_output_chooser_modal: false
       }
     },

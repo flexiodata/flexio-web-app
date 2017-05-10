@@ -116,7 +116,7 @@
     data() {
       return {
         email_id: _.uniqueId('email-'),
-        stdin_id: _.uniqueId('code-'),
+        stdin_id: _.uniqueId('stdin-'),
         show_file_chooser_modal: false
       }
     },
