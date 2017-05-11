@@ -475,6 +475,9 @@ class Process extends \Flexio\Object\Base
         if ($this->hasError())
             return;
 
+        if (!isset($message))
+            $message = \Flexio\Base\Error::getDefaultMessage($code);
+
         $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
     }
 
@@ -758,8 +761,8 @@ class Process extends \Flexio\Object\Base
             $type = 'flexio exception';
             $this->fail($code, $message, $file, $line, $type, $trace);
 
-            if ($this->getDebug() === true)
-                die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
+            //if ($this->getDebug() === true)
+            //    die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
         }
         catch (\Exception $e)
         {

@@ -10,6 +10,8 @@
         :project-eid="active_project_eid"
         :connection-type-filter="ctype"
         :show-connection-chooser-title="false"
+        :show-connection-chooser-selection="true"
+        :show-default-connections-in-chooser-list="false"
         :show-service-list="false"
         @choose-input="chooseInput"
       ></pipe-transfer-input-chooser>
@@ -25,6 +27,8 @@
         :project-eid="active_project_eid"
         :connection-type-filter="ctype"
         :show-connection-chooser-title="false"
+        :show-connection-chooser-selection="true"
+        :show-default-connections-in-chooser-list="false"
         :show-service-list="false"
         @choose-output="chooseOutput"
       ></pipe-transfer-output-chooser>
@@ -104,17 +108,17 @@
     },
     methods: {
       chooseInput(connection) {
-        var connection_identifier = _.get(connection, 'ename')
+        var connection_identifier = _.get(connection, 'ename', '')
         if (connection_identifier.length == 0)
-          connection_identifier = _.get(connection, 'eid')
+          connection_identifier = _.get(connection, 'eid', '')
 
         this.connection = _.assign({}, connection)
         this.val = connection_identifier
       },
       chooseOutput(connection) {
-        var connection_identifier = _.get(connection, 'ename')
+        var connection_identifier = _.get(connection, 'ename', '')
         if (connection_identifier.length == 0)
-          connection_identifier = _.get(connection, 'eid')
+          connection_identifier = _.get(connection, 'eid', '')
 
         this.connection = _.assign({}, connection)
         this.val = connection_identifier

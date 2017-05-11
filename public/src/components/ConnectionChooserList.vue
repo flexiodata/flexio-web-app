@@ -9,7 +9,9 @@
       :item="input_service"
       :index="index"
       :layout="itemLayout"
-      :connection-type="connectionType"
+      :connection-eid="connection_eid"
+      :connection-type="connection_type"
+      :show-selection="showSelection"
       @activate="onItemActivate"
     >
     </connection-chooser-item>
@@ -61,9 +63,17 @@
         type: Boolean,
         default: false
       },
+      'show-default-connections': {
+        type: Boolean,
+        default: true
+      },
       'connection-type-filter': {
         type: String,
         default: ''
+      },
+      'show-selection': {
+        type: Boolean,
+        default: false
       },
       'item-layout': {
         type: String // 'list' or 'grid'
@@ -74,14 +84,26 @@
       ConnectionChooserItem,
       EmptyItem
     },
+    watch: {
+      connectionType: function(val, old_val) {
+        this.connection_type = val
+      }
+    },
+    data() {
+      return {
+        connection_eid: '',
+        connection_type: ''
+      }
+    },
     computed: {
       default_connections() {
-        var me = this
+        if (!this.showDefaultConnections)
+          return []
 
         var items = _
           .chain(connections)
           .filter({ is_service: false })
-          .filter({ [me.listType==='output'?'is_output':'is_input']: true })
+          .filter({ [this.listType==='output'?'is_output':'is_input']: true })
           .map((c) => {
             return _.assign({}, c, {
               name: c.service_name
@@ -143,6 +165,8 @@
         this.$emit('add')
       },
       onItemActivate(item) {
+        this.connection_eid = _.get(item, 'eid', '')
+        this.connection_type = _.get(item, 'connection_type', '')
         this.$emit('item-activate', item)
       }
     }

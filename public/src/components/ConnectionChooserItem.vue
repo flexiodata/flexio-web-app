@@ -4,11 +4,13 @@
     @click="onClick"
   >
     <div class="flex flex-row items-center" v-if="layout == 'list'">
-      <connection-icon :type="item.connection_type" class="br1 square-3 mr3"></connection-icon>
+      <i class="material-icons mid-gray md-18 b mr3" v-if="showSelection && is_selected">check</i>
+      <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showSelection">check</i>
+      <connection-icon :type="ctype" class="br1 square-3 mr3"></connection-icon>
       <div class="mid-gray f5 fw6 cursor-default">{{item.name}}</div>
     </div>
     <div class="tc css-valign" v-else>
-      <connection-icon :type="item.connection_type" class="dib v-mid br2 square-5"></connection-icon>
+      <connection-icon :type="ctype" class="dib v-mid br2 square-5"></connection-icon>
       <div class="mid-gray f6 fw6 mt2 cursor-default">{{item.name}}</div>
     </div>
   </article>
@@ -18,13 +20,40 @@
   import ConnectionIcon from './ConnectionIcon.vue'
 
   export default {
-    props: ['item', 'layout', 'connection-type'],
+    props: {
+      'item': {
+        type: Object,
+        required: true
+      },
+      'layout': {
+        type: String,
+        default: 'list'
+      },
+      'connection-eid': {
+        type: String,
+        required: false
+      },
+      'connection-type': {
+        type: String,
+        required: false
+      },
+      'show-selection': {
+        type: Boolean,
+        default: false
+      }
+    },
     components: {
       ConnectionIcon
     },
     computed: {
+      eid() {
+        return _.get(this.item, 'eid', '')
+      },
+      ctype() {
+        return _.get(this.item, 'connection_type', '')
+      },
       is_selected() {
-        return this.connectionType == _.get(this.item, 'connection_type')
+        return this.eid.length > 0 ? this.connectionEid == this.eid : this.connectionType == this.ctype
       },
       cls() {
         var sel_cls = this.is_selected ? 'bg-black-10' : 'bg-white'

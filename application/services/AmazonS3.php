@@ -237,9 +237,19 @@ class AmazonS3 implements \Flexio\Services\IConnection
                 $callback($data);
             }
         }
+        catch (\Aws\Exception\AwsException $e)
+        {
+            $message = $e->getAwsErrorMessage();
+            if (strlen($message) == 0)
+                $message = "An error occurred while attempting to access the requested resource";
+                 else
+                $message = "AWS Error Message: $message";
+            
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $message);
+        }
         catch (\Exception $e)
         {
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "An error occurred while attempting to access the requested resource");
         }
 
         return true;

@@ -1,5 +1,13 @@
 <template>
   <div>
+    <ui-alert
+      type="error"
+      @dismiss="show_error = false"
+      v-show="show_error && error_msg.length > 0"
+    >
+      {{error_msg}}
+    </ui-alert>
+
     <task-configure-variable-item
       class="mb3"
       :item="v"
@@ -12,7 +20,7 @@
     <div class="flex flex-row items-center mt3" v-if="isActivePromptTask">
       <div class="flex-fill"></div>
       <btn btn-md class="b ttu blue mr2" @click="$emit('go-prev-prompt')" v-if="index != firstPromptIdx">Back</btn>
-      <btn btn-md class="b ttu white bg-blue" @click="$emit('go-next-prompt')" v-if="index != lastPromptIdx">Next</btn>
+      <btn btn-md class="b ttu white bg-blue" @click="emitGoNextPrompt" v-if="index != lastPromptIdx">Next</btn>
       <btn btn-md class="b ttu white bg-blue mr2" @click="$emit('run-once-with-values')" v-if="index == lastPromptIdx">Run Once With These Values</btn>
       <btn btn-md class="b ttu white bg-blue" @click="$emit('save-values-and-run')" v-if="index == lastPromptIdx">Save Values to Pipe & Run</btn>
     </div>
@@ -59,9 +67,30 @@
       Btn,
       TaskConfigureVariableItem
     },
+    data() {
+      return {
+        show_error: false
+      }
+    },
+    computed: {
+      task_eid() {
+        return _.get(this.item, 'eid', '')
+      },
+      error_msg() {
+        return _.get(this.item, 'error_msg', '')
+      }
+    },
     methods: {
       onValueChange(val, variable_set_key) {
         this.$emit('prompt-value-change', val, variable_set_key)
+      },
+      emitGoNextPrompt() {
+        this.$emit('go-next-prompt', this.task_eid)
+
+        this.$nextTick(() => {
+          if (this.error_msg.length > 0)
+            this.show_error = true
+        })
       }
     }
   }

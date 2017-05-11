@@ -56,7 +56,7 @@
       <!-- insert before button -->
       <div
         class="absolute"
-        style="top: -16px; left: 8px"
+        style="top: -12px; left: 8px"
         v-show="!show_progress"
         v-if="index==0 && !show_progress && !isPrompting && showInsertBeforeFirstTask"
       >
@@ -86,6 +86,20 @@
         ]"
         :style="content_style"
       >
+        <!-- progress status icon -->
+        <div class="relative" v-if="show_progress">
+          <div
+            class="absolute cursor-default"
+            style="top: 8px; left: -33px"
+          >
+            <i
+              class="db material-icons"
+              style="font-size: 23px"
+              :class="status_icon_cls"
+            >{{status_icon}}</i>
+          </div>
+        </div>
+
         <!-- always task description -->
         <inline-edit-text
           class="db lh-title mid-gray"
@@ -103,6 +117,7 @@
 
         <!-- option 1. show process progress item, or... -->
 
+        <!-- progress bar -->
         <process-progress-item
           class="mt2 pt2 bt b--black-10"
           :item="active_subprocess"
@@ -122,7 +137,7 @@
           :is-active-prompt-task="is_active_prompt_task"
           @prompt-value-change="onPromptValueChange"
           @go-prev-prompt="$emit('go-prev-prompt')"
-          @go-next-prompt="$emit('go-next-prompt')"
+          @go-next-prompt="emitGoNextPrompt"
           @run-once-with-values="$emit('run-once-with-values')"
           @save-values-and-run="$emit('save-values-and-run')"
           v-else-if="isPrompting && is_prompt"
@@ -131,11 +146,20 @@
         <!-- option 3. show normal builder item -->
 
         <div class="relative min-h2" v-else>
+          <!-- error icon -->
+          <div
+            class="absolute cursor-default"
+            style="top: 4px; left: -33px"
+            v-if="has_error"
+          >
+            <i class="db material-icons md-18 bg-white dark-red" style="font-size: 23px">error</i>
+          </div>
+
           <!-- collapser -->
           <div
             class="absolute cursor-default"
             style="top: 6px; left: -31px"
-            v-if="active_stream_eid.length > 0"
+            v-else-if="active_stream_eid.length > 0"
           >
             <div
               class="pointer moon-gray bg-white ba b--white-box br-100 hover-blue hover-b--blue hint--top-right"
@@ -170,9 +194,9 @@
             v-if="is_task_execute"
           ></code-editor>
 
-          <!-- error message and cancel/save buttons -->
+          <!-- syntax error message and cancel/save buttons -->
           <transition name="slide-fade">
-            <div class="flex flex-row items-start mt2" v-show="is_changed">
+            <div class="flex flex-row items-start mt2" v-if="is_changed">
               <div class="flex-fill mr4">
                 <transition name="slide-fade">
                   <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
@@ -182,6 +206,11 @@
               <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
             </div>
           </transition>
+
+          <!-- error message -->
+          <div class="flex flex-row items-start mt2" v-if="!is_changed && error_msg.length > 0">
+            <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code">{{error_msg}}</div>
+          </div>
 
           <!-- preview -->
           <transition name="slide-fade">
@@ -203,7 +232,11 @@
   import {
     PROCESS_STATUS_PENDING,
     PROCESS_STATUS_WAITING,
-    PROCESS_STATUS_RUNNING
+    PROCESS_STATUS_RUNNING,
+    PROCESS_STATUS_CANCELLED,
+    PROCESS_STATUS_PAUSED,
+    PROCESS_STATUS_FAILED,
+    PROCESS_STATUS_COMPLETED
   } from '../constants/process'
   import {
     TASK_TYPE_INPUT,
@@ -393,9 +426,45 @@
           PROCESS_STATUS_RUNNING
         ], _.get(this.activeProcess, 'process_status'))
       },
-      number_cls() {
-        // compensate for content top border
-        return this.index == 0 ? 'bt b--transparent' : ''
+      our_status() {
+        return _.get(this.active_subprocess, 'process_status', '')
+      },
+      show_status_icon() {
+        return this.our_status == PROCESS_STATUS_FAILED || this.show_progress
+      },
+      has_error() {
+        return this.our_status == PROCESS_STATUS_FAILED
+      },
+      error_msg() {
+        return _.get(this.active_subprocess, 'process_info.error.message', '')
+      },
+      status_icon() {
+        switch (this.our_status)
+        {
+          case PROCESS_STATUS_PENDING:   return 'check_circle'
+          case PROCESS_STATUS_WAITING:   return ''
+          case PROCESS_STATUS_RUNNING:   return 'sync'
+          case PROCESS_STATUS_CANCELLED: return 'cancel'
+          case PROCESS_STATUS_PAUSED:    return ''
+          case PROCESS_STATUS_FAILED:    return 'error'
+          case PROCESS_STATUS_COMPLETED: return 'check_circle'
+        }
+
+        return ''
+      },
+      status_icon_cls() {
+        switch (this.our_status)
+        {
+          case PROCESS_STATUS_PENDING:   return 'bg-white moon-gray'
+          case PROCESS_STATUS_WAITING:   return ''
+          case PROCESS_STATUS_RUNNING:   return 'bg-white moon-gray spin'
+          case PROCESS_STATUS_CANCELLED: return 'bg-white dark-red'
+          case PROCESS_STATUS_PAUSED:    return ''
+          case PROCESS_STATUS_FAILED:    return 'bg-white dark-red'
+          case PROCESS_STATUS_COMPLETED: return 'bg-white dark-green'
+        }
+
+        return ''
       },
       content_cls() {
         var task_cnt = _.get(this, 'tasks', []).length
@@ -590,6 +659,9 @@
       },
       onPromptValueChange(val, variable_set_key) {
         this.$emit('prompt-value-change', val, variable_set_key)
+      },
+      emitGoNextPrompt(task_eid) {
+        this.$emit('go-next-prompt', task_eid)
       }
     }
   }
@@ -611,5 +683,14 @@
 
   .pb4a {
     padding-bottom: 3rem;
+  }
+
+  .spin {
+    animation: spinner 1.2s linear infinite;
+  }
+
+  @keyframes spinner {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
   }
 </style>

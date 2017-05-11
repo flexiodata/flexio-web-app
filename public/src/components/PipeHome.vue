@@ -193,15 +193,42 @@
         var set_key = ''
 
         var prompts = _.map(this.tasks, (task) => {
+          var task_eid = _.get(task, 'eid')
           var params = _.get(task, 'params', {})
 
           var matched_vars = []
 
-          function getChildVariables(obj, set_key) {
-            _.each(obj, (v, k) => {
-              variable_idx = _.size(matched_vars)
-              variable_set_key = 'prompt_tasks['+task_idx+'].variables['+variable_idx+'].val'
+          function getVariable(val, set_key) {
+            var m
 
+            do {
+              m = VARIABLE_REGEX.exec(val)
+              if (m)
+              {
+                variable_idx = _.size(matched_vars)
+                variable_set_key = 'prompt_tasks['+task_idx+'].variables['+variable_idx+'].val'
+
+                matched_vars.push({
+                  task_eid,
+                  task_idx,
+                  variable_idx,
+                  variable_set_key,
+                  set_key,
+                  type: m[2],
+                  variable_name: m[3],
+                  default_val: m[5] || '',
+                  val: m[5] || ''
+                })
+              }
+            } while (m)
+          }
+
+          function getChildVariables(obj, set_key) {
+            // if the object is a string, try to find a variable in it
+            if (_.isString(obj))
+              return getVariable(obj, set_key)
+
+            _.each(obj, (v, k) => {
               // recurse over the array to find any variables in it
               if (_.isArray(v))
                 return _.each(v, (item, idx) => { getChildVariables(v[idx], set_key+'.'+k+'['+idx+']') })
@@ -212,27 +239,7 @@
 
               // if we find any matches, add them to our set of matched variables
               if (_.isString(v))
-              {
-                var m
-
-                do {
-                  m = VARIABLE_REGEX.exec(v)
-                  if (m)
-                  {
-                    matched_vars.push({
-                      task_eid: _.get(task, 'eid'),
-                      task_idx,
-                      variable_idx,
-                      variable_set_key,
-                      set_key: set_key+'.'+k,
-                      type: m[2],
-                      variable_name: m[3],
-                      default_val: m[5] || '',
-                      val: m[5] || ''
-                    })
-                  }
-                } while (m)
-              }
+                return getVariable(v, set_key+'.'+k)
             })
           }
 
@@ -248,7 +255,8 @@
             return _.assign({
               is_prompt: true,
               has_variables: true,
-              variables: matched_vars
+              variables: matched_vars,
+              error_msg: ''
             }, task)
           }
            else if (_.get(task, 'type') == TASK_TYPE_COMMENT)
@@ -401,13 +409,32 @@
         this.$scrollTo('#'+task.eid, options)
       },
 
+      validatePrompt(task_eid) {
+        var prompt = _.find(this.prompt_tasks, { eid: task_eid })
+        var prompt_vars = _.filter(this.getAllVariables(), { task_eid })
+
+        var empty_vars = _.filter(prompt_vars, (v) => {
+          return _.size(_.get(v, 'val', '')) == 0
+        })
+
+        prompt.error_msg = ''
+
+        if (_.size(empty_vars) > 0)
+          prompt.error_msg = 'One or more required values are missing'
+
+        return _.size(empty_vars) == 0
+      },
+
       goPrevPrompt() {
         var start_idx = Math.max(this.active_prompt_idx-1, 0)
         this.active_prompt_idx = _.findLastIndex(this.prompt_tasks, { is_prompt: true }, start_idx)
         this.scrollToTask()
       },
 
-      goNextPrompt() {
+      goNextPrompt(task_eid) {
+        if (!this.validatePrompt(task_eid))
+          return
+
         var start_idx = Math.min(this.active_prompt_idx+1, _.size(this.prompt_tasks)-1)
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { is_prompt: true }, start_idx)
         this.scrollToTask()
@@ -432,7 +459,7 @@
             {
               if (v.variable_name == m[3] /* variable name */)
               {
-                str = str.replace(m.input, v.val)
+                str = str.replace(m[0], v.val)
                 _.set(run_pipe, v.set_key, str)
               }
             }

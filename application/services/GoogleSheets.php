@@ -201,7 +201,6 @@ class GoogleSheets implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
         $result = curl_exec($ch);
 
 
@@ -714,7 +713,6 @@ class GoogleSpreadsheet
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_SSLVERSION, 1);
         $result = curl_exec($ch);
         if (!$_ch)
             curl_close($ch);

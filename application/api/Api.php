@@ -107,7 +107,7 @@ class Api
             }
 
             $response = array();
-            $response['errors'][] = $error;
+            $response['error'] = $error;
             if ($echo === false)
                 return $response;
 
@@ -130,7 +130,7 @@ class Api
             }
 
             $response = array();
-            $response['errors'][] = $error;
+            $response['error'] = $error;
             if ($echo === false)
                 return $response;
 
@@ -153,7 +153,7 @@ class Api
             }
 
             $response = array();
-            $response['errors'][] = $error;
+            $response['error'] = $error;
             if ($echo === false)
                 return $response;
 
@@ -387,12 +387,7 @@ class Api
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
 
-
-        // TODO: don't try to set/return an array of errors
-        $error = end($response);
-
-
-        // get the error code and message
+        $error = $response['error'];
         $error_code = $error['code'] ?? '';
         $error_message = $error['message'] ?? '';
 
@@ -458,37 +453,11 @@ class Api
                 break;
         }
 
-/*
         // if a message isn't specified, supply a default message
         if (strlen($error_message ) == 0)
-        {
-            // try to map the code to suitable api error message
-            switch ($error_message)
-            {
-                default:                                         $error_message = _('Operation failed');            break;
-                case \Flexio\Base\Error::UNDEFINED:              $error_message = _('Operation failed');            break;
-                case \Flexio\Base\Error::GENERAL:                $error_message = _('General error');               break;
-                case \Flexio\Base\Error::UNIMPLEMENTED:          $error_message = _('Unimplemented');               break;
-                case \Flexio\Base\Error::NO_DATABASE:            $error_message = _('Database not available');      break;
-                case \Flexio\Base\Error::NO_MODEL:               $error_message = _('Model not available');         break;
-                case \Flexio\Base\Error::NO_SERVICE:             $error_message = _('Service not available');       break;
-                case \Flexio\Base\Error::NO_OBJECT:              $error_message = _('Object not available');        break;
-                case \Flexio\Base\Error::INVALID_SYNTAX:         $error_message = _('Invalid syntax');              break;
-                case \Flexio\Base\Error::MISSING_PARAMETER:      $error_message = _('Missing parameter');           break;
-                case \Flexio\Base\Error::INVALID_PARAMETER:      $error_message = _('Invalid parameter');           break;
-                case \Flexio\Base\Error::CREATE_FAILED:          $error_message = _('Could not create object');     break;
-                case \Flexio\Base\Error::DELETE_FAILED:          $error_message = _('Could not delete object');     break;
-                case \Flexio\Base\Error::WRITE_FAILED:           $error_message = _('Could not write to object');   break;
-                case \Flexio\Base\Error::READ_FAILED:            $error_message = _('Could not read from object');  break;
-                case \Flexio\Base\Error::UNAUTHORIZED:           $error_message = _('Unauthorized');                break;
-                case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:    $error_message = _('Insufficient rights');         break;
-                case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:    $error_message = _('Size limit exceeded');         break;
-            }
+            $error['message'] = \Flexio\Base\Error::getDefaultMessage($error_code);
 
-            // TODO: set error message
-        }
-*/
-
+        $response['error'] = $error;
         $response = @json_encode($response, JSON_PRETTY_PRINT);
         echo $response;
     }

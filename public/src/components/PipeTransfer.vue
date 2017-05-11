@@ -120,12 +120,14 @@
 <script>
   import {
     TASK_TYPE_INPUT,
-    TASK_TYPE_OUTPUT
+    TASK_TYPE_OUTPUT,
+    TASK_TYPE_EMAIL_SEND
   } from '../constants/task-type'
   import {
     CONNECTION_TYPE_DROPBOX,
     CONNECTION_TYPE_GOOGLEDRIVE ,
-    CONNECTION_TYPE_SFTP
+    CONNECTION_TYPE_SFTP,
+    CONNECTION_TYPE_EMAIL
   } from '../constants/connection-type'
   import Btn from './Btn.vue'
   import PipeTransferInputList from './PipeTransferInputList.vue'
@@ -153,19 +155,32 @@
       }
     },
     computed: {
-      input_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_INPUT }) },
-      output_tasks() { return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT }) },
-
+      input_tasks() {
+        return _.filter(this.tasks, { type: TASK_TYPE_INPUT })
+      },
+      output_tasks() {
+        // this is somewhat of a kludge, but it works -- ideally, we'd have a full-fledged
+        // email output connection and/or figure out a way to make outputs and inputs
+        // a little less strict
+        return _.filter(this.tasks, (task) => {
+          return task.type == TASK_TYPE_OUTPUT || task.type == TASK_TYPE_EMAIL_SEND
+        })
+      },
       transform_tasks() {
         return _.reject(this.tasks, (t) => {
           var task_type = _.get(t, 'type')
           return task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT
         })
       },
-
-      has_input()  { return this.input_tasks.length > 0 },
-      has_output() { return this.output_tasks.length > 0 },
-      has_tasks()  { return this.tasks.length > 0 }
+      has_input() {
+        return this.input_tasks.length > 0
+      },
+      has_output() {
+        return this.output_tasks.length > 0
+      },
+      has_tasks() {
+        return this.tasks.length > 0
+      }
     },
     methods: {
       deleteInput(input) {
@@ -179,6 +194,9 @@
         this.$store.dispatch('deletePipeTask', { eid, task_eid })
       },
       addInput(connection) {
+        var eid = this.pipeEid
+        var ctype = _.get(connection, 'connection_type', '')
+
         // insert input after any existing inputs
         var input_idx = _.findLastIndex(this.tasks, (t) => { return _.get(t, 'type') == TASK_TYPE_INPUT })
 
@@ -191,11 +209,10 @@
         var conn_identifier = _.get(connection, 'ename', '')
         conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(connection, 'eid', '')
 
-        var eid = this.pipeEid
         var attrs = {
           index: input_idx,
           metadata: {
-            connection_type: _.get(connection, 'connection_type', '')
+            connection_type: ctype
           },
           type: TASK_TYPE_INPUT,
           params: {
@@ -210,13 +227,29 @@
         this.$store.dispatch('createPipeTask', { eid, attrs })
       },
       addOutput(connection) {
+        var eid = this.pipeEid
+        var ctype = _.get(connection, 'connection_type', '')
+
+        if (ctype == CONNECTION_TYPE_EMAIL)
+        {
+          var attrs = {
+            type: TASK_TYPE_EMAIL_SEND,
+            params: {
+              to: ['${email_address}'],
+              subject: 'Flex.io Pipe Email Output',
+              data: 'attachment'
+            }
+          }
+
+          // add email send task
+          this.$store.dispatch('createPipeTask', { eid, attrs })
+          return
+        }
+
         // always insert at the end of the pipe
         var conn_identifier = _.get(connection, 'ename', '')
         conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(connection, 'eid', '')
 
-        var ctype = _.get(connection, 'connection_type', '')
-
-        var eid = this.pipeEid
         var attrs = {
           metadata: {
             connection_type: ctype
