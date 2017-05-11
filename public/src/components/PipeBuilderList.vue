@@ -2,7 +2,7 @@
   <div class="overflow-y-auto" @scroll="onScroll">
     <ui-alert
       class="pl3 pr3 pr4-l relative"
-      style="top: -1rem; margin-bottom: 0"
+      style="top: -1rem"
       type="success"
       :dismissible="false"
       @dismiss="show_success = false"
@@ -12,7 +12,7 @@
     </ui-alert>
     <ui-alert
       class="pl3 pr3 pr4-l relative"
-      style="top: -1rem; margin-bottom: 0"
+      style="top: -1rem"
       type="error"
       @dismiss="show_error = false"
       v-show="show_error"

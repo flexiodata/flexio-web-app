@@ -56,7 +56,7 @@
       <!-- insert before button -->
       <div
         class="absolute"
-        style="top: -16px; left: 8px"
+        style="top: -12px; left: 8px"
         v-show="!show_progress"
         v-if="index==0 && !show_progress && !isPrompting && showInsertBeforeFirstTask"
       >
