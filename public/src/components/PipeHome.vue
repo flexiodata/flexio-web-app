@@ -255,7 +255,8 @@
             return _.assign({
               is_prompt: true,
               has_variables: true,
-              variables: matched_vars
+              variables: matched_vars,
+              error_msg: ''
             }, task)
           }
            else if (_.get(task, 'type') == TASK_TYPE_COMMENT)
@@ -408,6 +409,22 @@
         this.$scrollTo('#'+task.eid, options)
       },
 
+      validatePrompt(task_eid) {
+        var prompt = _.find(this.prompt_tasks, { eid: task_eid })
+        var prompt_vars = _.filter(this.getAllVariables(), { task_eid })
+
+        var empty_vars = _.filter(prompt_vars, (v) => {
+          return _.size(_.get(v, 'val', '')) == 0
+        })
+
+        prompt.error_msg = ''
+
+        if (_.size(empty_vars) > 0)
+          prompt.error_msg = 'One or more required values are missing'
+
+        return _.size(empty_vars) == 0
+      },
+
       goPrevPrompt() {
         var start_idx = Math.max(this.active_prompt_idx-1, 0)
         this.active_prompt_idx = _.findLastIndex(this.prompt_tasks, { is_prompt: true }, start_idx)
@@ -415,6 +432,9 @@
       },
 
       goNextPrompt(task_eid) {
+        if (!this.validatePrompt(task_eid))
+          return
+
         var start_idx = Math.min(this.active_prompt_idx+1, _.size(this.prompt_tasks)-1)
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { is_prompt: true }, start_idx)
         this.scrollToTask()

@@ -1,5 +1,13 @@
 <template>
   <div>
+    <ui-alert
+      type="error"
+      @dismiss="show_error = false"
+      v-show="show_error && error_msg.length > 0"
+    >
+      {{error_msg}}
+    </ui-alert>
+
     <task-configure-variable-item
       class="mb3"
       :item="v"
@@ -59,9 +67,17 @@
       Btn,
       TaskConfigureVariableItem
     },
+    data() {
+      return {
+        show_error: false
+      }
+    },
     computed: {
       task_eid() {
         return _.get(this.item, 'eid', '')
+      },
+      error_msg() {
+        return _.get(this.item, 'error_msg', '')
       }
     },
     methods: {
@@ -70,6 +86,11 @@
       },
       emitGoNextPrompt() {
         this.$emit('go-next-prompt', this.task_eid)
+
+        this.$nextTick(() => {
+          if (this.error_msg.length > 0)
+            this.show_error = true
+        })
       }
     }
   }
