@@ -193,6 +193,7 @@
         var set_key = ''
 
         var prompts = _.map(this.tasks, (task) => {
+          var task_eid = _.get(task, 'eid')
           var params = _.get(task, 'params', {})
 
           var matched_vars = []
@@ -204,8 +205,11 @@
               m = VARIABLE_REGEX.exec(val)
               if (m)
               {
+                variable_idx = _.size(matched_vars)
+                variable_set_key = 'prompt_tasks['+task_idx+'].variables['+variable_idx+'].val'
+
                 matched_vars.push({
-                  task_eid: _.get(task, 'eid'),
+                  task_eid,
                   task_idx,
                   variable_idx,
                   variable_set_key,
@@ -213,8 +217,7 @@
                   type: m[2],
                   variable_name: m[3],
                   default_val: m[5] || '',
-                  val: m[5] || '',
-                  required: true
+                  val: m[5] || ''
                 })
               }
             } while (m)
@@ -226,9 +229,6 @@
               return getVariable(obj, set_key)
 
             _.each(obj, (v, k) => {
-              variable_idx = _.size(matched_vars)
-              variable_set_key = 'prompt_tasks['+task_idx+'].variables['+variable_idx+'].val'
-
               // recurse over the array to find any variables in it
               if (_.isArray(v))
                 return _.each(v, (item, idx) => { getChildVariables(v[idx], set_key+'.'+k+'['+idx+']') })
