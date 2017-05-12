@@ -178,7 +178,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
         $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if ($http_response_code >= 400 || $result !== false)
+        if ($http_response_code >= 400 || $result !== true)
         {
             $error_object = @json_decode($error_payload, true);
             $message = $error_object['error']['message'] ?? '';
