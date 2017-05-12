@@ -94,8 +94,8 @@
             // since we're outputting raw text in a <pre> tag,
             // I don't think we want to escape the text here
             //str = _.escape(str)
-            str = str.replace(/\r/g, '\r\n');
-            str = str.replace(/\r\n\n/g, '\r\n');
+            str = str.replace(/\r/g, '\r\n')
+            str = str.replace(/\r\n\n/g, '\r\n')
           }
 
           state.text += str

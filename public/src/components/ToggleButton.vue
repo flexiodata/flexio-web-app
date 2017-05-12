@@ -9,7 +9,9 @@
   export default {
     props: ['checked'],
     computed: {
-      uid() { return _.uniqueId('toggle-'); }
+      uid() {
+        return _.uniqueId('toggle-')
+      }
     },
     methods: {
       click: function(evt) {
