@@ -51,9 +51,16 @@
       <btn
         btn-md
         btn-primary
+        class="ttu b mr2"
+        @click="openCopyPipeModal"
+        v-if="is_superuser"
+      >Get Template JSON</btn>
+      <btn
+        btn-md
+        btn-primary
         class="ttu b"
-        v-if="isPrompting || isProcessRunning"
         @click="cancelProcess"
+        v-if="isPrompting || isProcessRunning"
       >Cancel</btn>
       <div
         class="hint--bottom-left"
@@ -79,14 +86,23 @@
         @click="setPipeView('builder')"
       >Pipe Builder</div>
     </div>
+
+    <!-- copy pipe modal -->
+    <copy-pipe-modal
+      ref="modal-copy-pipe"
+      @hide="show_copy_pipe_modal = false"
+      v-if="show_copy_pipe_modal"
+    ></copy-pipe-modal>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_TYPE_INPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
+  import CopyPipeModal from './CopyPipeModal.vue'
 
   export default {
     props: {
@@ -107,50 +123,49 @@
     },
     components: {
       Btn,
-      InlineEditText
+      InlineEditText,
+      CopyPipeModal
+    },
+    data() {
+      return {
+        show_copy_pipe_modal: false
+      }
     },
     computed: {
       pipe() {
         return _.get(this.$store, 'state.objects.'+this.pipeEid, {})
       },
-
       pipe_name() {
         return _.get(this.pipe, 'name', '')
       },
-
       pipe_ename() {
         return _.get(this.pipe, 'ename', '')
       },
-
       pipe_description() {
         return _.get(this.pipe, 'description', '')
       },
-
       tasks() {
         return _.get(this.pipe, 'task', [])
       },
-
+      is_superuser() {
+        // limit to @flex.io users for now
+        var user_email = _.get(this.getActiveUser(), 'email', '')
+        return _.includes(user_email, '@flex.io') && _.get(this.$route, 'query.su', false) !== false
+      },
       input_tasks() {
         return _.filter(this.tasks, { type: TASK_TYPE_INPUT })
       },
-
       is_run_allowed() {
-        // only allow run after a step has been added
         return this.tasks.length > 0
-
-        /*
-        if (this.input_tasks.length == 0)
-          return false
-        return true
-        */
       },
-
       run_button_tooltip() {
         return ''
-        // return this.is_run_allowed ? '' : 'Pipes must have an input or execute step in order to be run'
       }
     },
     methods: {
+      ...mapGetters([
+        'getActiveUser'
+      ]),
       setPipeView(view) {
         this.$emit('set-pipe-view', view)
       },
@@ -165,6 +180,10 @@
       },
       cancelProcess() {
         this.$emit('cancel-process')
+      },
+      openCopyPipeModal() {
+        this.show_copy_pipe_modal = true
+        this.$nextTick(() => { this.$refs['modal-copy-pipe'].open(this.pipe) })
       }
     }
   }

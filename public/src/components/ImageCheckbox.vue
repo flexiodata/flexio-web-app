@@ -16,7 +16,9 @@
       }
     },
     computed: {
-      uid() { return _.uniqueId('checkbox-'); }
+      uid() {
+        return _.uniqueId('checkbox-')
+      }
     },
     methods: {
       click: function(evt) {

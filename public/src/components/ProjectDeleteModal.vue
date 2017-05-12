@@ -65,7 +65,7 @@
     },
     watch: {
       'project.name'(value) {
-        this.$emit('input', value);
+        this.$emit('input', value)
       }
     },
     computed: {
