@@ -54,7 +54,7 @@
         class="ttu b mr2"
         @click="openCopyPipeModal"
         v-if="is_superuser"
-      >Copy Pipe JSON</btn>
+      >Get Template JSON</btn>
       <btn
         btn-md
         btn-primary

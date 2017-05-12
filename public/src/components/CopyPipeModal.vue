@@ -8,7 +8,7 @@
     <div slot="header" class="w-100">
       <div class="flex flex-row items-center">
         <div class="flex-fill">
-          <span class="f4">Copy Pipe</span>
+          <span class="f4">Pipe Template JSON</span>
         </div>
       </div>
     </div>
