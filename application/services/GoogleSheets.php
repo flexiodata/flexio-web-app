@@ -101,7 +101,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
                 $path = substr($path,1);
             $spreadsheet = $this->getSpreadsheetByTitle($path);
             if (!$spreadsheet)
-                return null;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Cannot access sheet's worksheets");
             $worksheets = $spreadsheet->getWorksheets();
 
             $files = [];
@@ -201,8 +201,18 @@ class GoogleSheets implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        $result = curl_exec($ch);
 
+        $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($http_response_code >= 400)
+        {
+            curl_close($ch);
+            
+            if ($http_response_code == 401)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, "Access unauthorized");
+                 else
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Unable to access sheet");
+        }
 
         $doc = new \DOMDocument;
         if ($doc->loadXML($result))
@@ -310,22 +320,53 @@ class GoogleSheets implements \Flexio\Services\IConnection
         $buf = '';
         $info = array( 'currow' => 1, 'data' => [] );
 
+        $http_response_code = false;
+        $error_payload = '';
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://spreadsheets.google.com/feeds/cells/$spreadsheet_id/$worksheet_id/private/full");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token, 'GData-Version: 3.0']);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$buf, &$info) {
-            $buf .= $data;
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$buf, &$info, &$http_response_code, &$error_payload) {
+            if ($http_response_code === false)
+            {
+                $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            }
+            if ($http_response_code >= 400)
+            {
+                if (strlen($error_payload) < 65536)
+                    $error_payload .= $data;
+                return strlen($data);
+            }
+             else
+            {
+                $buf .= $data;
 
-            if (strlen($buf) > 500000)
-                self::processChunk($buf, $info, $callback, false);
+                if (strlen($buf) > 500000)
+                    self::processChunk($buf, $info, $callback, false);
 
-            return strlen($data);
+                return strlen($data);
+            }
         });
         $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
+        if ($http_response_code >= 400 || $result !== true)
+        {
+            $error_object = @json_decode($error_payload, true);
+            $message = $error_object['error']['message'] ?? '';
+
+            $exception_message = "Read failed";
+            if ($http_response_code >= 400)
+                $exception_message .= ". HTTP Code: $http_response_code";
+            if (strlen($message) > 0)
+                $exception_message .= ". Google API Error Message: $message";
+            
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $exception_message);
+        }
+        
         // process last remaining chunk
 
         self::processChunk($buf, $info, $callback, true);
@@ -484,9 +525,18 @@ class GoogleSheets implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
 
+        $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        if ($http_response_code >= 400)
+        {
+            if ($http_response_code == 401)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, "Access unauthorized");
+                 else
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Unable to create sheet");
+        }
 
         $result = @json_decode($result, true);
 
@@ -591,9 +641,17 @@ class GoogleSheets implements \Flexio\Services\IConnection
                 if (isset($params['token_expires']) && !is_null($params['token_expires']) && $params['token_expires'] > 0)
                     $token->setEndOfLife($params['token_expires']);
 
-                $token = $oauth->refreshAccessToken($token);
-                if (!$token)
-                    return null;
+                try
+                {
+                    $token = $oauth->refreshAccessToken($token);
+                    if (!$token)
+                        return null;
+                }
+                catch (\OAuth\Common\Http\Exception\TokenResponseException $e)
+                {
+                    // this happens when offline
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");                    
+                }
 
                 $object = new self;
                 $object->access_token = $token->getAccessToken();
@@ -699,10 +757,13 @@ class GoogleSpreadsheet
     public $title = '';
     public $worksheets = [];
 
-    public function getWorksheets($_ch = null) // TODO: set parameter/return types
+    public function getWorksheets($_ch = null) : array
     {
         if (count($this->worksheets) > 0)
+        {
+            // use cached copy
             return $this->worksheets;
+        }
 
         if (!$_ch)
             $ch = curl_init();
@@ -713,9 +774,19 @@ class GoogleSpreadsheet
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
         $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if (!$_ch)
             curl_close($ch);
+
+        if ($http_response_code >= 400)
+        {
+            if ($http_response_code == 401)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, "Access unauthorized");
+                 else
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Cannot access sheet's worksheets");
+        }
 
         $this->worksheets = [];
 
