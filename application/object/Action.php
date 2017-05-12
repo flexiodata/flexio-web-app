@@ -19,12 +19,12 @@ namespace Flexio\Object;
 class Action
 {
     const TYPE_UNDEFINED        = '';                        // undefined
-    const TYPE_READ             = 'action.read';             // ability to read the properties of an object
-    const TYPE_WRITE            = 'action.write';            // ability to write the properties of an object
-    const TYPE_DELETE           = 'action.delete';           // ability to delete an object
-    const TYPE_EXECUTE          = 'action.execute';          // ability to run a process object
-    const TYPE_READ_RIGHTS      = 'action.read.rights';      // ability to see rights
-    const TYPE_WRITE_RIGHTS     = 'action.write.rights';     // ability to change rights
+    const TYPE_READ             = 'read';             // ability to read the properties of an object
+    const TYPE_WRITE            = 'write';            // ability to write the properties of an object
+    const TYPE_DELETE           = 'delete';           // ability to delete an object
+    const TYPE_EXECUTE          = 'execute';          // ability to run a process object
+    const TYPE_READ_RIGHTS      = 'read.rights';      // ability to see rights
+    const TYPE_WRITE_RIGHTS     = 'write.rights';     // ability to change rights
 
 
     private $objects;

@@ -33,32 +33,32 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Object\Action::TYPE_READ;
-        $expected = 'action.read';
+        $expected = 'read';
         TestCheck::assertString('A.2', 'Action type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\Action::TYPE_WRITE;
-        $expected = 'action.write';
+        $expected = 'write';
         TestCheck::assertString('A.3', 'Action type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\Action::TYPE_DELETE;
-        $expected = 'action.delete';
+        $expected = 'delete';
         TestCheck::assertString('A.4', 'Action type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\Action::TYPE_EXECUTE;
-        $expected = 'action.execute';
+        $expected = 'execute';
         TestCheck::assertString('A.5', 'Action type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\Action::TYPE_READ_RIGHTS;
-        $expected = 'action.read.rights';
+        $expected = 'read.rights';
         TestCheck::assertString('A.6', 'Action type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\Action::TYPE_WRITE_RIGHTS;
-        $expected = 'action.write.rights';
+        $expected = 'write.rights';
         TestCheck::assertString('A.7', 'Action type',  $actual, $expected, $results);
     }
 }
