@@ -235,6 +235,9 @@ class Base implements IObject
 
     public function allows(string $user_eid, string $action) : bool
     {
+        return true;
+
+/*
         // note: like the status, read the rights fresh everytime to make
         // sure we have the most current information
 
@@ -286,10 +289,21 @@ class Base implements IObject
 
         // user isn't the owner or part of the group
         return false;
+*/
+    }
+
+    public function grant(array $rights = null)
+    {
+        // TODO: implement
+        return $this;
     }
 
     public function rights(\Flexio\Object\Acl $acl = null) : \Flexio\Object\Base
     {
+        return $this;
+
+        // TODO: set the rights
+/*
         // if rights aren't specified, create a default set of rights without
         // any users/actions specified; this allows us to reset the rights
         if (!isset($acl))
@@ -299,6 +313,7 @@ class Base implements IObject
         $rights = json_encode($acl->get());
         $this->getModel()->setRights($this->getEid(), $rights);
         return $this;
+*/
     }
 
     protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type
