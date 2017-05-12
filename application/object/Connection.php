@@ -295,7 +295,26 @@ class Connection extends \Flexio\Object\Base
             "token_expires" : null,
             "connection_type" : null,
             "connection_status" : null,
-            "rights": null,
+            "rights": {
+                "owner": {
+                    "read": true,
+                    "write": true,
+                    "execute": true,
+                    "delete": true
+                },
+                "member": {
+                    "read": true,
+                    "write": true,
+                    "execute": true,
+                    "delete": false
+                },
+                "public": {
+                    "read": false,
+                    "write": false,
+                    "execute": false,
+                    "delete": false
+                }
+            },
             "project='.\Model::EDGE_MEMBER_OF.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_PROJECT.'",
