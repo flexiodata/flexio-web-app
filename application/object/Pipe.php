@@ -242,26 +242,7 @@ class Pipe extends \Flexio\Object\Base
             "ename" : null,
             "name" : null,
             "description" : null,
-            "rights": {
-                "owner": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": true
-                },
-                "member": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": false
-                },
-                "public": {
-                    "read": false,
-                    "write": false,
-                    "execute": false,
-                    "delete": false
-                }
-            },
+            "rights": null,
             "project='.\Model::EDGE_MEMBER_OF.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_PROJECT.'",
@@ -309,6 +290,30 @@ class Pipe extends \Flexio\Object\Base
         $schedule = @json_decode($properties['schedule'],true);
         if ($schedule !== false)
             $properties['schedule'] = $schedule;
+
+        // populate the rights node with a sample
+        $properties['rights'] = json_decode('
+            {
+                "owner": {
+                    "read": true,
+                    "write": true,
+                    "execute": true,
+                    "delete": true
+                },
+                "member": {
+                    "read": true,
+                    "write": true,
+                    "execute": true,
+                    "delete": false
+                },
+                "public": {
+                    "read": false,
+                    "write": false,
+                    "execute": false,
+                    "delete": false
+                }
+            }
+        ',true);
 
         // return the properties
         return $properties;

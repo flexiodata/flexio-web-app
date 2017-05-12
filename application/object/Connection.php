@@ -295,26 +295,7 @@ class Connection extends \Flexio\Object\Base
             "token_expires" : null,
             "connection_type" : null,
             "connection_status" : null,
-            "rights": {
-                "owner": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": true
-                },
-                "member": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": false
-                },
-                "public": {
-                    "read": false,
-                    "write": false,
-                    "execute": false,
-                    "delete": false
-                }
-            },
+            "rights": null,
             "project='.\Model::EDGE_MEMBER_OF.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_PROJECT.'",
@@ -347,6 +328,30 @@ class Connection extends \Flexio\Object\Base
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if (!$properties)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // populate the rights node with a sample
+        $properties['rights'] = json_decode('
+            {
+                "owner": {
+                    "read": true,
+                    "write": true,
+                    "execute": true,
+                    "delete": true
+                },
+                "member": {
+                    "read": true,
+                    "write": true,
+                    "execute": true,
+                    "delete": false
+                },
+                "public": {
+                    "read": false,
+                    "write": false,
+                    "execute": false,
+                    "delete": false
+                }
+            }
+        ',true);
 
         return $properties;
     }
