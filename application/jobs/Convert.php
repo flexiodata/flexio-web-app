@@ -185,6 +185,10 @@ class Convert extends \Flexio\Jobs\Base
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
+        catch (\Error $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
