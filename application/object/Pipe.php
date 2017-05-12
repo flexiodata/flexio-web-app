@@ -295,22 +295,22 @@ class Pipe extends \Flexio\Object\Base
         $properties['rights'] = json_decode('
             {
                 "owner": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": true
+                    "action.read": true,
+                    "action.write": true,
+                    "action.execute": true,
+                    "action.delete": true
                 },
                 "member": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": false
+                    "action.read": true,
+                    "action.write": true,
+                    "action.execute": true,
+                    "action.delete": false
                 },
                 "public": {
-                    "read": false,
-                    "write": false,
-                    "execute": false,
-                    "delete": false
+                    "action.read": false,
+                    "action.write": false,
+                    "action.execute": false,
+                    "action.delete": false
                 }
             }
         ',true);
