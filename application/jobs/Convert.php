@@ -141,7 +141,23 @@ class Convert extends \Flexio\Jobs\Base
         if (!isset($GLOBALS['pdfparser_included']))
         {
             $GLOBALS['pdfparser_included'] = true;
-            set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'pdfparser-0.9.25' . DIRECTORY_SEPARATOR . 'src'));
+
+            spl_autoload_register(function ($class) {
+                $class = ltrim($class, '\\');
+                if (strpos($class, 'Smalot\\') === 0)
+                {
+                    $sl = strpos($class,'\\', 1);
+                    $class = str_replace('\\', '/', $class);
+                    $class = dirname(dirname(__DIR__)) . '/library/pdfparser-0.9.25/src/Smalot/' . substr($class,$sl+1) . '.php';
+                    if (file_exists($class))
+                    {
+                        require_once $class;
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
         }
 
         require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'tcpdf-6.2.12'. DIRECTORY_SEPARATOR . 'tcpdf_parser.php';
