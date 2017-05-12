@@ -172,13 +172,18 @@
       setPipeView(view) {
         if (_.includes([PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER], view))
         {
+          // don't strip off query string
+          var query = _.get(this.$route, 'query', undefined)
+
           this.pipe_view = view
           var eid = this.eid
           var params = { eid, view }
+
+          // if we're in the builder view, make sure we try to include the state
           if (view == PIPEHOME_VIEW_BUILDER)
             _.assign(params, { state: _.get(this.$route, 'params.state', undefined) })
 
-          this.$router.replace({ name: ROUTE_PIPEHOME, params })
+          this.$router.replace({ name: ROUTE_PIPEHOME, params, query })
         }
       },
 

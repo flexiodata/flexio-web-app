@@ -108,13 +108,6 @@
       },
       onHide() {
         this.$emit('hide', this)
-      },
-      doCopy() {
-        new Clipboard('.btn', {
-            text: function(trigger) {
-                return 'test'
-            }
-        });
       }
     }
   }
