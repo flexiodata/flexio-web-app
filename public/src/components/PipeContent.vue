@@ -5,7 +5,7 @@
   <div v-else-if="is_image">
     <img :stream-eid="streamEid" :src="stream_content_url" class="dib" style="max-height: 360px">
   </div>
-  <div v-else-if="is_flexio_html" class="bg-white relative overflow-hidden" style="height: 360px">
+  <div v-else-if="is_flexio_html" class="bg-white ba b--black-10" style="height: 360px">
     <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
   </div>
   <div v-else-if="is_pdf" class="bg-white relative overflow-hidden" style="height: 360px">
