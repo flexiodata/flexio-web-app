@@ -5,6 +5,9 @@
   <div v-else-if="is_image">
     <img :stream-eid="streamEid" :src="stream_content_url" class="dib" style="max-height: 360px">
   </div>
+  <div v-else-if="is_flexio_html" class="bg-white relative overflow-hidden" style="height: 360px">
+    <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
+  </div>
   <div v-else-if="is_pdf" class="bg-white relative overflow-hidden" style="height: 360px">
     <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
   </div>
@@ -44,6 +47,9 @@
       },
 
       stream_content_url() {
+        if (this.is_flexio_html)
+          return API_ROOT+'/streams/'+this.streamEid+'/content?content_type=text/html'
+
         return API_ROOT+'/streams/'+this.streamEid+'/content'
       },
 
@@ -67,6 +73,10 @@
           mt.MIMETYPE_IMAGE_GIF,
           mt.MIMETYPE_IMAGE_TIFF
         ], this.mime_type)
+      },
+
+      is_flexio_html() {
+        return this.mime_type == mt.MIMETYPE_APPLICATION_VND_HTML
       },
 
       is_pdf() {
