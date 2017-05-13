@@ -2,6 +2,7 @@
   <ui-modal
     ref="dialog"
     dismiss-on="close-button"
+    @open="onOpen"
     @hide="onHide"
   >
     <div slot="header" class="w-100">
@@ -60,7 +61,7 @@
         ></ui-textbox>
       </form>
 
-      <ui-collapsible class="mt4" title="Permissions" disable-ripple open>
+      <ui-collapsible class="mt4" title="Permissions" open disable-ripple v-if="show_permissions">
         <rights-list :object="pipe" @change="onRightsChanged"></rights-list>
       </ui-collapsible>
     </div>
@@ -128,6 +129,7 @@
     data() {
       return {
         mode: 'edit-pipe',
+        show_permissions: false,
         ss_errors: {},
         pipe: _.extend({}, defaultAttrs()),
         original_pipe: _.extend({}, defaultAttrs())
@@ -199,8 +201,12 @@
         this.pipe = _.extend({}, defaultAttrs(), attrs)
         this.original_pipe = _.extend({}, defaultAttrs(), attrs)
       },
+      onOpen() {
+        this.$nextTick(() => { this.show_permissions = true })
+      },
       onHide() {
         this.reset()
+        this.show_permissions = false
       },
       onRightsChanged(rights) {
         this.pipe = _.assign({}, this.pipe, { rights })

@@ -64,7 +64,6 @@
         return val ? "allowed" : "not allowed"
       },
       isOwner(role) {
-        console.log(role)
         return role == MEMBER_TYPE_OWNER
       },
       toggleRight(role, key, val) {
