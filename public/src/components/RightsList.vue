@@ -15,7 +15,8 @@
               type="checkbox"
               :checked="val"
               :disabled="isOwner(role)"
-              @change="toggleRight(role, key, val)">
+              @change="toggleRight(role, key, val)"
+              v-show="isPermissionAllowed(role, key)">
           </td>
         </tr>
       </tbody>
@@ -24,7 +25,8 @@
 </template>
 
 <script>
-  import { MEMBER_TYPE_OWNER } from '../constants/member-type'
+  import { MEMBER_TYPE_OWNER, MEMBER_TYPE_PUBLIC } from '../constants/member-type'
+  import { ACTION_TYPE_DELETE } from '../constants/action-type'
   import * as members from '../constants/member-info'
   import * as actions from '../constants/action-info'
 
@@ -65,6 +67,9 @@
       },
       isOwner(role) {
         return role == MEMBER_TYPE_OWNER
+      },
+      isPermissionAllowed(role, action) {
+        return role == MEMBER_TYPE_PUBLIC && action == ACTION_TYPE_DELETE ? false : true
       },
       toggleRight(role, key, val) {
         var new_rights = _.assign({}, this.rights)
