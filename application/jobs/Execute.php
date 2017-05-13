@@ -114,13 +114,15 @@ class Execute extends \Flexio\Jobs\Base
                 // create the output stream
                 $outstream_properties = array(
                     'name' => $instream->getName() . '.html',
-                    'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_HTML
+                    'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_HTML,
+                    'size' => strlen($code)
                 );
 
                 $outstream->set($outstream_properties);
 
                 $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
                 $streamwriter->write($code);
+                
                 return true;
                 
                 break;
