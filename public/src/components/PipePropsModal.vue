@@ -59,6 +59,10 @@
           v-model="pipe.description"
         ></ui-textbox>
       </form>
+
+      <ui-collapsible class="mt4" title="Permissions" disable-ripple open>
+        <rights-list :object="pipe" @change="onRightsChanged"></rights-list>
+      </ui-collapsible>
     </div>
 
     <div slot="footer" class="flex flex-row w-100">
@@ -86,6 +90,7 @@
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
   import UrlInputList from './UrlInputList.vue'
+  import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
 
   const defaultAttrs = () => {
@@ -106,7 +111,8 @@
       ConnectionChooserList,
       FileExplorerBar,
       FileChooserList,
-      UrlInputList
+      UrlInputList,
+      RightsList
     },
     watch: {
       'pipe.ename': function(val, old_val) {
@@ -195,7 +201,18 @@
       },
       onHide() {
         this.reset()
+      },
+      onRightsChanged(rights) {
+        this.pipe = _.assign({}, this.pipe, { rights })
       }
     }
   }
 </script>
+
+<style>
+  .ui-collapsible__header {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    min-height: auto;
+  }
+</style>
