@@ -4,6 +4,12 @@
   </div>
   <code-editor
     class="h-100 overflow-y-auto"
+    lang="text/html"
+    :val="state.text"
+    v-else-if="isHtml"
+  ></code-editor>
+  <code-editor
+    class="h-100 overflow-y-auto"
     lang="application/json"
     :val="state.text"
     :options="{ lineNumbers: false }"
@@ -29,7 +35,24 @@
   }
 
   export default {
-    props: ['stream-eid', 'content-url', 'is-json'],
+    props: {
+      'stream-eid': {
+        type: String,
+        required: true
+      },
+      'content-url': {
+        type: String,
+        required: true
+      },
+      'is-html': {
+        type: Boolean,
+        default: false
+      },
+      'is-json': {
+        type: Boolean,
+        default: false
+      }
+    },
     components: {
       Spinner,
       CodeEditor
