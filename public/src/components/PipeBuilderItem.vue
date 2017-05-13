@@ -368,7 +368,7 @@
       },
       orig_code() {
         var code = _.get(this, 'task.params.code', '')
-        try { return atob(code) } catch(e) { return '' }
+        try { return decodeURIComponent(escape(atob(code))) } catch(e) { return '' }
       },
       is_changed() {
         if (!this.is_inited)
@@ -515,9 +515,6 @@
         var code = _.get(this, 'item.params.code', '')
         try { return decodeURIComponent(escape(atob(code))) } catch(e) { return e }
       },
-
-
-
       getBase64Code(code) {
         try { return btoa(unescape(encodeURIComponent(code))) } catch(e) { return e }
       },
