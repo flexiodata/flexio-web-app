@@ -14,6 +14,7 @@
             <input
               type="checkbox"
               :checked="val"
+              :disabled="isOwner(role)"
               @change="toggleRight(role, key, val)">
           </td>
         </tr>
@@ -23,8 +24,9 @@
 </template>
 
 <script>
-  import * as actions from '../constants/action-info'
+  import { MEMBER_TYPE_OWNER } from '../constants/member-type'
   import * as members from '../constants/member-info'
+  import * as actions from '../constants/action-info'
 
   export default {
     props: {
@@ -60,6 +62,10 @@
       },
       getValueString(val) {
         return val ? "allowed" : "not allowed"
+      },
+      isOwner(role) {
+        console.log(role)
+        return role == MEMBER_TYPE_OWNER
       },
       toggleRight(role, key, val) {
         var new_rights = _.assign({}, this.rights)

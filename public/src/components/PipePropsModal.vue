@@ -208,11 +208,3 @@
     }
   }
 </script>
-
-<style>
-  .ui-collapsible__header {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    min-height: auto;
-  }
-</style>
