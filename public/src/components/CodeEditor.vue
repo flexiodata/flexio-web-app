@@ -12,7 +12,10 @@
 
 <script>
   import CodeMirror from 'codemirror'
+  import {} from 'codemirror/mode/css/css'
   import {} from 'codemirror/mode/javascript/javascript'
+  import {} from 'codemirror/mode/xml/xml'
+  import {} from 'codemirror/mode/htmlmixed/htmlmixed'
   import {} from 'codemirror/mode/python/python'
 
   export default {
@@ -46,7 +49,7 @@
     mounted() {
       var opts = {
         lineNumbers: true,
-        mode: this.lang
+        mode: this.getLang()
       }
 
       if (this.lang == 'application/json')
@@ -64,6 +67,9 @@
       })
     },
     methods: {
+      getLang() {
+        return this.lang == 'html' ? 'htmlmixed' : this.lang
+      },
       setValue(val) {
         this.code_text = val
         this.editor.setValue(val)
