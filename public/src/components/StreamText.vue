@@ -6,13 +6,14 @@
     class="h-100 overflow-y-auto"
     lang="text/html"
     :val="state.text"
+    :options="{ lineNumbers: false, readOnly: true }"
     v-else-if="isHtml"
   ></code-editor>
   <code-editor
     class="h-100 overflow-y-auto"
     lang="application/json"
     :val="state.text"
-    :options="{ lineNumbers: false }"
+    :options="{ lineNumbers: false, readOnly: true }"
     v-else-if="isJson"
   ></code-editor>
   <pre v-else class="monospace ma0 pa2 h-100 overflow-auto" @scroll="onScroll">{{state.text}}</pre>
