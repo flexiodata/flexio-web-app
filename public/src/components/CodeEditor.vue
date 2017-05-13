@@ -47,9 +47,19 @@
       this.code_text = this.val
     },
     mounted() {
+      var lang = this.lang
+
       var opts = {
         lineNumbers: true,
-        mode: this.getLang()
+        mode: this.getLang(),
+        extraKeys: {
+          // indent with 4 spaces for python and 2 spaces for all other languages
+          Tab: function(cm) {
+            //var spaces = Array(cm.getOption('indentUnit') + 1).join(' ')
+            var spaces = lang == 'python' ? '    ' : '  '
+            cm.replaceSelection(spaces)
+          }
+        }
       }
 
       if (this.lang == 'application/json')
