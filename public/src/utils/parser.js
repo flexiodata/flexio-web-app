@@ -864,7 +864,7 @@
 
     this.args.execute = ['lang'/*, 'code'*/];
     this.hints.execute = {
-      "lang":       [ /*'javascript',*/ 'python' ]
+      "lang":       [ /*'javascript',*/ 'python', 'html' ]
     };
     this.keywords.execute = function(str)
     {

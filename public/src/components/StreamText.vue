@@ -4,9 +4,16 @@
   </div>
   <code-editor
     class="h-100 overflow-y-auto"
+    lang="text/html"
+    :val="state.text"
+    :options="{ lineNumbers: false, readOnly: true }"
+    v-else-if="isHtml"
+  ></code-editor>
+  <code-editor
+    class="h-100 overflow-y-auto"
     lang="application/json"
     :val="state.text"
-    :options="{ lineNumbers: false }"
+    :options="{ lineNumbers: false, readOnly: true }"
     v-else-if="isJson"
   ></code-editor>
   <pre v-else class="monospace ma0 pa2 h-100 overflow-auto" @scroll="onScroll">{{state.text}}</pre>
@@ -29,7 +36,24 @@
   }
 
   export default {
-    props: ['stream-eid', 'content-url', 'is-json'],
+    props: {
+      'stream-eid': {
+        type: String,
+        required: true
+      },
+      'content-url': {
+        type: String,
+        required: true
+      },
+      'is-html': {
+        type: Boolean,
+        default: false
+      },
+      'is-json': {
+        type: Boolean,
+        default: false
+      }
+    },
     components: {
       Spinner,
       CodeEditor

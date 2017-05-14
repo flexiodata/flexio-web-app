@@ -105,6 +105,27 @@ class Execute extends \Flexio\Jobs\Base
 
                 break;
 
+            case 'html':
+                $program_type = 'html';
+                $program_extension = 'html';
+
+                $code = base64_decode($code);
+
+                // create the output stream
+                $outstream_properties = array(
+                    'name' => $instream->getName() . '.html',
+                    'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_HTML,
+                    'size' => strlen($code)
+                );
+
+                $outstream->set($outstream_properties);
+
+                $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+                $streamwriter->write($code);
+                
+                return true;
+                
+                break;
 /*
             case 'javascript':
                 $program_type = 'javascript';
@@ -124,6 +145,11 @@ class Execute extends \Flexio\Jobs\Base
                 // unknown language
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
+
+
+
+
+
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = null; // created below

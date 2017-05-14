@@ -5,11 +5,14 @@
   <div v-else-if="is_image">
     <img :stream-eid="streamEid" :src="stream_content_url" class="dib" style="max-height: 360px">
   </div>
+  <div v-else-if="is_flexio_html" class="bg-white ba b--black-10" style="height: 360px">
+    <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
+  </div>
   <div v-else-if="is_pdf" class="bg-white relative overflow-hidden" style="height: 360px">
     <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
   </div>
-  <div v-else-if="is_json || is_text" class="bg-white ba b--black-10" style="height: 360px">
-    <stream-text :stream-eid="streamEid" :content-url="stream_content_url" :is-json="is_json"></stream-text>
+  <div v-else-if="is_json || is_html || is_text" class="bg-white ba b--black-10" style="height: 360px">
+    <stream-text :stream-eid="streamEid" :content-url="stream_content_url" :is-json="is_json" :is-html="is_html"></stream-text>
   </div>
   <div v-else-if="is_table" class="bg-white ba b--black-10" style="height: 360px">
     <stream-grid :stream-eid="streamEid" :content-url="stream_content_url" :task-json="taskJson"></stream-grid>
@@ -44,6 +47,9 @@
       },
 
       stream_content_url() {
+        if (this.is_flexio_html)
+          return API_ROOT+'/streams/'+this.streamEid+'/content?content_type=text/html'
+
         return API_ROOT+'/streams/'+this.streamEid+'/content'
       },
 
@@ -69,8 +75,16 @@
         ], this.mime_type)
       },
 
+      is_flexio_html() {
+        return this.mime_type == mt.MIMETYPE_APPLICATION_VND_HTML
+      },
+
       is_pdf() {
         return this.mime_type == mt.MIMETYPE_APPLICATION_PDF
+      },
+
+      is_html() {
+        return this.mime_type == mt.MIMETYPE_TEXT_HTML
       },
 
       is_json() {
@@ -82,7 +96,6 @@
           mt.MIMETYPE_APPLICATION_XML,
           mt.MIMETYPE_APPLICATION_OCTET_STREAM,
           mt.MIMETYPE_TEXT_PLAIN,
-          mt.MIMETYPE_TEXT_HTML,
           mt.MIMETYPE_TEXT_CSV
         ], this.mime_type)
       },

@@ -88,10 +88,11 @@ class Stream
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
-                'eid'      => array('type' => 'identifier', 'required' => true),
-                'start'    => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'metadata' => array('type' => 'string', 'required' => false)
+                'eid'          => array('type' => 'identifier', 'required' => true),
+                'start'        => array('type' => 'integer', 'required' => false),
+                'limit'        => array('type' => 'integer', 'required' => false),
+                'metadata'     => array('type' => 'string', 'required' => false),
+                'content_type' => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -99,6 +100,7 @@ class Stream
         $start = isset($params['start']) ? (int)$params['start'] : 0;  // start isn't specified, start at the beginning
         $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
         $metadata = isset($params['metadata']) ? \toBoolean($params['metadata']) : false;
+        $content_type = isset($params['content_type']) ? $params['content_type'] : false;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
@@ -112,11 +114,16 @@ class Stream
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $mime_type = $stream_info['mime_type'];
-        if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        $response_content_type = $stream_info['mime_type'];
+
+        // if the caller wants to override the mime type that will be returned, they may
+        if ($content_type !== false)
+            $response_content_type = $content_type;
+
+        if ($response_content_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // return content as-is
-            header('Content-Type: ' . $mime_type);
+            header('Content-Type: ' . $response_content_type);
             $result = $stream->content($start, $limit);
             echo($result);
             exit(0);

@@ -12,7 +12,10 @@
 
 <script>
   import CodeMirror from 'codemirror'
+  import {} from 'codemirror/mode/css/css'
   import {} from 'codemirror/mode/javascript/javascript'
+  import {} from 'codemirror/mode/xml/xml'
+  import {} from 'codemirror/mode/htmlmixed/htmlmixed'
   import {} from 'codemirror/mode/python/python'
 
   export default {
@@ -44,9 +47,19 @@
       this.code_text = this.val
     },
     mounted() {
+      var lang = this.lang
+
       var opts = {
         lineNumbers: true,
-        mode: this.lang
+        mode: this.getLang(),
+        extraKeys: {
+          // indent with 4 spaces for python and 2 spaces for all other languages
+          Tab: function(cm) {
+            //var spaces = Array(cm.getOption('indentUnit') + 1).join(' ')
+            var spaces = lang == 'python' ? '    ' : '  '
+            cm.replaceSelection(spaces)
+          }
+        }
       }
 
       if (this.lang == 'application/json')
@@ -64,6 +77,9 @@
       })
     },
     methods: {
+      getLang() {
+        return this.lang == 'html' ? 'htmlmixed' : this.lang
+      },
       setValue(val) {
         this.code_text = val
         this.editor.setValue(val)
