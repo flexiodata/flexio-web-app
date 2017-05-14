@@ -29,6 +29,7 @@ class Pipe
                 'ename'           => array('type' => 'identifier', 'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
+                'rights'          => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)
@@ -60,6 +61,14 @@ class Pipe
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
         $pipe->setOwner($requesting_user_eid);
         $pipe->setCreatedBy($requesting_user_eid);
+
+        // the created of the object is the owner, so if rights property is
+        // set, then set the rights
+        if (isset($params['rights']))
+        {
+            $acl = \Flexio\Object\Acl::create($params['rights']);
+            $pipe->setRights($acl);
+        }
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
@@ -112,6 +121,10 @@ class Pipe
         $new_pipe->setOwner($requesting_user_eid);
         $new_pipe->setCreatedBy($requesting_user_eid);
 
+        // copy the project with the original rights
+        $acl = \Flexio\Object\Acl::create($original_pipe_properties['rights']);
+        $new_pipe->setRights($acl);
+
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
             $project->addMember($new_pipe);
@@ -151,6 +164,7 @@ class Pipe
                 'ename'           => array('type' => 'identifier', 'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
+                'rights'          => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)
@@ -170,6 +184,14 @@ class Pipe
 
         // set the properties
         $pipe->set($params);
+
+        // if we're the owner and the rights property is set, then set the rights
+        if ($requesting_user_eid === $pipe->getOwner() && isset($params['rights']))
+        {
+            $acl = \Flexio\Object\Acl::create($params['rights']);
+            $pipe->setRights($acl);
+        }
+
         return $pipe->get();
     }
 

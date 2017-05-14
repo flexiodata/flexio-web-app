@@ -118,7 +118,31 @@ class Acl
 
     public function get() : array
     {
-        return $this->acl;
+        // TODO: return actual acl
+        $acl = array(
+            'owner' => array(
+                'read' => true,
+                'write' => true,
+                'execute' => true,
+                'delete' => true
+            ),
+            'member' => array(
+                'read' => true,
+                'write' => true,
+                'execute' => true,
+                'delete' => true
+            ),
+            'public' => array(
+                'read' => true,
+                'write' => true,
+                'execute' => true,
+                'delete' => true
+            )
+        );
+
+        return $acl;
+
+        //return $this->acl;
     }
 }
 

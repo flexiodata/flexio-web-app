@@ -65,7 +65,7 @@ class Connection extends \Flexio\Object\Base
         $acl->add(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_GROUP);
         // turn off delete by default for group members for pipes
 
-        $object->rights($acl);
+        $object->setRights($acl);
 
         return $object;
     }
@@ -329,29 +329,8 @@ class Connection extends \Flexio\Object\Base
         if (!$properties)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // populate the rights node with a sample
-        $properties['rights'] = json_decode('
-            {
-                "owner": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": true
-                },
-                "member": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": false
-                },
-                "public": {
-                    "read": false,
-                    "write": false,
-                    "execute": false,
-                    "delete": false
-                }
-            }
-        ',true);
+        // populate the rights node
+        $properties['rights'] = $this->getRights()->get();
 
         return $properties;
     }

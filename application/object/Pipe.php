@@ -66,7 +66,7 @@ class Pipe extends \Flexio\Object\Base
         // turn off delete by default for group members for pipes
         $acl->add(\Flexio\Base\Action::TYPE_EXECUTE, \Flexio\Base\User::MEMBER_GROUP);
 
-        $object->rights($acl);
+        $object->setRights($acl);
 
         return $object;
     }
@@ -291,29 +291,10 @@ class Pipe extends \Flexio\Object\Base
         if ($schedule !== false)
             $properties['schedule'] = $schedule;
 
-        // populate the rights node with a sample
-        $properties['rights'] = json_decode('
-            {
-                "owner": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": true
-                },
-                "member": {
-                    "read": true,
-                    "write": true,
-                    "execute": true,
-                    "delete": false
-                },
-                "public": {
-                    "read": false,
-                    "write": false,
-                    "execute": false,
-                    "delete": false
-                }
-            }
-        ',true);
+        $properties['rights'] = $this->getRights()->
+
+        // populate the rights node
+        $properties['rights'] = $this->getRights()->get();
 
         // return the properties
         return $properties;

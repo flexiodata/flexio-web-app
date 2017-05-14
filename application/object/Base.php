@@ -54,7 +54,7 @@ class Base implements IObject
 
         // TODO: for now, don't allow any rights by default; change?
         $acl = \Flexio\Object\Acl::create();
-        $object->rights($acl);
+        $object->setRights($acl);
 
         return $object;
     }
@@ -296,6 +296,19 @@ class Base implements IObject
     {
         // TODO: implement
         return $this;
+    }
+
+    public function setRights(\Flexio\Object\Acl $acl) : \Flexio\Object\Base
+    {
+        // TODO: set the rights;
+        return $this;
+    }
+
+    public function getRights() : \Flexio\Object\Acl
+    {
+        // TODO: fill out
+        $acl = \Flexio\Object\Acl::create();
+        return $acl;
     }
 
     public function rights(\Flexio\Object\Acl $acl = null) : \Flexio\Object\Base

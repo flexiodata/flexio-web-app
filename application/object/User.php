@@ -85,7 +85,7 @@ class User extends \Flexio\Object\Base
 
         // turn of rights for group members for user person info
 
-        $object->rights($acl);
+        $object->setRights($acl);
 
         return $object;
     }
