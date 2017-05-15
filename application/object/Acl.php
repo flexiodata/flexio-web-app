@@ -118,7 +118,6 @@ class Acl
 
     private static function getDefault() : array
     {
-        // TODO: return actual acl
         return array(
             'owner' => array(
                 'read' => false,
