@@ -48,16 +48,29 @@ if (is_null($db))
 
 try
 {
+
+    $sql = 'select count(*) as cnt from tbl_object';
+    $r = $db->query($sql);
+    $row = $r->fetch();
+    echo("Total To Process: " . $row['cnt']);
+    echo("\n\n");
+
+
     // STEP 1: get a list of all objects
     $sql = 'select eid from tbl_object';
     $result = $db->query($sql);
 
-
     // STEP 2: iterate through each of the objects and populate the
     // rights column with the default rights
+
+    $count = 0;
     $objects = array();
     while ($result && ($row = $result->fetch()))
     {
+        $count++;
+        if ($count % 1000 === 0)
+            echo("Finished With: $count\n");
+
         // load the object
         $eid = $row['eid'];
         $object = \Flexio\Object\Store::load($eid);
