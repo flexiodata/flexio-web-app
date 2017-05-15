@@ -59,7 +59,7 @@ class Connection extends \Flexio\Object\Base
         $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
         $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_GROUP);
         $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_GROUP);
-        // don't allow delete delete by default for group members on connection
+        // don't allow delete by default for group members on connection
 
         return $object;
     }
