@@ -18,6 +18,16 @@ namespace Flexio\Object;
 
 class Acl
 {
+    // TODO: acl is a helper class that translates between the method of rights
+    // management used in the api and that at the object/model level; it's in
+    // the object folder instead of the api folder because rights properties
+    // are returned in the object get() function and it's more convenient to
+    // keep this here than adding the rights node at the api level; however,
+    // moving the rights node to the api level may be the appropriate course,
+    // in which case this class should be moved to the api level; the long-term
+    // solution may be to expose rights in the UI in a true ACL list, in which
+    // case this translation functionality may not be needed
+
     private $acl = array();
 
     public static function isValid(array $acl) : bool
@@ -33,7 +43,7 @@ class Acl
 
             foreach ($action_list as $action => $allowed)
             {
-                if (\Flexio\Object\Action::isValid($action) === false)
+                if (\Flexio\Object\Action::isValidType($action) === false)
                     return false;
 
                 if (is_bool($allowed) === false)
@@ -44,7 +54,7 @@ class Acl
         return true;
     }
 
-    public static function create(array $acl = null) : \Flexio\Object\Acl
+    public static function apply(\Flexio\Object\Base $object, array $acl) : bool
     {
         // note: user acl is a list of enumerated rights in the form
         // {
@@ -63,69 +73,50 @@ class Acl
         //    ...
         // }
 
-        // if the acl is null, set the acl to the defaults
-        if (!isset($acl))
-        {
-            $this->acl = $this->getDefault();
-            return $this;
-        }
-
         // the acl is specified, so make sure it's valid
         if (self::isValid($acl) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // start with the default and then set any permissions with the specified values
-        $updated_acl = $this->getDefault();
+        $updated_acl = self::getDefault();
         foreach ($acl as $user => $action_list)
         {
             foreach ($action_list as $action => $allowed)
             {
-                $updated_acl[$user][$action] = $allowed;
+                if ($allowed === true)
+                    $object->grant($action, $user);
+                     else
+                    $object->revoke($action, $user);
             }
         }
 
-        $this->acl = $updated_acl;
-        return (new static);
+        return true;
     }
 
-    public function add(string $action, string $user) : \Flexio\Object\Acl
+    public static function enum(\Flexio\Object\Base $object) : array
     {
-        // make sure the action and user are valid
-        if (\Flexio\Object\Action::isValid($action) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        // start with a default set of rights
+        $result = self::getDefault();
 
-        if (\Flexio\Object\User::isValidType($user_type) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        // get the rights and update the results from the default values
+        $object_rights = $object->getRights();
+        foreach ($object_rights as $r)
+        {
+            $access_code = $r['access_code']; // access code is the user category, eid, token, etc for which the rights are granted
+            $action = $r['action']; // action is the right that's granted
 
-        $acl_local = $this->acl;
-        $acl_local[$user][$action] = true;
-        $this->acl = $acl_local;
+            // if we can't find the access code and action, move on; the acl
+            // list only shows acls that are explicitly exposed
+            if (!isset($result[$access_code][$action]))
+                continue;
 
-        return $this;
+            $result[$access_code][$action] = true; // if a right is granted, update the value
+        }
+
+        return $result;
     }
 
-    public function remove(string $action, string $user) : \Flexio\Object\Acl
-    {
-        // make sure the action and user are valid
-        if (\Flexio\Object\Action::isValid($action) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        if (\Flexio\Object\User::isValidType($user_type) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $acl_local = $this->acl;
-        $acl_local[$user][$action] = false;
-        $this->acl = $acl_local;
-
-        return $this;
-    }
-
-    public function get() : array
-    {
-        return $this->acl;
-    }
-
-    private function getDefault() : array
+    private static function getDefault() : array
     {
         // TODO: return actual acl
         return array(

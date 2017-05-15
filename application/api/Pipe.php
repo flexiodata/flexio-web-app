@@ -65,10 +65,7 @@ class Pipe
         // the created of the object is the owner, so if rights property is
         // set, then set the rights
         if (isset($params['rights']))
-        {
-            $acl = \Flexio\Object\Acl::create($params['rights']);
-            $pipe->setRights($acl);
-        }
+            \Flexio\Object\Acl::apply($pipe, $params['rights']);
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
@@ -122,8 +119,7 @@ class Pipe
         $new_pipe->setCreatedBy($requesting_user_eid);
 
         // copy the project with the original rights
-        $acl = \Flexio\Object\Acl::create($original_pipe_properties['rights']);
-        $new_pipe->setRights($acl);
+        \Flexio\Object\Acl::apply($new_pipe, $original_pipe_properties['rights']);
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
@@ -187,10 +183,7 @@ class Pipe
 
         // if we're the owner and the rights property is set, then set the rights
         if ($requesting_user_eid === $pipe->getOwner() && isset($params['rights']))
-        {
-            $acl = \Flexio\Object\Acl::create($params['rights']);
-            $pipe->setRights($acl);
-        }
+            \Flexio\Object\Acl::apply($pipe, $params['rights']);
 
         return $pipe->get();
     }

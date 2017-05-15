@@ -51,16 +51,16 @@ class Pipe extends \Flexio\Object\Base
         $object->clearCache();
 
         // set the default pipe rights
-        $object->grant(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_EXECUTE, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_GROUP);
-        $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_GROUP);
+        $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_EXECUTE, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_GROUP);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_GROUP);
         // don't allow delete by default for group members for pipes
-        $object->grant(\Flexio\Base\Action::TYPE_EXECUTE, \Flexio\Base\User::MEMBER_GROUP);
+        $object->grant(\Flexio\Object\Action::TYPE_EXECUTE, \Flexio\Object\User::MEMBER_GROUP);
 
         return $object;
     }
@@ -285,10 +285,8 @@ class Pipe extends \Flexio\Object\Base
         if ($schedule !== false)
             $properties['schedule'] = $schedule;
 
-        $properties['rights'] = $this->getRights()->
-
         // populate the rights node
-        $properties['rights'] = $this->getRights()->get();
+        $properties['rights'] = \Flexio\Object\Acl::enum($this);
 
         // return the properties
         return $properties;

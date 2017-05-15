@@ -73,35 +73,35 @@ try
                 break;
 
             case \Model::TYPE_PIPE:
-                $object->grant(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_EXECUTE, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_GROUP);
-                $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_GROUP);
-                $object->grant(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_GROUP);
-                $object->grant(\Flexio\Base\Action::TYPE_EXECUTE, \Flexio\Base\User::MEMBER_GROUP);
+                $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_EXECUTE, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_GROUP);
+                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_GROUP);
+                $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_GROUP);
+                $object->grant(\Flexio\Object\Action::TYPE_EXECUTE, \Flexio\Object\User::MEMBER_GROUP);
                 break;
 
             case \Model::TYPE_CONNECTION:
-                $object->grant(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_GROUP);
-                $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_GROUP);
+                $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_GROUP);
+                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_GROUP);
                 // don't allow delete by default for group members for connections
                 break;
 
             case \Model::TYPE_USER:
-                $object->grant(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
+                $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
                 // don't allow group memebers to access user info
                 break;
         }

@@ -33,12 +33,12 @@ class User extends \Flexio\Object\Base
         switch ($member)
         {
             default:
-            case MEMBER_UNDEFINED:
+            case self::MEMBER_UNDEFINED:
                 return false;
 
-            case MEMBER_OWNER:
-            case MEMBER_GROUP:
-            case MEMBER_PUBLIC:
+            case self::MEMBER_OWNER:
+            case self::MEMBER_GROUP:
+            case self::MEMBER_PUBLIC:
                 return true;
         }
     }
@@ -74,11 +74,11 @@ class User extends \Flexio\Object\Base
         $object->clearCache();
 
         // set the default user rights
-        $object->grant(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
         // don't allow group memebers to access user info
 
         return $object;

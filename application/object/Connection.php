@@ -52,13 +52,13 @@ class Connection extends \Flexio\Object\Base
         $object->clearCache();
 
         // set the default connection rights
-        $object->grant(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
-        $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_GROUP);
-        $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_GROUP);
+        $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_GROUP);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_GROUP);
         // don't allow delete delete by default for group members on connection
 
         return $object;
@@ -324,7 +324,7 @@ class Connection extends \Flexio\Object\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // populate the rights node
-        $properties['rights'] = $this->getRights()->get();
+        $properties['rights'] = \Flexio\Object\Acl::enum($this);
 
         return $properties;
     }

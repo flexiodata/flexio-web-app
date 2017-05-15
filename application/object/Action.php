@@ -39,15 +39,15 @@ class Action
         switch ($action)
         {
             default:
-            case TYPE_UNDEFINED:
+            case self::TYPE_UNDEFINED:
                 return false;
 
-            case TYPE_READ:
-            case TYPE_WRITE:
-            case TYPE_DELETE:
-            case TYPE_EXECUTE:
-            case TYPE_READ_RIGHTS:
-            case TYPE_WRITE_RIGHTS:
+            case self::TYPE_READ:
+            case self::TYPE_WRITE:
+            case self::TYPE_DELETE:
+            case self::TYPE_EXECUTE:
+            case self::TYPE_READ_RIGHTS:
+            case self::TYPE_WRITE_RIGHTS:
                 return true;
         }
     }
