@@ -79,30 +79,32 @@ class Input(object):
         if dict:
             fieldnames = []
             casts = {}
-            for col in self.structure:
-                fieldnames.append(col['name'])
-                if col['type'] == 'numeric':
-                    casts[col['name']] = float
-                elif col['type'] == 'integer':
-                    casts[col['name']] = int
-                elif col['type'] == 'date':
-                    casts[col['name']] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
-                elif col['type'] == 'datetime':
-                    casts[col['name']] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
+            if self.structure:
+                for col in self.structure:
+                    fieldnames.append(col['name'])
+                    if col['type'] == 'numeric':
+                        casts[col['name']] = float
+                    elif col['type'] == 'integer':
+                        casts[col['name']] = int
+                    elif col['type'] == 'date':
+                        casts[col['name']] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
+                    elif col['type'] == 'datetime':
+                        casts[col['name']] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
             reader = csv.DictReader(sys.stdin, fieldnames)
         else:
             casts = {}
             index = 0
-            for col in self.structure:
-                if col['type'] == 'numeric':
-                    casts[index] = float
-                elif col['type'] == 'integer':
-                    casts[index] = int
-                elif col['type'] == 'date':
-                    casts[index] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
-                elif col['type'] == 'datetime':
-                    casts[index] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
-                index = index + 1
+            if self.structure:
+                for col in self.structure:
+                    if col['type'] == 'numeric':
+                        casts[index] = float
+                    elif col['type'] == 'integer':
+                        casts[index] = int
+                    elif col['type'] == 'date':
+                        casts[index] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
+                    elif col['type'] == 'datetime':
+                        casts[index] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
+                    index = index + 1
             reader = csv.reader(sys.stdin)
         return TableReader(reader, casts)
 
