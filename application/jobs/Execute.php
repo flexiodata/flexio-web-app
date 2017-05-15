@@ -111,6 +111,24 @@ class Execute extends \Flexio\Jobs\Base
 
                 $code = base64_decode($code);
 
+                $streamreader = \Flexio\Object\StreamReader::create($instream);
+                if (strpos($code, 'flexio.input.json_assoc()') !== false)
+                {
+                    $rows = [];
+                    while (true)
+                    {
+                        $row = $streamreader->readRow();
+                        if ($row === false)
+                            break;
+                        $rows[] = $row;
+                    }
+
+                    $json = json_encode($rows);
+
+                    $code = str_replace('flexio.input.json_assoc()', $json, $code);
+                }
+
+
                 // create the output stream
                 $outstream_properties = array(
                     'name' => $instream->getName() . '.html',
