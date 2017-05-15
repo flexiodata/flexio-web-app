@@ -84,6 +84,8 @@
     CONNECTION_TYPE_POSTGRES
   } from '../constants/connection-type'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import * as mt from '../constants/member-type'
+  import * as at from '../constants/action-type'
   import * as connections from '../constants/connection-info'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
@@ -94,12 +96,36 @@
   import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
 
+  const defaultRights = () => {
+    return {
+      [mt.MEMBER_TYPE_OWNER]: {
+        [at.ACTION_TYPE_READ]: true,
+        [at.ACTION_TYPE_WRITE]: true,
+        [at.ACTION_TYPE_EXECUTE]: true,
+        [at.ACTION_TYPE_DELETE]: true
+      },
+      [mt.MEMBER_TYPE_MEMBER]: {
+        [at.ACTION_TYPE_READ]: true,
+        [at.ACTION_TYPE_WRITE]: true,
+        [at.ACTION_TYPE_EXECUTE]: true,
+        [at.ACTION_TYPE_DELETE]: false
+      },
+      [mt.MEMBER_TYPE_PUBLIC]: {
+        [at.ACTION_TYPE_READ]: false,
+        [at.ACTION_TYPE_WRITE]: false,
+        [at.ACTION_TYPE_EXECUTE]: false,
+        [at.ACTION_TYPE_DELETE]: false
+      }
+    }
+  }
+
   const defaultAttrs = () => {
     return {
       eid: null,
       name: 'New Pipe',
       ename: '',
-      description: ''
+      description: '',
+      rights: defaultRights()
     }
   }
 
