@@ -18,9 +18,29 @@ namespace Flexio\Object;
 
 class User extends \Flexio\Object\Base
 {
+    const MEMBER_UNDEFINED = '';
+    const MEMBER_OWNER     = 'owner';
+    const MEMBER_GROUP     = 'member';
+    const MEMBER_PUBLIC    = 'public';
+
     public function __construct()
     {
         $this->setType(\Model::TYPE_USER);
+    }
+
+    public static function isValidType(string $member) : bool
+    {
+        switch ($member)
+        {
+            default:
+            case self::MEMBER_UNDEFINED:
+                return false;
+
+            case self::MEMBER_OWNER:
+            case self::MEMBER_GROUP:
+            case self::MEMBER_PUBLIC:
+                return true;
+        }
     }
 
     public static function create(array $properties = null) : \Flexio\Object\User
@@ -51,8 +71,16 @@ class User extends \Flexio\Object\Base
 
         $object->setModel($model);
         $object->setEid($local_eid);
-        $object->setRights();
         $object->clearCache();
+
+        // set the default user rights
+        $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
+        // don't allow group memebers to access user info
+
         return $object;
     }
 
@@ -91,7 +119,6 @@ class User extends \Flexio\Object\Base
 
         $object->setModel($model);
         $object->setEid($eid);
-        $object->setRights();
         $object->clearCache();
         return $object;
     }

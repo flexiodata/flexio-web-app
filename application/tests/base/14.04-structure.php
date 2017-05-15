@@ -34,7 +34,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->enum();
+        $actual = \Flexio\Base\Structure::create($column_info)->enum();
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -49,7 +49,7 @@ class Test
         // TEST: Structure::enum(); non-array inputs
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::create()->enum(null);
+        $actual = \Flexio\Base\Structure::create()->enum(null);
         $expected = array();
         TestCheck::assertInArray('B.1', 'Structure::enum(); if a non-array input is specified, return an empty array',  $actual, $expected, $results);
 
@@ -64,7 +64,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info)->enum('a');
+            \Flexio\Base\Structure::create($column_info)->enum('a');
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -85,7 +85,7 @@ class Test
         ]
         ',true);
         $specified_columns = array();
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
         TestCheck::assertInArray('C.1', 'Structure::enum(); return empty array if no columns are specified',  $actual, $expected, $results);
 
@@ -95,7 +95,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
         TestCheck::assertInArray('C.2', 'Structure::enum(); return empty array if no columns are available',  $actual, $expected, $results);
 
@@ -108,7 +108,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"}
@@ -125,7 +125,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('b');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"b", "type":"character"}
@@ -142,7 +142,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"c", "type":"character"}
@@ -159,7 +159,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a','b');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -177,7 +177,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -195,7 +195,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('b','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"b", "type":"character"},
@@ -213,7 +213,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a','b','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -232,7 +232,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('c','a','b');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"c", "type":"character"},
@@ -251,7 +251,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('x','a','y','b','c','z');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -270,7 +270,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('c','x','a','y','b');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"c", "type":"character"},
@@ -289,7 +289,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
         TestCheck::assertInArray('C.13', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
@@ -302,7 +302,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('b');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
         TestCheck::assertInArray('C.14', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
@@ -315,7 +315,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
         TestCheck::assertInArray('C.15', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
@@ -328,7 +328,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('aa');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"aa", "type":"character"}
@@ -345,7 +345,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('ab');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"ab", "type":"character"}
@@ -362,7 +362,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('ac');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"ac", "type":"character"}
@@ -379,7 +379,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('aab');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
         TestCheck::assertInArray('C.19', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
@@ -392,7 +392,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('zac');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
         TestCheck::assertInArray('C.20', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
@@ -409,7 +409,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('A');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"}
@@ -426,7 +426,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('B');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"b", "type":"character"}
@@ -443,7 +443,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('C');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"c", "type":"character"}
@@ -460,7 +460,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('Aa');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"aa", "type":"character"}
@@ -477,7 +477,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('aB');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"ab", "type":"character"}
@@ -494,7 +494,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('AC');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"ac", "type":"character"}
@@ -511,7 +511,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"}
@@ -528,7 +528,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('b');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"b", "type":"character"}
@@ -545,7 +545,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"c", "type":"character"}
@@ -562,7 +562,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('Aa');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"aa", "type":"character"}
@@ -579,7 +579,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('aB');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"ab", "type":"character"}
@@ -596,7 +596,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('AC');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"ac", "type":"character"}
@@ -615,7 +615,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"}
@@ -632,7 +632,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -654,7 +654,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -676,7 +676,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"c", "type":"character"},
@@ -695,7 +695,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('*','x','y');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -714,7 +714,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('x','y','*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -737,7 +737,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -764,7 +764,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('/');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
         ]
@@ -782,7 +782,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a[a-z]*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -803,7 +803,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('*a');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
         ]
@@ -821,7 +821,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('b[a-z]*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"bca", "type":"character"}
@@ -840,7 +840,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('e[a-z]*','b[a-z]*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"efg", "type":"character"},
@@ -860,7 +860,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('b[A-Z]*','a[A-Z]*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"bca", "type":"character"},
@@ -884,7 +884,7 @@ class Test
         ]
         ',true);
         $specified_columns = array(':text');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"}
@@ -905,7 +905,7 @@ class Test
         ]
         ',true);
         $specified_columns = array(':number');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"b", "type":"numeric"},
@@ -928,7 +928,7 @@ class Test
         ]
         ',true);
         $specified_columns = array(':date');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"e", "type":"date"}
@@ -949,7 +949,7 @@ class Test
         ]
         ',true);
         $specified_columns = array(':datetime');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"f", "type":"datetime"}
@@ -970,7 +970,7 @@ class Test
         ]
         ',true);
         $specified_columns = array(':boolean');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"g", "type":"boolean"}
@@ -991,7 +991,7 @@ class Test
         ]
         ',true);
         $specified_columns = array(':text',':number');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -1015,7 +1015,7 @@ class Test
         ]
         ',true);
         $specified_columns = array(':date',':datetime');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"e", "type":"date"},
@@ -1037,7 +1037,7 @@ class Test
         ]
         ',true);
         $specified_columns = array(':character',':numeric',':double',':integer',':date',':datetime',':boolean');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"e", "type":"date"},
@@ -1060,7 +1060,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a','a');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"}
@@ -1077,7 +1077,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('b','b');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"b", "type":"character"}
@@ -1094,7 +1094,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('c','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"c", "type":"character"}
@@ -1111,7 +1111,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('A','a','b','B','C','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -1129,7 +1129,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a','b','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"}
@@ -1145,7 +1145,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a','b','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"b", "type":"character"}
@@ -1161,7 +1161,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a','b','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"c", "type":"character"}
@@ -1181,7 +1181,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('a','b','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -1203,7 +1203,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('*','a','b','c');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -1222,7 +1222,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('*','*');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = json_decode('
         [
             {"name":"a", "type":"character"},
@@ -1244,7 +1244,7 @@ class Test
         ]
         ',true);
         $specified_columns = array('xdrowid');
-        $actual = \Flexio\Object\Structure::create($column_info)->enum($specified_columns);
+        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
         TestCheck::assertInArray('G.1', 'Structure::enum(); filter out invalid column names',  $actual, $expected, $results);
     }

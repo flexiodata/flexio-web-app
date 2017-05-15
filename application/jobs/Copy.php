@@ -77,7 +77,7 @@ class Copy extends \Flexio\Jobs\Base
 
         // additional columns may have been added, so make sure the store_name is set,
         // duplicate fieldnames are accounted for, etc
-        $structure = \Flexio\Object\Structure::create($output_columns);
+        $structure = \Flexio\Base\Structure::create($output_columns);
         $output_columns = $structure->enum();
 
         // build the output expression

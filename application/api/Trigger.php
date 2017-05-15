@@ -8,15 +8,15 @@
  * Created:  2016-08-02
  *
  * @package flexio
- * @subpackage Object
+ * @subpackage Api
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Object;
+namespace Flexio\Api;
 
 
-class Manager
+class Trigger
 {
     public static function handleEmail($stream, string $pipe_eid = null) // TODO: add function parameter
     {
@@ -59,11 +59,12 @@ class Manager
         // STEP 4: trigger the appropriate process with the email as an input
         $process = false;
         $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-        if ($pipe !== false)
+        if ($pipe !== false && $pipe->getOwner() !== false)
         {
             $pipe_properties = $pipe->get();
             unset($pipe_properties['ename']);
             $process = \Flexio\Object\Process::create($pipe_properties);
+            $process->setOwner($pipe->getOwner()); // processes run with pipe owner privileges
 
             // set an environment variable (parameter) with the "from" email address
             $from_addresses = $parser->getFrom();

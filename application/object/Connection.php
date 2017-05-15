@@ -49,8 +49,18 @@ class Connection extends \Flexio\Object\Base
 
         $object->setModel($model);
         $object->setEid($local_eid);
-        $object->setRights();
         $object->clearCache();
+
+        // set the default connection rights
+        $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_GROUP);
+        $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_GROUP);
+        // don't allow delete by default for group members on connection
+
         return $object;
     }
 
@@ -279,6 +289,7 @@ class Connection extends \Flexio\Object\Base
             "token_expires" : null,
             "connection_type" : null,
             "connection_status" : null,
+            "rights": null,
             "project='.\Model::EDGE_MEMBER_OF.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_PROJECT.'",
@@ -311,6 +322,9 @@ class Connection extends \Flexio\Object\Base
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if (!$properties)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // populate the rights node
+        $properties['rights'] = \Flexio\Object\Acl::enum($this);
 
         return $properties;
     }

@@ -25,52 +25,52 @@ class Test
 
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_INVALID;
+        $actual = \Flexio\Base\Structure::TYPE_INVALID;
         $expected = '';
         TestCheck::assertString('A.1', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_TEXT;
+        $actual = \Flexio\Base\Structure::TYPE_TEXT;
         $expected = 'text';
         TestCheck::assertString('A.2', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_CHARACTER;
+        $actual = \Flexio\Base\Structure::TYPE_CHARACTER;
         $expected = 'character';
         TestCheck::assertString('A.3', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_WIDECHARACTER;
+        $actual = \Flexio\Base\Structure::TYPE_WIDECHARACTER;
         $expected = 'widecharacter';
         TestCheck::assertString('A.4', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_NUMERIC;
+        $actual = \Flexio\Base\Structure::TYPE_NUMERIC;
         $expected = 'numeric';
         TestCheck::assertString('A.5', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_DOUBLE;
+        $actual = \Flexio\Base\Structure::TYPE_DOUBLE;
         $expected = 'double';
         TestCheck::assertString('A.6', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_INTEGER;
+        $actual = \Flexio\Base\Structure::TYPE_INTEGER;
         $expected = 'integer';
         TestCheck::assertString('A.7', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_DATE;
+        $actual = \Flexio\Base\Structure::TYPE_DATE;
         $expected = 'date';
         TestCheck::assertString('A.8', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_DATETIME;
+        $actual = \Flexio\Base\Structure::TYPE_DATETIME;
         $expected = 'datetime';
         TestCheck::assertString('A.9', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::TYPE_BOOLEAN;
+        $actual = \Flexio\Base\Structure::TYPE_BOOLEAN;
         $expected = 'boolean';
         TestCheck::assertString('A.10', 'Structure; verify class constants',  $actual, $expected, $results);
 
@@ -79,37 +79,37 @@ class Test
         // TEST: Structure wildcard constants
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::WILDCARD_INVALID;
+        $actual = \Flexio\Base\Structure::WILDCARD_INVALID;
         $expected = '';
         TestCheck::assertString('B.1', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::WILDCARD_ALL;
+        $actual = \Flexio\Base\Structure::WILDCARD_ALL;
         $expected = '*';
         TestCheck::assertString('B.2', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::WILDCARD_TEXT;
+        $actual = \Flexio\Base\Structure::WILDCARD_TEXT;
         $expected = ':text';
         TestCheck::assertString('B.3', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::WILDCARD_NUMBER;
+        $actual = \Flexio\Base\Structure::WILDCARD_NUMBER;
         $expected = ':number';
         TestCheck::assertString('B.4', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::WILDCARD_DATE;
+        $actual = \Flexio\Base\Structure::WILDCARD_DATE;
         $expected = ':date';
         TestCheck::assertString('B.5', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::WILDCARD_DATETIME;
+        $actual = \Flexio\Base\Structure::WILDCARD_DATETIME;
         $expected = ':datetime';
         TestCheck::assertString('B.6', 'Structure; verify class constants',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::WILDCARD_BOOLEAN;
+        $actual = \Flexio\Base\Structure::WILDCARD_BOOLEAN;
         $expected = ':boolean';
         TestCheck::assertString('B.7', 'Structure; verify class constants',  $actual, $expected, $results);
     }

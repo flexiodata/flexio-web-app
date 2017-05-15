@@ -32,7 +32,7 @@ class Test
         $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "id", "type" : "integer", "width" : 4, "scale" : 0},
             {"name" : "char_1a", "type" : "character", "width" : 10, "scale" : 0},
@@ -111,7 +111,7 @@ class Test
         $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "num_1a", "type" : "numeric", "width" : 10, "scale" : 0},
             {"name" : "num_1b", "type" : "numeric", "width" : 10, "scale" : 0},
@@ -188,7 +188,7 @@ class Test
         $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "num_2a", "type" : "double", "width" : 8, "scale" : 0},
             {"name" : "num_2b", "type" : "double", "width" : 8, "scale" : 0},
@@ -265,7 +265,7 @@ class Test
         $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "num_3a", "type" : "integer", "width" : 4, "scale" : 0},
             {"name" : "num_3b", "type" : "integer", "width" : 4, "scale" : 0},
@@ -342,7 +342,7 @@ class Test
         $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "date_1a", "type" : "date", "width" : 4, "scale" : 0},
             {"name" : "date_1b", "type" : "date", "width" : 4, "scale" : 0},
@@ -420,7 +420,7 @@ class Test
         $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "date_2a", "type" : "datetime", "width" : 8, "scale" : 0},
             {"name" : "date_2b", "type" : "datetime", "width" : 8, "scale" : 0},
@@ -498,7 +498,7 @@ class Test
         $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-        $stream_info['structure'] = \Flexio\Object\Structure::create(json_decode('
+        $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "bool_1a", "type" : "boolean", "width" : 1, "scale" : 0},
             {"name" : "bool_1b", "type" : "boolean", "width" : 1, "scale" : 0},

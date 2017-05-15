@@ -4,6 +4,7 @@
     remove-close-button
     dismiss-on="close-button"
     size="large"
+    @open="onOpen"
     @hide="onHide"
   >
     <div slot="header" class="w-100">
@@ -89,7 +90,13 @@
             v-model="connection.description"
           ></ui-textbox>
         </form>
+
+        <ui-collapsible class="mt4 ui-collapsible--sm" title="Permissions" open disable-ripple v-if="show_permissions">
+          <rights-list :object="connection" @change="onRightsChanged"></rights-list>
+        </ui-collapsible>
+
         <connection-configure-panel
+          class="mt4"
           :connection="connection"
           :mode="mode"
           @disconnect="tryDisconnect"
@@ -111,6 +118,8 @@
   import { mapGetters } from 'vuex'
   import { HOSTNAME } from '../constants/common'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
+  import * as mt from '../constants/member-type'
+  import * as at from '../constants/action-type'
   import * as types from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import api from '../api'
@@ -118,15 +127,42 @@
   import ServiceList from './ServiceList.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
+  import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
   import OauthPopup from './mixins/oauth-popup'
 
-  const DEFAULT_ATTRS = {
-    eid: null,
-    eid_status: OBJECT_STATUS_PENDING,
-    name: '',
-    description: '',
-    connection_type: ''
+  const defaultRights = () => {
+    return {
+      [mt.MEMBER_TYPE_OWNER]: {
+        [at.ACTION_TYPE_READ]: true,
+        [at.ACTION_TYPE_WRITE]: true,
+        [at.ACTION_TYPE_EXECUTE]: true,
+        [at.ACTION_TYPE_DELETE]: true
+      },
+      [mt.MEMBER_TYPE_MEMBER]: {
+        [at.ACTION_TYPE_READ]: true,
+        [at.ACTION_TYPE_WRITE]: true,
+        [at.ACTION_TYPE_EXECUTE]: true,
+        [at.ACTION_TYPE_DELETE]: false
+      },
+      [mt.MEMBER_TYPE_PUBLIC]: {
+        [at.ACTION_TYPE_READ]: false,
+        [at.ACTION_TYPE_WRITE]: false,
+        [at.ACTION_TYPE_EXECUTE]: false,
+        [at.ACTION_TYPE_DELETE]: false
+      }
+    }
+  }
+
+  const defaultAttrs = () => {
+    return {
+      eid: null,
+      eid_status: OBJECT_STATUS_PENDING,
+      name: '',
+      description: '',
+      connection_type: '',
+      rights: defaultRights()
+    }
   }
 
   export default {
@@ -145,7 +181,8 @@
       Btn,
       ServiceList,
       ConnectionIcon,
-      ConnectionConfigurePanel
+      ConnectionConfigurePanel,
+      RightsList
     },
     watch: {
       'connection.ename': function(val, old_val) {
@@ -162,9 +199,10 @@
       return {
         is_open: false,
         mode: 'add',
+        show_permissions: false,
         ss_errors: {},
-        connection: _.extend({}, DEFAULT_ATTRS),
-        original_connection: _.extend({}, DEFAULT_ATTRS)
+        connection: _.assign({}, defaultAttrs()),
+        original_connection: _.assign({}, defaultAttrs())
       }
     },
     computed: {
@@ -253,16 +291,23 @@
       },
       reset(attrs) {
         this.ss_errors = {}
-        this.connection = _.extend({}, DEFAULT_ATTRS, attrs)
-        this.original_connection = _.extend({}, DEFAULT_ATTRS, attrs)
+        this.connection = _.assign({}, defaultAttrs(), attrs)
+        this.original_connection = _.assign({}, defaultAttrs(), attrs)
+      },
+      onOpen() {
+        this.$nextTick(() => { this.show_permissions = true })
       },
       onHide() {
         this.reset()
         this.is_open = false
       },
+      onRightsChanged(rights) {
+        this.connection = _.assign({}, this.connection, { rights })
+      },
       createPendingConnection(item) {
-        var me = this
-        var attrs = _.extend({}, this.connection, {
+        debugger
+
+        var attrs = _.assign({}, this.connection, {
           name: item.service_name,
           connection_type: item.connection_type,
           parent_eid: this.projectEid
@@ -271,7 +316,7 @@
         this.$store.dispatch('createConnection', { attrs }).then(response => {
           if (response.ok)
           {
-            me.updateConnection(response.body)
+            this.updateConnection(response.body)
           }
            else
           {

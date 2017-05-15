@@ -264,6 +264,10 @@ class Identifier
                 return true;
 
             // model-related names
+            case 'acl':
+            case 'acls':
+            case 'action':
+            case 'actions':
             case 'model':
             case 'sql':
             case 'registry':

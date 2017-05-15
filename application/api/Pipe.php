@@ -29,6 +29,7 @@ class Pipe
                 'ename'           => array('type' => 'identifier', 'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
+                'rights'          => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)
@@ -51,7 +52,7 @@ class Pipe
             if ($project === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-            if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+            if ($project->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -60,6 +61,11 @@ class Pipe
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
         $pipe->setOwner($requesting_user_eid);
         $pipe->setCreatedBy($requesting_user_eid);
+
+        // the created of the object is the owner, so if rights property is
+        // set, then set the rights
+        if (isset($params['rights']))
+            \Flexio\Object\Acl::apply($pipe, $params['rights']);
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
@@ -86,7 +92,7 @@ class Pipe
         if ($original_pipe === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($original_pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($original_pipe->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // make sure we can save the copied pipe to any specified parent
@@ -96,7 +102,7 @@ class Pipe
             if ($project === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-            if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+            if ($project->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -111,6 +117,9 @@ class Pipe
         $new_pipe = \Flexio\Object\Pipe::create($new_pipe_properties);
         $new_pipe->setOwner($requesting_user_eid);
         $new_pipe->setCreatedBy($requesting_user_eid);
+
+        // copy the project with the original rights
+        \Flexio\Object\Acl::apply($new_pipe, $original_pipe_properties['rights']);
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
@@ -135,7 +144,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
+        if ($pipe->allows(\Flexio\Object\Action::TYPE_DELETE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $pipe->delete();
@@ -151,6 +160,7 @@ class Pipe
                 'ename'           => array('type' => 'identifier', 'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
+                'rights'          => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)
@@ -165,11 +175,16 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($pipe->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the properties
         $pipe->set($params);
+
+        // if we're the owner and the rights property is set, then set the rights
+        if ($requesting_user_eid === $pipe->getOwner() && isset($params['rights']))
+            \Flexio\Object\Acl::apply($pipe, $params['rights']);
+
         return $pipe->get();
     }
 
@@ -189,7 +204,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($pipe->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the properties
@@ -204,7 +219,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($user->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the pipes
@@ -212,40 +227,10 @@ class Pipe
         $pipes = $user->getPipes();
         foreach ($pipes as $p)
         {
-            if ($p->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+            if ($p->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
                 continue;
 
             $result[] = $p->get();
-        }
-
-        return $result;
-    }
-
-    public static function comments(array $params, string $requesting_user_eid = null) : array
-    {
-        $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $pipe_identifier = $params['eid'];
-
-        // load the object
-        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // get the comments
-        $result = array();
-        $comments = $pipe->getComments();
-        foreach ($comments as $c)
-        {
-            $result[] = $c->get();
         }
 
         return $result;
@@ -273,7 +258,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($pipe->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the processes
@@ -283,7 +268,7 @@ class Pipe
         {
             // a pipe can be run by different users; make sure the given user can only see
             // processes that they have rights to
-            if ($p->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+            if ($p->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
                 continue;
 
             $processes_accessible[] = $p->get();
@@ -312,7 +297,7 @@ class Pipe
 
         // check the rights on the object
         // TODO: re-enable rights checking with execute check
-        // if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        // if ($pipe->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // STEP 1: create a new process
@@ -462,7 +447,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($pipe->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the tasks
@@ -554,7 +539,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($pipe->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // add the task
@@ -588,7 +573,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($pipe->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // delete the task
@@ -618,7 +603,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($pipe->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // update the task
@@ -648,7 +633,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($pipe->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the task

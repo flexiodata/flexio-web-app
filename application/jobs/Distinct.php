@@ -65,12 +65,12 @@ class Distinct extends \Flexio\Jobs\Base
         // get the list of output columns
         $selected_columns_list = $job_definition['params']['columns'] ?? false;
         if (!is_array($selected_columns_list))
-            $selected_columns_list = array(\Flexio\Object\Structure::WILDCARD_ALL);
+            $selected_columns_list = array(\Flexio\Base\Structure::WILDCARD_ALL);
 
         // get the list of columns to use for determining distinctness
         $distinct_columns_list = $job_definition['params']['distinct'] ?? false;
         if (!is_array($distinct_columns_list))
-            $distinct_columns_list = array(\Flexio\Object\Structure::WILDCARD_ALL);
+            $distinct_columns_list = array(\Flexio\Base\Structure::WILDCARD_ALL);
 
         // convert the specified fields and wildcards into the list of columns
         $selected_columns = $instream->getStructure()->enum($selected_columns_list);

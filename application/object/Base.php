@@ -23,7 +23,6 @@ class Base implements IObject
     private $model;
     private $eid;
     private $eid_type;
-    private $rights;
 
     // properties for derived classes
     protected $eid_status;
@@ -51,8 +50,10 @@ class Base implements IObject
 
         $object->setModel($model);
         $object->setEid($local_eid);
-        $object->setRights();
         $object->clearCache();
+
+        // TODO: for now, don't allow any rights by default; change?
+
         return $object;
     }
 
@@ -86,7 +87,6 @@ class Base implements IObject
 
         $object->setModel($model);
         $object->setEid($eid);
-        $object->setRights();
         $object->clearCache();
         return $object;
     }
@@ -205,6 +205,8 @@ class Base implements IObject
 
     public function setCreatedBy(string $user_eid) : \Flexio\Object\Base
     {
+        // TODO: deprecated; move this information over to an action log
+
         // TODO: remove previous created by, if any
 
         // TODO: do we want to do more checking? have to be careful because
@@ -218,6 +220,8 @@ class Base implements IObject
 
     public function getCreatedBy() : string
     {
+        // TODO: deprecated; move this information over to an action log
+
         $object_eid = $this->getEid();
         $result = $this->getModel()->assoc_range($object_eid, \Model::EDGE_CREATED_BY);
 
@@ -227,58 +231,96 @@ class Base implements IObject
         return $result[0]['eid'];
     }
 
-    public function allows(string $user_eid, string $action_type) : bool
+    public function allows(string $action, string $access_code, string $access_type = '') : bool
     {
-        // find out all operations the specified user can take on the
-        // object in question
-        if ($this->rights === false)
-            $this->rights = \Flexio\Object\Rights::listall($user_eid, $this->getEid());
+        // note: like the status, read the rights fresh everytime to make
+        // sure we have the most current information
 
-        // if the rights exist and are set to true, allow the action
-        if (isset($this->rights[$action_type]) && $this->rights[$action_type] === true)
+        // get the rights for this object
+        $rights = $this->getModel()->getRights($this->getEid());
+        if ($rights === false)
+            return false;
+
+        // see if we have a direct match on the action, access_code and access_type
+        foreach ($rights as $r)
+        {
+            if ($action !== $r['action'])
+                continue;
+            if ($access_code !== $r['access_code'])
+                continue;
+            if ($access_type !== $r['access_type'])
+                continue;
+
+            // action allowed
             return true;
+        }
 
+        // we weren't able to match directly on any of the access items; TODO:
+        // at this point, the access code is either a user eid or an empty
+        // string (for a public user); find out the appropriate user class and
+        // search for the permission based on this
+        $user_class = $this->getUserClass($access_code);
+        foreach ($rights as $r)
+        {
+            if ($action !== $r['action'])
+                continue;
+            if ($user_class !== $r['access_code'])
+                continue;
+            if ($access_type !== $r['access_type'])
+                continue;
+
+            // action allowed
+            return true;
+        }
+
+        // action not allowed
         return false;
     }
 
-    public function setRights(array $rights = null) : \Flexio\Object\Base
+    public function grant(string $action, string $access_code, string $access_type = '') : \Flexio\Object\Base
     {
-        // TODO: set the rights
+        // TODO: implement 'access_type'
 
-        // reset the rights cache
-        $this->rights = false;
+        $r = array();
+        $r['action'] = $action;
+        $r['access_code'] = $access_code;
+        $r['access_type'] = $access_type;
+
+        $rights = array();
+        $rights[] = $r;
+
+        $this->getModel()->addRights($this->getEid(), $rights);
         return $this;
     }
 
-    public function addComment(string $comment_eid) : \Flexio\Object\Base
+    public function revoke(string $action, string $access_code, string $access_type = '') : \Flexio\Object\Base
     {
-        // make sure we have a comment
-        $comment = \Flexio\Object\Comment::load($comment_eid);
-        if ($comment === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        // TODO: implement 'access_type'
 
-        // add the comment association
-        $object_eid = $this->getEid();
-        $result1 = $this->getModel()->assoc_add($object_eid, \Model::EDGE_HAS_COMMENT, $comment_eid);
-        $result2 = $this->getModel()->assoc_add($comment_eid, \Model::EDGE_COMMENT_ON, $object_eid);
+        $r = array();
+        $r['action'] = $action;
+        $r['access_code'] = $access_code;
+        $r['access_type'] = $access_type;
+
+        $rights = array();
+        $rights[] = $r;
+
+        $this->getModel()->deleteRights($this->getEid(), $rights);
         return $this;
     }
 
-    public function getComments() : array
+    public function getRights() : array
     {
+        $rights = $this->getModel()->getRights($this->getEid());
+
         $result = array();
-
-        $object_eid = $this->getEid();
-        $res = $this->getModel()->assoc_range($object_eid, \Model::EDGE_HAS_COMMENT, [\Model::STATUS_AVAILABLE]);
-
-        foreach ($res as $item)
+        foreach ($rights as $right)
         {
-            $comment_eid = $item['eid'];
-            $comment = \Flexio\Object\Comment::load($comment_eid);
-            if ($comment === false)
-                continue;
-
-            $result[] = $comment;
+            $right_local = array();
+            $right_local['action'] = $right['action'];
+            $right_local['access_code'] = $right['access_code'];
+            $right_local['access_type'] = $right['access_type'];
+            $result[] = $right_local;
         }
 
         return $result;
@@ -338,5 +380,72 @@ class Base implements IObject
 
         // return the properties
         return $properties;
+    }
+
+    private function getUserClass(string $identifier) : string
+    {
+        if ($this->isOwned($identifier) === true)
+            return \Flexio\Object\User::MEMBER_OWNER;
+
+        if ($this->isMember($identifier) === true)
+            return \Flexio\Object\User::MEMBER_GROUP;
+
+        // user is uknown; they're a public user
+        return \Flexio\Object\User::MEMBER_PUBLIC;
+    }
+
+    protected function isOwned(string $identifier) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($identifier))
+            return false;
+
+        if ($identifier === $this->getOwner())
+            return true;
+
+        return false;
+    }
+
+    protected function isMember(string $identifier) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($identifier))
+            return false;
+
+        $user_eid = $identifier;
+        $object_eid = $this->getEid();
+
+        // note: in the following, we want to check if an object can be accessed by
+        // anybody who's part of a project; this includes any object that's in a
+        // project that's either owned or followed by the user in question; for
+        // example, it includes:
+        //     1) rights to userA for the project if they are the owner of the project
+        //     2) rights to userA for the project if they are a follower of the project
+        //     3) rights to userA for an object owned by userB in a project owned by userA and followed by userB
+        //     4) rights to userA for an object owned by userB in a project followed by userA and owned by userB
+
+        // see if the object is followed or owned by the user directly
+        $search_path = "$object_eid->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
+        $followers = \Flexio\Object\Search::exec($search_path);
+        if (count($followers) > 0)
+            return true;
+
+        // see if the object is a member of a project followed or owned by the user
+        $search_path = "$object_eid->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
+                                  "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
+        $followers = \Flexio\Object\Search::exec($search_path);
+        if (count($followers) > 0)
+            return true;
+
+        // see if the object is a resource that's a member of an object
+        // that's a member of a project followed or owned by the user
+        $search_path = "$object_eid->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PIPE.",".\Model::TYPE_CONNECTION.")".
+                                  "->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
+                                  "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
+        $followers = \Flexio\Object\Search::exec($search_path);
+        if (count($followers) > 0)
+            return true;
+
+        // we can't find a path where the object is being followed by the
+        // given user
+        return false;
     }
 }

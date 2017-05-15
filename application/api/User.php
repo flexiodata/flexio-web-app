@@ -102,9 +102,9 @@ class User
             // if appropriate, send an email
             if ($send_email === true)
             {
-                $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
+                $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
                 $email_params = array('email' => $email, 'verify_code' => $verify_code);
-                $message = \Flexio\Object\Message::create($message_type, $email_params);
+                $message = \Flexio\Api\Message::create($message_type, $email_params);
                 $message->send();
             }
 
@@ -171,9 +171,9 @@ class User
         // if appropriate, send an email
         if ($send_email === true)
         {
-            $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
+            $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
             $email_params = array('email' => $email, 'verify_code' => $new_verify_code);
-            $message = \Flexio\Object\Message::create($message_type, $email_params);
+            $message = \Flexio\Api\Message::create($message_type, $email_params);
             $message->send();
         }
 
@@ -235,7 +235,7 @@ class User
         // set info for unverified users
         if ($user->getStatus() !== \Model::STATUS_PENDING)
         {
-            if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+            if ($user->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -259,7 +259,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($user->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $user->get();
@@ -273,7 +273,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($user->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $projects = $user->getProjects();
@@ -329,7 +329,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($user->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($user->checkPassword($old_password) === false)
@@ -391,9 +391,9 @@ class User
         if (!isset($verify_code))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing verification code'));
 
-        $message_type = \Flexio\Object\Message::TYPE_EMAIL_WELCOME;
+        $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
         $email_params = array('email' => $email, 'verify_code' => $verify_code);
-        $message = \Flexio\Object\Message::create($message_type, $email_params);
+        $message = \Flexio\Api\Message::create($message_type, $email_params);
         $message->send();
 
         return true;
@@ -417,9 +417,9 @@ class User
         if ($user->set(array('verify_code' => $verify_code)) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not send password reset email at this time'));
 
-        $message_type = \Flexio\Object\Message::TYPE_EMAIL_RESET_PASSWORD;
+        $message_type = \Flexio\Api\Message::TYPE_EMAIL_RESET_PASSWORD;
         $email_params = array('email' => $email, 'verify_code' => $verify_code);
-        $message = \Flexio\Object\Message::create($message_type, $email_params);
+        $message = \Flexio\Api\Message::create($message_type, $email_params);
         $message->send();
 
         return true;

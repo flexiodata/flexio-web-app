@@ -247,7 +247,7 @@ class Test
         TestCheck::assertBoolean('D.6', 'Task::addTaskStep(); add steps that are in the correct format; if an eid is supplied, make sure it\'s valid and isn\'t an object in the application, or else generate a new one', $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid1 = \Flexio\Object\Comment::create()->getEid(); // eid corresponding to an object
+        $eid1 = \Flexio\Object\Object::create()->getEid(); // eid corresponding to an object
         $task = \Flexio\Object\Task::create();
         $task->addTaskStep(["eid" => $eid1, "type" => \Flexio\Jobs\Create::MIME_TYPE, "params" => (object)[]]);
         $result = $task->get();

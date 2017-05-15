@@ -8,15 +8,15 @@
  * Created:  2015-04-07
  *
  * @package flexio
- * @subpackage Object
+ * @subpackage Api
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Object;
+namespace Flexio\Api;
 
 
-class Scheduler
+class Cron
 {
     const JOB_SCHEDULE_CHECK_INTERVAL = 5; // check for jobs every 5 seconds
 
@@ -48,10 +48,10 @@ class Scheduler
     {
         // the scheduler script uses UTC as its timezone
         date_default_timezone_set('UTC');
-        $dt = self::getDateTimeParts();
+        $dt = \Flexio\Base\Util::getDateTimeParts();
         printf("Scheduler time is: %02d:%02d\n", $dt['hours'], $dt['minutes']);
 
-        $scheduler = new \Flexio\Object\Scheduler;
+        $scheduler = new \Flexio\Api\Cron;
         $scheduler->loop();
     }
 
@@ -88,7 +88,7 @@ class Scheduler
                             $tz = isset($job['timezone']) ? $job['timezone'] : 'UTC';
 
                             // what day of the week is it in the job's time zone?
-                            $parts = self::getDateTimeParts(time(), $tz);
+                            $parts = \Flexio\Base\Util::getDateTimeParts(time(), $tz);
                             $weekdays = ['sun','mon','tue','wed','thu','fri','sat'];
                             $weekday = $weekdays[$parts['nweekday'] % 7];
                             if (in_array($weekday, $job['days']))
@@ -188,7 +188,7 @@ class Scheduler
 
     private function refreshSchedulerTable()
     {
-        $pipe_model = \Flexio\Object\Store::getModel()->pipe;
+        $pipe_model = \Flexio\System\System::getModel()->pipe;
         $current_update = $pipe_model->getLastSchedulerUpdateTime();
 
         print("Current update time " . $current_update . "; Last update time " . $this->last_update . "\n");
@@ -250,7 +250,7 @@ class Scheduler
                     // find out what that time is in UTC
                     $dt = new \DateTime('now', new \DateTimeZone($timezone));
                     $dt->setTime($time['hour'], $time['minute']);
-                    $gmtime_parts = self::getDateTimeParts($dt->getTimestamp(), 'UTC');
+                    $gmtime_parts = \Flexio\Base\Util::getDateTimeParts($dt->getTimestamp(), 'UTC');
                     $hour = $gmtime_parts['hours'];
                     $minute = $gmtime_parts['minutes'];
 
@@ -266,13 +266,12 @@ class Scheduler
                 }
             }
         }
-
     }
 
     private static function runPipe(string $pipe_eid)
     {
-        // TODO: following run code is similar to \Flexio\Api\Process::create() and
-        // \Manager::runJob(); should factor; for example, the \Flexio\Api\Process::create()
+        // TODO: following run code is similar to \Flexio\Api\Process::create()
+        // should factor; for example, the \Flexio\Api\Process::create()
         // adds on the parent and owner
 
         // TODO: check permissions based on the owner of the pipe
@@ -289,78 +288,10 @@ class Scheduler
 
         // STEP 2: create the process
         $process = \Flexio\Object\Process::create($pipe_properties);
+        $process->setOwner($pipe->getOwner());
+        $process->setCreatedBy($pipe->getOwner());
 
         // STEP 3: run the process
         $process->run();
     }
-
-    private static function getDateTimeParts($t = null, $tz = null) // TODO: add input parameter types
-    {
-        if (is_null($tz))
-            $tz = date_default_timezone_get();
-
-        $dt = new \DateTime('now', new \DateTimeZone($tz));
-        $dt->setTimestamp(is_null($t) ? time() : $t);
-        $s = $dt->format('s:i:G:j:w:n:Y:z:l:w:F:U');
-
-        $k = array('seconds','minutes','hours','mday','wday','mon','year','yday','weekday','nweekday','month',0);
-
-        return array_combine($k, explode(":", $s));
-    }
-
-    // schedule info
-    const TEMPLATE = <<<EOD
-    {
-        "frequency": "",
-        "timezone": "",
-        "days": [],
-        "times": [
-            {
-                "hour": 0,
-                "minute": 0
-            }
-        ]
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["frequency","timezone","days","times"],
-        "properties": {
-            "frequency": {
-                "type": "string",
-                "enum": ["one-minute","five-minutes","thirty-minutes","hourly","daily","weekly","monthly"]
-            },
-            "timezone": {
-                "type": "string"
-            },
-            "days": {
-                "type": "array",
-                "items": {
-                    "type": ["number","string"],
-                    "enum": ["mon","tue","wed","thu","fri","sat","sun","last",1,15]
-                }
-            },
-            "times": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "required": ["hour","minute"],
-                    "properties": {
-                        "hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 24
-                        },
-                        "minute": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 60
-                        }
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

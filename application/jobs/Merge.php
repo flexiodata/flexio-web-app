@@ -128,7 +128,7 @@ class Merge extends \Flexio\Jobs\Base
         foreach ($input as $instream)
             $structures[] = $instream->getStructure();
 
-        $merged_structure = \Flexio\Object\Structure::union($structures);
+        $merged_structure = \Flexio\Base\Structure::union($structures);
         return $merged_structure->enum();
     }
 
