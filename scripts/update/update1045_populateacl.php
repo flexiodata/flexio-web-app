@@ -81,10 +81,9 @@ try
         switch ($type)
         {
             default:
-            case \Model::TYPE_PROJECT: // TODO: set default rights for project
-            case \Model::TYPE_PROCESS: // TODO: set default rights for process
                 break;
 
+            case \Model::TYPE_PROCESS: // processes inherit owner privileges for the pipe at this time
             case \Model::TYPE_PIPE:
                 $rights = array(
                     array('action' => \Flexio\Object\Action::TYPE_READ_RIGHTS,  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
@@ -101,6 +100,7 @@ try
                 \Flexio\System\System::getModel()->addRights($eid, $rights);
                 break;
 
+            case \Model::TYPE_PROJECT:
             case \Model::TYPE_CONNECTION:
                 $rights = array(
                     array('action' => \Flexio\Object\Action::TYPE_READ_RIGHTS,  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
