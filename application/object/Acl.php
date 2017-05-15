@@ -20,46 +20,71 @@ class Acl
 {
     private $acl = array();
 
+    public static function isValid(array $acl) : bool
+    {
+        // make sure the acl list we're using to serialize the object is valid
+        foreach ($acl as $user => $action_list)
+        {
+            if (\Flexio\Object\User::isValidType($user) === false)
+                return false;
+
+            if (is_array($action_list) === false)
+                return false;
+
+            foreach ($action_list as $action => $allowed)
+            {
+                if (\Flexio\Object\Action::isValid($action) === false)
+                    return false;
+
+                if (is_bool($allowed) === false)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
     public static function create(array $acl = null) : \Flexio\Object\Acl
     {
         // note: user acl is a list of enumerated rights in the form
         // {
-        //    "action.<type1>" : [
-        //        "owner",
-        //        "group",
-        //        "public"
-        //    ],
-        //    "action.<type2>" : [
-        //        "owner"
-        //        "public"
-        //    ],
+        //    "owner" : {
+        //        "read": true,
+        //        "write": true,
+        //        "execute": true,
+        //        "delete": true
+        //    },
+        //    "member" : {
+        //        "read": true,
+        //        "write": true,
+        //        "execute": true,
+        //        "delete": false
+        //    },
         //    ...
         // }
 
-        // if the acl is null, start with an empty set of rights
+        // if the acl is null, set the acl to the defaults
         if (!isset($acl))
         {
-            $this->acl = array();
+            $this->acl = $this->getDefault();
             return $this;
         }
 
-        // make sure the acl list we're using to serialize the object
-        // is valid
-        foreach ($acl as $action => $user_list)
+        // the acl is specified, so make sure it's valid
+        if (self::isValid($acl) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        // start with the default and then set any permissions with the specified values
+        $updated_acl = $this->getDefault();
+        foreach ($acl as $user => $action_list)
         {
-            if (\Flexio\Object\Action::isValid($action) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            if (is_array($user_list) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            foreach ($user_list as $user)
+            foreach ($action_list as $action => $allowed)
             {
-                if (\Flexio\Object\User::isValidType($user) === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                $updated_acl[$user][$action] = $allowed;
             }
         }
 
+        $this->acl = $updated_acl;
         return (new static);
     }
 
@@ -72,77 +97,57 @@ class Acl
         if (\Flexio\Object\User::isValidType($user_type) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // if the action isn't set, set the action and the user
-        if (!isset($this->acl[$action]))
-        {
-            $this->acl[$action] = array($user);
-            return $this;
-        }
+        $acl_local = $this->acl;
+        $acl_local[$user][$action] = true;
+        $this->acl = $acl_local;
 
-        // if the user is already set on the object, we're done
-        foreach ($this->acl[$action] as $user_in_question)
-        {
-            if ($user === $user_in_question)
-                return $this;
-        }
-
-        // we couldn't find the user; add the user to the list of
-        // allowed users
-        $users_allowed = $this->acl[$action];
-        $users_allowed[] = $user;
-        $this->acl[$action] = $users_allowed;
         return $this;
     }
 
     public function remove(string $action, string $user) : \Flexio\Object\Acl
     {
-        // if the action isn't set, there's nothing to remove
-        if (!isset($this->acl[$action]))
-            return $this;
+        // make sure the action and user are valid
+        if (\Flexio\Object\Action::isValid($action) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // cycle through the users; if the user matches one of the users
-        // currently allowed, remove the user
-        $users_allowed = array();
-        foreach ($this->acl[$action] as $user_in_question)
-        {
-            if ($user === $user_in_question)
-                continue;
+        if (\Flexio\Object\User::isValidType($user_type) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            $users_allowed[] = $user_in_question;
-        }
+        $acl_local = $this->acl;
+        $acl_local[$user][$action] = false;
+        $this->acl = $acl_local;
 
-        // update the users allowed for the action
-        $this->acl[$action] = $users_allowed;
         return $this;
     }
 
     public function get() : array
     {
+        return $this->acl;
+    }
+
+    private function getDefault() : array
+    {
         // TODO: return actual acl
-        $acl = array(
+        return array(
             'owner' => array(
-                'read' => true,
-                'write' => true,
-                'execute' => true,
-                'delete' => true
+                'read' => false,
+                'write' => false,
+                'execute' => false,
+                'delete' => false
             ),
             'member' => array(
-                'read' => true,
-                'write' => true,
-                'execute' => true,
-                'delete' => true
+                'read' => false,
+                'write' => false,
+                'execute' => false,
+                'delete' => false
             ),
             'public' => array(
-                'read' => true,
-                'write' => true,
-                'execute' => true,
-                'delete' => true
+                'read' => false,
+                'write' => false,
+                'execute' => false,
+                'delete' => false
             )
         );
-
-        return $acl;
-
-        //return $this->acl;
     }
 }
 

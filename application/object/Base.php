@@ -53,8 +53,6 @@ class Base implements IObject
         $object->clearCache();
 
         // TODO: for now, don't allow any rights by default; change?
-        $acl = \Flexio\Object\Acl::create();
-        $object->setRights($acl);
 
         return $object;
     }
@@ -233,7 +231,7 @@ class Base implements IObject
         return $result[0]['eid'];
     }
 
-    public function allows(string $user_eid, string $action) : bool
+    public function allows(string $action, string $access_code, string $access_type = '') : bool
     {
         return true;
 
@@ -292,41 +290,53 @@ class Base implements IObject
 */
     }
 
-    public function grant(array $rights = null)
+    public function grant(string $action, string $access_code, string $access_type = '') : \Flexio\Object\Base
     {
-        // TODO: implement
+        // TODO: implement 'access_type'
+
+        $r = array();
+        $r['action'] = $action;
+        $r['access_code'] = $access_code;
+        $r['access_type'] = $access_type;
+
+        $rights = array();
+        $rights[] = $r;
+
+        $this->getModel()->addRights($this->getEid(), $rights);
         return $this;
     }
 
-    public function setRights(\Flexio\Object\Acl $acl) : \Flexio\Object\Base
+    public function revoke(string $action, string $access_code, string $access_type = '') : \Flexio\Object\Base
     {
-        // TODO: set the rights;
+        // TODO: implement 'access_type'
+
+        $r = array();
+        $r['action'] = $action;
+        $r['access_code'] = $access_code;
+        $r['access_type'] = $access_type;
+
+        $rights = array();
+        $rights[] = $r;
+
+        $this->getModel()->deleteRights($this->getEid(), $rights);
         return $this;
     }
 
-    public function getRights() : \Flexio\Object\Acl
+    public function getRights() : array
     {
-        // TODO: fill out
-        $acl = \Flexio\Object\Acl::create();
-        return $acl;
-    }
+        $rights = $this->getModel()->getRights($this->getEid());
 
-    public function rights(\Flexio\Object\Acl $acl = null) : \Flexio\Object\Base
-    {
-        return $this;
+        $result = array();
+        foreach ($rights as $right)
+        {
+            $right_local = array();
+            $right_local['action'] = $right['action'];
+            $right_local['access_code'] = $right['access_code'];
+            $right_local['access_type'] = $right['access_type'];
+            $result[] = $right_local;
+        }
 
-        // TODO: set the rights
-/*
-        // if rights aren't specified, create a default set of rights without
-        // any users/actions specified; this allows us to reset the rights
-        if (!isset($acl))
-            $acl = \Flexio\Object\Acl::create();
-
-        // save the rights
-        $rights = json_encode($acl->get());
-        $this->getModel()->setRights($this->getEid(), $rights);
-        return $this;
-*/
+        return $result;
     }
 
     protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type

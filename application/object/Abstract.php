@@ -35,7 +35,8 @@ interface IObject
     public function setOwner(string $user_eid);
     public function getOwner();
 
-    public function allows(string $user_eid, string $action);
-    public function setRights(\Flexio\Object\Acl $acl);
+    public function allows(string $action, string $identifier);
+    public function grant(string $action, string $identifier);
+    public function revoke(string $action, string $identifier);
     public function getRights();
 }

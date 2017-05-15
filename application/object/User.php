@@ -20,7 +20,7 @@ class User extends \Flexio\Object\Base
 {
     const MEMBER_UNDEFINED = '';
     const MEMBER_OWNER     = 'owner';
-    const MEMBER_GROUP     = 'group';
+    const MEMBER_GROUP     = 'member';
     const MEMBER_PUBLIC    = 'public';
 
     public function __construct()
@@ -74,18 +74,12 @@ class User extends \Flexio\Object\Base
         $object->clearCache();
 
         // set the default user rights
-        $acl = \Flexio\Object\Acl::create();
-
-        $acl->add(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-        $acl->add(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
-
-        $acl->add(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
-        $acl->add(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
-        $acl->add(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
-
-        // turn of rights for group members for user person info
-
-        $object->setRights($acl);
+        $object->grant(\Flexio\Base\Action::TYPE_READ_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Base\Action::TYPE_WRITE_RIGHTS, \Flexio\Base\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Base\Action::TYPE_READ, \Flexio\Base\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Base\Action::TYPE_WRITE, \Flexio\Base\User::MEMBER_OWNER);
+        $object->grant(\Flexio\Base\Action::TYPE_DELETE, \Flexio\Base\User::MEMBER_OWNER);
+        // don't allow group memebers to access user info
 
         return $object;
     }
