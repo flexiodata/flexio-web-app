@@ -233,9 +233,6 @@ class Base implements IObject
 
     public function allows(string $action, string $access_code, string $access_type = '') : bool
     {
-        return true;
-
-/*
         // note: like the status, read the rights fresh everytime to make
         // sure we have the most current information
 
@@ -244,50 +241,42 @@ class Base implements IObject
         if ($rights === false)
             return false;
 
-        $rights = json_decode($rights,true);
-        if ($rights === false)
-            return false;
-
-        $acl = \Flexio\Object\Acl::create($rights);
-        $acl_items = $acl->get();
-
-        if (!isset($acl_items[$action]))
-            return false;
-
-        // the action is in the list of allowed actions; see if the action is public
-        // first to avoid having to do a user lookup
-        $owner_allowed = false;
-        $group_allowed = false;
-
-        $user_list = $acl_items[$action];
-        foreach ($user_list as $user)
+        // see if we have a direct match on the action, access_code and access_type
+        foreach ($rights as $r)
         {
-            // public rights exist for the action in question; we're done
-            if ($user === \Flexio\Object\User::MEMBER_PUBLIC)
-                return true;
+            if ($action !== $r['action'])
+                continue;
+            if ($access_code !== $r['access_code'])
+                continue;
+            if ($access_type !== $r['access_type'])
+                continue;
 
-            if ($user === \Flexio\Object\User::MEMBER_OWNER)
-                $owner_allowed = true;
-
-            if ($user === \Flexio\Object\User::MEMBER_GROUP)
-                $group_allowed = true;
-        }
-
-        // public rights don't exist for the action in question; see if the owner
-        // is allowed next since it's a faster lookup than group membership
-        if ($owner_allowed === true && $this->getOwner() === $user_eid)
+            // action allowed
             return true;
-
-        if ($group_allowed === true)
-        {
-            // TODO: lookup if the user is a member of the group; return true
-            // if they are and false otherwise
-            return false;
         }
 
-        // user isn't the owner or part of the group
+        // we weren't able to match directly on any of the access items; TODO:
+        // at this point, the access code is either a user eid or an empty
+        // string (for a public user); find out the appropriate user class and
+        // search for the permission based on this
+        $user_class = $this->getUserClass($access_code);
+
+        // see if we have a direct match on the action, access_code and access_type
+        foreach ($rights as $r)
+        {
+            if ($action !== $r['action'])
+                continue;
+            if ($user_class !== $r['access_code'])
+                continue;
+            if ($access_type !== $r['access_type'])
+                continue;
+
+            // action allowed
+            return true;
+        }
+
+        // action not allowed
         return false;
-*/
     }
 
     public function grant(string $action, string $access_code, string $access_type = '') : \Flexio\Object\Base
@@ -393,5 +382,22 @@ class Base implements IObject
 
         // return the properties
         return $properties;
+    }
+
+    private function getUserClass(string $identifier) : bool
+    {
+        // see if the user is known to be the public user
+        if ($identifier === '')
+            return \Flexio\Object\User::MEMBER_PUBLIC;
+
+        // see if the user is the owner
+        if ($identifier === $this->getOwner())
+            return \Flexio\Object\User::MEMBER_OWNER;
+
+        // see if the user is a member
+        // TODO: fill out
+
+        // user is uknown; they're a public user
+        return \Flexio\Object\User::MEMBER_PUBLIC;
     }
 }
