@@ -100,7 +100,7 @@ class Execute extends \Flexio\Jobs\Base
 
                 $code = base64_encode($code);
 
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c '(echo $code | base64 -d > /tmp/script.py && python3 /tmp/script.py)'";
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c '(echo $code | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
                 //$cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c 'runscript $code'";
 
                 break;
@@ -110,6 +110,24 @@ class Execute extends \Flexio\Jobs\Base
                 $program_extension = 'html';
 
                 $code = base64_decode($code);
+
+                $streamreader = \Flexio\Object\StreamReader::create($instream);
+                if (strpos($code, 'flexio.input.json_assoc()') !== false)
+                {
+                    $rows = [];
+                    while (true)
+                    {
+                        $row = $streamreader->readRow();
+                        if ($row === false)
+                            break;
+                        $rows[] = $row;
+                    }
+
+                    $json = json_encode($rows);
+
+                    $code = str_replace('flexio.input.json_assoc()', $json, $code);
+                }
+
 
                 // create the output stream
                 $outstream_properties = array(
