@@ -41,8 +41,7 @@ class Project extends \Flexio\Object\Base
         $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
         $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_GROUP);
         $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_GROUP);
-        // don't allow delete by default for group members for pipes
-        $object->grant(\Flexio\Object\Action::TYPE_EXECUTE, \Flexio\Object\User::MEMBER_GROUP);
+        // don't allow delete by default for group members on a project
 
         return $object;
     }
