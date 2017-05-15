@@ -382,7 +382,7 @@ class Base implements IObject
         return $properties;
     }
 
-    private function getUserClass(string $identifier) : bool
+    private function getUserClass(string $identifier) : string
     {
         if ($this->isOwned($identifier) === true)
             return \Flexio\Object\User::MEMBER_OWNER;
@@ -394,7 +394,7 @@ class Base implements IObject
         return \Flexio\Object\User::MEMBER_PUBLIC;
     }
 
-    private function isOwned(string $identifier) : bool
+    protected function isOwned(string $identifier) : bool
     {
         if (!\Flexio\Base\Eid::isValid($identifier))
             return false;
@@ -405,7 +405,7 @@ class Base implements IObject
         return false;
     }
 
-    private function isMember(string $identifier) : bool
+    protected function isMember(string $identifier) : bool
     {
         if (!\Flexio\Base\Eid::isValid($identifier))
             return false;
