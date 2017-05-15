@@ -260,8 +260,6 @@ class Base implements IObject
         // string (for a public user); find out the appropriate user class and
         // search for the permission based on this
         $user_class = $this->getUserClass($access_code);
-
-        // see if we have a direct match on the action, access_code and access_type
         foreach ($rights as $r)
         {
             if ($action !== $r['action'])
@@ -386,18 +384,68 @@ class Base implements IObject
 
     private function getUserClass(string $identifier) : bool
     {
-        // see if the user is known to be the public user
-        if ($identifier === '')
-            return \Flexio\Object\User::MEMBER_PUBLIC;
-
-        // see if the user is the owner
-        if ($identifier === $this->getOwner())
+        if ($this->isOwned($identifier) === true)
             return \Flexio\Object\User::MEMBER_OWNER;
 
-        // see if the user is a member
-        // TODO: fill out
+        if ($this->isMember($identifier) === true)
+            return \Flexio\Object\User::MEMBER_GROUP;
 
         // user is uknown; they're a public user
         return \Flexio\Object\User::MEMBER_PUBLIC;
+    }
+
+    private function isOwned(string $identifier) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($identifier))
+            return false;
+
+        if ($identifier === $this->getOwner())
+            return true;
+
+        return false;
+    }
+
+    private function isMember(string $identifier) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($identifier))
+            return false;
+
+        $user_eid = $identifier;
+        $object_eid = $this->getEid();
+
+        // note: in the following, we want to check if an object can be accessed by
+        // anybody who's part of a project; this includes any object that's in a
+        // project that's either owned or followed by the user in question; for
+        // example, it includes:
+        //     1) rights to userA for the project if they are the owner of the project
+        //     2) rights to userA for the project if they are a follower of the project
+        //     3) rights to userA for an object owned by userB in a project owned by userA and followed by userB
+        //     4) rights to userA for an object owned by userB in a project followed by userA and owned by userB
+
+        // see if the object is followed or owned by the user directly
+        $search_path = "$object_eid->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
+        $followers = \Flexio\Object\Search::exec($search_path);
+        if (count($followers) > 0)
+            return true;
+
+        // see if the object is a member of a project followed or owned by the user
+        $search_path = "$object_eid->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
+                                  "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
+        $followers = \Flexio\Object\Search::exec($search_path);
+        if (count($followers) > 0)
+            return true;
+
+        // see if the object is a resource that's a member of an object
+        // that's a member of a project followed or owned by the user
+        $search_path = "$object_eid->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PIPE.",".\Model::TYPE_CONNECTION.")".
+                                  "->(".\Model::EDGE_MEMBER_OF.")->(".\Model::TYPE_PROJECT.")".
+                                  "->(".\Model::EDGE_FOLLOWED_BY.",".\Model::EDGE_OWNED_BY.")->$user_eid";
+        $followers = \Flexio\Object\Search::exec($search_path);
+        if (count($followers) > 0)
+            return true;
+
+        // we can't find a path where the object is being followed by the
+        // given user
+        return false;
     }
 }
