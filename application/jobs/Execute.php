@@ -100,7 +100,7 @@ class Execute extends \Flexio\Jobs\Base
 
                 $code = base64_encode($code);
 
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c '(echo $code | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo $code | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
                 //$cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c 'runscript $code'";
 
                 break;
