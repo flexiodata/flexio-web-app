@@ -73,36 +73,45 @@ try
                 break;
 
             case \Model::TYPE_PIPE:
-                $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_EXECUTE, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_GROUP);
-                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_GROUP);
-                $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_GROUP);
-                $object->grant(\Flexio\Object\Action::TYPE_EXECUTE, \Flexio\Object\User::MEMBER_GROUP);
+                $rights = array(
+                    array('action' => \Flexio\Object\Action::TYPE_READ_RIGHTS,  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_WRITE_RIGHTS, 'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_READ,         'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_WRITE,        'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_DELETE,       'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_EXECUTE,      'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_READ,         'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_WRITE,        'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_DELETE,       'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_EXECUTE,      'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => '')
+                );
+                \Flexio\System\System::getModel()->addRights($eid, $rights);
                 break;
 
             case \Model::TYPE_CONNECTION:
-                $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_GROUP);
-                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_GROUP);
+                $rights = array(
+                    array('action' => \Flexio\Object\Action::TYPE_READ_RIGHTS,  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_WRITE_RIGHTS, 'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_READ,         'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_WRITE,        'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_DELETE,       'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_READ,         'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_WRITE,        'access_code' => \Flexio\Object\User::MEMBER_GROUP, 'access_type' => '')
+                );
                 // don't allow delete by default for group members for connections
+                \Flexio\System\System::getModel()->addRights($eid, $rights);
                 break;
 
             case \Model::TYPE_USER:
-                $object->grant(\Flexio\Object\Action::TYPE_READ_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_READ, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_WRITE, \Flexio\Object\User::MEMBER_OWNER);
-                $object->grant(\Flexio\Object\Action::TYPE_DELETE, \Flexio\Object\User::MEMBER_OWNER);
-                // don't allow group memebers to access user info
+                $rights = array(
+                    array('action' => \Flexio\Object\Action::TYPE_READ_RIGHTS,  'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_WRITE_RIGHTS, 'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_READ,         'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_WRITE,        'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => ''),
+                    array('action' => \Flexio\Object\Action::TYPE_DELETE,       'access_code' => \Flexio\Object\User::MEMBER_OWNER, 'access_type' => '')
+                );
+                // only allow owners to access user info
+                \Flexio\System\System::getModel()->addRights($eid, $rights);
                 break;
         }
     }
