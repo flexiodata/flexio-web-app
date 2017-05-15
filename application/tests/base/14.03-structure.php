@@ -34,7 +34,7 @@ class Test
         // TEST: Structure::union(); no input
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::union()->get();
+        $actual = \Flexio\Base\Structure::union()->get();
         $expected = array();
         TestCheck::assertArray('A.1', 'Structure::union(); if no input is specified, create an empty structure',  $actual, $expected, $results);
 
@@ -43,7 +43,7 @@ class Test
         // TEST: Structure::union(); non-array input
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::union(null)->get();
+        $actual = \Flexio\Base\Structure::union(null)->get();
         $expected = array();
         TestCheck::assertArray('B.1', 'Structure::union(); if no input is specified, create an empty structure',  $actual, $expected, $results);
 
@@ -51,7 +51,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::union(false);
+            \Flexio\Base\Structure::union(false);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -65,7 +65,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::union(true);
+            \Flexio\Base\Structure::union(true);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -79,7 +79,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::union(1);
+            \Flexio\Base\Structure::union(1);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -93,7 +93,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::union('a');
+            \Flexio\Base\Structure::union('a');
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -107,7 +107,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::union(new \stdClass());
+            \Flexio\Base\Structure::union(new \stdClass());
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -127,7 +127,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"}
@@ -150,7 +150,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -170,7 +170,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"}
@@ -194,7 +194,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -220,7 +220,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -245,7 +245,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -270,7 +270,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -296,7 +296,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field2", "type":"text"},
@@ -324,7 +324,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -352,7 +352,7 @@ class Test
             {"name":"field2    ", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -385,7 +385,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -415,7 +415,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -445,7 +445,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -476,7 +476,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -507,7 +507,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -538,7 +538,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -572,7 +572,7 @@ class Test
             {"name":"field4", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -609,7 +609,7 @@ class Test
             {"name":"field4", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2, $column_info3))->get();
         $expected = '
         [
             {"name":"field0", "type":"text"},
@@ -653,7 +653,7 @@ class Test
             {"name":"field9", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -696,7 +696,7 @@ class Test
             {"name":"field9", "type":"character"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -739,7 +739,7 @@ class Test
             {"name":"field9", "type":"widecharacter"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -782,7 +782,7 @@ class Test
             {"name":"field9", "type":"numeric"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -825,7 +825,7 @@ class Test
             {"name":"field9", "type":"double"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -868,7 +868,7 @@ class Test
             {"name":"field9", "type":"integer"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -911,7 +911,7 @@ class Test
             {"name":"field9", "type":"date"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -954,7 +954,7 @@ class Test
             {"name":"field9", "type":"datetime"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -998,7 +998,7 @@ class Test
             {"name":"field9", "type":"boolean"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -1031,7 +1031,7 @@ class Test
             {"name":"field2", "type":"character", "width": 40}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"character", "width": 20},
@@ -1053,7 +1053,7 @@ class Test
             {"name":"field2", "type":"widecharacter", "width": 40}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"widecharacter", "width": 20},
@@ -1075,7 +1075,7 @@ class Test
             {"name":"field2", "type":"numeric", "width": 12}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"numeric", "width": 8},
@@ -1101,7 +1101,7 @@ class Test
             {"name":"field2", "type":"numeric", "width": 10, "scale": 3}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::union(array($column_info1, $column_info2))->get();
+        $actual = \Flexio\Base\Structure::union(array($column_info1, $column_info2))->get();
         $expected = '
         [
             {"name":"field1", "type":"numeric", "width": 10, "scale": 6},

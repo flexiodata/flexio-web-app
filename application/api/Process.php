@@ -64,6 +64,7 @@ class Process
 
         // check rights
         $pipe = false;
+        $pipe_owner = false;
         if ($pipe_identifier !== false)
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -78,18 +79,32 @@ class Process
 
             // we're getting the logic from the pipe, and we're associating the process with
             // the pipe, so we should have both read/write access to the pipe;
-            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+            if ($pipe->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+            if ($pipe->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+            $pipe_owner = $pipe->getOwner();
         }
 
         // STEP 1: create a new process job with the default task
         $process_properties = $params;
         unset($process_properties['params']);
         $process = \Flexio\Object\Process::create($process_properties);
-        $process->setOwner($requesting_user_eid);
-        $process->setCreatedBy($requesting_user_eid);
+
+        if ($pipe_owner !== false)
+        {
+            // if the process is created from a pipe, it runs with pipe owner privileges
+            $process->setOwner($pipe_owner);
+            $process->setCreatedBy($pipe_owner);
+        }
+         else
+        {
+            // if the process is created independent of a pipe, it runs with requesting
+            // user privileges
+            $process->setOwner($requesting_user_eid);
+            $process->setCreatedBy($requesting_user_eid);
+        }
 
         if (isset($params['params']))
             $process->setParams($params['params']);
@@ -130,7 +145,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
+        if ($process->allows(\Flexio\Object\Action::TYPE_DELETE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $process->delete();
@@ -155,7 +170,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // TODO: we shouldn't allow the task to be set if the process is anything
@@ -191,7 +206,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($process->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // if no wait period is specified, return the information immediately
@@ -250,7 +265,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        // if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->run($background)->get();
@@ -272,7 +287,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        // if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->cancel()->get();
@@ -294,7 +309,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        // if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->pause()->get();
@@ -320,7 +335,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        // if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream = \Flexio\Object\Stream::create();
@@ -413,7 +428,7 @@ class Process
         }
 
         // create a merged structure
-        $merged_structure = \Flexio\Object\Structure::union($structures);
+        $merged_structure = \Flexio\Base\Structure::union($structures);
         return $merged_structure->enum();
     }
 
@@ -446,7 +461,7 @@ class Process
         }
 
         // create a merged structure
-        $merged_structure = \Flexio\Object\Structure::union($structures);
+        $merged_structure = \Flexio\Base\Structure::union($structures);
         return $merged_structure->enum();
     }
 

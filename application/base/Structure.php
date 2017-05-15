@@ -8,12 +8,12 @@
  * Created:  2016-10-19
  *
  * @package flexio
- * @subpackage Object
+ * @subpackage Base
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Object;
+namespace Flexio\Base;
 
 
 class Structure
@@ -48,13 +48,8 @@ class Structure
         $this->initialize();
     }
 
-    public static function create(array $columns = null) : \Flexio\Object\Structure
+    public static function create(array $columns = null) : \Flexio\Base\Structure
     {
-        // TODO: \Structure::union() allows Structure type input; allow
-        // \Structure::create() to take structure input; in general, we may
-        // want the create() classes of various objects to also allow a copy
-        // constructor type syntax where the input can also be a class object
-
         if (!isset($columns))
             $columns = array();
 
@@ -72,7 +67,7 @@ class Structure
         return $object;
     }
 
-    public static function union(array $structures = null) : \Flexio\Object\Structure
+    public static function union(array $structures = null) : \Flexio\Base\Structure
     {
         // TODO: make sure that union of structures handles column names
         // that are equivalent, differing only by case (e.g. Field1 vs. field1;
@@ -91,7 +86,7 @@ class Structure
         // count the different structure kinds
         foreach ($structures as $structure_item)
         {
-            if (!($structure_item instanceof \Flexio\Object\Structure))
+            if (!($structure_item instanceof \Flexio\Base\Structure))
             {
                 // if we don't have a structure, we may have a list of columns
                 // try to create a structure object from the input
@@ -127,14 +122,14 @@ class Structure
         return self::create($structure_output);
     }
 
-    public static function intersect(array $structures = null) : \Flexio\Object\Structure
+    public static function intersect(array $structures = null) : \Flexio\Base\Structure
     {
         // TODO: creates a structure that's the intersection of the specified structures
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return self::create();
     }
 
-    public function copy() : \Flexio\Object\Structure
+    public function copy() : \Flexio\Base\Structure
     {
         $object_copy = self::create();
         $object_copy->columns = $this->columns;
@@ -283,7 +278,7 @@ class Structure
         return $column_entry;
     }
 
-    public function pop()
+    public function pop() // TODO: add function return type
     {
         // note: returns the removed column, or false if there was no column to remove
 

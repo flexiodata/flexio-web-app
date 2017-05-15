@@ -225,6 +225,46 @@ class Util
         return $is_associative;
     }
 
+    public static function array_new_items(array $array1, array $array2, array $keys) : array
+    {
+        // takes two sequential arrays of key/value arrays; returns the
+        // array rows in array1 that aren't in array2 based on the value
+        // of the supplied keys
+
+        // TODO: right now, algorithm is o(n2); fine for small array comparisons
+
+        // create an array of keys where the keys are the actual keys
+        $array_keys = array_flip($keys);
+
+        // iterate over the rows in array 1 and see if the row is in array2
+        $result = array();
+        foreach ($array1 as $a1)
+        {
+            // get the key/values in for the row we want to compare
+            $a1_subset = array_intersect_key($a1, $array_keys);
+
+            $found = false;
+            foreach ($array2 as $a2)
+            {
+                // get the key/values in for the row we want to compare
+                $a2_subset = array_intersect_key($a2, $array_keys);
+
+                // see if the row in array1 is in array2 based on a key value comparison
+                // without regard to order or type
+                if ($a1_subset == $a2_subset)
+                {
+                    $found = true;
+                    break;
+                }
+            }
+
+            if ($found === false)
+                $result[] = $a1;
+        }
+
+        return $result;
+    }
+
     public static function diff(array $array1, array $array2) : array
     {
         // note: this function takes two arrays and finds the difference
@@ -460,6 +500,20 @@ class Util
         $days_diff = floor($seconds_diff/(24*60*60));
 
         return $days_diff;
+    }
+
+    public static function getDateTimeParts(int $t = null, string $tz = null) : array
+    {
+        if (is_null($tz))
+            $tz = date_default_timezone_get();
+
+        $dt = new \DateTime('now', new \DateTimeZone($tz));
+        $dt->setTimestamp(is_null($t) ? time() : $t);
+        $s = $dt->format('s:i:G:j:w:n:Y:z:l:w:F:U');
+
+        $k = array('seconds','minutes','hours','mday','wday','mon','year','yday','weekday','nweekday','month',0);
+
+        return array_combine($k, explode(":", $s));
     }
 
     /* // works, but currently not in use

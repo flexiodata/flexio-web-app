@@ -165,7 +165,7 @@
       },
       tryUpdatePipe(attrs, modal) {
         var eid = attrs.eid
-        attrs = _.pick(attrs, ['name', 'ename', 'description'])
+        attrs = _.pick(attrs, ['name', 'ename', 'description', 'rights'])
 
         this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
           if (response.ok)

@@ -52,7 +52,7 @@ class Follower
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // check the rights on the object
-        if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($object->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the object properties
@@ -124,7 +124,7 @@ class Follower
             if (strlen($last_name) > 0)
                 $sender_name = $sender_name . ' ' . $last_name;
 
-            $message_type = \Flexio\Object\Message::TYPE_EMAIL_SHARE;
+            $message_type = \Flexio\Api\Message::TYPE_EMAIL_SHARE;
             $from_name = $sender_name;
             $from_email = \Flexio\System\System::getCurrentUserEmail();
 
@@ -136,7 +136,7 @@ class Follower
             $email_params['object_eid'] = $object->getEid();
             $email_params['message'] = $message;
 
-            $email = \Flexio\Object\Message::create($message_type, $email_params);
+            $email = \Flexio\Api\Message::create($message_type, $email_params);
             $email->send();
 
             // regardless of whether or not they're a new user, add a sharing association
@@ -207,7 +207,7 @@ class Follower
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // for all other users, check the rights on the object
-        if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($object->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         \Flexio\System\System::getModel()->assoc_delete($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
@@ -232,7 +232,7 @@ class Follower
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($object->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($object->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get a list of the user eids associated with this object; this

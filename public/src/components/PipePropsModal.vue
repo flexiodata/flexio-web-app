@@ -2,6 +2,7 @@
   <ui-modal
     ref="dialog"
     dismiss-on="close-button"
+    @open="onOpen"
     @hide="onHide"
   >
     <div slot="header" class="w-100">
@@ -59,6 +60,10 @@
           v-model="pipe.description"
         ></ui-textbox>
       </form>
+
+      <ui-collapsible class="mt4 ui-collapsible--sm" title="Permissions" open disable-ripple v-if="show_permissions">
+        <rights-list :object="pipe" @change="onRightsChanged"></rights-list>
+      </ui-collapsible>
     </div>
 
     <div slot="footer" class="flex flex-row w-100">
@@ -79,6 +84,8 @@
     CONNECTION_TYPE_POSTGRES
   } from '../constants/connection-type'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import * as mt from '../constants/member-type'
+  import * as at from '../constants/action-type'
   import * as connections from '../constants/connection-info'
   import Btn from './Btn.vue'
   import ConnectionIcon from './ConnectionIcon.vue'
@@ -86,19 +93,49 @@
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
   import UrlInputList from './UrlInputList.vue'
+  import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
+
+  const defaultRights = () => {
+    return {
+      [mt.MEMBER_TYPE_OWNER]: {
+        [at.ACTION_TYPE_READ]: true,
+        [at.ACTION_TYPE_WRITE]: true,
+        [at.ACTION_TYPE_EXECUTE]: true,
+        [at.ACTION_TYPE_DELETE]: true
+      },
+      [mt.MEMBER_TYPE_MEMBER]: {
+        [at.ACTION_TYPE_READ]: true,
+        [at.ACTION_TYPE_WRITE]: true,
+        [at.ACTION_TYPE_EXECUTE]: true,
+        [at.ACTION_TYPE_DELETE]: false
+      },
+      [mt.MEMBER_TYPE_PUBLIC]: {
+        [at.ACTION_TYPE_READ]: false,
+        [at.ACTION_TYPE_WRITE]: false,
+        [at.ACTION_TYPE_EXECUTE]: false,
+        [at.ACTION_TYPE_DELETE]: false
+      }
+    }
+  }
 
   const defaultAttrs = () => {
     return {
       eid: null,
       name: 'New Pipe',
       ename: '',
-      description: ''
+      description: '',
+      rights: defaultRights()
     }
   }
 
   export default {
-    props: ['project-eid'],
+    props: {
+      'project-eid': {
+        default: '',
+        type: String
+      },
+    },
     mixins: [Validation],
     components: {
       Btn,
@@ -106,7 +143,8 @@
       ConnectionChooserList,
       FileExplorerBar,
       FileChooserList,
-      UrlInputList
+      UrlInputList,
+      RightsList
     },
     watch: {
       'pipe.ename': function(val, old_val) {
@@ -122,6 +160,7 @@
     data() {
       return {
         mode: 'edit-pipe',
+        show_permissions: false,
         ss_errors: {},
         pipe: _.extend({}, defaultAttrs()),
         original_pipe: _.extend({}, defaultAttrs())
@@ -193,8 +232,15 @@
         this.pipe = _.extend({}, defaultAttrs(), attrs)
         this.original_pipe = _.extend({}, defaultAttrs(), attrs)
       },
+      onOpen() {
+        this.$nextTick(() => { this.show_permissions = true })
+      },
       onHide() {
         this.reset()
+        this.show_permissions = false
+      },
+      onRightsChanged(rights) {
+        this.pipe = _.assign({}, this.pipe, { rights })
       }
     }
   }

@@ -33,7 +33,7 @@ class Test
         // TEST: Structure::create(); no input
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::create()->get();
+        $actual = \Flexio\Base\Structure::create()->get();
         $expected = array();
         TestCheck::assertArray('A.1', 'Structure::create(); if no input is specified, create an empty structure',  $actual, $expected, $results);
 
@@ -42,7 +42,7 @@ class Test
         // TEST: Structure::create(); column entries
 
         // BEGIN TEST
-        $actual = \Flexio\Object\Structure::create(null)->get();
+        $actual = \Flexio\Base\Structure::create(null)->get();
         $expected = '
         [
         ]
@@ -53,7 +53,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create(false);
+            \Flexio\Base\Structure::create(false);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -67,7 +67,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create(true);
+            \Flexio\Base\Structure::create(true);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -81,7 +81,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create(1);
+            \Flexio\Base\Structure::create(1);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -95,7 +95,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create('a');
+            \Flexio\Base\Structure::create('a');
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -109,7 +109,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create(new \stdClass());
+            \Flexio\Base\Structure::create(new \stdClass());
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -124,7 +124,7 @@ class Test
         [
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
         ]
@@ -140,7 +140,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -159,7 +159,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -178,7 +178,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -194,7 +194,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"text"}
@@ -212,7 +212,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -232,7 +232,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -249,7 +249,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"text"},
@@ -265,7 +265,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = json_decode('
         [
             {"name":"field1", "type":"text"},
@@ -287,7 +287,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -306,7 +306,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -322,7 +322,7 @@ class Test
             {"name":"field1"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"text"}
@@ -336,7 +336,7 @@ class Test
             {"name":"Field 1"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field 1"}
@@ -350,7 +350,7 @@ class Test
             {"name":"  Field 1  "}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field 1"}
@@ -368,7 +368,7 @@ class Test
             {"name":"field1"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"text"}
@@ -385,7 +385,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -404,7 +404,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -423,7 +423,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -439,7 +439,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"text"}
@@ -453,7 +453,7 @@ class Test
             {"name":"field1", "type":"character"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character"}
@@ -467,7 +467,7 @@ class Test
             {"name":"field1", "type":"widecharacter"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"widecharacter"}
@@ -481,7 +481,7 @@ class Test
             {"name":"field1", "type":"numeric"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"numeric"}
@@ -495,7 +495,7 @@ class Test
             {"name":"field1", "type":"double"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"double"}
@@ -509,7 +509,7 @@ class Test
             {"name":"field1", "type":"integer"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"integer"}
@@ -523,7 +523,7 @@ class Test
             {"name":"field1", "type":"date"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"date"}
@@ -537,7 +537,7 @@ class Test
             {"name":"field1", "type":"datetime"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"datetime"}
@@ -551,7 +551,7 @@ class Test
             {"name":"field1", "type":"boolean"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"boolean"}
@@ -565,7 +565,7 @@ class Test
             {"name":"field1", "type":"Character"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character"}
@@ -579,7 +579,7 @@ class Test
             {"name":"field1", "type":"DATE"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"date"}
@@ -600,7 +600,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -619,7 +619,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -638,7 +638,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -654,7 +654,7 @@ class Test
             {"name":"field1", "type":"character", "width":1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character", "width":1}
@@ -668,7 +668,7 @@ class Test
             {"name":"field1", "type":"text", "width":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"text", "width":null}
@@ -682,7 +682,7 @@ class Test
             {"name":"field1", "type":"text", "width":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"text", "width":null}
@@ -696,7 +696,7 @@ class Test
             {"name":"field1", "type":"character", "width":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character", "width":1}
@@ -710,7 +710,7 @@ class Test
             {"name":"field1", "type":"character", "width":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character", "width":255}
@@ -724,7 +724,7 @@ class Test
             {"name":"field1", "type":"widecharacter", "width":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"widecharacter", "width":1}
@@ -738,7 +738,7 @@ class Test
             {"name":"field1", "type":"widecharacter", "width":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"widecharacter", "width":255}
@@ -752,7 +752,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"numeric", "width":2}
@@ -766,7 +766,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"numeric", "width":18}
@@ -780,7 +780,7 @@ class Test
             {"name":"field1", "type":"double", "width":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"double", "width":8}
@@ -794,7 +794,7 @@ class Test
             {"name":"field1", "type":"double", "width":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"double", "width":8}
@@ -808,7 +808,7 @@ class Test
             {"name":"field1", "type":"integer", "width":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"integer", "width":8}
@@ -822,7 +822,7 @@ class Test
             {"name":"field1", "type":"integer", "width":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"integer", "width":8}
@@ -836,7 +836,7 @@ class Test
             {"name":"field1", "type":"date", "width":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"date", "width":8}
@@ -850,7 +850,7 @@ class Test
             {"name":"field1", "type":"date", "width":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"date", "width":8}
@@ -864,7 +864,7 @@ class Test
             {"name":"field1", "type":"datetime", "width":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"datetime", "width":8}
@@ -878,7 +878,7 @@ class Test
             {"name":"field1", "type":"datetime", "width":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"datetime", "width":8}
@@ -892,7 +892,7 @@ class Test
             {"name":"field1", "type":"boolean", "width":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"boolean", "width":1}
@@ -906,7 +906,7 @@ class Test
             {"name":"field1", "type":"boolean", "width":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"boolean", "width":1}
@@ -927,7 +927,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -946,7 +946,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -965,7 +965,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -981,7 +981,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":10, "scale":1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"numeric", "width":10, "scale":1}
@@ -995,7 +995,7 @@ class Test
             {"name":"field1", "type":"text", "width":1, "scale":-1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"text", "width":null, "scale":null}
@@ -1009,7 +1009,7 @@ class Test
             {"name":"field1", "type":"text", "width":1, "scale":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"text", "width":null, "scale":null}
@@ -1023,7 +1023,7 @@ class Test
             {"name":"field1", "type":"character", "width":1, "scale":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = json_decode('
         [
             {"name":"field1", "type":"character", "width":1, "scale":null}
@@ -1037,7 +1037,7 @@ class Test
             {"name":"field1", "type":"character", "width":1, "scale":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character", "width":1, "scale":null}
@@ -1051,7 +1051,7 @@ class Test
             {"name":"field1", "type":"widecharacter", "width":1, "scale":-1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"widecharacter", "width":1, "scale":null}
@@ -1065,7 +1065,7 @@ class Test
             {"name":"field1", "type":"widecharacter", "width":1, "scale":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"widecharacter", "width":1, "scale":null}
@@ -1079,7 +1079,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":18, "scale":-1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"numeric", "width":18, "scale":0}
@@ -1093,7 +1093,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":18, "scale":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"numeric", "width":18, "scale":12}
@@ -1107,7 +1107,7 @@ class Test
             {"name":"field1", "type":"double", "width":8, "scale":-1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"double", "width":8, "scale":0}
@@ -1121,7 +1121,7 @@ class Test
             {"name":"field1", "type":"double", "width":8, "scale":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"double", "width":8, "scale":12}
@@ -1135,7 +1135,7 @@ class Test
             {"name":"field1", "type":"integer", "width":8, "scale":-1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"integer", "width":8, "scale":null}
@@ -1149,7 +1149,7 @@ class Test
             {"name":"field1", "type":"integer", "width":8, "scale":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"integer", "width":8, "scale":null}
@@ -1163,7 +1163,7 @@ class Test
             {"name":"field1", "type":"date", "width":8, "scale":-1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"date", "width":8, "scale":null}
@@ -1177,7 +1177,7 @@ class Test
             {"name":"field1", "type":"date", "width":8, "scale":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"date", "width":8, "scale":null}
@@ -1191,7 +1191,7 @@ class Test
             {"name":"field1", "type":"datetime", "width":8, "scale":-1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"datetime", "width":8, "scale":null}
@@ -1205,7 +1205,7 @@ class Test
             {"name":"field1", "type":"datetime", "width":8, "scale":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"datetime", "width":8, "scale":null}
@@ -1219,7 +1219,7 @@ class Test
             {"name":"field1", "type":"boolean", "width":1, "scale":-1}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"boolean", "width":1, "scale":null}
@@ -1233,7 +1233,7 @@ class Test
             {"name":"field1", "type":"boolean", "width":1, "scale":100000}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"boolean", "width":1, "scale":null}
@@ -1254,7 +1254,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -1273,7 +1273,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -1292,7 +1292,7 @@ class Test
         $actual = '';
         try
         {
-            \Flexio\Object\Structure::create($column_info);
+            \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
@@ -1308,7 +1308,7 @@ class Test
             {"name":"field1", "type":"character", "width":10, "expression":""}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character", "width":10, "expression":""}
@@ -1322,7 +1322,7 @@ class Test
             {"name":"field1", "type":"character", "width":10, "expression":"abc"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character", "width":10, "expression":"abc"}
@@ -1336,7 +1336,7 @@ class Test
             {"name":"field1", "type":"character", "width":10, "expression":"aBC"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character", "width":10, "expression":"aBC"}
@@ -1354,7 +1354,7 @@ class Test
             {"name":"field1", "type":"character", "width":10, "scale":0, "unknown":"value"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "store_name":"field1"}
@@ -1368,7 +1368,7 @@ class Test
             {"name":"field 1", "type":"character", "width":10, "scale":0, "unknown":"value"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field 1", "store_name":"field_1"}
@@ -1382,7 +1382,7 @@ class Test
             {"name":"field #", "type":"character", "width":10, "scale":0, "unknown":"value"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field #", "store_name":"field_no"}
@@ -1396,7 +1396,7 @@ class Test
             {"name":"field %", "type":"character", "width":10, "scale":0, "unknown":"value"}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field %", "store_name":"field_pct"}
@@ -1414,7 +1414,7 @@ class Test
             {"name":"field1", "type":"character", "width":10, "scale":0, "unknown":"value"}
         ]
         ',true);
-        $columns = \Flexio\Object\Structure::create($column_info)->get();
+        $columns = \Flexio\Base\Structure::create($column_info)->get();
         $actual = isset($columns['unknown']) === false;
         $expected = true;
         TestCheck::assertBoolean('I.1', 'Structure::create(); make sure unknown parameters aren\'t saved',  $actual, $expected, $results);
@@ -1430,7 +1430,7 @@ class Test
             {"name":"field2", "type":"character", "width":10, "scale":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field1", "type":"character", "width":10, "scale":null},
@@ -1446,7 +1446,7 @@ class Test
             {"name":"field", "type":"character", "width":10, "scale":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field", "type":"character", "width":5, "scale":null},
@@ -1463,7 +1463,7 @@ class Test
             {"name":"field_1", "type":"character", "width":15, "scale":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field", "type":"character", "width":5, "scale":null},
@@ -1481,7 +1481,7 @@ class Test
             {"name":"field", "type":"character", "width":15, "scale":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"field", "type":"character", "width":5, "scale":null},
@@ -1499,7 +1499,7 @@ class Test
             {"name":"column ", "type":"character", "width":15, "scale":0}
         ]
         ',true);
-        $actual = \Flexio\Object\Structure::create($column_info)->get();
+        $actual = \Flexio\Base\Structure::create($column_info)->get();
         $expected = '
         [
             {"name":"column 1", "store_name":"column_1", "width":5, "scale":null},

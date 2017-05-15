@@ -27,6 +27,7 @@ class Connection
                 'ename'             => array('type' => 'identifier', 'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
+                'rights'            => array('type' => 'object', 'required' => false),
                 'host'              => array('type' => 'string',  'required' => false),
                 'port'              => array('type' => 'integer', 'required' => false),
                 'username'          => array('type' => 'string',  'required' => false),
@@ -48,7 +49,7 @@ class Connection
             if ($project === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-            if ($project->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+            if ($project->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -56,6 +57,11 @@ class Connection
         $connection = \Flexio\Object\Connection::create($params);
         $connection->setOwner($requesting_user_eid);
         $connection->setCreatedBy($requesting_user_eid);
+
+        // the created of the object is the owner, so if rights property is
+        // set, then set the rights
+        if (isset($params['rights']))
+            \Flexio\Object\Acl::apply($connection, $params['rights']);
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
@@ -82,7 +88,7 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_DELETE) === false)
+        if ($connection->allows(\Flexio\Object\Action::TYPE_DELETE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection->delete();
@@ -98,6 +104,7 @@ class Connection
                 'ename'             => array('type' => 'identifier', 'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
+                'rights'            => array('type' => 'object', 'required' => false),
                 'host'              => array('type' => 'string',  'required' => false),
                 'port'              => array('type' => 'integer', 'required' => false),
                 'username'          => array('type' => 'string',  'required' => false),
@@ -117,11 +124,15 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($connection->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the properties
         $connection->set($params);
+
+        // if we're the owner and the rights property is set, then set the rights
+        if ($requesting_user_eid === $connection->getOwner() && isset($params['rights']))
+            \Flexio\Object\Acl::apply($connection, $params['rights']);
 
         // get the $connection properties
         $properties = self::filterProperties($connection->get());
@@ -144,42 +155,12 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($connection->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the connection properties
         $properties = self::filterProperties($connection->get());
         return $properties;
-    }
-
-    public static function comments(array $params, string $requesting_user_eid = null) : array
-    {
-        $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $connection_identifier = $params['eid'];
-
-        // load the object
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // get the comments
-        $result = array();
-        $comments = $connection->getComments();
-        foreach ($comments as $c)
-        {
-            $result[] = $c->get();
-        }
-
-        return $result;
     }
 
     public static function describe(array $params, string $requesting_user_eid = null) : array
@@ -199,7 +180,7 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($connection->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the connection items
@@ -235,9 +216,9 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_READ) === false)
+        if ($connection->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($connection->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // try to connect
@@ -262,7 +243,7 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        if ($connection->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // disconnect

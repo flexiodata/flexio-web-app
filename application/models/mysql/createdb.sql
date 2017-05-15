@@ -30,7 +30,6 @@ CREATE TABLE tbl_object (
   eid_type char(3) NOT NULL default '',
   eid_status char(1) NOT NULL default '',
   ename varchar(40) NOT NULL default '',
-  rights text default '',
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
@@ -118,6 +117,27 @@ CREATE TABLE tbl_token (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX idx_token_user_eid ON tbl_token (user_eid);
+
+
+
+--
+-- Table structure for table tbl_acl
+--
+
+DROP TABLE IF EXISTS tbl_acl;
+CREATE TABLE tbl_acl (
+  id int UNSIGNED NOT NULL auto_increment,
+  object_eid char(12) NOT NULL default '',
+  access_type char(3) NOT NULL default '',
+  access_code varchar(255) NOT NULL default '',
+  action char(40) NOT NULL default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE INDEX idx_acl_object_eid ON tbl_acl (object_eid);
+CREATE INDEX idx_acl_object_eid_action ON tbl_acl (object_eid,action);
 
 
 
