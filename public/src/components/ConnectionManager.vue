@@ -91,7 +91,7 @@
       tryUpdateConnection(attrs, modal) {
         var me = this
         var eid = attrs.eid
-        attrs = _.pick(attrs, ['name', 'ename', 'description', 'token', 'host', 'port', 'username', 'password', 'database'])
+        attrs = _.pick(attrs, ['name', 'ename', 'description', 'rights', 'token', 'host', 'port', 'username', 'password', 'database'])
         _.extend(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
