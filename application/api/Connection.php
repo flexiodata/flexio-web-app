@@ -131,7 +131,7 @@ class Connection
         $connection->set($params);
 
         // if we're the owner and the rights property is set, then set the rights
-        if ($requesting_user_eid === $pipe->getOwner() && isset($params['rights']))
+        if ($requesting_user_eid === $connection->getOwner() && isset($params['rights']))
             \Flexio\Object\Acl::apply($connection, $params['rights']);
 
         // get the $connection properties
