@@ -305,8 +305,6 @@
         this.connection = _.assign({}, this.connection, { rights })
       },
       createPendingConnection(item) {
-        debugger
-
         var attrs = _.assign({}, this.connection, {
           name: item.service_name,
           connection_type: item.connection_type,
