@@ -186,6 +186,26 @@ class Test
             "ename" : null,
             "name" : null,
             "description" : null,
+            "rights" : {
+                "owner" : {
+                    "read": null,
+                    "write": null,
+                    "delete": null,
+                    "execute": null
+                },
+                "member" : {
+                    "read": null,
+                    "write": null,
+                    "delete": null,
+                    "execute": null
+                },
+                "public" : {
+                    "read": null,
+                    "write": null,
+                    "delete": null,
+                    "execute": null
+                }
+            },
             "project" : {
                 "eid" : null,
                 "eid_type" : null,
