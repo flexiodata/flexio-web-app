@@ -1,19 +1,25 @@
 <template>
   <div class="pa4">
-    <div class="flex flex-row flex-wrap">
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openAlertModal">Alert Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openConfirmModal">Confirm Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewProjectPropsModal">New Project Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditProjectPropsModal">Edit Project Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewConnectionModal">New Connection Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditConnectionModal">Edit Connection Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewPipePropsModal">New Pipe Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditPipePropsModal">Edit Pipe Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeScheduleModal">Pipe Schedule Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeShareModal">Pipe Share Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEmailSupportModal">Email Support Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openMemberAddModal">Member Add Modal</btn></div>
-      <div class="pa2 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openTallModal">Tall Modal</btn></div>
+    <div class="flex flex-row flex-wrap mw8 center">
+      <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Common Modals</div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openAlertModal">Alert Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openConfirmModal">Confirm Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEmailSupportModal">Email Support Modal</btn></div>
+      <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Project Modals</div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewProjectPropsModal">New Project Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditProjectPropsModal">Edit Project Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openDeleteProjectPropsModal">Delete Project Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openMemberAddModal">Member Add Modal</btn></div>
+      <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Connection Modals</div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewConnectionModal">New Connection Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditConnectionModal">Edit Connection Modal</btn></div>
+      <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Pipe Modals</div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewPipePropsModal">New Pipe Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditPipePropsModal">Edit Pipe Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeScheduleModal">Pipe Schedule Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeShareModal">Pipe Share Modal</btn></div>
+      <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Other Modals</div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openTallModal">Tall Modal</btn></div>
     </div>
 
     <alert-modal
@@ -39,6 +45,12 @@
       @hide="show_project_props_modal = false"
       v-if="show_project_props_modal"
     ></project-props-modal>
+
+    <project-delete-modal
+      ref="modal-project-delete"
+      @hide="show_project_delete_modal = false"
+      v-if="show_project_delete_modal"
+    ></project-delete-modal>
 
     <connection-props-modal
       ref="modal-connection-props"
@@ -73,12 +85,14 @@
 
     <member-add-modal
       ref="modal-member-add"
-      @hide="show_tall_modal = false"
-      v-if="show_tall_modal"
+      @hide="show_member_add_modal = false"
+      v-if="show_member_add_modal"
     ></member-add-modal>
 
     <ui-modal
       ref="modal-tall"
+      @hide="show_tall_modal = false"
+      v-if="show_tall_modal"
     >
       <div slot="header" class="f4">Tall modal</div>
 
@@ -95,8 +109,8 @@
       <p>Lobortis luctus nisl ut ipsum, aliquam sed orci rhoncus et vestibulum habitant, enim elit sem mi. Ante cursus wisi turpis, purus lacinia orci cursus, diam ac pharetra. Scelerisque non fringilla non adipiscing, vel elit ante massa auctor quam, ante eros vitae justo varius curabitur donec. Tellus consequat nunc sollicitudin vestibulum, nunc tortor proin integer orci pede, risus vitae, dictumst nibh aenean donec malesuada a pellentesque, cum suspendisse semper suspendisse mauris aliquam sed. Adipiscing non eget elit enim arcu, sed ut massa non vitae, leo aenean maecenas at recusandae nulla fringilla, ad iaculis justo in suspendisse, quis tellus nulla. Adipiscing magna cursus, in morbi feugiat vitae eu, faucibus amet, ut pellentesque ultrices et aliquam mauris, vel pariatur dolor placerat consequat. Justo suscipit dis vitae lectus, class ante non mauris fringilla tristique.</p>
 
       <div slot="footer" class="flex flex-row items-end">
-        <btn btn-md class="b ttu blue mr2" @click="close()">Cancel</btn>
-        <btn btn-md class="b ttu blue" @click="close()">Ok</btn>
+        <btn btn-md class="b ttu blue mr2" @click="show_tall_modal = false">Cancel</btn>
+        <btn btn-md class="b ttu blue" @click="show_tall_modal = false">Ok</btn>
       </div>
     </ui-modal>
 
@@ -109,6 +123,7 @@
   import AlertModal from './AlertModal.vue'
   import ConfirmModal from './ConfirmModal.vue'
   import ProjectPropsModal from './ProjectPropsModal.vue'
+  import ProjectDeleteModal from './ProjectDeleteModal.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
   import PipePropsModal from './PipePropsModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
@@ -144,6 +159,7 @@
       AlertModal,
       ConfirmModal,
       ProjectPropsModal,
+      ProjectDeleteModal,
       ConnectionPropsModal,
       PipePropsModal,
       PipeScheduleModal,
@@ -184,6 +200,11 @@
       openEditProjectPropsModal() {
         this.show_project_props_modal = true
         this.$nextTick(() => { this.$refs['modal-project-props'].open(exampleProject()) })
+      },
+
+      openDeleteProjectPropsModal() {
+        this.show_project_delete_modal = true
+        this.$nextTick(() => { this.$refs['modal-project-delete'].open(exampleProject()) })
       },
 
       openNewConnectionModal() {
