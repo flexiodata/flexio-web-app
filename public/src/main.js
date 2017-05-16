@@ -104,7 +104,7 @@ router.beforeEach((to, from, next) => {
       next()
     }, response => {
       next()
-    }
+    })
   }
 })
 
