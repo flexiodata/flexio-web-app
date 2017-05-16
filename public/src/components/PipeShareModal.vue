@@ -1,23 +1,10 @@
 <template>
   <ui-modal
     ref="dialog"
-    remove-close-button
     size="large"
     @hide="onHide"
   >
-    <div slot="header" class="w-100">
-      <div class="flex flex-row items-center">
-        <div class="flex-fill">
-          <span class="f4">Embed '{{pipe.name}}'</span>
-        </div>
-        <div
-          class="pointer f3 lh-solid b child black-30 hover-black-60"
-          @click="close"
-        >
-          &times;
-        </div>
-      </div>
-    </div>
+    <div slot="header" class="f4">Embed '{{pipe.name}}'</div>
 
     <div class="flex flex-row">
       <input
@@ -39,7 +26,7 @@
         :data-clipboard-target="'#'+input_id"
       ><span class="ttu b">Copy</span></btn>
     </div>
-    <div class="fw6 black-60 mt3 mb1">Preview:</div>
+    <div class="fw6 black-60 mt4 mb1">Preview:</div>
     <div v-html="embed"></div>
   </ui-modal>
 </template>

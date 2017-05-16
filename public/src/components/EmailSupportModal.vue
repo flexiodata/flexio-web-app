@@ -1,7 +1,6 @@
 <template>
   <ui-modal
     ref="dialog"
-    remove-close-button
     @hide="onHide"
   >
     <div slot="header" class="f4">Email Flex.io Support</div>

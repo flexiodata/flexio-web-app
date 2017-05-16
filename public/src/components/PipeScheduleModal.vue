@@ -2,7 +2,6 @@
   <ui-modal
     class="overflow-visible"
     ref="dialog"
-    remove-close-button
     size="large"
     @hide="onHide"
   >
