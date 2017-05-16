@@ -106,6 +106,24 @@ const removeAbstract = (state, objs) => {
   state['objects'] = _.omit(state['objects'], to_delete)
 }
 
+const removeKeys = (state, objs, keys) => {
+  // convert string (eid) to an array containing a single object
+  if (_.isString(objs))
+    objs = [{ eid: objs }]
+
+  // convert object to an array containing a single object
+  if (_.isObject(objs) && !_.isArray(objs))
+    objs = [objs]
+
+  // map each object to a key value
+  objs = _.keyBy(objs, 'eid')
+
+  _.each(objs, (obj, eid) => {
+    // remove the corresponding keys from each object in the state
+    state['objects'][eid] = _.omit(state['objects'][eid], keys)
+  })
+}
+
 export const addProject        = (state, objs, extra_defaults) => { addAbstract(state, objs, PROJECT_DEFAULTS,                  extra_defaults) }
 export const addPipe           = (state, objs, extra_defaults) => { addAbstract(state, objs, PIPE_DEFAULTS,                     extra_defaults) }
 export const addStream         = (state, objs, extra_defaults) => { addAbstract(state, objs, STREAM_DEFAULTS,                   extra_defaults) }
@@ -129,6 +147,7 @@ export const updateProcessTask = (state, eid, attrs) => { updateAbstract(state, 
 export const updateUser        = (state, eid, attrs) => { updateAbstract(state, eid, attrs) }
 
 export const removeObject      = (state, objs) => { removeAbstract(state, objs) }
+export const removeObjectKeys  = (state, objs, keys) => { removeKeys(state, objs, keys) }
 
 export const resetState = (state) => {
   var init = initialState()

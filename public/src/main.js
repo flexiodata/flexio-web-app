@@ -64,44 +64,47 @@ router.beforeEach((to, from, next) => {
   // update the active document in the store
   store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.eid || to.name)
 
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (store.state.active_user_eid.length > 0)
+  {
+    // user is signed in; move to the next route
+    next()
+  }
+   else if (to.matched.some(record => record.meta.requiresAuth))
+  {
     // this route requires authentication
 
-    if (store.state.active_user_eid.length > 0)
-    {
-      // user is signed in; move to the next route
-      next()
-    }
-     else
-    {
-      // check if the user is signed in
-      store.dispatch('fetchCurrentUser').then(response => {
-        if (store.state.active_user_eid.length > 0)
-        {
-          // user is signed in; move to the next route
-          next()
-        }
-         else
-        {
-          // user is not signed in; redirect them to the sign in page
-          next({
-            name: ROUTE_SIGNIN,
-            query: { redirect: to.fullPath }
-          })
-        }
-      }, response => {
-        // error fetching current user; bail out
+    // check if the user is signed in
+    store.dispatch('fetchCurrentUser').then(response => {
+      if (store.state.active_user_eid.length > 0)
+      {
+        // user is signed in; move to the next route
+        next()
+      }
+       else
+      {
+        // user is not signed in; redirect them to the sign in page
         next({
           name: ROUTE_SIGNIN,
           query: { redirect: to.fullPath }
         })
+      }
+    }, response => {
+      // error fetching current user; bail out
+      next({
+        name: ROUTE_SIGNIN,
+        query: { redirect: to.fullPath }
       })
-    }
+    })
   }
    else
   {
-    // this route does not require authentication; move to the next route
-    next()
+    // this route does not require authentication; try to sign in just to make
+    // sure we know who the active user is and move to the next route
+    store.dispatch('fetchCurrentUser').then(response => {
+      next()
+    }, response => {
+      next()
+    }
   }
 })
 

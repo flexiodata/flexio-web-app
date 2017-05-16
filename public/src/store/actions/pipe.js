@@ -1,5 +1,6 @@
 import api from '../../api'
 import * as types from '../mutation-types'
+import { OBJECT_TYPE_PIPE } from '../../constants/object-type'
 
 // ----------------------------------------------------------------------- //
 
@@ -60,6 +61,11 @@ export const fetchPipe = ({ commit }, { eid }) => {
     return response
   }, response => {
     // error callback
+
+    // errors don't include the eid or eid_type in the response body, so  we need
+    // to add them manually to ensure the object is serialized in the Vuex store
+    var eid_type = OBJECT_TYPE_PIPE
+    commit(types.FETCHED_PIPE, _.assign({ eid, eid_type }, response.body))
     commit(types.FETCHING_PIPE, { eid, fetching: false })
     return response
   })

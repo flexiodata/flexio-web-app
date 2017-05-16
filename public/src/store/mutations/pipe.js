@@ -1,5 +1,12 @@
 import * as types from '../mutation-types'
-import { addProject, updateProject, addPipe, updatePipe, removeObject } from './helpers'
+import {
+  addProject,
+  updateProject,
+  addPipe,
+  updatePipe,
+  removeObject,
+  removeObjectKeys
+} from './helpers'
 
 export default {
 
@@ -49,6 +56,10 @@ export default {
   },
 
   [types.FETCHED_PIPE] (state, pipe) {
+    // if the pipe in the store has an error node, remove it; the new fetch will
+    // put it back if there are still errors
+    removeObjectKeys(state, pipe, ['error'])
+
     addPipe(state, pipe, { is_fetched: true })
   },
 

@@ -2,6 +2,14 @@
   <div class="flex flex-column justify-center h-100" v-if="is_fetching">
     <spinner size="large" message="Loading pipe..."></spinner>
   </div>
+  <div class="flex flex-column justify-center items-center" v-else-if="!has_error">
+    <div class="f3 mid-gray">{{error_msg}}</div>
+    <div class="mt3" v-if="!is_signed_in">
+      <router-link :to="signin_route" class="link no-underline dib ttu b br1 white bg-blue darken-10 ph4 pv2a">
+        Sign in
+      </router-link>
+    </div>
+  </div>
   <div v-else class="flex flex-column items-stretch bg-nearer-white">
     <pipe-home-header
       class="flex-none pv2a ph3 ph4-l bg-near-white"
@@ -54,8 +62,8 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-  import { ROUTE_PIPEHOME } from '../constants/route'
+  import { mapState, mapGetters } from 'vuex'
+  import { ROUTE_SIGNIN, ROUTE_PIPEHOME } from '../constants/route'
   import { VARIABLE_REGEX } from '../constants/common'
   import { TASK_TYPE_COMMENT } from '../constants/task-type'
   import { TASK_INFO_COMMENT } from '../constants/task-info'
@@ -96,14 +104,32 @@
       }
     },
     computed: {
+      ...mapState([
+        'active_user_eid'
+      ]),
       pipe() {
         return _.get(this.$store, 'state.objects.'+this.eid, {})
       },
+      has_error() {
+        return _.get(this.pipe, 'error.code', '').length == 0
+      },
+      error_msg() {
+        return _.get(this.pipe, 'error.message', '')
+      },
       is_fetched() {
-        return _.get(this.pipe, 'is_fetched', false)
+        return _.get(this.pipe, 'is_fetched', false) && !this.has_error
       },
       is_fetching() {
         return _.get(this.pipe, 'is_fetching', false)
+      },
+      is_signed_in() {
+        return this.active_user_eid.length > 0
+      },
+      signin_route() {
+        return {
+          name: ROUTE_SIGNIN,
+          query: { redirect: this.$route.fullPath }
+        }
       },
       processes_fetched() {
         return _.get(this.pipe, 'processes_fetched', false)
