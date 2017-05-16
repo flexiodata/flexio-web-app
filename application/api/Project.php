@@ -128,10 +128,6 @@ class Project
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // check the rights on the object
-        if ($user->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
         // get the projects
         $result = array();
         $projects = $user->getProjects();
