@@ -61,7 +61,7 @@
         ></ui-textbox>
       </form>
 
-      <ui-collapsible class="mt4 ui-collapsible--sm" title="Permissions" open disable-ripple v-if="show_permissions">
+      <ui-collapsible class="mt4 ui-collapsible--sm" style="margin-bottom: 0" title="Permissions" open disable-ripple v-if="show_permissions">
         <rights-list :object="pipe" @change="onRightsChanged"></rights-list>
       </ui-collapsible>
     </div>

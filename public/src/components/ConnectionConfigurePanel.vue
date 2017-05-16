@@ -1,85 +1,80 @@
 <template>
   <div>
-    <div class="bt bw2 br2 br--top" :class="cls">
-      <div class="pa3 ba b--black-10 br2 br--bottom bg-black-05">
-        <div class="f4 fw6 mb2">Authentication</div>
-        <div v-if="is_oath">
-          <div v-if="is_connected">
-            <p class="lh-copy">
-              <i class="material-icons v-mid dark-green">check_circle</i>
-              <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
-            </p>
-            <div class="mt3 mb2 tc">
-              <btn btn-lg btn-outline class="b--black-20 bg-white" @click="onDisconnectClick">Disconnect from your {{service_name}} account</btn>
-            </div>
-          </div>
-          <div v-else>
-            <p class="lh-copy">To use this connection, you must connect {{service_name}} to Flex.io.</p>
-            <div class="mt3 mb2 tc">
-              <btn btn-lg btn-primary @click="onConnectClick">Authenticate your {{service_name}} account</btn>
-            </div>
-          </div>
+    <div v-if="is_oath">
+      <div v-if="is_connected">
+        <div class="lh-copy">
+          <i class="material-icons v-mid dark-green">check_circle</i>
+          <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
         </div>
-        <div v-else>
-          <p class="lh-copy" v-if="is_connected">
-            <i class="material-icons v-mid dark-green">check_circle</i>
-            <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
-          </p>
-          <p class="lh-copy" v-else>To use this connection, you must connect {{service_name}} to Flex.io.</p>
-          <div class="flex flex-column w-50-ns center mt1 mb3" :class="form_cls">
-            <ui-textbox
-              class="css-condensed css-input-token"
-              autocomplete="off"
-              label="Token"
-              floating-label
-              v-model.trim="info.token"
-              v-if="showInput('token')"
-            ></ui-textbox>
-            <ui-textbox
-              class="css-condensed css-input-host"
-              autocomplete="off"
-              floating-label
-              :label="host_label"
-              v-model.trim="info.host"
-              v-if="showInput('host')"
-            ></ui-textbox>
-            <ui-textbox
-              class="css-condensed css-input-port"
-              autocomplete="off"
-              label="Port"
-              floating-label
-              v-model.trim.number="info.port"
-              v-if="showInput('port')"
-            ></ui-textbox>
-            <ui-textbox
-              class="css-condensed css-input-username"
-              autocomplete="off"
-              floating-label
-              :label="username_label"
-              v-model.trim="info.username"
-              v-if="showInput('username')"
-            ></ui-textbox>
-            <ui-textbox
-              type="password"
-              class="css-condensed css-input-password"
-              autocomplete="off"
-              :label="password_label"
-              floating-label
-              v-model.trim="info.password"
-              v-if="showInput('password')"
-            ></ui-textbox>
-            <ui-textbox
-              class="css-condensed css-input-database"
-              autocomplete="off"
-              :label="database_label"
-              floating-label
-              v-model.trim="info.database"
-              v-if="showInput('database') && !is_sftp"
-            ></ui-textbox>
-            <div class="mt3 css-btn-test">
-              <btn btn-lg btn-primary class="w-100 ttu b" @click="onTestClick">Test connection</btn>
-            </div>
-          </div>
+        <div class="mt3 mb2 tc">
+          <btn btn-lg btn-outline class="b--black-20 bg-white" @click="onDisconnectClick">Disconnect from your {{service_name}} account</btn>
+        </div>
+      </div>
+      <div v-else>
+        <div class="lh-copy">To use this connection, you must connect {{service_name}} to Flex.io.</div>
+        <div class="mt3 mb2 tc">
+          <btn btn-lg btn-primary @click="onConnectClick">Authenticate your {{service_name}} account</btn>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <div class="lh-copy" v-if="is_connected">
+        <i class="material-icons v-mid dark-green">check_circle</i>
+        <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
+      </div>
+      <div class="lh-copy" v-else>To use this connection, you must connect {{service_name}} to Flex.io.</div>
+      <div class="flex flex-column w-50-ns center mt1 mb3" :class="form_cls">
+        <ui-textbox
+          class="css-condensed css-input-token"
+          autocomplete="off"
+          label="Token"
+          floating-label
+          v-model.trim="info.token"
+          v-if="showInput('token')"
+        ></ui-textbox>
+        <ui-textbox
+          class="css-condensed css-input-host"
+          autocomplete="off"
+          floating-label
+          :label="host_label"
+          v-model.trim="info.host"
+          v-if="showInput('host')"
+        ></ui-textbox>
+        <ui-textbox
+          class="css-condensed css-input-port"
+          autocomplete="off"
+          label="Port"
+          floating-label
+          v-model.trim.number="info.port"
+          v-if="showInput('port')"
+        ></ui-textbox>
+        <ui-textbox
+          class="css-condensed css-input-username"
+          autocomplete="off"
+          floating-label
+          :label="username_label"
+          v-model.trim="info.username"
+          v-if="showInput('username')"
+        ></ui-textbox>
+        <ui-textbox
+          type="password"
+          class="css-condensed css-input-password"
+          autocomplete="off"
+          :label="password_label"
+          floating-label
+          v-model.trim="info.password"
+          v-if="showInput('password')"
+        ></ui-textbox>
+        <ui-textbox
+          class="css-condensed css-input-database"
+          autocomplete="off"
+          :label="database_label"
+          floating-label
+          v-model.trim="info.database"
+          v-if="showInput('database') && !is_sftp"
+        ></ui-textbox>
+        <div class="mt3 css-btn-test">
+          <btn btn-lg btn-primary class="w-100 ttu b" @click="onTestClick">Test connection</btn>
         </div>
       </div>
     </div>

@@ -41,8 +41,7 @@
     <div v-if="is_open">
       <service-list v-show="!has_connection"
         @item-activate="createPendingConnection"
-      >
-      </service-list>
+      ></service-list>
       <div v-if="has_connection">
         <form novalidate @submit.prevent="submit">
           <div class="flex flex-row items-center">
@@ -91,19 +90,20 @@
           ></ui-textbox>
         </form>
 
-        <ui-collapsible class="mt4 ui-collapsible--sm" title="Permissions" open disable-ripple v-if="show_permissions">
+        <ui-collapsible class="ui-collapsible--sm" style="margin: 1.5rem 0 0 0" title="Permissions" disable-ripple v-if="show_permissions">
           <rights-list :object="connection" @change="onRightsChanged"></rights-list>
         </ui-collapsible>
 
-        <connection-configure-panel
-          class="mt4"
-          :connection="connection"
-          :mode="mode"
-          @disconnect="tryDisconnect"
-          @test="tryTest"
-          @connect="tryOauthConnect"
-          @change="updateConnection"
-        ></connection-configure-panel>
+        <ui-collapsible class="ui-collapsible--sm" style="margin: 1.5rem 0 0 0" title="Authentication" open disable-ripple>
+          <connection-configure-panel
+            :connection="connection"
+            :mode="mode"
+            @disconnect="tryDisconnect"
+            @test="tryTest"
+            @connect="tryOauthConnect"
+            @change="updateConnection"
+          ></connection-configure-panel>
+        </ui-collapsible>
       </div>
     </div>
 
