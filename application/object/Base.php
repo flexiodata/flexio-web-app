@@ -289,7 +289,7 @@ class Base implements IObject
         $rights = array();
         $rights[] = $r;
 
-        $this->getModel()->addRights($this->getEid(), $rights);
+        $this->addRights($rights);
         return $this;
     }
 
@@ -306,6 +306,12 @@ class Base implements IObject
         $rights[] = $r;
 
         $this->getModel()->deleteRights($this->getEid(), $rights);
+        return $this;
+    }
+
+    public function addRights(array $rights) : \Flexio\Object\Base
+    {
+        $this->getModel()->addRights($this->getEid(), $rights);
         return $this;
     }
 

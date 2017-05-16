@@ -92,11 +92,13 @@ class Process
         unset($process_properties['params']);
         $process = \Flexio\Object\Process::create($process_properties);
 
-        if ($pipe_owner !== false)
+        if ($pipe !== false)
         {
             // if the process is created from a pipe, it runs with pipe owner privileges
+            // and inherits the rights from the pipe
             $process->setOwner($pipe_owner);
             $process->setCreatedBy($pipe_owner);
+            $process->addRights($pipe->getRights());
         }
          else
         {

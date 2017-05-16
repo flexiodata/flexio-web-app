@@ -65,6 +65,7 @@ class Trigger
             unset($pipe_properties['ename']);
             $process = \Flexio\Object\Process::create($pipe_properties);
             $process->setOwner($pipe->getOwner()); // processes run with pipe owner privileges
+            $process->addRights($pipe->getRights()); // processes inherit rights from the pipe
 
             // set an environment variable (parameter) with the "from" email address
             $from_addresses = $parser->getFrom();
