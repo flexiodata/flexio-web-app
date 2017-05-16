@@ -55,7 +55,9 @@ class Test
             }
         ]
         ', true);
+        $user_eid = TestUtil::getDefaultTestUser();
         $pipe = \Flexio\Object\Pipe::create($properties);
+        $pipe->setOwner($user_eid);
         $content = getSampleEmailWithAttachment();
         $file = \Flexio\Base\File::getTempFilename('txt');
         file_put_contents($file, $content);

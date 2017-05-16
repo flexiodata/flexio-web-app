@@ -38,7 +38,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Object\User::MEMBER_GROUP;
-        $expected = 'group';
+        $expected = 'member';
         TestCheck::assertString('A.3', 'User member type',  $actual, $expected, $results);
 
         // BEGIN TEST

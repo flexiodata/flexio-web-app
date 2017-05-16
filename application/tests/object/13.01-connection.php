@@ -196,6 +196,26 @@ class Test
             "token_expires" : null,
             "connection_type" : null,
             "connection_status" : null,
+            "rights" : {
+                "owner" : {
+                    "read": null,
+                    "write": null,
+                    "delete": null,
+                    "execute": null
+                },
+                "member" : {
+                    "read": null,
+                    "write": null,
+                    "delete": null,
+                    "execute": null
+                },
+                "public" : {
+                    "read": null,
+                    "write": null,
+                    "delete": null,
+                    "execute": null
+                }
+            },
             "project" : {
                 "eid" : null,
                 "eid_type" : null,
