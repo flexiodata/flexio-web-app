@@ -39,6 +39,6 @@ interface IObject
     public function grant(string $action, string $identifier);
     public function revoke(string $action, string $identifier);
 
-    public function addRights($rights);
+    public function addRights(array $rights);
     public function getRights();
 }
