@@ -299,9 +299,9 @@ class Execute extends \Flexio\Jobs\Base
 
             if (!$done_reading)
             {
-                fxdebug("Reading... IsRunning=".($is_running?"Yes":"No")." DoneReading=".($done_reading?"Yes":"No")." DoneWriting=".($done_writing?"Yes":"No")."\n");
+                //fxdebug("Reading... IsRunning=".($is_running?"Yes":"No")." DoneReading=".($done_reading?"Yes":"No")." DoneWriting=".($done_writing?"Yes":"No")."\n");
                 $chunk = $process->read(1024);
-                fxdebug("Read from process: len=".($chunk===false?"false":"".strlen($chunk))." Data=$chunk\n\n\n");
+                //fxdebug("Read from process: len=".($chunk===false?"false":"".strlen($chunk))." Data=$chunk\n\n\n");
 
                 if ($chunk !== false)
                     $readbuf .= $chunk;
