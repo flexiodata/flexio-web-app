@@ -398,7 +398,11 @@
         // to be updated which will propogate to any derived computed values to change which
         // will cause our component to update
         if (!this.processes_fetched)
-          this.$store.dispatch('fetchProcesses', this.eid)
+        {
+          var pipe_eid = this.eid
+          var attrs = { start: 0, limit: 1, order: '-created' }
+          this.$store.dispatch('fetchProcesses', { pipe_eid, attrs })
+        }
       },
 
       tryFetchConnections() {

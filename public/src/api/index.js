@@ -98,7 +98,12 @@ export default {
   deletePipe:                     function({ eid })                     { return PipeResource[DEL] ({ eid })                                                              },
 
   // pipe (other)
-  fetchPipeProcesses:             function({ eid })                     { return PipeResource[GET] ({ eid, p1: 'processes' })                                             },
+  fetchPipeProcesses:             function({ eid, attrs }) {
+    var start = attrs.start
+    var limit = attrs.limit
+    var order = attrs.order
+    return PipeResource[GET] ({ eid, p1: 'processes', start, limit, order } )
+  },
 
   // task
   createPipeTask:                 function({ eid, attrs })              { return PipeResource[POS] ({ eid, p1: 'tasks' }, attrs)                                          },

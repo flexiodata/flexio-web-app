@@ -8,10 +8,10 @@ import {
 
 // ----------------------------------------------------------------------- //
 
-export const fetchProcesses = ({ commit }, pipe_eid) => {
+export const fetchProcesses = ({ commit }, { pipe_eid, attrs }) => {
   commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
 
-  return api.fetchPipeProcesses({ eid: pipe_eid }).then(response => {
+  return api.fetchPipeProcesses({ eid: pipe_eid, attrs }).then(response => {
     // success callback
     commit(types.FETCHED_PROCESSES, { pipe_eid, processes: response.body })
     commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: false })
