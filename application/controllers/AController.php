@@ -106,7 +106,7 @@ class AController extends \Flexio\System\FxControllerAction
         // if authenticating returns a string, it's a redirect url
         if ($result !== true && $result !== false)
         {
-            fxdebug('redirect URL is: '. $result);
+            //fxdebug('redirect URL is: '. $result);
             $this->_redirect($result);
         }
          else
