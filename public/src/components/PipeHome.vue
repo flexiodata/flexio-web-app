@@ -303,7 +303,10 @@
         // add the final step for running the pipe
         prompts.push(_.assign({
           is_prompt: true,
-          description: this.$refs['last-prompt'].innerHTML
+          description: this.$refs['last-prompt'].innerHTML,
+          // this is required so the pipe builder item
+          // has an 'id' anchor for the scrolling to work
+          eid: _.uniqueId('last-prompt-step-')
         }, TASK_INFO_COMMENT))
 
         return prompts
@@ -430,7 +433,7 @@
         // default to active task
         idx = _.defaultTo(idx, this.active_prompt_idx)
 
-        var task = _.get(this.tasks, '['+idx+']', null)
+        var task = _.get(this.prompt_tasks, '['+idx+']', null)
         if (_.isNil(task))
           return
 
