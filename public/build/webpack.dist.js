@@ -14,7 +14,15 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const config = merge(base, {
-  devtool: '#source-map'
+  devtool: '#source-map',
+
+  plugins: [
+    new webpack.BannerPlugin({
+      banner: options.banner,
+      raw: true,
+      entryOnly: true
+    })
+  ]
 })
 
 /* extend module rules */
