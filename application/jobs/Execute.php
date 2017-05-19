@@ -192,12 +192,19 @@ class Execute extends \Flexio\Jobs\Base
             unset($fld);
         }
 
+        $fxprocess = $this->getProcess();
+        $environment_variables = $fxprocess->getEnvironmentParams();
+        $user_variables = $fxprocess->getParams();
+
+        // merge in this order so that user-supplied variables don't override environment variables
+        $env = array_merge($user_variables, $environment_variables);
+
         $header = array(
             'name' => $instream->getName(),
             'size' => $instream->getSize(),
             'content_type' => $instream->getMimeType(),
             'structure' => $structure,
-            'env' => $this->getProcess()->getEnvironmentParams()
+            'env' => $env
         );
 
         $header_json = json_encode($header);
