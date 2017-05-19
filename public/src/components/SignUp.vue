@@ -5,12 +5,7 @@
         <img src="../assets/logo-flexio-header.png" alt="Flex.io">
       </div>
       <legend class="f3 tc ph0 mh0 mv3 black-80 w-100">Sign up for Flex.io</legend>
-      <div v-if="!is_valid_invite_code" class="mh5-ns">
-        <div class="mt3 mb4 lh-copy">
-          <p>Thanks so much for your interest in Flex.io! We're still in private beta and a valid invitation code is required in order to sign up. We'd still love to hear from you! Drop us a line at <a href="mailto:hello@flex.io?subject=Flex.io%20Beta%20Invite%20Request" target="_blank" rel="noopener noreferrer">hello@flex.io</a> and we'll see if we can help you out with that!</p>
-        </div>
-      </div>
-      <div v-else class="mh5-ns">
+      <div class="mh5-ns">
         <div v-if="error_msg" class="mv3 ph3 pv2a lh-title fw6 br1 white bg-dark-red">
           {{error_msg}}
         </div>
@@ -60,10 +55,6 @@
   import Btn from './Btn.vue'
   import Redirect from './mixins/redirect'
 
-  const INVITE_CODES = [
-    'e0miwu7qkv89h3rlrnst25e3jdxbbrpn'
-  ]
-
   export default {
     mixins: [Redirect],
     components: {
@@ -73,7 +64,6 @@
       next(vm => {
         // access to component instance via `vm`
         vm.verify_code = _.get(to, 'query.verify_code', '')
-        vm.invite_code = _.get(to, 'query.invite_code', '')
         vm.email = _.get(to, 'query.email', '')
 
         // if an email address has been provided to us, this indicates
@@ -102,7 +92,6 @@
         is_sent: false,
         error_msg: '',
         ss_errors: {},
-        invite_code: '',
         verify_code: '',
         input_cls: 'input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue lh-title ph3 pv2a w-100'
       }
@@ -119,9 +108,6 @@
             query: this.$route.query
 
         }
-      },
-      is_valid_invite_code() {
-        return _.includes(INVITE_CODES, this.invite_code)
       },
       email_error() {
         return _.get(this.ss_errors, 'email.message', '')
