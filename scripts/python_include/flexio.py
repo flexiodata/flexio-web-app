@@ -42,11 +42,17 @@ class Input(object):
             self._content_type = input_header['content_type']
         else:
             self._content_type = 'application/octet-stream'
+
         if 'structure' in input_header:
             self._structure = input_header['structure']
         else:
             self._structure = None
 
+        if 'env' in input_header:
+            self._env = input_header['env']
+        else:
+            self._env = {}
+        
         self.inited = True
 
     @property
@@ -72,6 +78,12 @@ class Input(object):
         if not self.inited:
             self.initialize()
         return self._structure
+
+    @property
+    def env(self):
+        if not self.inited:
+            self.initialize()
+        return self._env
     
     def table_reader(self, dict=False):
         if not self.inited:

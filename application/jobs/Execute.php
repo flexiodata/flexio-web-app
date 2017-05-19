@@ -196,8 +196,10 @@ class Execute extends \Flexio\Jobs\Base
             'name' => $instream->getName(),
             'size' => $instream->getSize(),
             'content_type' => $instream->getMimeType(),
-            'structure' => $structure
+            'structure' => $structure,
+            'env' => $this->getProcess()->getEnvironmentParams()
         );
+
         $header_json = json_encode($header);
         $process->write($header_json . "\r\n\r\n");
 
