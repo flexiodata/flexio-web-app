@@ -81,19 +81,21 @@ class Context
     {
         // sets the context to the input context
         $this->objects = $context->getStreams();
+        $this->env = $context->getEnv();
         return $this;
     }
 
     public function merge(\Flexio\Object\Context $context) : \Flexio\Object\Context
     {
-        // TODO: merge environmnet variables
-
-        // adds the items in the context to the existing context
+        // merge the streams
         $context_objects = $context->getStreams();
         foreach ($context_objects as $object)
         {
             $this->objects[] = $object;
         }
+
+        // merge the environment variables
+        $this->env = array_merge($this->env, $context->getEnv());
 
         return $this;
     }
