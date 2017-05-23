@@ -31,7 +31,6 @@ class Base implements \Flexio\Jobs\IJob
 EOD;
 
     // job properties
-    private $process;
     private $type;
     private $input;
     private $output;
@@ -49,7 +48,6 @@ EOD;
 
         // set the type and the process
         $object->type = static::MIME_TYPE;
-        $object->process = $process;
 
         // create the empty input and output context
         $object->input = \Flexio\Object\Context::create();
@@ -81,14 +79,6 @@ EOD;
         return $object;
     }
 
-    public function getProcess()
-    {
-        if (!isset($this->process))
-            return false;
-
-        return $this->process;
-    }
-
     public function getType() : string
     {
         return $this->type;
@@ -111,14 +101,5 @@ EOD;
 
     public function run()
     {
-    }
-
-    protected function isRunMode() : bool
-    {
-        $process = $this->getProcess();
-        if ($process === false)
-            return false;
-
-        return $process->isRunMode();
     }
 }

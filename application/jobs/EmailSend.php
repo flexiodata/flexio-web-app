@@ -29,9 +29,10 @@ class EmailSend extends \Flexio\Jobs\Base
         $this->getOutput()->merge($this->getInput());
 
         // note: current behavior is to only allow outputs (including email)
-        // in runtime; so, if we're not in runtime, we're done
-        if ($this->isRunMode() === false)
-            return;
+        // in runtime; right now, we only use runtime, so disable this for now
+        // TODO: need to implement isRunMode() by checking environment variable
+        // if ($this->isRunMode() === false)
+        //     return;
 
         // send the email
         $this->sendEmail();
