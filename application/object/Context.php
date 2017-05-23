@@ -124,13 +124,6 @@ class Context
         return $this;
     }
 
-    public function pop() : \Flexio\Object\Context
-    {
-        // removes an item from the end of the context
-        array_pop($this->objects);
-        return $this;
-    }
-
     public function getStreams() : array
     {
         // returns the streams in the context
@@ -146,22 +139,6 @@ class Context
     public function setEnv(array $arr)
     {
         $this->env = array_merge($this->env, arr);
-    }
-
-    public function find(string $name) // TODO: add return type
-    {
-        // returns the first object with a given name; if no object are found, returns false
-        foreach ($this->objects as $object)
-        {
-            $properties = $object->get();
-            if (isset($properties['name']))
-            {
-                if ($properties['name'] === $name)
-                    return $object;
-            }
-        }
-
-        return false;
     }
 
     public function clear() : \Flexio\Object\Context
