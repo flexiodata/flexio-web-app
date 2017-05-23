@@ -1007,7 +1007,7 @@ class Process extends \Flexio\Object\Base
 
         // load the job's php file and instantiate the job object
         include_once $class_file;
-        $job = $full_class_name::create($process, $task);
+        $job = $full_class_name::create($task);
 
         if ($job === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);

@@ -42,11 +42,11 @@ EOD;
     {
     }
 
-    public static function create(\Flexio\Object\Process $process = null, array $properties = null) : \Flexio\Jobs\Base
+    public static function create(array $properties = null) : \Flexio\Jobs\Base
     {
         $object = new static();
 
-        // set the type and the process
+        // set the type
         $object->type = static::MIME_TYPE;
 
         // create the empty input and output context

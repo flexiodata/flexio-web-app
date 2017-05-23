@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 
 interface IJob
 {
-    public static function create(\Flexio\Object\Process $process = null, array $properties = null);
+    public static function create(array $properties = null);
     public function getType() : string;
     public function getProperties() : array;
 
