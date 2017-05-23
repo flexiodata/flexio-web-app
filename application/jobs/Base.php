@@ -51,7 +51,7 @@ EOD;
         $object->type = static::MIME_TYPE;
         $object->process = $process;
 
-        // create the empty input and output collection
+        // create the empty input and output context
         $object->input = \Flexio\Object\Context::create();
         $object->output = \Flexio\Object\Context::create();
 

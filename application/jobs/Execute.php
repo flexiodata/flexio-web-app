@@ -20,7 +20,7 @@ class Execute extends \Flexio\Jobs\Base
 {
     public function run()
     {
-        $input = $this->getInput()->enum();
+        $input = $this->getInput()->getStreams();
         foreach ($input as $instream)
         {
             $mime_type = $instream->getMimeType();
@@ -140,9 +140,9 @@ class Execute extends \Flexio\Jobs\Base
 
                 $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
                 $streamwriter->write($code);
-                
+
                 return true;
-                
+
                 break;
 /*
             case 'javascript':
@@ -229,7 +229,7 @@ class Execute extends \Flexio\Jobs\Base
             {
                 // can't write to a process that's not running
                 $process->closeWrite();
-                $done_writing = true; 
+                $done_writing = true;
             }
 
             if ($is_running && !$done_writing)
@@ -270,7 +270,7 @@ class Execute extends \Flexio\Jobs\Base
                             $writebuf .= $chunk;
                         }
                     }
-                     
+
                     //ob_start();
                     //var_dump($buf);
                     //$s = ob_get_clean();
@@ -296,7 +296,7 @@ class Execute extends \Flexio\Jobs\Base
                         {
                             $writebuf = substr($writebuf, $written);
                         }
-                        
+
                        // fxdebug("\nBlock finished.\n\n");
 
                         //$totw += $len;
@@ -462,7 +462,7 @@ class Execute extends \Flexio\Jobs\Base
 
     // checks a script for compile errors;  If script compiles cleanly, returns true,
     // otherwise returns the error as a textual string
-    
+
     public static function checkScript(string $lang, string $code)
     {
         // only python supported for now

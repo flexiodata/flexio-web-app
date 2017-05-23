@@ -50,7 +50,7 @@ class Convert extends \Flexio\Jobs\Base
             $output_mime_type_from_definition = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
 
         // iterate through the inputs
-        $input = $this->getInput()->enum();
+        $input = $this->getInput()->getStreams();
         foreach ($input as $instream)
         {
             // get the mime type for the input; use the job format if it's

@@ -40,7 +40,7 @@ class EmailSend extends \Flexio\Jobs\Base
     private function sendEmail()
     {
         // get the attachments
-        $instream_list = $this->getInput()->enum();
+        $instream_list = $this->getInput()->getStreams();
         $attachments = self::getAttachmentsFromInput($instream_list);
 
         // build the email

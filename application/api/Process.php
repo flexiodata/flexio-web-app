@@ -372,7 +372,7 @@ class Process
         if ($process === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $process_streams = $process->getInput()->enum();
+        $process_streams = $process->getInput()->getStreams();
         return self::echoStreamInfo($process_streams, $params);
     }
 
@@ -397,7 +397,7 @@ class Process
         if ($process === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $process_streams = $process->getOutput()->enum();
+        $process_streams = $process->getOutput()->getStreams();
         return self::echoStreamInfo($process_streams, $params);
     }
 
@@ -417,10 +417,10 @@ class Process
         if ($process === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $input_collection = \Flexio\Object\Context::create();
-        $output_collection = \Flexio\Object\Context::create();
-        $process->getTaskStreams($input_collection, $output_collection, $task_identifier);
-        $input_streams = $input_collection->enum();
+        $input_context = \Flexio\Object\Context::create();
+        $output_context = \Flexio\Object\Context::create();
+        $process->getTaskStreams($input_context, $output_context, $task_identifier);
+        $input_streams = $input_context->getStreams();
 
         // get the structures
         $structures = array();
@@ -450,10 +450,10 @@ class Process
         if ($process === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $input_collection = \Flexio\Object\Context::create();
-        $output_collection = \Flexio\Object\Context::create();
-        $process->getTaskStreams($input_collection, $output_collection, $task_identifier);
-        $output_streams = $output_collection->enum();
+        $input_context = \Flexio\Object\Context::create();
+        $output_context = \Flexio\Object\Context::create();
+        $process->getTaskStreams($input_context, $output_context, $task_identifier);
+        $output_streams = $output_context->enum();
 
         // get the structures
         $structures = array();

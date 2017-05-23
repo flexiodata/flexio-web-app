@@ -33,7 +33,7 @@ class Output extends \Flexio\Jobs\Base
         $params = $job_definition['params'];
 
         // get an array of stream objects
-        $this->streams = $this->getInput()->enum();
+        $this->streams = $this->getInput()->getStreams();
 
         // resolve the output items, determining the appropriate connection type/eid for each item
         // in addition, a member will be populated called stream_idx, which will reference the

@@ -44,37 +44,37 @@ class Context
 
     public function copy() : \Flexio\Object\Context
     {
-        // creates a new collection with new objects for each of the
-        // original objects (i.e., we'll have a collection with new objects
+        // creates a new context with new objects for each of the
+        // original objects (i.e., we'll have a context with new objects
         // and eids but with the same data as the copied objects)
 
-        $collection_copy = \Flexio\Object\Context::create();
+        $context_copy = \Flexio\Object\Context::create();
         foreach ($this->objects as $object)
         {
             // try to copy the object; note: some objects can't be copied, so if
-            // a collection contains one of these objects, don't allow the collection
+            // a context contains one of these objects, don't allow the context
             // to be copied
             $object_copy = $object->copy();
-            $result = $collection_copy->push($object_copy);
+            $result = $context_copy->push($object_copy);
             if ($result === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
 
-        return $collection_copy;
+        return $context_copy;
     }
 
-    public function set(\Flexio\Object\Context $collection) : \Flexio\Object\Context
+    public function set(\Flexio\Object\Context $context) : \Flexio\Object\Context
     {
-        // sets the collection to the input collection
-        $this->objects = $collection->enum();
+        // sets the context to the input context
+        $this->objects = $context->getStreams();
         return $this;
     }
 
-    public function merge(\Flexio\Object\Context $collection) : \Flexio\Object\Context
+    public function merge(\Flexio\Object\Context $context) : \Flexio\Object\Context
     {
-        // adds the items in the collection to the existing collection
-        $collection_objects = $collection->enum();
-        foreach ($collection_objects as $object)
+        // adds the items in the context to the existing context
+        $context_objects = $context->getStreams();
+        foreach ($context_objects as $object)
         {
             $this->objects[] = $object;
         }
@@ -84,21 +84,21 @@ class Context
 
     public function push(\Flexio\Object\Base $object) : \Flexio\Object\Context
     {
-        // adds an object onto the end of the collection
+        // adds an object onto the end of the context
         $this->objects[] = $object;
         return $this;
     }
 
     public function pop() : \Flexio\Object\Context
     {
-        // removes an item from the end of the collection
+        // removes an item from the end of the context
         array_pop($this->objects);
         return $this;
     }
 
-    public function enum() : array
+    public function getStreams() : array
     {
-        // returns the items in the collection
+        // returns the streams in the context
         return $this->objects;
     }
 
@@ -131,7 +131,7 @@ class Context
 
     public function clear() : \Flexio\Object\Context
     {
-        // removes all items from the collection
+        // removes all items from the context
         $this->initialize();
         return $this;
     }

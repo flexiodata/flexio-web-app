@@ -28,7 +28,7 @@ class Merge extends \Flexio\Jobs\Base
         // them as text
 
         $table_merge_mode = true;
-        $input = $this->getInput()->enum();
+        $input = $this->getInput()->getStreams();
 
         foreach ($input as $instream)
         {
@@ -60,7 +60,7 @@ class Merge extends \Flexio\Jobs\Base
         // write to the output
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
-        $input = $this->getInput()->enum();
+        $input = $this->getInput()->getStreams();
         foreach ($input as $instream)
         {
             $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -100,7 +100,7 @@ class Merge extends \Flexio\Jobs\Base
             $row_template[$s['name']] = null;
 
         // insert the rows from each of the streams
-        $input = $this->getInput()->enum();
+        $input = $this->getInput()->getStreams();
         foreach ($input as $instream)
         {
             $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -123,7 +123,7 @@ class Merge extends \Flexio\Jobs\Base
         // this function finds out a "superset" structure from a list
         // of inputs that can be safely appended to
         $structures = array();
-        $input = $this->getInput()->enum();
+        $input = $this->getInput()->getStreams();
 
         foreach ($input as $instream)
             $structures[] = $instream->getStructure();

@@ -310,11 +310,11 @@ class Process extends \Flexio\Object\Base
         // get the current input
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
-        $input_collection = self::unstringifyCollectionEids($input);
+        $input_context = self::unstringifyCollectionEids($input);
 
         // add on the new input
-        $input_collection->push($stream);
-        $input_updated = self::stringifyCollectionEids($input_collection);
+        $input_context->push($stream);
+        $input_updated = self::stringifyCollectionEids($input_context);
         $this->getModel()->process->set($this->getEid(), array('input' => $input_updated));
 
         return $this;
@@ -328,38 +328,38 @@ class Process extends \Flexio\Object\Base
         // get whatever is in the input of the initial process step
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
-        $input_collection = self::unstringifyCollectionEids($input);
+        $input_context = self::unstringifyCollectionEids($input);
 
-        $input_collection = \Flexio\Object\Context::create();
-        foreach ($input_collection as $input)
+        $input_context = \Flexio\Object\Context::create();
+        foreach ($input_context as $input)
         {
             $stream = \Flexio\Object\Stream::load($input['eid']);
             if ($stream === false)
                 continue;
 
-            $input_collection->push($stream);
+            $input_context->push($stream);
         }
 
-        return $input_collection;
+        return $input_context;
     }
 
     public function getOutput() : \Flexio\Object\Context
     {
         $task_identifier = null; // last task
-        $input_collection = \Flexio\Object\Context::create();
-        $output_collection = \Flexio\Object\Context::create();
-        $this->getTaskStreams($input_collection, $output_collection, $task_identifier);
+        $input_context = \Flexio\Object\Context::create();
+        $output_context = \Flexio\Object\Context::create();
+        $this->getTaskStreams($input_context, $output_context, $task_identifier);
 
-        return $output_collection;
+        return $output_context;
     }
 
-    public function getTaskStreams(\Flexio\Object\Context &$input_collection, \Flexio\Object\Context &$output_collection, string $task_eid = null)
+    public function getTaskStreams(\Flexio\Object\Context &$input_context, \Flexio\Object\Context &$output_context, string $task_eid = null)
     {
-        // returns a collection of input streams for the specified task of a
+        // returns the context of input streams for the specified task of a
         // process; if no task is specified, the streams from the last subprocess
         // are used
-        $input_collection = \Flexio\Object\Context::create();
-        $output_collection = \Flexio\Object\Context::create();
+        $input_context = \Flexio\Object\Context::create();
+        $output_context = \Flexio\Object\Context::create();
 
         // get the suprocesses
         $process_info = $this->get();
@@ -399,7 +399,7 @@ class Process extends \Flexio\Object\Base
             if ($stream === false)
                 continue;
 
-            $input_collection->push($stream);
+            $input_context->push($stream);
         }
 
         $output_stream_list = $specified_subprocess['output'];
@@ -409,7 +409,7 @@ class Process extends \Flexio\Object\Base
             if ($stream === false)
                 continue;
 
-            $output_collection->push($stream);
+            $output_context->push($stream);
         }
     }
 
@@ -526,7 +526,7 @@ class Process extends \Flexio\Object\Base
         // make sure we have the latest list of subprocesses
         $local_properties = $this->get();
 
-        // create stream inputs and output collections
+        // create stream inputs and output contexts
         $input = \Flexio\Object\Context::create();
         $output = \Flexio\Object\Context::create();
 
@@ -537,8 +537,8 @@ class Process extends \Flexio\Object\Base
         // by an experimental api endpoint
         $current_process_properties = $this->getModel()->process->get($this->getEid());
         $current_input = $current_process_properties['input'];
-        $current_input_collection = self::unstringifyCollectionEids($current_input);
-        $input->set($current_input_collection);
+        $current_input_context = self::unstringifyCollectionEids($current_input);
+        $input->set($current_input_context);
 
 /*
         // TODO: experimental:
@@ -979,7 +979,7 @@ class Process extends \Flexio\Object\Base
             return '';
 
         // require an input
-        $task_input = $input->enum();
+        $task_input = $input->getStreams();
         if (count($task_input) === 0)
             return '';
 
@@ -1039,10 +1039,10 @@ class Process extends \Flexio\Object\Base
         return $job;
     }
 
-    private static function stringifyCollectionEids(\Flexio\Object\Context $collection) : string
+    private static function stringifyCollectionEids(\Flexio\Object\Context $context) : string
     {
         $result = array();
-        $stream_objects = $collection->enum();
+        $stream_objects = $context->getStreams();
         foreach ($stream_objects as $stream)
         {
             $stream_eid = $stream->getEid();
@@ -1057,10 +1057,10 @@ class Process extends \Flexio\Object\Base
 
     private static function unstringifyCollectionEids(string $string) : \Flexio\Object\Context
     {
-        $collection = \Flexio\Object\Context::create();
+        $context = \Flexio\Object\Context::create();
         $items = json_decode($string,true);
         if (!is_array($items))
-            return $collection;
+            return $context;
 
         foreach ($items as $i)
         {
@@ -1068,10 +1068,10 @@ class Process extends \Flexio\Object\Base
             if ($stream === false)
                 continue;
 
-            $collection->push($stream);
+            $context->push($stream);
         }
 
-        return $collection;
+        return $context;
     }
 
     private static function isValidProcessStatus(string $status) : bool

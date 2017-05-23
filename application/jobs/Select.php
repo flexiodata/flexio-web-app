@@ -20,7 +20,7 @@ class Select extends \Flexio\Jobs\Base
 {
     public function run()
     {
-        $input = $this->getInput()->enum();
+        $input = $this->getInput()->getStreams();
         foreach ($input as $instream)
         {
             $this->createOutput($instream);

@@ -26,7 +26,7 @@ class Search extends \Flexio\Jobs\Base
         // items in question; when we switch to this mode, don't pass on unhandled
         // output
 
-        $input = $this->getInput()->enum();
+        $input = $this->getInput()->getStreams();
         foreach ($input as $instream)
         {
             $mime_type = $instream->getMimeType();

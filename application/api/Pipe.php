@@ -369,7 +369,7 @@ class Pipe
         {
             $desired_stream = $_GET['stream'];
 
-            $output_streams = $process->getOutput()->enum();
+            $output_streams = $process->getOutput()->getStreams();
             for ($i = 0; $i < count($output_streams); ++$i)
             {
                 if ($output_streams[$i]->getName() == $desired_stream || (is_numeric($desired_stream) && $i == $desired_stream))
