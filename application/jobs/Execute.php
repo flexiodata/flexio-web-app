@@ -20,7 +20,7 @@ class Execute extends \Flexio\Jobs\Base
 {
     public function run()
     {
-        $this->getOutput()->setEnv($this->getInput()->getEnv());
+        $this->getOutput()->setEnv($this->getInput()->getEnv()); // by default, pass on all params; however, execute script can change them
         $input = $this->getInput()->getStreams();
 
         foreach ($input as $instream)
@@ -346,6 +346,10 @@ class Execute extends \Flexio\Jobs\Base
 
                             $content_type = $header['content_type'] ?? 'application/octet-stream';
                             $structure = $header['structure'] ?? null;
+                            $env = $header['env'] ?? null;
+
+                            if (isset($env))
+                                $this->getOutput()->setEnv($env);
 
                             $readbuf = substr($readbuf, $end+4);
 
