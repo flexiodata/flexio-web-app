@@ -310,11 +310,11 @@ class Process extends \Flexio\Object\Base
         // get the current input
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
-        $input_context = self::unstringifyCollectionEids($input);
+        $input_context = \Flexio\Object\Context::unstringifyCollectionEids($input);
 
         // add on the new input
         $input_context->push($stream);
-        $input_updated = self::stringifyCollectionEids($input_context);
+        $input_updated = \Flexio\Object\Context::stringifyCollectionEids($input_context);
         $this->getModel()->process->set($this->getEid(), array('input' => $input_updated));
 
         return $this;
@@ -328,7 +328,7 @@ class Process extends \Flexio\Object\Base
         // get whatever is in the input of the initial process step
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
-        $input_context = self::unstringifyCollectionEids($input);
+        $input_context = \Flexio\Object\Context::unstringifyCollectionEids($input);
 
         $input_context = \Flexio\Object\Context::create();
         foreach ($input_context as $input)
@@ -537,7 +537,7 @@ class Process extends \Flexio\Object\Base
         // by an experimental api endpoint
         $current_process_properties = $this->getModel()->process->get($this->getEid());
         $current_input = $current_process_properties['input'];
-        $current_input_context = self::unstringifyCollectionEids($current_input);
+        $current_input_context = \Flexio\Object\Context::unstringifyCollectionEids($current_input);
         $input->set($current_input_context);
 
 /*
@@ -577,7 +577,7 @@ class Process extends \Flexio\Object\Base
 
             // save the input from the output of the previous step
             $subprocess_params = array();
-            $subprocess_params['input'] = self::stringifyCollectionEids($input);
+            $subprocess_params['input'] = \Flexio\Object\Context::stringifyCollectionEids($input);
             $subprocess_params['started'] = self::getProcessTimestamp();
             $subprocess_params['process_status'] = \Model::PROCESS_STATUS_RUNNING;
             $subprocess_params['impl_revision'] = $implementation_revision;
@@ -614,7 +614,7 @@ class Process extends \Flexio\Object\Base
 
             // save the output from the last step
             $subprocess_params = array();
-            $subprocess_params['output'] = self::stringifyCollectionEids($output);
+            $subprocess_params['output'] = \Flexio\Object\Context::stringifyCollectionEids($output);
             $subprocess_params['finished'] = self::getProcessTimestamp();
             $subprocess_params['process_status'] = \Model::PROCESS_STATUS_COMPLETED;
             $subprocess_params['process_hash'] = $process_hash;
@@ -984,7 +984,7 @@ class Process extends \Flexio\Object\Base
             return '';
 
         $encoded_task_parameters = json_encode($task_parameters);
-        $encoded_task_input = self::stringifyCollectionEids($input);
+        $encoded_task_input = \Flexio\Object\Context::stringifyCollectionEids($input);
 
         $hash = md5(
             $implementation_version .
@@ -1037,41 +1037,6 @@ class Process extends \Flexio\Object\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $job;
-    }
-
-    private static function stringifyCollectionEids(\Flexio\Object\Context $context) : string
-    {
-        $result = array();
-        $stream_objects = $context->getStreams();
-        foreach ($stream_objects as $stream)
-        {
-            $stream_eid = $stream->getEid();
-            if ($stream_eid === false)
-                continue;
-
-            $result[] = array('eid' => $stream_eid);
-        }
-
-        return json_encode($result);
-    }
-
-    private static function unstringifyCollectionEids(string $string) : \Flexio\Object\Context
-    {
-        $context = \Flexio\Object\Context::create();
-        $items = json_decode($string,true);
-        if (!is_array($items))
-            return $context;
-
-        foreach ($items as $i)
-        {
-            $stream = \Flexio\Object\Stream::load($i['eid']);
-            if ($stream === false)
-                continue;
-
-            $context->push($stream);
-        }
-
-        return $context;
     }
 
     private static function isValidProcessStatus(string $status) : bool

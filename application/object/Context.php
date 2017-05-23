@@ -42,6 +42,41 @@ class Context
         return (new static);
     }
 
+    public static function stringifyCollectionEids(\Flexio\Object\Context $context) : string
+    {
+        $result = array();
+        $stream_objects = $context->getStreams();
+        foreach ($stream_objects as $stream)
+        {
+            $stream_eid = $stream->getEid();
+            if ($stream_eid === false)
+                continue;
+
+            $result[] = array('eid' => $stream_eid);
+        }
+
+        return json_encode($result);
+    }
+
+    public static function unstringifyCollectionEids(string $string) : \Flexio\Object\Context
+    {
+        $context = \Flexio\Object\Context::create();
+        $items = json_decode($string,true);
+        if (!is_array($items))
+            return $context;
+
+        foreach ($items as $i)
+        {
+            $stream = \Flexio\Object\Stream::load($i['eid']);
+            if ($stream === false)
+                continue;
+
+            $context->push($stream);
+        }
+
+        return $context;
+    }
+
     public function copy() : \Flexio\Object\Context
     {
         // creates a new context with new objects for each of the
