@@ -20,7 +20,9 @@ class Replace extends \Flexio\Jobs\Base
 {
     public function run()
     {
+        $this->getOutput()->setEnv($this->getInput()->getEnv());
         $input = $this->getInput()->getStreams();
+
         foreach ($input as $instream)
         {
             $mime_type = $instream->getMimeType();

@@ -121,7 +121,7 @@ class Context
 
     public function setEnv(array $arr)
     {
-        $this->env = array_merge($this->env, arr);
+        $this->env = array_merge($this->env, $arr);
     }
 
     public function clear() : \Flexio\Object\Context

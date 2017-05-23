@@ -28,6 +28,8 @@ class Merge extends \Flexio\Jobs\Base
         // them as text
 
         $table_merge_mode = true;
+
+        $this->getOutput()->setEnv($this->getInput()->getEnv());
         $input = $this->getInput()->getStreams();
 
         foreach ($input as $instream)

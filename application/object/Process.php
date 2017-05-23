@@ -533,38 +533,17 @@ class Process extends \Flexio\Object\Base
         // STEP 1: get the list of subprocesses
         $subprocesses = $local_properties['subprocesses'];
 
-        // STEP 2: set any initial input in the input record; these may be set
-        // by an experimental api endpoint
+        // STEP 2: set any initial input/variables in the input record; these may be
+        // set by an experimental api endpoint
         $current_process_properties = $this->getModel()->process->get($this->getEid());
         $current_input = $current_process_properties['input'];
         $current_input_context = \Flexio\Object\Context::unstringifyCollectionEids($current_input);
         $input->set($current_input_context);
 
-/*
-        // TODO: experimental:
-        // STEP 3: add system and user-supplied variables
+        $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getParams();
-        if (count($user_variables ) > 0)
-        {
-            // separate out the file upload variables from the task variables;
-            // file upload variables (those with a valid stream eid) go into
-            // the initial input; TODO: for now, this assumes that all the form
-            // info should be processed at the beginning of the pipe; but it may
-            // be that it should be processed as it occurs in the pipe
-            foreach ($user_variables as $name => $value)
-            {
-                if (\Flexio\Base\Eid::isValid($value) === false)
-                    continue;
-
-                $stream = \Flexio\Object\Stream::load($value);
-                if ($stream === false)
-                    continue;
-
-                $input->addStream($stream);
-            }
-        }
-*/
-
+        $variables = array_merge($user_variables, $environment_variables);
+        $input->setEnv($variables);
 
         // STEP 4: iterate through the subprocesses and run each one
         $cache_used_on_subprocess = false;
@@ -681,11 +660,8 @@ class Process extends \Flexio\Object\Base
         // after parameterization in order to use the Task object function; perhaps
         // parameterization should be on the base job object?
 
-        $environment_variables = $this->getEnvironmentParams();
-        $user_variables = $this->getParams();
-
-        // merge in this order so that user-supplied variables don't override environment variables
-        $variables = array_merge($user_variables, $environment_variables);
+        // replace the task variables with the environment values;
+        $variables = $input->getEnv();
         if (count($variables) > 0)
         {
             $task_wrapper = \Flexio\Object\Task::create()->push($task);

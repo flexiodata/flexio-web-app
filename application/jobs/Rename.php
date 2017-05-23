@@ -20,7 +20,9 @@ class Rename extends \Flexio\Jobs\Base
 {
     public function run()
     {
+        $this->getOutput()->setEnv($this->getInput()->getEnv());
         $input = $this->getInput()->getStreams();
+
         foreach ($input as $instream)
         {
             $this->createOutput($instream);
@@ -91,9 +93,8 @@ class Rename extends \Flexio\Jobs\Base
             $variables['stream.path'] = $outstream->getPath();
             $variables['stream.content.type'] = $outstream->getMimeType();
 
-            $process = $this->getProcess();
-            if ($process !== false)
-                $variables = array_merge($process->getEnvironmentParams(), $variables);
+            $env = $this->getInput()->getEnv();
+            $variables = array_merge($env, $variables);
 
             $retval = '';
             if (self::evaluateExpr($file_new_name_expr, $variables, $retval) === false)

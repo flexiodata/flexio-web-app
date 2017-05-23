@@ -20,7 +20,9 @@ class Execute extends \Flexio\Jobs\Base
 {
     public function run()
     {
+        $this->getOutput()->setEnv($this->getInput()->getEnv());
         $input = $this->getInput()->getStreams();
+
         foreach ($input as $instream)
         {
             $mime_type = $instream->getMimeType();
@@ -192,19 +194,14 @@ class Execute extends \Flexio\Jobs\Base
             unset($fld);
         }
 
-        $fxprocess = $this->getProcess();
-        $environment_variables = $fxprocess->getEnvironmentParams();
-        $user_variables = $fxprocess->getParams();
-
         // merge in this order so that user-supplied variables don't override environment variables
-        $env = array_merge($user_variables, $environment_variables);
-
+        $environment_variables = $this->getInput()->getEnv();
         $header = array(
             'name' => $instream->getName(),
             'size' => $instream->getSize(),
             'content_type' => $instream->getMimeType(),
             'structure' => $structure,
-            'env' => $env
+            'env' => $environment_variables
         );
 
         $header_json = json_encode($header);
