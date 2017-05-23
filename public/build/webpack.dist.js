@@ -58,10 +58,7 @@ config.plugins = (config.plugins || []).concat([
   }),
   new webpack.ProvidePlugin({
     _: 'lodash',
-    $: 'jquery',
-    jQuery: 'jquery',
-    Clipboard: 'clipboard',
-    tinycolor: 'tinycolor2'
+    Clipboard: 'clipboard'
   }),
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',

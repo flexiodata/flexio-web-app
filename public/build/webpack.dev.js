@@ -38,10 +38,7 @@ config.module.rules = (config.module.rules || []).concat([
 config.plugins = (config.plugins || []).concat([
   new webpack.ProvidePlugin({
     _: 'lodash',
-    $: 'jquery',
-    jQuery: 'jquery',
-    Clipboard: 'clipboard',
-    tinycolor: 'tinycolor2'
+    Clipboard: 'clipboard'
   })
 ])
 
