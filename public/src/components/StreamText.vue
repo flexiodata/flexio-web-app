@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-column justify-center h-100" v-if="state.is_fetching && !state.has_fetched">
-    <spinner :message="state.loading_text"></spinner>
+    <spinner size="large" :message="state.loading_text"></spinner>
   </div>
   <code-editor
     class="h-100 overflow-y-auto"
