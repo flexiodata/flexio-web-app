@@ -28,7 +28,7 @@ class Sort extends \Flexio\Jobs\Base
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->push($instream->copy());
+                    $this->getOutput()->addStream($instream->copy());
                     break;
 
                 // table input
@@ -43,7 +43,7 @@ class Sort extends \Flexio\Jobs\Base
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);

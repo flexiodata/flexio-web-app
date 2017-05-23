@@ -106,7 +106,7 @@ class Transform extends \Flexio\Jobs\Base
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->push($instream->copy());
+                    $this->getOutput()->addStream($instream->copy());
                     break;
 
                 // table input
@@ -134,13 +134,13 @@ class Transform extends \Flexio\Jobs\Base
         // pointing to the original content
         if (count($column_expression_map) === 0)
         {
-            $this->getOutput()->push($instream->copy());
+            $this->getOutput()->addStream($instream->copy());
             return;
         }
 
         // create the output with the replaced values
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         $output_columns = $outstream->getStructure()->enum();
         foreach ($output_columns as &$column)
@@ -201,13 +201,13 @@ class Transform extends \Flexio\Jobs\Base
         // pointing to the original content
         if (count($column_expression_map) === 0)
         {
-            $this->getOutput()->push($instream->copy());
+            $this->getOutput()->addStream($instream->copy());
             return;
         }
 
         // create the output with the replaced values
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);

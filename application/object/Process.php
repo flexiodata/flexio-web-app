@@ -313,7 +313,7 @@ class Process extends \Flexio\Object\Base
         $input_context = \Flexio\Object\Context::unstringifyCollectionEids($input);
 
         // add on the new input
-        $input_context->push($stream);
+        $input_context->addStream($stream);
         $input_updated = \Flexio\Object\Context::stringifyCollectionEids($input_context);
         $this->getModel()->process->set($this->getEid(), array('input' => $input_updated));
 
@@ -337,7 +337,7 @@ class Process extends \Flexio\Object\Base
             if ($stream === false)
                 continue;
 
-            $input_context->push($stream);
+            $input_context->addStream($stream);
         }
 
         return $input_context;
@@ -399,7 +399,7 @@ class Process extends \Flexio\Object\Base
             if ($stream === false)
                 continue;
 
-            $input_context->push($stream);
+            $input_context->addStream($stream);
         }
 
         $output_stream_list = $specified_subprocess['output'];
@@ -409,7 +409,7 @@ class Process extends \Flexio\Object\Base
             if ($stream === false)
                 continue;
 
-            $output_context->push($stream);
+            $output_context->addStream($stream);
         }
     }
 
@@ -560,7 +560,7 @@ class Process extends \Flexio\Object\Base
                 if ($stream === false)
                     continue;
 
-                $input->push($stream);
+                $input->addStream($stream);
             }
         }
 */
@@ -946,7 +946,7 @@ class Process extends \Flexio\Object\Base
             if ($stream === false)
                 continue;
 
-            $output->push($stream);
+            $output->addStream($stream);
         }
 
         return true;

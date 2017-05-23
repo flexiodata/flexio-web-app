@@ -28,7 +28,7 @@ class Filter extends \Flexio\Jobs\Base
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->push($instream->copy());
+                    $this->getOutput()->addStream($instream->copy());
                     break;
 
                 // table input
@@ -67,7 +67,7 @@ class Filter extends \Flexio\Jobs\Base
 
         // create the output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         // if we don't have a filter expression, then there's no output; we're done
         if ($filter_expression === false)

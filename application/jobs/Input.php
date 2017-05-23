@@ -110,7 +110,7 @@ class Input extends \Flexio\Jobs\Base
         {
             $stream_properties = $file_info;
             $outstream = \Flexio\Object\Stream::create($stream_properties);
-            $this->getOutput()->push($outstream);
+            $this->getOutput()->addStream($outstream);
             return;
         }
 
@@ -167,7 +167,7 @@ class Input extends \Flexio\Jobs\Base
         // the output
         $stream_properties = $file_info;
         $outstream = \Flexio\Object\Stream::create($stream_properties);
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
     }
 
     private function runEmail($service, array $file_info) // TODO: set paramater type
@@ -189,7 +189,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
         // create the iterator
@@ -226,7 +226,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
         // transfer the data
@@ -246,7 +246,7 @@ class Input extends \Flexio\Jobs\Base
         $path = $file_info['path'];
         $stream_properties = $file_info;
         $outstream = self::createDatastoreStream($stream_properties);
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
         $mime_data_sample = '';
@@ -297,7 +297,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $outstream = self::createDatastoreStream($stream_properties);
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         $rownum = 0;
         $structure = \Flexio\Base\Structure::create();

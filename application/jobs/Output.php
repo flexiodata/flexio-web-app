@@ -327,7 +327,7 @@ class Output extends \Flexio\Jobs\Base
         // create the output
         $outstream = self::createOutputStream($instream, $output_info);
         // note: don't add to the output stream since the input was passed on
-        // $this->getOutput()->push($outstream);
+        // $this->getOutput()->addStream($outstream);
 
         $service = $outstream->getService();
         if ($service === false)
@@ -373,7 +373,7 @@ class Output extends \Flexio\Jobs\Base
         // create the output
         $outstream = self::createOutputStream($instream, $output_info);
         // note: don't add to the output stream since the input was passed on
-        // $this->getOutput()->push($outstream);
+        // $this->getOutput()->addStream($outstream);
 
         $service = $outstream->getService();
         if ($service === false)

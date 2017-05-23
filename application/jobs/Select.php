@@ -62,7 +62,7 @@ class Select extends \Flexio\Jobs\Base
             // if we don't have a table, we only care about selecting the file,
             // so we're done
             default:
-                $this->getOutput()->push($instream->copy());
+                $this->getOutput()->addStream($instream->copy());
                 break;
 
             // if we have a table input, perform additional column selection
@@ -76,7 +76,7 @@ class Select extends \Flexio\Jobs\Base
     {
         // input/output
         $outstream = $instream->copy(); // copy everything, including the original path (since we're only selecting fields)
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         // get the selected columns
         $job_definition = $this->getProperties();

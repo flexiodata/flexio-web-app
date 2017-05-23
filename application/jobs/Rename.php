@@ -33,7 +33,7 @@ class Rename extends \Flexio\Jobs\Base
         // handled by the file/column rename handler; if there aren't any
         // operations, the stream will simply be copied to the output
         $outstream = $instream->copy();
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         $job_definition = $this->getProperties();
         $mime_type = $outstream->getMimeType();

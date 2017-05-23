@@ -30,7 +30,7 @@ class Execute extends \Flexio\Jobs\Base
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->push($instream->copy());
+                    $this->getOutput()->addStream($instream->copy());
                     break;
 
                 // stream/text/csv input
@@ -49,7 +49,7 @@ class Execute extends \Flexio\Jobs\Base
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         $is_input_table = false;
         $is_output_table = false;

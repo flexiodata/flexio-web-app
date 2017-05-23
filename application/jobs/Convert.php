@@ -68,7 +68,7 @@ class Convert extends \Flexio\Jobs\Base
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->push($instream->copy());
+                    $this->getOutput()->addStream($instream->copy());
                     break;
 
                 // table input
@@ -108,7 +108,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);
 
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -167,7 +167,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream = $instream->copy();
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
@@ -216,7 +216,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream = $instream->copy();
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         // read the json into a buffer
         $buffer = '';
@@ -313,7 +313,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream = $instream->copy();
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType($is_output_json ? \Flexio\Base\ContentType::MIME_TYPE_JSON : \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         if ($is_output_json)
         {
@@ -491,7 +491,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream = $instream->copy();
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         $structure = [];
         foreach ($columns as $col)

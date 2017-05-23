@@ -71,7 +71,7 @@ class Context
             if ($stream === false)
                 continue;
 
-            $context->push($stream);
+            $context->addStream($stream);
         }
 
         return $context;
@@ -90,7 +90,7 @@ class Context
             // a context contains one of these objects, don't allow the context
             // to be copied
             $object_copy = $object->copy();
-            $result = $context_copy->push($object_copy);
+            $result = $context_copy->addStream($object_copy);
             if ($result === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
@@ -107,6 +107,8 @@ class Context
 
     public function merge(\Flexio\Object\Context $context) : \Flexio\Object\Context
     {
+        // TODO: merge environmnet variables
+
         // adds the items in the context to the existing context
         $context_objects = $context->getStreams();
         foreach ($context_objects as $object)
@@ -117,7 +119,7 @@ class Context
         return $this;
     }
 
-    public function push(\Flexio\Object\Base $object) : \Flexio\Object\Context
+    public function addStream(\Flexio\Object\Base $object) : \Flexio\Object\Context
     {
         // adds an object onto the end of the context
         $this->objects[] = $object;

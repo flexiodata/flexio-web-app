@@ -28,7 +28,7 @@ class Limit extends \Flexio\Jobs\Base
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->push($instream->copy());
+                    $this->getOutput()->addStream($instream->copy());
                     break;
 
                 // table input
@@ -50,7 +50,7 @@ class Limit extends \Flexio\Jobs\Base
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->push($outstream);
+        $this->getOutput()->addStream($outstream);
 
         // get the number of rows to return
         $job_definition = $this->getProperties();
