@@ -52,8 +52,8 @@ EOD;
         $object->process = $process;
 
         // create the empty input and output collection
-        $object->input = \Flexio\Object\Collection::create();
-        $object->output = \Flexio\Object\Collection::create();
+        $object->input = \Flexio\Object\Context::create();
+        $object->output = \Flexio\Object\Context::create();
 
         // set the default properties
         $object->properties = json_decode($object::TEMPLATE,true);
@@ -99,12 +99,12 @@ EOD;
         return $this->properties;
     }
 
-    public function getInput() : \Flexio\Object\Collection
+    public function getInput() : \Flexio\Object\Context
     {
         return $this->input;
     }
 
-    public function getOutput() : \Flexio\Object\Collection
+    public function getOutput() : \Flexio\Object\Context
     {
         return $this->output;
     }

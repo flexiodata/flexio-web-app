@@ -23,8 +23,8 @@ interface IJob
     public function getType() : string;
     public function getProperties() : array;
 
-    public function getInput() : \Flexio\Object\Collection;
-    public function getOutput() : \Flexio\Object\Collection;
+    public function getInput() : \Flexio\Object\Context;
+    public function getOutput() : \Flexio\Object\Context;
 
     public function run();
 }

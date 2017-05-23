@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Collection
+class Context
 {
     private $objects;
     private $env;
@@ -37,18 +37,18 @@ class Collection
         return json_encode($items);
     }
 
-    public static function create() : \Flexio\Object\Collection
+    public static function create() : \Flexio\Object\Context
     {
         return (new static);
     }
 
-    public function copy() : \Flexio\Object\Collection
+    public function copy() : \Flexio\Object\Context
     {
         // creates a new collection with new objects for each of the
         // original objects (i.e., we'll have a collection with new objects
         // and eids but with the same data as the copied objects)
 
-        $collection_copy = \Flexio\Object\Collection::create();
+        $collection_copy = \Flexio\Object\Context::create();
         foreach ($this->objects as $object)
         {
             // try to copy the object; note: some objects can't be copied, so if
@@ -63,14 +63,14 @@ class Collection
         return $collection_copy;
     }
 
-    public function set(\Flexio\Object\Collection $collection) : \Flexio\Object\Collection
+    public function set(\Flexio\Object\Context $collection) : \Flexio\Object\Context
     {
         // sets the collection to the input collection
         $this->objects = $collection->enum();
         return $this;
     }
 
-    public function merge(\Flexio\Object\Collection $collection) : \Flexio\Object\Collection
+    public function merge(\Flexio\Object\Context $collection) : \Flexio\Object\Context
     {
         // adds the items in the collection to the existing collection
         $collection_objects = $collection->enum();
@@ -82,14 +82,14 @@ class Collection
         return $this;
     }
 
-    public function push(\Flexio\Object\Base $object) : \Flexio\Object\Collection
+    public function push(\Flexio\Object\Base $object) : \Flexio\Object\Context
     {
         // adds an object onto the end of the collection
         $this->objects[] = $object;
         return $this;
     }
 
-    public function pop() : \Flexio\Object\Collection
+    public function pop() : \Flexio\Object\Context
     {
         // removes an item from the end of the collection
         array_pop($this->objects);
@@ -129,7 +129,7 @@ class Collection
         return false;
     }
 
-    public function clear() : \Flexio\Object\Collection
+    public function clear() : \Flexio\Object\Context
     {
         // removes all items from the collection
         $this->initialize();

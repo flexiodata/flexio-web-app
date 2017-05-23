@@ -352,7 +352,7 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getInput() : \Flexio\Object\Collection
+    public function getInput() : \Flexio\Object\Context
     {
         // TODO: implement similarly to self::getOutput(), using getTaskStreams();
         // need better way of working with subprocesses
@@ -362,7 +362,7 @@ class Process extends \Flexio\Object\Base
         $input = $process_properties['input'];
         $input_collection = self::unstringifyCollectionEids($input);
 
-        $input_collection = \Flexio\Object\Collection::create();
+        $input_collection = \Flexio\Object\Context::create();
         foreach ($input_collection as $input)
         {
             $stream = \Flexio\Object\Stream::load($input['eid']);
@@ -375,23 +375,23 @@ class Process extends \Flexio\Object\Base
         return $input_collection;
     }
 
-    public function getOutput() : \Flexio\Object\Collection
+    public function getOutput() : \Flexio\Object\Context
     {
         $task_identifier = null; // last task
-        $input_collection = \Flexio\Object\Collection::create();
-        $output_collection = \Flexio\Object\Collection::create();
+        $input_collection = \Flexio\Object\Context::create();
+        $output_collection = \Flexio\Object\Context::create();
         $this->getTaskStreams($input_collection, $output_collection, $task_identifier);
 
         return $output_collection;
     }
 
-    public function getTaskStreams(\Flexio\Object\Collection &$input_collection, \Flexio\Object\Collection &$output_collection, string $task_eid = null)
+    public function getTaskStreams(\Flexio\Object\Context &$input_collection, \Flexio\Object\Context &$output_collection, string $task_eid = null)
     {
         // returns a collection of input streams for the specified task of a
         // process; if no task is specified, the streams from the last subprocess
         // are used
-        $input_collection = \Flexio\Object\Collection::create();
-        $output_collection = \Flexio\Object\Collection::create();
+        $input_collection = \Flexio\Object\Context::create();
+        $output_collection = \Flexio\Object\Context::create();
 
         // get the suprocesses
         $process_info = $this->get();
@@ -578,8 +578,8 @@ class Process extends \Flexio\Object\Base
         $local_properties = $this->get();
 
         // create stream inputs and output collections
-        $input = \Flexio\Object\Collection::create();
-        $output = \Flexio\Object\Collection::create();
+        $input = \Flexio\Object\Context::create();
+        $output = \Flexio\Object\Context::create();
 
         // STEP 1: get the list of subprocesses and reset the current subprocess
         $subprocesses = $local_properties['subprocesses'];
@@ -724,7 +724,7 @@ class Process extends \Flexio\Object\Base
         $this->clearCache();
     }
 
-    private function executeStep(array $task, \Flexio\Object\Collection $input, \Flexio\Object\Collection &$output)
+    private function executeStep(array $task, \Flexio\Object\Context $input, \Flexio\Object\Context &$output)
     {
         // if the process is something besides running, we're done
         $status = $this->getModel()->process->getProcessStatus($this->getEid());
@@ -983,7 +983,7 @@ class Process extends \Flexio\Object\Base
         return $result;
     }
 
-    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Collection $input, \Flexio\Object\Collection &$output) : bool
+    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Context $input, \Flexio\Object\Context &$output) : bool
     {
         // find the hash for the input and the task
         $hash = self::generateTaskHash($implementation_revision, $task, $input);
@@ -1010,7 +1010,7 @@ class Process extends \Flexio\Object\Base
         return true;
     }
 
-    private static function generateTaskHash(string $implementation_version, array $task, \Flexio\Object\Collection $input) : string
+    private static function generateTaskHash(string $implementation_version, array $task, \Flexio\Object\Context $input) : string
     {
         // if we dont' have an implementation version or an invalid implementation
         // version (git revision), don't cache anything
@@ -1097,7 +1097,7 @@ class Process extends \Flexio\Object\Base
         return $job;
     }
 
-    private static function stringifyCollectionEids(\Flexio\Object\Collection $collection) : string
+    private static function stringifyCollectionEids(\Flexio\Object\Context $collection) : string
     {
         $result = array();
         $stream_objects = $collection->enum();
@@ -1113,9 +1113,9 @@ class Process extends \Flexio\Object\Base
         return json_encode($result);
     }
 
-    private static function unstringifyCollectionEids(string $string) : \Flexio\Object\Collection
+    private static function unstringifyCollectionEids(string $string) : \Flexio\Object\Context
     {
-        $collection = \Flexio\Object\Collection::create();
+        $collection = \Flexio\Object\Context::create();
         $items = json_decode($string,true);
         if (!is_array($items))
             return $collection;

@@ -417,8 +417,8 @@ class Process
         if ($process === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $input_collection = \Flexio\Object\Collection::create();
-        $output_collection = \Flexio\Object\Collection::create();
+        $input_collection = \Flexio\Object\Context::create();
+        $output_collection = \Flexio\Object\Context::create();
         $process->getTaskStreams($input_collection, $output_collection, $task_identifier);
         $input_streams = $input_collection->enum();
 
@@ -450,8 +450,8 @@ class Process
         if ($process === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $input_collection = \Flexio\Object\Collection::create();
-        $output_collection = \Flexio\Object\Collection::create();
+        $input_collection = \Flexio\Object\Context::create();
+        $output_collection = \Flexio\Object\Context::create();
         $process->getTaskStreams($input_collection, $output_collection, $task_identifier);
         $output_streams = $output_collection->enum();
 
