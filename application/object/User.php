@@ -193,7 +193,7 @@ class User extends \Flexio\Object\Base
         $res = array();
         foreach ($projects as $proj)
         {
-            // lookup the projects for the pipe
+            // lookup the pipes for the project
             $project_eid = $proj->getEid();
             $members = $this->getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER, [\Model::STATUS_AVAILABLE]);
 
@@ -214,28 +214,45 @@ class User extends \Flexio\Object\Base
         }
 
         return $res;
-/*
-        // get the pipes for the user based on the pipes the user owns or has access to from projects that are being followed
-        $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")->(".\Model::EDGE_HAS_MEMBER.")->(".\Model::TYPE_PIPE.")";
-        $pipes = \Flexio\Object\Search::exec($search_path);
+    }
+
+    public function getConnections() : array
+    {
+        // note: we need to query the connections for active projects only; because we don't have the ability to specify
+        // properties in the graph query, we have to do two operations to get the connections; first get the active projects,
+        // then for the active projects, get the connection members
+
+        $eid = $this->getEid();
+
+
+
+        // get the projects for the user
+        $projects = $this->getProjects();
 
         $res = array();
-        foreach ($pipes as $p)
+        foreach ($projects as $proj)
         {
-            // load the object
-            $pipe = \Flexio\Object\Pipe::load($p);
-            if ($pipe === false)
-                continue;
+            // lookup the connections for the project
+            $project_eid = $proj->getEid();
+            $members = $this->getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER, [\Model::STATUS_AVAILABLE]);
 
-            // only show pipes that are available
-            if ($pipe->getStatus() !== \Model::STATUS_AVAILABLE)
-                continue;
+            foreach ($members as $member_info)
+            {
+                $type = $member_info['eid_type'];
+                if ($type !== \Model::TYPE_CONNECTION)
+                    continue;
 
-            $res[] = $pipe;
+                $connection_eid = $member_info['eid'];
+
+                $connection = \Flexio\Object\Connection::load($connection_eid);
+                if ($connection === false)
+                    continue;
+
+                $res[] = $connection;
+            }
         }
 
         return $res;
-*/
     }
 
     public function getTokens() : array

@@ -163,6 +163,32 @@ class Connection
         return $properties;
     }
 
+
+    public static function listall(array $params, string $requesting_user_eid = null) : array
+    {
+        // load the object
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($user->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // get the pipes
+        $result = array();
+        $pipes = $user->getConnections();
+        foreach ($pipes as $p)
+        {
+            if ($p->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+                continue;
+
+            $result[] = $p->get();
+        }
+
+        return $result;
+    }
+
     public static function describe(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();

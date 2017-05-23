@@ -316,6 +316,7 @@ class Api
 
             // connections
             case 'POS /connections'                    : return '\Flexio\Api\Connection::create';
+            case 'GET /connections'                    : return '\Flexio\Api\Connection::listall';
             case 'POS /connections/:eid'               : return '\Flexio\Api\Connection::set';
             case 'GET /connections/:eid'               : return '\Flexio\Api\Connection::get';
             case 'DEL /connections/:eid'               : return '\Flexio\Api\Connection::delete';
