@@ -121,14 +121,4 @@ EOD;
 
         return $process->isRunMode();
     }
-
-    protected function setProgress(float $pct) : bool
-    {
-        $process = $this->getProcess();
-        if ($process === false)
-            return false;
-
-        $process->setProgress($pct);
-        return true;
-    }
 }

@@ -37,17 +37,13 @@ class Sleep extends \Flexio\Jobs\Base
             if ($milliseconds_waited >= $milliseconds_to_wait)
                 break;
 
-            // update the status
-            $pct = round((100*$milliseconds_waited/$milliseconds_to_wait),1);
-            $this->setProgress($pct);
+            // TODO: update the status
 
             // wait
             usleep($milliseconds_to_update_status*1000);
         }
 
-        // set the status
-        $pct = 100;
-        $this->setProgress($pct);
+        // TODO: update the status
 
         // pass on the streams
         $this->getOutput()->merge($this->getInput());
