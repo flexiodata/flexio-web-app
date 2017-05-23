@@ -52,7 +52,7 @@ class Input(object):
             self._env = input_header['env']
         else:
             self._env = {}
-        
+
         self.inited = True
 
     @property
@@ -72,7 +72,7 @@ class Input(object):
         if not self.inited:
             self.initialize()
         return bool(self._structure)
-    
+
     @property
     def structure(self):
         if not self.inited:
@@ -84,7 +84,7 @@ class Input(object):
         if not self.inited:
             self.initialize()
         return self._env
-    
+
     def table_reader(self, dict=False):
         if not self.inited:
             self.initialize()
@@ -138,7 +138,7 @@ class TableWriter(object):
                 else:
                     values.append('')
             self.writer.writerow(values)
-        
+
     def writerows(self, rows):
         for row in rows:
             self.writerow(row)
@@ -148,7 +148,8 @@ class Output(object):
     def __init__(self):
         self.header_written = False
         self._content_type = 'application/octet-stream'
-        self.header = {"content_type": self._content_type}
+        self._env = {}
+        self.header = {"content_type": self._content_type, "env": self._env}
 
     @property
     def content_type(self):
@@ -158,6 +159,15 @@ class Output(object):
     def content_type(self, value):
         self._content_type = value
         self.header["content_type"] = self._content_type
+
+    @property
+    def env(self):
+        return self._env
+
+    @env.setter
+    def env(self, value):
+        self._env = value
+        self.header["env"] = self._env
 
     @property
     def stream(self):
