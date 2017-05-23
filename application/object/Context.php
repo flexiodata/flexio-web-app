@@ -77,27 +77,6 @@ class Context
         return $context;
     }
 
-    public function copy() : \Flexio\Object\Context
-    {
-        // creates a new context with new objects for each of the
-        // original objects (i.e., we'll have a context with new objects
-        // and eids but with the same data as the copied objects)
-
-        $context_copy = \Flexio\Object\Context::create();
-        foreach ($this->objects as $object)
-        {
-            // try to copy the object; note: some objects can't be copied, so if
-            // a context contains one of these objects, don't allow the context
-            // to be copied
-            $object_copy = $object->copy();
-            $result = $context_copy->addStream($object_copy);
-            if ($result === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-        }
-
-        return $context_copy;
-    }
-
     public function set(\Flexio\Object\Context $context) : \Flexio\Object\Context
     {
         // sets the context to the input context
