@@ -16,8 +16,6 @@ module.exports = {
       'filesize',
       'clipboard',
       'moment',
-      'jquery',
-      'tinycolor2',
       'codemirror'
     ],
     app: options.paths.resolve('src/main.js')
@@ -31,8 +29,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue',
-      'jquery': 'jquery/src/jquery'
+      'vue$': 'vue/dist/vue'
     }
   },
 

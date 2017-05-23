@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  import $ from 'jquery'
+  import axios from 'axios'
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
 
@@ -84,7 +84,6 @@
         return this.fetchChunk(true)
       },
       fetchChunk(fetch_all) {
-        var me = this
         var state = this.state
 
         var fetch_url = this.contentUrl
@@ -93,21 +92,23 @@
         if (fetch_all !== true)
         {
           fetch_opts = {
-            start: state.total_fetched,
-            limit: state.chunk_size,
-            format: 'data'
+            params: {
+              start: state.total_fetched,
+              limit: state.chunk_size,
+              format: 'data'
+            }
           }
         }
 
         state.is_fetching = true
 
-        $.get(fetch_url, fetch_opts).then(response => {
-          var str = response
+        axios.get(fetch_url, fetch_opts).then(response => {
+          var str = response.data
 
-          if (fetch_all === true || str.length < me.chunk_size)
-              me.state.eof = true
+          if (fetch_all === true || str.length < this.chunk_size)
+            state.eof = true
 
-          me.state.total_fetched += str.length
+          state.total_fetched += str.length
 
           if (_.isObject(str))
           {
@@ -126,7 +127,7 @@
 
           state.is_fetching = false
           state.has_fetched = true
-        }, response => {
+        }).catch(response => {
           state.is_fetching = false
           state.has_fetched = true
         })
