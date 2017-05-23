@@ -15,9 +15,6 @@
     <stream-text :stream-eid="streamEid" :content-url="stream_content_url" :is-json="is_json" :is-html="is_html"></stream-text>
   </div>
   <div v-else-if="is_table" class="bg-white ba b--black-10" style="height: 360px">
-    <stream-grid :stream-eid="streamEid" :content-url="stream_content_url" :task-json="taskJson"></stream-grid>
-  </div>
-  <div v-else-if="is_table && false" class="bg-white ba b--black-10" style="height: 360px">
     <grid
       :data-url="stream_content_url"
       :live-scroll="false"
@@ -27,19 +24,17 @@
 
 <script>
   import * as mt from '../constants/mimetype'
+  import { API_ROOT } from '../api/resources'
   import { Grid } from 'vue2-grid'
   import Spinner from 'vue-simple-spinner'
   import StreamText from './StreamText.vue'
-  import StreamGrid from './StreamGrid.vue'
-  import { API_ROOT } from '../api/resources'
 
   export default {
     props: ['stream-eid', 'task-json'],
     components: {
       Grid,
       Spinner,
-      StreamText,
-      StreamGrid
+      StreamText
     },
     computed: {
       stream() {
