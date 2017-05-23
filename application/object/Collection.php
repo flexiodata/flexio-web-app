@@ -19,6 +19,7 @@ namespace Flexio\Object;
 class Collection
 {
     private $objects;
+    private $env;
 
     public function __construct()
     {
@@ -101,6 +102,17 @@ class Collection
         return $this->objects;
     }
 
+    public function getEnv() : array
+    {
+        // returns context environment variables
+        return $this->env;
+    }
+
+    public function setEnv(array $arr)
+    {
+        $this->env = array_merge($this->env, arr);
+    }
+
     public function find(string $name) // TODO: add return type
     {
         // returns the first object with a given name; if no object are found, returns false
@@ -127,6 +139,7 @@ class Collection
     private function initialize()
     {
         $this->objects = array();
+        $this->env = array();
     }
 }
 

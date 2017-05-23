@@ -592,6 +592,7 @@ class Process extends \Flexio\Object\Base
         $current_input_collection = self::unstringifyCollectionEids($current_input);
         $input->set($current_input_collection);
 
+/*
         // TODO: experimental:
         // STEP 3: add system and user-supplied variables
         $user_variables = $this->getParams();
@@ -614,6 +615,8 @@ class Process extends \Flexio\Object\Base
                 $input->push($stream);
             }
         }
+*/
+
 
         // STEP 4: iterate through the subprocesses and run each one
         $cache_used_on_subprocess = false;
