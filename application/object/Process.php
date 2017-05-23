@@ -25,17 +25,11 @@ class Process extends \Flexio\Object\Base
     private $debug;
     private $errors;
 
-    // progress variables
-    private $current_executing_subprocess_eid;
-    private $last_percentage_saved;
-
     public function __construct()
     {
         $this->setType(\Model::TYPE_PROCESS);
         $this->debug = false;
         $this->error = array();
-        $this->current_executing_subprocess_eid = false;
-        $this->last_percentage_saved = false;
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Process
@@ -466,25 +460,6 @@ class Process extends \Flexio\Object\Base
         $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
     }
 
-    private function setCurrentExecutingSubProcess(string $subprocess = null)
-    {
-        // if the subprocess is the same, we're done
-        if ($subprocess === $this->current_executing_subprocess_eid)
-            return;
-
-        // allow subprocess to be reset
-        if (!isset($subprocess))
-            $subprocess = false;
-
-        $this->last_percentage_saved = false;
-        $this->current_executing_subprocess_eid = $subprocess;
-    }
-
-    private function getCurrentExecutingSubProcess() : string
-    {
-        return $this->current_executing_subprocess_eid;
-    }
-
     private function prepare()
     {
         // take the main job task and split it out into subprocesses
@@ -555,9 +530,8 @@ class Process extends \Flexio\Object\Base
         $input = \Flexio\Object\Context::create();
         $output = \Flexio\Object\Context::create();
 
-        // STEP 1: get the list of subprocesses and reset the current subprocess
+        // STEP 1: get the list of subprocesses
         $subprocesses = $local_properties['subprocesses'];
-        $this->setCurrentExecutingSubProcess(null);
 
         // STEP 2: set any initial input in the input record; these may be set
         // by an experimental api endpoint
@@ -600,9 +574,6 @@ class Process extends \Flexio\Object\Base
             // get the subprocess eid and task
             $subprocess_eid = $sp['eid'];
             $task = $sp['task'];
-
-            // set the current subprocess
-            $this->setCurrentExecutingSubProcess($subprocess_eid);
 
             // save the input from the output of the previous step
             $subprocess_params = array();
@@ -683,9 +654,6 @@ class Process extends \Flexio\Object\Base
             if ($this->hasError())
                 break;
         }
-
-	    // reset the current subprocess
-        $this->setCurrentExecutingSubProcess(null);
 
         // set final job status
         $process_params = array();
