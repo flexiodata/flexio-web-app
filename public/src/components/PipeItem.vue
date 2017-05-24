@@ -1,6 +1,6 @@
 <template>
-  <article class="css-pipe-item mw8 ma0 ma3-ns pv3 pv2a-ns ph3 bb ba-ns br2-ns cursor-default no-select shadow-sui-segment-ns trans-pm"
-    @dblclick="openPipe"
+  <article class="pa3 bb b--black-10 cursor-default no-select trans-pm"
+    @click="openPipe"
   >
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
@@ -140,14 +140,3 @@
     }
   }
 </script>
-
-<style lang="less" scoped>
-  .css-pipe-item {
-    border-color: rgba(34, 36, 38, 0.15);
-
-    &:hover {
-      background-color: rgba(0,0,0,0.05);
-      border-color: rgba(0,0,0,0.2);
-    }
-  }
-</style>
