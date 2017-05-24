@@ -61,7 +61,6 @@
         // as the 'return', otherwise JS will return without doing anything
         return _
           .chain(this.getAllPipes())
-          .filter(function(p) { return _.get(p, 'project.eid') == project_eid })
           .sortBy([ function(p) { return new Date(p.created) } ])
           .reverse()
           .value()
