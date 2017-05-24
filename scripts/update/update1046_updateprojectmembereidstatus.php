@@ -76,7 +76,7 @@ echo '{ "success": true, "msg": "Operation completed successfully." }';
 function updateProjectMemberEidStatus($db)
 {
     // STEP 1: get a list of projects
-    $query_sql = 'select eid, eid_status, updated from tbl_project';
+    $query_sql = 'select eid, eid_type, eid_status, updated from tbl_object';
     $result = $db->query($query_sql);
 
     // STEP 2: for each project that's deleted, set the eid_status
@@ -84,14 +84,18 @@ function updateProjectMemberEidStatus($db)
     $objects = array();
     while ($result && ($row = $result->fetch()))
     {
-        $project_eid = $row['eid'];
-        $project_status = $row['eid_status'];
-        $project_updated = $row['updated'];
+        $eid = $row['eid'];
+        $eid_type = $row['eid_type'];
+        $eid_status = $row['eid_status'];
+        $updated = $row['updated'];
 
-        if ($project_status !== \Model::STATUS_DELETED)
+        if ($eid_type !== \Model::TYPE_PROJECT)
             continue;
 
-        setProjectMemberStatusToDeleted($db, $project_eid, $project_updated);
+        if ($eid_status !== \Model::STATUS_DELETED)
+            continue;
+
+        setProjectMemberStatusToDeleted($db, $eid, $updated);
     }
 }
 
@@ -110,7 +114,7 @@ function setProjectMemberStatusToDeleted($db, $project_eid, $project_updated)
         if ($eid_status === \Model::STATUS_DELETED)
             continue;
 
-        writeObject($db, $eid, $eid_status, $project_updated);
+        writeObject($db, $eid, \Model::STATUS_DELETED, $project_updated);
     }
 }
 
