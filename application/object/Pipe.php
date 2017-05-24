@@ -178,8 +178,8 @@ class Pipe extends \Flexio\Object\Base
     {
         $result = array();
 
-        $object_eid = $this->getEid();
-        $res = $this->getModel()->assoc_range($object_eid, \Model::EDGE_HAS_PROCESS, [\Model::STATUS_AVAILABLE]);
+        $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
+        $res = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_HAS_PROCESS, $assoc_filter);
 
         foreach ($res as $item)
         {

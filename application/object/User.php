@@ -195,7 +195,8 @@ class User extends \Flexio\Object\Base
         {
             // lookup the pipes for the project
             $project_eid = $proj->getEid();
-            $members = $this->getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER, [\Model::STATUS_AVAILABLE]);
+            $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
+            $members = $this->getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER, $assoc_filter);
 
             foreach ($members as $member_info)
             {
@@ -234,7 +235,8 @@ class User extends \Flexio\Object\Base
         {
             // lookup the connections for the project
             $project_eid = $proj->getEid();
-            $members = $this->getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER, [\Model::STATUS_AVAILABLE]);
+            $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
+            $members = $this->getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER, $assoc_filter);
 
             foreach ($members as $member_info)
             {

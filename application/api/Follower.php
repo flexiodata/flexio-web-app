@@ -242,7 +242,8 @@ class Follower
 
         // TODO: for now, use the same result structure as the share
         // call; perhaps consider building this into the basic user info
-        $owned_by = \Flexio\System\System::getModel()->assoc_range($object->getEid(), \Model::EDGE_OWNED_BY, [\Model::STATUS_AVAILABLE]);
+        $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
+        $owned_by = \Flexio\System\System::getModel()->assoc_range($object->getEid(), \Model::EDGE_OWNED_BY, $assoc_filter);
         foreach ($owned_by as $item)
         {
             $user_eid = $item['eid'];
@@ -264,7 +265,8 @@ class Follower
             $result[] = $info;
         }
 
-        $shared_with = \Flexio\System\System::getModel()->assoc_range($object->getEid(), \Model::EDGE_FOLLOWED_BY, [\Model::STATUS_AVAILABLE]);
+        $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
+        $shared_with = \Flexio\System\System::getModel()->assoc_range($object->getEid(), \Model::EDGE_FOLLOWED_BY, $assoc_filter);
         foreach ($shared_with as $item)
         {
             $user_eid = $item['eid'];

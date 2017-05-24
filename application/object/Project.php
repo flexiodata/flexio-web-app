@@ -81,8 +81,7 @@ class Project extends \Flexio\Object\Base
     {
         $result = array();
 
-        $object_eid = $this->getEid();
-        $res = $this->getModel()->assoc_range($object_eid, \Model::EDGE_HAS_MEMBER);
+        $res = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_HAS_MEMBER);
 
         foreach ($res as $item)
         {
