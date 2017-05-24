@@ -237,12 +237,6 @@ class Pipe extends \Flexio\Object\Base
             "name" : null,
             "description" : null,
             "rights": null,
-            "project='.\Model::EDGE_MEMBER_OF.'" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_PROJECT.'",
-                "name" : null,
-                "description" : null
-            },
             "owned_by='.\Model::EDGE_OWNED_BY.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_USER.'",
