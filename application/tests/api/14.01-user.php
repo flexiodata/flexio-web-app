@@ -33,7 +33,7 @@ class Test
             "email": "'.$email.'",
             "password": "'.$password.'",
             "send_email": false,
-            "create_sample_project": false
+            "create_examples": false
         }
         ',true);
         $actual= \Flexio\Api\User::create($params, null);
