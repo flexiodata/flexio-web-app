@@ -51,7 +51,7 @@ class User
                 'verify_code'           => array('type' => 'string',  'required' => false, 'default' => ''),
                 'config'                => array('type' => 'object',  'required' => false, 'default' => []),
                 'send_email'            => array('type' => 'boolean', 'required' => false, 'default' => true),
-                'create_sample_project' => array('type' => 'boolean', 'required' => false, 'default' => true),
+                'create_examples' => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'require_verification'  => array('type' => 'boolean', 'required' => false, 'default' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -71,10 +71,10 @@ class User
 
         // configuration fields we don't want to pass on
         $send_email = $params['send_email'];
-        $create_sample_project = $params['create_sample_project'];
+        $create_examples = $params['create_examples'];
         $require_verification = $params['require_verification'];
         unset($params['send_email']);
-        unset($params['create_sample_project']);
+        unset($params['create_examples']);
         unset($params['require_verification']);
 
         // try to find the user
@@ -109,8 +109,8 @@ class User
             }
 
             // if appropriate, create a default project
-            if ($create_sample_project === true)
-                self::createSampleProject($user_eid);
+            if ($create_examples === true)
+                self::createExamplePipes($user_eid);
 
             // return the user info
             return $user->get();
@@ -493,11 +493,11 @@ class User
         return true;
     }
 
-    public static function createSample(array $params, string $requesting_user_eid = null) : bool
+    public static function createExamples(array $params, string $requesting_user_eid = null) : bool
     {
         // note: this is an API endpoint function for debugging; internally,
-        // createSampleProject() is used when a user is created so that the owner
-        // will be set to the newly created user even though the user and projects
+        // createExamplePipes() is used when a user is created so that the owner
+        // will be set to the newly created user even though the user and pipes
         // have both been created initially by the system
 
         $validator = \Flexio\Base\Validator::create();
@@ -505,25 +505,29 @@ class User
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $project = self::createSampleProject($requesting_user_eid, 'Sample Project');
+        $project = self::createExamplePipes($requesting_user_eid);
         return true;
     }
 
-    private static function createSampleProject(string $user_eid, string $name = null, string $description = null) : bool
+    private static function createExamplePipes(string $user_eid, array $project_params = null) : bool
     {
-        $project_params['name'] = $name ?? _('Sample Project');
-        $project_params['description'] = $description ?? _('Sample project to demonstrate functionality.');
-
         // create sample pipes; ensure user creation even if sample fails
         try
         {
-            $project = \Flexio\Object\Project::create($project_params);
-            $project->setOwner($user_eid);
-            $project->setCreatedBy($user_eid);
+            // if project params are specified, create a project and add the pipes to
+            // the project; otherwise, just create the pipes
+            $project_eid = null;
+            if (isset($project_params))
+            {
+                $project = \Flexio\Object\Project::create($project_params);
+                $project->setOwner($user_eid);
+                $project->setCreatedBy($user_eid);
+                $project_eid = $project->getEid();
+            }
 
             $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
-            $pipe1_eid = self::createSamplePipe($user_eid, $project->getEid(), $demo_dir .'pipe_commit.json');
-            $pipe2_eid = self::createSamplePipe($user_eid, $project->getEid(), $demo_dir .'pipe_contact.json');
+            $pipe1_eid = self::createExamplePipe($user_eid, $demo_dir .'pipe_commit.json', $project_eid);
+            $pipe2_eid = self::createExamplePipe($user_eid, $demo_dir .'pipe_contact.json', $project_eid);
         }
         catch (\Exception $e)
         {
@@ -535,7 +539,7 @@ class User
         return true;
     }
 
-    private static function createSamplePipe(string $user_eid, string $project_eid, string $file_name) : string
+    private static function createExamplePipe(string $user_eid, string $file_name, string $project_eid = null) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
         $f = @fopen($file_name, 'rb');
@@ -602,9 +606,12 @@ class User
         $pipe->setCreatedBy($user_eid);
 
         // if a parent project is specified, add the object as a member of the project
-        $project = \Flexio\Object\Project::load($project_eid);
-        if ($project !== false)
-            $project->addMember($pipe);
+        if (isset($project_eid))
+        {
+            $project = \Flexio\Object\Project::load($project_eid);
+            if ($project !== false)
+                $project->addMember($pipe);
+        }
 
         return $pipe->getEid();
     }
