@@ -196,6 +196,8 @@ class User extends \Flexio\Object\Base
 
             $res[] = $pipe;
         }
+
+        return $res;
     }
 
     public function getConnections() : array
@@ -217,6 +219,8 @@ class User extends \Flexio\Object\Base
 
             $res[] = $connection;
         }
+
+        return $res;
     }
 
     public function getTokens() : array
