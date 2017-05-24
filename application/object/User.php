@@ -179,82 +179,44 @@ class User extends \Flexio\Object\Base
 
     public function getPipes() : array
     {
-        // note: we need to query the pipes for active projects only; because we don't have the ability to specify
-        // properties in the graph query, we have to do two operations to get the pipes; first get the active projects,
-        // then for the active projects, get the pipe members
+        // TODO: add pipes from the projects that the user is following
 
-        $eid = $this->getEid();
-
-
-
-        // get the projects for the user
-        $projects = $this->getProjects();
+        // get the pipes for the user
+        $user_eid = $this->getEid();
+        $assoc_filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $pipes = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
 
         $res = array();
-        foreach ($projects as $proj)
+        foreach ($pipes as $pipe_info)
         {
-            // lookup the pipes for the project
-            $project_eid = $proj->getEid();
-            $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
-            $members = $this->getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER, $assoc_filter);
+            $pipe_eid = $pipe_info['eid'];
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            if ($pipe === false)
+                continue;
 
-            foreach ($members as $member_info)
-            {
-                $type = $member_info['eid_type'];
-                if ($type !== \Model::TYPE_PIPE)
-                    continue;
-
-                $pipe_eid = $member_info['eid'];
-
-                $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-                if ($pipe === false)
-                    continue;
-
-                $res[] = $pipe;
-            }
+            $res[] = $pipe;
         }
-
-        return $res;
     }
 
     public function getConnections() : array
     {
-        // note: we need to query the connections for active projects only; because we don't have the ability to specify
-        // properties in the graph query, we have to do two operations to get the connections; first get the active projects,
-        // then for the active projects, get the connection members
+        // TODO: add connections from the projects that the user is following
 
-        $eid = $this->getEid();
-
-
-
-        // get the projects for the user
-        $projects = $this->getProjects();
+        // get the connections for the user
+        $user_eid = $this->getEid();
+        $assoc_filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $connections = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
 
         $res = array();
-        foreach ($projects as $proj)
+        foreach ($connections as $connection_info)
         {
-            // lookup the connections for the project
-            $project_eid = $proj->getEid();
-            $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
-            $members = $this->getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER, $assoc_filter);
+            $connection_eid = $connection_info['eid'];
+            $connection = \Flexio\Object\Connection::load($connection_eid);
+            if ($connection === false)
+                continue;
 
-            foreach ($members as $member_info)
-            {
-                $type = $member_info['eid_type'];
-                if ($type !== \Model::TYPE_CONNECTION)
-                    continue;
-
-                $connection_eid = $member_info['eid'];
-
-                $connection = \Flexio\Object\Connection::load($connection_eid);
-                if ($connection === false)
-                    continue;
-
-                $res[] = $connection;
-            }
+            $res[] = $connection;
         }
-
-        return $res;
     }
 
     public function getTokens() : array
