@@ -1,5 +1,5 @@
 <template>
-  <article class="pa3 bb b--black-10 cursor-default no-select trans-pm"
+  <article class="pa3 bb b--black-10 pointer no-select trans-pm css-pipe-item"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">
@@ -9,7 +9,12 @@
         <connection-icon :type="output_type" class="dib v-mid br2 square-3"></connection-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns black-60 mv0 lh-title truncate">
-        <span :title="item.name">{{item.name}}</span>
+        <router-link
+          class="mid-gray no-underline css-pipe-title"
+          :to="pipe_route"
+        >
+          <span :title="item.name">{{item.name}}</span>
+        </router-link>
       </div>
       <div class="flex-none ml2">
         <toggle-button
@@ -25,6 +30,7 @@
           class="f5 b dib pointer pa2 black-60 popover-trigger"
           ref="dropdownTrigger"
           tabindex="0"
+          @click.stop
         ><i class="material-icons v-mid b">expand_more</i></a>
 
         <ui-popover
@@ -87,9 +93,18 @@
       ToggleButton
     },
     computed: {
-      input_type() { return this.getTaskConnectionType(TASK_TYPE_INPUT) },
-      output_type() { return this.getTaskConnectionType(TASK_TYPE_OUTPUT) },
-      is_scheduled() { return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false }
+      input_type() {
+        return this.getTaskConnectionType(TASK_TYPE_INPUT)
+      },
+      output_type() {
+        return this.getTaskConnectionType(TASK_TYPE_OUTPUT)
+      },
+      is_scheduled() {
+        return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
+      },
+      pipe_route() {
+        return { name: ROUTE_PIPEHOME, params: { eid: this.item.eid } }
+      }
     },
     methods: {
       getTaskConnectionType(task_type) {
@@ -97,7 +112,7 @@
         return _.get(task, 'metadata.connection_type')
       },
       openPipe() {
-        this.$router.push({ name: ROUTE_PIPEHOME, params: { eid: this.item.eid } })
+        this.$router.push(this.pipe_route)
       },
       trashPipe() {
         var attrs = {
@@ -140,3 +155,12 @@
     }
   }
 </script>
+
+<style lang="less">
+  // match .blue color to Material Design's 'Blue A600' color
+  @blue: #1e88e5;
+
+  .css-pipe-item:hover .css-pipe-title {
+    color: @blue;
+  }
+</style>
