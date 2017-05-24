@@ -76,7 +76,7 @@ echo '{ "success": true, "msg": "Operation completed successfully." }';
 function updateProjectMemberEidStatus($db)
 {
     // STEP 1: get a list of projects
-    $query_sql = 'select eid, eid_status from tbl_project';
+    $query_sql = 'select eid, eid_status, updated from tbl_project';
     $result = $db->query($query_sql);
 
     // STEP 2: for each project that's deleted, set the eid_status
@@ -86,15 +86,16 @@ function updateProjectMemberEidStatus($db)
     {
         $project_eid = $row['eid'];
         $project_status = $row['eid_status'];
+        $project_updated = $row['updated'];
 
         if ($project_status !== \Model::STATUS_DELETED)
             continue;
 
-        setProjectMemberStatus($project_eid, \Model::STATUS_DELETED);
+        setProjectMemberStatusToDeleted($db, $project_eid, $project_updated);
     }
 }
 
-function setProjectMemberStatus($project_eid, $eid_status)
+function setProjectMemberStatusToDeleted($db, $project_eid, $project_updated)
 {
     // STEP 1: get the pipe/connection members of the project
     $members = \Flexio\System\System::getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER);
@@ -103,13 +104,27 @@ function setProjectMemberStatus($project_eid, $eid_status)
     foreach ($members as $m)
     {
         $eid = $m['eid'];
-        $object = \Flexio\Object\Store::load($eid);
-        if ($object === false)
+        $eid_status = $m['eid_status'];
+
+        // if an item is already deleted, no need to do anything
+        if ($eid_status === \Model::STATUS_DELETED)
             continue;
 
-        if ($object->getStatus() === \Model::STATUS_DELETED)
-            continue;
-
-        $object->setStatus($eid_status);
+        writeObject($db, $eid, $eid_status, $project_updated);
     }
+}
+
+function writeObject($db, $eid, $status, $updated)
+{
+    $qeid = $db->quote($eid);
+    $qstatus = $db->quote($status);
+    $qupdated = $db->quote($updated);
+
+    $sql = "update tbl_object ".
+           "    set ".
+           "        eid_status = $qstatus, ".
+           "        updated = $qupdated ".
+           "    where eid = $qeid;";
+
+    $db->exec($sql);
 }
