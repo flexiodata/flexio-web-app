@@ -3,7 +3,22 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchConnections = ({ commit }, project_eid) => {
+export const fetchConnections = ({ commit }) => {
+  commit(types.FETCHING_CONNECTIONS, { fetching: true })
+
+  return api.fetchConnections().then(response => {
+    // success callback
+    commit(types.FETCHED_CONNECTIONS, { connections: response.body })
+    commit(types.FETCHING_CONNECTIONS, { fetching: false })
+    return response
+  }, response => {
+    // error callback
+    commit(types.FETCHING_CONNECTIONS, { fetching: false })
+    return response
+  })
+}
+
+export const fetchProjectConnections = ({ commit }, project_eid) => {
   commit(types.FETCHING_CONNECTIONS, { project_eid, fetching: true })
 
   return api.fetchProjectConnections({ eid: project_eid }).then(response => {

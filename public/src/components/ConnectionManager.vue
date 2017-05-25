@@ -23,32 +23,31 @@
 
     <!-- list -->
     <connection-list
-      class="flex-fill overflow-auto"
+      class="flex-fill mt4"
       :filter="filter"
-      :project-eid="projectEid"
       @item-edit="openEditModal"
       @item-delete="tryDeleteConnection"
     ></connection-list>
 
     <!-- props modal (used for both add and edit) -->
     <connection-props-modal
-      ref="modal-props"
-      :project-eid="projectEid"
+      ref="modal-connection-props"
       @submit="tryUpdateConnection"
+      @hide="show_connection_props_modal = false"
+      v-if="show_connection_props_modal"
     ></connection-props-modal>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import ConnectionList from './ConnectionList.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
   import Btn from './Btn.vue'
 
   export default {
-    props: ['project-eid'],
     components: {
       Spinner,
       ConnectionList,
@@ -57,42 +56,37 @@
     },
     data() {
       return {
-        filter: ''
+        filter: '',
+        show_connection_props_modal: false
       }
     },
     computed: {
-      is_fetched() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetched', false)
-      },
-      is_fetching() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetching', true)
-      }
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'is_fetching': 'connections_fetching',
+        'is_fetched': 'connections_fetched'
+      })
     },
     created() {
-      if (!this.projectEid)
-        return
-
       this.tryFetchConnections()
     },
     methods: {
-      ...mapGetters([
-        'getAllProjects'
-      ]),
       openAddModal() {
-        this.$refs['modal-props'].open()
+        this.show_connection_props_modal = true
+        this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
       },
       openEditModal(item) {
-        this.$refs['modal-props'].open(item, 'edit')
+        this.show_connection_props_modal = true
+        this.$nextTick(() => { this.$refs['modal-connection-props'].open(item, 'edit') })
       },
       tryFetchConnections() {
         if (!this.is_fetched)
-          this.$store.dispatch('fetchConnections', this.projectEid)
+          this.$store.dispatch('fetchConnections')
       },
       tryUpdateConnection(attrs, modal) {
-        var me = this
         var eid = attrs.eid
         attrs = _.pick(attrs, ['name', 'ename', 'description', 'rights', 'token', 'host', 'port', 'username', 'password', 'database'])
-        _.extend(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
+        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
@@ -101,7 +95,7 @@
             modal.close()
 
             // try to connect to the connection
-            me.$store.dispatch('testConnection', { eid, attrs })
+            this.$store.dispatch('testConnection', { eid, attrs })
           }
            else
           {

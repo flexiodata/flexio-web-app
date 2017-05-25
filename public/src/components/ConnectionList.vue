@@ -25,14 +25,14 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import ConnectionItem from './ConnectionItem.vue'
   import EmptyItem from './EmptyItem.vue'
   import CommonFilter from './mixins/common-filter'
 
   export default {
-    props: ['filter', 'project-eid'],
+    props: ['filter'],
     mixins: [CommonFilter],
     components: {
       Spinner,
@@ -40,18 +40,26 @@
       EmptyItem
     },
     computed: {
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'is_fetching': 'connections_fetching',
+        'is_fetched': 'connections_fetched'
+      }),
       connections() {
         return this.commonFilter(this.getOurConnections(), this.filter, ['name', 'description'])
-      },
-      is_fetching() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetching', true)
       }
+    },
+    created() {
+      this.tryFetchConnections()
     },
     methods: {
       ...mapGetters([
-        'getAllConnections',
-        'getAllProjects'
+        'getAllConnections'
       ]),
+      tryFetchConnections() {
+        if (!this.is_fetched)
+          this.$store.dispatch('fetchConnections')
+      },
       getOurConnections() {
         var project_eid = this.projectEid
 

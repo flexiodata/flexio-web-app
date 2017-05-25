@@ -5,25 +5,15 @@ export default {
 
   // ----------------------------------------------------------------------- //
 
-  [types.FETCHING_CONNECTIONS] (state, { project_eid, fetching }) {
-    // if we're trying to fetch connections for a project that's not
-    // in our store, add a very basic project object to the store
-    if (fetching === true && !_.has(state.objects, project_eid))
-    {
-      addProject(state, project_eid, { connections_fetching: fetching })
-    }
-     else
-    {
-      // otherwise, just set the project's connection fetching flag
-      updateProject(state, project_eid, { connections_fetching: fetching })
-    }
+  [types.FETCHING_CONNECTIONS] (state, { fetching }) {
+    state.connections_fetching = fetching
   },
 
-  [types.FETCHED_CONNECTIONS] (state, { project_eid, connections }) {
+  [types.FETCHED_CONNECTIONS] (state, { connections }) {
     addConnection(state, connections)
 
-    // set the project's connection fetched flag
-    updateProject(state, project_eid, { connections_fetched: true })
+    // set our fetched flag so we know we've queried the backend
+    state.connections_fetched = true
   },
 
   // ----------------------------------------------------------------------- //

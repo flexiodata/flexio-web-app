@@ -76,7 +76,6 @@
   import Btn from './Btn.vue'
 
   export default {
-    props: ['project-eid'],
     components: {
       Spinner,
       PipeList,

@@ -19,8 +19,7 @@ export default {
   [types.FETCHED_PIPES] (state, { pipes }) {
     addPipe(state, pipes)
 
-    // set our fetched flag so we know we've queried the backend for projects
-    state.pipes_fetching = false
+    // set our fetched flag so we know we've queried the backend
     state.pipes_fetched = true
   },
 

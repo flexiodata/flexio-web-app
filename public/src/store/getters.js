@@ -86,3 +86,7 @@ export const hasProjects = state => {
 export const hasPipes = state => {
   return state.pipes_fetched && _.size(getAllPipes(state)) > 0
 }
+
+export const hasConnections = state => {
+  return state.connections_fetched && _.size(getAllConnections(state)) > 0
+}

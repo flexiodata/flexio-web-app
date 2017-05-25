@@ -83,6 +83,7 @@ export default {
   bulkDeleteProjectItems:         function({ eid, attrs })              { return ProjectResource[DEL] ({ eid, p1: 'trash' }, attrs)                                       },
 
   // connection
+  fetchConnections:               function()                            { return ConnectionResource[GET] ()                                                               },
   fetchConnection:                function({ eid })                     { return ConnectionResource[GET] ({ eid })                                                        },
   createConnection:               function({ attrs })                   { return ConnectionResource[POS] ({}, attrs)                                                      },
   updateConnection:               function({ eid, attrs })              { return ConnectionResource[POS] ({ eid }, attrs)                                                 },
@@ -123,7 +124,7 @@ export default {
   // stream
   fetchStream:                    function({ eid })                     { return StreamResource[GET] ({ eid })                                                            },
 
-  // stream
+  // test
   fetchTests:                     function()                            { return TestResource[GET] ({ p1: 'configure' })                                                  },
   runTest:                        function({ id })                      { return TestResource[GET] ({ p1: 'run', id })                                                    }
 }
