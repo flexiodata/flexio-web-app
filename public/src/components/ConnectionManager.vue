@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <!-- control bar -->
-    <div class="flex-none flex flex-row mr5-l">
+    <div class="flex-none flex flex-row pa3 pa4-l mr4-l bb bb-0-l b--black-10">
       <div class="flex-fill">
         <input
           type="text"
@@ -23,7 +23,7 @@
 
     <!-- list -->
     <connection-list
-      class="flex-fill mt4 mr5-l"
+      class="flex-fill pa4-l mr4-l"
       :filter="filter"
       @item-edit="openEditModal"
       @item-delete="tryDeleteConnection"

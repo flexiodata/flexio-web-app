@@ -1,5 +1,5 @@
 <template>
-  <article class="pa3 bb b--black-10 pointer no-select trans-pm css-pipe-item"
+  <article class="pv3 ph2 ph3-l bb b--black-10 pointer no-select trans-pm css-pipe-item"
     @click="openPipe"
     @mouseenter="onMouseEnter"
     @mouseover="onMouseOver"

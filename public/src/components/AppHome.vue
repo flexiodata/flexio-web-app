@@ -9,7 +9,7 @@
         <span class="dn dib-ns v-mid">{{item.name}}</span>
       </router-link>
     </div>
-    <router-view :project-eid="eid" class="flex flex-column flex-fill pa4 relative overflow-auto"></router-view>
+    <router-view :project-eid="eid" class="flex flex-column flex-fill relative overflow-auto"></router-view>
   </div>
 </template>
 
