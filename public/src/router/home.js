@@ -1,7 +1,16 @@
-import store from '../store'
+import {
+  ROUTE_PROJECTPIPES,
+  ROUTE_PROJECTMEMBERS,
+  ROUTE_PROJECTCONNECTIONS,
+  ROUTE_PROJECTTRASH
+} from '../constants/route'
 import * as types from '../store/mutation-types'
-import { ROUTE_HOME } from '../constants/route'
+import store from '../store'
 import AppHome from '../components/AppHome.vue'
+import PipeManager from '../components/PipeManager.vue'
+import MemberManager from '../components/MemberManager.vue'
+import ConnectionManager from '../components/ConnectionManager.vue'
+import TrashManager from '../components/TrashManager.vue'
 
 export const basepath_redirect = {
   path: '/',
@@ -11,14 +20,41 @@ export const basepath_redirect = {
 
 export const home = {
   path: '/home',
-  name: ROUTE_HOME,
   component: AppHome,
   meta: { requiresAuth: true },
-  beforeEnter: (to, from, next) => {
-    // update the active project in the store
-    store.commit(types.CHANGE_ACTIVE_PROJECT, '')
-
-    // move to the next route
-    next()
-  }
+  children: [
+    {
+      // redirect to /home/pipes
+      path: '',
+      redirect: 'pipes'
+    },
+    {
+      // PipeManager will be rendered inside ProjectHome's <router-view>
+      // when /home/pipes is matched
+      path: 'pipes',
+      name: ROUTE_PROJECTPIPES,
+      component: PipeManager
+    },
+    {
+      // MemberManager will be rendered inside ProjectHome's <router-view>
+      // when /home/members is matched
+      path: 'members',
+      name: ROUTE_PROJECTMEMBERS,
+      component: MemberManager
+    },
+    {
+      // ConnectionManager will be rendered inside ProjectHome's <router-view>
+      // when /home/connections is matched
+      path: 'connections',
+      name: ROUTE_PROJECTCONNECTIONS,
+      component: ConnectionManager
+    },
+    {
+      // TrashManager will be rendered inside ProjectHome's <router-view>
+      // when /home/trash is matched
+      path: 'trash',
+      name: ROUTE_PROJECTTRASH,
+      component: TrashManager
+    }
+  ]
 }

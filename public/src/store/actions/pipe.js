@@ -4,7 +4,22 @@ import { OBJECT_TYPE_PIPE } from '../../constants/object-type'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchPipes = ({ commit }, project_eid) => {
+export const fetchPipes = ({ commit }) => {
+  commit(types.FETCHING_PIPES, { fetching: true })
+
+  return api.fetchPipes().then(response => {
+    // success callback
+    commit(types.FETCHED_PIPES, { pipes: response.body })
+    commit(types.FETCHING_PIPES, { fetching: false })
+    return response
+  }, response => {
+    // error callback
+    commit(types.FETCHING_PIPES, { fetching: false })
+    return response
+  })
+}
+
+export const fetchProjectPipes = ({ commit }, project_eid) => {
   commit(types.FETCHING_PIPES, { project_eid, fetching: true })
 
   return api.fetchProjectPipes({ eid: project_eid }).then(response => {

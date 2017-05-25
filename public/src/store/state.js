@@ -4,6 +4,12 @@ export default () => {
     user_fetching: false,
     projects_fetched: false,
     projects_fetching: false,
+    pipes_fetched: false,
+    pipes_fetching: false,
+    connections_fetched: false,
+    connections_fetching: false,
+    members_fetched: false,
+    members_fetching: false,
 
     active_user_eid: '',
     active_document_eid: '',

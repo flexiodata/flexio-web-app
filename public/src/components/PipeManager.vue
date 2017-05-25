@@ -23,9 +23,8 @@
 
     <!-- list -->
     <pipe-list
-      class="flex-fill overflow-auto"
+      class="flex-fill mt4"
       :filter="filter"
-      :project-eid="projectEid"
       @item-edit="openPipeEditModal"
       @item-duplicate="duplicatePipe"
       @item-share="openPipeShareModal"
@@ -35,7 +34,6 @@
     <!-- add modal -->
     <pipe-props-modal
       ref="modal-add-pipe"
-      :project-eid="projectEid"
       @submit="tryCreatePipe"
       @hide="show_pipe_add_modal = false"
       v-if="show_pipe_add_modal"
@@ -44,7 +42,6 @@
     <!-- edit modal -->
     <pipe-props-modal
       ref="modal-edit-pipe"
-      :project-eid="projectEid"
       @submit="tryUpdatePipe"
       @hide="show_pipe_edit_modal = false"
       v-if="show_pipe_edit_modal"
@@ -68,9 +65,9 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import PipeList from './PipeList.vue'
   import PipePropsModal from './PipePropsModal.vue'
@@ -99,23 +96,16 @@
       }
     },
     computed: {
-      is_fetched() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'pipes_fetched', false)
-      },
-      is_fetching() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'pipes_fetching', true)
-      }
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'is_fetching': 'pipes_fetching',
+        'is_fetched': 'pipes_fetched'
+      })
     },
     created() {
-      if (!this.projectEid)
-        return
-
       this.tryFetchPipes()
     },
     methods: {
-      ...mapGetters([
-        'getAllProjects'
-      ]),
       openPipe(eid) {
         this.$router.push({ name: ROUTE_PIPEHOME, params: { eid } })
       },
@@ -138,19 +128,16 @@
       duplicatePipe(item) {
         var attrs = {
           copy_eid: item.eid,
-          name: item.name,
-          parent_eid: this.projectEid
+          name: item.name
         }
 
         this.$store.dispatch('createPipe', { attrs })
       },
       tryFetchPipes() {
         if (!this.is_fetched)
-          this.$store.dispatch('fetchPipes', this.projectEid)
+          this.$store.dispatch('fetchPipes')
       },
       tryCreatePipe(attrs, modal) {
-        _.extend(attrs, { parent_eid: this.projectEid })
-
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok)
           {

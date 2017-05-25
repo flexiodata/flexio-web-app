@@ -12,25 +12,16 @@ export default {
 
   // ----------------------------------------------------------------------- //
 
-  [types.FETCHING_PIPES] (state, { project_eid, fetching }) {
-    // if we're trying to fetch pipes for a project that's not
-    // in our store, add a very basic project object to the store
-    if (fetching === true && !_.has(state.objects, project_eid))
-    {
-      addProject(state, project_eid, { pipes_fetching: fetching })
-    }
-     else
-    {
-      // otherwise, just set the project's pipe fetching flag
-      updateProject(state, project_eid, { pipes_fetching: fetching })
-    }
+  [types.FETCHING_PIPES] (state, { fetching }) {
+    state.pipes_fetching = fetching
   },
 
-  [types.FETCHED_PIPES] (state, { project_eid, pipes }) {
+  [types.FETCHED_PIPES] (state, { pipes }) {
     addPipe(state, pipes)
 
-    // set the project's pipe fetched flag
-    updateProject(state, project_eid, { pipes_fetched: true })
+    // set our fetched flag so we know we've queried the backend for projects
+    state.pipes_fetching = false
+    state.pipes_fetched = true
   },
 
   // ----------------------------------------------------------------------- //

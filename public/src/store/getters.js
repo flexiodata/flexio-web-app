@@ -82,3 +82,7 @@ export const getActiveDocumentProcesses = state => {
 export const hasProjects = state => {
   return state.projects_fetched && _.size(getAllProjects(state)) > 0
 }
+
+export const hasPipes = state => {
+  return state.pipes_fetched && _.size(getAllPipes(state)) > 0
+}

@@ -92,6 +92,7 @@ export default {
   disconnectConnection:           function({ eid, attrs })              { return ConnectionResource[POS] ({ eid, p1: 'disconnect' }, attrs)                               },
 
   // pipe
+  fetchPipes:                     function()                            { return PipeResource[GET] ()                                                                     },
   fetchPipe:                      function({ eid })                     { return PipeResource[GET] ({ eid })                                                              },
   createPipe:                     function({ attrs })                   { return PipeResource[POS] ({}, attrs)                                                            },
   updatePipe:                     function({ eid, attrs })              { return PipeResource[POS] ({ eid }, attrs)                                                       },

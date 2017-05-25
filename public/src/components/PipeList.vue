@@ -27,14 +27,14 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import PipeItem from './PipeItem.vue'
   import EmptyItem from './EmptyItem.vue'
   import CommonFilter from './mixins/common-filter'
 
   export default {
-    props: ['filter', 'project-eid'],
+    props: ['filter'],
     mixins: [CommonFilter],
     components: {
       Spinner,
@@ -42,21 +42,27 @@
       EmptyItem
     },
     computed: {
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'is_fetching': 'pipes_fetching',
+        'is_fetched': 'pipes_fetched'
+      }),
       pipes() {
         return this.commonFilter(this.getOurPipes(), this.filter, ['name', 'description'])
-      },
-      is_fetching() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'pipes_fetching', true)
       }
+    },
+    created() {
+      this.tryFetchPipes()
     },
     methods: {
       ...mapGetters([
-        'getAllPipes',
-        'getAllProjects'
+        'getAllPipes'
       ]),
+      tryFetchPipes() {
+        if (!this.is_fetched)
+          this.$store.dispatch('fetchPipes')
+      },
       getOurPipes() {
-        var project_eid = this.projectEid
-
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything
         return _
