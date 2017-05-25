@@ -1,17 +1,17 @@
 <template>
   <div :class="iconsOnly ? 'flex flex-row items-center' : ''">
-    <pipe-task-item
+    <task-summary-item
       v-for="(task, index) in tasks"
       :item="task"
       :index="index"
       :icon-only="iconsOnly"
     >
-    </pipe-task-item>
+    </task-summary-item>
   </div>
 </template>
 
 <script>
-  import PipeTaskItem from './PipeTaskItem.vue'
+  import TaskSummaryItem from './TaskSummaryItem.vue'
 
   export default {
     props: {
@@ -25,7 +25,7 @@
       }
     },
     components: {
-      PipeTaskItem
+      TaskSummaryItem
     }
   }
 </script>

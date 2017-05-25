@@ -88,10 +88,10 @@
         <div>Pipe Steps</div>
       </div>
       <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto-l" v-if="has_tasks">
-        <pipe-task-list
+        <task-summary-list
           class="overflow-y-auto-l"
           :tasks="tasks"
-        ></pipe-task-list>
+        ></task-summary-list>
         <div>
           <btn
             btn-md
@@ -137,7 +137,7 @@
   import PipeTransferInputChooser from './PipeTransferInputChooser.vue'
   import PipeTransferOutputList from './PipeTransferOutputList.vue'
   import PipeTransferOutputChooser from './PipeTransferOutputChooser.vue'
-  import PipeTaskList from './PipeTaskList.vue'
+  import TaskSummaryList from './TaskSummaryList.vue'
 
   export default {
     props: ['tasks', 'pipe-eid', 'project-eid', 'active-subprocess'],
@@ -147,7 +147,7 @@
       PipeTransferInputChooser,
       PipeTransferOutputList,
       PipeTransferOutputChooser,
-      PipeTaskList
+      TaskSummaryList
     },
     data() {
       return {

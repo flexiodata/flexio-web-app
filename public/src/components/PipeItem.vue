@@ -17,14 +17,15 @@
         </div>
       </div>
       <div class="flex-none ml3 ml4-l dn db-ns">
-        <pipe-task-list
+        <task-summary-list
           :tasks="tasks"
           :icons-only="true"
-        ></pipe-task-list>
+        ></task-summary-list>
       </div>
       <div class="flex-none ml3 ml4-l">
         <toggle-button
           class="hint--top"
+          style="display: block"
           :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
           :checked="is_scheduled"
           @click.stop="toggleScheduled"
@@ -95,14 +96,14 @@
   import { OBJECT_STATUS_TRASH } from '../constants/object-status'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ToggleButton from './ToggleButton.vue'
-  import PipeTaskList from './PipeTaskList.vue'
+  import TaskSummaryList from './TaskSummaryList.vue'
 
   export default {
     props: ['item'],
     components: {
       ConnectionIcon,
       ToggleButton,
-      PipeTaskList
+      TaskSummaryList
     },
     data() {
       return {

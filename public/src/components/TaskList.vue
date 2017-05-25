@@ -1,4 +1,4 @@
-cv<template>
+<template>
   <div class="flex flex-row">
     <div v-if="false" class="flex flex-row relative">
       <div class="flex flex-column relative pointer b--transparent mh2 square-6 square-7-ns tc justify-center  trans-wh"
