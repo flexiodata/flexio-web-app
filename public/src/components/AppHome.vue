@@ -4,12 +4,12 @@
       <router-link to="/home" class="flex-none-l dn db-l no-underline link pv1 mh3 mb4" title="Home">
         <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
       </router-link>
-      <router-link v-for="item in nav_items" :to="item.route" class="flex-auto flex-none-l no-underline truncate tc tl-l link f5 fw6 mv0 mb1-l ph-1 pl3-l pr5-l pv2 bb bb-0-l bw1 bw2-l css-nav2">
+      <router-link v-for="item in nav_items" :to="item.route" class="flex-auto flex-none-l no-underline truncate tc tl-l link f5 fw6 mv0 mb2-l ph-1 pl3-l pr5-l pv2 bb bb-0-l bw1 bw2-l css-nav2">
         <i class="material-icons md-24 v-mid dn" :class="item.class">{{item.icon}}</i>
         <span class="dn dib-ns v-mid">{{item.name}}</span>
       </router-link>
     </div>
-    <router-view :project-eid="eid" class="flex flex-column flex-fill relative overflow-auto"></router-view>
+    <router-view class="flex flex-column flex-fill relative overflow-auto"></router-view>
   </div>
 </template>
 

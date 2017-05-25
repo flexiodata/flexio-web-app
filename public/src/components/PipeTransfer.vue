@@ -88,7 +88,10 @@
         <div>Pipe Steps</div>
       </div>
       <div class="flex-fill pt3 pb3 pr3 ml3 overflow-y-auto-l" v-if="has_tasks">
-        <pipe-transfer-transform-list :tasks="tasks"></pipe-transfer-transform-list>
+        <pipe-transfer-transform-list
+          class="overflow-y-auto-l"
+          :tasks="tasks"
+        ></pipe-transfer-transform-list>
         <div>
           <btn
             btn-md

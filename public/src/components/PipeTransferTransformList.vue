@@ -1,9 +1,10 @@
 <template>
-  <div class="overflow-y-auto">
+  <div :class="iconsOnly ? 'flex flex-row items-center' : ''">
     <pipe-transfer-transform-item
       v-for="(task, index) in tasks"
       :item="task"
       :index="index"
+      :icon-only="iconsOnly"
     >
     </pipe-transfer-transform-item>
   </div>
@@ -13,7 +14,16 @@
   import PipeTransferTransformItem from './PipeTransferTransformItem.vue'
 
   export default {
-    props: ['tasks'],
+    props: {
+      'tasks': {
+        type: Array,
+        required: true
+      },
+      'icons-only': {
+        type: Boolean,
+        default: false
+      }
+    },
     components: {
       PipeTransferTransformItem
     }

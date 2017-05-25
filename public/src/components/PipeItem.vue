@@ -1,16 +1,11 @@
 <template>
-  <article class="pv3 ph2 ph3-l bb b--black-10 pointer no-select trans-pm css-pipe-item"
+  <article class="pv3 ph2 bb b--black-10 pointer no-select trans-pm css-pipe-item"
     @click="openPipe"
     @mouseenter="onMouseEnter"
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave"
   >
     <div class="flex flex-row items-center">
-      <div class="flex-none mr2">
-        <connection-icon :type="input_type" class="dib v-mid br2 square-3"></connection-icon>
-        <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px">arrow_drop_down</i>
-        <connection-icon :type="output_type" class="dib v-mid br2 square-3"></connection-icon>
-      </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title truncate">
         <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-pipe-title">{{item.name}}</h1>
         <div
@@ -21,7 +16,13 @@
           <h2 class="f6 fw4 mt1 mb0 black-60 truncate">{{item.description}}</h2>
         </div>
       </div>
-      <div class="flex-none ml3">
+      <div class="flex-none ml3 ml4-l dn db-ns">
+        <pipe-transfer-transform-list
+          :tasks="tasks"
+          :icons-only="true"
+        ></pipe-transfer-transform-list>
+      </div>
+      <div class="flex-none ml3 ml4-l">
         <toggle-button
           class="hint--top"
           :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
@@ -30,7 +31,7 @@
           @dblclick.stop
         ></toggle-button>
       </div>
-      <div class="flex-none ml3">
+      <div class="flex-none ml3 ml4-l">
         <a
           class="f5 b dib pointer pa1 black-60 ba br2 popover-trigger"
           ref="dropdownTrigger"
@@ -94,12 +95,14 @@
   import { OBJECT_STATUS_TRASH } from '../constants/object-status'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ToggleButton from './ToggleButton.vue'
+  import PipeTransferTransformList from './PipeTransferTransformList.vue'
 
   export default {
     props: ['item'],
     components: {
       ConnectionIcon,
-      ToggleButton
+      ToggleButton,
+      PipeTransferTransformList
     },
     data() {
       return {
@@ -116,6 +119,9 @@
       },
       is_scheduled() {
         return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
+      },
+      tasks() {
+        return _.get(this.item, 'task', [])
       },
       pipe_route() {
         return { name: ROUTE_PIPEHOME, params: { eid: this.item.eid } }

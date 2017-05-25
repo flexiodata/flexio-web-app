@@ -1,9 +1,9 @@
 <template>
-  <article class="flex flex-row pt1 pb3">
+  <article class="flex flex-row" :class="iconOnly ? '' : 'pt1 pb3'">
     <div class="flex-none">
       <connection-icon
         :type="ctype"
-        class="br1 mr2"
+        class="db br1 mr2"
         style="width: 28px; height: 28px"
         v-if="show_connection_icon"
       ></connection-icon>
@@ -15,7 +15,7 @@
         <i class="db material-icons f4">{{task_icon}}</i>
       </div>
     </div>
-    <div class="flex-fill relative" :style="title_style">
+    <div class="flex-fill relative" :style="title_style" v-if="iconOnly !== true">
       <div class="flex flex-row">
         <div class="f5 lh-title mr1">{{index+1}}.</div>
         <div class="flex-fill f5 lh-title">{{display_name}}</div>
@@ -31,7 +31,20 @@
   import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
-    props: ['item', 'index'],
+    props: {
+      'item': {
+        type: Object,
+        required: true
+      },
+      'index': {
+        type: Number,
+        required: true
+      },
+      'icon-only': {
+        type: Boolean,
+        default: false
+      }
+    },
     mixins: [TaskItemHelper],
     components: {
       ConnectionIcon

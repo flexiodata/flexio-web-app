@@ -1,5 +1,5 @@
 <template>
-  <article class="pv3 ph2 ph3-l bb b--black-10 pointer no-select trans-pm css-connection-item"
+  <article class="pv3 pr2 pl3 pl2-l bb b--black-10 pointer no-select trans-pm css-connection-item"
     @click="editConnection"
     @mouseenter="onMouseEnter"
     @mouseover="onMouseOver"
