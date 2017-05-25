@@ -285,8 +285,6 @@ class Api
             case 'POS /projects/:eid'                  : return '\Flexio\Api\Project::set';
             case 'GET /projects/:eid'                  : return '\Flexio\Api\Project::get';
             case 'DEL /projects/:eid'                  : return '\Flexio\Api\Project::delete';
-            case 'GET /projects/:eid/pipes'            : return '\Flexio\Api\Project::pipes';
-            case 'GET /projects/:eid/connections'      : return '\Flexio\Api\Project::connections';
 
             // followers
             case 'POS /projects/:eid/followers'        : return '\Flexio\Api\Follower::create';
