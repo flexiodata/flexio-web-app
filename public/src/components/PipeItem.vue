@@ -17,10 +17,10 @@
         </div>
       </div>
       <div class="flex-none ml3 ml4-l dn db-ns">
-        <pipe-transfer-transform-list
+        <pipe-task-list
           :tasks="tasks"
           :icons-only="true"
-        ></pipe-transfer-transform-list>
+        ></pipe-task-list>
       </div>
       <div class="flex-none ml3 ml4-l">
         <toggle-button
@@ -95,14 +95,14 @@
   import { OBJECT_STATUS_TRASH } from '../constants/object-status'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ToggleButton from './ToggleButton.vue'
-  import PipeTransferTransformList from './PipeTransferTransformList.vue'
+  import PipeTaskList from './PipeTaskList.vue'
 
   export default {
     props: ['item'],
     components: {
       ConnectionIcon,
       ToggleButton,
-      PipeTransferTransformList
+      PipeTaskList
     },
     data() {
       return {

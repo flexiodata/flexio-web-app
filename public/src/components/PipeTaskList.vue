@@ -1,17 +1,17 @@
 <template>
   <div :class="iconsOnly ? 'flex flex-row items-center' : ''">
-    <pipe-transfer-transform-item
+    <pipe-task-item
       v-for="(task, index) in tasks"
       :item="task"
       :index="index"
       :icon-only="iconsOnly"
     >
-    </pipe-transfer-transform-item>
+    </pipe-task-item>
   </div>
 </template>
 
 <script>
-  import PipeTransferTransformItem from './PipeTransferTransformItem.vue'
+  import PipeTaskItem from './PipeTaskItem.vue'
 
   export default {
     props: {
@@ -25,7 +25,7 @@
       }
     },
     components: {
-      PipeTransferTransformItem
+      PipeTaskItem
     }
   }
 </script>
