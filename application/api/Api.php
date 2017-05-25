@@ -287,10 +287,6 @@ class Api
             case 'DEL /projects/:eid'                  : return '\Flexio\Api\Project::delete';
             case 'GET /projects/:eid/pipes'            : return '\Flexio\Api\Project::pipes';
             case 'GET /projects/:eid/connections'      : return '\Flexio\Api\Project::connections';
-            case 'POS /projects/:eid/trash'            : return '\Flexio\Api\Project::addTrash';
-            case 'GET /projects/:eid/trash'            : return '\Flexio\Api\Project::trashed';
-            case 'DEL /projects/:eid/trash'            : return '\Flexio\Api\Project::clearTrash';
-            case 'POS /projects/:eid/restore'          : return '\Flexio\Api\Project::unTrash';
 
             // followers
             case 'POS /projects/:eid/followers'        : return '\Flexio\Api\Follower::create';
@@ -339,6 +335,12 @@ class Api
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
             case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\Process::cancel';
             case 'POS /processes/:eid/pause'           : return '\Flexio\Api\Process::pause';
+
+            // trash
+            case 'POS /trash'                          : return '\Flexio\Api\Trash::add';
+            case 'GET /trash'                          : return '\Flexio\Api\Trash::listall';
+            case 'DEL /trash'                          : return '\Flexio\Api\Trash::empty';
+            case 'POS /restore'                        : return '\Flexio\Api\Trash::restore';
 
             // streams
             case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
