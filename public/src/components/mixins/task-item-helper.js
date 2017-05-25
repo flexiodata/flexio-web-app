@@ -13,9 +13,6 @@ export default {
     task_icon() {
       return _.result(this, 'tinfo.icon', 'build')
     },
-    task_icon() {
-      return _.result(this, 'tinfo.icon', 'build')
-    },
     ctype() {
       return _.get(this, 'task.metadata.connection_type', '')
     },
