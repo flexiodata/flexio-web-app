@@ -16,6 +16,199 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
+
+class BinaryData
+{
+    public $data = '';
+    public function __construct($data)
+    { 
+        $this->data = $data;
+    }
+    public function __toString()
+    {
+        return $this->data;
+    }
+}
+
+class ExecuteProxy
+{
+    private $context = null;
+    private $socket = null;
+    private $port = null;
+
+    public function initialize()
+    {
+        $this->context = new \ZMQContext(1);
+
+        //  Socket to talk to clients
+        $this->socket = new \ZMQSocket($this->context, ZMQ::SOCKET_REP);
+
+        // it's unfortunate that we can't use port :*, but with the
+        // current php bindings, we are unable to figure out which
+        // port the kernel chose
+        $port = 10000 + rand(0, 10000);
+$port = 10000;
+        while (true)
+        {
+            try
+            {
+                $abc = $this->socket->bind("tcp://*:$port");
+                break;
+            }
+            catch (Exception $e)
+            {
+                //echo("Could not bind to port $port\n");
+                $port++;
+                if ($port == 20000)
+                    return false;
+            }
+        }
+
+        $this->port = $port;
+    }
+
+
+    public function getListenPort()
+    {
+        return $this->port;
+    }
+
+    public function run()
+    {
+        while (true)
+        {
+            //  Wait for next request from client
+            $request = $this->socket->recv();
+            printf ("Received request: [%s]\n", $request);
+
+            $arr = $this->parseCallString($request);
+var_dump($arr);
+
+            if ($arr === false || count($arr) == 0)
+            {
+                // bad parse -- send exception
+                $this->socket->send("E19,Request parse error");
+                continue;
+            }  
+
+            $func = array_shift($arr);
+
+            // check if function exists
+            if (!method_exists($this, 'func_' . $func))
+            {
+                // bad parse -- send exception
+                $this->socket->send("E14,Unknown method");
+                continue;
+            }
+
+            // make function call
+            $retval = call_user_func_array([ $this, 'func_'.$func ], $arr);
+
+            //  Send reply back to client
+            $this->socket->send(self::encodepart($retval));
+        }
+
+    }
+
+
+    public static function encodepart($val)
+    {
+       if ($val instanceof BinaryData)
+       {
+           $type = 'B';
+           $val = $val->data;
+       }
+        else if (is_int($val))
+       {
+           $type = 'i';
+           $val = (string)$val;
+       }
+        else 
+       {
+           $type = 's';
+       }
+
+       return $type . strlen($val) . ',' . $val;
+    }
+
+    public function parseCallString($s)
+    {
+        $offset = 0;
+        $strlen = strlen($s);
+
+        $result = [];
+
+        while ($offset < $strlen)
+        {
+            // get type -- and make sure it's supported
+            $type = substr($s, $offset, 1);
+            $offset++;
+
+            if (strpos("sibBN", $type) === false)
+                return false; // unsupported type
+
+            // find comma
+            $comma_offset = false;
+            for ($i = $offset; $i < min($strlen,$offset+11); ++$i)
+            {
+                if ($s[$i] == ',')
+                {
+                    $comma_offset = $i;
+                    break;
+                }
+                if (strpos("01234567889", $s[$i]) === false)
+                    return false; // length must be integer
+            }
+            if ($comma_offset === false || $comma_offset == $offset)
+                return false;
+
+            // get length
+            $length = intval(substr($s, $offset, $comma_offset - $offset));
+
+            // get content
+            $offset = $comma_offset+1;
+            $content = substr($s, $offset, $length);
+            $offset += $length;
+
+            if ($type == 'B')
+                $content = new BinaryData($content);
+            if ($type == 'i')
+                $content = (int)$content;
+            else if ($type == 'N')
+                $content = null;
+            else if ($type == 'b')
+                $content = ($content == '0' ? false : true);
+
+            $result[] = $content;
+        }
+
+        return $result;
+
+    }
+
+
+
+    private function func_hello1($name)
+    {
+        return "Hello, $name";
+    }
+
+    private function func_hello2()
+    {
+        return "Hello2";
+    }
+
+    private function func_read()
+    {
+        // returns php string, but should return binary type
+        return new BinaryData("This is binary data");
+    }
+}
+
+
+
+
+
 class Execute extends \Flexio\Jobs\Base
 {
     public function run()
