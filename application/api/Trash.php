@@ -166,7 +166,7 @@ class Trash
 
         // get the pipes
         $result = array();
-        $pipes = $user->getPipes(array(\Model::STATUS_TRASHED));
+        $pipes = $user->getPipes(array(\Model::STATUS_TRASH));
         foreach ($pipes as $p)
         {
             if ($p->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
