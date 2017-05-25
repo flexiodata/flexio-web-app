@@ -7,7 +7,7 @@
   >
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
-        <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3 square-4-ns"></connection-icon>
+        <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3 square-4-l"></connection-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title truncate">
         <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-connection-title">{{item.name}}</h1>
@@ -25,14 +25,16 @@
           <span class="dn dib-l v-mid">{{status}}</span>
         </div>
       </div>
-      <div class="tr ml3 ml2-ns min-w4-ns truncate f6 fw6">
+      <div class="tr ml3 ml2-ns min-w4-ns dark-gray truncate f6 fw6">
           {{created}}
       </div>
-      <div class="ml2 ml3-ns">
+      <div class="ml2 ml3-l">
         <a
-          class="f5 b dib pointer pa2 black-60 popover-trigger"
+          class="f5 b dib pointer pa1 black-60 ba br2 popover-trigger"
           ref="dropdownTrigger"
           tabindex="0"
+          :class="is_hover ? 'b--black-20' : 'b--transparent'"
+          @click.stop
         ><i class="material-icons v-mid b">expand_more</i></a>
 
         <ui-popover
