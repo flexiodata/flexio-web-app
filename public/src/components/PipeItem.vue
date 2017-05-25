@@ -1,6 +1,9 @@
 <template>
   <article class="pa3 bb b--black-10 pointer no-select trans-pm css-pipe-item"
     @click="openPipe"
+    @mouseenter="onMouseEnter"
+    @mouseover="onMouseOver"
+    @mouseleave="onMouseLeave"
   >
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
@@ -8,8 +11,8 @@
         <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px">arrow_drop_down</i>
         <connection-icon :type="output_type" class="dib v-mid br2 square-3"></connection-icon>
       </div>
-      <div class="flex-fill mh2 fw6 f6 f5-ns black-60 mv0 lh-title truncate">
-        <h1 class="f6 f5-ns fw6 lh-title black mv0 css-pipe-title">{{item.name}}</h1>
+      <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title truncate">
+        <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-pipe-title">{{item.name}}</h1>
         <div
           class="mw7 hint--bottom hint--large"
           :aria-label="item.description"
@@ -18,7 +21,7 @@
           <h2 class="f6 fw4 mt1 mb0 black-60 truncate">{{item.description}}</h2>
         </div>
       </div>
-      <div class="flex-none ml2">
+      <div class="flex-none ml3">
         <toggle-button
           class="hint--top"
           :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
@@ -27,20 +30,22 @@
           @dblclick.stop
         ></toggle-button>
       </div>
-      <div class="flex-none ml2">
+      <div class="flex-none ml3">
         <a
-          class="f5 b dib pointer pa2 black-60 popover-trigger"
+          class="f5 b dib pointer pa1 black-60 ba br2 popover-trigger"
           ref="dropdownTrigger"
           tabindex="0"
+          :class="is_hover ? 'b--black-20' : 'b--transparent'"
           @click.stop
-          v-show="is_hover"
         ><i class="material-icons v-mid b">expand_more</i></a>
 
         <ui-popover
           trigger="dropdownTrigger"
           ref="dropdown"
           dropdown-position="bottom right"
-          v-if="is_hover"
+          @open="is_dropdown_open = true"
+          @close="is_dropdown_open = false"
+          v-if="is_hover || is_dropdown_open"
         >
           <ui-menu
             contain-focus
@@ -96,6 +101,12 @@
       ConnectionIcon,
       ToggleButton
     },
+    data() {
+      return {
+        is_hover: false,
+        is_dropdown_open: false
+      }
+    },
     computed: {
       input_type() {
         return this.getTaskConnectionType(TASK_TYPE_INPUT)
@@ -105,9 +116,6 @@
       },
       is_scheduled() {
         return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
-      },
-      is_hover() {
-        return true
       },
       pipe_route() {
         return { name: ROUTE_PIPEHOME, params: { eid: this.item.eid } }
@@ -138,6 +146,15 @@
           case 'schedule':  return this.$emit('schedule', this.item)
           case 'delete':    return this.trashPipe()
         }
+      },
+      onMouseEnter() {
+        this.is_hover = true
+      },
+      onMouseLeave() {
+        this.is_hover = false
+      },
+      onMouseOver() {
+        this.is_hover = true
       },
       toggleScheduled() {
         var attrs = {

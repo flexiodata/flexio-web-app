@@ -1,13 +1,16 @@
 <template>
   <article class="pa3 bb b--black-10 pointer no-select trans-pm css-connection-item"
     @click="editConnection"
+    @mouseenter="onMouseEnter"
+    @mouseover="onMouseOver"
+    @mouseleave="onMouseLeave"
   >
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
         <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3 square-4-ns"></connection-icon>
       </div>
-      <div class="flex-fill mh2 fw6 f6 f5-ns black-60 mv0 lh-title truncate">
-        <h1 class="f6 f5-ns fw6 lh-title black mv0 css-connection-title">{{item.name}}</h1>
+      <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title truncate">
+        <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-connection-title">{{item.name}}</h1>
         <div
           class="mw7 hint--bottom hint--large"
           :aria-label="item.description"
@@ -36,6 +39,9 @@
           trigger="dropdownTrigger"
           ref="dropdown"
           dropdown-position="bottom right"
+          @open="is_dropdown_open = true"
+          @close="is_dropdown_open = false"
+          v-if="is_hover || is_dropdown_open"
         >
           <ui-menu
             contain-focus
@@ -73,6 +79,12 @@
     props: ['item'],
     components: {
       ConnectionIcon
+    },
+    data() {
+      return {
+        is_hover: false,
+        is_dropdown_open: false
+      }
     },
     computed: {
       status_cls() {
@@ -120,6 +132,15 @@
           case 'delete':    return this.$emit('delete', this.item)
         }
       },
+      onMouseEnter() {
+        this.is_hover = true
+      },
+      onMouseLeave() {
+        this.is_hover = false
+      },
+      onMouseOver() {
+        this.is_hover = true
+      }
     }
   }
 </script>
