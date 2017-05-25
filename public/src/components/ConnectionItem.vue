@@ -1,11 +1,13 @@
 <template>
-  <article class="css-connection-item ma0 ma3-ns pv3 pv2a-ns ph3 bb ba-ns br2-ns cursor-default no-select shadow-sui-segment-ns trans-pm">
+  <article class="pa3 bb b--black-10 pointer no-select trans-pm css-connection-item"
+    @click="editConnection"
+  >
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
         <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3 square-4-ns"></connection-icon>
       </div>
-      <div class="flex-fill mh2 fw6 f6 f5-ns black-60 mv0 lh-title">
-        <h1 class="f6 f5-ns fw6 lh-title black mv0">{{item.name}}</h1>
+      <div class="flex-fill mh2 fw6 f6 f5-ns black-60 mv0 lh-title truncate">
+        <h1 class="f6 f5-ns fw6 lh-title black mv0 css-connection-title">{{item.name}}</h1>
         <div
           class="mw7 hint--bottom hint--large"
           :aria-label="item.description"
@@ -108,6 +110,9 @@
       }
     },
     methods: {
+      editConnection() {
+        this.$emit('edit', this.item)
+      },
       onDropdownItemClick(menu_item) {
         switch (menu_item.id)
         {
@@ -119,13 +124,11 @@
   }
 </script>
 
-<style lang="less" scoped>
-  .css-connection-item {
-    border-color: rgba(34, 36, 38, 0.15);
+<style lang="less">
+  // match .blue color to Material Design's 'Blue A600' color
+  @blue: #1e88e5;
 
-    &:hover {
-      background-color: rgba(0,0,0,0.05);
-      border-color: rgba(0,0,0,0.2);
-    }
+  .css-connection-item:hover .css-connection-title {
+    color: @blue;
   }
 </style>
