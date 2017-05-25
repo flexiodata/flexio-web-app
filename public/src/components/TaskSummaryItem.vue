@@ -3,17 +3,20 @@
     class="flex flex-row"
     :class="iconOnly ? '' : 'pt1 pb3'"
   >
-    <div class="flex-none">
+    <div
+      class="flex-none"
+      :class="iconOnly ? 'hint--bottom mr1' : 'mr2'"
+      :aria-label="display_name"
+    >
       <connection-icon
         class="db br1"
         style="width: 28px; height: 28px"
-        :class="iconOnly ? 'mr1' : 'mr2'"
         :type="ctype"
         v-if="show_connection_icon"
       ></connection-icon>
       <div
         class="pa1 br1 white trans-wh tc relative"
-        :class="[ bg_color, iconOnly ? 'mr1' : 'mr2' ]"
+        :class="[ bg_color ]"
         v-else
       >
         <i class="db material-icons f4">{{task_icon}}</i>
