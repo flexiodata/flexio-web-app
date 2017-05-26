@@ -24,11 +24,9 @@
     </div>
     <div class="w-25-ns dn db-ns truncate">
       <div class="flex flex-row items-center mh2">
-        <div class="ml2 min-w4-l">
-          <div class="f6 fw6 cursor-default truncate" :class="status_cls">
-            <i class="material-icons v-mid">{{status_icon}}</i>
-            <span class="dn dib-l v-mid">{{status}}</span>
-          </div>
+        <div class="f6 fw6 cursor-default truncate" :class="status_cls">
+          <i class="material-icons v-mid">{{status_icon}}</i>
+          <span class="dn dib-l v-mid">{{status}}</span>
         </div>
       </div>
     </div>
@@ -73,7 +71,7 @@
             ></ui-menu>
           </ui-popover>
         </div>
-    </div>
+      </div>
     </div>
   </article>
 </template>

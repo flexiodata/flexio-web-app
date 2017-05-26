@@ -13,6 +13,7 @@
     <span slot="text">No connections to show</span>
   </empty-item>
   <div v-else>
+    <connection-header-item v-if="showHeader"></connection-header-item>
     <connection-item
       v-for="(connection, index) in connections"
       :item="connection"
@@ -27,15 +28,25 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
+  import ConnectionHeaderItem from './ConnectionHeaderItem.vue'
   import ConnectionItem from './ConnectionItem.vue'
   import EmptyItem from './EmptyItem.vue'
   import CommonFilter from './mixins/common-filter'
 
   export default {
-    props: ['filter'],
+    props: {
+      'filter': {
+        type: String
+      },
+      'show-header': {
+        type: Boolean,
+        default: false
+      }
+    },
     mixins: [CommonFilter],
     components: {
       Spinner,
+      ConnectionHeaderItem,
       ConnectionItem,
       EmptyItem
     },

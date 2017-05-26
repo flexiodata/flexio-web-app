@@ -26,6 +26,7 @@
       class="flex-fill pl4-l pr4-l pb4-l"
       style="max-width: 1574px"
       :filter="filter"
+      :show-header="true"
       @item-edit="openPipeEditModal"
       @item-duplicate="duplicatePipe"
       @item-share="openPipeShareModal"

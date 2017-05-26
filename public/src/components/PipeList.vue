@@ -13,6 +13,7 @@
     <span slot="text">No pipes to show</span>
   </empty-item>
   <div v-else>
+    <pipe-header-item v-if="showHeader"></pipe-header-item>
     <pipe-item
       v-for="(pipe, index) in pipes"
       :item="pipe"
@@ -29,15 +30,25 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
+  import PipeHeaderItem from './PipeHeaderItem.vue'
   import PipeItem from './PipeItem.vue'
   import EmptyItem from './EmptyItem.vue'
   import CommonFilter from './mixins/common-filter'
 
   export default {
-    props: ['filter'],
+    props: {
+      'filter': {
+        type: String
+      },
+      'show-header': {
+        type: Boolean,
+        default: false
+      }
+    },
     mixins: [CommonFilter],
     components: {
       Spinner,
+      PipeHeaderItem,
       PipeItem,
       EmptyItem
     },

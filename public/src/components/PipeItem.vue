@@ -33,7 +33,7 @@
       <div class="flex flex-row items-center mh2">
         <div class="flex-fill">
           <toggle-button
-            class="hint--top center"
+            class="hint--top"
             style="display: block"
             :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
             :checked="is_scheduled"
