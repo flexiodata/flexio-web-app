@@ -22,8 +22,7 @@
       @duplicate="onItemDuplicate"
       @share="onItemShare"
       @schedule="onItemSchedule"
-      >
-    </pipe-item>
+    ></pipe-item>
   </div>
 </template>
 

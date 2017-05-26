@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <!-- control bar -->
-    <div class="flex-none flex flex-row ph2 ph0-l mh0 mh3-l pt2 pt3-l pb2 bb bb-0-l b--black-10">
+    <div class="flex-none flex flex-row pa3 pa4-l bb bb-0-l b--black-10" style="max-width: 1574px">
       <div class="flex-fill">
         <input
           type="text"
@@ -23,8 +23,9 @@
 
     <!-- list -->
     <trash-list
+      class="flex-fill pl4-l pr4-l pb4-l"
+      style="max-width: 1574px"
       :filter="filter"
-      class="flex-fill overflow-auto"
     ></trash-list>
 
     <!-- confirm modal -->

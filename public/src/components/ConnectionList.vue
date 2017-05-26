@@ -20,8 +20,7 @@
       :index="index"
       @edit="onItemEdit"
       @delete="onItemDelete"
-    >
-    </connection-item>
+    ></connection-item>
   </div>
 </template>
 

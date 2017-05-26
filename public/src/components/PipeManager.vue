@@ -17,7 +17,7 @@
         >
       </div>
       <div class="flex-none">
-        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openPipeAddModal()">New pipe</btn>
+        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openPipeAddModal">New pipe</btn>
       </div>
     </div>
 
