@@ -1,88 +1,98 @@
 <template>
-  <article class="pv3 ph2 bb b--black-10 pointer no-select trans-pm css-pipe-item"
+  <article class="flex flex-row items-center pv3 ph2 bb b--black-10 pointer no-select trans-pm css-pipe-item"
     @click="openPipe"
     @mouseenter="onMouseEnter"
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave"
   >
-    <div class="flex flex-row items-center">
-      <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title truncate">
-        <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-pipe-title">{{item.name}}</h1>
-        <div
-          class="mw7 hint--bottom hint--large"
-          :aria-label="item.description"
-          v-show="item.description.length > 0"
-        >
-          <h2 class="f6 fw4 mt1 mb0 black-60 truncate">{{item.description}}</h2>
+    <div class="w-two-thirds w-50-ns truncate">
+      <div class="flex flex-row items-center mh2">
+        <div class="flex-fill fw6 f6 f5-ns lh-title truncate">
+          <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-pipe-title">{{item.name}}</h1>
+          <div
+            class="mw7 hint--bottom hint--large"
+            :aria-label="item.description"
+            v-show="item.description.length > 0"
+          >
+            <h2 class="f6 fw4 mt1 mb0 black-60 truncate">{{item.description}}</h2>
+          </div>
         </div>
       </div>
-      <div class="flex-none ml3 ml4-l dn db-ns">
-        <task-summary-list
-          :tasks="tasks"
-          :icons-only="true"
-        ></task-summary-list>
+    </div>
+    <div class="w-30-ns dn db-ns truncate">
+      <div class="flex flex-row items-center mh2">
+        <div class="flex-none">
+          <task-summary-list
+            :tasks="tasks"
+            :icons-only="true"
+          ></task-summary-list>
+        </div>
       </div>
-      <div class="flex-none ml3 ml4-l">
-        <toggle-button
-          class="hint--top"
-          style="display: block"
-          :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
-          :checked="is_scheduled"
-          @click.stop="toggleScheduled"
-          @dblclick.stop
-        ></toggle-button>
-      </div>
-      <div class="flex-none ml3 ml4-l">
-        <a
-          class="f5 b dib pointer pa1 black-60 ba br2 popover-trigger"
-          ref="dropdownTrigger"
-          tabindex="0"
-          :class="is_hover ? 'b--black-20' : 'b--transparent'"
-          @click.stop
-        ><i class="material-icons v-mid b">expand_more</i></a>
+    </div>
+    <div class="w-third w-20-ns truncate">
+      <div class="flex flex-row items-center mh2">
+        <div class="flex-fill">
+          <toggle-button
+            class="hint--top center"
+            style="display: block"
+            :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
+            :checked="is_scheduled"
+            @click.stop="toggleScheduled"
+            @dblclick.stop
+          ></toggle-button>
+        </div>
+        <div class="flex-none">
+          <a
+            class="f5 b dib pointer pa1 black-60 ba br2 popover-trigger"
+            ref="dropdownTrigger"
+            tabindex="0"
+            :class="is_hover ? 'b--black-20' : 'b--transparent'"
+            @click.stop
+          ><i class="material-icons v-mid b">expand_more</i></a>
 
-        <ui-popover
-          trigger="dropdownTrigger"
-          ref="dropdown"
-          dropdown-position="bottom right"
-          @open="is_dropdown_open = true"
-          @close="is_dropdown_open = false"
-          v-if="is_hover || is_dropdown_open"
-        >
-          <ui-menu
-            contain-focus
-            has-icons
+          <ui-popover
+            trigger="dropdownTrigger"
+            ref="dropdown"
+            dropdown-position="bottom right"
+            @open="is_dropdown_open = true"
+            @close="is_dropdown_open = false"
+            v-if="is_hover || is_dropdown_open"
+          >
+            <ui-menu
+              contain-focus
+              has-icons
 
-            :options="[{
-              id: 'open',
-              label: 'Open',
-              icon: 'file_upload'
-            },{
-              id: 'edit',
-              label: 'Edit',
-              icon: 'edit'
-            },{
-              id: 'duplicate',
-              label: 'Duplicate',
-              icon: 'content_copy'
-            },{
-              id: 'share',
-              label: 'Share',
-              icon: 'share'
-            },{
-              id: 'schedule',
-              label: 'Schedule',
-              icon: 'date_range'
-            },{
-              id: 'delete',
-              label: 'Move to Trash',
-              icon: 'delete'
-            }]"
+              :options="[{
+                id: 'open',
+                label: 'Open',
+                icon: 'file_upload'
+              },{
+                id: 'edit',
+                label: 'Edit',
+                icon: 'edit'
+              },{
+                id: 'duplicate',
+                label: 'Duplicate',
+                icon: 'content_copy'
+              },{
+                id: 'share',
+                label: 'Share',
+                icon: 'share'
+              },{
+                id: 'schedule',
+                label: 'Schedule',
+                icon: 'date_range'
+              },{
+                id: 'delete',
+                label: 'Move to Trash',
+                icon: 'delete'
+              }]"
 
-            @select="onDropdownItemClick"
-            @close="$refs.dropdown.close()"
-          ></ui-menu>
-        </ui-popover>
+              @select="onDropdownItemClick"
+              @close="$refs.dropdown.close()"
+            ></ui-menu>
+          </ui-popover>
+        </div>
       </div>
     </div>
   </article>
