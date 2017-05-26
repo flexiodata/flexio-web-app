@@ -5,19 +5,19 @@
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave"
   >
-    <div class="w-60 w-50-ns truncate">
+    <div class="w-60 w-50-ns">
       <div class="flex flex-row items-center mh2">
         <div class="flex-none mr2">
           <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3 square-4-l"></connection-icon>
         </div>
-        <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title truncate">
+        <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title">
           <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-connection-title">{{item.name}}</h1>
           <div
-            class="mw7 hint--bottom hint--large"
+            class="mw7 hint--bottom-right hint--large"
             :aria-label="item.description"
             v-show="item.description.length > 0"
           >
-            <h2 class="f6 fw4 mt1 mb0 black-60 truncate">{{item.description}}</h2>
+            <h2 class="f6 fw4 mt1 mb0 black-60">{{item.description}}</h2>
           </div>
         </div>
       </div>

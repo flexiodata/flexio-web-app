@@ -1,20 +1,22 @@
 <template>
-  <article class="flex flex-row items-center pv3 ph2 bb b--black-10 pointer no-select trans-pm css-pipe-item"
+  <article
+    class="flex flex-row items-center pv3 ph2 bb b--black-10 no-select trans-pm css-pipe-item"
+    :class="isTrash ? 'css-trash-item' : 'pointer'"
     @click="openPipe"
     @mouseenter="onMouseEnter"
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave"
   >
-    <div class="w-two-thirds w-50-ns truncate">
+    <div class="w-two-thirds w-50-ns">
       <div class="flex flex-row items-center mh2">
-        <div class="flex-fill fw6 f6 f5-ns lh-title truncate">
+        <div class="flex-fill fw6 f6 f5-ns lh-title">
           <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-pipe-title">{{item.name}}</h1>
           <div
-            class="mw7 hint--bottom hint--large"
+            class="mw7 hint--bottom-right hint--large"
             :aria-label="item.description"
             v-show="item.description.length > 0"
           >
-            <h2 class="f6 fw4 mt1 mb0 black-60 truncate">{{item.description}}</h2>
+            <h2 class="f6 fw4 mt1 mb0 black-60">{{item.description}}</h2>
           </div>
         </div>
       </div>
@@ -31,7 +33,7 @@
     </div>
     <div class="w-third w-20-ns">
       <div class="flex flex-row items-center mh2">
-        <div class="flex-fill">
+        <div class="flex-fill" :class="isTrash ? 'o-40 no-pointer-events' : ''">
           <toggle-button
             class="hint--top"
             style="display: block"
@@ -93,6 +95,10 @@
       },
       'menu-items': {
         type: Array
+      },
+      'is-trash': {
+        type: Boolean,
+        default: false
       }
     },
     components: {
@@ -159,6 +165,9 @@
         return _.get(task, 'metadata.connection_type')
       },
       openPipe() {
+        if (this.isTrash)
+          return
+
         this.$router.push(this.pipe_route)
       },
       trashPipe() {
@@ -220,7 +229,7 @@
   // match .blue color to Material Design's 'Blue A600' color
   @blue: #1e88e5;
 
-  .css-pipe-item:hover .css-pipe-title {
+  .css-pipe-item:not(.css-trash-item):hover .css-pipe-title {
     color: @blue;
   }
 </style>

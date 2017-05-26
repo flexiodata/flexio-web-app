@@ -2,6 +2,7 @@
   <pipe-item
     :item="item"
     :index="index"
+    :is-trash="true"
     :menu-items="menu_items"
     @dropdown-item-click="onDropdownItemClick"
     v-if="is_pipe"
@@ -70,14 +71,3 @@
     }
   }
 </script>
-
-<style lang="less" scoped>
-  .css-trash-item {
-    border-color: rgba(34, 36, 38, 0.15);
-
-    &:hover {
-      background-color: rgba(0,0,0,0.05);
-      border-color: rgba(0,0,0,0.2);
-    }
-  }
-</style>

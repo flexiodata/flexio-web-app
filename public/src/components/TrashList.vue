@@ -16,8 +16,8 @@
     <trash-item
       v-for="(trash_item, index) in trash_items"
       :item="trash_item"
-      :index="index">
-    </trash-item>
+      :index="index"
+    ></trash-item>
   </div>
 </template>
 
