@@ -1,7 +1,7 @@
 import api from '../../api'
 import * as types from '../mutation-types'
 
-/* **** PIPE ACTIONS **** */
+// ----------------------------------------------------------------------- //
 
 export const fetchTrash = ({ commit }) => {
   commit(types.FETCHING_TRASH, { fetching: true })
@@ -30,6 +30,22 @@ export const fetchProjectTrash = ({ commit }, project_eid) => {
   }, response => {
     // error callback
     commit(types.FETCHING_TRASH, { project_eid, fetching: false })
+    return response
+  })
+}
+
+// ----------------------------------------------------------------------- //
+
+export const emptyTrash = ({ commit }, { attrs }) => {
+  commit(types.BULK_DELETING_ITEMS, { attrs })
+
+  var items = _.map(attrs.items, (item) => { return item.eid })
+  return api.emptyTrash({ attrs: { items: items } }).then(response => {
+    // success callback
+    commit(types.BULK_DELETED_ITEMS, { attrs })
+    return response
+  }, response => {
+    // error callback
     return response
   })
 }

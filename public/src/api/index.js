@@ -110,6 +110,7 @@ export default {
 
   // trash
   fetchTrash:                     function()                            { return TrashResource[GET] ()                                                                    },
+  emptyTrash:                     function({ attrs })                   { return TrashResource[DEL] ({}, attrs)                                                           },
 
   // task
   createPipeTask:                 function({ eid, attrs })              { return PipeResource[POS] ({ eid, p1: 'tasks' }, attrs)                                          },

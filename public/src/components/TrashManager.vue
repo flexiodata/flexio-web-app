@@ -91,7 +91,7 @@
       },
       onConfirmModalClose(modal) {
         var attrs = { items: this.getAllTrash() }
-        this.$store.dispatch('bulkDeleteProjectItems', { attrs })
+        this.$store.dispatch('emptyTrash', { attrs })
         modal.close()
       }
     }

@@ -61,33 +61,7 @@
             <ui-menu
               contain-focus
               has-icons
-
-              :options="[{
-                id: 'open',
-                label: 'Open',
-                icon: 'file_upload'
-              },{
-                id: 'edit',
-                label: 'Edit',
-                icon: 'edit'
-              },{
-                id: 'duplicate',
-                label: 'Duplicate',
-                icon: 'content_copy'
-              },{
-                id: 'share',
-                label: 'Share',
-                icon: 'share'
-              },{
-                id: 'schedule',
-                label: 'Schedule',
-                icon: 'date_range'
-              },{
-                id: 'delete',
-                label: 'Move to Trash',
-                icon: 'delete'
-              }]"
-
+              :options="menu_items"
               @select="onDropdownItemClick"
               @close="$refs.dropdown.close()"
             ></ui-menu>
@@ -109,7 +83,18 @@
   import TaskSummaryList from './TaskSummaryList.vue'
 
   export default {
-    props: ['item'],
+    props: {
+      'item': {
+        type: Object,
+        required: true
+      },
+      'index': {
+        type: Number
+      },
+      'menu-items': {
+        type: Array
+      }
+    },
     components: {
       ConnectionIcon,
       ToggleButton,
@@ -136,6 +121,36 @@
       },
       pipe_route() {
         return { name: ROUTE_PIPEHOME, params: { eid: this.item.eid } }
+      },
+      menu_items() {
+        if (_.isArray(this.menuItems))
+          return this.menuItems
+
+        return [{
+          id: 'open',
+          label: 'Open',
+          icon: 'file_upload'
+        },{
+          id: 'edit',
+          label: 'Edit',
+          icon: 'edit'
+        },{
+          id: 'duplicate',
+          label: 'Duplicate',
+          icon: 'content_copy'
+        },{
+          id: 'share',
+          label: 'Share',
+          icon: 'share'
+        },{
+          id: 'schedule',
+          label: 'Schedule',
+          icon: 'date_range'
+        },{
+          id: 'delete',
+          label: 'Move to Trash',
+          icon: 'delete'
+        }]
       }
     },
     methods: {
@@ -154,6 +169,10 @@
         this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
       },
       onDropdownItemClick(menu_item) {
+        // custom menu passed to us; fire back the event
+        if (_.isArray(this.menuItems))
+          return this.$emit('dropdown-item-click', menu_item, this.item)
+
         switch (menu_item.id)
         {
           case 'open':      return this.openPipe()
