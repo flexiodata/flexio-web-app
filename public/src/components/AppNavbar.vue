@@ -9,47 +9,7 @@
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
-        <div v-else-if="logged_in">
-          <a
-            class="no-underline f5 b dib pointer ml1 mr0 mr2-ns pv1 ph1 ph2-ns br1 hover-bg-light-gray popover-trigger"
-            ref="userdropdowntrigger"
-            tabindex="0"
-          >
-            <img :src="user_profile_src" class="dib v-mid ba b--black-10 db br-100"/>
-            <i class="material-icons v-mid black-20" style="margin: 0 -6px">arrow_drop_down</i>
-          </a>
-
-          <ui-popover
-            trigger="userdropdowntrigger"
-            ref="userdropdown"
-            dropdown-position="bottom right"
-          >
-            <ui-menu
-              contain-focus
-              has-icons
-
-              :options="[{
-                id: 'account',
-                label: 'Account',
-                icon: 'account_circle'
-              },{
-                id: 'docs',
-                label: 'Documentation',
-                icon: 'import_contacts'
-              },{
-                type: 'divider'
-              },{
-                id: 'sign-out',
-                label: 'Sign out',
-                icon: 'forward'
-              }]"
-
-              @select="onUserDropdownItemClick"
-              @close="$refs.userdropdown.close()"
-            >
-            </ui-menu>
-          </ui-popover>
-        </div>
+        <user-dropdown v-else-if="logged_in"></user-dropdown>
         <div v-else>
           <router-link to="/signin" class="link underline-hover dib f6 f6-ns ttu b black-60 ph2 pv1 mr1 mr2-ns">Sign in</router-link>
           <router-link to="/signup" class="link no-underline dib f6 f6-ns ttu b br1 white bg-orange darken-10 ph2 ph3-ns pv2 mv1">
@@ -79,10 +39,12 @@
   import { HOSTNAME } from '../constants/common'
   import { mapState, mapGetters } from 'vuex'
   import AppBreadcrumbs from './AppBreadcrumbs.vue'
+  import UserDropdown from './UserDropdown.vue'
 
   export default {
     components: {
-      AppBreadcrumbs
+      AppBreadcrumbs,
+      UserDropdown
     },
     computed: {
       ...mapState([
@@ -119,12 +81,6 @@
       },
       user_eid() {
         return _.get(this.getActiveUser(), 'eid', '')
-      },
-       user_email_hash() {
-        return _.get(this.getActiveUser(), 'email_hash', '')
-      },
-      user_profile_src() {
-        return 'https://secure.gravatar.com/avatar/'+this.user_email_hash+'?d=mm&s=32'
       },
       logged_in() {
         return this.user_eid.length > 0
