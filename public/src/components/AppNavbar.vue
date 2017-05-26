@@ -89,37 +89,7 @@
     methods: {
       ...mapGetters([
         'getActiveUser'
-      ]),
-      openHelpDocs() {
-        window.open('https://'+HOSTNAME+'/docs/web-app/', '_blank')
-      },
-      gotoProjects() {
-        this.$router.push({ name: ROUTE_HOME })
-      },
-      gotoAccount() {
-        this.$router.push({ name: ROUTE_ACCOUNT })
-      },
-      signOut() {
-        this.$store.dispatch('signOut').then(response => {
-          if (response.ok)
-          {
-            this.$router.push({ name: ROUTE_SIGNIN })
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-      onUserDropdownItemClick(menu_item) {
-        switch (menu_item.id)
-        {
-          case 'projects': return this.gotoProjects()
-          case 'account':  return this.gotoAccount()
-          case 'docs':     return this.openHelpDocs()
-          case 'sign-out': return this.signOut()
-        }
-      }
+      ])
     }
   }
 </script>
