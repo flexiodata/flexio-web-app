@@ -1,5 +1,10 @@
 <template>
   <div class="flex flex-row items-start min-w5">
+    <router-link class="pv1 dark-gray hover-blue css-back-button" to="/home/pipes">
+      <div class="hint--bottom-right" aria-label="Back to pipe list">
+        <i class="material-icons md-24">chevron_left</i>
+      </div>
+    </router-link>
     <div class="flex-fill mb1 mr2">
       <div class="flex flex-column flex-row-l items-center-l">
         <inline-edit-text
@@ -199,6 +204,16 @@
     &:hover,
     &.css-nav-active {
       border-bottom: 2px solid @blue;
+    }
+  }
+
+  .css-back-button {
+    margin-left: -12px;
+  }
+
+  @media @breakpoint-large {
+    .css-back-button {
+      margin-left: -24px;
     }
   }
 </style>
