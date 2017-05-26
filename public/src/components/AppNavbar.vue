@@ -27,10 +27,6 @@
     ROUTE_ACCOUNT,
     ROUTE_EMBEDHOME,
     ROUTE_HOME,
-    ROUTE_PROJECTPIPES,
-    ROUTE_PROJECTMEMBERS,
-    ROUTE_PROJECTCONNECTIONS,
-    ROUTE_PROJECTTRASH,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
     ROUTE_FORGOTPASSWORD,
@@ -51,15 +47,9 @@
         'user_fetching'
       ]),
       render_nav() {
-        return false
-
         switch (this.$route.name)
         {
           case ROUTE_EMBEDHOME:
-          case ROUTE_PROJECTPIPES:
-          case ROUTE_PROJECTMEMBERS:
-          case ROUTE_PROJECTCONNECTIONS:
-          case ROUTE_PROJECTTRASH:
             return false
 
           default:
