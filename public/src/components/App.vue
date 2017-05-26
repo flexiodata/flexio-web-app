@@ -62,11 +62,14 @@
         return true
       },
       show_onboarding_modal() {
+        // we have to do 'show_onboarding_modal' as a computed value since
+        // we need to wait to check if we have an active user or not
         if (this.active_user_eid.length == 0)
           return false
 
-        var cfg = _.get(this.getActiveUser(), 'config')
-        if (this.show_intercom_button && _.get(cfg, 'app.prompt.tour.shown') !== true)
+        //var cfg = _.get(this.getActiveUser(), 'config')
+        //if (this.show_intercom_button && _.get(cfg, 'app.prompt.tour.shown') !== true)
+        if (true)
           return true
 
         return false
