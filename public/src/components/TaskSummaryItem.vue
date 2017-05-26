@@ -5,7 +5,7 @@
   >
     <div
       class="flex-none"
-      :class="iconOnly ? 'hint--bottom mr1' : 'mr2'"
+      :class="iconOnly ? 'hint--top mr1' : 'mr2'"
       :aria-label="display_name"
     >
       <connection-icon

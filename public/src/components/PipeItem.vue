@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="w-30-ns dn db-ns truncate">
+    <div class="w-30-ns dn db-ns">
       <div class="flex flex-row items-center mh2">
         <div class="flex-none">
           <task-summary-list
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="w-third w-20-ns truncate">
+    <div class="w-third w-20-ns">
       <div class="flex flex-row items-center mh2">
         <div class="flex-fill">
           <toggle-button
