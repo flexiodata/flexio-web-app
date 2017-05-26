@@ -11,6 +11,7 @@ import {
   ProcessResource,
   StreamResource,
   TestResource,
+  TrashResource,
   ValidateResource
 } from './resources'
 
@@ -100,12 +101,15 @@ export default {
   deletePipe:                     function({ eid })                     { return PipeResource[DEL] ({ eid })                                                              },
 
   // pipe (other)
-  fetchPipeProcesses:             function({ eid, attrs }) {
+  fetchPipeProcesses: function({ eid, attrs }) {
     var start = attrs.start
     var limit = attrs.limit
     var order = attrs.order
     return PipeResource[GET] ({ eid, p1: 'processes', start, limit, order } )
   },
+
+  // trash
+  fetchTrash:                     function()                            { return TrashResource[GET] ()                                                                    },
 
   // task
   createPipeTask:                 function({ eid, attrs })              { return PipeResource[POS] ({ eid, p1: 'tasks' }, attrs)                                          },

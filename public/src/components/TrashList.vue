@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import TrashItem from './TrashItem.vue'
   import EmptyItem from './EmptyItem.vue'
@@ -37,26 +37,24 @@
       EmptyItem
     },
     computed: {
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'is_fetching': 'trash_fetching',
+        'is_fetched': 'trash_fetched'
+      }),
       trash_items() {
         return this.commonFilter(this.getOurTrash(), this.filter, ['name', 'description'])
       },
-      is_fetching() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'trash_fetching', true)
-      }
     },
     methods: {
       ...mapGetters([
-        'getAllTrash',
-        'getAllProjects'
+        'getAllTrash'
       ]),
       getOurTrash() {
-        var project_eid = this.projectEid
-
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything
         return _
           .chain(this.getAllTrash())
-          .filter(function(p) { return _.get(p, 'project.eid') == project_eid })
           .sortBy([ function(p) { return new Date(p.created) } ])
           .reverse()
           .value()

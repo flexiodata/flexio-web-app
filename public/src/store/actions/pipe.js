@@ -19,6 +19,7 @@ export const fetchPipes = ({ commit }) => {
   })
 }
 
+// DEPRECATED
 export const fetchProjectPipes = ({ commit }, project_eid) => {
   commit(types.FETCHING_PIPES, { project_eid, fetching: true })
 

@@ -8,6 +8,8 @@ export default () => {
     pipes_fetching: false,
     connections_fetched: false,
     connections_fetching: false,
+    trash_fetched: false,
+    trash_fetching: false,
 
     active_user_eid: '',
     active_document_eid: '',

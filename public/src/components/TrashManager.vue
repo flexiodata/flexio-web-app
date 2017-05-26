@@ -17,24 +17,25 @@
         >
       </div>
       <div class="flex-none">
-        <btn btn-md class="btn-confirm ttu b ba b--dark-red white bg-dark-red" :class="{ disabled: trash_cnt == 0 }" @click="openModal('modal-confirm')">Empty trash</btn>
+        <btn btn-md class="btn-confirm ttu b ba b--dark-red white bg-dark-red" :class="{ disabled: trash_cnt == 0 }" @click="openConfirmModal">Empty trash</btn>
       </div>
     </div>
 
     <!-- list -->
     <trash-list
       :filter="filter"
-      :project-eid="projectEid"
       class="flex-fill overflow-auto"
     ></trash-list>
 
     <!-- confirm modal -->
     <confirm-modal
+      ref="modal-confirm"
       title="Empty trash?"
       submit-label="Delete forever"
       cancel-label="Cancel"
       @confirm="onConfirmModalClose"
-      ref="modal-confirm"
+      @hide="show_confirm_modal = false"
+      v-if="show_confirm_modal"
     >
       <div class="lh-copy mb3">Are you sure you want to delete all items from the trash?</div>
       <div class="ttu dark-red fw6">Warning: You can't undo this action!</div>
@@ -43,14 +44,13 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import TrashList from './TrashList.vue'
   import ConfirmModal from './ConfirmModal.vue'
   import Btn from './Btn.vue'
 
   export default {
-    props: ['project-eid'],
     components: {
       Spinner,
       TrashList,
@@ -59,42 +59,38 @@
     },
     data() {
       return {
-        filter: ''
+        filter: '',
+        show_confirm_modal: false
       }
     },
     computed: {
-      is_fetched() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'trash_fetched', false)
-      },
-      is_fetching() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'trash_fetching', true)
-      },
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'is_fetching': 'pipes_fetching',
+        'is_fetched': 'pipes_fetched'
+      }),
       trash_cnt() {
         return this.getAllTrash().length
       }
     },
     created() {
-      if (!this.projectEid)
-        return
-
       this.tryFetchTrashItems()
     },
     methods: {
       ...mapGetters([
-        'getAllProjects',
         'getAllTrash'
       ]),
-      openModal(ref) {
-        this.$refs[ref].open()
+      openConfirmModal() {
+        this.show_confirm_modal = true
+        this.$nextTick(() => { this.$refs['modal-confirm'].open() })
       },
       tryFetchTrashItems() {
         if (!this.is_fetched)
-          this.$store.dispatch('fetchTrash', this.projectEid)
+          this.$store.dispatch('fetchTrash')
       },
       onConfirmModalClose(modal) {
-        var project_eid = this.projectEid
         var attrs = { items: this.getAllTrash() }
-        this.$store.dispatch('bulkDeleteProjectItems', { project_eid, attrs })
+        this.$store.dispatch('bulkDeleteProjectItems', { attrs })
         modal.close()
       }
     }

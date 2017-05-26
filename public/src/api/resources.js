@@ -44,5 +44,8 @@ export const ProcessResource = Vue.resource(API_ROOT+'/processes{/eid}'+SUFFIX)
 // stream
 export const StreamResource = Vue.resource(API_ROOT+'/streams{/eid}')
 
-// stream
+// test
 export const TestResource = Vue.resource(API_ROOT+'/tests'+SUFFIX)
+
+// trash
+export const TrashResource = Vue.resource(API_ROOT+'/trash'+SUFFIX)

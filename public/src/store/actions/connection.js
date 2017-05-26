@@ -18,6 +18,7 @@ export const fetchConnections = ({ commit }) => {
   })
 }
 
+// DEPRECATED
 export const fetchProjectConnections = ({ commit }, project_eid) => {
   commit(types.FETCHING_CONNECTIONS, { project_eid, fetching: true })
 
