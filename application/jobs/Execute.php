@@ -144,7 +144,7 @@ var_dump($arr);
             $type = substr($s, $offset, 1);
             $offset++;
 
-            if (strpos("sibBN", $type) === false)
+            if (strpos("sibaoBN", $type) === false)
                 return false; // unsupported type
 
             // find comma
@@ -178,18 +178,36 @@ var_dump($arr);
                 $content = null;
             else if ($type == 'b')
                 $content = ($content == '0' ? false : true);
+            else if ($type == 'a')
+                $content = $this->parseCallString($content);
+            else if ($type == 'o')
+            {
+                // objects are stored in <key><value><key><value>... format
+                $arr = $this->parseCallString($content);
+                $size = count($arr);
+
+                if (($size % 2) != 0)
+                    return false;
+
+                $content = [];
+                for ($idx = 0; $idx < $size; $idx += 2)
+                {
+                    $content[ $arr[$idx] ] = $arr[$idx+1];
+                }
+            }
 
             $result[] = $content;
         }
 
         return $result;
-
     }
 
 
 
     private function func_hello1($name)
     {
+        if (is_array($name))
+           $name = var_export($name,true);
         return "Hello, $name";
     }
 
@@ -204,8 +222,6 @@ var_dump($arr);
         return new BinaryData("This is binary data");
     }
 }
-
-
 
 
 
