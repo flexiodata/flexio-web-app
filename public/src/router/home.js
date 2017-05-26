@@ -29,29 +29,25 @@ export const home = {
       redirect: 'pipes'
     },
     {
-      // PipeManager will be rendered inside ProjectHome's <router-view>
-      // when /home/pipes is matched
       path: 'pipes',
       name: ROUTE_PROJECTPIPES,
       component: PipeManager
     },
     {
-      // MemberManager will be rendered inside ProjectHome's <router-view>
-      // when /home/members is matched
       path: 'members',
       name: ROUTE_PROJECTMEMBERS,
       component: MemberManager
     },
     {
-      // ConnectionManager will be rendered inside ProjectHome's <router-view>
-      // when /home/connections is matched
+      path: 'sharing',
+      component: { template: '<div class="pa4">TODO: Sharing</div>' }
+    },
+    {
       path: 'connections',
       name: ROUTE_PROJECTCONNECTIONS,
       component: ConnectionManager
     },
     {
-      // TrashManager will be rendered inside ProjectHome's <router-view>
-      // when /home/trash is matched
       path: 'trash',
       name: ROUTE_PROJECTTRASH,
       component: TrashManager

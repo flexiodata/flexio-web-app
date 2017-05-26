@@ -28,10 +28,15 @@
       name: 'Connections',
       icon: 'repeat'
     },
-    {
+    /*{
       route: 'members',
       name: 'Members',
       icon: 'person'
+    },*/
+    {
+      route: 'sharing',
+      name: 'Sharing',
+      icon: 'share'
     },
     {
       route: 'trash',
