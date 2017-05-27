@@ -88,26 +88,10 @@ class Comment extends \Flexio\Object\Base
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_COMMENT.'",
                 "comment" : null,
-                "created_by='.\Model::EDGE_CREATED_BY.'" : {
-                    "eid" : null,
-                    "eid_type" : "'.\Model::TYPE_USER.'",
-                    "user_name" : null,
-                    "first_name" : null,
-                    "last_name" : null,
-                    "email_hash" : null
-                },
                 "created" : null,
                 "updated" : null
             }],
             "owned_by='.\Model::EDGE_OWNED_BY.'" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_USER.'",
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
-            "created_by='.\Model::EDGE_CREATED_BY.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_USER.'",
                 "user_name" : null,

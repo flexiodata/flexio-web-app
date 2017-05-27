@@ -140,14 +140,6 @@ class Project extends \Flexio\Object\Base
                 "last_name" : null,
                 "email_hash" : null
             },
-            "created_by='.\Model::EDGE_CREATED_BY.'" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_USER.'",
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
             "created" : null,
             "updated" : null
         }

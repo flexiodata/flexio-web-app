@@ -218,15 +218,6 @@ class Test
                 "last_name" : null,
                 "email_hash" : null
             },
-            "created_by": {
-                "eid" : null,
-                "eid_type" : null,
-                "full_name" : null,
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
             "verify_code" : null,
             "config" : {
             },

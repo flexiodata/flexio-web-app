@@ -220,14 +220,6 @@ class Test
                 "last_name" : null,
                 "email_hash" : null
             },
-            "created_by" : {
-                "eid" : null,
-                "eid_type" : null,
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
             "task" : {
             },
             "schedule" : null,
