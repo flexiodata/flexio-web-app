@@ -179,8 +179,6 @@ class User extends \Flexio\Object\Base
 
     public function getPipes(array $status = null) : array
     {
-        // TODO: add pipes from the projects that the user is following
-
         // get the pipes for the user
         $user_eid = $this->getEid();
 
@@ -188,7 +186,9 @@ class User extends \Flexio\Object\Base
             $status = array(\Model::STATUS_AVAILABLE);
 
         $assoc_filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => $status);
-        $pipes = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
+        $pipes_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
+        $pipes_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $assoc_filter);
+        $pipes = array_merge($pipes_owned, $pipes_followed);
 
         $res = array();
         foreach ($pipes as $pipe_info)
@@ -206,8 +206,6 @@ class User extends \Flexio\Object\Base
 
     public function getConnections(array $status = null) : array
     {
-        // TODO: add connections from the projects that the user is following
-
         // get the connections for the user
         $user_eid = $this->getEid();
 
@@ -215,7 +213,9 @@ class User extends \Flexio\Object\Base
             $status = array(\Model::STATUS_AVAILABLE);
 
         $assoc_filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => $status);
-        $connections = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
+        $connections_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
+        $connections_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $assoc_filter);
+        $connections = array_merge($connections_owned, $connections_followed);
 
         $res = array();
         foreach ($connections as $connection_info)
