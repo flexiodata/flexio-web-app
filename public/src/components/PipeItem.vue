@@ -1,75 +1,64 @@
 <template>
   <article
-    class="flex flex-row items-center pv3 ph2 bb b--black-10 no-select trans-pm css-pipe-item"
+    class="dt w-100 pv3 ph2 bb b--black-10 no-select trans-pm css-pipe-item"
     :class="isTrash ? 'css-trash-item' : 'pointer'"
     @click="openPipe"
     @mouseenter="onMouseEnter"
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave"
   >
-    <div class="w-two-thirds w-50-ns">
+    <div class="dtc v-mid w-100">
       <div class="flex flex-row items-center mh2">
-        <div class="flex-fill fw6 f6 f5-ns lh-title">
+        <div class="flex-none mr2">
+          <connection-icon :type="input_type" class="dib v-mid br2 square-3"></connection-icon>
+          <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px">arrow_drop_down</i>
+          <connection-icon :type="output_type" class="dib v-mid br2 square-3"></connection-icon>
+        </div>
+        <div class="flex-fill mh2 fw6 f6 f5-ns lh-title">
           <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-pipe-title">{{item.name}}</h1>
-          <div
-            class="mw7 hint--bottom-right hint--large"
-            :aria-label="item.description"
-            v-show="item.description.length > 0"
-          >
+          <div class="dn db-l mw7">
             <h2 class="f6 fw4 mt1 mb0 black-60">{{item.description}}</h2>
           </div>
         </div>
       </div>
     </div>
-    <div class="w-30-ns dn db-ns">
-      <div class="flex flex-row items-center mh2">
-        <div class="flex-none">
-          <task-summary-list
-            :tasks="tasks"
-            :icons-only="true"
-          ></task-summary-list>
-        </div>
+    <div class="dtc v-mid ph2 min-w3 min-w4-l">
+      <div :class="isTrash ? 'o-40 no-pointer-events' : ''">
+        <toggle-button
+          class="hint--top"
+          style="display: block"
+          :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
+          :checked="is_scheduled"
+          @click.stop="toggleScheduled"
+          @dblclick.stop
+        ></toggle-button>
       </div>
     </div>
-    <div class="w-third w-20-ns">
-      <div class="flex flex-row items-center mh2">
-        <div class="flex-fill" :class="isTrash ? 'o-40 no-pointer-events' : ''">
-          <toggle-button
-            class="hint--top"
-            style="display: block"
-            :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
-            :checked="is_scheduled"
-            @click.stop="toggleScheduled"
-            @dblclick.stop
-          ></toggle-button>
-        </div>
-        <div class="flex-none">
-          <a
-            class="f5 b dib pointer pa1 black-60 ba br2 popover-trigger"
-            ref="dropdownTrigger"
-            tabindex="0"
-            :class="is_hover ? 'b--black-20' : 'b--transparent'"
-            @click.stop
-          ><i class="material-icons v-mid b">expand_more</i></a>
+    <div class="dtc v-mid ph2 min-w3 tr">
+      <a
+        class="f5 b dib pointer pa1 black-60 ba br2 popover-trigger"
+        ref="dropdownTrigger"
+        tabindex="0"
+        :class="is_hover ? 'b--black-20' : 'b--transparent'"
+        @click.stop
+      ><i class="material-icons v-mid b">expand_more</i></a>
 
-          <ui-popover
-            trigger="dropdownTrigger"
-            ref="dropdown"
-            dropdown-position="bottom right"
-            @open="is_dropdown_open = true"
-            @close="is_dropdown_open = false"
-            v-if="is_hover || is_dropdown_open"
-          >
-            <ui-menu
-              contain-focus
-              has-icons
-              :options="menu_items"
-              @select="onDropdownItemClick"
-              @close="$refs.dropdown.close()"
-            ></ui-menu>
-          </ui-popover>
-        </div>
-      </div>
+      <ui-popover
+        trigger="dropdownTrigger"
+        ref="dropdown"
+        dropdown-position="bottom right"
+        @open="is_dropdown_open = true"
+        @close="is_dropdown_open = false"
+        v-if="is_hover || is_dropdown_open"
+      >
+        <ui-menu
+          contain-focus
+          has-icons
+          :options="menu_items"
+          @select="onDropdownItemClick"
+          @close="$refs.dropdown.close()"
+        ></ui-menu>
+      </ui-popover>
     </div>
   </article>
 </template>

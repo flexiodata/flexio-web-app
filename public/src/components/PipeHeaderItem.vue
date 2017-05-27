@@ -1,13 +1,13 @@
 <template>
-  <article class="flex flex-row items-center pv3 ph2 bb b--black-10 pointer no-select fw6 dark-gray trans-pm">
-    <div class="w-two-thirds w-50-ns truncate">
+  <article class="dt w-100 pv3 ph2 bb b--black-10 pointer no-select fw6 dark-gray trans-pm">
+    <div class="dtc v-mid w-100">
       <div class="mh2">Name</div>
     </div>
-    <div class="w-30-ns dn db-ns truncate">
-      <div class="mh2">Steps</div>
+    <div class="dtc v-mid ph2 min-w3 min-w4-l">
+      Schedule
     </div>
-    <div class="w-third w-20-ns truncate">
-      <div class="mh2">Schedule</div>
+    <div class="dtc v-mid ph2 min-w3 tr">
+      &nbsp;
     </div>
   </article>
 </template>
