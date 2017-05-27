@@ -76,7 +76,7 @@ echo '{ "success": true, "msg": "Operation completed successfully." }';
 function updateProjectMemberEidStatus($db)
 {
     // STEP 1: get a list of projects
-    $query_sql = 'select eid, eid_type, eid_status, updated from tbl_object';
+    $query_sql = "select eid, eid_type, eid_status, updated from tbl_object where eid_type = '" . \Model::TYPE_PROJECT . "'";
     $result = $db->query($query_sql);
 
     // STEP 2: for each project that's deleted, set the eid_status
@@ -88,9 +88,6 @@ function updateProjectMemberEidStatus($db)
         $eid_type = $row['eid_type'];
         $eid_status = $row['eid_status'];
         $updated = $row['updated'];
-
-        if ($eid_type !== \Model::TYPE_PROJECT)
-            continue;
 
         if ($eid_status !== \Model::STATUS_DELETED)
             continue;
