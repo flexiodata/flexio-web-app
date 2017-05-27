@@ -216,12 +216,6 @@ class Test
                     "execute": null
                 }
             },
-            "project" : {
-                "eid" : null,
-                "eid_type" : null,
-                "name" : null,
-                "description" : null
-            },
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null,
