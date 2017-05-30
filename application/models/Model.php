@@ -29,6 +29,7 @@ class Model
     const TYPE_COMMENT        = 'CMT';
     const TYPE_PROCESS        = 'PRC';
     const TYPE_TOKEN          = 'ATH';
+    const TYPE_RIGHT          = 'ACL';
 
     const EDGE_UNDEFINED     = '';     // undefind edge
     const EDGE_CREATED       = 'CRT';  // user A created object B
@@ -1027,6 +1028,7 @@ class Model
             case \Model::TYPE_COMMENT        : return $this->comment;
             case \Model::TYPE_PROCESS        : return $this->process;
             case \Model::TYPE_TOKEN          : return $this->token;
+            case \Model::TYPE_RIGHT          : return $this->right;
         }
     }
 
@@ -1064,6 +1066,7 @@ class Model
             case \Model::TYPE_COMMENT:
             case \Model::TYPE_PROCESS:
             case \Model::TYPE_TOKEN:
+            case \Model::TYPE_RIGHT:
                 return true;
         }
     }
