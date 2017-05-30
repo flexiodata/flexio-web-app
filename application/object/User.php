@@ -246,8 +246,6 @@ class User extends \Flexio\Object\Base
             if (!$item || $item['eid_status'] != \Model::STATUS_AVAILABLE)
                 continue;
 
-            // double-check to make sure we're not returning the secret code
-            unset($item['secret_code']);
             $res[] = $item;
         }
 

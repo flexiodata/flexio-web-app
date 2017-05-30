@@ -31,7 +31,6 @@ class Right extends ModelBase
                 'object_eid'    => $params['object_eid'] ?? '',
                 'access_type'   => $params['access_type'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
-                'secret_code'   => $params['secret_code'] ?? '',
                 'action'        => $params['action'] ?? '',
                 'created'       => $timestamp,
                 'updated'       => $timestamp
@@ -57,7 +56,7 @@ class Right extends ModelBase
         $db->beginTransaction();
         try
         {
-            // TODO: zero out any access code/secret code?
+            // TODO: zero out any access code?
 
             // delete the object
             $result = $this->getModel()->deleteObjectBase($eid);
@@ -85,7 +84,6 @@ class Right extends ModelBase
                                          tac.object_eid as object_eid,
                                          tac.access_type as access_type,
                                          tac.access_code as access_code,
-                                         tac.secret_code as secret_code,
                                          tac.action as action,
                                          tob.eid_status as eid_status,
                                          tob.created as created,
@@ -108,7 +106,6 @@ class Right extends ModelBase
                      'object_eid'  => $row['object_eid'],
                      'access_type' => $row['access_type'],
                      'access_code' => $row['access_code'],
-                     'secret_code' => $row['secret_code'],
                      'action'      => $row['action'],
                      'eid_status'  => $row['eid_status'],
                      'created'     => \Flexio\Base\Util::formatDate($row['created']),
@@ -124,7 +121,6 @@ class Right extends ModelBase
                                      tac.object_eid as object_eid,
                                      tac.access_type as access_type,
                                      tac.access_code as access_code,
-                                     tac.secret_code as secret_code,
                                      tac.action as action,
                                      tob.eid_status as eid_status,
                                      tob.created as created,
@@ -142,7 +138,6 @@ class Right extends ModelBase
                      'object_eid'  => $row['object_eid'],
                      'access_type' => $row['access_type'],
                      'access_code' => $row['access_code'],
-                     'secret_code' => $row['secret_code'],
                      'action'      => $row['action'],
                      'eid_status'  => $row['eid_status'],
                      'created'     => \Flexio\Base\Util::formatDate($row['created']),
@@ -158,7 +153,6 @@ class Right extends ModelBase
                                       tac.object_eid as object_eid,
                                       tac.access_type as access_type,
                                       tac.access_code as access_code,
-                                      tac.secret_code as secret_code,
                                       tac.action as action,
                                       tob.eid_status as eid_status,
                                       tob.created as created,
@@ -180,7 +174,6 @@ class Right extends ModelBase
                               'object_eid'  => $row['object_eid'],
                               'access_type' => $row['access_type'],
                               'access_code' => $row['access_code'],
-                              'secret_code' => $row['secret_code'],
                               'action'      => $row['action'],
                               'eid_status'  => $row['eid_status'],
                               'created'     => \Flexio\Base\Util::formatDate($row['created']),

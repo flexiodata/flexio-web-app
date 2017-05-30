@@ -36,7 +36,6 @@ class Right extends \Flexio\Object\Base
 
         // generate an access code and a secret code
         //$properties['access_code'] = \Flexio\Base\Util::generateHandle();
-        //$properties['secret_code'] = \Flexio\Base\Util::generateHandle();
 
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
@@ -97,7 +96,6 @@ class Right extends \Flexio\Object\Base
             "object_eid": null,
             "access_type" : null,
             "access_code" : null,
-            "secret_code" : null,
             "action" : null,
             "created" : null,
             "updated" : null

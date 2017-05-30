@@ -94,9 +94,8 @@ class Token
         if ($token === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // get the properties; double check to make sure that secret code isn't returned
+        // get the properties
         $properties = $token->get();
-        unset($properties['secret_code']);
         return $properties;
     }
 
