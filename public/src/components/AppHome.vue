@@ -4,8 +4,8 @@
       <div class="flex-none-l dn db-l no-underline link mh3 mb4" style="margin-top: 6px" v-if="false">
         <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
       </div>
-      <router-link v-for="item in nav_items" :to="item.route" class="flex-auto flex-none-l no-underline truncate tc tl-l link f5 fw6 mv0 mb2-l ph-1 pl3-l pr5-l pv2 bb bb-0-l bw1 bw2-l css-nav2">
-        <i class="material-icons md-24 v-mid dn" :class="item.class">{{item.icon}}</i>
+      <router-link v-for="item in nav_items" :to="item.route" class="flex-auto flex-none-l no-underline truncate tc tl-l link f5 fw6 mv0 mb2-l ph1 pl3-l pr5-l pv2 bb bb-0-l bw1 bw2-l css-nav2">
+        <i class="material-icons md-24 v-mid db dn-ns" :class="item.class">{{item.icon}}</i>
         <span class="dn dib-ns v-mid">{{item.name}}</span>
       </router-link>
     </div>
