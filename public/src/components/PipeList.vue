@@ -13,7 +13,7 @@
     <span slot="text">No pipes to show</span>
   </empty-item>
   <div v-else>
-    <pipe-header-item v-if="showHeader"></pipe-header-item>
+    <pipe-header-item v-if="showHeader && false"></pipe-header-item>
     <pipe-item
       v-for="(pipe, index) in pipes"
       :item="pipe"

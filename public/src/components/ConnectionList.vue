@@ -13,7 +13,7 @@
     <span slot="text">No connections to show</span>
   </empty-item>
   <div v-else>
-    <connection-header-item v-if="showHeader"></connection-header-item>
+    <connection-header-item v-if="showHeader && false"></connection-header-item>
     <connection-item
       v-for="(connection, index) in connections"
       :item="connection"
