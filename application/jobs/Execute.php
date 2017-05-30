@@ -32,103 +32,122 @@ class BinaryData
 
 class ExecuteProxy
 {
-    private $context = null;
-    private $socket = null;
-    private $port = null;
+    const MESSAGE_SIGNATURE = '--MSGqQp8mf~';
+    public $pipes = [null,null,null];
+    public $process = null;
+    public $check_sig = '';
+    public $callbacks = null;
 
-    public function initialize()
+    public function initialize($cmd, $callbacks)
     {
-        $this->context = new \ZMQContext(1);
+        $this->callbacks = $callbacks;
 
-        //  Socket to talk to clients
-        $this->socket = new \ZMQSocket($this->context, ZMQ::SOCKET_REP);
+        $descriptor_spec = array(
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w")
+        );
 
-        // it's unfortunate that we can't use port :*, but with the
-        // current php bindings, we are unable to figure out which
-        // port the kernel chose
-        $port = 10000 + rand(0, 10000);
-$port = 10000;
-        while (true)
+        $this->process = proc_open($cmd, $descriptor_spec, $this->pipes, "/home/server/src");
+        if (!is_resource($this->process))
         {
-            try
-            {
-                $abc = $this->socket->bind("tcp://*:$port");
-                break;
-            }
-            catch (Exception $e)
-            {
-                //echo("Could not bind to port $port\n");
-                $port++;
-                if ($port == 20000)
-                    return false;
-            }
+            $this->process = null;
+            return false;
         }
 
-        $this->port = $port;
+        stream_set_blocking($this->pipes[0], true);  // write to here
+        stream_set_blocking($this->pipes[1], false); // read from here
     }
 
-
-    public function getListenPort()
-    {
-        return $this->port;
-    }
 
     public function run()
     {
-        while (true)
+        while (!feof($this->pipes[1]))
         {
-            //  Wait for next request from client
-            $request = $this->socket->recv();
-            printf ("Received request: [%s]\n", $request);
+            $read_streams = array( $this->pipes[1] );
+            $write_streams = NULL;
+            $except_streams = NULL;
+            $res = stream_select($read_streams, $write_streams, $except_streams, 1);
+            if ($res === false)
+                break;
 
-            $arr = $this->parseCallString($request);
-var_dump($arr);
-
-            if ($arr === false || count($arr) == 0)
+            if ($res > 0)
             {
-                // bad parse -- send exception
-                $this->socket->send("E19,Request parse error");
-                continue;
-            }  
+                $ch = fread($this->pipes[1], 1);
+    
+                $this->check_sig = substr($this->check_sig . $ch, 0, 12);
 
-            $func = array_shift($arr);
+                if ($this->check_sig == self::MESSAGE_SIGNATURE)
+                {
+                    $length = '';
+                    $this->check_sig = '';
 
-            // check if function exists
-            if (!method_exists($this, 'func_' . $func))
-            {
-                // bad parse -- send exception
-                $this->socket->send("E14,Unknown method");
-                continue;
+                    for ($i = 0; $i < 12; ++$i)
+                    {
+                        $ch = fread($this->pipes[1], 1);
+                        if ($ch < '0' || $ch > '9')
+                            break;
+                        $length .= $ch;
+                    }
+
+                    if ($ch == ',')
+                    {
+                        $length = (int)$length;
+
+                        $payload = '';
+                        $remaining = $length;
+                        while ($remaining > 0)
+                        {
+                            $want = min(8192, $remaining);
+                            $chunk = fread($this->pipes[1], $want);
+                            $remaining -= strlen($chunk);
+                            $payload .= $chunk;
+                        }
+
+                        if (strlen($payload) == $length)
+                        {
+                            $this->onMessage($payload);
+                        }
+                         else
+                        {
+                            //echo "Only got " . strlen($payload) . " wanted $length";
+                        }
+                    }
+
+                }
             }
 
-            // make function call
-            $retval = call_user_func_array([ $this, 'func_'.$func ], $arr);
-
-            //  Send reply back to client
-            $this->socket->send(self::encodepart($retval));
+            //var_dump($res);
         }
 
+        //echo "Stderr from child process was:\n";
+        //$str = fread($this->pipes[2], 8192);
+        //echo $str;
     }
 
 
     public static function encodepart($val)
     {
-       if ($val instanceof BinaryData)
-       {
-           $type = 'B';
-           $val = $val->data;
-       }
+        if (is_null($val))
+        {
+            return 'N0,';
+        }
+        else if ($val instanceof BinaryData)
+        {
+            $type = 'B';
+            $val = $val->data;
+        }
         else if (is_int($val))
-       {
-           $type = 'i';
-           $val = (string)$val;
-       }
+        {
+            $type = 'i';
+            $val = (string)$val;
+        }
         else 
-       {
-           $type = 's';
-       }
+        {
+            $type = 's';
+        }
 
-       return $type . strlen($val) . ',' . $val;
+        return $type . strlen($val) . ',' . $val;
     }
 
     public function parseCallString($s)
@@ -203,39 +222,91 @@ var_dump($arr);
     }
 
 
-
-    private function func_hello1($name)
+    public function sendMessage($msg)
     {
-        if (is_array($name))
-           $name = var_export($name,true);
-        return "Hello, $name";
+        fwrite($this->pipes[0], self::MESSAGE_SIGNATURE . strlen($msg) . ',' . $msg);
+        fflush($this->pipes[0]);
     }
 
-    private function func_hello2()
+    public function onMessage($msg)
     {
-        return "Hello2";
+        $arr = $this->parseCallString($msg);
+        //var_dump($arr);
+
+        if ($arr === false || count($arr) == 0)
+        {
+            // bad parse -- send exception
+            $this->sendMessage("E19,Request parse error");
+            return;
+        }  
+
+        $func = array_shift($arr);
+
+        // check if function exists
+        if (!method_exists($this->callbacks, 'func_' . $func))
+        {
+            // bad parse -- send exception
+            $this->sendMessage("E14,Unknown method");
+            return;
+        }
+
+        // make function call
+        $retval = call_user_func_array([ $this->callbacks, 'func_'.$func ], $arr);
+
+        //  Send reply back to client
+        $this->sendMessage(self::encodepart($retval));
     }
 
-    private function func_read()
-    {
-        // returns php string, but should return binary type
-        return new BinaryData("This is binary data");
-    }
 }
-
 
 
 class Execute extends \Flexio\Jobs\Base
 {
+    private $code_base64 = '';
+    private $code = '';
+
     public function run()
     {
         $this->getOutput()->setEnv($this->getInput()->getEnv()); // by default, pass on all params; however, execute script can change them
         $input = $this->getInput()->getStreams();
 
+
+        // properties
+        $job_definition = $this->getProperties();
+
+        // get the code from the template
+        // 'code' contains the base64-encoded program source
+        $this->lang = $job_definition['params']['lang'];
+        $this->code_base64 = $job_definition['params']['code'] ?? '';
+        if (strlen($this->code_base64) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+
+        $this->code = base64_decode($this->code_base64);
+
+        if ($this->lang == 'python')
+        {
+            if (strpos($this->code, "flexio_handler") !== false)
+            {
+                // add code that invokes the main handler -- this is the preferred
+                // way of coding python scripts
+                if (false !== strpos($this->code, "\r\n"))
+                    $endl = "\r\n";
+                    else
+                    $endl = "\n";
+
+                $this->code .= $endl . "import flexio as flexioext";
+                $this->code .= $endl . "flexioext.run(flexio_handler)";
+                $this->code .= $endl;
+
+                $this->code_base64 = base64_encode($this->code);
+            }
+        }
+
+
         foreach ($input as $instream)
         {
             $mime_type = $instream->getMimeType();
-            $this->createOutput($instream);
+            $this->doStream($instream);
 /*
             switch ($mime_type)
             {
@@ -256,419 +327,103 @@ class Execute extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream)
+
+    // these member variables are for the script callback hooks below
+    private $instream = null;
+    private $inwriter = null;
+    private $outstream = null;
+    private $outwriter = null;
+
+
+    private function getOutputStream()
+    {
+        return $this->outstream;
+    }
+
+    private function getOutputWriter()
+    {
+        if (is_null($this->outwriter))
+        {
+            $this->outwriter = \Flexio\Object\StreamWriter::create($this->outstream);
+        }
+
+        return $this->outwriter;
+    }
+
+
+    private function doStream(\Flexio\Object\Stream $instream)
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->addStream($outstream);
 
+        // by default, set output content type to text
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
+
+        // these member variables are for the script callback hooks below
+        $this->instream = $instream;
+        $this->outstream = $outstream;
+        $this->inwriter = null;
+        $this->outwriter = null;
+
+/*
         $is_input_table = false;
         $is_output_table = false;
         if ($instream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             $is_input_table = true;
-
-        // by default, set output content type to text
-        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
-
-        // properties
-        $job_definition = $this->getProperties();
-
-        // get the code from the template
-        // $code contains the base64-encoded program source
-        $code = $job_definition['params']['code'] ?? '';
-        if (strlen($code) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+*/
 
 
         // determine what program to load
-        $program_type = false;
-        $program_extension = false;
-        switch ($job_definition['params']['lang'])
+        if ($this->lang == 'python')
         {
-            case 'python':
-                $program_type = 'python';
-                $program_extension = 'py';
-                $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-                if (is_null($dockerbin))
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-
-                $code = base64_decode($code);
-
-                if (strpos($code, "flexio_handler") !== false)
-                {
-                    // add code that invokes the main handler -- this is the preferred
-                    // way of coding python scripts
-                    if (false !== strpos($code, "\r\n"))
-                        $endl = "\r\n";
-                        else
-                        $endl = "\n";
-
-                    $code .= $endl . "import flexio as flexioext";
-                    $code .= $endl . "flexioext.run(flexio_handler)";
-                    $code .= $endl;
-                }
-
-                $code = base64_encode($code);
-
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo $code | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
-                //$cmd = "$dockerbin run -a stdin -a stdout -a stderr --net none --rm -i fxpython sh -c 'runscript $code'";
-
-                break;
-
-            case 'html':
-                $program_type = 'html';
-                $program_extension = 'html';
-
-                $code = base64_decode($code);
-
-                $streamreader = \Flexio\Object\StreamReader::create($instream);
-                if (strpos($code, 'flexio.input.json_assoc()') !== false)
-                {
-                    $rows = [];
-                    while (true)
-                    {
-                        $row = $streamreader->readRow();
-                        if ($row === false)
-                            break;
-                        $rows[] = $row;
-                    }
-
-                    $json = json_encode($rows);
-
-                    $code = str_replace('flexio.input.json_assoc()', $json, $code);
-                }
-
-
-                // create the output stream
-                $outstream_properties = array(
-                    'name' => $instream->getName() . '.html',
-                    'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_HTML,
-                    'size' => strlen($code)
-                );
-
-                $outstream->set($outstream_properties);
-
-                $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-                $streamwriter->write($code);
-
-                return true;
-
-                break;
-/*
-            case 'javascript':
-                $program_type = 'javascript';
-                $program_extension = 'js';
-                break;
-
-            case 'go':
-                $program_type = 'go';
-                $program_extension = 'go';
-                break;
-            case 'r':
-                $program_type = 'r';
-                $program_extension = 'r';
-                break;
-*/
-            default:
-                // unknown language
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
+
+            $ep = new ExecuteProxy;
+            $ep->initialize($cmd, $this);
+            $ep->run();
+
+            return true;
         }
-
-
-
-
-
-
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
-        $streamwriter = null; // created below
-
-        $cwd = sys_get_temp_dir();
-
-        $process = new \Flexio\Base\ProcessPipe;
-        if (!$process->exec($cmd, $cwd))
+         else if ($this->lang == 'html')
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-        }
-
-        // first, write a json header record to the process, followed by \r\n\r\n
-        $structure = ($is_input_table ? $instream->getStructure() : null);
-        if (isset($structure))
-        {
-            $structure = $structure->get();
-
-            // don't need/want to report store name to script
-            foreach ($structure as &$fld)
-                unset($fld['store_name']);
-            unset($fld);
-        }
-
-        // merge in this order so that user-supplied variables don't override environment variables
-        $environment_variables = $this->getInput()->getEnv();
-        $header = array(
-            'name' => $instream->getName(),
-            'size' => $instream->getSize(),
-            'content_type' => $instream->getMimeType(),
-            'structure' => $structure,
-            'env' => $environment_variables
-        );
-
-        $header_json = json_encode($header);
-        $process->write($header_json . "\r\n\r\n");
-
-        $done_writing = false; // "done writing input to process"
-        $done_reading = false; // "done reading result from process"
-        $first_chunk = true;
-        $readbuf = '';         // read from process buffer
-        $writebuf = '';        // write to process buffer
-
-        //$tot = 0;
-        //$totw = 0;
-
-        do
-        {
-            $is_running = $process->isRunning();
-
-            // read chunk of data from input stream and write it to the process
-
-            if (!$is_running && !$done_writing)
+            if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
             {
-                // can't write to a process that's not running
-                $process->closeWrite();
-                $done_writing = true;
-            }
-
-            if ($is_running && !$done_writing)
-            {
-                if ($is_input_table)
+                $streamreader = \Flexio\Object\StreamReader::create($instream);
+                $rows = [];
+                while (true)
                 {
-                    $rowcnt = 0;
                     $row = $streamreader->readRow();
-                    if ($row)
-                    {
-                        $str = join(',', array_values($row)) . "\n";
-                        $process->write($str);
-
-                        ++$rowcnt;
-                        /*
-                        if ($maxrows != -1 && ++$rowcnt >= $maxrows)
-                        {
-                            $process->closeWrite();
-                            $done_writing = true;
-                        }
-                        */
-                    }
-                     else
-                    {
-                        $process->closeWrite();
-                        $done_writing = true;
-                    }
+                    if ($row === false)
+                        break;
+                    $rows[] = $row;
                 }
-                 else
-                {
-                    // fill our to-write buffer with data from input stream,
-                    // if it isn't already full of data waiting to be written
-                    if (strlen($writebuf) < 65536)
-                    {
-                        $chunk = $streamreader->read(1024);
-                        if ($chunk !== false)
-                        {
-                            $writebuf .= $chunk;
-                        }
-                    }
 
-                    //ob_start();
-                    //var_dump($buf);
-                    //$s = ob_get_clean();
-                    //fxdebug("\n\n\n\nStream Reader: ".$s."***");
+                $json = json_encode($rows);
 
-                    $writebuflen = strlen($writebuf);
-                    if ($writebuflen == 0)
-                    {
-                        $process->closeWrite();
-                        $done_writing = true;
-                        //fxdebug("Closed Writing; Total Written: $totw");
-                    }
-                     else
-                    {
-
-                       // fxdebug("\n\n\n\nWriting to process: ".$writebuf."***");
-                        $written = $process->write($writebuf);
-                        if ($written == $writebuflen)
-                        {
-                            $writebuf = '';
-                        }
-                        else
-                        {
-                            $writebuf = substr($writebuf, $written);
-                        }
-
-                       // fxdebug("\nBlock finished.\n\n");
-
-                        //$totw += $len;
-                    }
-                }
+                $code = str_replace('flexio.input.json_assoc()', $json, $code);
             }
 
+            // create the output stream
+            $outstream_properties = array(
+                'name' => $instream->getName() . '.html',
+                'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_HTML,
+                'size' => strlen($code)
+            );
 
+            $outstream->set($outstream_properties);
 
-            if (!$done_reading)
-            {
-                //fxdebug("Reading... IsRunning=".($is_running?"Yes":"No")." DoneReading=".($done_reading?"Yes":"No")." DoneWriting=".($done_writing?"Yes":"No")."\n");
-                $chunk = $process->read(1024);
-                //fxdebug("Read from process: len=".($chunk===false?"false":"".strlen($chunk))." Data=$chunk\n\n\n");
+            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+            $streamwriter->write($code);
 
-                if ($chunk !== false)
-                    $readbuf .= $chunk;
-
-                if (strlen($readbuf) == 0)
-                {
-                    if (!$is_running)
-                    {
-                        $done_reading = true;
-                    }
-                }
-                 else
-                {
-                    if ($first_chunk)
-                    {
-                        $end = strpos($readbuf, "\r\n\r\n");
-
-                        if ($end === false)
-                        {
-                            // did not find response header end -- we need more data; however
-                            // if the response header size becomes unrealistically large, fail out
-                            if (strlen($readbuf) > 100000)
-                            {
-                                // could not response header -- job failed
-                                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_GENERAL, "Script did not provide valid response header");
-                            }
-                        }
-                         else
-                        {
-                            $header = @json_decode(substr($readbuf, 0, $end), true);
-                            if (is_null($header))
-                            {
-                                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_GENERAL, "Script did not provide valid response header (invalid JSON)");
-                            }
-
-
-                            $content_type = $header['content_type'] ?? 'application/octet-stream';
-                            $structure = $header['structure'] ?? null;
-                            $env = $header['env'] ?? null;
-
-                            if (isset($env))
-                                $this->getOutput()->setEnv($env);
-
-                            $readbuf = substr($readbuf, $end+4);
-
-                            if ($content_type == \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-                            {
-                                if (!isset($structure))
-                                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-                                $outstream->setMimeType($content_type);
-                                $outstream->setStructure($structure);
-                                $is_output_table = true;
-                            }
-                            else
-                            {
-                                $outstream->setMimeType($content_type);
-                                $is_output_table = false;
-                            }
-
-                            $first_chunk = false;
-                            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-                        }
-                    }
-
-                    // var_dump($readbuf);
-
-                    //ob_start();
-                    //var_dump($readbuf);
-                    //$s = ob_get_clean();
-                    //fxdebug("From process: ".$s."***\n\n\n\n");
-
-                    //fxdebug("Writing " . strlen($readbuf) . " bytes\n");
-                    //$tot += strlen($readbuf);
-                    if ($streamwriter)
-                    {
-                        if ($is_output_table)
-                        {
-                            $offset = 0;
-                            while (true)
-                            {
-                                $eolpos = \Flexio\Jobs\Convert::indexOfLineTerminator($readbuf, '"', $offset);
-                                if ($eolpos === false)
-                                {
-                                    $readbuf = substr($readbuf, $offset);
-                                    break;
-                                }
-
-                                $line = substr($readbuf, $offset, $eolpos - $offset);
-
-                                $offset = $eolpos+1;
-                                if ($readbuf[$offset-1] == "\r" && ($readbuf[$offset] ?? '') == "\n")
-                                    $offset++;
-
-                                $row = str_getcsv($line);
-
-                                if ($row !== false)
-                                {
-                                    $row = \Flexio\Jobs\Convert::conformValuesToStructure($structure, $row);
-                                    $streamwriter->write($row);
-                                }
-
-                            }
-                        }
-                        else
-                        {
-                            $streamwriter->write($readbuf);
-                            $readbuf = '';
-                        }
-                    }
-                }
-
-            }
-
-            // fxdebug("Done writing to process? " . ($done_writing?"true":"false") . " Done reading from process? " . ($done_reading?"true":"false")."\n");
-
-        } while (!$done_writing || !$done_reading);
-
-        //fxdebug("Loop done");
-/*
-        // write any remaining data from process
-        while (true)
-        {
-            $readbuf = $process->read(1024);
-            if (strlen($readbuf) == 0)
-                break;
-            //fxdebug("Writing (after process ended)  " . strlen($readbuf) . " bytes\n");
-            //$tot += strlen($readbuf);
-            $streamwriter->write($readbuf);
-        }
-*/
-
-        //fxdebug("Total bytes written: " . $tot);
-
-        $err = $process->getError();
-
-
-
-        if (isset($err))
-        {
-            $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
-            if (strlen($err) == 0)
-                $err = null;
+            return true;
         }
 
-
-        if (isset($err))
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-        }
     }
-
 
     // checks a script for compile errors;  If script compiles cleanly, returns true,
     // otherwise returns the error as a textual string
@@ -701,6 +456,57 @@ class Execute extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
     }
+
+
+
+
+
+
+    private function func_hello1($name)
+    {
+        if (is_array($name))
+           $name = var_export($name,true);
+        return "Hello, $name";
+    }
+
+    private function func_hello2()
+    {
+        return "Hello2";
+    }
+
+    private function func_read()
+    {
+        // returns php string, but should return binary type
+        return new BinaryData("This is binary data");
+    }
+
+    public function func_write($message)
+    {
+        $outstream = $this->getOutputStream();
+        $writer = $this->getOutputWriter();
+
+        $writer->write($message);
+
+/*
+        if ($message instanceof BinaryData)
+            echo 'Binary: ' . $message . "\n";
+             else
+            echo 'Test  : ' . $message . "\n";
+*/
+    }
+
+    public function func_set_content_type($value)
+    {
+        $outstream = $this->getOutputStream();
+        $outstream->setMimeType($value);
+    }
+
+
+
+
+
+
+
 
     // job definition info
     const MIME_TYPE = 'flexio.execute';

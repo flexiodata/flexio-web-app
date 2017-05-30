@@ -4,6 +4,93 @@ import csv
 import datetime
 
 
+class StdinoutMessenger(object):
+    def __init__(self):
+        self.inited = False
+
+    def invoke(self, func, params):
+        payload = self.encodepart(func)
+        for param in params:
+            payload = payload + self.encodepart(param)
+        self.send_message(payload)
+        response = self.read_message()
+        return self.decodepart(response)
+        #print("Received reply %s" % response)
+
+    def send_message(self, payload):
+        msg = b'--MSGqQp8mf~' + str(len(payload)).encode('utf-8') + b',' + payload
+        sys.stdout.buffer.write(msg)
+        sys.stdout.flush()
+
+    def read_message(self):
+        buf = b''
+        while True:
+            buf += sys.stdin.buffer.read(1)
+            if len(buf) > 100:
+                break
+            if buf == b'--MSGqQp8mf~':
+                lenstr = b''
+                while True:
+                    ch = sys.stdin.buffer.read(1)
+                    if ch < b'0' or ch > b'9':
+                        break
+                    lenstr = lenstr + ch
+                if ch != b',':
+                    #print("***" + ch.decode() + "***" + lenstr.decode())
+                    sys.exit(1)
+                    return None
+                msglen = int(lenstr.decode())
+                return sys.stdin.buffer.read(msglen)
+        return None
+    
+    def encodepart(self, var):
+        if var is None:
+            return b'N0,'
+        type = b's'
+        if isinstance(var, (bytes,bytearray)):
+            type = b'B'
+        if isinstance(var, bool):
+            type = b'b'
+            var = b'1' if var else b'0' 
+        elif isinstance(var, int):
+            type = b'i'
+            var = str(var).encode('utf-8')
+        elif isinstance(var, str):
+            type = b's'
+            var = var.encode('utf-8')
+        elif isinstance(var, list):
+            type = b'a'
+            arraypayload = b''
+            for l in var:
+                arraypayload = arraypayload + self.encodepart(l)
+            var = arraypayload
+        elif isinstance(var, dict):
+            type = b'o'
+            objpayload = b''
+            for key,value in var.items():
+                objpayload = objpayload + self.encodepart(key) + self.encodepart(value)
+            var = objpayload
+        return type + str(len(var)).encode('utf-8') + b',' + var
+
+    def decodepart(self, var):
+        type = chr(var[0])
+        commapos = var.find(b',')
+        if commapos == -1:
+            return None
+        var = var[commapos+1:]
+        if type == 'i':
+            return int(var.decode('utf-8'))
+        elif type == 'b':
+            return False if var == b'0' else True
+        elif type == 'B':
+            return var
+        elif type == 's':
+            return var.decode('utf-8') 
+        elif type == 'N':
+            return None
+
+messenger = StdinoutMessenger()
+
 class TableReader(object):
     def __init__(self, reader, casts):
         self.reader = reader
@@ -158,7 +245,7 @@ class Output(object):
     @content_type.setter
     def content_type(self, value):
         self._content_type = value
-        self.header["content_type"] = self._content_type
+        messenger.invoke('set_content_type', [value])
 
     @property
     def env(self):
@@ -182,6 +269,9 @@ class Output(object):
         self.content_type = "application/vnd.flexio.table"
         self.header["structure"] = structure
         return TableWriter(structure, self.stream)
+
+    def write(self, msg):
+        messenger.invoke('write', [msg])
 
 def run(func):
     input = Input()

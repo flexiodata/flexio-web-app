@@ -120,10 +120,50 @@ class TestController extends \Flexio\System\FxControllerAction
         // keep this function empty
         $this->renderRaw();
 
+
+$context = new \ZMQContext(1);
+
+//  Socket to talk to clients
+$responder = new \ZMQSocket($context, \ZMQ::SOCKET_REP);
+
+$port = 40090;
+while (true)
+{
+    try
+    {
+        $abc = $responder->bind("tcp://*:$port");
+        echo("Bound to port $port\n");
+        break;
+    }
+    catch(Exception $e)
+    {
+        echo("Could not bind to port $port\n");
+        $port++;
+    }
+}
+
+$endpoints = $responder->getEndpoints();
+
+$i = 0;
+while ($i < 60) {
+    //  Wait for next request from client
+    $request = $responder->recv();
+    printf ("Received request: [%s]\n", $request);
+
+    //  Do some 'work'
+    sleep (1);
+    $i++;
+
+    //  Send reply back to client
+    $responder->send("World $i");
+}
+        
+/*
 echo "<pre>";
 
         $actual = \Flexio\Tests\TestUtil::evalExpression('to_char(to_date("2001-02-03"))');
         var_dump($actual);
+*/
 
 /*
         $result2 = \Flexio\Tests\TestUtil::evalExpressionPostgres('iskindof(\'"firstnamelastname"@domain.com\',"email")');
