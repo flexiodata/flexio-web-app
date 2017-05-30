@@ -263,6 +263,11 @@ class Api
             case 'GET /search'                         : return '\Flexio\Api\Search::exec';
 
             // users
+
+            // TODO: convert user password api to something like:
+            // 'POS /users/:eid/credentials' // changing password
+            // 'DEL /users/:eid/credentials' // resetting password
+
             case 'GET /users/me'                       : return '\Flexio\Api\User::about';
             case 'GET /users/me/statistics'            : return '\Flexio\Api\User::statistics';
 
