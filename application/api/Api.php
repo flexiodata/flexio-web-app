@@ -265,24 +265,34 @@ class Api
             // users
 
             // TODO: convert user password api to something like:
-            // 'POS /users/:eid/credentials' // changing password
-            // 'DEL /users/:eid/credentials' // resetting password
+            // 'POS /users/me/credentials' // changing password
+            // 'DEL /users/me/credentials' // resetting password
 
             case 'GET /users/me'                       : return '\Flexio\Api\User::about';
             case 'GET /users/me/statistics'            : return '\Flexio\Api\User::statistics';
 
             case 'POS /users'                          : return '\Flexio\Api\User::create';
-            case 'POS /users/resetpassword'            : return '\Flexio\Api\User::resetpassword';
-            case 'POS /users/requestpasswordreset'     : return '\Flexio\Api\User::requestpasswordreset';
             case 'POS /users/resendverify'             : return '\Flexio\Api\User::resendverify';
             case 'POS /users/activate'                 : return '\Flexio\Api\User::activate';
             case 'POS /users/:eid'                     : return '\Flexio\Api\User::set';
             case 'GET /users/:eid'                     : return '\Flexio\Api\User::get';
             case 'POS /users/:eid/changepassword'      : return '\Flexio\Api\User::changepassword';
+            case 'POS /users/resetpassword'            : return '\Flexio\Api\User::resetpassword';
+            case 'POS /users/requestpasswordreset'     : return '\Flexio\Api\User::requestpasswordreset';
+
+            // sharing
+            case 'GET /rights'                         : return '\Flexio\Api\Right::listall';
+            case 'POS /rights'                         : return '\Flexio\Api\Right::create';
+            case 'GET /rights/:eid'                    : return '\Flexio\Api\Right::get';
+            case 'DEL /rights/:eid'                    : return '\Flexio\Api\Right::delete';
+            // DEPRECATED (users/:eid/tokens):
             case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::listall';
             case 'POS /users/:eid/tokens'              : return '\Flexio\Api\Token::create';
             case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
             case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
+
+
+
 
             // projects
             case 'POS /projects'                       : return '\Flexio\Api\Project::create';
