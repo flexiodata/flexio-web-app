@@ -279,8 +279,30 @@ class Pipe extends \Flexio\Object\Base
         if ($schedule !== false)
             $properties['schedule'] = $schedule;
 
+        // TODO: deprecated
+        $default_rights = array(
+            'owner' => array(
+                'read' => true,
+                'write' => true,
+                'execute' => true,
+                'delete' => true
+            ),
+            'member' => array(
+                'read' => true,
+                'write' => true,
+                'execute' => true,
+                'delete' => false
+            ),
+            'public' => array(
+                'read' => false,
+                'write' => false,
+                'execute' => false,
+                'delete' => false
+            )
+        );
+
         // populate the rights node
-        $properties['rights'] = \Flexio\Object\Acl::enum($this);
+        $properties['rights'] = $default_rights;
 
         // return the properties
         return $properties;

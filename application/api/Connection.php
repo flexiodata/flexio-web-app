@@ -27,7 +27,6 @@ class Connection
                 'ename'             => array('type' => 'identifier', 'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
-                'rights'            => array('type' => 'object', 'required' => false),
                 'host'              => array('type' => 'string',  'required' => false),
                 'port'              => array('type' => 'integer', 'required' => false),
                 'username'          => array('type' => 'string',  'required' => false),
@@ -57,11 +56,6 @@ class Connection
         $connection = \Flexio\Object\Connection::create($params);
         $connection->setOwner($requesting_user_eid);
         $connection->setCreatedBy($requesting_user_eid);
-
-        // the created of the object is the owner, so if rights property is
-        // set, then set the rights
-        if (isset($params['rights']))
-            \Flexio\Object\Acl::apply($connection, $params['rights']);
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
@@ -104,7 +98,6 @@ class Connection
                 'ename'             => array('type' => 'identifier', 'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
-                'rights'            => array('type' => 'object', 'required' => false),
                 'host'              => array('type' => 'string',  'required' => false),
                 'port'              => array('type' => 'integer', 'required' => false),
                 'username'          => array('type' => 'string',  'required' => false),
@@ -129,10 +122,6 @@ class Connection
 
         // set the properties
         $connection->set($params);
-
-        // if we're the owner and the rights property is set, then set the rights
-        if ($requesting_user_eid === $connection->getOwner() && isset($params['rights']))
-            \Flexio\Object\Acl::apply($connection, $params['rights']);
 
         // get the $connection properties
         $properties = self::filterProperties($connection->get());
