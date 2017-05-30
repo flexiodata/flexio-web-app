@@ -30,7 +30,6 @@ class Token extends ModelBase
                 'eid'           => $eid,
                 'user_eid'      => $params['user_eid'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
-                'secret_code'   => $params['secret_code'] ?? '',
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );
@@ -101,7 +100,6 @@ class Token extends ModelBase
                      'eid_type'    => $row['eid_type'],
                      'user_eid'    => $row['user_eid'],
                      'access_code' => $row['access_code'],
-                     'secret_code' => $row['secret_code'],
                      'eid_status'  => $row['eid_status'],
                      'created'     => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
@@ -131,7 +129,6 @@ class Token extends ModelBase
                      'eid_type'    => $row['eid_type'],
                      'user_eid'    => $row['user_eid'],
                      'access_code' => $row['access_code'],
-                     'secret_code' => $row['secret_code'],
                      'eid_status'  => $row['eid_status'],
                      'created'     => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
@@ -165,7 +162,6 @@ class Token extends ModelBase
                               'eid_type'    => $row['eid_type'],
                               'user_eid'    => $row['user_eid'],
                               'access_code' => $row['access_code'],
-                              'secret_code' => $row['secret_code'],
                               'eid_status'  => $row['eid_status'],
                               'created'     => \Flexio\Base\Util::formatDate($row['created']),
                               'updated'     => \Flexio\Base\Util::formatDate($row['updated']));

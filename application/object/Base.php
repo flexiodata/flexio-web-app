@@ -247,7 +247,7 @@ class Base implements IObject
         // sure we have the most current information
 
         // get the rights for this object
-        $rights = $this->getModel()->getRights($this->getEid());
+        $rights = $this->getModel()->right->getRights($this->getEid());
         if ($rights === false)
             return false;
 
@@ -315,19 +315,19 @@ class Base implements IObject
         $rights = array();
         $rights[] = $r;
 
-        $this->getModel()->deleteRights($this->getEid(), $rights);
+        $this->getModel()->right->deleteRights($this->getEid(), $rights);
         return $this;
     }
 
     public function addRights(array $rights) : \Flexio\Object\Base
     {
-        $this->getModel()->addRights($this->getEid(), $rights);
+        $this->getModel()->right->addRights($this->getEid(), $rights);
         return $this;
     }
 
     public function getRights() : array
     {
-        $rights = $this->getModel()->getRights($this->getEid());
+        $rights = $this->getModel()->right->getRights($this->getEid());
 
         $result = array();
         foreach ($rights as $right)

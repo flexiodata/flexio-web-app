@@ -34,9 +34,8 @@ class Token extends \Flexio\Object\Base
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-        // generate an access code and a secret code
+        // generate an access code
         $properties['access_code'] = \Flexio\Base\Util::generateHandle();
-        $properties['secret_code'] = \Flexio\Base\Util::generateHandle();
 
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
@@ -94,7 +93,6 @@ class Token extends \Flexio\Object\Base
             "eid_status" : null,
             "user_eid": null,
             "access_code" : null,
-            "secret_code" : null,
             "created" : null,
             "updated" : null
         }
