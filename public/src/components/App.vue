@@ -67,9 +67,12 @@
         if (this.active_user_eid.length == 0)
           return false
 
-        //var cfg = _.get(this.getActiveUser(), 'config')
-        //if (this.show_intercom_button && _.get(cfg, 'app.prompt.tour.shown') !== true)
-        if (true)
+        var params = _.get(this.$route, 'query', {})
+        if (params['app.prompt.tour.shown'] === 'true')
+          return true
+
+        var cfg = _.get(this.getActiveUser(), 'config')
+        if (this.show_intercom_button && _.get(cfg, 'app.prompt.tour.shown') !== true)
           return true
 
         return false
