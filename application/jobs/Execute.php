@@ -48,7 +48,7 @@ class ExecuteProxy
             2 => array("pipe", "w")
         );
 
-        $this->process = proc_open($cmd, $descriptor_spec, $this->pipes, "/home/server/src");
+        $this->process = proc_open($cmd, $descriptor_spec, $this->pipes);
         if (!is_resource($this->process))
         {
             $this->process = null;
@@ -120,9 +120,12 @@ class ExecuteProxy
             //var_dump($res);
         }
 
-        //echo "Stderr from child process was:\n";
-        //$str = fread($this->pipes[2], 8192);
-        //echo $str;
+/*
+        echo "Stderr from child process was:\n";
+        $str = fread($this->pipes[2], 8192);
+        echo $str;
+        die($str);
+*/
     }
 
 
@@ -142,7 +145,33 @@ class ExecuteProxy
             $type = 'i';
             $val = (string)$val;
         }
-        else 
+        else if (is_array($val))
+        {
+            if (count($val) == 0 || array_keys($val) === range(0, count($val) - 1))
+            {
+                // sequential array
+                $type = 'a';
+                $payload = '';
+                foreach ($val as $v)
+                {
+                    $payload .= self::encodepart($v);
+                }
+                $val = $payload;
+            }
+             else
+            {
+                // assoc array
+                $type = 'o';
+                $payload = '';
+                foreach ($val as $k => $v)
+                {
+                    $payload .= self::encodepart($k);
+                    $payload .= self::encodepart($v);
+                }
+                $val = $payload;
+            }
+        }
+        else
         {
             $type = 's';
         }
@@ -264,11 +293,12 @@ class Execute extends \Flexio\Jobs\Base
 {
     private $code_base64 = '';
     private $code = '';
+    private $inputs = [];
 
     public function run()
     {
         $this->getOutput()->setEnv($this->getInput()->getEnv()); // by default, pass on all params; however, execute script can change them
-        $input = $this->getInput()->getStreams();
+        $this->inputs = $this->getInput()->getStreams();
 
 
         // properties
@@ -285,8 +315,10 @@ class Execute extends \Flexio\Jobs\Base
 
         if ($this->lang == 'python')
         {
-            if (strpos($this->code, "flexio_handler") !== false)
+            if (strpos($this->code, "flexio_stream_handler") !== false)
             {
+                // "MANAGED MODE" - script is called once for each stream
+
                 // add code that invokes the main handler -- this is the preferred
                 // way of coding python scripts
                 if (false !== strpos($this->code, "\r\n"))
@@ -295,15 +327,56 @@ class Execute extends \Flexio\Jobs\Base
                     $endl = "\n";
 
                 $this->code .= $endl . "import flexio as flexioext";
-                $this->code .= $endl . "flexioext.run(flexio_handler)";
+                $this->code .= $endl . "flexioext.run_stream(flexio_stream_handler)";
                 $this->code .= $endl;
 
                 $this->code_base64 = base64_encode($this->code);
+
+                foreach ($this->inputs as $instream)
+                {
+                    $this->doStream($instream);
+                }
+                
+                return true;
+            }
+             else
+            {
+                // "UNMANAGED MODE" - script is called once per job (once per all streams)
+
+                // if a flexio_hander is specified, call it, otherwise let the script
+                // handle everything
+                if (strpos($this->code, "flexio_handler") !== false)
+                {
+                    // add code that invokes the main handler -- this is the preferred
+                    // way of coding python scripts
+                    if (false !== strpos($this->code, "\r\n"))
+                        $endl = "\r\n";
+                        else
+                        $endl = "\n";
+
+                    $this->code .= $endl . "import flexio as flexioext";
+                    $this->code .= $endl . "flexioext.run(flexio_handler)";
+                    $this->code .= $endl;
+
+                    $this->code_base64 = base64_encode($this->code);
+                }
+
+                $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+                if (is_null($dockerbin))
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
+
+                $ep = new ExecuteProxy;
+                $ep->initialize($cmd, $this);
+                $ep->run();
+
+                return true;
             }
         }
 
 
-        foreach ($input as $instream)
+        foreach ($inputs as $instream)
         {
             $mime_type = $instream->getMimeType();
             $this->doStream($instream);
@@ -501,7 +574,20 @@ class Execute extends \Flexio\Jobs\Base
         $outstream->setMimeType($value);
     }
 
+    public function func_getInputStreamInfo()
+    {
+        $res = [];
+        $idx = 0;
+        foreach ($this->inputs as $input)
+        {
+            $res[] = array('idx' => $idx++,
+                           'name' => $input->getName(),
+                           'size' => $input->getSize(),
+                           'content_type' => $input->getMimeType());
+        }
 
+        return $res;
+    }
 
 
 
