@@ -1,5 +1,5 @@
 <template>
-  <article class="flex flex-column justify-between w5a br2 pv4 ph3 ph4-ns ma3 bg-nearer-white ba b--black-10">
+  <article class="flex flex-column justify-between w5a br2 pv3 ph3 ma3 bg-nearer-white ba b--black-10">
     <div class="tl">
       <highlight-step-list
         class="justify-center"
