@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="render_nav" v-show="show_nav" class="bb b--black-20">
+  <nav class="bb b--black-20">
     <div class="flex flex-row bg-white pa1 pl3-ns pr2-ns items-center" style="min-height: 50px">
       <div class="flex-fill flex flex-row items-center truncate">
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">
@@ -46,29 +46,6 @@
       ...mapState([
         'user_fetching'
       ]),
-      render_nav() {
-        switch (this.$route.name)
-        {
-          case ROUTE_EMBEDHOME:
-            return false
-
-          default:
-            return true
-        }
-      },
-      show_nav() {
-        switch (this.$route.name)
-        {
-          case ROUTE_SIGNIN:
-          case ROUTE_SIGNUP:
-          case ROUTE_FORGOTPASSWORD:
-          case ROUTE_RESETPASSWORD:
-            return false
-
-          default:
-            return true
-        }
-      },
       user_eid() {
         return _.get(this.getActiveUser(), 'eid', '')
       },

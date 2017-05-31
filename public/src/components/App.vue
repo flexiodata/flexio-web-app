@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <app-navbar class="flex-none"></app-navbar>
+    <app-navbar class="flex-none" v-if="show_intercom_button"></app-navbar>
     <router-view class="flex-fill"></router-view>
 
     <!-- onboarding modal -->
@@ -49,8 +49,9 @@
         'active_user_eid'
       ]),
       show_intercom_button() {
-        switch (this.$route.name)
+        switch (_.get(this.$route, 'name', ''))
         {
+          case null:
           case ROUTE_EMBEDHOME:
           case ROUTE_SIGNIN:
           case ROUTE_SIGNUP:
