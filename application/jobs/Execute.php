@@ -128,6 +128,13 @@ class ExecuteProxy
 */
     }
 
+    public function getStdError()
+    {
+        $res = fread($this->pipes[2], 8192);
+        if (strlen(trim($res)) == 0)
+            return null;
+        return $res;
+    }
 
     public static function encodepart($val)
     {
@@ -371,6 +378,20 @@ class Execute extends \Flexio\Jobs\Base
                 $ep->initialize($cmd, $this);
                 $ep->run();
 
+                $err = $ep->getStdError();
+                
+                if (isset($err))
+                {
+                    $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
+                    if (strlen($err) == 0)
+                        $err = null;
+                }
+
+                if (isset($err))
+                {
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+                }
+
                 return true;
             }
         }
@@ -459,6 +480,20 @@ class Execute extends \Flexio\Jobs\Base
             $ep = new ExecuteProxy;
             $ep->initialize($cmd, $this);
             $ep->run();
+
+            $err = $ep->getStdError();
+
+            if (isset($err))
+            {
+                $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
+                if (strlen($err) == 0)
+                    $err = null;
+            }
+
+            if (isset($err))
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+            }
 
             return true;
         }
@@ -588,6 +623,34 @@ class Execute extends \Flexio\Jobs\Base
 
         return $res;
     }
+
+    public function func_getOutputStreamInfo()
+    {
+        $res = [];
+
+        if ($this->outputs)
+        {
+            $idx = 0;
+            foreach ($this->outputs as $output)
+            {
+                $res[] = array('idx' => $idx++,
+                               'name' => $output->getName(),
+                               'size' => $output->getSize(),
+                               'content_type' => $output->getMimeType());
+            }
+        }
+
+        return $res;
+    }
+
+    public function func_createTable($name, $structure)
+    {
+        var_dump($name);
+        var_dump($structure);
+        die();
+    }
+
+
 
 
 

@@ -151,6 +151,25 @@ class Inputs(object):
             self.initialize()
         return self.inputs[idx]
 
+class Outputs(object):
+    def __init__(self):
+        self.inited = False
+        self.outputs = []
+
+    def initialize(self):
+        res = proxy.invoke('getOutputStreamInfo', [])
+        if res:
+            self.outputs = res
+            self.inited = True
+    
+    def __getitem__(self, idx):
+        if not self.inited:
+            self.initialize()
+        return self.outputs[idx]
+
+    def create_table(self, name, structure):
+        res = proxy.invoke('createTable', [name, structure])
+
 class Input(object):
     def __init__(self):
         self.inited = False
