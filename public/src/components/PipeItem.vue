@@ -133,6 +133,10 @@
         },{
           id: 'share',
           label: 'Share',
+          icon: 'person_add'
+        },{
+          id: 'embed',
+          label: 'Embed',
           icon: 'share'
         },{
           id: 'schedule',
@@ -174,6 +178,7 @@
           case 'edit':      return this.$emit('edit', this.item)
           case 'duplicate': return this.$emit('duplicate', this.item)
           case 'share':     return this.$emit('share', this.item)
+          case 'embed':     return this.$emit('embed', this.item)
           case 'schedule':  return this.$emit('schedule', this.item)
           case 'delete':    return this.trashPipe()
         }

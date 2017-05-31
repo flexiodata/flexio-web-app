@@ -21,6 +21,7 @@
       @edit="onItemEdit"
       @duplicate="onItemDuplicate"
       @share="onItemShare"
+      @embed="onItemEmbed"
       @schedule="onItemSchedule"
     ></pipe-item>
   </div>
@@ -89,6 +90,9 @@
       },
       onItemShare(item) {
         this.$emit('item-share', item)
+      },
+      onItemEmbed(item) {
+        this.$emit('item-embed', item)
       },
       onItemSchedule(item) {
         this.$emit('item-schedule', item)

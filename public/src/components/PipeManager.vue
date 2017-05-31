@@ -30,6 +30,7 @@
       @item-edit="openPipeEditModal"
       @item-duplicate="duplicatePipe"
       @item-share="openPipeShareModal"
+      @item-embed="openPipeEmbedModal"
       @item-schedule="openPipeScheduleModal"
     ></pipe-list>
 
@@ -56,6 +57,13 @@
       v-if="show_pipe_share_modal"
     ></pipe-share-modal>
 
+    <!-- embed modal -->
+    <pipe-embed-modal
+      ref="modal-embed-pipe"
+      @hide="show_pipe_embed_modal = false"
+      v-if="show_pipe_embed_modal"
+    ></pipe-embed-modal>
+
     <!-- schedule modal -->
     <pipe-schedule-modal
       ref="modal-schedule-pipe"
@@ -74,6 +82,7 @@
   import PipeList from './PipeList.vue'
   import PipePropsModal from './PipePropsModal.vue'
   import PipeShareModal from './PipeShareModal.vue'
+  import PipeEmbedModal from './PipeEmbedModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
   import Btn from './Btn.vue'
 
@@ -83,6 +92,7 @@
       PipeList,
       PipePropsModal,
       PipeShareModal,
+      PipeEmbedModal,
       PipeScheduleModal,
       Btn
     },
@@ -92,6 +102,7 @@
         show_pipe_add_modal: false,
         show_pipe_edit_modal: false,
         show_pipe_share_modal: false,
+        show_pipe_embed_modal: false,
         show_pipe_schedule_modal: false,
         show_connection_add_modal: false
       }
@@ -121,6 +132,10 @@
       openPipeShareModal(item) {
         this.show_pipe_share_modal = true
         this.$nextTick(() => { this.$refs['modal-share-pipe'].open(item) })
+      },
+      openPipeEmbedModal(item) {
+        this.show_pipe_embed_modal = true
+        this.$nextTick(() => { this.$refs['modal-embed-pipe'].open(item) })
       },
       openPipeScheduleModal(item) {
         this.show_pipe_schedule_modal = true
