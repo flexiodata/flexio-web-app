@@ -14,9 +14,6 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-  import SetActiveProject from './mixins/set-active-project'
-
   const nav_items = [
     {
       route: 'pipes',
@@ -46,33 +43,10 @@
   ]
 
   export default {
-    mixins: [SetActiveProject],
     data() {
       return {
-        eid: this.$route.params.eid,
         nav_items: nav_items
       }
-    },
-    computed: {
-      project() {
-        return _.find(this.getAllProjects(), { eid: this.eid })
-      },
-
-      is_fetched() {
-        return _.get(this.project, 'is_fetched', false)
-      },
-
-      is_fetching() {
-        return _.get(this.project, 'is_fetching', false)
-      }
-    },
-    created() {
-      this.setActiveProject(this.eid)
-    },
-    methods: {
-      ...mapGetters([
-        'getAllProjects'
-      ])
     }
   }
 </script>
