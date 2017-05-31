@@ -4,7 +4,9 @@ import csv
 import datetime
 
 
-class StdinoutMessenger(object):
+import pprint
+
+class StdinoutProxy(object):
     def __init__(self):
         self.inited = False
 
@@ -14,7 +16,8 @@ class StdinoutMessenger(object):
             payload = payload + self.encodepart(param)
         self.send_message(payload)
         response = self.read_message()
-        return self.decodepart(response)
+        result, nextoff = self.decodepart(response, 0)
+        return result
         #print("Received reply %s" % response)
 
     def send_message(self, payload):
@@ -72,24 +75,48 @@ class StdinoutMessenger(object):
             var = objpayload
         return type + str(len(var)).encode('utf-8') + b',' + var
 
-    def decodepart(self, var):
-        type = chr(var[0])
-        commapos = var.find(b',')
-        if commapos == -1:
-            return None
-        var = var[commapos+1:]
-        if type == 'i':
-            return int(var.decode('utf-8'))
-        elif type == 'b':
-            return False if var == b'0' else True
-        elif type == 'B':
-            return var
-        elif type == 's':
-            return var.decode('utf-8') 
-        elif type == 'N':
-            return None
+    def decodeparts(self, vars):
+        off = 0
+        res = []
+        while off is not None:
+            content, off = self.decodepart(vars, off)
+            res.append(content)
+        return res
 
-messenger = StdinoutMessenger()
+    def decodepart(self, var, offset):
+        commapos = var.find(b',', offset)
+        if commapos == -1:
+            return None, None
+        type = chr(var[offset])
+        lenpart = int(var[offset+1:commapos].decode())
+        start = commapos+1
+        end = start+lenpart
+        part = var[start:end]
+        if end >= len(var):
+            end = None
+        if type == 'i':
+            return int(part.decode('utf-8')), end
+        elif type == 'b':
+            return False if part == b'0' else True, end
+        elif type == 'B':
+            return part, end
+        elif type == 's':
+            return part.decode('utf-8'), end
+        elif type == 'a':
+            return self.decodeparts(part), end
+        elif type == 'o':
+            off = 0
+            res = {}
+            while off is not None:
+                key, off = self.decodepart(part, off)
+                if off is not None:
+                    value, off = self.decodepart(part, off)
+                    res[key] = value
+            return res, end
+        elif type == 'N':
+            return None, end
+
+proxy = StdinoutProxy()
 
 class TableReader(object):
     def __init__(self, reader, casts):
@@ -108,39 +135,25 @@ class TableReader(object):
         else:
             raise StopIteration
 
+class Inputs(object):
+    def __init__(self):
+        self.inited = False
+        self.inputs = []
+
+    def initialize(self):
+        res = proxy.invoke('getInputStreamInfo', [])
+        if res:
+            self.inputs = res
+            self.inited = True
+    
+    def __getitem__(self, idx):
+        if not self.inited:
+            self.initialize()
+        return self.inputs[idx]
+
 class Input(object):
     def __init__(self):
         self.inited = False
-
-    def initialize(self):
-
-        input_header = ''
-        for i in range(0,10000):
-            input_header += sys.stdin.buffer.read(1).decode('utf-8')
-            if input_header[-4:] == "\r\n\r\n":
-                break
-        if input_header[-4:] != "\r\n\r\n":
-            sys.stdout.write('{"content_type":"application/octet-stream"}\r\n\r\nMissing payload header')
-            sys.exit()
-        input_header = json.loads(input_header)
-
-        self.header_written = False
-        if 'content_type' in input_header:
-            self._content_type = input_header['content_type']
-        else:
-            self._content_type = 'application/octet-stream'
-
-        if 'structure' in input_header:
-            self._structure = input_header['structure']
-        else:
-            self._structure = None
-
-        if 'env' in input_header:
-            self._env = input_header['env']
-        else:
-            self._env = {}
-
-        self.inited = True
 
     @property
     def stream(self):
@@ -245,7 +258,7 @@ class Output(object):
     @content_type.setter
     def content_type(self, value):
         self._content_type = value
-        messenger.invoke('set_content_type', [value])
+        proxy.invoke('set_content_type', [value])
 
     @property
     def env(self):
@@ -271,7 +284,19 @@ class Output(object):
         return TableWriter(structure, self.stream)
 
     def write(self, msg):
-        messenger.invoke('write', [msg])
+        proxy.invoke('write', [msg])
+
+
+
+
+inputs = Inputs()
+
+
+def run_stream(func):
+    input = Input()
+    output = Output()
+    func(input, output)
+
 
 def run(func):
     input = Input()
