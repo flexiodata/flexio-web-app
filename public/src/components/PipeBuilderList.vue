@@ -91,7 +91,7 @@
       'active-process': {
         type: Object
       },
-      'project-connections': {
+      'connections': {
         type: Array,
         default: () => { return [] }
       }

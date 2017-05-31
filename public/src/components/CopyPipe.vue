@@ -14,48 +14,28 @@
 <script>
   import axios from 'axios'
   import marked from 'marked'
-  import { mapState, mapGetters } from 'vuex'
   import { ROUTE_PIPEHOME } from '../constants/route'
   import { PIPEHOME_VIEW_BUILDER, PIPEHOME_STATUS_CONFIGURE } from '../constants/pipehome'
   import Spinner from 'vue-simple-spinner'
-  import SetActiveProject from './mixins/set-active-project'
 
   export default {
-    mixins: [SetActiveProject],
     components: {
       Spinner
-    },
-    watch: {
-      active_user_eid: function(val, old_val) {
-        this.tryFetchProjects()
-      }
     },
     data() {
       return {
         is_loading: true,
-        is_pipe_created: false,
-        is_project_fetched: false,
         pipe_json: {},
         error_markdown: ''
       }
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ]),
       json_filename() {
         return _.get(this.$route, 'query.path', '')
       },
       short_json_filename() {
         var idx = this.json_filename.lastIndexOf('/')
         return this.json_filename.substring(idx > 0 ? idx+1 : 0)
-      },
-      default_project() {
-        return _
-          .chain(this.getActiveUserProjects())
-          .sortBy([ function(p) { return new Date(p.created) } ])
-          .first()
-          .value()
       },
       loading_message() {
         return 'Loading '+this.short_json_filename+'...'
@@ -65,55 +45,13 @@
       }
     },
     mounted() {
-      if (this.active_user_eid.length > 0)
-        this.tryFetchProjects()
+      this.loadPipeFromJsonFile()
     },
     methods: {
-      ...mapGetters([
-        'hasProjects',
-        'getActiveUserProjects'
-      ]),
-      tryFetchProjects() {
-        // only fetch projects once
-        if (this.is_project_fetched)
-          return
-
-        if (!this.hasProjects())
-        {
-          this.$store.dispatch('fetchProjects').then(response => {
-            if (response.ok)
-            {
-              this.is_project_fetched = true
-              this.loadPipeFromJsonFile()
-            }
-          })
-        }
-         else
-        {
-          this.is_project_fetched = true
-          this.loadPipeFromJsonFile()
-        }
-      },
       tryCreatePipe(attrs) {
-        // only create the pipe once
-        if (this.is_pipe_created)
-          return
-
-        var parent_eid = _.get(this.default_project, 'eid', '')
-
-        if (parent_eid.length == 0 || _.size(attrs) == 0)
-          return
-
-        // start in the target project
-        this.setActiveProject(parent_eid)
-
-        // add (project) parent eid to the create attributes
-        _.assign(attrs, { parent_eid })
-
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok)
           {
-            this.is_pipe_created = true
             this.openPipe(response.body.eid)
           }
            else

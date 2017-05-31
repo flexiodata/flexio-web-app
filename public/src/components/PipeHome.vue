@@ -24,7 +24,6 @@
 
     <pipe-transfer
       class="flex-fill pv0 pv4-l pl4-l bt b--black-10 min-h5"
-      :project-eid="project_eid"
       :pipe-eid="eid"
       :tasks="tasks"
       @open-builder="showBuilderView"
@@ -40,7 +39,7 @@
       :active-prompt-idx="active_prompt_idx"
       :is-prompting="is_prompting"
       :active-process="active_process"
-      :project-connections="project_connections"
+      :connections="connections"
       @prompt-value-change="onPromptValueChange"
       @go-prev-prompt="goPrevPrompt"
       @go-next-prompt="goNextPrompt"
@@ -78,10 +77,8 @@
   import PipeHomeHeader from './PipeHomeHeader.vue'
   import PipeTransfer from './PipeTransfer.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
-  import SetActiveProject from './mixins/set-active-project'
 
   export default {
-    mixins: [SetActiveProject],
     components: {
       Btn,
       Spinner,
@@ -105,7 +102,9 @@
     },
     computed: {
       ...mapState([
-        'active_user_eid'
+        'active_user_eid',
+        'connections_fetching',
+        'connections_fetched'
       ]),
       pipe() {
         return _.get(this.$store, 'state.objects.'+this.eid, {})
@@ -142,9 +141,6 @@
         // the prompting mode if we actually have variables to fill in
         return _.filter(this.prompt_tasks, { has_variables: true }).length > 0
       },
-      project_eid() {
-        return _.get(this.pipe, 'project.eid', '')
-      },
       active_process() {
         return _.last(this.getActiveDocumentProcesses())
       },
@@ -160,13 +156,8 @@
       is_builder_view()  {
         return this.pipe_view == PIPEHOME_VIEW_BUILDER
       },
-      project_connections() {
+      connections() {
         return this.getOurConnections()
-      }
-    },
-    watch: {
-      project_eid: function(val, old_val) {
-        this.tryFetchConnections()
       }
     },
     created() {
@@ -367,7 +358,6 @@
         // as the 'return', otherwise JS will return without doing anything
         return _
           .chain(this.getAllConnections())
-          .filter((p) => { return _.get(p, 'project.eid') == this.project_eid })
           .sortBy([ function(p) { return new Date(p.created) } ])
           .reverse()
           .value()
@@ -379,9 +369,6 @@
           this.$store.dispatch('fetchPipe', { eid: this.eid }).then(response => {
             if (response.ok)
             {
-              if (this.project_eid.length > 0)
-                this.setActiveProject(this.project_eid)
-
               // if we're starting in configure mode, start the prompting
               if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_CONFIGURE)
                 this.runPipe()
@@ -409,13 +396,8 @@
       },
 
       tryFetchConnections() {
-        if (this.project_eid.length == 0)
-          return
-
-        // if we haven't fetched the columns for the active process task, do so now
-        var connections_fetched = _.get(this.$store, 'state.objects.'+this.project_eid+'.connections_fetched', false)
-        if (!connections_fetched)
-          this.$store.dispatch('fetchConnections', this.project_eid)
+        if (!this.connections_fetched)
+          this.$store.dispatch('fetchConnections')
       },
 
       getAllVariables() {

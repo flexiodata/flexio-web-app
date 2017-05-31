@@ -6,7 +6,6 @@
     <connection-chooser-list
       list-type="output"
       item-layout="list"
-      :project-eid="projectEid"
       :connection-type-filter="connectionTypeFilter"
       :show-selection="showConnectionChooserSelection"
       :show-default-connections="showDefaultConnectionsInChooserList"
@@ -25,7 +24,6 @@
     <!-- connection props modal -->
     <connection-props-modal
       ref="modal-connection-props"
-      :project-eid="projectEid"
       :show-steps="false"
       @submit="tryUpdateConnection"
       @hide="show_connection_props_modal = false"
@@ -42,9 +40,6 @@
 
   export default {
     props: {
-      'project-eid': {
-        type: String
-      },
       'show-connection-chooser-list': {
         type: Boolean,
         default: true
@@ -95,7 +90,6 @@
         var attrs = _.extend({}, this.connection, {
           name: item.service_name,
           connection_type: item.connection_type,
-          parent_eid: this.projectEid,
           eid_status: OBJECT_STATUS_PENDING
         })
 

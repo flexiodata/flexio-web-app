@@ -7,7 +7,6 @@
       <pipe-transfer-input-chooser
         ref="input-chooser"
         class="bg-white bt b--light-gray"
-        :project-eid="active_project_eid"
         :connection-type-filter="ctype"
         :show-connection-chooser-title="false"
         :show-connection-chooser-selection="true"
@@ -24,7 +23,6 @@
       <pipe-transfer-output-chooser
         ref="output-chooser"
         class="bg-white bt b--light-gray"
-        :project-eid="active_project_eid"
         :connection-type-filter="ctype"
         :show-connection-chooser-title="false"
         :show-connection-chooser-selection="true"
@@ -51,7 +49,6 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
   import * as connections from '../constants/connection-info'
   import Btn from './Btn.vue'
   import PipeTransferInputChooser from './PipeTransferInputChooser.vue'
@@ -92,9 +89,6 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_project_eid'
-      ]),
       task() {
         return this.taskItem
       },

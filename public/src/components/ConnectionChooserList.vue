@@ -32,17 +32,13 @@
 <script>
   import { CONNECTION_TYPE_BLANK_PIPE } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import ConnectionChooserItem from './ConnectionChooserItem.vue'
   import EmptyItem from './EmptyItem.vue'
 
   export default {
     props: {
-      'project-eid': {
-        type: String,
-        required: true
-      },
       'connection-type': {
         type: String,
         required: false
@@ -96,6 +92,11 @@
       }
     },
     computed: {
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'is_fetching': 'connections_fetching',
+        'is_fetched': 'connections_fetched'
+      }),
       default_connections() {
         if (!this.showDefaultConnections)
           return []
@@ -124,39 +125,27 @@
 
         return _.filter(items, { connection_type: this.connectionTypeFilter })
       },
-      is_fetched() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetched', true)
-      },
-      is_fetching() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'connections_fetching', true)
-      },
       add_button_label() {
         return this.addButtonLabel.length > 0 ? this.addButtonLabel : 'New Connection'
       }
     },
     created() {
-      if (!this.projectEid)
-        return
-
       this.tryFetchConnections()
     },
     methods: {
       ...mapGetters([
-        'getAllConnections',
-        'getAllProjects'
+        'getAllConnections'
       ]),
       tryFetchConnections() {
         if (!this.is_fetched)
-          this.$store.dispatch('fetchConnections', this.projectEid)
+          this.$store.dispatch('fetchConnections')
       },
       getOurConnections() {
-        var project_eid = this.projectEid
 
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything
         return _
           .chain(this.getAllConnections())
-          .filter(function(p) { return _.get(p, 'project.eid') == project_eid })
           .sortBy([ function(p) { return new Date(p.created) } ])
           .reverse()
           .value()

@@ -167,10 +167,6 @@
 
   export default {
     props: {
-      'project-eid': {
-        default: '',
-        type: String
-      },
       'show-steps': {
         default: true,
         type: Boolean
@@ -307,8 +303,7 @@
       createPendingConnection(item) {
         var attrs = _.assign({}, this.connection, {
           name: item.service_name,
-          connection_type: item.connection_type,
-          parent_eid: this.projectEid
+          connection_type: item.connection_type
         })
 
         this.$store.dispatch('createConnection', { attrs }).then(response => {

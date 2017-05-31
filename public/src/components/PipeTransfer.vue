@@ -35,7 +35,6 @@
       ></pipe-transfer-input-list>
       <pipe-transfer-input-chooser
         class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto-l"
-        :project-eid="projectEid"
         @cancel="show_input_chooser = false"
         @choose-input="addInput"
         v-else
@@ -76,7 +75,6 @@
       ></pipe-transfer-output-list>
       <pipe-transfer-output-chooser
         class="flex-fill bg-white ph3-l pb3-l br2 br--bottom overflow-y-auto-l"
-        :project-eid="projectEid"
         @cancel="show_output_chooser = false"
         @choose-output="addOutput"
         v-else
@@ -140,7 +138,15 @@
   import TaskSummaryList from './TaskSummaryList.vue'
 
   export default {
-    props: ['tasks', 'pipe-eid', 'project-eid', 'active-subprocess'],
+    props: {
+      'tasks': {
+        type: Array,
+        required: true
+      },
+      'pipe-eid': {
+        type: String
+      }
+    },
     components: {
       Btn,
       PipeTransferInputList,

@@ -130,12 +130,6 @@
   }
 
   export default {
-    props: {
-      'project-eid': {
-        default: '',
-        type: String
-      },
-    },
     mixins: [Validation],
     components: {
       Btn,

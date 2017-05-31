@@ -31,7 +31,14 @@
   import CommonFilter from './mixins/common-filter'
 
   export default {
-    props: ['filter', 'project-eid'],
+    props: {
+      'filter': {
+        type: String
+      },
+      'project-eid': {
+        type: String
+      }
+    },
     mixins: [CommonFilter],
     components: {
       Spinner,
