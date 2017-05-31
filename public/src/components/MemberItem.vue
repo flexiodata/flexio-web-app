@@ -1,7 +1,7 @@
 <template>
 <article class="dt w-100 bb b--black-05 ph3 pb3 mt3">
-  <div class="dtc w2 w3-ns v-mid">
-    <img :src="profile_src" class="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns"/>
+  <div class="dtc w2 v-mid">
+    <img :src="profile_src" class="ba b--black-10 db br-100 w2 h2"/>
   </div>
   <div class="dtc v-mid pl3">
     <h1 class="f6 f5-ns fw6 lh-title black mv0">{{title}}</h1>
@@ -28,8 +28,11 @@
   export default {
     props: ['item'],
     computed: {
+      email_hash() {
+        return _.get(this.item, 'email_hash', '')
+      },
       profile_src() {
-        return 'https://secure.gravatar.com/avatar/'+this.item.email_hash+'?d=mm&s=64'
+        return 'https://secure.gravatar.com/avatar/'+this.email_hash+'?d=mm&s=64'
       },
       is_owner() {
         return _.toLower(_.get(this.item, 'user_group')) == 'owner'
@@ -44,7 +47,7 @@
         return this.is_pending ? this.item.email : this.item.first_name+' '+this.item.last_name
       },
       remove_str() {
-        return 'Remove '+this.title
+        return 'Remove ' + this.title
       }
     },
     methods: {

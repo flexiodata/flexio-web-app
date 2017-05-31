@@ -33,9 +33,10 @@
   export default {
     props: {
       'filter': {
-        type: String
+        type: String,
+        default: ''
       },
-      'project-eid': {
+      'object-eid': {
         type: String
       }
     },
@@ -50,22 +51,21 @@
         return this.commonFilter(this.getOurMembers(), this.filter, ['first_name', 'last_name', 'user_name'])
       },
       is_fetching() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'members_fetching', true)
+        return false
       }
     },
     methods: {
       ...mapGetters([
-        'getAllUsers',
-        'getAllProjects'
+        'getAllUsers'
       ]),
       getOurMembers() {
-        var project_eid = this.projectEid
+        var object_eid = this.objectEid
 
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything
         return _
           .chain(this.getAllUsers())
-          .filter(function(m) { return _.includes(_.get(m, 'following', []), project_eid ) })
+          .filter(function(m) { return _.includes(_.get(m, 'object_eid', []), object_eid ) })
           .value()
       },
       onItemDelete(item) {
