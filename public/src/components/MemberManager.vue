@@ -17,37 +17,33 @@
         >
       </div>
       <div class="flex-none">
-        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openModal('modal-add')">Add members</btn>
+        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openAddMemberModal">Add members</btn>
       </div>
     </div>
 
     <!-- list -->
     <member-list
       :filter="filter"
-      :project-eid="projectEid"
       @item-delete="tryDeleteMember"
       class="flex-fill overflow-auto"
     ></member-list>
 
     <!-- add modal -->
     <member-add-modal
-      open-from=".btn-add"
-      close-to=".btn-add"
-      ref="modal-add"
+      ref="modal-add-member"
       @submit="tryAddMembers"
     ></member-add-modal>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import MemberList from './MemberList.vue'
   import MemberAddModal from './MemberAddModal.vue'
   import Btn from './Btn.vue'
 
   export default {
-    props: ['project-eid'],
     components: {
       Spinner,
       MemberList,
@@ -60,34 +56,25 @@
       }
     },
     computed: {
-      is_fetched() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'members_fetched', false)
-      },
-      is_fetching() {
-        return _.get(_.find(this.getAllProjects(), { eid: this.projectEid }), 'members_fetching', true)
-      }
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'is_fetching': 'connections_fetching',
+        'is_fetched': 'connections_fetched'
+      })
     },
     created() {
-      if (!this.projectEid)
-        return
-
       this.tryFetchMembers()
     },
     methods: {
-      ...mapGetters([
-        'getAllProjects'
-      ]),
-      openModal(ref) {
-        this.$refs[ref].open()
+      openAddMemberModal() {
+        this.$refs['modal-add-member'].open()
       },
       tryFetchMembers() {
         if (!this.is_fetched)
-          this.$store.dispatch('fetchMembers', this.projectEid)
+          this.$store.dispatch('fetchMembers')
       },
       tryAddMembers(attrs, modal) {
-        var project_eid = this.projectEid
-
-        this.$store.dispatch('createMembers', { project_eid, attrs }).then(response => {
+        this.$store.dispatch('createMembers', { attrs }).then(response => {
           if (response.ok)
           {
             modal.close()
@@ -99,10 +86,9 @@
         })
       },
       tryDeleteMember(item) {
-        var project_eid = this.projectEid
         var eid = _.get(item, 'eid')
 
-        this.$store.dispatch('deleteMember', { project_eid, eid }).then(response => {
+        this.$store.dispatch('deleteMember', { eid }).then(response => {
           if (response.ok)
           {
             modal.close()
