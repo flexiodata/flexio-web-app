@@ -1,6 +1,6 @@
 <template>
   <article
-    class="css-connection-item ma0 mv3-l pv3 pv2a-l ph3 bb ba-l br2-l cursor-default no-select shadow-sui-segment-l trans-pm"
+    class="css-connection-item ma0 mv3-l pv3 pv2a-l ph3 bb ba-l br2-l pointer no-select shadow-sui-segment-l trans-pm"
     @click="editConnection"
     @mouseenter="onMouseEnter"
     @mouseover="onMouseOver"

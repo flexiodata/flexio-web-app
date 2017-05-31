@@ -1,6 +1,6 @@
 <template>
   <article
-    class="css-pipe-item mv3-l pv3 pv2a-l ph3 bb ba-l br2-l cursor-default no-select shadow-sui-segment-l trans-pm"
+    class="css-pipe-item mv3-l pv3 pv2a-l ph3 bb ba-l br2-l no-select shadow-sui-segment-l trans-pm"
     :class="isTrash ? 'css-trash-item' : 'pointer'"
     @click="openPipe"
     @mouseenter="onMouseEnter"
