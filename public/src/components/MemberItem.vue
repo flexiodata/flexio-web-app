@@ -1,11 +1,11 @@
 <template>
 <article class="dt w-100 bb b--black-05 ph3 pb3 mt3">
   <div class="dtc w2 v-mid">
-    <img :src="profile_src" class="ba b--black-10 db br-100 w2 h2"/>
+    <img :src="profile_src" class="ba b--black-10 db br-100 w2 h2">
   </div>
-  <div class="dtc v-mid pl3">
-    <h1 class="f6 f5-ns fw6 lh-title black mv0">{{title}}</h1>
-    <h2 v-if="!is_pending" class="f6 fw4 mt0 mb0 black-60">@{{item.user_name}}</h2>
+  <div class="dtc v-mid pl2">
+    <h1 class="f6 fw6 lh-title black mv0">{{title}}</h1>
+    <h2 v-if="!is_pending" class="f7 fw4 mt0 mb0 black-60">@{{item.user_name}}</h2>
   </div>
   <div class="dtc v-mid">
     <div v-if="is_owner" class="w-100 tr">
