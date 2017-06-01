@@ -285,7 +285,7 @@ class Output(object):
         return TableWriter(structure, self.stream)
 
     def write(self, msg):
-        proxy.invoke('write', [msg])
+        proxy.invoke('write', [self._idx, msg])
 
     def insert_row(self, row):
         proxy.invoke('insertRow', [self._idx, row])
@@ -325,12 +325,15 @@ class Outputs(object):
             self.initialize()
         return self.outputs[idx]
 
-    def create_table(self, name, structure):
-        info = proxy.invoke('createTable', [name, structure])
+    def create(self, name, structure=None, content_type='text/plain'):
+        properties = { 'name': name, 'content_type': content_type }
+        if structure:
+            properties['structure'] = structure
+        info = proxy.invoke('createOutputStream', [properties])
         output = Output(info)
         self.outputs.append(output)
         return output
-
+    
 inputs = Inputs()
 outputs = Outputs()
 

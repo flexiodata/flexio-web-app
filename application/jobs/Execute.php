@@ -28,6 +28,10 @@ class BinaryData
     {
         return $this->data;
     }
+    public function getData()
+    {
+        return $this->data;
+    }
 }
 
 class ExecuteProxy
@@ -622,22 +626,6 @@ class Execute extends \Flexio\Jobs\Base
         return new BinaryData("This is binary data");
     }
 
-    public function func_write($message)
-    {
-        $outstream = $this->getOutputStream();
-        $writer = $this->getOutputWriter();
-
-        $writer->write($message);
-
-/*
-        if ($message instanceof BinaryData)
-            echo 'Binary: ' . $message . "\n";
-             else
-            echo 'Test  : ' . $message . "\n";
-*/
-    }
-
-
     public function func_getInputStreamInfo()
     {
         $res = [];
@@ -672,13 +660,24 @@ class Execute extends \Flexio\Jobs\Base
         return $res;
     }
 
-    public function func_createTable($name, $structure)
+    public function func_createOutputStream($properties)
     {
+        $name = $properties['name'] ?? '';
+        $content_type = $properties['content_type'] ?? 'text/plain';
+        $structure = $properties['structure'] ?? null;
+
         $properties = array(
             'name' => $name,
-            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
-            'structure' => $structure
+            'mime_type' => $content_type
         );
+
+        if (!is_null($structure))
+        {
+            // specifying a structure automatically sets content type to table
+            $properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+            $properties['structure'] = $structure;
+        }
+
         $stream = \Flexio\Object\Stream::create($properties);
         $this->getOutput()->addStream($stream);
         $this->outputs[] = $stream;
@@ -704,7 +703,6 @@ class Execute extends \Flexio\Jobs\Base
         $writer->write($row);
     }
 
-
     public function func_insertRows($stream_idx, $row)
     {
         $writer = $this->getOutputWriter($stream_idx);
@@ -715,6 +713,18 @@ class Execute extends \Flexio\Jobs\Base
         {
             $writer->write($row);
         }
+    }
+
+    public function func_write($stream_idx, $message)
+    {
+        $writer = $this->getOutputWriter($stream_idx);
+        if (is_null($writer))
+            return null;
+
+        if ($message instanceof BinaryData)
+            $writer->write($message->getData());
+             else
+            $writer->write($message);
     }
 
 
