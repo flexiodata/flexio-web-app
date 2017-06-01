@@ -301,6 +301,9 @@ class Execute extends \Flexio\Jobs\Base
     private $code_base64 = '';
     private $code = '';
     private $inputs = [];
+    private $outputs = [];
+    private $output_writers = [];
+    private $managed_stream_index = 0;   // "current stream" index running in managed mode
 
     public function run()
     {
@@ -326,6 +329,21 @@ class Execute extends \Flexio\Jobs\Base
             {
                 // "MANAGED MODE" - script is called once for each stream
 
+
+                // set up one output stream for each input stream
+                foreach ($this->inputs as $instream)
+                {
+                    // input/output
+                    $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+                    $this->getOutput()->addStream($outstream);
+
+                    // by default, set output content type to text
+                    $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
+
+                    $this->outputs[] = $outstream;
+                }
+
+
                 // add code that invokes the main handler -- this is the preferred
                 // way of coding python scripts
                 if (false !== strpos($this->code, "\r\n"))
@@ -339,9 +357,12 @@ class Execute extends \Flexio\Jobs\Base
 
                 $this->code_base64 = base64_encode($this->code);
 
-                foreach ($this->inputs as $instream)
+
+                $stream_count = count($this->inputs);
+                for ($idx = 0; $idx < $stream_count; ++$idx)
                 {
-                    $this->doStream($instream);
+                    $this->managed_stream_index = $idx;
+                    $this->doStream($this->inputs[$idx], $this->outputs[$idx]);
                 }
                 
                 return true;
@@ -434,8 +455,27 @@ class Execute extends \Flexio\Jobs\Base
         return $this->outstream;
     }
 
-    private function getOutputWriter()
+    private function getOutputWriter($idx = null)
     {
+        if (isset($idx))
+        {
+            if (count($this->output_writers) != count($this->outputs))
+                $this->output_writers = array_pad($this->output_writers, count($this->outputs), null);
+
+            if ($idx < 0 || $idx >= count($this->output_writers))
+                return null;
+
+            $ret = $this->output_writers[$idx];
+            if (is_null($ret))
+            {
+                $ret = \Flexio\Object\StreamWriter::create($this->outputs[$idx]);
+                $this->output_writers[$idx] = $ret;
+            }
+
+            return $ret;
+        }
+
+
         if (is_null($this->outwriter))
         {
             $this->outwriter = \Flexio\Object\StreamWriter::create($this->outstream);
@@ -445,14 +485,8 @@ class Execute extends \Flexio\Jobs\Base
     }
 
 
-    private function doStream(\Flexio\Object\Stream $instream)
+    private function doStream(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream)
     {
-        // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
-
-        // by default, set output content type to text
-        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
 
         // these member variables are for the script callback hooks below
         $this->instream = $instream;
@@ -603,22 +637,17 @@ class Execute extends \Flexio\Jobs\Base
 */
     }
 
-    public function func_set_content_type($value)
-    {
-        $outstream = $this->getOutputStream();
-        $outstream->setMimeType($value);
-    }
 
     public function func_getInputStreamInfo()
     {
         $res = [];
         $idx = 0;
-        foreach ($this->inputs as $input)
+        foreach ($this->inputs as $stream)
         {
             $res[] = array('idx' => $idx++,
-                           'name' => $input->getName(),
-                           'size' => $input->getSize(),
-                           'content_type' => $input->getMimeType());
+                           'name' => $stream->getName(),
+                           'size' => $stream->getSize(),
+                           'content_type' => $stream->getMimeType());
         }
 
         return $res;
@@ -631,12 +660,12 @@ class Execute extends \Flexio\Jobs\Base
         if ($this->outputs)
         {
             $idx = 0;
-            foreach ($this->outputs as $output)
+            foreach ($this->outputs as $stream)
             {
                 $res[] = array('idx' => $idx++,
-                               'name' => $output->getName(),
-                               'size' => $output->getSize(),
-                               'content_type' => $output->getMimeType());
+                               'name' => $stream->getName(),
+                               'size' => $stream->getSize(),
+                               'content_type' => $stream->getMimeType());
             }
         }
 
@@ -645,12 +674,48 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_createTable($name, $structure)
     {
-        var_dump($name);
-        var_dump($structure);
-        die();
+        $properties = array(
+            'name' => $name,
+            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
+            'structure' => $structure
+        );
+        $stream = \Flexio\Object\Stream::create($properties);
+        $this->getOutput()->addStream($stream);
+        $this->outputs[] = $stream;
+
+        return array('idx' => count($this->outputs)-1,
+                     'name' => $stream->getName(),
+                     'size' => $stream->getSize(),
+                     'content_type' => $stream->getMimeType());
+    }
+
+    public function func_getManagedStreamIndex()
+    {
+        return $this->managed_stream_index;
     }
 
 
+    public function func_insertRow($stream_idx, $row)
+    {
+        $writer = $this->getOutputWriter($stream_idx);
+        if (is_null($writer))
+            return null;
+
+        $writer->write($row);
+    }
+
+
+    public function func_insertRows($stream_idx, $row)
+    {
+        $writer = $this->getOutputWriter($stream_idx);
+        if (is_null($writer))
+            return null;
+        
+        foreach ($rows as $row)
+        {
+            $writer->write($row);
+        }
+    }
 
 
 

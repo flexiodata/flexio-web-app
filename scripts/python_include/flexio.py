@@ -135,40 +135,6 @@ class TableReader(object):
         else:
             raise StopIteration
 
-class Inputs(object):
-    def __init__(self):
-        self.inited = False
-        self.inputs = []
-
-    def initialize(self):
-        res = proxy.invoke('getInputStreamInfo', [])
-        if res:
-            self.inputs = res
-            self.inited = True
-    
-    def __getitem__(self, idx):
-        if not self.inited:
-            self.initialize()
-        return self.inputs[idx]
-
-class Outputs(object):
-    def __init__(self):
-        self.inited = False
-        self.outputs = []
-
-    def initialize(self):
-        res = proxy.invoke('getOutputStreamInfo', [])
-        if res:
-            self.outputs = res
-            self.inited = True
-    
-    def __getitem__(self, idx):
-        if not self.inited:
-            self.initialize()
-        return self.outputs[idx]
-
-    def create_table(self, name, structure):
-        res = proxy.invoke('createTable', [name, structure])
 
 class Input(object):
     def __init__(self):
@@ -264,11 +230,27 @@ class TableWriter(object):
 
 
 class Output(object):
-    def __init__(self):
-        self.header_written = False
-        self._content_type = 'application/octet-stream'
+    def __init__(self, info):
         self._env = {}
-        self.header = {"content_type": self._content_type, "env": self._env}
+        if info:
+            self._name = info['name']
+            self._content_type = info['content_type']
+            self._size = info['size']
+            self._idx = info['idx']
+        else:
+            self._name = ''
+            self._content_type = 'application/octet-stream'
+            self._size = 0
+            self._idx = -1
+    
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+        proxy.invoke('setStreamProperties', [self._idx, {'name':value}])
 
     @property
     def content_type(self):
@@ -277,7 +259,7 @@ class Output(object):
     @content_type.setter
     def content_type(self, value):
         self._content_type = value
-        proxy.invoke('set_content_type', [value])
+        proxy.invoke('setStreamProperties', [self._idx, {'content_type':value}])
 
     @property
     def env(self):
@@ -305,20 +287,62 @@ class Output(object):
     def write(self, msg):
         proxy.invoke('write', [msg])
 
+    def insert_row(self, row):
+        proxy.invoke('insertRow', [self._idx, row])
+    
+    def insert_rows(self, rows):
+        proxy.invoke('insertRows', [self._idx, rows])
+    
+class Inputs(object):
+    def __init__(self):
+        self.inited = False
+        self.inputs = []
 
+    def initialize(self):
+        res = proxy.invoke('getInputStreamInfo', [])
+        if res:
+            self.inputs = res
+            self.inited = True
+    
+    def __getitem__(self, idx):
+        if not self.inited:
+            self.initialize()
+        return self.inputs[idx]
 
+class Outputs(object):
+    def __init__(self):
+        self.inited = False
+        self.outputs = []
+
+    def initialize(self):
+        stream_infos = proxy.invoke('getOutputStreamInfo', [])
+        for info in stream_infos:
+            self.outputs.append(Output(info))
+            self.inited = True
+    
+    def __getitem__(self, idx):
+        if not self.inited:
+            self.initialize()
+        return self.outputs[idx]
+
+    def create_table(self, name, structure):
+        info = proxy.invoke('createTable', [name, structure])
+        output = Output(info)
+        self.outputs.append(output)
+        return output
 
 inputs = Inputs()
-
+outputs = Outputs()
 
 def run_stream(func):
-    input = Input()
-    output = Output()
+    stream_idx = proxy.invoke('getManagedStreamIndex', [])
+    input = inputs[stream_idx]
+    output = outputs[stream_idx]
     func(input, output)
 
 
 def run(func):
-    input = Input()
-    output = Output()
+    input = Inputs()
+    output = Outputs()
     func(input, output)
 
