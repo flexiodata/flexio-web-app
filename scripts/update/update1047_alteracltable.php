@@ -68,14 +68,14 @@ EOT;
     // STEP 2: create a new acl table
     $sql = <<<EOT
         CREATE TABLE tbl_acl (
-        id serial,
-        eid varchar(12) NOT NULL,
-        object_eid varchar(12) NOT NULL default '',
-        access_type varchar(3) NOT NULL default '',
-        access_code varchar(255) NOT NULL default '',
-        actions json,
-        created timestamp NULL default NULL,
-        updated timestamp NULL default NULL,
+            id serial,
+            eid varchar(12) NOT NULL,
+            object_eid varchar(12) NOT NULL default '',
+            access_type varchar(3) NOT NULL default '',
+            access_code varchar(255) NOT NULL default '',
+            actions json,
+            created timestamp NULL default NULL,
+            updated timestamp NULL default NULL,
         PRIMARY KEY (id),
         UNIQUE (eid)
         );
