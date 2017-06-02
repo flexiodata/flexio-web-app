@@ -247,22 +247,27 @@ class Base implements IObject
         // sure we have the most current information
 
         // get the rights for this object
-        $rights = $this->getModel()->right->getRights($this->getEid());
+        $rights = $this->getModel()->right->get($this->getEid());
         if ($rights === false)
             return false;
 
         // see if we have a direct match on the action, access_code and access_type
         foreach ($rights as $r)
         {
-            if ($action !== $r['action'])
-                continue;
             if ($access_code !== $r['access_code'])
                 continue;
             if ($access_type !== $r['access_type'])
                 continue;
 
-            // action allowed
-            return true;
+            $actions = $r['actions'];
+            foreach ($actions as $a)
+            {
+                if ($action !== $a)
+                    continue;
+
+                // action allowed
+                return true;
+            }
         }
 
         // we weren't able to match directly on any of the access items; TODO:
@@ -272,27 +277,32 @@ class Base implements IObject
         $user_class = $this->getUserClass($access_code);
         foreach ($rights as $r)
         {
-            if ($action !== $r['action'])
-                continue;
             if ($user_class !== $r['access_code'])
                 continue;
             if ($access_type !== $r['access_type'])
                 continue;
 
-            // action allowed
-            return true;
+            $actions = $r['actions'];
+            foreach ($actions as $a)
+            {
+                if ($action !== $a)
+                    continue;
+
+                // action allowed
+                return true;
+            }
         }
 
         // action not allowed
         return false;
     }
 
-    public function grant(string $action, string $access_code, string $access_type = '') : \Flexio\Object\Base
+    public function grant(string $access_code, string $access_type, array $actions) : \Flexio\Object\Base
     {
         // TODO: implement 'access_type'
 
         $r = array();
-        $r['action'] = $action;
+        $r['actions'] = $actions;
         $r['access_code'] = $access_code;
         $r['access_type'] = $access_type;
 
@@ -303,39 +313,40 @@ class Base implements IObject
         return $this;
     }
 
-    public function revoke(string $action, string $access_code, string $access_type = '') : \Flexio\Object\Base
+    public function revoke(string $access_code, string $access_type, array $actions) : \Flexio\Object\Base
     {
-        // TODO: implement 'access_type'
-
-        $r = array();
-        $r['action'] = $action;
-        $r['access_code'] = $access_code;
-        $r['access_type'] = $access_type;
-
-        $rights = array();
-        $rights[] = $r;
-
-        $this->getModel()->right->deleteRights($this->getEid(), $rights);
-        return $this;
+        // TODO: implement
     }
 
     public function addRights(array $rights) : \Flexio\Object\Base
     {
-        $this->getModel()->right->addRights($this->getEid(), $rights);
+        // TODO: add parameter checks?
+
+        // TODO: see if a record already exists for the object, access_code,
+        // and type; if so, add onto the record; otherwise, create a new record
+
+        foreach ($rights as $r)
+        {
+            if (isset($r['actions']))
+                $r['actions'] = json_encode($r['actions']);
+
+            $this->getModel()->right->create($this->getEid(), $r);
+        }
+
         return $this;
     }
 
     public function getRights() : array
     {
-        $rights = $this->getModel()->right->getRights($this->getEid());
+        $rights = $this->getModel()->right->get($this->getEid());
 
         $result = array();
-        foreach ($rights as $right)
+        foreach ($rights as $r)
         {
             $right_local = array();
-            $right_local['action'] = $right['action'];
-            $right_local['access_code'] = $right['access_code'];
-            $right_local['access_type'] = $right['access_type'];
+            $right_local['access_code'] = $r['access_code'];
+            $right_local['access_type'] = $r['access_type'];
+            $right_local['actions'] = json_decode($r['actions'], true);
             $result[] = $right_local;
         }
 
