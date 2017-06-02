@@ -261,21 +261,9 @@ class Convert extends \Flexio\Jobs\Base
         $delimiter = $job_definition['params']['input']['delimiter'] ?? self::DELIMITER_COMMA;
         $is_output_json = ($output_mime_type == \Flexio\Base\ContentType::MIME_TYPE_JSON ? true : false);
 
-        if (isset($job_definition['params']['input']['header']))
-            $header = $job_definition['params']['input']['header'];
-        else if (isset($job_definition['params']['input']['header_row']))    // compatibility
-            $header = $job_definition['params']['input']['header_row'];
-        else
-            $header = true; // default
-        $header = toBoolean($header);
-
-        if (isset($job_definition['params']['input']['qualifier']))
-            $qualifier = $job_definition['params']['input']['qualifier'];
-        else if (isset($job_definition['params']['input']['text_qualifier']))  // compatibility
-            $qualifier = $job_definition['params']['input']['text_qualifier'];
-        else
-            $qualifier = self::TEXT_QUALIFIER_DOUBLE_QUOTE; // default
-
+        $header = toBoolean($job_definition['params']['input']['header'] ?? true);
+        $qualifier = $job_definition['params']['input']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
+        $encoding = $job_definition['params']['input']['encoding'] ?? '';
 
         switch ($delimiter)
         {
@@ -331,8 +319,15 @@ class Convert extends \Flexio\Jobs\Base
         $is_icsv = false;
         $rown = 0;
 
+        $buf = '';
+        $buf_head = 0;
+
         $structure = array();
         $output_structure = array();
+        $eof_reached = false;
+        $first = true;
+
+
 
         while (true)
         {
@@ -341,6 +336,7 @@ class Convert extends \Flexio\Jobs\Base
             {
                 $row = false;
 
+/*
                 // read the row
                 for ($n = 0; $n < 500; ++$n)
                 {
@@ -357,9 +353,93 @@ class Convert extends \Flexio\Jobs\Base
                     if ($lfpos !== false)
                         break; // if we found an LF, we have the whole CSV row; if not, read in another row
                 }
+*/
+                while (true)
+                {
+                    $lineend_pos = self::indexOfLineTerminator($buf, $qualifier, $buf_head);
+                    if ($lineend_pos !== false)
+                    {
+                        $row = substr($buf, $buf_head, $lineend_pos - $buf_head + 1);
+
+                        if ($buf[$lineend_pos] == "\r")
+                        {
+                            // if next char is a \n, skip past it, because it's a \r\n line ending
+
+                            if ($lineend_pos == strlen($buf)-1)
+                            {
+                                // need more data to determine if next char is \n
+                                $chunk = $streamreader->read(8192);
+                                if ($chunk !== false)
+                                    $buf .= $chunk;
+                            }
+
+                            if ($lineend_pos+1 < strlen($buf) && $buf[$lineend_pos+1] == "\n")
+                                $lineend_pos++;
+                        }
+
+                        $buf_head = $lineend_pos + 1;
+
+                        break;
+                    }
+                     else
+                    {
+                        if ($buf_head < strlen($buf))
+                        {
+                            $buf = substr($buf, $buf_head);
+                            $buf_head = 0;
+                        }
+                        
+                        if ($eof_reached)
+                        {
+                            // get any last row without LF
+                            $row = substr($buf, $buf_head);
+                            if (strlen($row) == 0)
+                                $row = false;
+                            break;
+                        }
+                         else
+                        {
+                            $chunk = $streamreader->read(8192);
+                            if ($chunk !== false)
+                            {
+                                if ($first)
+                                {
+                                    $first = false;
+
+                                    // look for utf-8 byte-order mark
+                                    if (substr($chunk, 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf))
+                                    {
+                                        $chunk = substr($chunk, 3);
+                                        if ($encoding == '')
+                                            $encoding = 'UTF-8';
+                                    }
+
+                                    if ($encoding == '')
+                                    {
+                                        $encoding = mb_detect_encoding($chunk,'UTF-8,ISO-8859-1');
+                                        if ($encoding === false)
+                                        {
+                                            // encoding could not be detected, default to UTF-8
+                                            $encoding = 'UTF-8';
+                                        }
+                                    }
+                                }
+
+                                $buf .= $chunk;
+                            }
+                             else
+                            {
+                                $eof_reached = true;
+                            }
+                        }
+                    }
+                }
 
                 if ($row === false)
                     break; // reached EOF
+
+                if ($encoding != 'UTF-8')
+                    $row = iconv($encoding, 'UTF-8', $row);
 
                 $row = str_getcsv($row, $delimiter, $qualifier);
                 if ($row === false)
