@@ -120,6 +120,7 @@ CREATE TABLE tbl_acl (
 );
 
 CREATE INDEX idx_acl_object_eid ON tbl_acl (object_eid);
+CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
 
 
 

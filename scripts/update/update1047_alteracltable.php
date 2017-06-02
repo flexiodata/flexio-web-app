@@ -87,6 +87,11 @@ EOT;
 EOT;
     $db->exec($sql);
 
+    $sql = <<<EOT
+        CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
+EOT;
+    $db->exec($sql);
+
 
     // STEP 3: copy the values
     copyAclInfo($db);

@@ -137,7 +137,7 @@ CREATE TABLE tbl_acl (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX idx_acl_object_eid ON tbl_acl (object_eid);
-CREATE INDEX idx_acl_object_eid_action ON tbl_acl (object_eid,action);
+CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
 
 
 
