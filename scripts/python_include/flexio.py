@@ -4,6 +4,120 @@ import csv
 import datetime
 
 
+import pprint
+
+class StdinoutProxy(object):
+    def __init__(self):
+        self.inited = False
+
+    def invoke(self, func, params):
+        payload = self.encodepart(func)
+        for param in params:
+            payload = payload + self.encodepart(param)
+        self.send_message(payload)
+        response = self.read_message()
+        result, nextoff = self.decodepart(response, 0)
+        return result
+        #print("Received reply %s" % response)
+
+    def send_message(self, payload):
+        msg = b'--MSGqQp8mf~' + str(len(payload)).encode('utf-8') + b',' + payload
+        sys.stdout.buffer.write(msg)
+        sys.stdout.flush()
+
+    def read_message(self):
+        buf = b''
+        while True:
+            buf += sys.stdin.buffer.read(1)
+            if len(buf) > 100:
+                break
+            if buf == b'--MSGqQp8mf~':
+                lenstr = b''
+                while True:
+                    ch = sys.stdin.buffer.read(1)
+                    if ch < b'0' or ch > b'9':
+                        break
+                    lenstr = lenstr + ch
+                if ch != b',':
+                    #print("***" + ch.decode() + "***" + lenstr.decode())
+                    sys.exit(1)
+                    return None
+                msglen = int(lenstr.decode())
+                return sys.stdin.buffer.read(msglen)
+        return None
+    
+    def encodepart(self, var):
+        if var is None:
+            return b'N0,'
+        type = b's'
+        if isinstance(var, (bytes,bytearray)):
+            type = b'B'
+        if isinstance(var, bool):
+            type = b'b'
+            var = b'1' if var else b'0' 
+        elif isinstance(var, int):
+            type = b'i'
+            var = str(var).encode('utf-8')
+        elif isinstance(var, str):
+            type = b's'
+            var = var.encode('utf-8')
+        elif isinstance(var, list):
+            type = b'a'
+            arraypayload = b''
+            for l in var:
+                arraypayload = arraypayload + self.encodepart(l)
+            var = arraypayload
+        elif isinstance(var, dict):
+            type = b'o'
+            objpayload = b''
+            for key,value in var.items():
+                objpayload = objpayload + self.encodepart(key) + self.encodepart(value)
+            var = objpayload
+        return type + str(len(var)).encode('utf-8') + b',' + var
+
+    def decodeparts(self, vars):
+        off = 0
+        res = []
+        while off is not None:
+            content, off = self.decodepart(vars, off)
+            res.append(content)
+        return res
+
+    def decodepart(self, var, offset):
+        commapos = var.find(b',', offset)
+        if commapos == -1:
+            return None, None
+        type = chr(var[offset])
+        lenpart = int(var[offset+1:commapos].decode())
+        start = commapos+1
+        end = start+lenpart
+        part = var[start:end]
+        if end >= len(var):
+            end = None
+        if type == 'i':
+            return int(part.decode('utf-8')), end
+        elif type == 'b':
+            return False if part == b'0' else True, end
+        elif type == 'B':
+            return part, end
+        elif type == 's':
+            return part.decode('utf-8'), end
+        elif type == 'a':
+            return self.decodeparts(part), end
+        elif type == 'o':
+            off = 0
+            res = {}
+            while off is not None:
+                key, off = self.decodepart(part, off)
+                if off is not None:
+                    value, off = self.decodepart(part, off)
+                    res[key] = value
+            return res, end
+        elif type == 'N':
+            return None, end
+
+proxy = StdinoutProxy()
+
 class TableReader(object):
     def __init__(self, reader, casts):
         self.reader = reader
@@ -21,39 +135,10 @@ class TableReader(object):
         else:
             raise StopIteration
 
+
 class Input(object):
     def __init__(self):
         self.inited = False
-
-    def initialize(self):
-
-        input_header = ''
-        for i in range(0,10000):
-            input_header += sys.stdin.buffer.read(1).decode('utf-8')
-            if input_header[-4:] == "\r\n\r\n":
-                break
-        if input_header[-4:] != "\r\n\r\n":
-            sys.stdout.write('{"content_type":"application/octet-stream"}\r\n\r\nMissing payload header')
-            sys.exit()
-        input_header = json.loads(input_header)
-
-        self.header_written = False
-        if 'content_type' in input_header:
-            self._content_type = input_header['content_type']
-        else:
-            self._content_type = 'application/octet-stream'
-
-        if 'structure' in input_header:
-            self._structure = input_header['structure']
-        else:
-            self._structure = None
-
-        if 'env' in input_header:
-            self._env = input_header['env']
-        else:
-            self._env = {}
-
-        self.inited = True
 
     @property
     def stream(self):
@@ -145,11 +230,27 @@ class TableWriter(object):
 
 
 class Output(object):
-    def __init__(self):
-        self.header_written = False
-        self._content_type = 'application/octet-stream'
+    def __init__(self, info):
         self._env = {}
-        self.header = {"content_type": self._content_type, "env": self._env}
+        if info:
+            self._name = info['name']
+            self._content_type = info['content_type']
+            self._size = info['size']
+            self._idx = info['idx']
+        else:
+            self._name = ''
+            self._content_type = 'application/octet-stream'
+            self._size = 0
+            self._idx = -1
+    
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+        proxy.invoke('setStreamProperties', [self._idx, {'name':value}])
 
     @property
     def content_type(self):
@@ -158,7 +259,7 @@ class Output(object):
     @content_type.setter
     def content_type(self, value):
         self._content_type = value
-        self.header["content_type"] = self._content_type
+        proxy.invoke('setStreamProperties', [self._idx, {'content_type':value}])
 
     @property
     def env(self):
@@ -183,8 +284,68 @@ class Output(object):
         self.header["structure"] = structure
         return TableWriter(structure, self.stream)
 
+    def write(self, msg):
+        proxy.invoke('write', [self._idx, msg])
+
+    def insert_row(self, row):
+        proxy.invoke('insertRow', [self._idx, row])
+    
+    def insert_rows(self, rows):
+        proxy.invoke('insertRows', [self._idx, rows])
+    
+class Inputs(object):
+    def __init__(self):
+        self.inited = False
+        self.inputs = []
+
+    def initialize(self):
+        res = proxy.invoke('getInputStreamInfo', [])
+        if res:
+            self.inputs = res
+            self.inited = True
+    
+    def __getitem__(self, idx):
+        if not self.inited:
+            self.initialize()
+        return self.inputs[idx]
+
+class Outputs(object):
+    def __init__(self):
+        self.inited = False
+        self.outputs = []
+
+    def initialize(self):
+        stream_infos = proxy.invoke('getOutputStreamInfo', [])
+        for info in stream_infos:
+            self.outputs.append(Output(info))
+            self.inited = True
+    
+    def __getitem__(self, idx):
+        if not self.inited:
+            self.initialize()
+        return self.outputs[idx]
+
+    def create(self, name, structure=None, content_type='text/plain'):
+        properties = { 'name': name, 'content_type': content_type }
+        if structure:
+            properties['structure'] = structure
+        info = proxy.invoke('createOutputStream', [properties])
+        output = Output(info)
+        self.outputs.append(output)
+        return output
+    
+inputs = Inputs()
+outputs = Outputs()
+
+def run_stream(func):
+    stream_idx = proxy.invoke('getManagedStreamIndex', [])
+    input = inputs[stream_idx]
+    output = outputs[stream_idx]
+    func(input, output)
+
+
 def run(func):
-    input = Input()
-    output = Output()
+    input = Inputs()
+    output = Outputs()
     func(input, output)
 

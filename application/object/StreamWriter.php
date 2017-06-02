@@ -55,7 +55,6 @@ class StreamWriter
         // the fieldnames)
         $stream_info['datastore_mode'] = $datastore_mode;
 
-        // create an appropriate writer based on the mime type
         $mime_type = $stream_info['mime_type'];
         switch ($mime_type)
         {
