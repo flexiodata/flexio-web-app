@@ -25,18 +25,6 @@ class Right extends \Flexio\Object\Base
 
     public static function create(array $properties = null) : \Flexio\Object\Right
     {
-        // the object_eid needs to be set and be a valid object
-        if (!isset($properties['object_eid']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        $object_eid = $properties['object_eid'];
-        $object = \Flexio\Object\Store::load($object_eid);
-        if ($object === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // generate an access code and a secret code
-        //$properties['access_code'] = \Flexio\Base\Util::generateHandle();
-
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
         $local_eid = $model->create($object->getType(), $properties);
@@ -49,9 +37,15 @@ class Right extends \Flexio\Object\Base
 
     public function set(array $properties) : \Flexio\Object\Right
     {
-        // TODO: implement
+        // TODO: add properties check
 
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        // actions are stored as a json string, so this needs to be encoded
+        if (isset($properties) && isset($properties['actions']))
+            $properties['actions'] = json_encode($properties['actions']);
+
+        $this->clearCache();
+        $right_model = $this->getModel()->right;
+        $right_model->set($this->getEid(), $properties);
         return $this;
     }
 
@@ -65,10 +59,14 @@ class Right extends \Flexio\Object\Base
 
     private function isCached() : bool
     {
-        if ($this->properties === false)
-            return false;
+        // always return the latest rights
+        return false;
 
-        return true;
+        // note: following is normal cache behavior
+        // if ($this->properties === false)
+        //    return false;
+        //
+        // return true;
     }
 
     private function clearCache() : bool
@@ -96,7 +94,7 @@ class Right extends \Flexio\Object\Base
             "object_eid": null,
             "access_type" : null,
             "access_code" : null,
-            "action" : null,
+            "actions" : null,
             "created" : null,
             "updated" : null
         }
@@ -107,6 +105,9 @@ class Right extends \Flexio\Object\Base
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if (!$properties)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // unpack the actions object
+        $properties['actions'] = json_decode($properties['actions'],true);
 
         // return the properties
         return $properties;

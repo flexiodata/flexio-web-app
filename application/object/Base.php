@@ -247,7 +247,7 @@ class Base implements IObject
         // sure we have the most current information
 
         // get the rights for this object
-        $rights = $this->getModel()->right->get($this->getEid());
+        $rights = $this->getModel()->right->getInfoFromObjectEid($this->getEid());
         if ($rights === false)
             return false;
 
@@ -320,17 +320,17 @@ class Base implements IObject
 
     public function addRights(array $rights) : \Flexio\Object\Base
     {
-        // TODO: add parameter checks?
-
         // TODO: see if a record already exists for the object, access_code,
         // and type; if so, add onto the record; otherwise, create a new record
 
         foreach ($rights as $r)
         {
-            if (isset($r['actions']))
-                $r['actions'] = json_encode($r['actions']);
-
-            $this->getModel()->right->create($this->getEid(), $r);
+            $rights_copied = array();
+            $rights_copied['object_eid'] = $this->getEid();
+            $rights_copied['access_code'] = $r['access_code'];
+            $rights_copied['access_type'] = $r['access_type'];
+            $rights_copied['actions'] = $r['actions'];
+            \Flexio\Object\Right::create($rights_copied);
         }
 
         return $this;
@@ -338,16 +338,14 @@ class Base implements IObject
 
     public function getRights() : array
     {
-        $rights = $this->getModel()->right->get($this->getEid());
+        $rights = $this->getModel()->right->getInfoFromObjectEid($this->getEid());
 
         $result = array();
         foreach ($rights as $r)
         {
             $right_local = array();
-            $right_local['access_code'] = $r['access_code'];
-            $right_local['access_type'] = $r['access_type'];
-            $right_local['actions'] = json_decode($r['actions'], true);
-            $result[] = $right_local;
+            $right_eid = $r['eid'];
+            $result[] = \Flexio\Object\Right::load($right_eid)
         }
 
         return $result;

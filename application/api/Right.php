@@ -71,15 +71,14 @@ class Right
 
         $right_identifier = $params['eid'];
 
-         // load the object and check the rights; ability to create/set rights determined by user rights
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows(\Flexio\Object\Action::TYPE_READ_RIGHTS, $requesting_user_eid) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        // get all the rights that a user has access to
+        $objects = self::getObjectsForUser($requesting_user_eid);
 
-        // TODO: return the right
+        // if the rights are in the list, return the right info for that object;
+        // otherwise the user doesn't have access
+
+
 
         return array();
     }
@@ -91,16 +90,38 @@ class Right
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-         // load the object and check the rights; ability to create/set rights determined by user rights
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        return self::getObjectsForUser($requesting_user_eid);
+    }
 
-        if ($user->allows(\Flexio\Object\Action::TYPE_READ_RIGHTS, $requesting_user_eid) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+    private static function getObjectsForUser($user_eid)
+    {
+        // find all objects owned or followed by the user
+        $assoc_filter = array('eid_status' => \Model::STATUS_AVAILABLE);
+        $objects_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
+        $objects_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $assoc_filter);
+        $objects = array_merge($objects_owned, $objects_followed);
 
-        // TODO: return the rights for the user
+        $res = array();
+        foreach ($objects as $object_info)
+        {
+            $object_eid = $object_info['eid'];
+            $object = \Flexio\Object\Store::load($object_eid);
+            if ($object === false)
+                continue;
 
-        return array();
+            // TODO: right now, report all rights for an owner or a follower;
+            // when rights move over to listing specific rights per user,
+            // only the rights associated with the user should be viewed,
+            // and these should be granted when the object is shared
+
+            $object_subset = array();
+            $object_subset['eid'] = $object->getEid();
+            $object_subset['eid_type'] = $object->getType();
+            $object_rights = $object->getRights();
+
+            $res[] = $object;
+        }
+
+        return $res;
     }
 }
