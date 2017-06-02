@@ -108,17 +108,18 @@ CREATE INDEX idx_token_user_eid ON tbl_token (user_eid);
 DROP TABLE IF EXISTS tbl_acl;
 CREATE TABLE tbl_acl (
   id serial,
+  eid varchar(12) NOT NULL,
   object_eid varchar(12) NOT NULL default '',
   access_type varchar(3) NOT NULL default '',
   access_code varchar(255) NOT NULL default '',
-  action varchar(40) NOT NULL default '',
+  actions json,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE (eid)
 );
 
 CREATE INDEX idx_acl_object_eid ON tbl_acl (object_eid);
-CREATE INDEX idx_acl_object_eid_action ON tbl_acl (object_eid,action);
 
 
 

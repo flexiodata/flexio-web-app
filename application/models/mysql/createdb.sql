@@ -130,7 +130,7 @@ CREATE TABLE tbl_acl (
   object_eid char(12) NOT NULL default '',
   access_type char(3) NOT NULL default '',
   access_code varchar(255) NOT NULL default '',
-  action char(40) NOT NULL default '',
+  actions text default '',
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id)
