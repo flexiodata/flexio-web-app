@@ -52,6 +52,9 @@
       'is-json': {
         type: Boolean,
         default: false
+      },
+      'query-params': {
+        type: Object
       }
     },
     components: {
@@ -87,22 +90,20 @@
         var state = this.state
 
         var fetch_url = this.contentUrl
-        var fetch_opts = {}
+        var params = _.assign({}, this.queryParams)
 
         if (fetch_all !== true)
         {
-          fetch_opts = {
-            params: {
-              start: state.total_fetched,
-              limit: state.chunk_size,
-              format: 'data'
-            }
-          }
+          _.assign(params, {
+            start: state.total_fetched,
+            limit: state.chunk_size,
+            format: 'data'
+          })
         }
 
         state.is_fetching = true
 
-        axios.get(fetch_url, fetch_opts).then(response => {
+        axios.get(fetch_url, { params }).then(response => {
           var str = response.data
 
           if (fetch_all === true || str.length < this.chunk_size)
