@@ -250,7 +250,7 @@ class Output(object):
     @name.setter
     def name(self, value):
         self._name = value
-        proxy.invoke('setStreamProperties', [self._idx, {'name':value}])
+        proxy.invoke('setOutputStreamInfo', [self._idx, {'name':value}])
 
     @property
     def content_type(self):
@@ -259,7 +259,7 @@ class Output(object):
     @content_type.setter
     def content_type(self, value):
         self._content_type = value
-        proxy.invoke('setStreamProperties', [self._idx, {'content_type':value}])
+        proxy.invoke('setOutputStreamInfo', [self._idx, {'content_type':value}])
 
     @property
     def env(self):

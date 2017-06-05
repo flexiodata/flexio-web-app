@@ -156,6 +156,11 @@ class ExecuteProxy
             $type = 'i';
             $val = (string)$val;
         }
+        else if (is_bool($val))
+        {
+            $type = 'b';
+            $val = $val ? '1':'0';
+        }
         else if (is_array($val))
         {
             if (count($val) == 0 || array_keys($val) === range(0, count($val) - 1))
@@ -447,13 +452,6 @@ class Execute extends \Flexio\Jobs\Base
     }
 
 
-    // these member variables are for the script callback hooks below
-    private $instream = null;
-    private $inwriter = null;
-    private $outstream = null;
-    private $outwriter = null;
-
-
     private function getOutputStream()
     {
         return $this->outstream;
@@ -491,12 +489,6 @@ class Execute extends \Flexio\Jobs\Base
 
     private function doStream(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream)
     {
-
-        // these member variables are for the script callback hooks below
-        $this->instream = $instream;
-        $this->outstream = $outstream;
-        $this->inwriter = null;
-        $this->outwriter = null;
 
 /*
         $is_input_table = false;
@@ -660,6 +652,20 @@ class Execute extends \Flexio\Jobs\Base
         return $res;
     }
 
+    public function func_setOutputStreamInfo($idx, $properties)
+    {
+        if ($idx < 0 || $idx >= count($this->outputs))
+            return false;
+
+        if (isset($properties['content_type']))
+            $properties['mime_type'] = $properties['content_type'];
+        
+        $properties = \Flexio\Base\Util::filterArray($properties, ["name","mime_type"]);
+        $this->outputs[$idx]->set($properties);
+
+        return true;
+    }
+
     public function func_createOutputStream($properties)
     {
         $name = $properties['name'] ?? '';
@@ -687,6 +693,8 @@ class Execute extends \Flexio\Jobs\Base
                      'size' => $stream->getSize(),
                      'content_type' => $stream->getMimeType());
     }
+
+
 
     public function func_getManagedStreamIndex()
     {
