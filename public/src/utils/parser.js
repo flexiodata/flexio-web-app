@@ -553,7 +553,9 @@
       {
         var header = params['header'].value;
 
-        if (header != 'true' && header != 'false')
+        var is_var = (null !== header.match(/^[$][{].+[}]$/)) ? true:false;
+
+        if (header != 'true' && header != 'false' && !is_var)
         {
             this.errors.push({ "code":     "invalid_value",
                                "message":  "Invalid value: '" + header + "'",
@@ -561,8 +563,8 @@
                                "length":   params['header'].length })
         }
 
-        if (from_format == 'delimited') json.params.input.header  = (header == 'true' ? true : false);
-        if (to_format   == 'delimited') json.params.output.header = (header == 'true' ? true : false);
+        if (from_format == 'delimited') json.params.input.header  = is_var ? header : (header == 'true' ? true : false);
+        if (to_format   == 'delimited') json.params.output.header = is_var ? header : (header == 'true' ? true : false);
       }
 
       return json;

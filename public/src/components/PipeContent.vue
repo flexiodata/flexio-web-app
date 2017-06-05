@@ -12,7 +12,13 @@
     <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
   </div>
   <div v-else-if="is_json || is_html || is_text" class="bg-white ba b--black-10" style="height: 360px">
-    <stream-text :stream-eid="streamEid" :content-url="stream_content_url" :is-json="is_json" :is-html="is_html"></stream-text>
+    <stream-text
+      :stream-eid="streamEid"
+      :content-url="stream_content_url"
+      :query-params="stream_query_params"
+      :is-json="is_json"
+      :is-html="is_html"
+    ></stream-text>
   </div>
   <div v-else-if="is_table" class="bg-white ba b--black-10" style="height: 360px">
     <grid
@@ -46,6 +52,13 @@
           return API_ROOT+'/streams/'+this.streamEid+'/content?content_type=text/html'
 
         return API_ROOT+'/streams/'+this.streamEid+'/content'
+      },
+
+      stream_query_params() {
+        return _.includes([
+          mt.MIMETYPE_TEXT_PLAIN,
+          mt.MIMETYPE_TEXT_CSV
+        ], this.mime_type) ? { encode: 'UTF-8' } : {}
       },
 
       is_fetched() {

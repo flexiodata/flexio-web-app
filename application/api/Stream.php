@@ -92,7 +92,8 @@ class Stream
                 'start'        => array('type' => 'integer', 'required' => false),
                 'limit'        => array('type' => 'integer', 'required' => false),
                 'metadata'     => array('type' => 'string', 'required' => false),
-                'content_type' => array('type' => 'string', 'required' => false)
+                'content_type' => array('type' => 'string', 'required' => false),
+                'encode'       => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -101,6 +102,7 @@ class Stream
         $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
         $metadata = isset($params['metadata']) ? \toBoolean($params['metadata']) : false;
         $content_type = isset($params['content_type']) ? $params['content_type'] : false;
+        $encode = $params['encode'] ?? null;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
@@ -125,6 +127,13 @@ class Stream
             // return content as-is
             header('Content-Type: ' . $response_content_type);
             $result = $stream->content($start, $limit);
+            if (isset($encode))
+            {
+                // user wants us to re-encode the data payload on a preview-only basis
+                $encoding = mb_detect_encoding($result, 'UTF-8,ISO-8859-1');
+                if ($encoding != 'UTF-8')
+                    $result = iconv($encoding, 'UTF-8', $result);
+            }
             echo($result);
             exit(0);
         }

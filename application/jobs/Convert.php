@@ -42,12 +42,12 @@ class Convert extends \Flexio\Jobs\Base
     {
         // if a job format is specified, get the mime type from the job definition
         $job_definition = $this->getProperties();
-        $input_mime_type_from_definition = self::getInputMimeTypeFromDefinition($job_definition);
-        $output_mime_type_from_definition = self::getOutputMimeTypeFromDefinition($job_definition);
+        $input_content_type_from_definition = self::getInputMimeTypeFromDefinition($job_definition);
+        $output_content_type_from_definition = self::getOutputMimeTypeFromDefinition($job_definition);
 
         // default to convert to table
-        if ($output_mime_type_from_definition === false)
-            $output_mime_type_from_definition = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        if ($output_content_type_from_definition === false)
+            $output_content_type_from_definition = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
 
         // iterate through the inputs
         $this->getOutput()->setEnv($this->getInput()->getEnv());
@@ -57,16 +57,16 @@ class Convert extends \Flexio\Jobs\Base
         {
             // get the mime type for the input; use the job format if it's
             // specified, as long as the input format isn't a flexio table
-            $mime_type = $instream->getMimeType();
-            if ($mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            $instream_mime_type = $instream->getMimeType();
+            if ($instream_mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             {
-                if ($input_mime_type_from_definition === false)
-                    $mime_type = $instream->getMimeType();
+                if ($input_content_type_from_definition === false)
+                    $instream_mime_type = $instream->getMimeType();
                      else
-                    $mime_type = $input_mime_type_from_definition;
+                    $instream_mime_type = $input_content_type_from_definition;
             }
 
-            switch ($mime_type)
+            switch ($instream_mime_type)
             {
                 // unhandled input
                 default:
@@ -75,29 +75,29 @@ class Convert extends \Flexio\Jobs\Base
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutputFromTableInput($instream, $output_mime_type_from_definition);
+                    $this->createOutputFromTableInput($instream, $output_content_type_from_definition);
                     break;
 
                 // json input
 
                 case \Flexio\Base\ContentType::MIME_TYPE_JSON:
-                    $this->createOutputFromJsonInput($instream, $output_mime_type_from_definition);
+                    $this->createOutputFromJsonInput($instream, $output_content_type_from_definition);
                     break;
 
                 // csv input; also handle raw stream content with csv handler
                 case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
                 case \Flexio\Base\ContentType::MIME_TYPE_CSV:
-                    $this->createOutputFromCsvInput($instream, $output_mime_type_from_definition);
+                    $this->createOutputFromCsvInput($instream, $output_content_type_from_definition);
                     break;
 
                 // text input
                 case \Flexio\Base\ContentType::MIME_TYPE_TXT:
-                    $this->createOutputFromFixedLengthInput($instream, $output_mime_type_from_definition);
+                    $this->createOutputFromFixedLengthInput($instream, $output_content_type_from_definition);
                     break;
 
                 // text input
                 case \Flexio\Base\ContentType::MIME_TYPE_PDF:
-                    $this->createOutputFromPdfInput($instream, $output_mime_type_from_definition);
+                    $this->createOutputFromPdfInput($instream, $output_content_type_from_definition);
                     break;
             }
         }
@@ -115,26 +115,104 @@ class Convert extends \Flexio\Jobs\Base
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         $streamreader = \Flexio\Object\StreamReader::create($instream);
 
-        $rown = 0;
-
-        // transfer the data
-        $streamwriter->write("[");
-
-        while (true)
+        if ($output_mime_type == \Flexio\Base\ContentType::MIME_TYPE_JSON)
         {
-            $row = $streamreader->readRow();
-            if ($row === false)
-                break;
+            $rown = 0;
 
-            $row = json_encode($row);
-            $streamwriter->write(($rown>0?",\n":"\n") . $row);
+            // transfer the data
+            $streamwriter->write("[");
 
-            ++$rown;
+            while (true)
+            {
+                $row = $streamreader->readRow();
+                if ($row === false)
+                    break;
+
+                $row = json_encode($row);
+                $streamwriter->write(($rown>0?",\n":"\n") . $row);
+
+                ++$rown;
+            }
+
+            $streamwriter->write("\n]");
+            $streamwriter->close();
+            $outstream->setSize($streamwriter->getBytesWritten());
+        }
+         else
+        {
+            $delimiter = $job_definition['params']['output']['delimiter'] ?? self::DELIMITER_COMMA;
+            $header = toBoolean($job_definition['params']['output']['header'] ?? true);
+            $qualifier = $job_definition['params']['output']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
+            $encoding = $job_definition['params']['output']['encoding'] ?? 'UTF-8';  // by default, use UTF-8 output
+
+            switch ($delimiter)
+            {
+                // convert the delimiter tokens into their literal equivalent;
+                // for the default, use what we have
+                default:
+                    break;
+
+                case self::DELIMITER_NONE:       $delimiter = "";   break;
+                case self::DELIMITER_COMMA:      $delimiter = ",";  break;
+                case self::DELIMITER_SEMICOLON:  $delimiter = ";";  break;
+                case self::DELIMITER_PIPE:       $delimiter = "|";  break;
+                case self::DELIMITER_TAB:        $delimiter = "\t"; break;
+                case self::DELIMITER_SPACE:      $delimiter = " ";  break;
+            }
+
+            switch ($qualifier)
+            {
+                // convert the text qualifier tokens into their literal equivalent
+                // for the default, use what we have
+                default:
+                    break;
+
+                case self::TEXT_QUALIFIER_NONE:          $qualifier = "";   break;
+                case self::TEXT_QUALIFIER_SINGLE_QUOTE:  $qualifier = "'";  break;
+                case self::TEXT_QUALIFIER_DOUBLE_QUOTE:  $qualifier = "\""; break;
+
+                // compatibility
+                case '{single_quote}':  $qualifier = "'";  break;
+                case '{double_quote}':  $qualifier = "\"";  break;
+            }
+
+            $fp = fopen('php://temp', 'w');
+
+            if ($header)
+            {
+                $structure = $instream->getStructure()->enum();
+                $header_row = array_column($structure, 'name');
+                fputcsv($fp, $header_row, $delimiter, $qualifier);
+            }
+
+            $rown = 0;
+
+            while (true)
+            {
+                $row = $streamreader->readRow();
+
+                if (ftell($fp) > 100000 || $row === false)
+                {
+                    fseek($fp, 0);
+                    $contents = stream_get_contents($fp);
+                    fclose($fp);
+                    $streamwriter->write($contents);
+
+                    if ($row === false)
+                        break;
+                         else
+                        $fp = fopen('php://temp', 'w');
+                }
+
+                fputcsv($fp, $row, $delimiter, $qualifier);
+
+                ++$rown;
+            }
+
+            $streamwriter->close();
+            $outstream->setSize($streamwriter->getBytesWritten());
         }
 
-        $streamwriter->write("\n]");
-        $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
 
@@ -261,21 +339,9 @@ class Convert extends \Flexio\Jobs\Base
         $delimiter = $job_definition['params']['input']['delimiter'] ?? self::DELIMITER_COMMA;
         $is_output_json = ($output_mime_type == \Flexio\Base\ContentType::MIME_TYPE_JSON ? true : false);
 
-        if (isset($job_definition['params']['input']['header']))
-            $header = $job_definition['params']['input']['header'];
-        else if (isset($job_definition['params']['input']['header_row']))    // compatibility
-            $header = $job_definition['params']['input']['header_row'];
-        else
-            $header = true; // default
-        $header = toBoolean($header);
-
-        if (isset($job_definition['params']['input']['qualifier']))
-            $qualifier = $job_definition['params']['input']['qualifier'];
-        else if (isset($job_definition['params']['input']['text_qualifier']))  // compatibility
-            $qualifier = $job_definition['params']['input']['text_qualifier'];
-        else
-            $qualifier = self::TEXT_QUALIFIER_DOUBLE_QUOTE; // default
-
+        $header = toBoolean($job_definition['params']['input']['header'] ?? true);
+        $qualifier = $job_definition['params']['input']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
+        $encoding = $job_definition['params']['input']['encoding'] ?? '';
 
         switch ($delimiter)
         {
@@ -331,8 +397,15 @@ class Convert extends \Flexio\Jobs\Base
         $is_icsv = false;
         $rown = 0;
 
+        $buf = '';
+        $buf_head = 0;
+
         $structure = array();
         $output_structure = array();
+        $eof_reached = false;
+        $first = true;
+
+
 
         while (true)
         {
@@ -341,6 +414,7 @@ class Convert extends \Flexio\Jobs\Base
             {
                 $row = false;
 
+/*
                 // read the row
                 for ($n = 0; $n < 500; ++$n)
                 {
@@ -357,9 +431,93 @@ class Convert extends \Flexio\Jobs\Base
                     if ($lfpos !== false)
                         break; // if we found an LF, we have the whole CSV row; if not, read in another row
                 }
+*/
+                while (true)
+                {
+                    $lineend_pos = self::indexOfLineTerminator($buf, $qualifier, $buf_head);
+                    if ($lineend_pos !== false)
+                    {
+                        $row = substr($buf, $buf_head, $lineend_pos - $buf_head + 1);
+
+                        if ($buf[$lineend_pos] == "\r")
+                        {
+                            // if next char is a \n, skip past it, because it's a \r\n line ending
+
+                            if ($lineend_pos == strlen($buf)-1)
+                            {
+                                // need more data to determine if next char is \n
+                                $chunk = $streamreader->read(8192);
+                                if ($chunk !== false)
+                                    $buf .= $chunk;
+                            }
+
+                            if ($lineend_pos+1 < strlen($buf) && $buf[$lineend_pos+1] == "\n")
+                                $lineend_pos++;
+                        }
+
+                        $buf_head = $lineend_pos + 1;
+
+                        break;
+                    }
+                     else
+                    {
+                        if ($buf_head < strlen($buf))
+                        {
+                            $buf = substr($buf, $buf_head);
+                            $buf_head = 0;
+                        }
+                        
+                        if ($eof_reached)
+                        {
+                            // get any last row without LF
+                            $row = substr($buf, $buf_head);
+                            if (strlen($row) == 0)
+                                $row = false;
+                            break;
+                        }
+                         else
+                        {
+                            $chunk = $streamreader->read(8192);
+                            if ($chunk !== false)
+                            {
+                                if ($first)
+                                {
+                                    $first = false;
+
+                                    // look for utf-8 byte-order mark
+                                    if (substr($chunk, 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf))
+                                    {
+                                        $chunk = substr($chunk, 3);
+                                        if ($encoding == '')
+                                            $encoding = 'UTF-8';
+                                    }
+
+                                    if ($encoding == '')
+                                    {
+                                        $encoding = mb_detect_encoding($chunk,'UTF-8,ISO-8859-1');
+                                        if ($encoding === false)
+                                        {
+                                            // encoding could not be detected, default to UTF-8
+                                            $encoding = 'UTF-8';
+                                        }
+                                    }
+                                }
+
+                                $buf .= $chunk;
+                            }
+                             else
+                            {
+                                $eof_reached = true;
+                            }
+                        }
+                    }
+                }
 
                 if ($row === false)
                     break; // reached EOF
+
+                if ($encoding != 'UTF-8')
+                    $row = iconv($encoding, 'UTF-8', $row);
 
                 $row = str_getcsv($row, $delimiter, $qualifier);
                 if ($row === false)
