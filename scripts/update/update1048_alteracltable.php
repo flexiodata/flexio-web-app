@@ -156,6 +156,9 @@ function copyAclInfo($db)
     while ($result && ($row = $result->fetch()))
     {
         // transfer the acl items
+        $actions = $row['actions'];
+        sort($actions);
+        $row['actions'] = $actions;
         $eid = \Flexio\System\System::getModel()->right->create($row);
 
         // set the created/updated date
