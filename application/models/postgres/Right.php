@@ -165,9 +165,9 @@ class Right extends ModelBase
                                       tob.updated as updated
                               from tbl_object tob
                               inner join tbl_acl tac on tob.eid = tac.eid
-                              where tac.user_eid = ?
+                              where tac.object_eid = ?
                               order by tob.created
-                             ", $user_eid);
+                             ", $object_eid);
 
         if (!$rows)
             return array();

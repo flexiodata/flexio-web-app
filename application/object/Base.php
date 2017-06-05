@@ -247,9 +247,7 @@ class Base implements IObject
         // sure we have the most current information
 
         // get the rights for this object
-        $rights = $this->getModel()->right->getInfoFromObjectEid($this->getEid());
-        if ($rights === false)
-            return false;
+        $rights = $this->getRights();
 
         // see if we have a direct match on the action, access_code and access_type
         foreach ($rights as $r)
@@ -339,16 +337,12 @@ class Base implements IObject
     public function getRights() : array
     {
         $rights = $this->getModel()->right->getInfoFromObjectEid($this->getEid());
-
-        $result = array();
-        foreach ($rights as $r)
+        foreach ($rights as &$r)
         {
-            $right_local = array();
-            $right_eid = $r['eid'];
-            $result[] = \Flexio\Object\Right::load($right_eid)
+            $r['actions'] = json_decode($r['actions'],true);
         }
 
-        return $result;
+        return $rights;
     }
 
     protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type
