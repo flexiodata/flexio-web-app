@@ -67,7 +67,22 @@ EOT;
 
     // STEP 2: create a new acl table
     $sql = <<<EOT
-        CREATE TABLE tbl_acl (
+        DROP TABLE IF EXISTS tbl_acl;
+EOT;
+    $db->exec($sql);
+
+    $sql = <<<EOT
+        DROP INDEX IF EXISTS idx_acl_object_eid;
+EOT;
+    $db->exec($sql);
+
+    $sql = <<<EOT
+        DROP INDEX IF EXISTS idx_acl_access_code;
+EOT;
+    $db->exec($sql);
+
+    $sql = <<<EOT
+        CREATE TABLE IF NOT EXISTS tbl_acl (
             id serial,
             eid varchar(12) NOT NULL,
             object_eid varchar(12) NOT NULL default '',
@@ -98,10 +113,10 @@ EOT;
 
 
     // STEP 4: drop the old acl table
-//    $sql = <<<EOT
-//        DROP TABLE IF EXISTS tbl_acl_old;
-//EOT;
-//    $db->exec($sql);
+    $sql = <<<EOT
+        DROP TABLE IF EXISTS tbl_acl_old;
+EOT;
+    $db->exec($sql);
 }
 catch(\Exception $e)
 {
@@ -124,7 +139,7 @@ function copyAclInfo($db)
                       object_eid,
                       access_type,
                       access_code,
-                      json_agg(action) as actions
+                      json_agg(action) as actions,
                       min(created) as created,
                       min(updated) as updated
                   from tbl_acl_old
@@ -144,6 +159,7 @@ function copyAclInfo($db)
         $eid = \Flexio\System\System::getModel()->right->create($row);
 
         // set the created/updated date
+        $update = array();
         $update['created'] = $row['created'];
         $update['updated'] = $row['updated'];
         $db->update('tbl_acl', $update, 'eid = ' . $db->quote($eid));
