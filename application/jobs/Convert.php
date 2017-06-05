@@ -105,6 +105,8 @@ class Convert extends \Flexio\Jobs\Base
 
     private function createOutputFromTableInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
+        $job_definition = $this->getProperties();
+        
         $outstream = \Flexio\Object\Stream::create();
         $outstream->setName($instream->getName());
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
@@ -406,14 +408,12 @@ class Convert extends \Flexio\Jobs\Base
         $first = true;
 
 
-
         while (true)
         {
             // parse the row
             if ($use_text_qualifier)
             {
                 $row = false;
-
 /*
                 // read the row
                 for ($n = 0; $n < 500; ++$n)
@@ -461,7 +461,7 @@ class Convert extends \Flexio\Jobs\Base
                     }
                      else
                     {
-                        if ($buf_head < strlen($buf))
+                        if ($buf_head > 0 && $buf_head < strlen($buf))
                         {
                             $buf = substr($buf, $buf_head);
                             $buf_head = 0;
@@ -471,6 +471,7 @@ class Convert extends \Flexio\Jobs\Base
                         {
                             // get any last row without LF
                             $row = substr($buf, $buf_head);
+                            $buf_head += strlen($row);
                             if (strlen($row) == 0)
                                 $row = false;
                             break;
