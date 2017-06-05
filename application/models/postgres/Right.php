@@ -31,7 +31,7 @@ class Right extends ModelBase
                 'object_eid'    => $params['object_eid'] ?? '',
                 'access_type'   => $params['access_type'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
-                'actions'       => $params['action'] ?? '',
+                'actions'       => $params['actions'] ?? '',
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );
