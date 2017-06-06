@@ -49,7 +49,7 @@ if (is_null($db))
 try
 {
     // STEP 1: add the new column to the user table
-    $sql = "update tbl_acl_old ".
+    $sql = "update tbl_acl ".
            "    set ".
            "        action = (".
            "            case when action='read' then 'object.read' ".
