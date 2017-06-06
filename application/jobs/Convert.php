@@ -1094,8 +1094,15 @@ class Convert extends \Flexio\Jobs\Base
         if ($header === true)
         {
             $structure = [];
+            $cnt = 0;
             foreach ($row as $fld)
             {
+                ++$cnt;
+                if (strlen(trim($fld)) == 0)
+                {
+                    $fld = 'field'.$cnt;
+                }
+
                 $structure[] = array(
                     'name' =>          $fld,
                     'type' =>         'text',
