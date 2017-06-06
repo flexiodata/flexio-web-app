@@ -279,13 +279,16 @@ class Output(object):
             self.header_written = True
         return sys.stdout
 
-    def create_table(self, structure):
-        self.content_type = "application/vnd.flexio.table"
-        self.header["structure"] = structure
-        return TableWriter(structure, self.stream)
+    def create(self, name=None, structure=None, content_type='text/plain'):
+        properties = { 'content_type': content_type }
+        if name:
+            properties['name'] = name
+        if structure:
+            properties['structure'] = structure
+        return proxy.invoke('managedCreate', [self._idx, properties])
 
-    def write(self, msg):
-        proxy.invoke('write', [self._idx, msg])
+    def write(self, data):
+        proxy.invoke('write', [self._idx, data])
 
     def insert_row(self, row):
         proxy.invoke('insertRow', [self._idx, row])
@@ -325,8 +328,10 @@ class Outputs(object):
             self.initialize()
         return self.outputs[idx]
 
-    def create(self, name, structure=None, content_type='text/plain'):
-        properties = { 'name': name, 'content_type': content_type }
+    def create(self, name=None, structure=None, content_type='text/plain'):
+        properties = { 'content_type': content_type }
+        if name:
+            properties['name'] = name
         if structure:
             properties['structure'] = structure
         info = proxy.invoke('createOutputStream', [properties])

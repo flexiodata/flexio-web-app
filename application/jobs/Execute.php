@@ -334,7 +334,7 @@ class Execute extends \Flexio\Jobs\Base
 
         if ($this->lang == 'python')
         {
-            if (strpos($this->code, "flexio_stream_handler") !== false)
+            if (strpos($this->code, "flexio_file_handler") !== false)
             {
                 // "MANAGED MODE" - script is called once for each stream
 
@@ -361,7 +361,7 @@ class Execute extends \Flexio\Jobs\Base
                     $endl = "\n";
 
                 $this->code .= $endl . "import flexio as flexioext";
-                $this->code .= $endl . "flexioext.run_stream(flexio_stream_handler)";
+                $this->code .= $endl . "flexioext.run_stream(flexio_file_handler)";
                 $this->code .= $endl;
 
                 $this->code_base64 = base64_encode($this->code);
@@ -694,7 +694,29 @@ class Execute extends \Flexio\Jobs\Base
                      'content_type' => $stream->getMimeType());
     }
 
+    public function func_managedCreate($stream_idx, $properties)
+    {
+        if ($idx < 0 || $idx >= count($this->outputs))
+            return false;
 
+        $stream = $this->outputs[$stream_idx];
+
+        $set = array();
+
+        if (isset($properties['name']))
+            $set['name'] = $properties['name'];
+        if (isset($properties['content_type']))
+            $set['mime_type'] = $properties['content_type'];
+        if (isset($properties['structure']))
+        {
+            $set['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+            $set['structure'] = $properties['structure'];
+        }
+        
+        $stream->set($set);
+
+        return true;
+    }
 
     public function func_getManagedStreamIndex()
     {
