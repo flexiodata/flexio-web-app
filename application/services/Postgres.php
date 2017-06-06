@@ -1015,19 +1015,19 @@ class PostgresInserter
     {
         $structure_indexed = [];
         foreach ($this->structure as $column)
-            $structure_indexed[strtolower($column['name'])] = $column;
+            $structure_indexed[mb_strtolower($column['name'])] = $column;
 
 
         $this->columns = [];
         foreach ($fields as $field)
         {
-            if (!array_key_exists(strtolower($field), $structure_indexed))
+            if (!array_key_exists(mb_strtolower($field), $structure_indexed))
             {
                 // field not found
                 return false;
             }
 
-            $this->columns[] = $structure_indexed[strtolower($field)];
+            $this->columns[] = $structure_indexed[mb_strtolower($field)];
         }
 
         $this->fields = \Flexio\Services\Postgres::createDelimitedFieldList($fields);
@@ -1153,12 +1153,12 @@ class PostgresInserterMultiRow
     {
         $structure_indexed = [];
         foreach ($this->structure as $column)
-            $structure_indexed[strtolower($column['name'])] = $column;
+            $structure_indexed[mb_strtolower($column['name'])] = $column;
 
         $this->columns = [];
         foreach ($fields as $field)
         {
-            $cleaned_fieldname = strtolower($field);
+            $cleaned_fieldname = mb_strtolower($field);
             if (!array_key_exists($cleaned_fieldname, $structure_indexed))
                 return false;
 

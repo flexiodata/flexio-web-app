@@ -642,7 +642,14 @@ class Structure
     private static function makeValidStoreName(string $name) : string
     {
         // store names are always lowercase
-        $name = strtolower($name);
+        $name = mb_strtolower($name);
+
+        // make sure the utf-8 field name length is less than 30, leaving
+        // space for counter digits at the end of a store field name
+        while (strlen($name) > 29)
+        {
+            $name = mb_substr($name, 0, mb_strlen($name)-1);
+        }
 
         // replace certain characters
         $invalid_col_chars = "*|!@$&^*:\"<>()[]{}?\\:;'`~-+=,./\x00\x09\x0A\x0B\x0C\x0D\xFF\t\n ";
