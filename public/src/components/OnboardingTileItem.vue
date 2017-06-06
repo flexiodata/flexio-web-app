@@ -15,7 +15,7 @@
     <div class="tc mt2">
       <router-link
         class="db center link no-underline tc mw4 f6 f6-ns ttu b br1 white bg-blue darken-10 ph2 ph3-ns pv2"
-        :to="'/'+item.slug"
+        :to="copy_pipe_url"
       >
         <span>Use this</span>
       </router-link>
@@ -45,6 +45,12 @@
       },
       highlight_steps() {
         return _.get(this.item, 'highlight_steps', [])
+      },
+      json_file_url() {
+        return 'https://www.flex.io/examples/src/config/json/' + _.get(this.item, 'slug') + '.json'
+      },
+      copy_pipe_url() {
+        return '/copypipe?path='+encodeURIComponent(this.json_file_url)
       }
     }
   }
