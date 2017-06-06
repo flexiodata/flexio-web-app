@@ -645,7 +645,8 @@ class Structure
         $name = mb_strtolower($name);
 
         // make sure the utf-8 field name length is less than 30, leaving
-        // space for counter digits at the end of a store field name
+        // space for counter digits at the end of a store field name;
+        // Postgres max field name size is 31
         while (strlen($name) > 29)
         {
             $name = mb_substr($name, 0, mb_strlen($name)-1);
