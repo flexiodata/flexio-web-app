@@ -78,17 +78,80 @@ function transferProjectFollowers($db)
     $objects = array();
     while ($result && ($row = $result->fetch()))
     {
-        $eid = $row['eid'];
-        addProjectFollowersToMembers($db, $eid);
-        removeProjectFollowers($db, $eid);
+        $project_eid = $row['eid'];
+        transferProjectFollowersToMembers($db, $project_eid);
     }
 }
 
-function addProjectFollowersToMembers($db, $eid, $updated)
+function transferProjectFollowersToMembers($db, $project_eid)
 {
+    // get the project follower association info and members
+    $project_follower_assoc_info = getAssociationInfo($db, $project_eid, \Model::EDGE_FOLLOWED_BY);
+    $project_members = \Flexio\System\System::getModel()->assoc_range($project_eid, \Model::EDGE_HAS_MEMBER);
+
+    // apply the appropriate project follower association info to the members
+    foreach ($project_follower_assoc_info as $f)
+    {
+        $follower_eid = $f['target_eid'];
+
+        foreach ($project_members as $m)
+        {
+            $member_eid = $m['eid'];
+
+            // create the appropriate associations between the project follower and
+            // the project member
+            $new_member_assoc_info = array();
+            $new_member_assoc_info['source_eid'] = $member_eid;
+            $new_member_assoc_info['target_eid'] = $follower_eid;
+            $new_member_assoc_info['association_type'] = \Model::EDGE_FOLLOWED_BY;
+            $new_member_assoc_info['created'] = $f['created'];
+            $new_member_assoc_info['updated'] = $f['updated'];
+            insertAssociationInfo($db, $new_member_assoc_info);
+
+            $new_member_assoc_info = array();
+            $new_member_assoc_info['source_eid'] = $follower_eid;
+            $new_member_assoc_info['target_eid'] = $member_eid;
+            $new_member_assoc_info['association_type'] = \Model::EDGE_FOLLOWING;
+            $new_member_assoc_info['created'] = $f['created'];
+            $new_member_assoc_info['updated'] = $f['updated'];
+            insertAssociationInfo($db, $new_member_assoc_info);
+        }
+
+        // delete the project followers
+        \Flexio\System\System::getModel()->assoc_delete($project_eid, \Model::EDGE_FOLLOWED_BY, $follower_eid);
+        \Flexio\System\System::getModel()->assoc_delete($follower_eid, \Model::EDGE_FOLLOWING, $project_eid);
+    }
 }
 
-function removeProjectFollowers($db, $eid, $updated)
+function getAssociationInfo($db, $source_eid, $type)
 {
+    $qsource_eid = $db->quote($source_eid);
+    $qtype = $db->quote($type);
+
+    $sql = "select ".
+            "        tas.source_eid as source_eid, ".
+            "        tas.target_eid as target_eid, ".
+            "        tas.association_type as association_type, ".
+            "        tas.created as created, ".
+            "        tas.updated as updated ".
+            "    from tbl_association tas ".
+            "    inner join tbl_object tobsrc on tas.source_eid = tobsrc.eid ".
+            "    inner join tbl_object tobtar on tas.target_eid = tobtar.eid ".
+            "    where tas.source_eid = $qsource_eid ".
+            "        and tas.association_type = $qtype ".
+            "    order by tobtar.id ";
+    $result = $db->query($sql);
+
+    $info = array();
+    while ($result && ($row = $result->fetch()))
+    {
+        $info[] = $row;
+    }
+
+    return $info;
 }
 
+function insertAssociationInfo($db, $info)
+{
+    $db->insert('tbl_association', $info, true /*ignore duplicate key*/);
+}
