@@ -454,8 +454,8 @@ class Execute extends \Flexio\Jobs\Base
 
     private function getInputReader($idx)
     {
-        if (count($this->input_readers) != count($this->outputs))
-            $this->input_readers = array_pad($this->input_readers, count($this->outputs), null);
+        if (count($this->input_readers) != count($this->inputs))
+            $this->input_readers = array_pad($this->input_readers, count($this->inputs), null);
 
         if ($idx < 0 || $idx >= count($this->input_readers))
             return null;
@@ -763,26 +763,17 @@ class Execute extends \Flexio\Jobs\Base
     }
 
 
-    public function func_read($stream_idx, $length, $associative)
+    public function func_read($stream_idx, $length)
     {
         $reader = $this->getInputReader($stream_idx);
         if (is_null($reader))
             return null;
 
-        if (is_null($length))
-        {
-            $res = $reader->readRow();
-            if ($res === false)
-                return false;
-            return $associative ? $res : array_values($res);
-        }
-         else
-        {
-            $res = $reader->read($length);
-            if ($res === false)
-                return false;
-            return new BinaryData($res);
-        }
+        $res = $reader->read($length);
+
+        if ($res === false)
+            return false;
+        return new BinaryData($res);
     }
 
     public function func_readline($stream_idx, $associative)

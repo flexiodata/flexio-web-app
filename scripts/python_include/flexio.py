@@ -283,24 +283,12 @@ class Input(object):
     def read(self, length=None):
         if length is None:
             return self.readall()
-        if self._fetch_style == self.Tuple:
-            row = proxy.invoke('read', [self._idx, length, False])
-            if row is False:
-                return None
-            if not self._is_table:
-                return row
-            if self._casting:
-                self.type_casts(row)
-            return tuple(row)
-        else:
-            row = proxy.invoke('read', [self._idx, length, True])
-            if row is False:
-                return None
-            if not self._is_table:
-                return row
-            if self._casting:
-                self.type_casts(row)
-            return row
+        if self._is_table:
+            return None
+        data = proxy.invoke('read', [self._idx, length])
+        if data is False:
+            return None
+        return data
 
     def readline(self):
         if self._fetch_style == self.Tuple:
