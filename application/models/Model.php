@@ -59,6 +59,12 @@ class Model
     const STATUS_TRASH     = 'T';
     const STATUS_DELETED   = 'D';
 
+    const ACCESS_CODE_TYPE_UNDEFINED = '';
+    const ACCESS_CODE_TYPE_EID       = 'EID';
+    const ACCESS_CODE_TYPE_TOKEN     = 'TKN';
+    const ACCESS_CODE_TYPE_EMAIL     = 'EML';
+    const ACCESS_CODE_TYPE_CATEGORY  = 'CAT';
+
     const REGISTRY_VALUE_UNDEFINED = '';
     const REGISTRY_VALUE_STRING    = 'S';
     const REGISTRY_VALUE_NUMBER    = 'N';

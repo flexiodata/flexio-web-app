@@ -497,5 +497,37 @@ class Test
         $actual = \Model::PROCESS_STATUS_COMPLETED;
         $expected = 'C';
         TestCheck::assertString('K.8', 'Task status constant',  $actual, $expected, $results);
+
+
+
+        // TEST: Model access code type constants; the database stores raw values
+        // for some of these constants, so these tests ensure that the constants
+        // are consistent between various models and the values in the
+        // databases
+
+        // BEGIN TEST
+        $actual = \Model::ACCESS_CODE_TYPE_UNDEFINED;
+        $expected = '';
+        TestCheck::assertString('L.1', 'Access code type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::ACCESS_CODE_TYPE_EID;
+        $expected = 'EID';
+        TestCheck::assertString('L.2', 'Access code type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::ACCESS_CODE_TYPE_TOKEN;
+        $expected = 'TKN';
+        TestCheck::assertString('L.3', 'Access code type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::ACCESS_CODE_TYPE_EMAIL;
+        $expected = 'EML';
+        TestCheck::assertString('L.4', 'Access code type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::ACCESS_CODE_TYPE_CATEGORY;
+        $expected = 'CAT';
+        TestCheck::assertString('L.5', 'Access code type constant',  $actual, $expected, $results);
     }
 }
