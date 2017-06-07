@@ -145,13 +145,15 @@ class Input(object):
             self._size = info['size']
             self._idx = info['idx']
             self._structure = None
+            self._dict = False
         else:
             self._name = ''
             self._content_type = 'application/octet-stream'
             self._size = 0
             self._idx = -1
             self._structure = None
-    
+            self._dict = False
+        
     @property
     def env(self):
         return self._env
@@ -181,7 +183,17 @@ class Input(object):
         return True if self._content_type == 'application/vnd.flexio.table' else False
 
     def read(self, length=None, dict=False):
-        return proxy.invoke('read', [self._idx, length, dict])
+        return proxy.invoke('read', [self._idx, length, self._dict])
+
+    def __iter__(self):
+        return self
+        
+    def __next__(self):
+        row = self.read()
+        if type(row) == type(False):
+            if not row:
+                raise StopIteration
+        return row
 
     def table_reader(self, dict=False):
         if not self.inited:

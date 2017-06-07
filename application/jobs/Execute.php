@@ -776,11 +776,16 @@ class Execute extends \Flexio\Jobs\Base
         if (is_null($length))
         {
             $res = $reader->readRow();
+            if ($res === false)
+                return false;
             return $associative ? $res : array_values($res);
         }
          else
         {
-            return new BinaryData($reader->read($length));
+            $res = $reader->read($length);
+            if ($res === false)
+                return false;
+            return new BinaryData();
         }
     }
 
