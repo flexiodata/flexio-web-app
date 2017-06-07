@@ -210,6 +210,7 @@ class Input(object):
         if info:
             self._name = info['name']
             self._content_type = info['content_type']
+            self._is_table = True if self._content_type == 'application/vnd.flexio.table' else False
             self._size = info['size']
             self._idx = info['idx']
             self._structure = None
@@ -220,6 +221,7 @@ class Input(object):
         else:
             self._name = ''
             self._content_type = 'application/octet-stream'
+            self._is_table = False
             self._size = 0
             self._idx = -1
             self._structure = None
@@ -254,7 +256,7 @@ class Input(object):
     
     @property
     def is_table(self):
-        return True if self._content_type == 'application/vnd.flexio.table' else False
+        return self._is_table
 
     @property
     def fetch_style(self):
@@ -279,29 +281,68 @@ class Input(object):
         self._casting = value
 
     def read(self, length=None):
+        if length is None:
+            return self.readall()
         if self._fetch_style == self.Tuple:
             row = proxy.invoke('read', [self._idx, length, False])
             if row is False:
-                return False
+                return None
+            if not self._is_table:
+                return row
             if self._casting:
                 self.type_casts(row)
             return tuple(row)
         else:
             row = proxy.invoke('read', [self._idx, length, True])
             if row is False:
-                return False
+                return None
+            if not self._is_table:
+                return row
             if self._casting:
                 self.type_casts(row)
             return row
+
+    def readline(self):
+        if self._fetch_style == self.Tuple:
+            row = proxy.invoke('readline', [self._idx, False])
+            if row is False:
+                return None
+            if self._casting:
+                self.type_casts(row)
+            return tuple(row)
+        else:
+            row = proxy.invoke('readline', [self._idx, True])
+            if row is False:
+                return None
+            if self._casting:
+                self.type_casts(row)
+            return row
+    
+    def readall(self):
+        if self.is_table:
+            rows = []
+            while True:
+                row = self.readline()
+                if row is None:
+                    break
+                rows.append(row)
+            return rows
+        else:
+            buf = b''
+            while True:
+                chunk = self.read(length=4096)
+                if chunk is None:
+                    break
+                buf += chunk
+            return buf
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        row = self.read()
-        if type(row) == type(False):
-            if not row:
-                raise StopIteration
+        row = self.readline()
+        if row is None:
+            raise StopIteration
         return row
 
     def type_casts(self, row):

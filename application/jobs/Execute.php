@@ -491,15 +491,6 @@ class Execute extends \Flexio\Jobs\Base
 
     private function doStream(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream)
     {
-
-/*
-        $is_input_table = false;
-        $is_output_table = false;
-        if ($instream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            $is_input_table = true;
-*/
-
-
         // determine what program to load
         if ($this->lang == 'python')
         {
@@ -790,10 +781,21 @@ class Execute extends \Flexio\Jobs\Base
             $res = $reader->read($length);
             if ($res === false)
                 return false;
-            return new BinaryData();
+            return new BinaryData($res);
         }
     }
 
+    public function func_readline($stream_idx, $associative)
+    {
+        $reader = $this->getInputReader($stream_idx);
+        if (is_null($reader))
+            return null;
+
+        $res = $reader->readRow();
+        if ($res === false)
+            return false;
+        return $associative ? $res : array_values($res);
+    }
 
 
 
