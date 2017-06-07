@@ -24,7 +24,7 @@ class Right extends ModelBase
         try
         {
             // create the object base
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_TOKEN, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_RIGHT, $params);
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
