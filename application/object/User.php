@@ -223,6 +223,33 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
+    public function getRightList() : array
+    {
+        // returns the rights for the objects the user has access to
+        $res = array();
+        $rights = $this->getModel()->right->getInfoFromAccessCode($this->getEid());
+        if ($rights === false)
+            return $res;
+
+        foreach ($rights as $right_info)
+        {
+            $right_eid = $right_info['eid'];
+            $right = \Flexio\Object\Right::load($right_eid);
+            if ($right === false)
+                continue;
+
+            // only show rights that are available; note: the right list will return
+            // all tokens, including ones that have been deleted, so this check
+            // is important
+            if ($right->getStatus() !== \Model::STATUS_AVAILABLE)
+                continue;
+
+            $res[] = $right;
+        }
+
+        return $res;
+    }
+
     public function getTokens() : array
     {
         $res = array();
@@ -230,15 +257,20 @@ class User extends \Flexio\Object\Base
         if ($token_items === false)
             return $res;
 
-        foreach ($token_items as $item)
+        foreach ($token_items as $token_info)
         {
+            $token_eid = $token_info['eid'];
+            $token = \Flexio\Object\Token::load($token_eid);
+            if ($token === false)
+                continue;
+
             // only show tokens that are available; note: token list will return
             // all tokens, including ones that have been deleted, so this check
             // is important
-            if (!$item || $item['eid_status'] != \Model::STATUS_AVAILABLE)
+            if ($token->getStatus() !== \Model::STATUS_AVAILABLE)
                 continue;
 
-            $res[] = $item;
+            $res[] = $token;
         }
 
         return $res;

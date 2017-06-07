@@ -87,41 +87,51 @@ class Right
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
+                'objects' => array('type' => 'string', 'array' => true, 'required' => false),
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        return self::getObjectsForUser($requesting_user_eid);
+        $object_filter_list = $params['objects'] ?? false;
+        $objects = self::getObjectsForUser($requesting_user_eid);
+
+        // if no object list is specified, return everything
+        if ($object_filter_list === false)
+            return $objects;
+
+        // if an object list is specified, return the subset of matching objects
+        if ($object_filter_list !== false)
+        {
+            $result = array();
+            $object_filter_list = array_flip($object_filter_list);
+            foreach ($objects as $o)
+            {
+                if (array_key_exists($o['object_eid'], $object_filter_list))
+                    $result[] = $o;
+            }
+
+            return $result;
+        }
     }
 
     private static function getObjectsForUser($user_eid)
     {
-        // find all objects owned or followed by the user
-        $assoc_filter = array('eid_status' => \Model::STATUS_AVAILABLE);
-        $objects_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
-        $objects_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $assoc_filter);
-        $objects = array_merge($objects_owned, $objects_followed);
+        // load the user and check the rights; TODO: should we only show
+        // rights that the user has access to see?
+        $user = \Flexio\Object\User::load($user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $res = array();
-        foreach ($objects as $object_info)
+        if ($user->allows($user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // get the rights
+        $result = array();
+        $rights = $user->getRightList();
+        foreach ($rights as $r)
         {
-            $object_eid = $object_info['eid'];
-            $object = \Flexio\Object\Store::load($object_eid);
-            if ($object === false)
-                continue;
-
-            // TODO: right now, report all rights for an owner or a follower;
-            // when rights move over to listing specific rights per user,
-            // only the rights associated with the user should be viewed,
-            // and these should be granted when the object is shared
-
-            $object_subset = array();
-            $object_subset['eid'] = $object->getEid();
-            $object_subset['eid_type'] = $object->getType();
-            $object_rights = $object->getRights();
-
-            $res[] = $object;
+            $result[] = $r->get();
         }
 
-        return $res;
+        return $result;
     }
 }

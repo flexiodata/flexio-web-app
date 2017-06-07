@@ -117,6 +117,14 @@ class Token
         if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return $user->getTokens();
+        // get the tokens
+        $result = array();
+        $tokens = $user->getTokens();
+        foreach ($tokens as $t)
+        {
+            $result[] = $t->get();
+        }
+
+        return $result;
     }
 }

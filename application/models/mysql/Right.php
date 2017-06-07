@@ -116,7 +116,7 @@ class Right extends ModelBase
     {
         // get the rights information from the access code
         $db = $this->getDatabase();
-        $row = $db->fetchAll("select tob.eid as eid,
+        $rows = $db->fetchAll("select tob.eid as eid,
                                      tob.eid_type as eid_type,
                                      tac.object_eid as object_eid,
                                      tac.access_type as access_type,

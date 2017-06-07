@@ -291,6 +291,8 @@ class Api
             case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
             case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
 
+            // TODO: remove; for testing
+            case 'GET /users/:eid/rights'              : return '\Flexio\Api\Right::listall';
 
 
 
