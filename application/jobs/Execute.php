@@ -310,6 +310,7 @@ class Execute extends \Flexio\Jobs\Base
     private $code_base64 = '';
     private $code = '';
     private $inputs = [];
+    private $input_readers = [];
     private $outputs = [];
     private $output_writers = [];
     private $managed_stream_index = 0;   // "current stream" index running in managed mode
@@ -451,39 +452,40 @@ class Execute extends \Flexio\Jobs\Base
         }
     }
 
-
-    private function getOutputStream()
+    private function getInputReader($idx)
     {
-        return $this->outstream;
+        if (count($this->input_readers) != count($this->outputs))
+            $this->input_readers = array_pad($this->input_readers, count($this->outputs), null);
+
+        if ($idx < 0 || $idx >= count($this->input_readers))
+            return null;
+
+        $ret = $this->input_readers[$idx];
+        if (is_null($ret))
+        {
+            $ret = \Flexio\Object\StreamReader::create($this->inputs[$idx]);
+            $this->input_readers[$idx] = $ret;
+        }
+
+        return $ret;
     }
 
-    private function getOutputWriter($idx = null)
+    private function getOutputWriter($idx)
     {
-        if (isset($idx))
+        if (count($this->output_writers) != count($this->outputs))
+            $this->output_writers = array_pad($this->output_writers, count($this->outputs), null);
+
+        if ($idx < 0 || $idx >= count($this->output_writers))
+            return null;
+
+        $ret = $this->output_writers[$idx];
+        if (is_null($ret))
         {
-            if (count($this->output_writers) != count($this->outputs))
-                $this->output_writers = array_pad($this->output_writers, count($this->outputs), null);
-
-            if ($idx < 0 || $idx >= count($this->output_writers))
-                return null;
-
-            $ret = $this->output_writers[$idx];
-            if (is_null($ret))
-            {
-                $ret = \Flexio\Object\StreamWriter::create($this->outputs[$idx]);
-                $this->output_writers[$idx] = $ret;
-            }
-
-            return $ret;
+            $ret = \Flexio\Object\StreamWriter::create($this->outputs[$idx]);
+            $this->output_writers[$idx] = $ret;
         }
 
-
-        if (is_null($this->outwriter))
-        {
-            $this->outwriter = \Flexio\Object\StreamWriter::create($this->outstream);
-        }
-
-        return $this->outwriter;
+        return $ret;
     }
 
 
@@ -612,12 +614,6 @@ class Execute extends \Flexio\Jobs\Base
         return "Hello2";
     }
 
-    private function func_read()
-    {
-        // returns php string, but should return binary type
-        return new BinaryData("This is binary data");
-    }
-
     public function func_getInputStreamInfo()
     {
         $res = [];
@@ -696,7 +692,7 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_managedCreate($stream_idx, $properties)
     {
-        if ($idx < 0 || $idx >= count($this->outputs))
+        if ($stream_idx < 0 || $idx >= count($this->outputs))
             return false;
 
         $stream = $this->outputs[$stream_idx];
@@ -718,11 +714,21 @@ class Execute extends \Flexio\Jobs\Base
         return true;
     }
 
+
     public function func_getManagedStreamIndex()
     {
         return $this->managed_stream_index;
     }
 
+    public function func_getInputStreamStructure($stream_idx)
+    {
+        if ($stream_idx < 0 || $idx >= count($this->inputs))
+            return false;
+
+        $stream = $this->inputs[$stream_idx];
+
+        return $stream->getStructure()->enum();
+    }
 
     public function func_insertRow($stream_idx, $row)
     {
@@ -730,7 +736,10 @@ class Execute extends \Flexio\Jobs\Base
         if (is_null($writer))
             return null;
 
-        $writer->write($row);
+        if ($row instanceof BinaryData)
+            $writer->write($row->getData());
+             else
+            $writer->write($row);
     }
 
     public function func_insertRows($stream_idx, $row)
@@ -745,19 +754,35 @@ class Execute extends \Flexio\Jobs\Base
         }
     }
 
-    public function func_write($stream_idx, $message)
+    public function func_write($stream_idx, $data)
     {
         $writer = $this->getOutputWriter($stream_idx);
         if (is_null($writer))
             return null;
 
-        if ($message instanceof BinaryData)
-            $writer->write($message->getData());
+        if ($data instanceof BinaryData)
+            $writer->write($data->getData());
              else
-            $writer->write($message);
+            $writer->write($data);
     }
 
 
+    public function func_read($stream_idx, $length, $associative)
+    {
+        $reader = $this->getInputReader($stream_idx);
+        if (is_null($reader))
+            return null;
+
+        if (is_null($length))
+        {
+            $res = $reader->readRow();
+            return $associative ? $res : array_values($res);
+        }
+         else
+        {
+            return new BinaryData($reader->read($length));
+        }
+    }
 
 
 

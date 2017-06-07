@@ -137,38 +137,51 @@ class TableReader(object):
 
 
 class Input(object):
-    def __init__(self):
-        self.inited = False
+    def __init__(self, info):
+        self._env = {}
+        if info:
+            self._name = info['name']
+            self._content_type = info['content_type']
+            self._size = info['size']
+            self._idx = info['idx']
+            self._structure = None
+        else:
+            self._name = ''
+            self._content_type = 'application/octet-stream'
+            self._size = 0
+            self._idx = -1
+            self._structure = None
+    
+    @property
+    def env(self):
+        return self._env
 
     @property
-    def stream(self):
-        if not self.inited:
-            self.initialize()
-        return sys.stdin
+    def name(self):
+        return self._name
 
     @property
     def content_type(self):
-        if not self.inited:
-            self.initialize()
         return self._content_type
 
     @property
-    def is_table(self):
-        if not self.inited:
-            self.initialize()
-        return bool(self._structure)
-
+    def size(self):
+        return self._size
+    
     @property
     def structure(self):
-        if not self.inited:
-            self.initialize()
+        if not self.is_table():
+            return None
+        if not self._structure:
+            self._structure = proxy.invoke('getInputStreamStructure', [self._idx])
         return self._structure
-
+    
     @property
-    def env(self):
-        if not self.inited:
-            self.initialize()
-        return self._env
+    def is_table(self):
+        return True if self._content_type == 'application/vnd.flexio.table' else False
+
+    def read(self, length=None, dict=False):
+        return proxy.invoke('read', [self._idx, length, dict])
 
     def table_reader(self, dict=False):
         if not self.inited:
@@ -302,9 +315,9 @@ class Inputs(object):
         self.inputs = []
 
     def initialize(self):
-        res = proxy.invoke('getInputStreamInfo', [])
-        if res:
-            self.inputs = res
+        stream_infos = proxy.invoke('getInputStreamInfo', [])
+        for info in stream_infos:
+            self.inputs.append(Input(info))
             self.inited = True
     
     def __getitem__(self, idx):
