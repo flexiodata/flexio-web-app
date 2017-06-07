@@ -601,23 +601,22 @@ class Execute extends \Flexio\Jobs\Base
 
 
 
-
-    private function func_hello1($name)
-    {
-        if (is_array($name))
-           $name = var_export($name,true);
-        return "Hello, $name";
-    }
-
-    private function func_hello2()
-    {
-        return "Hello2";
-    }
-
-
     public function func_getInputEnv()
     {
         return $this->getInput()->getEnv();
+    }
+
+    public function func_getOutputEnv()
+    {
+        return $this->getOutput()->getEnv();
+    }
+
+    public function func_setOutputEnvValue($key, $value)
+    {
+        $env = $this->getOutput()->getEnv();
+        $env[(string)$key] = (string)$value;
+        $this->getOutput()->setEnv($env);
+        return true;
     }
 
     public function func_getInputStreamInfo()

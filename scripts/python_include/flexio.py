@@ -155,9 +155,50 @@ class InputEnv(object):
         if not self.inited:
             self.initialize()
         return self.env.values()
-    
-input_env = InputEnv()
 
+class OutputEnv(object):
+
+    def __init__(self):
+        self.inited = False
+        self.env = {}
+
+    def initialize(self):
+        self.env = proxy.invoke('getOutputEnv', [])
+        self.inited = True
+
+    def __getitem__(self, key):
+        if not self.inited:
+            self.initialize()
+        return self.env[key]
+
+    def __setitem__(self, key, value):
+        if not self.inited:
+            self.initialize()
+        if proxy.invoke('setOutputEnvValue', [key,value]) is True:
+            self.env[key] = value
+    
+    def __iter__(self):
+        if not self.inited:
+            self.initialize()
+        return iter(self.env)
+
+    def items(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.items()
+
+    def keys(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.keys()
+    
+    def values(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.values()
+
+input_env = InputEnv()
+output_env = OutputEnv()
 
 class Input(object):
 
@@ -292,7 +333,6 @@ class Input(object):
 
 class Output(object):
     def __init__(self, info):
-        self._env = {}
         if info:
             self._name = info['name']
             self._content_type = info['content_type']
@@ -324,12 +364,7 @@ class Output(object):
 
     @property
     def env(self):
-        return self._env
-
-    @env.setter
-    def env(self, value):
-        self._env = value
-        self.header["env"] = self._env
+        return output_env
 
     @property
     def stream(self):
@@ -387,7 +422,11 @@ class Outputs(object):
         for info in stream_infos:
             self.outputs.append(Output(info))
             self.inited = True
-    
+
+    @property
+    def env(self):
+        return output_env
+
     def __getitem__(self, idx):
         if not self.inited:
             self.initialize()
@@ -403,7 +442,7 @@ class Outputs(object):
         output = Output(info)
         self.outputs.append(output)
         return output
-    
+
 inputs = Inputs()
 outputs = Outputs()
 
