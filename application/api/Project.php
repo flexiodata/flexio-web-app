@@ -37,8 +37,19 @@ class Project
 
         // create the object
         $project = \Flexio\Object\Project::create($params);
-        $project->setOwner($requesting_user_eid);
+
         $project->setCreatedBy($requesting_user_eid);
+        $project->setOwner($requesting_user_eid);
+
+        $project->grant($requesting_user_eid, \Model::ACCESS_CODE_TYPE_EID,
+            array(
+                \Flexio\Object\Action::TYPE_READ_RIGHTS,
+                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
+                \Flexio\Object\Action::TYPE_READ,
+                \Flexio\Object\Action::TYPE_WRITE,
+                \Flexio\Object\Action::TYPE_DELETE
+            )
+        );
 
         // return the project
         return $project->get();

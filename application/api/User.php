@@ -96,8 +96,18 @@ class User
             // create the user
             $user = \Flexio\Object\User::create($new_user_info);
             $user_eid = $user->getEid();
-            $user->setOwner($user_eid);
             $user->setCreatedBy($user_eid);
+            $user->setOwner($user_eid);
+
+            $user->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID,
+                array(
+                    \Flexio\Object\Action::TYPE_READ_RIGHTS,
+                    \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
+                    \Flexio\Object\Action::TYPE_READ,
+                    \Flexio\Object\Action::TYPE_WRITE,
+                    \Flexio\Object\Action::TYPE_DELETE
+                )
+            );
 
             // if appropriate, send an email
             if ($send_email === true)
@@ -520,8 +530,19 @@ class User
             if (isset($project_params))
             {
                 $project = \Flexio\Object\Project::create($project_params);
-                $project->setOwner($user_eid);
                 $project->setCreatedBy($user_eid);
+                $project->setOwner($user_eid);
+
+                $project->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID,
+                    array(
+                        \Flexio\Object\Action::TYPE_READ_RIGHTS,
+                        \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
+                        \Flexio\Object\Action::TYPE_READ,
+                        \Flexio\Object\Action::TYPE_WRITE,
+                        \Flexio\Object\Action::TYPE_DELETE
+                    )
+                );
+
                 $project_eid = $project->getEid();
             }
 
@@ -604,6 +625,16 @@ class User
         $pipe = \Flexio\Object\Pipe::create($call_params);
         $pipe->setOwner($user_eid);
         $pipe->setCreatedBy($user_eid);
+
+        $pipe->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
+                \Flexio\Object\Action::TYPE_READ_RIGHTS,
+                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
+                \Flexio\Object\Action::TYPE_READ,
+                \Flexio\Object\Action::TYPE_WRITE,
+                \Flexio\Object\Action::TYPE_DELETE,
+                \Flexio\Object\Action::TYPE_EXECUTE
+            )
+        );
 
         // if a parent project is specified, add the object as a member of the project
         if (isset($project_eid))

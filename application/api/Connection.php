@@ -52,10 +52,21 @@ class Connection
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
-        // create the object; associate it with the user who created it
+        // create the object
         $connection = \Flexio\Object\Connection::create($params);
-        $connection->setOwner($requesting_user_eid);
+
         $connection->setCreatedBy($requesting_user_eid);
+        $connection->setOwner($requesting_user_eid);
+
+        $connection->grant($requesting_user_eid, \Model::ACCESS_CODE_TYPE_EID,
+            array(
+                \Flexio\Object\Action::TYPE_READ_RIGHTS,
+                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
+                \Flexio\Object\Action::TYPE_READ,
+                \Flexio\Object\Action::TYPE_WRITE,
+                \Flexio\Object\Action::TYPE_DELETE
+            )
+        );
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)

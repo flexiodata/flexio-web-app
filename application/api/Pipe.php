@@ -58,8 +58,20 @@ class Pipe
         // create the object
         $pipe_properties = $params;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
-        $pipe->setOwner($requesting_user_eid);
+
         $pipe->setCreatedBy($requesting_user_eid);
+        $pipe->setOwner($requesting_user_eid);
+
+        $pipe->grant($requesting_user_eid, \Model::ACCESS_CODE_TYPE_EID,
+            array(
+                \Flexio\Object\Action::TYPE_READ_RIGHTS,
+                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
+                \Flexio\Object\Action::TYPE_READ,
+                \Flexio\Object\Action::TYPE_WRITE,
+                \Flexio\Object\Action::TYPE_DELETE,
+                \Flexio\Object\Action::TYPE_EXECUTE
+            )
+        );
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
@@ -109,8 +121,19 @@ class Pipe
         $new_pipe_properties['task'] = $original_pipe_properties['task'];
 
         $new_pipe = \Flexio\Object\Pipe::create($new_pipe_properties);
-        $new_pipe->setOwner($requesting_user_eid);
         $new_pipe->setCreatedBy($requesting_user_eid);
+        $new_pipe->setOwner($requesting_user_eid);
+
+        $new_pipe->grant($requesting_user_eid, \Model::ACCESS_CODE_TYPE_EID,
+            array(
+                \Flexio\Object\Action::TYPE_READ_RIGHTS,
+                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
+                \Flexio\Object\Action::TYPE_READ,
+                \Flexio\Object\Action::TYPE_WRITE,
+                \Flexio\Object\Action::TYPE_DELETE,
+                \Flexio\Object\Action::TYPE_EXECUTE
+            )
+        );
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)

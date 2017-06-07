@@ -297,8 +297,6 @@ class Base implements IObject
 
     public function grant(string $access_code, string $access_type, array $actions) : \Flexio\Object\Base
     {
-        // TODO: implement 'access_type'
-
         $r = array();
         $r['actions'] = $actions;
         $r['access_code'] = $access_code;
@@ -403,6 +401,9 @@ class Base implements IObject
 
     private function getUserClass(string $identifier) : string
     {
+        // DEPRECATED: part of old user-class-based (owner/group/public) rights
+        // TODO: when no longer needed
+
         if ($this->isOwned($identifier) === true)
             return \Flexio\Object\User::MEMBER_OWNER;
 
@@ -413,8 +414,11 @@ class Base implements IObject
         return \Flexio\Object\User::MEMBER_PUBLIC;
     }
 
-    protected function isOwned(string $identifier) : bool
+    private function isOwned(string $identifier) : bool
     {
+        // DEPRECATED: part of old user-class-based (owner/group/public) rights
+        // TODO: when no longer needed
+
         if (!\Flexio\Base\Eid::isValid($identifier))
             return false;
 
@@ -424,8 +428,11 @@ class Base implements IObject
         return false;
     }
 
-    protected function isMember(string $identifier) : bool
+    private function isMember(string $identifier) : bool
     {
+        // DEPRECATED: part of old user-class-based (owner/group/public) rights
+        // TODO: when no longer needed
+
         if (!\Flexio\Base\Eid::isValid($identifier))
             return false;
 

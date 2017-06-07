@@ -58,6 +58,15 @@ class Test
         $user_eid = TestUtil::getDefaultTestUser();
         $pipe = \Flexio\Object\Pipe::create($properties);
         $pipe->setOwner($user_eid);
+        $pipe->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
+                \Flexio\Object\Action::TYPE_READ_RIGHTS,
+                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
+                \Flexio\Object\Action::TYPE_READ,
+                \Flexio\Object\Action::TYPE_WRITE,
+                \Flexio\Object\Action::TYPE_DELETE,
+                \Flexio\Object\Action::TYPE_EXECUTE
+            )
+        );
         $content = getSampleEmailWithAttachment();
         $file = \Flexio\Base\File::getTempFilename('txt');
         file_put_contents($file, $content);

@@ -53,19 +53,6 @@ class Process extends \Flexio\Object\Base
         $object->setEid($local_eid);
         $object->clearCache();
 
-        // set the default process rights; normally processes will inherit rights from the
-        // pipe object that created them, but these provide a set of defaults in case
-        // a process is run standalone
-        $object->grant(\Flexio\Object\User::MEMBER_OWNER, '', array(
-                \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                \Flexio\Object\Action::TYPE_READ,
-                \Flexio\Object\Action::TYPE_WRITE,
-                \Flexio\Object\Action::TYPE_DELETE,
-                \Flexio\Object\Action::TYPE_EXECUTE
-            )
-        );
-
         return $object;
     }
 
