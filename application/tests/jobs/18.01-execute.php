@@ -25,7 +25,7 @@ class Test
         // SETUP
 
         $script = <<<EOD
-def flexio_stream_handler(input,output):
+def flexio_file_handler(input,output):
     output.content_type = "text/plain"
     output.write("Hello, world.")
 EOD;
