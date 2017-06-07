@@ -48,75 +48,30 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: rename the acl table
-    $sql = <<<EOT
-        ALTER TABLE tbl_acl RENAME TO tbl_acl_old;
-EOT;
-    $db->exec($sql);
-
-    $sql = <<<EOT
-        DROP INDEX IF EXISTS idx_acl_object_eid;
-EOT;
-    $db->exec($sql);
-
-    $sql = <<<EOT
-        DROP INDEX IF EXISTS idx_acl_object_eid_action;
-EOT;
-    $db->exec($sql);
+    // STEP 1: delete all the ACL object entries from the object
+    // table; we'll be creating a new set of ACL entries from
+    // the existing table records by inserting the new records
+    // and deleting the old; these ACL eids aren't currently
+    // referenced anywhere else
+    deleteOldAclObjectEntries($db);
 
 
-    // STEP 2: create a new acl table
-    $sql = <<<EOT
-        DROP TABLE IF EXISTS tbl_acl;
-EOT;
-    $db->exec($sql);
+    // STEP 2: iterate through the rights and convert the owner/group
+    // codes into specific user eids; simply copy the public type
+    // add associated access code type
+    $query_sql = "select * from tbl_acl";
+    $result = $db->query($query_sql);
 
-    $sql = <<<EOT
-        DROP INDEX IF EXISTS idx_acl_object_eid;
-EOT;
-    $db->exec($sql);
-
-    $sql = <<<EOT
-        DROP INDEX IF EXISTS idx_acl_access_code;
-EOT;
-    $db->exec($sql);
-
-    $sql = <<<EOT
-        CREATE TABLE IF NOT EXISTS tbl_acl (
-            id serial,
-            eid varchar(12) NOT NULL,
-            object_eid varchar(12) NOT NULL default '',
-            access_type varchar(3) NOT NULL default '',
-            access_code varchar(255) NOT NULL default '',
-            actions json,
-            created timestamp NULL default NULL,
-            updated timestamp NULL default NULL,
-        PRIMARY KEY (id),
-        UNIQUE (eid)
-        );
-EOT;
-    $db->exec($sql);
-
-    $sql = <<<EOT
-        CREATE INDEX idx_acl_object_eid ON tbl_acl (object_eid);
-EOT;
-    $db->exec($sql);
-
-    $sql = <<<EOT
-        CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
-EOT;
-    $db->exec($sql);
+    $objects = array();
+    while ($result && ($row = $result->fetch()))
+    {
+        updateAclAccessCodes($db, $row);
+    }
 
 
-    // STEP 3: copy the values
-    copyAclInfo($db);
-
-
-    // STEP 4: drop the old acl table
-    $sql = <<<EOT
-        DROP TABLE IF EXISTS tbl_acl_old;
-EOT;
-    $db->exec($sql);
+    // STEP 3: delete the original records that we've converted (these
+    // will be the records without any access code type)
+    deleteOldAclAccessEntries($db);
 }
 catch(\Exception $e)
 {
@@ -132,42 +87,29 @@ $current_version = \Flexio\System\System::getUpdateVersionFromFilename(__FILE__)
 echo '{ "success": true, "msg": "Operation completed successfully." }';
 
 
-function copyAclInfo($db)
+
+function updateAclAccessCodes($db, $acl_entry)
 {
-    // STEP 1: get a list of the existing acl entries
-    $query_sql = "select
-                      object_eid,
-                      access_type,
-                      access_code,
-                      json_agg(action) as actions,
-                      min(created) as created,
-                      min(updated) as updated
-                  from tbl_acl_old
-                  group by
-                      object_eid,
-                      access_type,
-                      access_code
-                ";
-    $result = $db->query($query_sql);
+    // create a new ACL entry item
+    // TODO: implement
 
-    // STEP 2: for each of the old acl action lists, transfer the
-    // values to the new acl table
-    $objects = array();
-    while ($result && ($row = $result->fetch()))
-    {
-        // transfer the acl items
-        $actions = json_decode($row['actions'], true);
-        if (is_array($actions))
-        {
-            sort($actions);
-            $row['actions'] = json_encode($actions);
-        }
-        $eid = \Flexio\System\System::getModel()->right->create($row);
-
-        // set the created/updated date
-        $update = array();
-        $update['created'] = $row['created'];
-        $update['updated'] = $row['updated'];
-        $db->update('tbl_acl', $update, 'eid = ' . $db->quote($eid));
-    }
+    // insert the new ACL entry
+    $new_acl_entry = array();
+    $db->insert('tbl_acl', $new_acl_entry, true /*ignore duplicate key*/);
 }
+
+function deleteOldAclObjectEntries($db)
+{
+    // TODO: current ACL entries were incorrectly created with the
+    // \Model::TYPE_TOKEN eid type; to delete the old ACL entries
+    // from the object table, use an inner join to the ACL table
+
+    $sql = "delete from tbl_object where eid_type = '" . \Model::TYPE_RIGHT . "'";
+    $db->exec($sql);
+}
+
+function deleteOldAclAccessCodes($db)
+{
+    // TODO: fill out
+}
+
