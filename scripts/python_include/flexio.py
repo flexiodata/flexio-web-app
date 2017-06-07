@@ -137,38 +137,90 @@ class TableReader(object):
 
 
 class Input(object):
-    def __init__(self):
-        self.inited = False
+
+    # used for setting fetch style
+    Dictionary = 1
+    Tuple = 2
+
+    def __init__(self, info):
+        self._env = {}
+        if info:
+            self._name = info['name']
+            self._content_type = info['content_type']
+            self._size = info['size']
+            self._idx = info['idx']
+            self._structure = None
+            self._dict = False
+            self._fetch_style = self.Tuple
+        else:
+            self._name = ''
+            self._content_type = 'application/octet-stream'
+            self._size = 0
+            self._idx = -1
+            self._structure = None
+            self._dict = False
+            self._fetch_style = self.Tuple
+        
+    @property
+    def env(self):
+        return self._env
 
     @property
-    def stream(self):
-        if not self.inited:
-            self.initialize()
-        return sys.stdin
+    def name(self):
+        return self._name
 
     @property
     def content_type(self):
-        if not self.inited:
-            self.initialize()
         return self._content_type
 
     @property
-    def is_table(self):
-        if not self.inited:
-            self.initialize()
-        return bool(self._structure)
-
+    def size(self):
+        return self._size
+    
     @property
     def structure(self):
-        if not self.inited:
-            self.initialize()
+        if not self.is_table():
+            return None
+        if not self._structure:
+            self._structure = proxy.invoke('getInputStreamStructure', [self._idx])
         return self._structure
+    
+    @property
+    def is_table(self):
+        return True if self._content_type == 'application/vnd.flexio.table' else False
 
     @property
-    def env(self):
-        if not self.inited:
-            self.initialize()
-        return self._env
+    def fetch_style(self):
+        return self._name
+
+    @fetch_style.setter
+    def fetch_style(self, value):
+        if type({}) == value:
+            self._fetch_style = self.Dictionary
+        elif type(()) == value:
+            self._fetch_style = self.Tuple
+        else:
+            raise ValueError("fetch style must be set to dict or tuple")
+
+    def read(self, length=None):
+        if self._fetch_style == self.Tuple:
+            row = proxy.invoke('read', [self._idx, length, False])
+            if type(row) == type(False):
+                if not row:
+                    return False
+            return tuple(row)
+        else:
+            return proxy.invoke('read', [self._idx, length, True])
+        
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        row = self.read()
+        if type(row) == type(False):
+            if not row:
+                raise StopIteration
+        return row
 
     def table_reader(self, dict=False):
         if not self.inited:
@@ -250,7 +302,7 @@ class Output(object):
     @name.setter
     def name(self, value):
         self._name = value
-        proxy.invoke('setStreamProperties', [self._idx, {'name':value}])
+        proxy.invoke('setOutputStreamInfo', [self._idx, {'name':value}])
 
     @property
     def content_type(self):
@@ -259,7 +311,7 @@ class Output(object):
     @content_type.setter
     def content_type(self, value):
         self._content_type = value
-        proxy.invoke('setStreamProperties', [self._idx, {'content_type':value}])
+        proxy.invoke('setOutputStreamInfo', [self._idx, {'content_type':value}])
 
     @property
     def env(self):
@@ -279,13 +331,16 @@ class Output(object):
             self.header_written = True
         return sys.stdout
 
-    def create_table(self, structure):
-        self.content_type = "application/vnd.flexio.table"
-        self.header["structure"] = structure
-        return TableWriter(structure, self.stream)
+    def create(self, name=None, structure=None, content_type='text/plain'):
+        properties = { 'content_type': content_type }
+        if name:
+            properties['name'] = name
+        if structure:
+            properties['structure'] = structure
+        return proxy.invoke('managedCreate', [self._idx, properties])
 
-    def write(self, msg):
-        proxy.invoke('write', [self._idx, msg])
+    def write(self, data):
+        proxy.invoke('write', [self._idx, data])
 
     def insert_row(self, row):
         proxy.invoke('insertRow', [self._idx, row])
@@ -299,9 +354,9 @@ class Inputs(object):
         self.inputs = []
 
     def initialize(self):
-        res = proxy.invoke('getInputStreamInfo', [])
-        if res:
-            self.inputs = res
+        stream_infos = proxy.invoke('getInputStreamInfo', [])
+        for info in stream_infos:
+            self.inputs.append(Input(info))
             self.inited = True
     
     def __getitem__(self, idx):
@@ -325,8 +380,10 @@ class Outputs(object):
             self.initialize()
         return self.outputs[idx]
 
-    def create(self, name, structure=None, content_type='text/plain'):
-        properties = { 'name': name, 'content_type': content_type }
+    def create(self, name=None, structure=None, content_type='text/plain'):
+        properties = { 'content_type': content_type }
+        if name:
+            properties['name'] = name
         if structure:
             properties['structure'] = structure
         info = proxy.invoke('createOutputStream', [properties])

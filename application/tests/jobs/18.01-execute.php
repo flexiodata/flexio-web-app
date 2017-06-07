@@ -25,10 +25,9 @@ class Test
         // SETUP
 
         $script = <<<EOD
-from io import BytesIO
-def flexio_handler(input,output):
+def flexio_stream_handler(input,output):
     output.content_type = "text/plain"
-    output.stream.buffer.write(b"Hello, world.")
+    output.write("Hello, world.")
 EOD;
         $task = json_decode('
         [

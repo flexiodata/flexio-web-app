@@ -156,6 +156,11 @@ class ExecuteProxy
             $type = 'i';
             $val = (string)$val;
         }
+        else if (is_bool($val))
+        {
+            $type = 'b';
+            $val = $val ? '1':'0';
+        }
         else if (is_array($val))
         {
             if (count($val) == 0 || array_keys($val) === range(0, count($val) - 1))
@@ -305,6 +310,7 @@ class Execute extends \Flexio\Jobs\Base
     private $code_base64 = '';
     private $code = '';
     private $inputs = [];
+    private $input_readers = [];
     private $outputs = [];
     private $output_writers = [];
     private $managed_stream_index = 0;   // "current stream" index running in managed mode
@@ -329,7 +335,7 @@ class Execute extends \Flexio\Jobs\Base
 
         if ($this->lang == 'python')
         {
-            if (strpos($this->code, "flexio_stream_handler") !== false)
+            if (strpos($this->code, "flexio_file_handler") !== false)
             {
                 // "MANAGED MODE" - script is called once for each stream
 
@@ -356,7 +362,7 @@ class Execute extends \Flexio\Jobs\Base
                     $endl = "\n";
 
                 $this->code .= $endl . "import flexio as flexioext";
-                $this->code .= $endl . "flexioext.run_stream(flexio_stream_handler)";
+                $this->code .= $endl . "flexioext.run_stream(flexio_file_handler)";
                 $this->code .= $endl;
 
                 $this->code_base64 = base64_encode($this->code);
@@ -446,57 +452,45 @@ class Execute extends \Flexio\Jobs\Base
         }
     }
 
-
-    // these member variables are for the script callback hooks below
-    private $instream = null;
-    private $inwriter = null;
-    private $outstream = null;
-    private $outwriter = null;
-
-
-    private function getOutputStream()
+    private function getInputReader($idx)
     {
-        return $this->outstream;
+        if (count($this->input_readers) != count($this->outputs))
+            $this->input_readers = array_pad($this->input_readers, count($this->outputs), null);
+
+        if ($idx < 0 || $idx >= count($this->input_readers))
+            return null;
+
+        $ret = $this->input_readers[$idx];
+        if (is_null($ret))
+        {
+            $ret = \Flexio\Object\StreamReader::create($this->inputs[$idx]);
+            $this->input_readers[$idx] = $ret;
+        }
+
+        return $ret;
     }
 
-    private function getOutputWriter($idx = null)
+    private function getOutputWriter($idx)
     {
-        if (isset($idx))
+        if (count($this->output_writers) != count($this->outputs))
+            $this->output_writers = array_pad($this->output_writers, count($this->outputs), null);
+
+        if ($idx < 0 || $idx >= count($this->output_writers))
+            return null;
+
+        $ret = $this->output_writers[$idx];
+        if (is_null($ret))
         {
-            if (count($this->output_writers) != count($this->outputs))
-                $this->output_writers = array_pad($this->output_writers, count($this->outputs), null);
-
-            if ($idx < 0 || $idx >= count($this->output_writers))
-                return null;
-
-            $ret = $this->output_writers[$idx];
-            if (is_null($ret))
-            {
-                $ret = \Flexio\Object\StreamWriter::create($this->outputs[$idx]);
-                $this->output_writers[$idx] = $ret;
-            }
-
-            return $ret;
+            $ret = \Flexio\Object\StreamWriter::create($this->outputs[$idx]);
+            $this->output_writers[$idx] = $ret;
         }
 
-
-        if (is_null($this->outwriter))
-        {
-            $this->outwriter = \Flexio\Object\StreamWriter::create($this->outstream);
-        }
-
-        return $this->outwriter;
+        return $ret;
     }
 
 
     private function doStream(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream)
     {
-
-        // these member variables are for the script callback hooks below
-        $this->instream = $instream;
-        $this->outstream = $outstream;
-        $this->inwriter = null;
-        $this->outwriter = null;
 
 /*
         $is_input_table = false;
@@ -620,12 +614,6 @@ class Execute extends \Flexio\Jobs\Base
         return "Hello2";
     }
 
-    private function func_read()
-    {
-        // returns php string, but should return binary type
-        return new BinaryData("This is binary data");
-    }
-
     public function func_getInputStreamInfo()
     {
         $res = [];
@@ -660,6 +648,20 @@ class Execute extends \Flexio\Jobs\Base
         return $res;
     }
 
+    public function func_setOutputStreamInfo($idx, $properties)
+    {
+        if ($idx < 0 || $idx >= count($this->outputs))
+            return false;
+
+        if (isset($properties['content_type']))
+            $properties['mime_type'] = $properties['content_type'];
+        
+        $properties = \Flexio\Base\Util::filterArray($properties, ["name","mime_type"]);
+        $this->outputs[$idx]->set($properties);
+
+        return true;
+    }
+
     public function func_createOutputStream($properties)
     {
         $name = $properties['name'] ?? '';
@@ -688,11 +690,45 @@ class Execute extends \Flexio\Jobs\Base
                      'content_type' => $stream->getMimeType());
     }
 
+    public function func_managedCreate($stream_idx, $properties)
+    {
+        if ($stream_idx < 0 || $idx >= count($this->outputs))
+            return false;
+
+        $stream = $this->outputs[$stream_idx];
+
+        $set = array();
+
+        if (isset($properties['name']))
+            $set['name'] = $properties['name'];
+        if (isset($properties['content_type']))
+            $set['mime_type'] = $properties['content_type'];
+        if (isset($properties['structure']))
+        {
+            $set['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+            $set['structure'] = $properties['structure'];
+        }
+        
+        $stream->set($set);
+
+        return true;
+    }
+
+
     public function func_getManagedStreamIndex()
     {
         return $this->managed_stream_index;
     }
 
+    public function func_getInputStreamStructure($stream_idx)
+    {
+        if ($stream_idx < 0 || $idx >= count($this->inputs))
+            return false;
+
+        $stream = $this->inputs[$stream_idx];
+
+        return $stream->getStructure()->enum();
+    }
 
     public function func_insertRow($stream_idx, $row)
     {
@@ -700,7 +736,10 @@ class Execute extends \Flexio\Jobs\Base
         if (is_null($writer))
             return null;
 
-        $writer->write($row);
+        if ($row instanceof BinaryData)
+            $writer->write($row->getData());
+             else
+            $writer->write($row);
     }
 
     public function func_insertRows($stream_idx, $row)
@@ -715,19 +754,40 @@ class Execute extends \Flexio\Jobs\Base
         }
     }
 
-    public function func_write($stream_idx, $message)
+    public function func_write($stream_idx, $data)
     {
         $writer = $this->getOutputWriter($stream_idx);
         if (is_null($writer))
             return null;
 
-        if ($message instanceof BinaryData)
-            $writer->write($message->getData());
+        if ($data instanceof BinaryData)
+            $writer->write($data->getData());
              else
-            $writer->write($message);
+            $writer->write($data);
     }
 
 
+    public function func_read($stream_idx, $length, $associative)
+    {
+        $reader = $this->getInputReader($stream_idx);
+        if (is_null($reader))
+            return null;
+
+        if (is_null($length))
+        {
+            $res = $reader->readRow();
+            if ($res === false)
+                return false;
+            return $associative ? $res : array_values($res);
+        }
+         else
+        {
+            $res = $reader->read($length);
+            if ($res === false)
+                return false;
+            return new BinaryData();
+        }
+    }
 
 
 
