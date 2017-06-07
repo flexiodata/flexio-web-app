@@ -152,6 +152,7 @@ class Input(object):
             self._structure = None
             self._dict = False
             self._fetch_style = self.Tuple
+            self._casts = None
         else:
             self._name = ''
             self._content_type = 'application/octet-stream'
@@ -160,6 +161,7 @@ class Input(object):
             self._structure = None
             self._dict = False
             self._fetch_style = self.Tuple
+            self._casts = None
         
     @property
     def env(self):
@@ -179,7 +181,7 @@ class Input(object):
     
     @property
     def structure(self):
-        if not self.is_table():
+        if not self.is_table:
             return None
         if not self._structure:
             self._structure = proxy.invoke('getInputStreamStructure', [self._idx])
@@ -195,6 +197,7 @@ class Input(object):
 
     @fetch_style.setter
     def fetch_style(self, value):
+        self._casts = None
         if type({}) == value:
             self._fetch_style = self.Dictionary
         elif type(()) == value:
@@ -205,13 +208,17 @@ class Input(object):
     def read(self, length=None):
         if self._fetch_style == self.Tuple:
             row = proxy.invoke('read', [self._idx, length, False])
-            if type(row) == type(False):
-                if not row:
-                    return False
+            if row is False:
+                return False
+            self.type_casts(row)
             return tuple(row)
         else:
-            return proxy.invoke('read', [self._idx, length, True])
-        
+            row = proxy.invoke('read', [self._idx, length, True])
+            if row is False:
+                return False
+            self.type_casts(row)
+            return row
+
     def __iter__(self):
         return self
 
@@ -221,6 +228,33 @@ class Input(object):
             if not row:
                 raise StopIteration
         return row
+
+    def type_casts(self, row):
+        if self._casts is None:
+            self._casts = {}
+            structure = self.structure
+            idx = 0
+            for col in self.structure:
+                if self._fetch_style == self.Tuple:
+                    key = idx
+                else:
+                    key = col['name']
+                if col['type'] == 'numeric':
+                    self._casts[key] = float
+                elif col['type'] == 'integer':
+                    self._casts[key] = int
+                elif col['type'] == 'date':
+                    self._casts[key] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
+                elif col['type'] == 'datetime':
+                    self._casts[key] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
+                idx = idx + 1
+        for key,func in self._casts.items():
+            try:
+                row[key] = func(row[key])
+            except IndexError:
+                continue
+            except KeyError:
+                continue
 
     def table_reader(self, dict=False):
         if not self.inited:
