@@ -12,7 +12,7 @@
   import { HOSTNAME } from '../constants/common'
   import { TASK_TYPE_EXECUTE } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
-  import { mapState, mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
   import CodeMirror from 'codemirror'
   import {} from '../../node_modules/codemirror/addon/hint/show-hint'
   import {} from '../../node_modules/codemirror/addon/display/placeholder'
@@ -135,9 +135,6 @@
       }
     },
     computed: {
-      ...mapState([
-        'active_project_eid'
-      ]),
       is_changed() {
         return this.cmd_text != this.val
       },
@@ -276,7 +273,6 @@
         // as the 'return', otherwise JS will return without doing anything
         return _
           .chain(this.getAllConnections())
-          .filter((p) => { return _.get(p, 'project.eid') == this.active_project_eid })
           .sortBy([ function(p) { return new Date(p.created) } ])
           .value()
       },

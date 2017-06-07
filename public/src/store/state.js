@@ -13,7 +13,6 @@ export default () => {
 
     active_user_eid: '',
     active_document_eid: '',
-    active_project_eid: '',
 
     objects: {}
   }
