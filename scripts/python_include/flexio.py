@@ -137,6 +137,11 @@ class TableReader(object):
 
 
 class Input(object):
+
+    # used for setting fetch style
+    Dictionary = 1
+    Tuple = 2
+
     def __init__(self, info):
         self._env = {}
         if info:
@@ -146,6 +151,7 @@ class Input(object):
             self._idx = info['idx']
             self._structure = None
             self._dict = False
+            self._fetch_style = self.Tuple
         else:
             self._name = ''
             self._content_type = 'application/octet-stream'
@@ -153,6 +159,7 @@ class Input(object):
             self._idx = -1
             self._structure = None
             self._dict = False
+            self._fetch_style = self.Tuple
         
     @property
     def env(self):
@@ -182,12 +189,32 @@ class Input(object):
     def is_table(self):
         return True if self._content_type == 'application/vnd.flexio.table' else False
 
-    def read(self, length=None, dict=False):
-        return proxy.invoke('read', [self._idx, length, self._dict])
+    @property
+    def fetch_style(self):
+        return self._name
 
+    @fetch_style.setter
+    def fetch_style(self, value):
+        if type({}) == value:
+            self._fetch_style = self.Dictionary
+        elif type(()) == value:
+            self._fetch_style = self.Tuple
+        else:
+            raise ValueError("fetch style must be set to dict or tuple")
+
+    def read(self, length=None):
+        if self._fetch_style == self.Tuple:
+            row = proxy.invoke('read', [self._idx, length, False])
+            if type(row) == type(False):
+                if not row:
+                    return False
+            return tuple(row)
+        else:
+            return proxy.invoke('read', [self._idx, length, True])
+        
     def __iter__(self):
         return self
-        
+
     def __next__(self):
         row = self.read()
         if type(row) == type(False):
