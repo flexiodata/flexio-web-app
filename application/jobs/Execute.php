@@ -454,8 +454,8 @@ class Execute extends \Flexio\Jobs\Base
 
     private function getInputReader($idx)
     {
-        if (count($this->input_readers) != count($this->outputs))
-            $this->input_readers = array_pad($this->input_readers, count($this->outputs), null);
+        if (count($this->input_readers) != count($this->inputs))
+            $this->input_readers = array_pad($this->input_readers, count($this->inputs), null);
 
         if ($idx < 0 || $idx >= count($this->input_readers))
             return null;
@@ -491,15 +491,6 @@ class Execute extends \Flexio\Jobs\Base
 
     private function doStream(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream)
     {
-
-/*
-        $is_input_table = false;
-        $is_output_table = false;
-        if ($instream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            $is_input_table = true;
-*/
-
-
         // determine what program to load
         if ($this->lang == 'python')
         {
@@ -601,17 +592,22 @@ class Execute extends \Flexio\Jobs\Base
 
 
 
-
-    private function func_hello1($name)
+    public function func_getInputEnv()
     {
-        if (is_array($name))
-           $name = var_export($name,true);
-        return "Hello, $name";
+        return $this->getInput()->getEnv();
     }
 
-    private function func_hello2()
+    public function func_getOutputEnv()
     {
-        return "Hello2";
+        return $this->getOutput()->getEnv();
+    }
+
+    public function func_setOutputEnvValue($key, $value)
+    {
+        $env = $this->getOutput()->getEnv();
+        $env[(string)$key] = (string)$value;
+        $this->getOutput()->setEnv($env);
+        return true;
     }
 
     public function func_getInputStreamInfo()
@@ -767,28 +763,30 @@ class Execute extends \Flexio\Jobs\Base
     }
 
 
-    public function func_read($stream_idx, $length, $associative)
+    public function func_read($stream_idx, $length)
     {
         $reader = $this->getInputReader($stream_idx);
         if (is_null($reader))
             return null;
 
-        if (is_null($length))
-        {
-            $res = $reader->readRow();
-            if ($res === false)
-                return false;
-            return $associative ? $res : array_values($res);
-        }
-         else
-        {
-            $res = $reader->read($length);
-            if ($res === false)
-                return false;
-            return new BinaryData();
-        }
+        $res = $reader->read($length);
+
+        if ($res === false)
+            return false;
+        return new BinaryData($res);
     }
 
+    public function func_readline($stream_idx, $associative)
+    {
+        $reader = $this->getInputReader($stream_idx);
+        if (is_null($reader))
+            return null;
+
+        $res = $reader->readRow();
+        if ($res === false)
+            return false;
+        return $associative ? $res : array_values($res);
+    }
 
 
 

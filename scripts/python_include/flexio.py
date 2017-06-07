@@ -118,23 +118,87 @@ class StdinoutProxy(object):
 
 proxy = StdinoutProxy()
 
-class TableReader(object):
-    def __init__(self, reader, casts):
-        self.reader = reader
-        self.casts = casts
+
+
+
+class InputEnv(object):
+
+    def __init__(self):
+        self.inited = False
+        self.env = {}
+
+    def initialize(self):
+        self.env = proxy.invoke('getInputEnv', [])
+        self.inited = True
+
+    def __getitem__(self, key):
+        if not self.inited:
+            self.initialize()
+        return self.env[key]
 
     def __iter__(self):
-        return self
+        if not self.inited:
+            self.initialize()
+        return iter(self.env)
 
-    def __next__(self):
-        row = next(self.reader)
-        if row:
-            for key,value in self.casts.items():
-                row[key] = value(row[key])
-            return row
-        else:
-            raise StopIteration
+    def items(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.items()
 
+    def keys(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.keys()
+    
+    def values(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.values()
+
+class OutputEnv(object):
+
+    def __init__(self):
+        self.inited = False
+        self.env = {}
+
+    def initialize(self):
+        self.env = proxy.invoke('getOutputEnv', [])
+        self.inited = True
+
+    def __getitem__(self, key):
+        if not self.inited:
+            self.initialize()
+        return self.env[key]
+
+    def __setitem__(self, key, value):
+        if not self.inited:
+            self.initialize()
+        if proxy.invoke('setOutputEnvValue', [key,value]) is True:
+            self.env[key] = value
+    
+    def __iter__(self):
+        if not self.inited:
+            self.initialize()
+        return iter(self.env)
+
+    def items(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.items()
+
+    def keys(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.keys()
+    
+    def values(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.values()
+
+input_env = InputEnv()
+output_env = OutputEnv()
 
 class Input(object):
 
@@ -143,27 +207,32 @@ class Input(object):
     Tuple = 2
 
     def __init__(self, info):
-        self._env = {}
         if info:
             self._name = info['name']
             self._content_type = info['content_type']
+            self._is_table = True if self._content_type == 'application/vnd.flexio.table' else False
             self._size = info['size']
             self._idx = info['idx']
             self._structure = None
             self._dict = False
             self._fetch_style = self.Tuple
+            self._casts = None
+            self._casting = True
         else:
             self._name = ''
             self._content_type = 'application/octet-stream'
+            self._is_table = False
             self._size = 0
             self._idx = -1
             self._structure = None
             self._dict = False
             self._fetch_style = self.Tuple
+            self._casts = None
+            self._casting = True
         
     @property
     def env(self):
-        return self._env
+        return input_env
 
     @property
     def name(self):
@@ -179,7 +248,7 @@ class Input(object):
     
     @property
     def structure(self):
-        if not self.is_table():
+        if not self.is_table:
             return None
         if not self._structure:
             self._structure = proxy.invoke('getInputStreamStructure', [self._idx])
@@ -187,14 +256,15 @@ class Input(object):
     
     @property
     def is_table(self):
-        return True if self._content_type == 'application/vnd.flexio.table' else False
+        return self._is_table
 
     @property
     def fetch_style(self):
-        return self._name
+        return self._fetch_style
 
     @fetch_style.setter
     def fetch_style(self, value):
+        self._casts = None
         if type({}) == value:
             self._fetch_style = self.Dictionary
         elif type(()) == value:
@@ -202,88 +272,96 @@ class Input(object):
         else:
             raise ValueError("fetch style must be set to dict or tuple")
 
+    @property
+    def casting(self):
+        return self._casting
+
+    @casting.setter
+    def casting(self, value):
+        self._casting = value
+
     def read(self, length=None):
+        if length is None:
+            return self.readall()
+        if self._is_table:
+            return None
+        data = proxy.invoke('read', [self._idx, length])
+        if data is False:
+            return None
+        return data
+
+    def readline(self):
         if self._fetch_style == self.Tuple:
-            row = proxy.invoke('read', [self._idx, length, False])
-            if type(row) == type(False):
-                if not row:
-                    return False
+            row = proxy.invoke('readline', [self._idx, False])
+            if row is False:
+                return None
+            if self._casting:
+                self.type_casts(row)
             return tuple(row)
         else:
-            return proxy.invoke('read', [self._idx, length, True])
-        
+            row = proxy.invoke('readline', [self._idx, True])
+            if row is False:
+                return None
+            if self._casting:
+                self.type_casts(row)
+            return row
+    
+    def readall(self):
+        if self.is_table:
+            rows = []
+            while True:
+                row = self.readline()
+                if row is None:
+                    break
+                rows.append(row)
+            return rows
+        else:
+            buf = b''
+            while True:
+                chunk = self.read(length=4096)
+                if chunk is None:
+                    break
+                buf += chunk
+            return buf
+
     def __iter__(self):
         return self
 
     def __next__(self):
-        row = self.read()
-        if type(row) == type(False):
-            if not row:
-                raise StopIteration
+        row = self.readline()
+        if row is None:
+            raise StopIteration
         return row
 
-    def table_reader(self, dict=False):
-        if not self.inited:
-            self.initialize()
-        if dict:
-            fieldnames = []
-            casts = {}
-            if self.structure:
-                for col in self.structure:
-                    fieldnames.append(col['name'])
-                    if col['type'] == 'numeric':
-                        casts[col['name']] = float
-                    elif col['type'] == 'integer':
-                        casts[col['name']] = int
-                    elif col['type'] == 'date':
-                        casts[col['name']] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
-                    elif col['type'] == 'datetime':
-                        casts[col['name']] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
-            reader = csv.DictReader(sys.stdin, fieldnames)
-        else:
-            casts = {}
-            index = 0
-            if self.structure:
-                for col in self.structure:
-                    if col['type'] == 'numeric':
-                        casts[index] = float
-                    elif col['type'] == 'integer':
-                        casts[index] = int
-                    elif col['type'] == 'date':
-                        casts[index] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
-                    elif col['type'] == 'datetime':
-                        casts[index] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
-                    index = index + 1
-            reader = csv.reader(sys.stdin)
-        return TableReader(reader, casts)
-
-
-class TableWriter(object):
-    def __init__(self, structure, stream):
-        self.structure = structure
-        self.fieldnames = [col['name'] for col in structure]
-        self.writer = csv.writer(stream)
-
-    def writerow(self, row):
-        if type(row) is list:
-            self.writer.writerow(row)
-        else:
-            values = []
-            for f in self.fieldnames:
-                if f in row:
-                    values.append(row[f])
+    def type_casts(self, row):
+        if self._casts is None:
+            self._casts = {}
+            structure = self.structure
+            idx = 0
+            for col in self.structure:
+                if self._fetch_style == self.Tuple:
+                    key = idx
                 else:
-                    values.append('')
-            self.writer.writerow(values)
-
-    def writerows(self, rows):
-        for row in rows:
-            self.writerow(row)
-
+                    key = col['name']
+                if col['type'] == 'numeric':
+                    self._casts[key] = float
+                elif col['type'] == 'integer':
+                    self._casts[key] = int
+                elif col['type'] == 'date':
+                    self._casts[key] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
+                elif col['type'] == 'datetime':
+                    self._casts[key] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
+                idx = idx + 1
+        for key,func in self._casts.items():
+            try:
+                row[key] = func(row[key])
+            except IndexError:
+                continue
+            except KeyError:
+                continue
 
 class Output(object):
     def __init__(self, info):
-        self._env = {}
         if info:
             self._name = info['name']
             self._content_type = info['content_type']
@@ -315,12 +393,7 @@ class Output(object):
 
     @property
     def env(self):
-        return self._env
-
-    @env.setter
-    def env(self, value):
-        self._env = value
-        self.header["env"] = self._env
+        return output_env
 
     @property
     def stream(self):
@@ -364,6 +437,10 @@ class Inputs(object):
             self.initialize()
         return self.inputs[idx]
 
+    @property
+    def env(self):
+        return input_env
+
 class Outputs(object):
     def __init__(self):
         self.inited = False
@@ -374,7 +451,11 @@ class Outputs(object):
         for info in stream_infos:
             self.outputs.append(Output(info))
             self.inited = True
-    
+
+    @property
+    def env(self):
+        return output_env
+
     def __getitem__(self, idx):
         if not self.inited:
             self.initialize()
@@ -390,7 +471,7 @@ class Outputs(object):
         output = Output(info)
         self.outputs.append(output)
         return output
-    
+
 inputs = Inputs()
 outputs = Outputs()
 
