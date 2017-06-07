@@ -52,7 +52,7 @@ class Follower
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // check the rights on the object
-        if ($object->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+        if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the object properties
@@ -207,7 +207,7 @@ class Follower
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // for all other users, check the rights on the object
-        if ($object->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+        if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         \Flexio\System\System::getModel()->assoc_delete($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
@@ -232,7 +232,7 @@ class Follower
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($object->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+        if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get a list of the user eids associated with this object; this

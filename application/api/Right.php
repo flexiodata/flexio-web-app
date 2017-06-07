@@ -30,7 +30,7 @@ class Right
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, $requesting_user_eid) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // TODO: add the right
@@ -53,7 +53,7 @@ class Right
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows(\Flexio\Object\Action::TYPE_WRITE_RIGHTS, $requesting_user_eid) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // TODO: delete the right

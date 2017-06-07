@@ -52,7 +52,7 @@ class Search
                 continue;
 
             // check the rights on the pipe
-            if ($pipe->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
                 continue;
 
             $pipe_properties = $pipe->get();

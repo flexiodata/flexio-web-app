@@ -235,7 +235,7 @@ class User
         // set info for unverified users
         if ($user->getStatus() !== \Model::STATUS_PENDING)
         {
-            if ($user->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+            if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -259,7 +259,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $user->get();
@@ -273,7 +273,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $projects = $user->getProjects();
@@ -329,7 +329,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($user->checkPassword($old_password) === false)

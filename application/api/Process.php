@@ -79,9 +79,9 @@ class Process
 
             // we're getting the logic from the pipe, and we're associating the process with
             // the pipe, so we should have both read/write access to the pipe;
-            if ($pipe->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-            if ($pipe->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
             $pipe_owner = $pipe->getOwner();
@@ -147,7 +147,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($process->allows(\Flexio\Object\Action::TYPE_DELETE, $requesting_user_eid) === false)
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $process->delete();
@@ -172,7 +172,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // TODO: we shouldn't allow the task to be set if the process is anything
@@ -208,7 +208,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($process->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // if no wait period is specified, return the information immediately
@@ -267,7 +267,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+        // if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->run($background)->get();
@@ -289,7 +289,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+        // if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->cancel()->get();
@@ -311,7 +311,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+        // if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->pause()->get();
@@ -337,7 +337,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // if ($process->allows(\Flexio\Object\Action::TYPE_WRITE, $requesting_user_eid) === false)
+        // if ($process->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream = \Flexio\Object\Stream::create();

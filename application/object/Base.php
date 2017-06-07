@@ -241,7 +241,7 @@ class Base implements IObject
         return $result[0]['eid'];
     }
 
-    public function allows(string $action, string $access_code, string $access_type = '') : bool
+    public function allows(string $access_code, string $action) : bool
     {
         // note: like the status, read the rights fresh everytime to make
         // sure we have the most current information

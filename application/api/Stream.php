@@ -78,7 +78,7 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
-        //if ($stream->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+        //if ($stream->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
         //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $stream->get();
@@ -109,7 +109,7 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
-        //if ($stream->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+        //if ($stream->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
         //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream_info = $stream->get();
@@ -329,7 +329,7 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
-        //if ($stream->allows(\Flexio\Object\Action::TYPE_READ, $requesting_user_eid) === false)
+        //if ($stream->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
         //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream_info = $stream->get();
