@@ -249,46 +249,30 @@ class Base implements IObject
         // get the rights for this object
         $rights = $this->getRights();
 
-        // see if we have a direct match on the action, access_code and access_type
+        // get all the allowed actions for the access code or any
+        // public access type class
+        $allowed_actions = array();
         foreach ($rights as $r)
         {
-            if ($access_code !== $r['access_code'])
-                continue;
-            if ($access_type !== $r['access_type'])
-                continue;
+            $access_type = $r['access_type'];
 
-            $actions = $r['actions'];
-            foreach ($actions as $a)
-            {
-                if ($action !== $a)
-                    continue;
+            // merge any allowed actions for matching eid access codes;
+            // TODO: when other access types are added, we'll need to add
+            // a parameter to the function to qualify the access code; for
+            // now, all access types are either eids or the public access
+            // type category
+            if ($access_type === \Model::ACCESS_CODE_TYPE_EID && $access_code === $r['access_code'])
+                $allowed_actions = array_merge($allowed_actions, $r['actions']);
 
-                // action allowed
-                return true;
-            }
+            if ($access_type === \Model::ACCESS_CODE_TYPE_CATEGORY && $access_code === \Flexio\Object\User::MEMBER_PUBLIC)
+                $allowed_actions = array_merge($allowed_actions, $r['actions']);
         }
 
-        // we weren't able to match directly on any of the access items; TODO:
-        // at this point, the access code is either a user eid or an empty
-        // string (for a public user); find out the appropriate user class and
-        // search for the permission based on this
-        $user_class = $this->getUserClass($access_code);
-        foreach ($rights as $r)
+        // see if the requested action is allowed
+        foreach ($allowed_actions as $allowed_action)
         {
-            if ($user_class !== $r['access_code'])
-                continue;
-            if ($access_type !== $r['access_type'])
-                continue;
-
-            $actions = $r['actions'];
-            foreach ($actions as $a)
-            {
-                if ($action !== $a)
-                    continue;
-
-                // action allowed
+            if ($action === $allowed_action)
                 return true;
-            }
         }
 
         // action not allowed
@@ -334,13 +318,20 @@ class Base implements IObject
 
     public function getRights() : array
     {
-        $rights = $this->getModel()->right->getInfoFromObjectEid($this->getEid());
-        foreach ($rights as &$r)
+        $result = array();
+        $rights_info = $this->getModel()->right->getInfoFromObjectEid($this->getEid());
+
+        foreach ($rights_info as $r)
         {
-            $r['actions'] = json_decode($r['actions'],true);
+            $right_eid = $r['eid'];
+            $right = \Flexio\Object\Right::load($right_eid);
+            if ($right === false)
+                continue;
+
+            $result[] = $right->get();
         }
 
-        return $rights;
+        return $result;
     }
 
     protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type

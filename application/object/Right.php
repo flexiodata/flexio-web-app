@@ -25,6 +25,10 @@ class Right extends \Flexio\Object\Base
 
     public static function create(array $properties = null) : \Flexio\Object\Right
     {
+        // actions are stored as a json string, so this needs to be encoded
+        if (isset($properties) && isset($properties['actions']))
+            $properties['actions'] = json_encode($properties['actions']);
+
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
         $local_eid = $model->create($object->getType(), $properties);
