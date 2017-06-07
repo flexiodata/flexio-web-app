@@ -118,22 +118,45 @@ class StdinoutProxy(object):
 
 proxy = StdinoutProxy()
 
-class TableReader(object):
-    def __init__(self, reader, casts):
-        self.reader = reader
-        self.casts = casts
+
+
+
+class InputEnv(object):
+
+    def __init__(self):
+        self.inited = False
+        self.env = {}
+
+    def initialize(self):
+        self.env = proxy.invoke('getInputEnv', [])
+        self.inited = True
+
+    def __getitem__(self, key):
+        if not self.inited:
+            self.initialize()
+        return self.env[key]
 
     def __iter__(self):
-        return self
+        if not self.inited:
+            self.initialize()
+        return iter(self.env)
 
-    def __next__(self):
-        row = next(self.reader)
-        if row:
-            for key,value in self.casts.items():
-                row[key] = value(row[key])
-            return row
-        else:
-            raise StopIteration
+    def items(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.items()
+
+    def keys(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.keys()
+    
+    def values(self):
+        if not self.inited:
+            self.initialize()
+        return self.env.values()
+    
+input_env = InputEnv()
 
 
 class Input(object):
@@ -143,7 +166,6 @@ class Input(object):
     Tuple = 2
 
     def __init__(self, info):
-        self._env = {}
         if info:
             self._name = info['name']
             self._content_type = info['content_type']
@@ -167,7 +189,7 @@ class Input(object):
         
     @property
     def env(self):
-        return self._env
+        return input_env
 
     @property
     def name(self):
@@ -350,6 +372,10 @@ class Inputs(object):
         if not self.inited:
             self.initialize()
         return self.inputs[idx]
+
+    @property
+    def env(self):
+        return input_env
 
 class Outputs(object):
     def __init__(self):

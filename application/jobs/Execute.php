@@ -614,6 +614,12 @@ class Execute extends \Flexio\Jobs\Base
         return "Hello2";
     }
 
+
+    public function func_getInputEnv()
+    {
+        return $this->getInput()->getEnv();
+    }
+
     public function func_getInputStreamInfo()
     {
         $res = [];
