@@ -267,6 +267,9 @@ class Stream extends \Flexio\Object\Base
         }
          else
         {
+            return $streamreader->getRows($start,$limit);
+            
+            /*
             // read table content
             $result = array();
             while (true)
@@ -285,6 +288,7 @@ class Stream extends \Flexio\Object\Base
             }
 
             return $result;
+            */
         }
     }
 
