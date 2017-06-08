@@ -294,19 +294,12 @@ class Api
             // TODO: remove; for testing
             case 'GET /users/:eid/rights'              : return '\Flexio\Api\Right::listall';
 
-
-
             // projects
             case 'POS /projects'                       : return '\Flexio\Api\Project::create';
             case 'GET /projects'                       : return '\Flexio\Api\Project::listall';
             case 'POS /projects/:eid'                  : return '\Flexio\Api\Project::set';
             case 'GET /projects/:eid'                  : return '\Flexio\Api\Project::get';
             case 'DEL /projects/:eid'                  : return '\Flexio\Api\Project::delete';
-
-            // followers
-            case 'POS /projects/:eid/followers'        : return '\Flexio\Api\Follower::create';
-            case 'GET /projects/:eid/followers'        : return '\Flexio\Api\Follower::listall';
-            case 'DEL /projects/:eid/followers/:eid'   : return '\Flexio\Api\Follower::delete';
 
             // trash
             case 'POS /trash'                          : return '\Flexio\Api\Trash::add';
