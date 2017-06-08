@@ -1,4 +1,5 @@
 import {
+  ROUTE_HOME,
   ROUTE_PROJECTPIPES,
   ROUTE_PROJECTMEMBERS,
   ROUTE_PROJECTCONNECTIONS,
@@ -26,6 +27,7 @@ export const home = {
     {
       // redirect to /home/pipes
       path: '',
+      name: ROUTE_HOME,
       redirect: 'pipes'
     },
     {
