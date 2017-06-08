@@ -33,7 +33,6 @@ class Right
         foreach ($rights as $r)
         {
             $object_eid = $r['object_eid'] ?? false;
-            $user_eid = $r['object_eid'] ?? false;
             $access_code = $r['access_code'] ?? false;
             $actions = $r['actions'] ?? false;
 
@@ -51,16 +50,11 @@ class Right
             if ($object === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-            $user = \Flexio\Object\User::load($user_eid);
-            if ($user === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
             if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
             $object_rights_to_add[] = array(
                 'object' => $object,
-                'user' => $user,
                 'access_code' => $access_code,
                 'actions' => $actions
             );
@@ -71,11 +65,10 @@ class Right
         foreach ($object_rights_to_add as $o)
         {
             $object = $o['object'];
-            $user = $o['user'];
             $access_code = $o['access_code'];
             $actions = $o['actions'];
 
-            $object->grant($user->getEid(), \Model::ACCESS_CODE_TYPE_EID, $actions);
+            $object->grant($access_code, \Model::ACCESS_CODE_TYPE_EID, $actions);
 
             $object_eid = $object->getEid();
             $object_eids_with_rights_added[$object_eid] = $object;
