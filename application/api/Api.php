@@ -285,7 +285,7 @@ class Api
             case 'POS /rights'                         : return '\Flexio\Api\Right::create';
             case 'GET /rights/:eid'                    : return '\Flexio\Api\Right::get';
             case 'DEL /rights/:eid'                    : return '\Flexio\Api\Right::delete';
-            // DEPRECATED (users/:eid/tokens):
+            // DEPRECATED (users/:eid/tokens; merge with rights?):
             case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::listall';
             case 'POS /users/:eid/tokens'              : return '\Flexio\Api\Token::create';
             case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
