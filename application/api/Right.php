@@ -22,20 +22,73 @@ class Right
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
+                'rights' => array('type' => 'object', 'required' => true)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // load the object and check the rights; ability to create/set rights determined by user rights
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        $rights = $params['rights'];
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        // validate the rights
+        $object_rights_to_add = array();
+        foreach ($rights as $r)
+        {
+            $object_eid = $r['object_eid'] ?? false;
+            $user_eid = $r['object_eid'] ?? false;
+            $access_code = $r['access_code'] ?? false;
+            $actions = $r['actions'] ?? false;
 
-        // TODO: add the right
+            if (!is_string($object_eid))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (!is_string($object_eid))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (!is_string($access_code))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (!is_array($actions))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        return array();
+            // make sure we're allowed to modify the rights
+            $object = \Flexio\Object\Store::load($object_eid);
+            if ($object === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+            $user = \Flexio\Object\User::load($user_eid);
+            if ($user === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+            if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+            $object_rights_to_add[] = array(
+                'object' => $object,
+                'user' => $user,
+                'access_code' => $access_code,
+                'actions' => $actions
+            );
+        }
+
+        // add the rights after we've validated all the parameters
+        $object_eids_with_rights_added = array();
+        foreach ($object_rights_to_add as $o)
+        {
+            $object = $o['object'];
+            $user = $o['user'];
+            $access_code = $o['access_code'];
+            $actions = $o['actions'];
+
+            $object->grant($user->getEid(), \Model::ACCESS_CODE_TYPE_EID, $actions);
+
+            $object_eid = $object->getEid();
+            $object_eids_with_rights_added[$object_eid] = $object;
+        }
+
+        // return the rights for the objects affects
+        $result = array();
+        foreach ($object_eids_with_rights_added as $object_eid => $object)
+        {
+            $result[] = $object->getRights();
+        }
+
+        return $result;
     }
 
     public static function delete(array $params, string $requesting_user_eid = null) : bool
