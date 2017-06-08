@@ -9,6 +9,7 @@ import {
   ConnectionResource,
   PipeResource,
   ProcessResource,
+  RightsResource,
   StreamResource,
   TestResource,
   TrashResource,
@@ -41,11 +42,15 @@ export default {
   // auth
   login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
   logout:                         function()                            { return LogoutResource[POS] ()                                                                   },
-  signUp:                         function()                            { return SignupResource[POS] ({ }, attrs)                                                         },
+  signUp:                         function()                            { return SignupResource[POS] ({}, attrs)                                                          },
   checkSignup:                    function({ attrs })                   { return SignupResource[POS] ({ p1: 'check' }, attrs)                                             },
 
   // validation
-  validate:                       function({ attrs })                   { return ValidateResource[POS] ({ }, attrs)                                                       },
+  validate:                       function({ attrs })                   { return ValidateResource[POS] ({}, attrs)                                                        },
+
+  // rights
+  fetchRights:                    function({ attrs })                   { return RightsResource[GET] (attrs)                                                              },
+  createRights:                   function({ attrs })                   { return RightsResource[POS] ({}, attrs)                                                          },
 
   // help
   sendEmailSupport:               function({ attrs })                   { return HelpResource[POS] ({}, attrs)                                                            },
