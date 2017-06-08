@@ -291,9 +291,6 @@ class Api
             case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
             case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
 
-            // TODO: remove; for testing
-            case 'GET /users/:eid/rights'              : return '\Flexio\Api\Right::listall';
-
             // projects
             case 'POS /projects'                       : return '\Flexio\Api\Project::create';
             case 'GET /projects'                       : return '\Flexio\Api\Project::listall';
@@ -366,7 +363,7 @@ class Api
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug'; // display process info
             case 'GET /debug/sysconfig'                : return '\Flexio\Api\System::configuration'; // displays config info
             case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
-            case 'GET /debug/createexamples'      : return '\Flexio\Api\User::createExamples'; // creates example pipes
+            case 'GET /debug/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
         }
     }
 
