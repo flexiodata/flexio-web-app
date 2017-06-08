@@ -85,6 +85,14 @@ class StreamReader
         return $this->reader->readRow();
     }
 
+    public function getRows(int $offset, int $limit)
+    {
+        if ($this->isOk() === false)
+            return false;
+
+        return $this->reader->getRows($offset, $limit);
+    }
+
     public function close() : bool
     {
         if ($this->isOk() === false)
@@ -217,6 +225,14 @@ class StreamFileReader
                 return $row;
             }
         }
+    }
+
+    public function getRows(int $offset, int $limit)
+    {
+        // TODO: possibly implement this here
+        // this is not presently called as non-table streams
+        // are handled manually by Stream.php content() see line ~216 there
+        return null;
     }
 
     private static function getRowFromBuffer(&$buffer) // TODO: add input parameter types
@@ -396,6 +412,42 @@ class StreamTableReader
             $this->read_buffer = substr($this->read_buffer, $length);
             return $ret;
         }
+    }
+
+    public function getRows(int $offset, int $limit)
+    {
+        if (!isset($this->stream_info['path']))
+            return false;
+        $path = $this->stream_info['path'];
+
+        if (!isset($this->stream_info['structure']))
+            return false;
+        $structure = $this->stream_info['structure'];
+
+        if ($this->iterator === false)
+        {
+            $this->iterator = $this->getService()->query(['table' => $path]);
+            if (!$this->iterator)
+                return false;
+
+            $this->read_buffer = '';
+        }
+
+        $rows = $this->iterator->getRows($offset,$limit);
+        if (!$rows)
+            return false;
+        
+        $mapped_rows = array();
+        foreach ($rows as $row)
+        {
+            $mapped_row = array();
+            foreach ($structure as $col)
+                $mapped_row[$col['name']] = $row[$col['store_name']] ?? null;
+
+            $mapped_rows[] = $mapped_row;
+        }
+
+        return $mapped_rows;
     }
 
     public function readRow()
