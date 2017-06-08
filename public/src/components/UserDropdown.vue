@@ -45,7 +45,8 @@
 <script>
   import {
     ROUTE_ACCOUNT,
-    ROUTE_HOME
+    ROUTE_HOME,
+    ROUTE_SIGNIN
   } from '../constants/route'
   import { HOSTNAME } from '../constants/common'
   import { mapGetters } from 'vuex'

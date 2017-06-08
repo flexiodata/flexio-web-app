@@ -73,9 +73,8 @@
     computed: {
       signup_link() {
         return {
-            name: ROUTE_SIGNUP,
-            query: this.$route.query
-
+          name: ROUTE_SIGNUP,
+          query: this.$route.query
         }
       }
     },
