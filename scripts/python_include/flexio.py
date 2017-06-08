@@ -215,7 +215,7 @@ class Input(object):
             self._idx = info['idx']
             self._structure = None
             self._dict = False
-            self._fetch_style = self.Tuple
+            self._fetch_style = self.Dictionary
             self._casts = None
             self._casting = True
         else:
@@ -226,7 +226,7 @@ class Input(object):
             self._idx = -1
             self._structure = None
             self._dict = False
-            self._fetch_style = self.Tuple
+            self._fetch_style = self.Dictionary
             self._casts = None
             self._casting = True
         
