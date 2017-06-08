@@ -29,6 +29,15 @@ class Input extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $params = $job_definition['params'];
 
+
+        if (isset($params['connection']) && $params['connection'] == 'stdin')
+        {
+            // stdin input job is a placeholder -- just pass on all streams
+            $this->getOutput()->merge($this->getInput());
+            return;
+        }
+
+
         // make fully qualified path, if necessary
         $location = $params['location'] ?? '';
         if (strlen($location) > 0 && isset($params['items']))
