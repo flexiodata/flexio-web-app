@@ -86,6 +86,11 @@ class Right
 
     public static function set(array $params, string $requesting_user_eid = null) : bool
     {
+        // note: only allow the actions to be changed; don't allow the object
+        // or the user to be changed since this would allow a user to simply
+        // change the object and/or user to give themselves rights to something
+        // else
+
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
@@ -94,6 +99,7 @@ class Right
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $right_eid = $params['eid'];
+        $actions = $params['actions'];
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -110,13 +116,8 @@ class Right
         if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // note: only allow the actions to be changed; don't allow the object
-        // or the user to be changed since this would allow a user to simply
-        // change the object and/or user to give themselves rights to something
-        // else
-
-        // TODO: set the rights
-
+        $new_rights = array('eid' => $eid, 'actions' => $actions);
+        $object->setRights($new_rights);
         return true;
     }
 
