@@ -283,6 +283,7 @@ class Api
             // sharing
             case 'GET /rights'                         : return '\Flexio\Api\Right::listall';
             case 'POS /rights'                         : return '\Flexio\Api\Right::create';
+            case 'POS /rights/:eid'                    : return '\Flexio\Api\Right::set';
             case 'GET /rights/:eid'                    : return '\Flexio\Api\Right::get';
             case 'DEL /rights/:eid'                    : return '\Flexio\Api\Right::delete';
             // DEPRECATED (users/:eid/tokens; merge with rights?):
