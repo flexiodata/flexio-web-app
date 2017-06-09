@@ -231,20 +231,28 @@ class User extends \Flexio\Object\Base
         if ($rights === false)
             return $res;
 
-        foreach ($rights as $right_info)
+        // get a unique list of the objects
+        $object_list = array();
+        foreach ($rights as $r)
         {
-            $right_eid = $right_info['eid'];
-            $right = \Flexio\Object\Right::load($right_eid);
-            if ($right === false)
-                continue;
+            $object_eid = $r['object_eid'];
+            if (!isset($objects[$object_eid]))
+            {
+                $o = \Flexio\Object\Store::load($object_eid);
+                if ($o !== false)
+                    $object_list[$object_eid] = $o;
+            }
+        }
 
-            // only show rights that are available; note: the right list will
-            // return all rights, including ones that have been deleted, so
-            // this check is important
-            if ($right->getStatus() !== \Model::STATUS_AVAILABLE)
-                continue;
-
-            $res[] = $right;
+        // return the rights for all the objects
+        $res = array();
+        foreach ($object_list as $object_eid => $object)
+        {
+            $object_rights = $object->getRights();
+            foreach ($object_rights as $r)
+            {
+                $res[] = $r;
+            }
         }
 
         return $res;

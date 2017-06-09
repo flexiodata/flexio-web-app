@@ -58,7 +58,7 @@ class Follower
         // get the object properties
         $object_properties = $object->get();
 
-        // the first parameter 'users' is an arrray of strings that are either eids
+        // the first parameter 'users' is an array of strings that are either eids
         // or email addresses; make sure these are strings
         $user_eids = array();
         foreach ($users as $identifier)

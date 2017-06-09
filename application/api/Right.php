@@ -38,8 +38,6 @@ class Right
 
             if (!is_string($object_eid))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (!is_string($object_eid))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
             if (!is_string($access_code))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
             if (!is_array($actions))
@@ -52,6 +50,13 @@ class Right
 
             if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+            // right now, the access_code should be either a user eid or an email;
+            // load the user
+            $user = \Flexio\Object\User::load($access_code);
+            if ($user === false)
+                $user = $this->inviteUser($access_code); // user doesn't exist; invite them
+            $access_code = $user->getEid();
 
             $object_rights_to_add[] = array(
                 'object' => $object,
@@ -217,17 +222,48 @@ class Right
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($user_eid, \Flexio\Object\Action::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        //if ($user->allows($user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the rights
         $result = array();
         $rights = $user->getRightList();
-        foreach ($rights as $r)
-        {
-            $result[] = $r->get();
-        }
+        return $rights;
+    }
 
-        return $result;
+    private function inviteUser($email) : bool
+    {
+        // user doesn't exist; create a user
+        $user_email = $identifier;
+        $username = \Flexio\Base\Util::generateHandle(); // default username
+        $password = \Flexio\Base\Util::generateHandle();
+        $verify_code = \Flexio\Base\Util::generateHandle(); // code to verify user's email address
+
+        $new_user_info = array('user_name' => $username,
+                                'email' => $user_email,
+                                'eid_status' => \Model::STATUS_PENDING,
+                                'password' => $password,
+                                'verify_code' => $verify_code,
+                                'first_name' => '',
+                                'last_name' => '',
+                                'full_name' => '',
+                                'send_email' => false,
+                                'create_examples' => false,
+                                'require_verification' => true); // require verification to give user a chance to fill out their info
+
+        // if the user isn't invited, create the user; if something went wrong, move on
+        $user_info = \Flexio\Api\User::create($new_user_info, $requesting_user_eid);
+        if (!isset($user_info) || $user_info === false)
+            return false;
+
+        $user_eid = $user_info['eid'];
+
+        // add an invitation association
+        \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_INVITED, $user_eid);
+        \Flexio\System\System::getModel()->assoc_add($user_eid, \Model::EDGE_INVITED_BY, $requesting_user_eid);
+
+        // TODO: send out the invitation
+
+        return true;
     }
 }
