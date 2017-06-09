@@ -96,9 +96,7 @@
               'access_code': u,
               'actions': [
                 types.ACTION_TYPE_READ,
-                types.ACTION_TYPE_EXECUTE,
-                types.ACTION_TYPE_WRITE,
-                types.ACTION_TYPE_DELETE
+                types.ACTION_TYPE_EXECUTE
               ]
             }
           })
