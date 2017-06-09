@@ -69,7 +69,7 @@
         'getAllRights'
       ]),
       tryFetchRights() {
-        if (_.size(this.objectEid) > 0)
+        if (_.size(this.objectEid) > 0 && _.size(this.getOurRights()) == 0)
           this.$store.dispatch('fetchRights', { objects: this.objectEid })
       },
       getOurRights() {
@@ -77,7 +77,8 @@
         // as the 'return', otherwise JS will return without doing anything
         return _
           .chain(this.getAllRights())
-          .sortBy([ function(p) { return new Date(p.created) } ])
+          .filter(r => { return _.get(r, 'object_eid', '') === this.objectEid })
+          .sortBy([ function(r) { return new Date(r.created) } ])
           .reverse()
           .value()
       },
