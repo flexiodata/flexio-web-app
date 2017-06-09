@@ -20,8 +20,6 @@ class Right
 {
     public static function create(array $params, string $requesting_user_eid = null) : array
     {
-$params['rights'] = json_decode($params['rights'],true);
-
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'rights' => array('type' => 'object', 'required' => true)
