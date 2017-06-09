@@ -257,48 +257,6 @@ class StreamFileReader
         }
 
         return false;
-
-        /*
-        // this is the old version of this code; it has some problems;
-        // first, the first check is unecessary because the second check
-        // does the same thing.  The problem with the final check is if
-        // a \r\n is split up between two buffer reads; that will effectively
-        // insert a blank line into the data
-        // datadatadata\r<buffer-end>\ndatadatadatadata
-        //
-        // solution: go with a simpler variant that only handles \r\n and \n
-        // old-style mac formats no longer supported
-
-        // check for various types of newlines and return
-        // the line if we can find one of them
-
-        $cr = strpos($buffer, "\r\n");
-        if ($cr !== false)
-        {
-            $line = substr($buffer, 0, $cr + 2);
-            $buffer = substr($buffer, $cr + 2);
-            return $line;
-        }
-
-        $cr = strpos($buffer, "\n");
-        if ($cr !== false)
-        {
-            $line = substr($buffer, 0, $cr + 1);
-            $buffer = substr($buffer, $cr + 1);
-            return $line;
-        }
-
-        $cr = strpos($buffer, "\r");
-        if ($cr !== false)
-        {
-            $line = substr($buffer, 0, $cr + 1);
-            $buffer = substr($buffer, $cr + 1);
-            return $line;
-        }
-
-        // no lines found
-        return false;
-        */
     }
 
     private function getService()
