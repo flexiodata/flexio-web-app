@@ -991,7 +991,7 @@ class PostgresIteratorAll
 
 
 /*
-class PostgresInserterCopy
+class PostgresInserterBulkCopy
 {
     public $db;
     public $table = '';
