@@ -142,9 +142,10 @@ class Project extends \Flexio\Object\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // populate the follower count
+        $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
         $follower_count = $this->getModel()->assoc_count($this->getEid(),
                                                          \Model::EDGE_FOLLOWED_BY,
-                                                         [\Model::STATUS_AVAILABLE]) + 1; // plus 1 to include owner
+                                                         $assoc_filter) + 1; // plus 1 to include owner
         $properties['follower_count'] = $follower_count;
 
         // populate the pipe count
