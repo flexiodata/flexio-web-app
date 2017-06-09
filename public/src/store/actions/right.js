@@ -37,10 +37,10 @@ export const createRights = ({ commit }, { attrs }) => {
   })
 }
 
-export const updateRights = ({ commit }, { eid, attrs }) => {
+export const updateRight = ({ commit }, { eid, attrs }) => {
   commit(types.UPDATING_RIGHT, { eid, attrs })
 
-  return api.updateRights({ eid, attrs }).then(response => {
+  return api.updateRight({ eid, attrs }).then(response => {
     // success callback
     commit(types.UPDATED_RIGHT, { eid, attrs: response.body })
     return response
@@ -50,6 +50,17 @@ export const updateRights = ({ commit }, { eid, attrs }) => {
   })
 }
 
-export const deleteRights = ({ commit }, { attrs }) => {
+export const deleteRight = ({ commit }, { attrs }) => {
+  commit(types.DELETING_RIGHT, { attrs })
 
+  var eid = _.get(attrs, 'eid', '')
+  return api.deleteRight({ eid }).then(response => {
+    debugger
+    // success callback
+    commit(types.DELETED_RIGHT, { attrs })
+    return response
+  }, response => {
+    // error callback
+    return response
+  })
 }

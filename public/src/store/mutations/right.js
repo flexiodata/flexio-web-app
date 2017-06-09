@@ -31,10 +31,11 @@ export default {
     updateRight(state, eid, attrs)
   },
 
-  [types.DELETING_RIGHT] (state, { eid, token_eid }) {},
+  [types.DELETING_RIGHT] (state, { attrs }) {},
 
-  [types.DELETED_RIGHT] (state, { eid, token_eid }) {
-    removeObject(state, token_eid)
+  [types.DELETED_RIGHT] (state, { attrs }) {
+    debugger
+    removeObject(state, attrs)
   }
 
   // ----------------------------------------------------------------------- //

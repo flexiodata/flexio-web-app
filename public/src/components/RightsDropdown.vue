@@ -26,7 +26,7 @@
           <div class="f7 lh-copy light-silver">People can view or run this pipe</div>
         </div>
       </div>
-      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer dark-red" @click="$emit('remove')">
+      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer dark-red" @click="removeRight">
         <i class="material-icons md-18 ml1 mr2 transparent" :class="can_edit ? '' : 'transparent'">check</i>
         <div>Remove</div>
       </div>
@@ -99,9 +99,12 @@
         var eid = _.get(this.item, 'eid', '')
         var attrs = { actions }
 
-        this.$store.dispatch('updateRights', { eid , attrs }).then(response => {
+        this.$store.dispatch('updateRight', { eid , attrs }).then(response => {
           console.log(response)
         })
+      },
+      removeRight() {
+        this.$store.dispatch('deleteRight', { attrs: this.item })
       }
     }
   }
