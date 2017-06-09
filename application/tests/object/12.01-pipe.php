@@ -186,26 +186,6 @@ class Test
             "ename" : null,
             "name" : null,
             "description" : null,
-            "rights" : {
-                "owner" : {
-                    "read": null,
-                    "write": null,
-                    "delete": null,
-                    "execute": null
-                },
-                "member" : {
-                    "read": null,
-                    "write": null,
-                    "delete": null,
-                    "execute": null
-                },
-                "public" : {
-                    "read": null,
-                    "write": null,
-                    "delete": null,
-                    "execute": null
-                }
-            },
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null,
@@ -214,6 +194,8 @@ class Test
                 "last_name" : null,
                 "email_hash" : null
             },
+            "followed_by" : [
+            ],
             "task" : {
             },
             "schedule" : null,

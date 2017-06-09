@@ -196,26 +196,6 @@ class Test
             "token_expires" : null,
             "connection_type" : null,
             "connection_status" : null,
-            "rights" : {
-                "owner" : {
-                    "read": null,
-                    "write": null,
-                    "delete": null,
-                    "execute": null
-                },
-                "member" : {
-                    "read": null,
-                    "write": null,
-                    "delete": null,
-                    "execute": null
-                },
-                "public" : {
-                    "read": null,
-                    "write": null,
-                    "delete": null,
-                    "execute": null
-                }
-            },
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null,
@@ -224,6 +204,8 @@ class Test
                 "last_name" : null,
                 "email_hash" : null
             },
+            "followed_by" : [
+            ],
             "created" : null,
             "updated" : null
         }

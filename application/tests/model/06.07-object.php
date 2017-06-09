@@ -132,9 +132,9 @@ class Test
         $association = $model->delete($eid3);
         $association = $model->delete($eid4);
         $count_all = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
-        $count_all_with_filter = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, [\Model::STATUS_AVAILABLE, \Model::STATUS_DELETED]);
-        $count_available = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, [\Model::STATUS_AVAILABLE]);
-        $count_deleted = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, [\Model::STATUS_DELETED]);
+        $count_all_with_filter = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_AVAILABLE, \Model::STATUS_DELETED)));
+        $count_available = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_AVAILABLE)));
+        $count_deleted = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_DELETED)));
         $actual = $count_all === 3 && $count_all_with_filter ===3 && $count_available === 1 && $count_deleted === 2;
         $expected = true;
         TestCheck::assertBoolean('C.5', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
