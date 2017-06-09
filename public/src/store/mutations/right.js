@@ -34,7 +34,6 @@ export default {
   [types.DELETING_RIGHT] (state, { attrs }) {},
 
   [types.DELETED_RIGHT] (state, { attrs }) {
-    debugger
     removeObject(state, attrs)
   }
 

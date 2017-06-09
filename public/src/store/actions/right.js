@@ -55,7 +55,6 @@ export const deleteRight = ({ commit }, { attrs }) => {
 
   var eid = _.get(attrs, 'eid', '')
   return api.deleteRight({ eid }).then(response => {
-    debugger
     // success callback
     commit(types.DELETED_RIGHT, { attrs })
     return response
