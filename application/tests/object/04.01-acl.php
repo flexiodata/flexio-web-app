@@ -20,6 +20,9 @@ class Test
 {
     public function run(&$results)
     {
+        // TODO: add tests for grant, revoke, etc
+
+
         // SETUP
         $model = TestUtil::getModel();
 
@@ -32,479 +35,220 @@ class Test
         [
         ]
         ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights);
-        $actual = $model->getRights($eid);
+        $object = \Flexio\Object\Object::create(array());
+        $object->setRights($rights);
+        $actual = $object->getRights();
         $expected = array();
-        TestCheck::assertArray('A.1', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]}
         ]
         ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights);
-        $actual = $model->getRights($eid);
+        $object = \Flexio\Object\Object::create(array());
+        $object->setRights($rights);
+        $actual = $object->getRights();
         $expected = json_decode('
         [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"}
+            {"object_eid": "'.$object->getEid().'", "access_type": "a", "access_code": "b", "actions": ["object.read"]}
         ]
         ',true);
-        TestCheck::assertArray('A.2', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.2', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights);
-        $actual = $model->getRights($eid);
+        $object = \Flexio\Object\Object::create(array());
+        $object->setRights($rights);
+        $actual = $object->getRights();
         $expected = json_decode('
         [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"},
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"}
+            {"object_eid": "'.$object->getEid().'", "access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertArray('A.3', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.3', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
         $rights2 = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]}
         ]
         ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights1);
-        $model->addRights($eid, $rights2);
-        $actual = $model->getRights($eid);
+        $object = \Flexio\Object\Object::create(array());
+        $object->setRights($rights1);
+        $object->setRights($rights2);
+        $actual = $object->getRights();
         $expected = json_decode('
         [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"},
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"}
+            {"object_eid": "'.$object->getEid().'", "access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertArray('A.4', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.4', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
         $rights2 = json_decode('
         [
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights1);
-        $model->addRights($eid, $rights2);
-        $actual = $model->getRights($eid);
+        $object = \Flexio\Object\Object::create(array());
+        $object->setRights($rights1);
+        $object->setRights($rights2);
+        $actual = $object->getRights();
         $expected = json_decode('
         [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"},
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"}
+            {"object_eid": "'.$object->getEid().'", "access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertArray('A.5', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.5', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]}
         ]
         ',true);
         $rights2 = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights1);
-        $model->addRights($eid, $rights2);
-        $actual = $model->getRights($eid);
+        $object = \Flexio\Object\Object::create(array());
+        $object->setRights($rights1);
+        $object->setRights($rights2);
+        $actual = $object->getRights();
         $expected = json_decode('
         [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"},
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"}
+            {"object_eid": "'.$object->getEid().'", "access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertArray('A.6', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.6', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
         [
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "c", "access_code": "d", "actions": ["object.read"]}
         ]
         ',true);
         $rights2 = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights1);
-        $model->addRights($eid, $rights2);
-        $actual = $model->getRights($eid);
+        $object = \Flexio\Object\Object::create(array());
+        $object->setRights($rights1);
+        $object->setRights($rights2);
+        $actual = $object->getRights();
         $expected = json_decode('
         [
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"},
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"}
+            {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.read"]},
+            {"object_eid": "'.$object->getEid().'", "access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertArray('A.7', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.7', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "b", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"access_type": "b", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
         $rights2 = json_decode('
         [
-            {"access_type": "a", "access_code": "c", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "c", "actions": ["object.read"]},
+            {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights1);
-        $model->addRights($eid, $rights2);
-        $actual = $model->getRights($eid);
+        $object = \Flexio\Object\Object::create(array());
+        $object->setRights($rights1);
+        $object->setRights($rights2);
+        $actual = $object->getRights();
         $expected = json_decode('
         [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"},
-            {"object_eid": "'.$eid.'", "access_type": "b", "access_code": "d", "action": "write"},
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "c", "action": "read"},
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"}
+            {"object_eid": "'.$object->getEid().'", "access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"object_eid": "'.$object->getEid().'", "access_type": "b", "access_code": "d", "actions": ["object.write"]},
+            {"object_eid": "'.$object->getEid().'", "access_type": "a", "access_code": "c", "actions": ["object.read"]},
+            {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertArray('A.8', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.8', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "b", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"access_type": "b", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
         $rights2 = json_decode('
         [
-            {"access_type": "a", "access_code": "c", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "c", "actions": ["object.read"]},
+            {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $eid1 = $model->create(\Model::TYPE_OBJECT, array());
-        $eid2 = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid1, $rights1);
-        $model->addRights($eid2, $rights2);
-        $actual = $model->getRights($eid1);
+        $object1 = \Flexio\Object\Object::create(array());
+        $object2 = \Flexio\Object\Object::create(array());
+        $object1->setRights($rights1);
+        $object2->setRights($rights2);
+        $actual = $object1->getRights();
         $expected = json_decode('
         [
-            {"object_eid": "'.$eid1.'", "access_type": "a", "access_code": "b", "action": "read"},
-            {"object_eid": "'.$eid1.'", "access_type": "b", "access_code": "d", "action": "write"}
+            {"object_eid": "'.$object1->getEid().'", "access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"object_eid": "'.$object1->getEid().'", "access_type": "b", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertArray('A.9', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.9', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
         [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "b", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "b", "actions": ["object.read"]},
+            {"access_type": "b", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
         $rights2 = json_decode('
         [
-            {"access_type": "a", "access_code": "c", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
+            {"access_type": "a", "access_code": "c", "actions": ["object.read"]},
+            {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $eid1 = $model->create(\Model::TYPE_OBJECT, array());
-        $eid2 = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid1, $rights1);
-        $model->addRights($eid2, $rights2);
-        $actual = $model->getRights($eid2);
+        $object1 = \Flexio\Object\Object::create(array());
+        $object2 = \Flexio\Object\Object::create(array());
+        $object1->setRights($rights1);
+        $object2->setRights($rights2);
+        $actual = $object2->getRights();
         $expected = json_decode('
         [
-            {"object_eid": "'.$eid2.'", "access_type": "a", "access_code": "c", "action": "read"},
-            {"object_eid": "'.$eid2.'", "access_type": "c", "access_code": "d", "action": "write"}
+            {"object_eid": "'.$object2->getEid().'", "access_type": "a", "access_code": "c", "actions": ["object.read"]},
+            {"object_eid": "'.$object2->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertArray('A.10', '\Model::addRights(); ',  $actual, $expected, $results);
-
-
-
-        // TEST: \Model::deleteRights()
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-        ]
-        ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights_add);
-        $model->deleteRights($eid, $rights_delete);
-        $actual = $model->getRights($eid);
-        $expected = json_decode('
-        [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"},
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        TestCheck::assertArray('B.1', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights_add);
-        $model->deleteRights($eid, $rights_delete);
-        $actual = $model->getRights($eid);
-        $expected = json_decode('
-        [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"}
-        ]
-        ',true);
-        TestCheck::assertArray('B.2', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "a", "access_code": "b", "action": "read"}
-        ]
-        ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights_add);
-        $model->deleteRights($eid, $rights_delete);
-        $actual = $model->getRights($eid);
-        $expected = json_decode('
-        [
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        TestCheck::assertArray('B.3', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights_add);
-        $model->deleteRights($eid, $rights_delete);
-        $actual = $model->getRights($eid);
-        $expected = json_decode('
-        [
-        ]
-        ',true);
-        TestCheck::assertArray('B.4', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "c", "access_code": "d", "action": "write"},
-            {"access_type": "a", "access_code": "b", "action": "read"}
-        ]
-        ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights_add);
-        $model->deleteRights($eid, $rights_delete);
-        $actual = $model->getRights($eid);
-        $expected = json_decode('
-        [
-        ]
-        ',true);
-        TestCheck::assertArray('B.5', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "f", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "a", "access_code": "f", "action": "read"}
-        ]
-        ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights_add);
-        $model->deleteRights($eid, $rights_delete);
-        $actual = $model->getRights($eid);
-        $expected = json_decode('
-        [
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        TestCheck::assertArray('B.6', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "f", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights_add);
-        $model->deleteRights($eid, $rights_delete);
-        $actual = $model->getRights($eid);
-        $expected = json_decode('
-        [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "f", "action": "read"}
-        ]
-        ',true);
-        TestCheck::assertArray('B.7', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "c", "access_code": "d", "action": "execute"},
-            {"access_type": "a", "access_code": "f", "action": "read"}
-        ]
-        ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights_add);
-        $model->deleteRights($eid, $rights_delete);
-        $actual = $model->getRights($eid);
-        $expected = json_decode('
-        [
-            {"object_eid": "'.$eid.'", "access_type": "a", "access_code": "b", "action": "read"},
-            {"object_eid": "'.$eid.'", "access_type": "c", "access_code": "d", "action": "write"}
-        ]
-        ',true);
-        TestCheck::assertArray('B.8', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "b", "action": "read"},
-            {"access_type": "c", "access_code": "d", "action": "write"},
-            {"access_type": "c", "access_code": "d", "action": "execute"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "c", "access_code": "d", "action": "write"},
-            {"access_type": "c", "access_code": "d", "action": "execute"},
-            {"access_type": "a", "access_code": "b", "action": "read"}
-        ]
-        ',true);
-        $eid = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid, $rights_add);
-        $model->deleteRights($eid, $rights_delete);
-        $actual = $model->getRights($eid);
-        $expected = json_decode('
-        [
-        ]
-        ',true);
-        TestCheck::assertArray('B.9', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "f", "action": "read"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "a", "access_code": "f", "action": "read"}
-        ]
-        ',true);
-        $eid1 = $model->create(\Model::TYPE_OBJECT, array());
-        $eid2 = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid1, $rights_add);
-        $model->deleteRights($eid1, $rights_delete);
-        $actual = $model->getRights($eid1);
-        $expected = json_decode('
-        [
-        ]
-        ',true);
-        TestCheck::assertArray('B.10', '\Model::deleteRights(); ',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $rights_add = json_decode('
-        [
-            {"access_type": "a", "access_code": "f", "action": "read"}
-        ]
-        ',true);
-        $rights_delete = json_decode('
-        [
-            {"access_type": "a", "access_code": "f", "action": "read"}
-        ]
-        ',true);
-        $eid1 = $model->create(\Model::TYPE_OBJECT, array());
-        $eid2 = $model->create(\Model::TYPE_OBJECT, array());
-        $model->addRights($eid1, $rights_add);
-        $model->deleteRights($eid2, $rights_delete);
-        $actual = $model->getRights($eid1);
-        $expected = json_decode('
-        [
-            {"object_eid": "'.$eid1.'", "access_type": "a", "access_code": "f", "action": "read"}
-        ]
-        ',true);
-        TestCheck::assertArray('B.11', '\Model::deleteRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.10', '\Model::addRights(); ',  $actual, $expected, $results);
     }
 }
