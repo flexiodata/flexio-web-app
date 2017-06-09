@@ -990,8 +990,8 @@ class PostgresIteratorAll
 }
 
 
-
-class PostgresInserter
+/*
+class PostgresInserterCopy
 {
     public $db;
     public $table = '';
@@ -1124,6 +1124,7 @@ class PostgresInserter
         return $this->flush();
     }
 }
+*/
 
 
 
@@ -1290,6 +1291,7 @@ class PostgresInserterMultiRow
 }
 
 
+/*
 class PostgresInserterSimple
 {
     public $db;
@@ -1338,7 +1340,7 @@ class PostgresInserterSimple
         return $this->flush();
     }
 }
-
+*/
 
 
 
