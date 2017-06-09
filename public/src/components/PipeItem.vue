@@ -19,6 +19,9 @@
           <h2 class="f6 fw4 mt1 mb0 black-60">{{item.description}}</h2>
         </div>
       </div>
+      <div class="flex-none min-w4 mr3 f6 fw6 black-60">
+        {{follower_str}}
+      </div>
       <div class="flex-none mr2">
         <div :class="isTrash ? 'o-40 no-pointer-events' : ''">
           <toggle-button
@@ -66,6 +69,7 @@
   import { SCHEDULE_STATUS_ACTIVE, SCHEDULE_STATUS_INACTIVE, SCHEDULE_FREQUENCY_DAILY } from '../constants/schedule'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import { OBJECT_STATUS_TRASH } from '../constants/object-status'
+  import util from '../utils'
   import ConnectionIcon from './ConnectionIcon.vue'
   import ToggleButton from './ToggleButton.vue'
   import TaskSummaryList from './TaskSummaryList.vue'
@@ -107,6 +111,13 @@
       },
       is_scheduled() {
         return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
+      },
+      follower_count() {
+        return _.size(_.get(this.item, 'followed_by', []))
+      },
+      follower_str() {
+        var cnt = this.follower_count
+        return cnt == 0 ? 'Only You' : util.pluralize(cnt, cnt+' '+'members', cnt+' '+'member')
       },
       tasks() {
         return _.get(this.item, 'task', [])
