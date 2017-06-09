@@ -12,19 +12,22 @@
       <div class="dib f6 bg-white ba b--black-10 ph2 ph3-ns pv1 black-60 cursor-default">{{owner}}</div>
     </div>
     <div v-else class="w-100 tr">
-      <rights-dropdown></rights-dropdown>
+      <rights-dropdown :item="item"></rights-dropdown>
     </div>
   </div>
 </article>
 </template>
 
 <script>
-  import * as types from '../constants/action-type'
-  import * as actions from '../constants/action-info'
   import RightsDropdown from './RightsDropdown.vue'
 
   export default {
-    props: ['item'],
+    props: {
+      'item': {
+        type: Object,
+        required: true
+      }
+    },
     components: {
       RightsDropdown
     },
@@ -46,63 +49,7 @@
       },
       title() {
         return _.get(this.item, 'access_code')
-        return this.is_pending ? this.item.email : this.item.first_name+' '+this.item.last_name
-      },
-      item_actions() {
-        return _.get(this.item, 'actions', [])
-      },
-      can_edit() {
-        if (_.includes(this.item_actions, types.ACTION_TYPE_DELETE) ||
-            _.includes(this.item_actions, types.ACTION_TYPE_WRITE))
-        {
-          return true
-        }
-
-        return false
-      },
-      can_view() {
-        if (_.includes(this.item_actions, types.ACTION_TYPE_EXECUTE) ||
-            _.includes(this.item_actions, types.ACTION_TYPE_READ))
-        {
-          return true
-        }
-
-        return false
-      },
-      rights_label() {
-        return this.can_edit ? 'Can Edit' :
-          this.can_view ? 'Can View' : ''
-      },
-      menu_items() {
-        return [{
-          id: types.ACTION_TYPE_DELETE, // implicitly allow 'can write' as well
-          label: 'Can Edit',
-          icon: this.can_edit ? 'check' : 'check_box_outline_blank'
-        },{
-          id: types.ACTION_TYPE_EXECUTE, // implicitly allow 'can read' as well
-          label: 'Can View',
-          icon: !this.can_edit && this.can_view ? 'check' : 'check_box_outline_blank'
-        },{
-          type: 'divider'
-        },{
-          id: 'remove',
-          label: 'Remove',
-          icon: ''
-        }]
-      }
-    },
-    methods: {
-      onDropdownItemClick(menu_item) {
-        switch (menu_item.id)
-        {
-          case types.ACTION_TYPE_READ:
-          case types.ACTION_TYPE_WRITE:
-          case types.ACTION_TYPE_DELETE:
-          case types.ACTION_TYPE_EXECUTE:
-            return this.$emit('edit', this.item, menu_item.id)
-          case 'remove':
-            return this.$emit('delete', this.item)
-        }
+        //return this.is_pending ? this.item.email : this.item.first_name+' '+this.item.last_name
       }
     }
   }

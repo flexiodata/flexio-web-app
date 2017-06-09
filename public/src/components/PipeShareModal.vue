@@ -8,7 +8,7 @@
     <!-- list -->
     <member-list
       class="overflow-auto"
-      style="min-height: 300px"
+      style="height: 300px"
       :object-eid="pipe_eid"
     ></member-list>
 

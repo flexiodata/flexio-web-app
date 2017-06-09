@@ -1,7 +1,7 @@
 <template>
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
-      <spinner size="large" message="Loading members..."></spinner>
+      <spinner message="Loading..."></spinner>
     </div>
   </div>
   <empty-item v-else-if="members.length == 0 && filter.length > 0">
@@ -53,12 +53,14 @@
         this.tryFetchRights()
       }
     },
+    data() {
+      return {
+        is_fetching: false
+      }
+    },
     computed: {
       members() {
         return this.getOurRights()
-      },
-      is_fetching() {
-        return false
       }
     },
     mounted() {
@@ -70,7 +72,12 @@
       ]),
       tryFetchRights() {
         if (_.size(this.objectEid) > 0 && _.size(this.getOurRights()) == 0)
-          this.$store.dispatch('fetchRights', { objects: this.objectEid })
+        {
+          this.is_fetching = true
+          this.$store.dispatch('fetchRights', { objects: this.objectEid }).then(response => {
+            this.is_fetching = false
+          })
+        }
       },
       getOurRights() {
         // NOTE: it's really important to include the '_' on the same line
