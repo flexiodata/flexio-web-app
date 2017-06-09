@@ -279,7 +279,6 @@ class Connection extends \Flexio\Object\Base
             "token_expires" : null,
             "connection_type" : null,
             "connection_status" : null,
-            "rights": null,
             "owned_by='.\Model::EDGE_OWNED_BY.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_USER.'",
@@ -306,31 +305,6 @@ class Connection extends \Flexio\Object\Base
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if (!$properties)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        // TODO: deprecated
-        $default_rights = array(
-            'owner' => array(
-                'read' => true,
-                'write' => true,
-                'execute' => true,
-                'delete' => true
-            ),
-            'member' => array(
-                'read' => true,
-                'write' => true,
-                'execute' => true,
-                'delete' => false
-            ),
-            'public' => array(
-                'read' => false,
-                'write' => false,
-                'execute' => false,
-                'delete' => false
-            )
-        );
-
-        // populate the rights node
-        $properties['rights'] = $default_rights;
 
         return $properties;
     }
