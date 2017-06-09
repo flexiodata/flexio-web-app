@@ -20,6 +20,8 @@ class Right
 {
     public static function create(array $params, string $requesting_user_eid = null) : array
     {
+$params['rights'] = json_decode($params['rights'],true);
+
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'rights' => array('type' => 'object', 'required' => true)
@@ -55,14 +57,19 @@ class Right
             // load the user
             $user = \Flexio\Object\User::load($access_code);
             if ($user === false)
-                $user = $this->inviteUser($access_code); // user doesn't exist; invite them
-            $access_code = $user->getEid();
+                $user = self::inviteUser($access_code, $requesting_user_eid); // user doesn't exist; invite them
 
-            $object_rights_to_add[] = array(
-                'object' => $object,
-                'access_code' => $access_code,
-                'actions' => $actions
-            );
+            if ($user !== false)
+            {
+                $access_code = $user->getEid();
+
+                $object_rights_to_add[] = array(
+                    'object' => $object,
+                    'user' => $user,
+                    'access_code' => $access_code,
+                    'actions' => $actions
+                );
+            }
         }
 
         // add the rights after we've validated all the parameters
@@ -70,6 +77,7 @@ class Right
         foreach ($object_rights_to_add as $o)
         {
             $object = $o['object'];
+            $user = $o['user'];
             $access_code = $o['access_code'];
             $actions = $o['actions'];
 
@@ -77,6 +85,10 @@ class Right
 
             $object_eid = $object->getEid();
             $object_eids_with_rights_added[$object_eid] = $object;
+
+            \Flexio\System\System::getModel()->assoc_add($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
+            \Flexio\System\System::getModel()->assoc_add($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
+
         }
 
         // return the rights for the objects affects
@@ -231,12 +243,12 @@ class Right
         return $rights;
     }
 
-    private function inviteUser($email) : bool
+    private static function inviteUser(string $identifier, string $requesting_user_eid)
     {
         // user doesn't exist; create a user
         $user_email = $identifier;
         $username = \Flexio\Base\Util::generateHandle(); // default username
-        $password = \Flexio\Base\Util::generateHandle();
+        $password = \Flexio\Base\Util::generatePassword();
         $verify_code = \Flexio\Base\Util::generateHandle(); // code to verify user's email address
 
         $new_user_info = array('user_name' => $username,
@@ -254,7 +266,7 @@ class Right
         // if the user isn't invited, create the user; if something went wrong, move on
         $user_info = \Flexio\Api\User::create($new_user_info, $requesting_user_eid);
         if (!isset($user_info) || $user_info === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $user_eid = $user_info['eid'];
 
@@ -262,8 +274,6 @@ class Right
         \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_INVITED, $user_eid);
         \Flexio\System\System::getModel()->assoc_add($user_eid, \Model::EDGE_INVITED_BY, $requesting_user_eid);
 
-        // TODO: send out the invitation
-
-        return true;
+        return \Flexio\Object\User::load($user_eid);
     }
 }

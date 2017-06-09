@@ -42,8 +42,7 @@ class Api
         if (isset($urlpart7)) $params['apiparam6']  = $urlpart7;
 
         // process the request
-        try
-        {
+
             // if we're testing a failure, throw an error right away
             if (isset($params['testfail']) && strlen($params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
             {
@@ -86,79 +85,7 @@ class Api
                 return $response;
 
             self::sendContentResponse($response);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $info = $e->getMessage(); // exception info is packaged up in message
-            $info = json_decode($info,true);
 
-            $error = array();
-            $error['code'] = $info['code'];
-            $error['message'] = $info['message'];
-
-            if (IS_DEBUG() !== false)
-            {
-                $file = $e->getFile();
-                $line = $e->getLine();
-                $error['type'] = 'flexio exception';
-                $error['file'] = $file;
-                $error['line'] = $line;
-                $error['trace'] = $e->getTrace();
-            }
-
-            $response = array();
-            $response['error'] = $error;
-            if ($echo === false)
-                return $response;
-
-            self::sendErrorResponse($response);
-        }
-        catch (\Exception $e)
-        {
-            $error = array();
-            $error['code'] = \Flexio\Base\Error::GENERAL;
-            $error['message'] = '';
-
-            if (IS_DEBUG() !== false)
-            {
-                $file = $e->getFile();
-                $line = $e->getLine();
-                $error['type'] = 'php exception';
-                $error['file'] = $file;
-                $error['line'] = $line;
-                $error['trace'] = $e->getTrace();
-            }
-
-            $response = array();
-            $response['error'] = $error;
-            if ($echo === false)
-                return $response;
-
-            self::sendErrorResponse($response);
-        }
-        catch (\Error $e)
-        {
-            $error = array();
-            $error['code'] = \Flexio\Base\Error::GENERAL;
-            $error['message'] = '';
-
-            if (IS_DEBUG() !== false)
-            {
-                $file = $e->getFile();
-                $line = $e->getLine();
-                $error['type'] = 'php error';
-                $error['file'] = $file;
-                $error['line'] = $line;
-                $error['trace'] = $e->getTrace();
-            }
-
-            $response = array();
-            $response['error'] = $error;
-            if ($echo === false)
-                return $response;
-
-            self::sendErrorResponse($response);
-        }
     }
 
     private static function processRequest(string $request_method, array $url_params, array $query_params, string $requesting_user_eid = null)
