@@ -17,6 +17,7 @@
       v-for="(member, index) in members"
       :item="member"
       :index="index"
+      :owner-eid="ownerEid"
       :key="member.eid"
     ></member-item>
   </div>
@@ -37,6 +38,10 @@
         default: ''
       },
       'object-eid': {
+        type: String,
+        default: ''
+      },
+      'owner-eid': {
         type: String,
         default: ''
       }

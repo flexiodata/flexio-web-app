@@ -16,6 +16,7 @@
       class="overflow-auto"
       style="height: 260px"
       :object-eid="pipe_eid"
+      :owner-eid="owner_eid"
       v-if="pipe_eid.length > 0"
     ></member-list>
 
@@ -46,6 +47,9 @@
     computed: {
       pipe_eid() {
         return _.get(this.pipe, 'eid', '')
+      },
+      owner_eid() {
+        return _.get(this.pipe, 'owned_by.eid', '')
       }
     },
     methods: {

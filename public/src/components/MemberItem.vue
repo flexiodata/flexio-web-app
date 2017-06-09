@@ -9,7 +9,7 @@
   </div>
   <div class="dtc v-mid">
     <div v-if="is_owner" class="w-100 tr">
-      <div class="dib f6 bg-white ba b--black-10 ph2 ph3-ns pv1 black-60 cursor-default">{{owner}}</div>
+      <div class="dib f6 bg-white ba b--black-10 ph2 ph3-ns pv1 black-60 cursor-default">Owner</div>
     </div>
     <div v-else class="w-100 tr">
       <rights-dropdown :item="item"></rights-dropdown>
@@ -27,6 +27,10 @@
       'item': {
         type: Object,
         required: true
+      },
+      'owner-eid': {
+        type: String,
+        default: ''
       }
     },
     components: {
@@ -40,13 +44,10 @@
         return 'https://secure.gravatar.com/avatar/'+this.email_hash+'?d=mm&s=64'
       },
       is_owner() {
-        return _.toLower(_.get(this.item, 'user_group')) == 'owner'
+        return _.get(this.item, 'access_code') == this.ownerEid
       },
       is_pending() {
         return _.get(this.item, 'first_name', '').length == 0 && _.get(this.item, 'last_name', '').length == 0
-      },
-      owner() {
-        return this.is_owner ? 'Owner' : ''
       },
       title() {
         return _.get(this.item, 'access_code')
