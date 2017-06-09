@@ -1,32 +1,41 @@
 <template>
   <ui-modal
     ref="dialog"
+    class="has-footer"
     @hide="onHide"
   >
     <div slot="header" class="f4">Share '{{pipe.name}}'</div>
 
+    <member-add-form
+      :object-eid="pipe_eid"
+      v-if="pipe_eid.length > 0"
+    ></member-add-form>
+
     <!-- list -->
     <member-list
       class="overflow-auto"
-      style="height: 300px"
+      style="height: 260px"
       :object-eid="pipe_eid"
+      v-if="pipe_eid.length > 0"
     ></member-list>
 
   </ui-modal>
 </template>
 
 <script>
+  import MemberAddForm from './MemberAddForm.vue'
   import MemberList from './MemberList.vue'
 
   const defaultAttrs = () => {
     return {
-      eid: null,
+      eid: '',
       name: ''
     }
   }
 
   export default {
     components: {
+      MemberAddForm,
       MemberList
     },
     data() {

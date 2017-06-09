@@ -47,11 +47,6 @@
       MemberItem,
       EmptyItem
     },
-    watch: {
-      'objectEid': function(val, old_val) {
-        this.tryFetchRights()
-      }
-    },
     data() {
       return {
         is_fetching: false
