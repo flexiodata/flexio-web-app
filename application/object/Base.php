@@ -289,7 +289,7 @@ class Base implements IObject
         $rights = array();
         $rights[] = $r;
 
-        $this->addRights($rights);
+        $this->setRights($rights);
         return $this;
     }
 
@@ -366,24 +366,6 @@ class Base implements IObject
                 $rights_new['actions'] = $r['actions'];
                 \Flexio\Object\Right::create($rights_new);
             }
-        }
-
-        return $this;
-    }
-
-    public function addRights(array $rights) : \Flexio\Object\Base
-    {
-        // TODO: see if a record already exists for the object, access_code,
-        // and type; if so, add onto the record; otherwise, create a new record
-
-        foreach ($rights as $r)
-        {
-            $rights_new = array();
-            $rights_new['object_eid'] = $this->getEid();
-            $rights_new['access_code'] = $r['access_code'];
-            $rights_new['access_type'] = $r['access_type'];
-            $rights_new['actions'] = $r['actions'];
-            \Flexio\Object\Right::create($rights_new);
         }
 
         return $this;
