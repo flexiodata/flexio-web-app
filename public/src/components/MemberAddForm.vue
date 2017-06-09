@@ -1,7 +1,7 @@
 <template>
   <form
     novalidate
-    :class="invite_info.users_str.length > 0 ? 'pa3 ba br1 b--black-05' : ''"
+    :class="invite_info.users_str.length > 0 ? 'pa3 mb3 ba br1 b--black-05' : ''"
     @submit.prevent="submit"
   >
     <div class="flex flex-row">
