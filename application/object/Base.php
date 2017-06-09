@@ -346,14 +346,13 @@ class Base implements IObject
             {
                 // only allow right associated with this object to be updated
                 // from this object
-                if ($this->getEid() !== $r['object_eid'])
+                $right_info = $right->get();
+                if ($this->getEid() !== $right_info['object_eid'])
                     continue;
 
                 // the right already exists, so update it, but don't allow the
                 // object to be changed
                 $rights_updated = array();
-                $rights_updated['access_code'] = $r['access_code'];
-                $rights_updated['access_type'] = $r['access_type'];
                 $rights_updated['actions'] = $r['actions'];
                 $right->set($rights_updated);
             }
@@ -368,6 +367,7 @@ class Base implements IObject
             }
         }
 
+        die('moo!!!');
         return $this;
     }
 

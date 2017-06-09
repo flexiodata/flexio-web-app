@@ -19,6 +19,7 @@
 </template>
 
 <script>
+  import api from '../api'
   import RightsDropdown from './RightsDropdown.vue'
 
   export default {

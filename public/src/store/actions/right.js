@@ -37,6 +37,19 @@ export const createRights = ({ commit }, { attrs }) => {
   })
 }
 
+export const updateRights = ({ commit }, { eid, attrs }) => {
+  commit(types.UPDATING_RIGHT, { eid, attrs })
+
+  return api.updateRights({ eid, attrs }).then(response => {
+    // success callback
+    commit(types.UPDATED_RIGHT, { eid, attrs: response.body })
+    return response
+  }, response => {
+    // error callback
+    return response
+  })
+}
+
 export const deleteRights = ({ commit }, { attrs }) => {
 
 }

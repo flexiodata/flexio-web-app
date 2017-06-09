@@ -116,8 +116,9 @@ class Right
         if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $new_rights = array('eid' => $eid, 'actions' => $actions);
+        $new_rights = array(array('eid' => $right_eid, 'actions' => $actions));
         $object->setRights($new_rights);
+
         return true;
     }
 

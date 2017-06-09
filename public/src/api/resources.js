@@ -22,7 +22,7 @@ export const SignupResource = Vue.resource(API_ROOT+'/signup'+SUFFIX)
 export const ValidateResource = Vue.resource(API_ROOT+'/validate'+SUFFIX)
 
 // rights
-export const RightsResource = Vue.resource(API_ROOT+'/rights'+SUFFIX)
+export const RightsResource = Vue.resource(API_ROOT+'/rights{/eid}'+SUFFIX)
 
 // help
 export const HelpResource = Vue.resource(API_ROOT+'/help/conversation')

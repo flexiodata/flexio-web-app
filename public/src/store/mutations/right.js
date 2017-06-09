@@ -1,5 +1,10 @@
 import * as types from '../mutation-types'
-import { updateUser, addRight, removeObject } from './helpers'
+import {
+  updateUser,
+  addRight,
+  updateRight,
+  removeObject
+} from './helpers'
 
 export default {
 
@@ -18,6 +23,12 @@ export default {
 
   [types.CREATED_RIGHT] (state, { eid, attrs }) {
     addRight(state, attrs, { is_fetched: true })
+  },
+
+  [types.UPDATING_RIGHT] (state, { eid, attrs }) {},
+
+  [types.UPDATED_RIGHT] (state, { eid, attrs }) {
+    updateRight(state, eid, attrs)
   },
 
   [types.DELETING_RIGHT] (state, { eid, token_eid }) {},

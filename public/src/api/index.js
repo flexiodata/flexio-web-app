@@ -51,6 +51,7 @@ export default {
   // rights
   fetchRights:                    function({ attrs })                   { return RightsResource[GET] (attrs)                                                              },
   createRights:                   function({ attrs })                   { return RightsResource[POS] ({}, attrs)                                                          },
+  updateRights:                   function({ eid, attrs })              { return RightsResource[POS] ({ eid }, attrs)                                                     },
 
   // help
   sendEmailSupport:               function({ attrs })                   { return HelpResource[POS] ({}, attrs)                                                            },

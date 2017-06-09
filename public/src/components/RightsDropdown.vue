@@ -12,14 +12,14 @@
       trigger="dropdownTrigger"
       dropdown-position="bottom right"
     >
-      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer bb b--black-05" @click="$emit('can-edit')">
+      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer bb b--black-05" @click="changeRights('can-edit')">
         <i class="material-icons md-18 ml1 mr2" :class="can_edit ? '' : 'transparent'">check</i>
         <div>
           <div class="fw6 lh-title mb1">Can Edit</div>
           <div class="f7 lh-copy light-silver">People can view, run, edit or delete this pipe</div>
         </div>
       </div>
-      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer bb b--black-05" @click="$emit('can-view')">
+      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer bb b--black-05" @click="changeRights('can-view')">
         <i class="material-icons md-18 ml1 mr2" :class="!can_edit && can_view ? '' : 'transparent'">check</i>
         <div>
           <div class="fw6 lh-title mb1">Can View</div>
@@ -70,6 +70,38 @@
       rights_label() {
         return this.can_edit ? 'Can Edit' :
           this.can_view ? 'Can View' : ''
+      }
+    },
+    methods: {
+      changeRights(rights) {
+        switch (rights)
+        {
+          case 'can-view':
+            this.updateRights([
+              types.ACTION_TYPE_READ,
+              types.ACTION_TYPE_EXECUTE
+            ])
+            return
+          case 'can-edit':
+            this.updateRights([
+              types.ACTION_TYPE_READ,
+              types.ACTION_TYPE_EXECUTE,
+              types.ACTION_TYPE_WRITE,
+              types.ACTION_TYPE_DELETE
+            ])
+            return
+        }
+      },
+      onRemoveMember() {
+        console.log('remove')
+      },
+      updateRights(actions) {
+        var eid = _.get(this.item, 'eid', '')
+        var attrs = { actions }
+
+        this.$store.dispatch('updateRights', { eid , attrs }).then(response => {
+          console.log(response)
+        })
       }
     }
   }

@@ -18,8 +18,7 @@
       :item="member"
       :index="index"
       :key="member.eid"
-    >
-    </member-item>
+    ></member-item>
   </div>
 </template>
 

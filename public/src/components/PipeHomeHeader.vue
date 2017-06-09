@@ -176,7 +176,7 @@
       },
       editPipeSingleton(attrs, input) {
         var eid = this.pipeEid
-        this.$store.dispatch('updatePipe', { eid , attrs })
+        this.$store.dispatch('updatePipe', { eid, attrs })
         input.endEdit()
       },
       runPipe() {
