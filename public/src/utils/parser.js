@@ -1005,6 +1005,15 @@
 
       var res = "input";
 
+
+      // interpret old-style metadata json
+      if (json.hasOwnProperty('metadata') && json['metadata'].hasOwnProperty('connection_type') && json['metadata']['connection_type'] == 'stdin')
+      {
+          res = this.append(res, "from: stdin")
+          return res
+      }
+
+
       if (json.params.hasOwnProperty('connection'))
       {
         res = this.append(res, "from: " + json.params.connection);
@@ -1317,6 +1326,13 @@
 
       var res = "output";
 
+      // interpret old-style metadata json
+      if (json.hasOwnProperty('metadata') && json['metadata'].hasOwnProperty('connection_type') && json['metadata']['connection_type'] == 'stdout')
+      {
+          res = this.append(res, "to: stdout")
+          return res
+      }
+      
       if (json.params.hasOwnProperty('connection'))
       {
         res = this.append(res, "to: " + json.params.connection);

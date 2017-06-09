@@ -32,6 +32,14 @@ class Output extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $params = $job_definition['params'];
 
+        if (isset($params['connection']) && $params['connection'] == 'stdout')
+        {
+            // stdin input job is a placeholder -- just pass on all streams
+            $this->getOutput()->merge($this->getInput());
+            return;
+        }
+
+
         // get an array of stream objects
         $this->streams = $this->getInput()->getStreams();
 
