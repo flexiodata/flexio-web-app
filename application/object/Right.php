@@ -98,6 +98,7 @@ class Right extends \Flexio\Object\Base
             "object_eid": null,
             "access_type" : null,
             "access_code" : null,
+            "access_identifier" : null,
             "actions" : null,
             "created" : null,
             "updated" : null
@@ -112,6 +113,14 @@ class Right extends \Flexio\Object\Base
 
         // unpack the actions object
         $properties['actions'] = json_decode($properties['actions'],true);
+
+        // populate the access_info if possible
+        $user = \Flexio\Object\User::load($properties['access_code']);
+        if ($user !== false)
+        {
+            $user_info = $user->get();
+            $properties['access_identifier'] = $user_info['email'];
+        }
 
         // return the properties
         return $properties;
