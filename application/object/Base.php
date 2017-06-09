@@ -358,16 +358,12 @@ class Base implements IObject
             }
              else
             {
-                $rights_new = array();
-                $rights_new['object_eid'] = $this->getEid();
-                $rights_new['access_code'] = $r['access_code'];
-                $rights_new['access_type'] = $r['access_type'];
-                $rights_new['actions'] = $r['actions'];
-                \Flexio\Object\Right::create($rights_new);
+                $rights_updated = $r;
+                $rights_updated['object_eid'] = $this->getEid(); // set the object eid and pass everything else on
+                \Flexio\Object\Right::create($rights_updated);
             }
         }
 
-        die('moo!!!');
         return $this;
     }
 
