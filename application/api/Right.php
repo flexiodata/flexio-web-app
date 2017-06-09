@@ -84,6 +84,42 @@ class Right
         return $result;
     }
 
+    public static function set(array $params, string $requesting_user_eid = null) : bool
+    {
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
+                'eid' => array('type' => 'identifier', 'required' => true),
+                'actions' => array('type' => 'object', 'required' => true)
+            ))->getParams()) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $right_eid = $params['eid'];
+
+        // make sure we're allowed to modify the rights
+        $right = \Flexio\Object\Right::load($right_eid);
+        if ($right === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        $right_info = $right->get();
+        $object_eid = $right_info['object_eid'];
+
+        $object = \Flexio\Object\Store::load($object_eid);
+        if ($object === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // note: only allow the actions to be changed; don't allow the object
+        // or the user to be changed since this would allow a user to simply
+        // change the object and/or user to give themselves rights to something
+        // else
+
+        // TODO: set the rights
+
+        return true;
+    }
+
     public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
@@ -99,7 +135,6 @@ class Right
         if ($right === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // make sure we're allowed to modify the rights
         $right_info = $right->get();
         $object_eid = $right_info['object_eid'];
 
@@ -129,7 +164,6 @@ class Right
         if ($right === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // make sure we're allowed to modify the rights
         $right_info = $right->get();
         $object_eid = $right_info['object_eid'];
 
