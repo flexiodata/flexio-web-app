@@ -293,9 +293,82 @@ class Base implements IObject
         return $this;
     }
 
-    public function revoke(string $access_code, string $access_type, array $actions) : \Flexio\Object\Base
+    public function revoke(string $access_code, string $access_type, array $actions = null) : \Flexio\Object\Base
     {
-        // TODO: implement
+        // if actions is null, revoke all rights for the given access code and
+        // access type; otherwise, revoke the specified actions
+
+        // get a list of rights
+        $rights = $this->getRights();
+        foreach ($rights as $r)
+        {
+            if ($access_code !== $r['access_code'])
+                continue;
+            if ($access_type !== $r['access_type'])
+                continue;
+
+            if (!is_array($actions))
+            {
+                // if actions is null, revoke all the rights
+                $right_eid = $r['eid'];
+                $this->getModel()->right->delete($right_eid);
+            }
+             else
+            {
+                // if actions is specified
+                $new_actions = array();
+                $actions_currently_allowed = $r['actions'];
+                $actions_to_delete = array_flip($actions);
+
+                foreach ($actions_currently_allowed as $a)
+                {
+                    if (array_key_exists($a, $actions_to_delete))
+                        continue;
+
+                    $new_actions[] = $a;
+                }
+
+                $right_eid = $r['eid'];
+                $this->getModel()->right->set($right_eid, json_encode($new_actions));
+            }
+        }
+    }
+
+    public function setRights(array $rights) : \Flexio\Object\Base
+    {
+        foreach ($rights as $r)
+        {
+            // see if the rights already exists
+            $right_eid = $r['eid'] ?? false;
+            $right = \Flexio\Object\Right::load($right_eid);
+
+            if ($right !== false)
+            {
+                // only allow right associated with this object to be updated
+                // from this object
+                if ($this->getEid() !== $r['object_eid'])
+                    continue;
+
+                // the right already exists, so update it, but don't allow the
+                // object to be changed
+                $rights_updated = array();
+                $rights_updated['access_code'] = $r['access_code'];
+                $rights_updated['access_type'] = $r['access_type'];
+                $rights_updated['actions'] = $r['actions'];
+                $right->set($rights_updated);
+            }
+             else
+            {
+                $rights_new = array();
+                $rights_new['object_eid'] = $this->getEid();
+                $rights_new['access_code'] = $r['access_code'];
+                $rights_new['access_type'] = $r['access_type'];
+                $rights_new['actions'] = $r['actions'];
+                \Flexio\Object\Right::create($rights_new);
+            }
+        }
+
+        return $this;
     }
 
     public function addRights(array $rights) : \Flexio\Object\Base
@@ -305,12 +378,12 @@ class Base implements IObject
 
         foreach ($rights as $r)
         {
-            $rights_copied = array();
-            $rights_copied['object_eid'] = $this->getEid();
-            $rights_copied['access_code'] = $r['access_code'];
-            $rights_copied['access_type'] = $r['access_type'];
-            $rights_copied['actions'] = $r['actions'];
-            \Flexio\Object\Right::create($rights_copied);
+            $rights_new = array();
+            $rights_new['object_eid'] = $this->getEid();
+            $rights_new['access_code'] = $r['access_code'];
+            $rights_new['access_type'] = $r['access_type'];
+            $rights_new['actions'] = $r['actions'];
+            \Flexio\Object\Right::create($rights_new);
         }
 
         return $this;
@@ -326,6 +399,12 @@ class Base implements IObject
             $right_eid = $r['eid'];
             $right = \Flexio\Object\Right::load($right_eid);
             if ($right === false)
+                continue;
+
+            // only show rights that are available; note: the right list will
+            // return all rights, including ones that have been deleted, so
+            // this check is important
+            if ($right->getStatus() !== \Model::STATUS_AVAILABLE)
                 continue;
 
             $result[] = $right->get();

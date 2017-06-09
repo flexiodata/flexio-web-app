@@ -56,8 +56,6 @@ class Right extends ModelBase
         $db->beginTransaction();
         try
         {
-            // TODO: zero out any access code?
-
             // delete the object
             $result = $this->getModel()->deleteObjectBase($eid);
             $db->commit();
@@ -67,6 +65,46 @@ class Right extends ModelBase
         {
             $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+        }
+    }
+
+    public function set(string $eid, array $params) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($process_arr = $validator->check($params, array(
+                'object_eid'    => $params['object_eid'] ?? '',
+                'access_type'   => $params['access_type'] ?? '',
+                'access_code'   => $params['access_code'] ?? '',
+                'actions'       => $params['actions'] ?? '',
+            ))->getParams()) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
+
+        $db = $this->getDatabase();
+        $db->beginTransaction();
+        try
+        {
+            // set the base object properties
+            $result = $this->getModel()->setObjectBase($eid, $params);
+            if ($result === false)
+            {
+                // object doesn't exist or is deleted
+                $db->commit();
+                return false;
+            }
+
+            // set the properties
+            $db->update('tbl_acl', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->commit();
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            $db->rollback();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
 

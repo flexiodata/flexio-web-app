@@ -238,9 +238,9 @@ class User extends \Flexio\Object\Base
             if ($right === false)
                 continue;
 
-            // only show rights that are available; note: the right list will return
-            // all tokens, including ones that have been deleted, so this check
-            // is important
+            // only show rights that are available; note: the right list will
+            // return all rights, including ones that have been deleted, so
+            // this check is important
             if ($right->getStatus() !== \Model::STATUS_AVAILABLE)
                 continue;
 
