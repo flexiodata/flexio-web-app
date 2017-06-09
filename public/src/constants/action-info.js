@@ -3,22 +3,22 @@ import * as types from './action-type'
 /* action info */
 
 const READ = {
-  name: 'Read',
+  name: 'Can View',
   type: types.ACTION_TYPE_READ
 }
 
 const WRITE = {
-  name: 'Write',
+  name: 'Can Edit',
   type: types.ACTION_TYPE_WRITE
 }
 
 const EXECUTE = {
-  name: 'Execute',
+  name: 'Can Run',
   type: types.ACTION_TYPE_EXECUTE
 }
 
 const DELETE = {
-  name: 'Delete',
+  name: 'Can Delete',
   type: types.ACTION_TYPE_DELETE
 }
 

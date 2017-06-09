@@ -8,15 +8,13 @@
     <!-- list -->
     <member-list
       class="overflow-auto"
+      :object-eid="pipe_eid"
     ></member-list>
 
   </ui-modal>
 </template>
 
 <script>
-  import api from '../api'
-  import { ACTION_TYPE_READ } from '../constants/action-type'
-  import Btn from './Btn.vue'
   import MemberList from './MemberList.vue'
 
   const defaultAttrs = () => {
@@ -28,7 +26,6 @@
 
   export default {
     components: {
-      Btn,
       MemberList
     },
     data() {
@@ -36,28 +33,15 @@
         pipe: _.extend({}, defaultAttrs())
       }
     },
+    computed: {
+      pipe_eid() {
+        return _.get(this.pipe, 'eid', '')
+      }
+    },
     methods: {
       open(attrs) {
         this.reset(attrs)
         this.$refs['dialog'].open()
-
-        // -- hard coded for now --
-
-        var pipe_eid = _.get(this.pipe, 'eid')
-
-        var rights = [{
-          "object_eid": pipe_eid,
-          "access_code": 'n7z50rgbybbn',
-          "actions": [ACTION_TYPE_READ]
-        }]
-
-        api.createRights({ attrs: { rights } }).then(create_response => {
-          console.log(create_response)
-
-          api.fetchRights({ objects: pipe_eid }).then(fetch_response => {
-            console.log(fetch_response)
-          })
-        })
       },
       close() {
         this.$refs['dialog'].close()

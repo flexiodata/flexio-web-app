@@ -5,10 +5,14 @@ import {
   OBJECT_TYPE_STREAM,
   OBJECT_TYPE_CONNECTION,
   OBJECT_TYPE_PROCESS,
-  OBJECT_TYPE_TOKEN
+  OBJECT_TYPE_TOKEN,
+  OBJECT_TYPE_RIGHT
 } from '../constants/object-type'
 
-import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_TRASH } from '../constants/object-status'
+import {
+  OBJECT_STATUS_AVAILABLE,
+  OBJECT_STATUS_TRASH
+} from '../constants/object-status'
 
 export const getAllProjects = state => {
   return _.filter(state.objects, { eid_type: OBJECT_TYPE_PROJECT })
@@ -40,6 +44,10 @@ export const getAllStreams = state => {
 
 export const getAllTokens = state => {
   return _.filter(state.objects, { eid_type: OBJECT_TYPE_TOKEN })
+}
+
+export const getAllRights = state => {
+  return _.filter(state.objects, { eid_type: OBJECT_TYPE_RIGHT })
 }
 
 export const getAllTrash = state => {

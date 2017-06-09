@@ -9,6 +9,7 @@ import * as processtask from './process-task.js'
 import * as stream from './stream.js'
 import * as task from './task.js'
 import * as token from './token.js'
+import * as right from './right.js'
 import * as trash from './trash.js'
 
 export default _.extend({},
@@ -23,5 +24,6 @@ export default _.extend({},
   stream,
   task,
   token,
+  right,
   trash
 )
