@@ -85,7 +85,6 @@
           .chain(this.getAllRights())
           .filter(r => { return _.get(r, 'object_eid', '') === this.objectEid })
           .sortBy([ function(r) { return new Date(r.created) } ])
-          .reverse()
           .value()
       }
     }

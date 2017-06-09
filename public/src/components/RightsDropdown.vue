@@ -92,9 +92,6 @@
             return
         }
       },
-      onRemoveMember() {
-        console.log('remove')
-      },
       updateRights(actions) {
         var eid = _.get(this.item, 'eid', '')
         var attrs = { actions }

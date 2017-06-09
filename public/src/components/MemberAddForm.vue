@@ -90,10 +90,10 @@
           }
           */
 
-          var rights = _.map(this.users, (r) => {
+          var rights = _.map(this.users, (u) => {
             return {
               'object_eid': this.objectEid,
-              'access_code': 'n7z50rgbybbn',
+              'access_code': u,
               'actions': [
                 types.ACTION_TYPE_READ,
                 types.ACTION_TYPE_EXECUTE,

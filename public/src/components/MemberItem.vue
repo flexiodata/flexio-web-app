@@ -50,7 +50,7 @@
         return _.get(this.item, 'first_name', '').length == 0 && _.get(this.item, 'last_name', '').length == 0
       },
       title() {
-        return _.get(this.item, 'access_code')
+        return _.get(this.item, 'access_identifier')
         //return this.is_pending ? this.item.email : this.item.first_name+' '+this.item.last_name
       }
     }
