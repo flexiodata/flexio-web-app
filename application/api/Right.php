@@ -92,18 +92,25 @@ class Right
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $right_identifier = $params['eid'];
+        $right_eid = $params['eid'];
 
-         // load the object and check the rights; ability to create/set rights determined by user rights
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
+        // make sure we're allowed to modify the rights
+        $right = \Flexio\Object\Right::load($right_eid);
+        if ($right === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
+        // make sure we're allowed to modify the rights
+        $right_info = $right->get();
+        $object_eid = $right_info['object_eid'];
+
+        $object = \Flexio\Object\Store::load($object_eid);
+        if ($object === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // TODO: delete the right
-
+        $right->delete();
         return true;
     }
 
@@ -115,18 +122,25 @@ class Right
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $right_identifier = $params['eid'];
+        $right_eid = $params['eid'];
 
+        // make sure we're allowed to modify the rights
+        $right = \Flexio\Object\Right::load($right_eid);
+        if ($right === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // get all the rights that a user has access to
-        $objects = self::getObjectsForUser($requesting_user_eid);
+        // make sure we're allowed to modify the rights
+        $right_info = $right->get();
+        $object_eid = $right_info['object_eid'];
 
-        // if the rights are in the list, return the right info for that object;
-        // otherwise the user doesn't have access
+        $object = \Flexio\Object\Store::load($object_eid);
+        if ($object === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
+        if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-
-        return array();
+        return $right->get();
     }
 
     public static function listall(array $params, string $requesting_user_eid = null) : array

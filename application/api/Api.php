@@ -285,16 +285,11 @@ class Api
             case 'POS /rights'                         : return '\Flexio\Api\Right::create';
             case 'GET /rights/:eid'                    : return '\Flexio\Api\Right::get';
             case 'DEL /rights/:eid'                    : return '\Flexio\Api\Right::delete';
-            // DEPRECATED (users/:eid/tokens):
+            // DEPRECATED (users/:eid/tokens; merge with rights?):
             case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::listall';
             case 'POS /users/:eid/tokens'              : return '\Flexio\Api\Token::create';
             case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
             case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
-
-            // TODO: remove; for testing
-            case 'GET /users/:eid/rights'              : return '\Flexio\Api\Right::listall';
-
-
 
             // projects
             case 'POS /projects'                       : return '\Flexio\Api\Project::create';
@@ -302,11 +297,6 @@ class Api
             case 'POS /projects/:eid'                  : return '\Flexio\Api\Project::set';
             case 'GET /projects/:eid'                  : return '\Flexio\Api\Project::get';
             case 'DEL /projects/:eid'                  : return '\Flexio\Api\Project::delete';
-
-            // followers
-            case 'POS /projects/:eid/followers'        : return '\Flexio\Api\Follower::create';
-            case 'GET /projects/:eid/followers'        : return '\Flexio\Api\Follower::listall';
-            case 'DEL /projects/:eid/followers/:eid'   : return '\Flexio\Api\Follower::delete';
 
             // trash
             case 'POS /trash'                          : return '\Flexio\Api\Trash::add';
@@ -373,7 +363,7 @@ class Api
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug'; // display process info
             case 'GET /debug/sysconfig'                : return '\Flexio\Api\System::configuration'; // displays config info
             case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
-            case 'GET /debug/createexamples'      : return '\Flexio\Api\User::createExamples'; // creates example pipes
+            case 'GET /debug/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
         }
     }
 
