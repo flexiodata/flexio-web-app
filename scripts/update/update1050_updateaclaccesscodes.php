@@ -204,14 +204,17 @@ function deleteOldObjectTableAclEntries($db)
 {
     // note: current ACL entries were incorrectly created with the
     // \Model::TYPE_TOKEN eid type; to delete the old ACL entries
-    // from the object table, use the eids in the acl table
+    // from the object table, use the eids in the acl table (use
+    // the old acl format indicator that had no access_type to identify
+    // older records)
 
     $sql = <<<EOT
         delete from
             tbl_object
         where
             (tbl_object.eid_type = 'ATH' or tbl_object.eid_type = 'ACL') and
-            not exists (select 1 from tbl_token where tbl_object.eid = tbl_token.eid);
+            not exists (select 1 from tbl_token where tbl_object.eid = tbl_token.eid) and
+            not exists (select 1 from tbl_acl where tbl_object.eid = tbl_acl.eid and tbl_acl.access_type != '');
 EOT;
     $db->exec($sql);
 }
