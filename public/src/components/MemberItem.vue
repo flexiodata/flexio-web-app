@@ -12,26 +12,7 @@
       <div class="dib f6 bg-white ba b--black-10 ph2 ph3-ns pv1 black-60 cursor-default">{{owner}}</div>
     </div>
     <div v-else class="w-100 tr">
-      <a
-        class="f5 dib pointer pa1 mid-gray popover-trigger"
-        ref="dropdownTrigger"
-        tabindex="0"
-        @click.stop
-      ><span class="v-mid">{{rights_label}}</span> <i class="material-icons v-mid">expand_more</i></a>
-
-      <ui-popover
-        trigger="dropdownTrigger"
-        ref="dropdown"
-        dropdown-position="bottom right"
-      >
-        <ui-menu
-          contain-focus
-          has-icons
-          :options="menu_items"
-          @select="onDropdownItemClick"
-          @close="$refs.dropdown.close()"
-        ></ui-menu>
-      </ui-popover>
+      <rights-dropdown></rights-dropdown>
     </div>
   </div>
 </article>
@@ -40,9 +21,13 @@
 <script>
   import * as types from '../constants/action-type'
   import * as actions from '../constants/action-info'
+  import RightsDropdown from './RightsDropdown.vue'
 
   export default {
     props: ['item'],
+    components: {
+      RightsDropdown
+    },
     computed: {
       email_hash() {
         return _.get(this.item, 'email_hash', '')
@@ -66,25 +51,43 @@
       item_actions() {
         return _.get(this.item, 'actions', [])
       },
+      can_edit() {
+        if (_.includes(this.item_actions, types.ACTION_TYPE_DELETE) ||
+            _.includes(this.item_actions, types.ACTION_TYPE_WRITE))
+        {
+          return true
+        }
+
+        return false
+      },
+      can_view() {
+        if (_.includes(this.item_actions, types.ACTION_TYPE_EXECUTE) ||
+            _.includes(this.item_actions, types.ACTION_TYPE_READ))
+        {
+          return true
+        }
+
+        return false
+      },
       rights_label() {
-        if (_.includes(this.item_actions, types.ACTION_TYPE_DELETE))  { return 'Can Edit' }
-        if (_.includes(this.item_actions, types.ACTION_TYPE_WRITE))   { return 'Can Edit' }
-        if (_.includes(this.item_actions, types.ACTION_TYPE_EXECUTE)) { return 'Can View' }
-        if (_.includes(this.item_actions, types.ACTION_TYPE_READ))    { return 'Can View' }
-        return ''
+        return this.can_edit ? 'Can Edit' :
+          this.can_view ? 'Can View' : ''
       },
       menu_items() {
         return [{
           id: types.ACTION_TYPE_DELETE, // implicitly allow 'can write' as well
-          label: 'Can Edit'
+          label: 'Can Edit',
+          icon: this.can_edit ? 'check' : 'check_box_outline_blank'
         },{
           id: types.ACTION_TYPE_EXECUTE, // implicitly allow 'can read' as well
-          label: 'Can View'
+          label: 'Can View',
+          icon: !this.can_edit && this.can_view ? 'check' : 'check_box_outline_blank'
         },{
           type: 'divider'
         },{
           id: 'remove',
-          label: 'Remove'
+          label: 'Remove',
+          icon: ''
         }]
       }
     },

@@ -17,7 +17,7 @@
       v-for="(member, index) in members"
       :item="member"
       :index="index"
-      @delete="onItemDelete"
+      :key="member.eid"
     >
     </member-item>
   </div>
@@ -81,9 +81,6 @@
           .sortBy([ function(r) { return new Date(r.created) } ])
           .reverse()
           .value()
-      },
-      onItemDelete(item) {
-        this.$emit('item-delete', item)
       }
     }
   }
