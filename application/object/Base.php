@@ -339,7 +339,7 @@ class Base implements IObject
         foreach ($rights as $r)
         {
             // see if the rights already exists
-            $right_eid = $r['eid'] ?? false;
+            $right_eid = $r['eid'] ?? '';
             $right = \Flexio\Object\Right::load($right_eid);
 
             if ($right !== false)
