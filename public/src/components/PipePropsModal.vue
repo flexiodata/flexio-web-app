@@ -60,10 +60,6 @@
           v-model="pipe.description"
         ></ui-textbox>
       </form>
-
-      <ui-collapsible class="mt4 ui-collapsible--sm" style="margin-bottom: 0" title="Permissions" open disable-ripple v-if="show_permissions">
-        <rights-list :object="pipe" @change="onRightsChanged"></rights-list>
-      </ui-collapsible>
     </div>
 
     <div slot="footer" class="flex flex-row w-100">
@@ -154,7 +150,6 @@
     data() {
       return {
         mode: 'edit-pipe',
-        show_permissions: false,
         ss_errors: {},
         pipe: _.extend({}, defaultAttrs()),
         original_pipe: _.extend({}, defaultAttrs())
@@ -226,12 +221,8 @@
         this.pipe = _.extend({}, defaultAttrs(), attrs)
         this.original_pipe = _.extend({}, defaultAttrs(), attrs)
       },
-      onOpen() {
-        this.$nextTick(() => { this.show_permissions = true })
-      },
       onHide() {
         this.reset()
-        this.show_permissions = false
       },
       onRightsChanged(rights) {
         this.pipe = _.assign({}, this.pipe, { rights })
