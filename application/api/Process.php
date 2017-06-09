@@ -98,7 +98,7 @@ class Process
             // and inherits the rights from the pipe
             $process->setOwner($pipe_owner);
             $process->setCreatedBy($pipe_owner);
-            $process->addRights($pipe->getRights());
+            $process->setRights($pipe->getRights());
         }
          else
         {
