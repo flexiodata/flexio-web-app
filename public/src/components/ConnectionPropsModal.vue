@@ -90,10 +90,6 @@
           ></ui-textbox>
         </form>
 
-        <ui-collapsible class="ui-collapsible--sm" style="margin: 1.5rem 0 0 0" title="Permissions" disable-ripple v-if="show_permissions">
-          <rights-list :object="connection" @change="onRightsChanged"></rights-list>
-        </ui-collapsible>
-
         <ui-collapsible class="ui-collapsible--sm" style="margin: 1.5rem 0 0 0" title="Authentication" open disable-ripple>
           <connection-configure-panel
             :connection="connection"
@@ -195,7 +191,6 @@
       return {
         is_open: false,
         mode: 'add',
-        show_permissions: false,
         ss_errors: {},
         connection: _.assign({}, defaultAttrs()),
         original_connection: _.assign({}, defaultAttrs())
@@ -289,9 +284,6 @@
         this.ss_errors = {}
         this.connection = _.assign({}, defaultAttrs(), attrs)
         this.original_connection = _.assign({}, defaultAttrs(), attrs)
-      },
-      onOpen() {
-        this.$nextTick(() => { this.show_permissions = true })
       },
       onHide() {
         this.reset()

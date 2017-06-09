@@ -8,7 +8,7 @@
   >
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
-        <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3 square-4-l"></connection-icon>
+        <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3"></connection-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title">
         <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-connection-title">{{item.name}}</h1>

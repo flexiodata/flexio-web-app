@@ -17,13 +17,14 @@
       v-for="(member, index) in members"
       :item="member"
       :index="index"
-      @delete="onItemDelete"
+      :key="member.eid"
     >
     </member-item>
   </div>
 </template>
 
 <script>
+  import api from '../api'
   import { mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import MemberItem from './MemberItem.vue'
@@ -37,7 +38,8 @@
         default: ''
       },
       'object-eid': {
-        type: String
+        type: String,
+        default: ''
       }
     },
     mixins: [CommonFilter],
@@ -46,30 +48,39 @@
       MemberItem,
       EmptyItem
     },
+    watch: {
+      'objectEid': function(val, old_val) {
+        this.tryFetchRights()
+      }
+    },
     computed: {
       members() {
-        return this.commonFilter(this.getOurMembers(), this.filter, ['first_name', 'last_name', 'user_name'])
+        return this.getOurRights()
       },
       is_fetching() {
         return false
       }
     },
+    mounted() {
+      this.tryFetchRights()
+    },
     methods: {
       ...mapGetters([
-        'getAllUsers'
+        'getAllRights'
       ]),
-      getOurMembers() {
-        var object_eid = this.objectEid
-
+      tryFetchRights() {
+        if (_.size(this.objectEid) > 0 && _.size(this.getOurRights()) == 0)
+          this.$store.dispatch('fetchRights', { objects: this.objectEid })
+      },
+      getOurRights() {
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything
         return _
-          .chain(this.getAllUsers())
-          .filter(function(m) { return _.includes(_.get(m, 'object_eid', []), object_eid ) })
+          .chain(this.getAllRights())
+          .filter(r => { return _.get(r, 'object_eid', '') === this.objectEid })
+          .sortBy([ function(r) { return new Date(r.created) } ])
+          .reverse()
           .value()
-      },
-      onItemDelete(item) {
-        this.$emit('item-delete', item)
       }
     }
   }
