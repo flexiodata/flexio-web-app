@@ -75,10 +75,10 @@ class Right extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($process_arr = $validator->check($params, array(
-                'object_eid'    => $params['object_eid'] ?? '',
-                'access_type'   => $params['access_type'] ?? '',
-                'access_code'   => $params['access_code'] ?? '',
-                'actions'       => $params['actions'] ?? '',
+                'object_eid' => array('type' => 'string',  'required' => false),
+                'access_type' => array('type' => 'string',  'required' => false),
+                'access_code' => array('type' => 'string',  'required' => false),
+                'actions' => array('type' => 'string',  'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
