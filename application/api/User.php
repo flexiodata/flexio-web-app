@@ -295,8 +295,10 @@ class User
         $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
         $connection_count = $user->getObjectCount($filter);
 
-        $filter = array('eid_type' => array(\Model::TYPE_TOKEN), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $token_count = $user->getObjectCount($filter);
+        // TODO: find out why following doesn't work
+        //$filter = array('eid_type' => array(\Model::TYPE_TOKEN), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        //$token_count = $user->getObjectCount($filter);
+        $token_count = count($user->getTokens());
 
         $properties = array();
         $properties['eid'] = $requesting_user_eid;

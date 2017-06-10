@@ -199,7 +199,7 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getObjectCount(array $filter = null) : array
+    public function getObjectCount(array $filter = null) : int
     {
         // filter can be contain combinations of the following:
         //$filter = array(
