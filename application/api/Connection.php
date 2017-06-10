@@ -163,7 +163,6 @@ class Connection
         return $properties;
     }
 
-
     public static function listall(array $params, string $requesting_user_eid = null) : array
     {
         // load the object
@@ -171,15 +170,17 @@ class Connection
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // get the pipes
+        // get the connections
+        $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $connections = $user->getObjects($filter);
+
         $result = array();
-        $pipes = $user->getConnections();
-        foreach ($pipes as $p)
+        foreach ($connections as $c)
         {
-            if ($p->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+            if ($c->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
                 continue;
 
-            $result[] = $p->get();
+            $result[] = $c->get();
         }
 
         return $result;

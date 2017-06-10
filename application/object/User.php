@@ -169,58 +169,53 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getPipes(array $status = null) : array
+    public function getObjects(array $filter = null) : array
     {
-        // get the pipes for the user
+        // filter can be contain combinations of the following:
+        //$filter = array(
+        //    'target_eids' => array(/* index array of eids */),
+        //    'eid_type' => array(/* index array of eid types */),
+        //    'eid_status' = array(/* index array of eid statuses */)
+        //);
+
+        // get the objects owned/followed by the user
         $user_eid = $this->getEid();
 
-        if (!isset($status))
-            $status = array(\Model::STATUS_AVAILABLE);
-
-        $assoc_filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => $status);
-        $pipes_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
-        $pipes_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $assoc_filter);
-        $pipes = array_merge($pipes_owned, $pipes_followed);
+        $objects_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $filter);
+        $objects_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $filter);
+        $objects = array_merge($objects_owned, $objects_followed);
 
         $res = array();
-        foreach ($pipes as $pipe_info)
+        foreach ($objects as $object_info)
         {
-            $pipe_eid = $pipe_info['eid'];
-            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-            if ($pipe === false)
+            $object_eid = $object_info['eid'];
+            $object = \Flexio\Object\Store::load($object_eid);
+            if ($object === false)
                 continue;
 
-            $res[] = $pipe;
+            $res[] = $object;
         }
 
         return $res;
     }
 
-    public function getConnections(array $status = null) : array
+    public function getObjectCount(array $filter = null) : array
     {
-        // get the connections for the user
+        // filter can be contain combinations of the following:
+        //$filter = array(
+        //    'target_eids' => array(/* index array of eids */),
+        //    'eid_type' => array(/* index array of eid types */),
+        //    'eid_status' = array(/* index array of eid statuses */)
+        //);
+
+        // get the counts of the objects owned/followed by the user
         $user_eid = $this->getEid();
 
-        if (!isset($status))
-            $status = array(\Model::STATUS_AVAILABLE);
+        $objects_owned = $this->getModel()->assoc_count($user_eid, \Model::EDGE_OWNS, $filter);
+        $objects_followed = $this->getModel()->assoc_count($user_eid, \Model::EDGE_FOLLOWING, $filter);
+        $total_objects = $objects_owned + $objects_followed;
 
-        $assoc_filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => $status);
-        $connections_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $assoc_filter);
-        $connections_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $assoc_filter);
-        $connections = array_merge($connections_owned, $connections_followed);
-
-        $res = array();
-        foreach ($connections as $connection_info)
-        {
-            $connection_eid = $connection_info['eid'];
-            $connection = \Flexio\Object\Connection::load($connection_eid);
-            if ($connection === false)
-                continue;
-
-            $res[] = $connection;
-        }
-
-        return $res;
+        return $total_objects;
     }
 
     public function getRightList() : array

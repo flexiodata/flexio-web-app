@@ -286,16 +286,25 @@ class User
         if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $projects = $user->getProjects();
-        $pipes = $user->getPipes();
-        $tokens = $user->getTokens();
+        $filter = array('eid_type' => array(\Model::TYPE_PROJECT), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $project_count = $user->getObjectCount($filter);
+
+        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $pipe_count = $user->getObjectCount($filter);
+
+        $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $connection_count = $user->getObjectCount($filter);
+
+        $filter = array('eid_type' => array(\Model::TYPE_TOKEN), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $token_count = $user->getObjectCount($filter);
 
         $properties = array();
         $properties['eid'] = $requesting_user_eid;
         $properties['eid_type'] = \Model::TYPE_USER;
-        $properties['pipe_count'] = count($pipes);
-        $properties['project_count'] = count($projects);
-        $properties['token_count'] = count($tokens);
+        $properties['project_count'] = $project_count;
+        $properties['pipe_count'] = $pipe_count;
+        $properties['connection_count'] = $connection_count;
+        $properties['token_count'] = $token_count;
         return $properties;
     }
 

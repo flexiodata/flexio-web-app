@@ -165,8 +165,10 @@ class Trash
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the pipes
+        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_TRASH));
+        $pipes = $user->getObjects($filter);
+
         $result = array();
-        $pipes = $user->getPipes(array(\Model::STATUS_TRASH));
         foreach ($pipes as $p)
         {
             if ($p->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
