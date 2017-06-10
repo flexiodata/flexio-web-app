@@ -218,33 +218,17 @@ class User extends \Flexio\Object\Base
         return $total_objects;
     }
 
-    public function getRightList() : array
+    public function getObjectRights(array $filter = null) : array
     {
-        // returns the rights for the objects the user has access to
-        $res = array();
-        $rights = $this->getModel()->right->getInfoFromAccessCode($this->getEid());
-        if ($rights === false)
-            return $res;
+        // get the objects for the user
+        $objects = $this->getObjects($filter);
 
-        // get a unique list of the objects
-        $object_list = array();
-        foreach ($rights as $r)
-        {
-            $object_eid = $r['object_eid'];
-            if (!isset($objects[$object_eid]))
-            {
-                $o = \Flexio\Object\Store::load($object_eid);
-                if ($o !== false)
-                    $object_list[$object_eid] = $o;
-            }
-        }
-
-        // return the rights for all the objects
+        // return the rights for the objects
         $res = array();
-        foreach ($object_list as $object_eid => $object)
+        foreach ($objects as $o)
         {
-            $object_rights = $object->getRights();
-            foreach ($object_rights as $r)
+            $rights = $o->getRights();
+            foreach ($rights as $r)
             {
                 $res[] = $r;
             }

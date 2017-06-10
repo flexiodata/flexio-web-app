@@ -202,42 +202,23 @@ class Right
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $object_filter_list = $params['objects'] ?? false;
-        $objects = self::getObjectsForUser($requesting_user_eid);
+        $user_eid = $requesting_user_eid;
 
-        // if no object list is specified, return everything
-        if ($object_filter_list === false)
-            return $objects;
+        // build the filter for the rights we want to get
+        $filter = array(
+            'eid_type' => array(\Model::TYPE_PIPE, \Model::TYPE_CONNECTION),
+            'eid_status' => array(\Model::STATUS_AVAILABLE)
+        );
 
-        // if an object list is specified, return the subset of matching objects
-        if ($object_filter_list !== false)
-        {
-            $result = array();
-            $object_filter_list = array_flip($object_filter_list);
-            foreach ($objects as $o)
-            {
-                if (array_key_exists($o['object_eid'], $object_filter_list))
-                    $result[] = $o;
-            }
+        if (isset($params['objects']))
+            $filter['target_eids'] = $params['objects']; // filter for specific objects
 
-            return $result;
-        }
-    }
-
-    private static function getObjectsForUser($user_eid)
-    {
-        // load the user and check the rights; TODO: should we only show
-        // rights that the user has access to see?
+        // get the rights for the user
         $user = \Flexio\Object\User::load($user_eid);
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        //if ($user->allows($user_eid, \Flexio\Object\Action::TYPE_READ) === false)
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // get the rights
-        $result = array();
-        $rights = $user->getRightList();
+        $rights = $user->getObjectRights($filter);
         return $rights;
     }
 
