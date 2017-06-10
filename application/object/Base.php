@@ -342,26 +342,31 @@ class Base implements IObject
             $right_eid = $r['eid'] ?? '';
             $right = \Flexio\Object\Right::load($right_eid);
 
+            // if a right eid is specified and the object eid is the same
+            // as the current object, then update the right on the current
+            // object; otherwise, create a new right on the current object
             if ($right !== false)
             {
                 // only allow right associated with this object to be updated
                 // from this object
                 $right_info = $right->get();
-                if ($this->getEid() !== $right_info['object_eid'])
+                if ($this->getEid() === $right_info['object_eid'])
+                {
+                    // the right already exists, so update it, but don't allow the
+                    // object to be changed
+                    $rights_updated = array();
+                    $rights_updated['actions'] = $r['actions'];
+                    $right->set($rights_updated);
                     continue;
+                }
 
-                // the right already exists, so update it, but don't allow the
-                // object to be changed
-                $rights_updated = array();
-                $rights_updated['actions'] = $r['actions'];
-                $right->set($rights_updated);
+                // fall through
             }
-             else
-            {
-                $rights_updated = $r;
-                $rights_updated['object_eid'] = $this->getEid(); // set the object eid and pass everything else on
-                \Flexio\Object\Right::create($rights_updated);
-            }
+
+            // create a new right
+            $rights_updated = $r;
+            $rights_updated['object_eid'] = $this->getEid(); // set the object eid and pass everything else on
+            \Flexio\Object\Right::create($rights_updated);
         }
 
         return $this;
