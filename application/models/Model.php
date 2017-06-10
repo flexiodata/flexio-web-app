@@ -561,6 +561,14 @@ class Model
             $filter_condition = '';
             if (isset($filter))
             {
+                if (isset($filter['target_eids']))
+                {
+                    // TODO: adding this filter covers the functionality for assoc_get(),
+                    // effectively rendering it obsolete; remove the other to simplify?
+                    $eid_filter = $filter['target_eids'];
+                    $filter_condition .= " and tas.target_eid in (".self::buildEidString($eid_filter).")";
+                }
+
                 if (isset($filter['eid_type']))
                 {
                     $type_filter = $filter['eid_type'];
@@ -622,6 +630,14 @@ class Model
             $filter_condition = '';
             if (isset($filter))
             {
+                if (isset($filter['target_eids']))
+                {
+                    // TODO: adding this filter covers the functionality for assoc_get(),
+                    // effectively rendering it obsolete; remove the other to simplify?
+                    $eid_filter = $filter['target_eids'];
+                    $filter_condition .= " and tas.target_eid in (".self::buildEidString($eid_filter).")";
+                }
+
                 if (isset($filter['eid_type']))
                 {
                     $type_filter = $filter['eid_type'];
@@ -1158,6 +1174,23 @@ class Model
         {
             return false;
         }
+    }
+
+    private static function buildEidString(array $eid_arr) : string
+    {
+        $eid_str = '';
+        foreach ($eid_arr as $key => $value)
+        {
+            if (\Flexio\Base\Eid::isValid($value) === false)
+                continue;
+
+            if (strlen($eid_str) > 0)
+                $eid_str .= ',';
+
+            $eid_str .= "'" . $value . "'";
+        }
+
+        return $eid_str;
     }
 
     private static function buildTypeString(array $type_arr) : string
