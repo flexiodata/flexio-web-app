@@ -395,15 +395,6 @@ class Output(object):
     def env(self):
         return output_env
 
-    @property
-    def stream(self):
-        if not self.header_written:
-            str = json.dumps(self.header) + "\r\n\r\n"
-            sys.stdout.write(str)
-            sys.stdout.flush()
-            self.header_written = True
-        return sys.stdout
-
     def create(self, name=None, structure=None, content_type='text/plain'):
         properties = { 'content_type': content_type }
         if name:
