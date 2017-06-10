@@ -401,7 +401,10 @@ class Output(object):
             properties['name'] = name
         if structure:
             properties['structure'] = structure
-        return proxy.invoke('managedCreate', [self._idx, properties])
+        if proxy.invoke('managedCreate', [self._idx, properties]) is False:
+            return False
+        else:
+            return self
 
     def write(self, data):
         proxy.invoke('write', [self._idx, data])
