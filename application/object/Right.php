@@ -95,11 +95,15 @@ class Right extends \Flexio\Object\Base
             "eid" : null,
             "eid_type" : "'.\Model::TYPE_RIGHT.'",
             "eid_status" : null,
-            "object_eid": null,
-            "access_type" : null,
             "access_code" : null,
+            "access_type" : null,
             "access_identifier" : null,
             "actions" : null,
+            "user" : null,
+            "object=object_eid" : {
+                "eid": null,
+                "eid_type": null
+            },
             "created" : null,
             "updated" : null
         }
@@ -114,12 +118,25 @@ class Right extends \Flexio\Object\Base
         // unpack the actions object
         $properties['actions'] = json_decode($properties['actions'],true);
 
-        // populate the access_info if possible
+        // populate the user info if possible
         $user = \Flexio\Object\User::load($properties['access_code']);
         if ($user !== false)
         {
             $user_info = $user->get();
-            $properties['access_identifier'] = $user_info['email'];
+
+            if ($user_info !== false)
+            {
+                $info['eid'] = $user_info['eid'];
+                $info['eid_type'] = $user_info['eid_type'];
+                $info['eid_status'] = $user_info['eid_status'];
+                $info['user_name'] = $user_info['user_name'];
+                $info['first_name'] = $user_info['first_name'];
+                $info['last_name'] = $user_info['last_name'];
+                $info['email'] = $user_info['email'];
+                $info['email_hash'] = $user_info['email_hash'];
+
+                $properties['user'] = $info;
+            }
         }
 
         // return the properties
