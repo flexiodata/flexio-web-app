@@ -97,13 +97,14 @@ class Right extends \Flexio\Object\Base
             "eid_status" : null,
             "access_code" : null,
             "access_type" : null,
-            "access_identifier" : null,
             "actions" : null,
             "user" : null,
             "object=object_eid" : {
                 "eid": null,
                 "eid_type": null
             },
+            "object_eid": null,
+            "access_identifier" : null,
             "created" : null,
             "updated" : null
         }
