@@ -5,14 +5,14 @@
   </div>
   <div class="dtc v-mid pl2">
     <h1 class="f6 fw6 lh-title black mv0">{{title}}</h1>
-    <h2 v-if="!is_pending" class="f7 fw4 mt0 mb0 black-60">@{{username}}</h2>
+    <h2 v-if="!is_pending" class="f7 fw4 lh-copy ma0 light-silver">@{{username}}</h2>
   </div>
   <div class="dtc v-mid">
     <div v-if="is_owner" class="w-100 tr">
-      <div class="dib f6 bg-white ba b--black-10 ph2 ph3-ns pv1 black-60 cursor-default">Owner</div>
+      <div class="dib f6 fw6 bg-white ba b--black-10 ph2 ph3-ns pv1 black-60 cursor-default">Owner</div>
     </div>
     <div v-else class="w-100 tr">
-      <rights-dropdown :item="item"></rights-dropdown>
+      <rights-dropdown  class="f6 fw6 black-60" :item="item"></rights-dropdown>
     </div>
   </div>
 </article>

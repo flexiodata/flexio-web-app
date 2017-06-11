@@ -1,7 +1,7 @@
 <template>
   <div>
     <a
-      class="f5 pointer pa1 mid-gray popover-trigger"
+      class="pointer popover-trigger"
       ref="dropdownTrigger"
       tabindex="0"
       @click.stop

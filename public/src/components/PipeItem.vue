@@ -113,11 +113,11 @@
         return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
       },
       follower_count() {
-        return _.size(_.get(this.item, 'followed_by', []))
+        return _.size(_.get(this.item, 'followed_by', [])) + 1 /* owner */
       },
       follower_str() {
         var cnt = this.follower_count
-        return cnt == 0 ? 'Only You' : util.pluralize(cnt, cnt+' '+'members', cnt+' '+'member')
+        return cnt <= 1 ? 'Only You' : util.pluralize(cnt, cnt+' '+'members', cnt+' '+'member')
       },
       tasks() {
         return _.get(this.item, 'task', [])
