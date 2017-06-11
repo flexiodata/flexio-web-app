@@ -5,7 +5,7 @@
   </div>
   <div class="dtc v-mid pl2">
     <h1 class="f6 fw6 lh-title black mv0">{{title}}</h1>
-    <h2 v-if="!is_pending" class="f7 fw4 mt0 mb0 black-60">@{{item.user_name}}</h2>
+    <h2 v-if="!is_pending" class="f7 fw4 mt0 mb0 black-60">@{{username}}</h2>
   </div>
   <div class="dtc v-mid">
     <div v-if="is_owner" class="w-100 tr">
@@ -38,7 +38,7 @@
     },
     computed: {
       email_hash() {
-        return _.get(this.item, 'email_hash', '')
+        return _.get(this.item, 'user.email_hash', '')
       },
       profile_src() {
         return 'https://secure.gravatar.com/avatar/'+this.email_hash+'?d=mm&s=64'
@@ -47,11 +47,13 @@
         return _.get(this.item, 'access_code') == this.ownerEid
       },
       is_pending() {
-        return _.get(this.item, 'first_name', '').length == 0 && _.get(this.item, 'last_name', '').length == 0
+        return _.get(this.item, 'user.first_name', '').length == 0 && _.get(this.item, 'user.last_name', '').length == 0
       },
       title() {
-        return _.get(this.item, 'access_identifier')
-        //return this.is_pending ? this.item.email : this.item.first_name+' '+this.item.last_name
+        return this.is_pending ? _.get(this.item, 'user.email', '') : _.get(this.item, 'user.first_name', '')+' '+_.get(this.item, 'user.last_name', '')
+      },
+      username() {
+        return _.get(this.item, 'user.user_name', '')
       }
     }
   }
