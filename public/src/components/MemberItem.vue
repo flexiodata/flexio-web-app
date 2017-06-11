@@ -12,14 +12,19 @@
       <div class="f6 fw6 black-60 cursor-default">Owner</div>
     </div>
     <div v-else class="w-100 tr">
-      <rights-dropdown  class="f6 fw6 black-60" :item="item"></rights-dropdown>
+      <rights-dropdown
+        class="f6 fw6 black-60"
+        :class="is_editable ? '' : 'o-40 no-pointer-events'"
+        :is-editable="is_editable"
+        :item="item"
+      ></rights-dropdown>
     </div>
   </div>
 </article>
 </template>
 
 <script>
-  import api from '../api'
+  import { mapState } from 'vuex'
   import RightsDropdown from './RightsDropdown.vue'
 
   export default {
@@ -37,6 +42,9 @@
       RightsDropdown
     },
     computed: {
+      ...mapState([
+        'active_user_eid'
+      ]),
       email_hash() {
         return _.get(this.item, 'user.email_hash', '')
       },
@@ -45,6 +53,9 @@
       },
       is_owner() {
         return _.get(this.item, 'access_code') == this.ownerEid
+      },
+      is_editable() {
+        return this.ownerEid == this.active_user_eid
       },
       is_pending() {
         return _.get(this.item, 'user.first_name', '').length == 0 && _.get(this.item, 'user.last_name', '').length == 0

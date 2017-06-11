@@ -5,7 +5,7 @@
       ref="dropdownTrigger"
       tabindex="0"
       @click.stop
-    ><span class="v-mid">{{rights_label}}</span> <i class="material-icons v-mid">expand_more</i></a>
+    ><span class="v-mid">{{rights_label}}</span><i class="material-icons v-mid" v-if="isEditable">expand_more</i></a>
 
     <ui-popover
       class="mw5 f6 mid-gray"
@@ -43,6 +43,10 @@
       'item': {
         type: Object,
         required: true
+      },
+      'is-editable': {
+        type: Boolean,
+        default: true
       }
     },
     computed: {
