@@ -67,7 +67,7 @@
         'getAllConnections'
       ]),
       tryFetchConnections() {
-        if (!this.is_fetched)
+        if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
       },
       getOurConnections() {
