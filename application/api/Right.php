@@ -152,7 +152,7 @@ class Right
         $new_rights = array(array('eid' => $right_eid, 'actions' => $actions));
         $object->setRights($new_rights);
 
-        return true;
+        return $right->get();
     }
 
     public static function delete(array $params, string $requesting_user_eid = null) : bool
@@ -180,6 +180,7 @@ class Right
         if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // delete the right
         $right->delete();
         return true;
     }
