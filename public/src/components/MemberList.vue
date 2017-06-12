@@ -79,12 +79,21 @@
         }
       },
       getOurRights() {
+        var rights_items = this.getAllRights()
+        rights_items = rights_items.concat([{
+          'object_eid': this.objectEid,
+          'access_code': 'public',
+          'access_type': 'CAT',
+          'actions': []
+        }])
+
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything
         return _
-          .chain(this.getAllRights())
+          .chain(rights_items)
           .filter(r => { return _.get(r, 'object_eid', '') === this.objectEid })
           .sortBy([
+            r => { return _.get(r, 'access_code') == 'public' },
             r => { return _.get(r, 'access_code') == this.ownerEid },
             r => { return new Date(r.created) }
           ])
