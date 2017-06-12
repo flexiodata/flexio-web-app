@@ -70,7 +70,7 @@
         'getAllRights'
       ]),
       tryFetchRights() {
-        if (_.size(this.objectEid) > 0 && _.size(this.getOurRights()) == 0)
+        if (_.size(this.objectEid) > 0 && _.size(this.getOurRights()) == 1 /* everyone */)
         {
           this.is_fetching = true
           this.$store.dispatch('fetchRights', { objects: this.objectEid }).then(response => {
@@ -79,7 +79,7 @@
         }
       },
       getOurRights() {
-        var rights_items = this.getAllRights()
+        var rights_items = _.defaultTo(this.getAllRights(), [])
         rights_items = rights_items.concat([{
           'object_eid': this.objectEid,
           'access_code': 'public',
