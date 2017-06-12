@@ -307,6 +307,10 @@ class Identifier
             case 'serial':
             case 'server':
             case 'servers':
+            case 'stdin':
+            case 'stdins':
+            case 'stdout':
+            case 'stdouts':
             case 'system':
             case 'systems':
             case 'translate':
@@ -325,6 +329,7 @@ class Identifier
             case 'auth':
             case 'authorize':
             case 'authorization':
+            case 'oauth':
                 return true;
 
             // common extensions
