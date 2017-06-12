@@ -133,11 +133,11 @@
           id: 'open',
           label: 'Open',
           icon: 'file_upload'
-        },{
+        }/*,{
           id: 'edit',
           label: 'Edit',
           icon: 'edit'
-        },{
+        }*/,{
           id: 'duplicate',
           label: 'Duplicate',
           icon: 'content_copy'
