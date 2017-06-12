@@ -150,7 +150,7 @@
         this.$store.dispatch('createPipe', { attrs })
       },
       tryFetchPipes() {
-        if (!this.is_fetched)
+        if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchPipes')
       },
       tryCreatePipe(attrs, modal) {

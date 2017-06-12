@@ -67,8 +67,8 @@
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
-        'is_fetching': 'pipes_fetching',
-        'is_fetched': 'pipes_fetched'
+        'is_fetching': 'trash_fetching',
+        'is_fetched': 'trash_fetched'
       }),
       trash_cnt() {
         return this.getAllTrash().length
@@ -86,7 +86,7 @@
         this.$nextTick(() => { this.$refs['modal-confirm'].open() })
       },
       tryFetchTrashItems() {
-        if (!this.is_fetched)
+        if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchTrash')
       },
       onConfirmModalClose(modal) {
