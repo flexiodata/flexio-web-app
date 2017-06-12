@@ -209,6 +209,25 @@ class Base implements IObject
         return $result[0]['eid'];
     }
 
+    public function getFollowers() : array
+    {
+        // get the objects owned/followed by the user
+        $objects_followed = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_FOLLOWED_BY);
+
+        $res = array();
+        foreach ($objects_followed as $object_info)
+        {
+            $object_eid = $object_info['eid'];
+            $object = \Flexio\Object\Store::load($object_eid);
+            if ($object === false)
+                continue;
+
+            $res[] = $object;
+        }
+
+        return $res;
+    }
+
     public function setCreatedBy(string $user_eid) : \Flexio\Object\Base
     {
         // TODO: deprecated; move this information over to an action log
@@ -307,7 +326,7 @@ class Base implements IObject
             $updated_rights_entry['eid'] = $existing_rights_entry['eid'];
             $updated_rights_entry['access_code'] = $existing_rights_entry['access_code'];
             $updated_rights_entry['access_type'] = $existing_rights_entry['access_type'];
-            $updated_rights_entry['actions'] = array_merge($existing_rights_entry['actions'], $actions);
+            $updated_rights_entry['actions'] = array_unique(array_merge($existing_rights_entry['actions'], $actions));
             $updated_rights[] = $updated_rights_entry;
         }
          else

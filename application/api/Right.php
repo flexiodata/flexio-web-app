@@ -36,6 +36,7 @@ class Right
             $access_code = $r['access_code'] ?? false;
             $actions = $r['actions'] ?? false;
 
+
             if (!is_string($object_eid))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
             if (!is_string($access_code))
@@ -96,21 +97,14 @@ class Right
 
             $object_eid = $object->getEid();
             $object_eids_with_rights_added[$object_eid] = $object;
-
-            // if a user was granted rights (i.e., not a category like 'public'),
-            // then associate the user and the pipe
-            if (isset($o['user']))
-            {
-                $user = $o['user'];
-                \Flexio\System\System::getModel()->assoc_add($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
-                \Flexio\System\System::getModel()->assoc_add($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
-            }
         }
 
-        // return the rights for the objects affects
+        // sync up the followers for each of the objects with rights affected;
+        // return the objects with the effected rights
         $result = array();
         foreach ($object_eids_with_rights_added as $object_eid => $object)
         {
+            self::syncFollowersWithRights($object_eid);
             $result[] = $object->getRights();
         }
 
@@ -182,6 +176,10 @@ class Right
 
         // delete the right
         $right->delete();
+
+        // sync the followers and the rights
+        self::syncFollowersWithRights($object_eid);
+
         return true;
     }
 
@@ -273,5 +271,57 @@ class Right
         \Flexio\System\System::getModel()->assoc_add($user_eid, \Model::EDGE_INVITED_BY, $requesting_user_eid);
 
         return \Flexio\Object\User::load($user_eid);
+    }
+
+    private static function syncFollowersWithRights(string $object_eid) : bool
+    {
+        // load the object
+        $object = \Flexio\Object\Store::load($object_eid);
+        if ($object === false)
+            return false;
+
+        // get the object followers
+        $follower_eids = array();
+        $followers = $object->getFollowers();
+        foreach ($followers as $f)
+        {
+            $follower_eids[$f->getEid()] = true;
+        }
+
+        // get the non-owner users that have access to the object
+        $user_eids_having_rights = array();
+        $rights = $object->getRights();
+        foreach ($rights as $r)
+        {
+            if (!isset($r['user']))
+                continue;
+
+            $user_eids_having_rights[$r['user']['eid']] = true;
+        }
+        $owner_eid = $object->getOwner();
+        if ($owner_eid !== false)
+            unset($user_eids_having_rights[$owner_eid]);
+
+        // delete any followers not in the list of rights
+        foreach ($follower_eids as $follower_eid => $placeholder)
+        {
+            if (array_key_exists($follower_eid, $user_eids_having_rights) === true)
+                continue;
+
+            \Flexio\System\System::getModel()->assoc_delete($object->getEid(), \Model::EDGE_FOLLOWED_BY, $follower_eid);
+            \Flexio\System\System::getModel()->assoc_delete($follower_eid, \Model::EDGE_FOLLOWING, $object->getEid());
+        }
+
+        // add any followers that aren't already in the list of followers
+        foreach ($user_eids_having_rights as $user_eid => $placeholder)
+        {
+            if (array_key_exists($user_eid, $follower_eids) === true)
+                continue;
+
+            \Flexio\System\System::getModel()->assoc_add($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user_eid);
+            \Flexio\System\System::getModel()->assoc_add($user_eid, \Model::EDGE_FOLLOWING, $object->getEid());
+        }
+
+        return true;
     }
 }

@@ -175,7 +175,7 @@ class User extends \Flexio\Object\Base
         //$filter = array(
         //    'target_eids' => array(/* index array of eids */),
         //    'eid_type' => array(/* index array of eid types */),
-        //    'eid_status' = array(/* index array of eid statuses */)
+        //    'eid_status' => array(/* index array of eid statuses */)
         //);
 
         // get the objects owned/followed by the user
@@ -205,7 +205,7 @@ class User extends \Flexio\Object\Base
         //$filter = array(
         //    'target_eids' => array(/* index array of eids */),
         //    'eid_type' => array(/* index array of eid types */),
-        //    'eid_status' = array(/* index array of eid statuses */)
+        //    'eid_status' => array(/* index array of eid statuses */)
         //);
 
         // get the counts of the objects owned/followed by the user
