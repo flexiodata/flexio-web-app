@@ -113,6 +113,10 @@ class ApiController extends \Flexio\System\FxControllerAction
                     $input = file_get_contents('php://input');
                     if (strlen($input) > 0)
                     {
+                        $urlencoding_test = substr($input, 0, 3);
+                        if ($urlencoding_test == '%7B' || $urlencoding_test == '%7b')
+                            $input = rawurldecode($input);
+
                         $obj = @json_decode($input, true);
 
                         if ($obj === null)
