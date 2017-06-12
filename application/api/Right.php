@@ -92,6 +92,9 @@ class Right
                     \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_SHARED_WITH, $user->getEid());
                     \Flexio\System\System::getModel()->assoc_add($user->getEid(), \Model::EDGE_SHARED_FROM, $requesting_user_eid);
 
+                    // TODO: only send an email invite once if a user happens to be listed multiple time in the list;
+                    // only send invites if a user isn't already in the list
+
                     self::sendInviteEmail($user->getEid(), $requesting_user_eid, $object->getEid(), $message);
                 }
             }
