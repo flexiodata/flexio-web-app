@@ -311,8 +311,8 @@
         {
           try
           {
-            var key = chunk.substr(0, arrow).trim();
-            var value = chunk.substr(arrow+2).trim();
+            var key = this.dequoteColumn(chunk.substr(0, arrow).trim());
+            var value = this.dequoteColumn(chunk.substr(arrow+2).trim());
             if (key.length >= 2 && key[0] == '"' && key[key.length-1] == '"')
               key = JSON.parse(key);
             if (value.length >= 2 && value[0] == '"' && value[value.length-1] == '"')
