@@ -396,7 +396,7 @@
       },
 
       tryFetchConnections() {
-        if (!this.connections_fetched)
+        if (!this.connections_fetched && !this.connections_fetching)
           this.$store.dispatch('fetchConnections')
       },
 
