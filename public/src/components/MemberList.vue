@@ -70,7 +70,7 @@
         'getAllRights'
       ]),
       tryFetchRights() {
-        if (_.size(this.objectEid) > 0 && _.size(this.getOurRights()) == 0)
+        if (_.size(this.objectEid) > 0 && _.size(this.getOurRights()) == 1 /* everyone */)
         {
           this.is_fetching = true
           this.$store.dispatch('fetchRights', { objects: this.objectEid }).then(response => {
@@ -79,12 +79,25 @@
         }
       },
       getOurRights() {
+        var rights_items = _.defaultTo(this.getAllRights(), [])
+        rights_items = rights_items.concat([{
+          'object_eid': this.objectEid,
+          'access_code': 'public',
+          'access_type': 'CAT',
+          'actions': []
+        }])
+
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything
         return _
-          .chain(this.getAllRights())
+          .chain(rights_items)
           .filter(r => { return _.get(r, 'object_eid', '') === this.objectEid })
-          .sortBy([ function(r) { return new Date(r.created) } ])
+          .sortBy([
+            r => { return _.get(r, 'access_code') == 'public' },
+            r => { return _.get(r, 'access_code') == this.ownerEid },
+            r => { return new Date(r.created) }
+          ])
+          .reverse()
           .value()
       }
     }

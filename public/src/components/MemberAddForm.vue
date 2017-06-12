@@ -11,12 +11,19 @@
         label="Invite people"
         help=" "
         placeholder="Email Addresses"
+        v-model="invite_info.users_str"
+      ></ui-textbox>
+      <ui-textbox
+        autocomplete="off"
+        class="flex-fill"
+        label="Invite people"
+        help=" "
+        placeholder="Email Addresses"
         required
         v-deferred-focus
-        :error="errors.first('users_str')"
-        :invalid="errors.has('users_str')"
         v-model="invite_info.users_str"
         v-validate
+        v-if="false"
         data-vv-as="email addresses"
         data-vv-name="users_str"
         data-vv-value-path="invite_info.users_str"

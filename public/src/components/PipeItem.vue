@@ -13,13 +13,13 @@
         <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px">arrow_drop_down</i>
         <connection-icon :type="output_type" class="dib v-mid br2 square-3"></connection-icon>
       </div>
-      <div class="flex-fill mh2 fw6 f6 f5-ns lh-title">
+      <div class="flex-fill mh2 fw6 f6 f5-ns">
         <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-pipe-title">{{item.name}}</h1>
         <div class="dn db-l mw7">
-          <h2 class="f6 fw4 mt1 mb0 black-60">{{item.description}}</h2>
+          <h2 class="f6 fw4 mt1 mb0 mid-gray lh-copy">{{item.description}}</h2>
         </div>
       </div>
-      <div class="flex-none min-w4 mr3 f6 fw6 black-60">
+      <div class="dn db-l flex-none min-w4 mr3 f6 fw6 mid-gray">
         {{follower_str}}
       </div>
       <div class="flex-none mr2">
@@ -113,11 +113,11 @@
         return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
       },
       follower_count() {
-        return _.size(_.get(this.item, 'followed_by', []))
+        return _.size(_.get(this.item, 'followed_by', [])) + 1 /* owner */
       },
       follower_str() {
         var cnt = this.follower_count
-        return cnt == 0 ? 'Only You' : util.pluralize(cnt, cnt+' '+'members', cnt+' '+'member')
+        return util.pluralize(cnt, cnt+' '+'members', cnt+' '+'member')
       },
       tasks() {
         return _.get(this.item, 'task', [])
@@ -133,11 +133,11 @@
           id: 'open',
           label: 'Open',
           icon: 'file_upload'
-        },{
+        }/*,{
           id: 'edit',
           label: 'Edit',
           icon: 'edit'
-        },{
+        }*/,{
           id: 'duplicate',
           label: 'Duplicate',
           icon: 'content_copy'

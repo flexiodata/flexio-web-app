@@ -281,15 +281,46 @@ class Base implements IObject
 
     public function grant(string $access_code, string $access_type, array $actions) : \Flexio\Object\Base
     {
-        $r = array();
-        $r['actions'] = $actions;
-        $r['access_code'] = $access_code;
-        $r['access_type'] = $access_type;
+        // get the existing rights; if the access_code and access_type
+        // match an entry that's already there, then add the existing
+        // rights to the first matching entry; otherwise, create a new
+        // rights entry
 
-        $rights = array();
-        $rights[] = $r;
+        $existing_rights_entry = false;
+        $existing_rights = $this->getRights();
+        foreach ($existing_rights as $r)
+        {
+            if ($access_code !== $r['access_code'])
+                continue;
+            if ($access_type !== $r['access_type'])
+                continue;
 
-        $this->setRights($rights);
+            $existing_rights_entry = $r;
+            break;
+        }
+
+        $updated_rights = array();
+        if ($existing_rights_entry !== false)
+        {
+            // right exists; add on the actions
+            $updated_rights_entry = array();
+            $updated_rights_entry['eid'] = $existing_rights_entry['eid'];
+            $updated_rights_entry['access_code'] = $existing_rights_entry['access_code'];
+            $updated_rights_entry['access_type'] = $existing_rights_entry['access_type'];
+            $updated_rights_entry['actions'] = array_merge($existing_rights_entry['actions'], $actions);
+            $updated_rights[] = $updated_rights_entry;
+        }
+         else
+        {
+            // right doesn't exist; create a new one
+            $new_rights_entry = array();
+            $new_rights_entry['access_code'] = $access_code;
+            $new_rights_entry['access_type'] = $access_type;
+            $new_rights_entry['actions'] = $actions;
+            $updated_rights[] = $new_rights_entry;
+        }
+
+        $this->setRights($updated_rights);
         return $this;
     }
 
@@ -336,6 +367,11 @@ class Base implements IObject
 
     public function setRights(array $rights) : \Flexio\Object\Base
     {
+        // note: set rights is explicit: it replaces actions with the specified
+        // actions if a rights eid is supplied, otherwise it creates a new entry;
+        // grant() is additive: it adds to what's already been granted; revoke()
+        // is subtractive: it takes away from what's been granted
+
         foreach ($rights as $r)
         {
             // see if the rights already exists
