@@ -13,7 +13,7 @@ const config = merge(base, {
     },
     noInfo: true,
 	proxy: {
-      '/api/*': {
+      '/api/**': {
         target: 'https://localhost',
         secure: false
       }
