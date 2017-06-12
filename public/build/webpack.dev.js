@@ -11,6 +11,12 @@ const config = merge(base, {
     historyApiFallback: {
       index: './src/index-dev.html'
     },
+    proxy: {
+      '/api/**': {
+        target: 'https://localhost',
+        secure: false
+      }
+    },
     noInfo: true
   },
   devtool: '#eval-source-map'

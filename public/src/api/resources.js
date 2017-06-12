@@ -11,7 +11,7 @@ Vue.http.options.credentials = true
 var SUFFIX = '{/p1}{/p2}{/p3}{/p4}'
 
 // api root
-export const API_ROOT = 'https://'+HOSTNAME+'/api/v1'
+export const API_ROOT = '/api/v1'
 
 // auth
 export const LoginResource = Vue.resource(API_ROOT+'/login')
