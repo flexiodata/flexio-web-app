@@ -51,22 +51,35 @@ class Right
             if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE_RIGHTS) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-            // right now, the access_code should be either a user eid or an email;
-            // load the user
-            $user = \Flexio\Object\User::load($access_code);
-            if ($user === false)
-                $user = self::inviteUser($access_code, $requesting_user_eid); // user doesn't exist; invite them
-
-            if ($user !== false)
+            // right now, the access_code should be either a user eid, email address,
+            // or the 'public' category; load the user
+            $object_rights_to_add = array();
+            if ($access_code === \Flexio\Object\User::MEMBER_PUBLIC)
             {
-                $access_code = $user->getEid();
-
                 $object_rights_to_add[] = array(
                     'object' => $object,
-                    'user' => $user,
-                    'access_code' => $access_code,
+                    'access_code' => \Flexio\Object\User::MEMBER_PUBLIC,
+                    'access_type' => \Model::ACCESS_CODE_TYPE_CATEGORY,
                     'actions' => $actions
                 );
+            }
+             else
+            {
+                // see if the access code is a valid user; if not, invite the user
+                $user = \Flexio\Object\User::load($access_code);
+                if ($user === false)
+                    $user = self::inviteUser($access_code, $requesting_user_eid); // user doesn't exist; invite them
+
+                if ($user !== false)
+                {
+                    $object_rights_to_add[] = array(
+                        'object' => $object,
+                        'user' => $user,
+                        'access_code' => $user->getEid(),
+                        'access_type' => \Model::ACCESS_CODE_TYPE_EID,
+                        'actions' => $actions
+                    );
+                }
             }
         }
 
@@ -75,18 +88,23 @@ class Right
         foreach ($object_rights_to_add as $o)
         {
             $object = $o['object'];
-            $user = $o['user'];
             $access_code = $o['access_code'];
+            $access_type = $o['access_type'];
             $actions = $o['actions'];
 
-            $object->grant($access_code, \Model::ACCESS_CODE_TYPE_EID, $actions);
+            $object->grant($access_code, $access_type, $actions);
 
             $object_eid = $object->getEid();
             $object_eids_with_rights_added[$object_eid] = $object;
 
-            \Flexio\System\System::getModel()->assoc_add($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
-            \Flexio\System\System::getModel()->assoc_add($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
-
+            // if a user was granted rights (i.e., not a category like 'public'),
+            // then associate the user and the pipe
+            if (isset($o['user']))
+            {
+                $user = $o['user'];
+                \Flexio\System\System::getModel()->assoc_add($object->getEid(), \Model::EDGE_FOLLOWED_BY, $user->getEid());
+                \Flexio\System\System::getModel()->assoc_add($user->getEid(), \Model::EDGE_FOLLOWING, $object->getEid());
+            }
         }
 
         // return the rights for the objects affects
