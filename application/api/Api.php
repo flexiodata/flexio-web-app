@@ -103,6 +103,7 @@ class Api
                 $error['type'] = 'flexio exception';
                 $error['file'] = $file;
                 $error['line'] = $line;
+                $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
             }
 
@@ -126,6 +127,7 @@ class Api
                 $error['type'] = 'php exception';
                 $error['file'] = $file;
                 $error['line'] = $line;
+                $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
             }
 
@@ -149,6 +151,7 @@ class Api
                 $error['type'] = 'php error';
                 $error['file'] = $file;
                 $error['line'] = $line;
+                $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
             }
 
