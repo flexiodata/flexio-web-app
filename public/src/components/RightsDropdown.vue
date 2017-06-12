@@ -117,20 +117,25 @@
         var eid = _.get(this.item, 'eid', '')
         var attrs = { actions }
 
+        // we're on the 'ghost' everyone item in the rights list; use the 'createRights'
+        // call to add the selected rights
         if (this.isEveryone && eid.length == 0)
         {
-          var object_eid = _.get(this.item, 'object_eid', '')
-          var action_code = 'public'
-          var action_type = 'CAT'
+          var rights = [{
+            object_eid: _.get(this.item, 'object_eid', ''),
+            action_code: 'public',
+            action_type: 'CAT',
+            actions
+          }]
 
-          attrs = {
-            object_eid,
-            action_code,
-            action_type,
-            actions,
-          }
+          this.$store.dispatch('createRights', { attrs: { rights } }).then(response => {
+            console.log(response)
+          })
+
+          return
         }
 
+        // otherwise, update the right
         this.$store.dispatch('updateRight', { eid, attrs }).then(response => {
           console.log(response)
         })
