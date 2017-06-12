@@ -17,7 +17,7 @@
         >
       </div>
       <div class="flex-none">
-        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openPipeAddModal">New pipe</btn>
+        <btn btn-md btn-primary class="btn-add ttu b ba" @click="tryCreatePipe()">New pipe</btn>
       </div>
     </div>
 
@@ -154,10 +154,14 @@
           this.$store.dispatch('fetchPipes')
       },
       tryCreatePipe(attrs, modal) {
+        if (!_.isObject(attrs))
+          attrs = { name: 'Untitled Pipe' }
+
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok)
           {
-            modal.close()
+            if (!_.isNil(modal))
+              modal.close()
             this.openPipe(response.body.eid)
           }
            else
