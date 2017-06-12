@@ -117,7 +117,7 @@ class Right
         return $result;
     }
 
-    public static function set(array $params, string $requesting_user_eid = null) : bool
+    public static function set(array $params, string $requesting_user_eid = null) : array
     {
         // note: only allow the actions to be changed; don't allow the object
         // or the user to be changed since this would allow a user to simply
