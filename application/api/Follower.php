@@ -124,7 +124,7 @@ class Follower
             if (strlen($last_name) > 0)
                 $sender_name = $sender_name . ' ' . $last_name;
 
-            $message_type = \Flexio\Api\Message::TYPE_EMAIL_SHARE;
+            $message_type = \Flexio\Api\Message::TYPE_EMAIL_SHARE_PROJECT;
             $from_name = $sender_name;
             $from_email = \Flexio\System\System::getCurrentUserEmail();
 

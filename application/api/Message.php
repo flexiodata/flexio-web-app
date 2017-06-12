@@ -20,8 +20,8 @@ class Message
 {
     const TYPE_EMAIL_WELCOME             = 'email_welcome';
     const TYPE_EMAIL_RESET_PASSWORD      = 'email_reset_password';
-    const TYPE_EMAIL_SHARE               = 'email_share';
-    const TYPE_EMAIL_PIPE                = 'email_pipe';
+    const TYPE_EMAIL_SHARE_PROJECT       = 'email_share_project';
+    const TYPE_EMAIL_SHARE_PIPE          = 'email_share_pipe';
 
     protected $messge_type;
     protected $message_params;
@@ -40,8 +40,8 @@ class Message
 
             case self::TYPE_EMAIL_WELCOME:
             case self::TYPE_EMAIL_RESET_PASSWORD:
-            case self::TYPE_EMAIL_SHARE:
-            case self::TYPE_EMAIL_PIPE:
+            case self::TYPE_EMAIL_SHARE_PROJECT:
+            case self::TYPE_EMAIL_SHARE_PIPE:
                 break;
         }
 
@@ -65,10 +65,10 @@ class Message
             case self::TYPE_EMAIL_RESET_PASSWORD:
                 return self::createResetPasswordEmail($this->message_params);
 
-            case self::TYPE_EMAIL_SHARE:
+            case self::TYPE_EMAIL_SHARE_PROJECT:
                 return self::createShareProjectEmail($this->message_params);
 
-            case self::TYPE_EMAIL_PIPE:
+            case self::TYPE_EMAIL_SHARE_PIPE:
                 return self::createSharePipeEmail($this->message_params);
         }
     }
