@@ -13,8 +13,7 @@
 
     <!-- list -->
     <member-list
-      class="overflow-auto"
-      style="height: 260px"
+      style="min-height: 260px"
       :object-eid="pipe_eid"
       :owner-eid="owner_eid"
       v-if="pipe_eid.length > 0"
