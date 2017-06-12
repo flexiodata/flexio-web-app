@@ -80,12 +80,17 @@
       },
       getOurRights() {
         var rights_items = _.defaultTo(this.getAllRights(), [])
-        rights_items = rights_items.concat([{
-          'object_eid': this.objectEid,
-          'access_code': 'public',
-          'access_type': 'CAT',
-          'actions': []
-        }])
+
+        // if there's no 'public' right for this object, add a default placeholder one
+        if (!_.find(rights_items, { access_code: 'public', object_eid: this.objectEid }))
+        {
+          rights_items = rights_items.concat([{
+            'object_eid': this.objectEid,
+            'access_code': 'public',
+            'access_type': 'CAT',
+            'actions': []
+          }])
+        }
 
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything

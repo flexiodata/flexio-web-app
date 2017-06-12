@@ -123,8 +123,7 @@
         {
           var rights = [{
             object_eid: _.get(this.item, 'object_eid', ''),
-            action_code: 'public',
-            action_type: 'CAT',
+            access_code: 'public',
             actions
           }]
 
