@@ -9,6 +9,7 @@
 
     <ui-popover
       class="mw5 f6 mid-gray"
+      ref="popover"
       trigger="dropdownTrigger"
       dropdown-position="bottom right"
     >
@@ -85,7 +86,7 @@
               types.ACTION_TYPE_READ,
               types.ACTION_TYPE_EXECUTE
             ])
-            return
+            break
           case 'can-edit':
             this.updateRights([
               types.ACTION_TYPE_READ,
@@ -93,8 +94,10 @@
               types.ACTION_TYPE_WRITE,
               types.ACTION_TYPE_DELETE
             ])
-            return
+            break
         }
+
+        this.$refs.popover.close()
       },
       updateRights(actions) {
         var eid = _.get(this.item, 'eid', '')
@@ -106,6 +109,7 @@
       },
       removeRight() {
         this.$store.dispatch('deleteRight', { attrs: this.item })
+        this.$refs.popover.close()
       }
     }
   }
