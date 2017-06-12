@@ -11,7 +11,13 @@ const config = merge(base, {
     historyApiFallback: {
       index: './src/index-dev.html'
     },
-    noInfo: true
+    noInfo: true,
+	proxy: {
+      '/api/*': {
+        target: 'https://localhost',
+        secure: false
+      }
+    }
   },
   devtool: '#eval-source-map'
 })
@@ -31,6 +37,7 @@ config.module.rules = (config.module.rules || []).concat([
     loader: 'style-loader!css-loader!autoprefixer-loader!less-loader'
   }
 ])
+
 
 /* load plugins */
 
