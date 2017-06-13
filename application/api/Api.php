@@ -78,7 +78,7 @@ class Api
             // get the requesting user
             $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
             if (!\Flexio\Base\Eid::isValid($requesting_user_eid))
-                $requesting_user_eid = ''; // public user
+                $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC;
 
             // send the response
             $response = self::processRequest($method, $url_params, $query_params, $requesting_user_eid);
