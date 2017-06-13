@@ -1,9 +1,0 @@
-Hi there,
-${name} has invited you to a Flex.io data project called "${object_name}".
-
-View the project here:
-${share_link}
-${message}
-
-Thanks!
-- The Flex.io Team

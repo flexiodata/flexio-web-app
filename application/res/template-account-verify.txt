@@ -1,9 +1,0 @@
-Hello,
-
-Thank you for creating your Flex.io account!
-
-Please click on the following link to activate your account:
-${activation_link}
-
-Thanks!
-- The Flex.io Team

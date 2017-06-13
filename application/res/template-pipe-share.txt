@@ -1,9 +1,0 @@
-Hi there,
-${message}
-${name} has shared a Flex.io pipe called "${object_name}" with you.
-
-View the pipe here:
-${share_link}
-
-Thanks!
-- The Flex.io Team
