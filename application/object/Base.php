@@ -294,6 +294,13 @@ class Base implements IObject
                 return true;
         }
 
+        // always allow the owner the ability to read/write writes
+        if ($action === \Flexio\Object\Action::TYPE_READ_RIGHTS || $action === \Flexio\Object\Action::TYPE_WRITE_RIGHTS)
+        {
+            if ($r['access_code'] = $this->getOwner())
+                return true;
+        }
+
         // action not allowed
         return false;
     }

@@ -22,11 +22,13 @@ class Right
     {
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
-                'rights' => array('type' => 'object', 'required' => true)
+                'rights' => array('type' => 'object', 'required' => true),
+                'message' => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $rights = $params['rights'];
+        $message = $params['message'] ?? '';
 
         // validate the rights
         $object_rights_to_add = array();
@@ -69,7 +71,12 @@ class Right
                 // see if the access code is a valid user; if not, invite the user
                 $user = \Flexio\Object\User::load($access_code);
                 if ($user === false)
-                    $user = self::inviteUser($access_code, $requesting_user_eid); // user doesn't exist; invite them
+                {
+                    // create a user
+                    $user = self::createUser($access_code, $requesting_user_eid); // user doesn't exist; invite them
+                    \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_INVITED, $user->getEid());
+                    \Flexio\System\System::getModel()->assoc_add($user->getEid(), \Model::EDGE_INVITED_BY, $requesting_user_eid);
+                }
 
                 if ($user !== false)
                 {
@@ -80,6 +87,15 @@ class Right
                         'access_type' => \Model::ACCESS_CODE_TYPE_EID,
                         'actions' => $actions
                     );
+
+                    // regardless of whether or not they're a new user, add a sharing association
+                    \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_SHARED_WITH, $user->getEid());
+                    \Flexio\System\System::getModel()->assoc_add($user->getEid(), \Model::EDGE_SHARED_FROM, $requesting_user_eid);
+
+                    // TODO: only send an email invite once if a user happens to be listed multiple time in the list;
+                    // only send invites if a user isn't already in the list
+
+                    self::sendInviteEmail($user->getEid(), $requesting_user_eid, $object->getEid(), $message);
                 }
             }
         }
@@ -239,7 +255,7 @@ class Right
         return $rights;
     }
 
-    private static function inviteUser(string $identifier, string $requesting_user_eid)
+    private static function createUser(string $identifier, string $requesting_user_eid)
     {
         // user doesn't exist; create a user
         $user_email = $identifier;
@@ -265,12 +281,56 @@ class Right
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         $user_eid = $user_info['eid'];
-
-        // add an invitation association
-        \Flexio\System\System::getModel()->assoc_add($requesting_user_eid, \Model::EDGE_INVITED, $user_eid);
-        \Flexio\System\System::getModel()->assoc_add($user_eid, \Model::EDGE_INVITED_BY, $requesting_user_eid);
-
         return \Flexio\Object\User::load($user_eid);
+    }
+
+    private static function sendInviteEmail(string $invited_user_eid, string $requesting_user_eid, string $object_eid, string $message) : bool
+    {
+        $invited_user = \Flexio\Object\User::load($invited_user_eid);
+        if ($invited_user === false)
+            return false;
+
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user === false)
+            return false;
+
+        $object = \Flexio\Object\Store::load($object_eid);
+        if ($object === false)
+            return false;
+
+        $invited_user_info = $invited_user->get();
+        $to_email = $invited_user_info['email'];
+
+        $requesting_user_info = $requesting_user->get();
+        $first_name = $requesting_user_info['first_name'];
+        $last_name = $requesting_user_info['last_name'];
+        $from_name = $first_name . (strlen($last_name) > 0 ? (' ' . $last_name) : '');
+        $from_email = $requesting_user_info['email'];
+
+        $object_info = $object->get();
+        $object_eid = $object_info['eid'];
+        $object_name = isset($object_info['name']) ? $object_info['name'] : '';
+
+        // send out the invite
+        $email_params = array();
+
+        // if the user hasn't been verified yet (either just created or previously created
+        // but not verified), then add the verification code
+        if ($invited_user_info['eid_status'] == \Model::STATUS_PENDING)
+            $email_params['verify_code'] = $invited_user_info['verify_code'];
+
+        // get the full name of the sender
+        $email_params['email'] = $to_email;
+        $email_params['from_name'] = $from_name;
+        $email_params['from_email'] = $from_email;
+        $email_params['object_name'] = $object_name;
+        $email_params['object_eid'] = $object_eid;
+        $email_params['message'] = $message;
+
+        $email = \Flexio\Api\Message::create(\Flexio\Api\Message::TYPE_EMAIL_SHARE_PIPE, $email_params);
+        $email->send();
+
+        return true;
     }
 
     private static function syncFollowersWithRights(string $object_eid) : bool
