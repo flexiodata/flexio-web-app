@@ -33,6 +33,10 @@
   transition-duration: 0ms !important;
 }
 
+[class*=hint--multiline]:after {
+  white-space: pre;
+}
+
 // [class*=hint--] is position: relative and needs to be overriden
 .static[class*=hint--] { position: static; }
 .absolute[class*=hint--] { position: absolute; }

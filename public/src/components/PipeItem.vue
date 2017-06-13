@@ -19,13 +19,17 @@
           <h2 class="f6 fw4 mt1 mb0 mid-gray lh-copy">{{item.description}}</h2>
         </div>
       </div>
-      <div class="dn db-l flex-none min-w4 mr3 f6 fw6 mid-gray">
-        {{follower_str}}
+      <div class="dn db-l flex-none mh3 f7 fw6 mid-gray" style="min-width: 160px">
+
+        <span
+          class="hint--bottom hint--multiline"
+          :aria-label="follower_tooltip"
+        >{{follower_str}} (@{{owner_username}})</span>
       </div>
       <div class="flex-none mr2">
         <div :class="isTrash ? 'o-40 no-pointer-events' : ''">
           <toggle-button
-            class="hint--top"
+            class="hint--bottom"
             style="display: block"
             :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
             :checked="is_scheduled"
@@ -115,12 +119,25 @@
       is_scheduled() {
         return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
       },
+      owner_username() {
+        return _.get(this.item, 'owned_by.user_name', '')
+      },
+      owner_fullname() {
+        return _.get(this.item, 'owned_by.first_name', '')+' '+_.get(this.item, 'owned_by.last_name', '')
+      },
+      followers() {
+        return _.get(this.item, 'followed_by', [])
+      },
       follower_count() {
-        return _.size(_.get(this.item, 'followed_by', [])) + 1 /* owner */
+        return _.size(this.followers) + 1 /* owner */
       },
       follower_str() {
         var cnt = this.follower_count
         return util.pluralize(cnt, cnt+' '+'members', cnt+' '+'member')
+      },
+      follower_tooltip() {
+        var tooltip = 'Owner: '+this.owner_fullname
+        return tooltip
       },
       tasks() {
         return _.get(this.item, 'task', [])
