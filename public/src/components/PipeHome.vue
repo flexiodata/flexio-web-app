@@ -375,7 +375,8 @@
             }
              else
             {
-              // TODO: add error handling
+              // we weren't able to load the pipe; redirect to the sign in page
+              this.$router.push(this.signin_route)
             }
           })
         }
