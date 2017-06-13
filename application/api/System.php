@@ -18,8 +18,10 @@ namespace Flexio\Api;
 
 class System
 {
-    public static function login(array $params, string $requesting_user_eid = null) : bool
+    public static function login(array $params, string $requesting_user_eid = null) : array
     {
+        // note: should return the same as User::about();
+
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'username' => array('type' => 'string', 'required' => true),
@@ -37,10 +39,21 @@ class System
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, $error_message);
         }
 
-        return true;
+        // return "about" info
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        $user = \Flexio\Object\User::load($current_user_eid);
+        if ($user === false)
+        {
+            $properties = array();
+            $properties['eid'] = '';
+            $properties['eid_type'] = \Model::TYPE_USER;
+            return $properties;
+        }
+
+        return $user->get();
     }
 
-    public static function logout(array $params, string $requesting_user_eid = null) : bool
+    public static function logout(array $params, string $requesting_user_eid = null) : array
     {
         // validation placeholder; no parameters are used
         $validator = \Flexio\Base\Validator::create();
@@ -51,7 +64,12 @@ class System
         \Flexio\System\System::clearLoginIdentity();
         @session_destroy();
         @setcookie('FXSESSID', '', time()-86400, '/');
-        return true;
+
+        // return empty "about" info
+        $properties = array();
+        $properties['eid'] = '';
+        $properties['eid_type'] = \Model::TYPE_USER;
+        return $properties;
     }
 
     public static function validate(array $params, string $requesting_user_eid = null) : array

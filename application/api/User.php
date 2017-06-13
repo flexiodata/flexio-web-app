@@ -312,6 +312,8 @@ class User
 
     public static function about(array $params, string $requesting_user_eid = null) : array
     {
+        // note: should return the same as System::login();
+
         // returns the information for the currently logged-in user or an empty eid
         // if the user isn't logged in
         $user = \Flexio\Object\User::load($requesting_user_eid);
