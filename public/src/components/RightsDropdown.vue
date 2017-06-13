@@ -67,6 +67,9 @@
       item_actions() {
         return _.get(this.item, 'actions', [])
       },
+      object_eid() {
+        return _.get(this.item, 'object_eid', '')
+      },
       can_edit() {
         if (_.includes(this.item_actions, types.ACTION_TYPE_DELETE) ||
             _.includes(this.item_actions, types.ACTION_TYPE_WRITE))
@@ -114,33 +117,32 @@
         this.$refs.popover.close()
       },
       updateRights(actions) {
-        var eid = _.get(this.item, 'eid', '')
         var attrs = { actions }
 
         // we're on the 'ghost' everyone item in the rights list; use the 'createRights'
         // call to add the selected rights
-        if (this.isEveryone && eid.length == 0)
+        if (this.isEveryone && this.object_eid.length == 0)
         {
           var rights = [{
-            object_eid: _.get(this.item, 'object_eid', ''),
+            object_eid: this.object_eid,
             access_code: 'public',
             actions
           }]
 
           this.$store.dispatch('createRights', { attrs: { rights } }).then(response => {
-            console.log(response)
+            this.$store.dispatch('fetchPipe', { eid: this.object_eid })
           })
 
           return
         }
 
         // otherwise, update the right
-        this.$store.dispatch('updateRight', { eid, attrs }).then(response => {
-          console.log(response)
-        })
+        this.$store.dispatch('updateRight', { eid, attrs })
       },
       removeRight() {
-        this.$store.dispatch('deleteRight', { attrs: this.item })
+        this.$store.dispatch('deleteRight', { attrs: this.item }).then(response => {
+          this.$store.dispatch('fetchPipe', { eid: this.object_eid })
+        })
         this.$refs.popover.close()
       }
     }
