@@ -91,14 +91,14 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
   commit(types.SIGNING_IN, true)
 
   return api.login({ attrs }).then(response => {
+    var user = response.body
+
     // success callback
-    commit(types.SIGNED_IN)
+    commit(types.SIGNED_IN, user)
     commit(types.SIGNING_IN, false)
 
     analytics.track('Signed In', _.omit(attrs, ['password']))
-
-    // now that we've signed in, fetch the active user's info from the server
-    dispatch('fetchCurrentUser')
+    dispatch('fetchCurrentUserStatistics')
 
     return response
   }, response => {
