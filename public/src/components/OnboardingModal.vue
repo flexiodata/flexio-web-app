@@ -16,8 +16,7 @@
         ></ui-icon-button>
       </div>
       <div class="f2 pt4 mbv">Welcome to Flex.io</div>
-      <div class="mt3 f5 fw6 black-60 lh-copy">Below are three simple templates to show how pipes work.</div>
-      <div class="mb3 f5 fw6 black-60 lh-copy">Click on one below to get started, and then you can modify them with your own inputs and commands.</div>
+      <div class="mv3 f5 fw6 black-60 lh-copy mw7 center">Below are three simple templates to show how pipes work. Click on one below to get started, and then you can modify them with your own inputs and commands.</div>
       <div class="mv3 center" style="max-width: 1280px">
         <div class="flex flex-column flex-row-l">
           <onboarding-tile-item
@@ -28,7 +27,7 @@
         </div>
       </div>
       <div class="mv3 f7 fw6 black-60">
-        Prefer to live dangerously? Skip these templates and <a href="#" class="blue" @click.prevent="close('skip')">jump straight into the deep end</a>. Click on the chat at the bottom right to call a lifeguard. :)
+        Prefer to live dangerously? Skip these templates and <a href="#" class="blue" @click.prevent="close('skip')">jump straight into the deep end</a>. Click on the chat button at the bottom right to call a lifeguard. :)
       </div>
     </div>
   </ui-modal>
