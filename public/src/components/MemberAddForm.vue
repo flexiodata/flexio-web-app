@@ -104,6 +104,7 @@
           var message = this.invite_info.message
 
           this.$store.dispatch('createRights', { attrs: { rights, message } }).then(response => {
+            this.$store.dispatch('fetchPipe', { eid: this.objectEid })
             this.reset()
           })
         })
