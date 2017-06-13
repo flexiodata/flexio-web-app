@@ -125,8 +125,10 @@
     TASK_TYPE_EMAIL_SEND
   } from '../constants/task-type'
   import {
+    CONNECTION_TYPE_STDIN,
+    CONNECTION_TYPE_STDOUT,
     CONNECTION_TYPE_DROPBOX,
-    CONNECTION_TYPE_GOOGLEDRIVE ,
+    CONNECTION_TYPE_GOOGLEDRIVE,
     CONNECTION_TYPE_SFTP,
     CONNECTION_TYPE_EMAIL
   } from '../constants/connection-type'
@@ -224,13 +226,16 @@
             connection_type: ctype
           },
           type: TASK_TYPE_INPUT,
-          params: {
-            items: []
-          }
+          params: {}
         }
 
         if (conn_identifier.length > 0)
           _.set(attrs, 'params.connection', conn_identifier)
+
+        if (ctype === CONNECTION_TYPE_STDIN)
+          _.set(attrs, 'params.connection', ctype)
+           else
+          _.set(attrs, 'params.items', []) // all other connections start with empty items array
 
         // add input task
         this.$store.dispatch('createPipeTask', { eid, attrs })
@@ -269,6 +274,9 @@
 
         if (conn_identifier.length > 0)
           _.set(attrs, 'params.connection', conn_identifier)
+
+        if (ctype === CONNECTION_TYPE_STDOUT)
+          _.set(attrs, 'params.connection', ctype)
 
         // add default output location for connections that need this
         if (ctype == CONNECTION_TYPE_DROPBOX || ctype == CONNECTION_TYPE_GOOGLEDRIVE || ctype == CONNECTION_TYPE_SFTP)
