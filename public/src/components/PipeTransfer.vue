@@ -232,7 +232,7 @@
         if (conn_identifier.length > 0)
           _.set(attrs, 'params.connection', conn_identifier)
 
-        if (ctype === CONNECTION_TYPE_STDIN)
+        if (ctype === CONNECTION_TYPE_STDIN || ctype === CONNECTION_TYPE_EMAIL)
           _.set(attrs, 'params.connection', ctype)
            else
           _.set(attrs, 'params.items', []) // all other connections start with empty items array
