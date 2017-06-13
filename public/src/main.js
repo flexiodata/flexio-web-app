@@ -73,6 +73,9 @@ router.beforeEach((to, from, next) => {
   {
     // this route requires authentication
 
+    if (store.state.user_fetching)
+      return
+
     // check if the user is signed in
     store.dispatch('fetchCurrentUser').then(response => {
       if (store.state.active_user_eid.length > 0)
@@ -98,6 +101,9 @@ router.beforeEach((to, from, next) => {
   }
    else
   {
+    if (store.state.user_fetching)
+      return
+
     // this route does not require authentication; try to sign in just to make
     // sure we know who the active user is and move to the next route
     store.dispatch('fetchCurrentUser').then(response => {
