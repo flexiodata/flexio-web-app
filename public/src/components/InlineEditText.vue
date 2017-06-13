@@ -22,20 +22,20 @@
       <div
         class="marked"
         :class="{ 'flex-fill': isBlock }"
-        @click="startEdit"
+        @click="startEdit('click')"
         v-html="markdown_val"
         v-if="isMarkdown && markdown_val.length > 0">
       </div>
       <div
         :class="isBlock ? 'flex-fill' : ''"
-        @click="startEdit"
+        @click="startEdit('click')"
         v-else-if="!isMarkdown && edit_val.length > 0"
       >
         {{edit_val}}
       </div>
       <div
         :class="[placeholderCls, isBlock ? 'flex-fill' : '']"
-        @click="startEdit"
+        @click="startEdit('click')"
         v-else
       >
         {{placeholder}}
@@ -44,7 +44,7 @@
         class="br1 child"
         :class="[editButtonTooltipCls, isBlock ? 'ma1 pa1 self-start' : '']"
         :aria-label="editButtonLabel"
-        @click="startEdit"
+        @click="startEdit('edit-button')"
         v-if="!is_editing && showEditButton && allowEdit"
       ><i class="db material-icons f6">edit</i>
       </button>
@@ -110,6 +110,10 @@
         type: Boolean,
         default: true
       },
+      'edit-on': {
+        type: Array,
+        default: () => { return ['click', 'edit-button'] }
+      },
       'is-markdown': {
         type: Boolean,
         default: false
@@ -167,8 +171,12 @@
         this.before_edit_val = this.edit_val
         this.$emit('save', { [this.inputKey]: this.edit_val }, this)
       },
-      startEdit() {
+      startEdit(from) {
         if (!this.allowEdit)
+          return
+
+        // allow ability to choose how an edit is started
+        if (!_.includes(this.editOn, from))
           return
 
         this.is_editing = true

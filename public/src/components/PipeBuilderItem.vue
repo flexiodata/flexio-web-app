@@ -110,6 +110,7 @@
           :placeholder="display_name"
           :val="description"
           :allow-edit="!show_progress && !isPrompting"
+          :edit-on="['edit-button']"
           :is-markdown="true"
           :is-block="true"
           @save="editTaskSingleton">
