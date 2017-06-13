@@ -90,13 +90,6 @@
           if (!success)
             return
 
-          /*
-          var attrs = {
-            users: this.users,
-            message: this.invite_info.message
-          }
-          */
-
           var rights = _.map(this.users, (u) => {
             return {
               'object_eid': this.objectEid,
@@ -108,7 +101,9 @@
             }
           })
 
-          this.$store.dispatch('createRights', { attrs: { rights } }).then(response => {
+          var message = this.invite_info.message
+
+          this.$store.dispatch('createRights', { attrs: { rights, message } }).then(response => {
             this.reset()
           })
         })
