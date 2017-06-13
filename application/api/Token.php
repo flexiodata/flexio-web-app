@@ -55,17 +55,17 @@ class Token
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $user_identifier = $params['eid'];
+        $token_identifier = $params['eid'];
 
         // load the user and check the rights; note: user rights govern user tokens
-        $user = \Flexio\Object\User::load($user_identifier);
+        $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false) // use write, since it's like changing a user property
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $token = \Flexio\Object\Token::load($user_identifier);
+        $token = \Flexio\Object\Token::load($token_identifier);
         if ($token !== false)
             $token->delete();
 
@@ -80,17 +80,17 @@ class Token
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $user_identifier = $params['eid'];
+        $token_identifier = $params['eid'];
 
         // load the user and check the rights; note: user rights govern user tokens
-        $user = \Flexio\Object\User::load($user_identifier);
+        $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $token = \Flexio\Object\Token::load($user_identifier);
+        $token = \Flexio\Object\Token::load($token_identifier);
         if ($token === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
