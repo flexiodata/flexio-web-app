@@ -15,7 +15,7 @@
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns">
         <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-pipe-title">{{item.name}}</h1>
-        <div class="dn db-l mw7">
+        <div class="dn db-l mw7" v-if="has_description">
           <h2 class="f6 fw4 mt1 mb0 mid-gray lh-copy">{{item.description}}</h2>
         </div>
       </div>
@@ -108,6 +108,9 @@
       },
       output_type() {
         return this.getTaskConnectionType(TASK_TYPE_OUTPUT)
+      },
+      has_description() {
+        return _.get(this.item, 'description', '').length > 0
       },
       is_scheduled() {
         return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
