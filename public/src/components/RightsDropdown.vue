@@ -117,11 +117,12 @@
         this.$refs.popover.close()
       },
       updateRights(actions) {
+        var eid = _.get(this.item, 'eid', '')
         var attrs = { actions }
 
         // we're on the 'ghost' everyone item in the rights list; use the 'createRights'
         // call to add the selected rights
-        if (this.isEveryone && this.object_eid.length == 0)
+        if (this.isEveryone && eid.length == 0)
         {
           var rights = [{
             object_eid: this.object_eid,
