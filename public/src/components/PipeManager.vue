@@ -160,13 +160,24 @@
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok)
           {
+            var pipe = response.body
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
+
+            // add Segment-friendly keys
+            _.assign(analytics_payload, {
+              createdAt: _.get(pipe, 'created')
+            })
+
+            analytics.track('Created Pipe: New', analytics_payload)
+
             if (!_.isNil(modal))
               modal.close()
+
             this.openPipe(response.body.eid)
           }
            else
           {
-            // TODO: add error handling
+            analytics.track('Created Pipe: New (Error)')
           }
         })
       },
