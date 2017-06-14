@@ -189,6 +189,7 @@ class User extends \Flexio\Object\Base
         foreach ($objects as $object_info)
         {
             $object_eid = $object_info['eid'];
+            $object_eid_type = $object_info['eid_type'];
             $object = \Flexio\Object\Store::load($object_eid);
             if ($object === false)
                 continue;
