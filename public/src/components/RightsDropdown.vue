@@ -39,7 +39,7 @@
         </div>
       </div>
       <div
-        class="flex flex-row pl2 pr3 pv3 darken-05 pointer bb b--black-05"
+        class="flex flex-row pl2 pr3 pv3 darken-05 pointer bt b--black-05"
         @click="changeRights('can-edit')"
         v-if="!isEveryone"
       >
