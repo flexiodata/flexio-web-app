@@ -50,12 +50,15 @@
         </div>
       </div>
       <div
-        class="flex flex-row pl2 pr3 pv3 darken-05 pointer bt b--black-05 dark-red"
+        class="flex flex-row pl2 pr3 pv3 darken-05 pointer bt b--black-05"
         @click="removeRight"
         v-if="!isEveryone"
       >
         <i class="material-icons md-18 ml1 mr2 transparent">check</i>
-        <div>Remove</div>
+        <div>
+          <div class="fw6 lh-title mb1 dark-red">Remove</div>
+          <div class="f7 lh-copy light-silver">Remove this person from this pipe</div>
+        </div>
       </div>
     </ui-popover>
   </div>
