@@ -265,6 +265,13 @@ class Base implements IObject
         // note: like the status, read the rights fresh everytime to make
         // sure we have the most current information
 
+        // if the user is the owner, allow to do anything;
+        // TODO: if the user interface ever allows rights to be limited
+        // for the owner, this needs to be removed; right now, the UI allows
+        // the owner to do everything, so this is an optimization
+        if ($r['access_code'] = $this->getOwner())
+            return true;
+
         // get the rights for this object
         $rights = $this->getRights();
 
@@ -281,25 +288,20 @@ class Base implements IObject
             // now, all access types are either eids or the public access
             // type category
             if ($access_type === \Model::ACCESS_CODE_TYPE_EID && $access_code === $r['access_code'])
-                $allowed_actions = array_merge($allowed_actions, $r['actions']);
+            {
+                $actions_to_add_to_allowed = array_flip($r['actions']);
+                $allowed_actions = array_merge($allowed_actions, $actions_to_add_to_allowed);
+            }
 
             if ($access_type === \Model::ACCESS_CODE_TYPE_CATEGORY && $access_code === \Flexio\Object\User::MEMBER_PUBLIC)
-                $allowed_actions = array_merge($allowed_actions, $r['actions']);
+            {
+                $actions_to_add_to_allowed = array_flip($r['actions']);
+                $allowed_actions = array_merge($allowed_actions, $actions_to_add_to_allowed);
+            }
         }
 
-        // see if the requested action is allowed
-        foreach ($allowed_actions as $allowed_action)
-        {
-            if ($action === $allowed_action)
-                return true;
-        }
-
-        // always allow the owner the ability to read/write writes
-        if ($action === \Flexio\Object\Action::TYPE_READ_RIGHTS || $action === \Flexio\Object\Action::TYPE_WRITE_RIGHTS)
-        {
-            if ($r['access_code'] = $this->getOwner())
-                return true;
-        }
+        if (array_key_exists($action, $allowed_actions) === true)
+            return true;
 
         // action not allowed
         return false;
@@ -441,18 +443,11 @@ class Base implements IObject
 
         foreach ($rights_info as $r)
         {
-            $right_eid = $r['eid'];
-            $right = \Flexio\Object\Right::load($right_eid);
-            if ($right === false)
+            if ($r['eid_status'] !== \Model::STATUS_AVAILABLE)
                 continue;
 
-            // only show rights that are available; note: the right list will
-            // return all rights, including ones that have been deleted, so
-            // this check is important
-            if ($right->getStatus() !== \Model::STATUS_AVAILABLE)
-                continue;
-
-            $result[] = $right->get();
+            $r['actions'] = json_decode($r['actions'],true);
+            $result[] = $r;
         }
 
         return $result;

@@ -54,9 +54,11 @@ class Store
         }
     }
 
-    public static function load(string $identifier)
+    public static function load(string $identifier, string $eid_type = null)
     {
-        $eid_type = self::getModel()->getTypeByIdentifier($identifier);
+        if (!isset($eid_type))
+            $eid_type = self::getModel()->getTypeByIdentifier($identifier);
+
         switch ($eid_type)
         {
             default:
