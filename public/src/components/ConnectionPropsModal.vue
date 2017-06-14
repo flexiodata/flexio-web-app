@@ -4,7 +4,6 @@
     remove-close-button
     dismiss-on="close-button"
     size="large"
-    @open="onOpen"
     @hide="onHide"
   >
     <div slot="header" class="w-100">
