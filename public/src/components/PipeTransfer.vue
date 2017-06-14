@@ -237,8 +237,24 @@
            else
           _.set(attrs, 'params.items', []) // all other connections start with empty items array
 
+
         // add input task
-        this.$store.dispatch('createPipeTask', { eid, attrs })
+        this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
+          var task = response.body
+          var analytics_payload = { eid, attrs }
+
+          // add Segment-friendly keys
+          _.assign(analytics_payload, {
+            createdAt: _.get(task, 'created')
+          })
+
+          // add connection type
+          _.assign(analytics_payload, {
+            connection_type: ctype
+          })
+
+          analytics.track('Added Step: Input', analytics_payload)
+        })
       },
       addOutput(connection) {
         var eid = this.pipeEid
@@ -256,7 +272,23 @@
           }
 
           // add email send task
-          this.$store.dispatch('createPipeTask', { eid, attrs })
+          this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
+            var task = response.body
+            var analytics_payload = { eid, attrs }
+
+            // add Segment-friendly keys
+            _.assign(analytics_payload, {
+              createdAt: _.get(task, 'created')
+            })
+
+            // add connection type
+            _.assign(analytics_payload, {
+              connection_type: ctype
+            })
+
+            analytics.track('Added Step: Output', analytics_payload)
+          })
+
           return
         }
 
@@ -283,7 +315,22 @@
           _.set(attrs, 'params.location', '/')
 
         // add output task
-        this.$store.dispatch('createPipeTask', { eid, attrs })
+        this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
+          var task = response.body
+          var analytics_payload = { eid, attrs }
+
+          // add Segment-friendly keys
+          _.assign(analytics_payload, {
+            createdAt: _.get(task, 'created')
+          })
+
+          // add connection type
+          _.assign(analytics_payload, {
+            connection_type: ctype
+          })
+
+          analytics.track('Added Step: Output', analytics_payload)
+        })
       }
     }
   }
