@@ -110,7 +110,6 @@ For major releases
 ```
 npm version major
 yarn run build:release
-erase dist\*.map
 erase dist\css\*.map
 git add dist\*.js
 git add dist\css\*.css
