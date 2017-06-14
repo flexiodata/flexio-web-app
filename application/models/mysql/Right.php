@@ -150,44 +150,6 @@ class Right extends ModelBase
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function getInfoFromAccessCode(string $code) : array
-    {
-        // get the rights information from the access code
-        $db = $this->getDatabase();
-        $rows = $db->fetchAll("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
-                                     tac.object_eid as object_eid,
-                                     tac.access_type as access_type,
-                                     tac.access_code as access_code,
-                                     tac.actions as actions,
-                                     tob.eid_status as eid_status,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_acl tac on tob.eid = tac.eid
-                              where tac.access_code = ?
-                             ", $code);
-
-        if (!$rows)
-            return array();
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $output[] = array('eid'         => $row['eid'],
-                              'eid_type'    => $row['eid_type'],
-                              'object_eid'  => $row['object_eid'],
-                              'access_type' => $row['access_type'],
-                              'access_code' => $row['access_code'],
-                              'actions'     => $row['actions'],
-                              'eid_status'  => $row['eid_status'],
-                              'created'     => \Flexio\Base\Util::formatDate($row['created']),
-                              'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
-        }
-
-        return $output;
-    }
-
     public function getInfoFromObjectEid(string $object_eid) : array
     {
         // get the all available authentication information for the object_eid
