@@ -116,23 +116,25 @@
     },
     methods: {
       changeRights(rights) {
+        var actions = []
+
         switch (rights)
         {
           case 'can-view':
-            this.updateRights([
-              types.ACTION_TYPE_READ,
-              types.ACTION_TYPE_EXECUTE
-            ])
+            actions.push(types.ACTION_TYPE_READ)
+            if (!this.isEveryone)
+              actions.push(types.ACTION_TYPE_EXECUTE)
             break
           case 'can-edit':
-            this.updateRights([
+            actions = [
               types.ACTION_TYPE_READ,
               types.ACTION_TYPE_EXECUTE,
-              types.ACTION_TYPE_WRITE,
-              types.ACTION_TYPE_DELETE
-            ])
+              types.ACTION_TYPE_WRITE
+            ]
             break
         }
+
+        this.updateRights(actions)
 
         this.$refs.popover.close()
       },
