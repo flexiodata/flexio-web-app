@@ -245,6 +245,10 @@
     TASK_TYPE_EXECUTE,
     TASK_TYPE_COMMENT
   } from '../constants/task-type'
+  import {
+    CONNECTION_TYPE_HTTP,
+    CONNECTION_TYPE_RSS
+  } from '../constants/connection-type'
   import api from '../api'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
@@ -647,6 +651,34 @@
           if (!_.isNil(connection))
           {
             var ctype = _.get(connection, 'connection_type', '')
+            _.set(edit_attrs, 'metadata.connection_type', ctype)
+            _.set(analytics_payload, 'connection_type', ctype)
+          }
+           else
+          {
+            // add connection type metadata for stdin and stdout
+            var ctype = _.get(connection, 'connection_type', connection_identifier)
+
+            // add connection type metadata for web link and rss inputs
+            if (ctype.length == 0)
+            {
+              var items = _.get(edit_attrs, 'params.items', [])
+
+              var is_rss = !_.isNil(_.find(items, (item) => {
+                return _.includes(_.get(item, 'path', ''), 'rss://')
+              }))
+
+              var is_http = !_.isNil(_.find(items, (item) => {
+                return _.includes(_.get(item, 'path', ''), 'http://') || _.includes(_.get(item, 'path', ''), 'https://')
+              }))
+
+              if (is_rss)
+                ctype = CONNECTION_TYPE_RSS
+
+              if (is_http)
+                ctype = CONNECTION_TYPE_HTTP
+            }
+
             _.set(edit_attrs, 'metadata.connection_type', ctype)
             _.set(analytics_payload, 'connection_type', ctype)
           }
