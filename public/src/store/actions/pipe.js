@@ -43,21 +43,8 @@ export const createPipe = ({ commit, dispatch }, { attrs }) => {
   return api.createPipe({ attrs }).then(response => {
     // success callback
     var pipe = response.body
-    var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
 
-    // add custom info
-    _.assign(analytics_payload, {
-      inputType: _.get(pipe, 'task[0].metadata.connection_type', '')
-    })
-
-    // add Segment-friendly keys
-    _.assign(analytics_payload, {
-      createdAt: _.get(pipe, 'created')
-    })
-
-    analytics.track('Created Pipe', analytics_payload)
     dispatch('fetchCurrentUserStatistics')
-
     commit(types.CREATED_PIPE, { attrs, pipe })
 
     return response

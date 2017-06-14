@@ -11,7 +11,7 @@
           class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr2-l"
           input-key="name"
           :val="pipe_name"
-          @save="editPipeSingleton">
+          @save="editPipeName">
         </inline-edit-text>
         <div class="flex flex-row items-center">
           <inline-edit-text
@@ -20,7 +20,7 @@
             input-key="ename"
             :val="pipe_ename"
             :show-edit-button="false"
-            @save="editPipeSingleton">
+            @save="editPipeAlias">
           </inline-edit-text>
           <div
             class="hint--bottom hint--large cursor-default"
@@ -37,7 +37,7 @@
         placeholder-cls="fw6 black-20 hover-black-40"
         input-key="description"
         :val="pipe_description"
-        @save="editPipeSingleton">
+        @save="editPipeDescription">
       </inline-edit-text>
     </div>
     <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
@@ -98,6 +98,16 @@
       @hide="show_copy_pipe_modal = false"
       v-if="show_copy_pipe_modal"
     ></copy-pipe-modal>
+
+    <!-- alert modal -->
+    <alert-modal
+      ref="modal-alert"
+      title="Error"
+      @hide="show_alert_modal = false"
+      v-if="show_alert_modal"
+    >
+      <div class="lh-copy">{{ename_error}}</div>
+    </alert-modal>
   </div>
 </template>
 
@@ -108,6 +118,8 @@
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
   import CopyPipeModal from './CopyPipeModal.vue'
+  import AlertModal from './AlertModal.vue'
+  import Validation from './mixins/validation'
 
   export default {
     props: {
@@ -126,14 +138,18 @@
         type: Boolean
       }
     },
+    mixins: [Validation],
     components: {
       Btn,
       InlineEditText,
-      CopyPipeModal
+      CopyPipeModal,
+      AlertModal
     },
     data() {
       return {
-        show_copy_pipe_modal: false
+        show_copy_pipe_modal: false,
+        show_alert_modal: false,
+        ss_errors: {}
       }
     },
     computed: {
@@ -165,6 +181,9 @@
       },
       run_button_tooltip() {
         return ''
+      },
+      ename_error() {
+        return _.get(this.ss_errors, 'ename.message', '')
       }
     },
     methods: {
@@ -174,9 +193,59 @@
       setPipeView(view) {
         this.$emit('set-pipe-view', view)
       },
-      editPipeSingleton(attrs, input) {
+      editPipeName(attrs, input) {
         var eid = this.pipeEid
-        this.$store.dispatch('updatePipe', { eid, attrs })
+
+        this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          if (response.ok)
+            analytics.track('Updated Pipe: Name', { eid, attrs })
+             else
+            analytics.track('Updated Pipe: Name (Error)', { eid, attrs })
+        })
+        input.endEdit()
+      },
+      editPipeAlias(attrs, input) {
+        var eid = this.pipeEid
+        var ename = _.get(attrs, 'ename', '')
+
+        this.validateEname(ename, (response, errors) => {
+          var errors = _.omitBy(errors, (e) => { return _.get(e, 'valid') })
+
+          this.ss_errors = ename.length > 0 && _.size(errors) > 0
+            ? _.assign({}, errors)
+            : _.assign({})
+
+          if (ename.length > 0 && _.size(errors) > 0)
+          {
+            analytics.track('Updated Pipe: Alias (Invalid)', { eid, attrs })
+
+            // show error message
+            this.show_alert_modal = true
+            this.$nextTick(() => { this.$refs['modal-alert'].open() })
+          }
+           else
+          {
+            this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+              if (response.ok)
+                analytics.track('Updated Pipe: Alias', { eid, attrs })
+                 else
+                analytics.track('Updated Pipe: Alias (Error)', { eid, attrs })
+            })
+
+            input.endEdit()
+          }
+        })
+      },
+      editPipeDescription(attrs, input) {
+        var eid = this.pipeEid
+
+        this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          if (response.ok)
+            analytics.track('Updated Pipe: Description', { eid, attrs })
+             else
+            analytics.track('Updated Pipe: Description (Error)', { eid, attrs })
+        })
+
         input.endEdit()
       },
       runPipe() {

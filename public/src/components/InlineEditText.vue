@@ -7,9 +7,9 @@
       class="w-100 pa1 ba b--black-10 resize-none input-reset lh-title focus-outline-transparent"
       :class="isBlock ? 'db' : ''"
       :placeholder="placeholder"
-      @keydown.esc="endEdit(false)"
-      @keydown.enter.ctrl="save"
-      @keydown.enter="onEnterKeydown"
+      @keydown.esc.prevent="endEdit(false)"
+      @keydown.enter.ctrl.prevent="save"
+      @keydown.enter.prevent="onEnterKeydown"
       @blur="onBlur"
       v-model="edit_val"
       v-show="is_editing"
@@ -168,7 +168,6 @@
     },
     methods: {
       save() {
-        this.before_edit_val = this.edit_val
         this.$emit('save', { [this.inputKey]: this.edit_val }, this)
       },
       startEdit(from) {
@@ -194,6 +193,8 @@
 
         if (save === false)
           this.edit_val = this.before_edit_val
+           else
+          this.before_edit_val = this.edit_val
 
         // allow time for transition to finish
         if (this.showSaveCancelButtons || this.isMarkdown)
@@ -206,7 +207,7 @@
           this.save()
       },
       onBlur() {
-        if (!this.show_buttons)
+        if (this.is_editing && !this.show_buttons)
           this.save()
       }
     }

@@ -52,11 +52,25 @@
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok)
           {
+            var pipe = response.body
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
+
+            // add Segment-friendly keys
+            _.assign(analytics_payload, {
+              createdAt: _.get(pipe, 'created')
+            })
+
+            // add template file
+            _.assign(analytics_payload, {
+              template: this.json_filename
+            })
+
+            analytics.track('Created Pipe: Template', analytics_payload)
             this.openPipe(response.body.eid)
           }
            else
           {
-            // TODO: add error handling
+            analytics.track('Created Pipe: Template (Error)', { template: this.json_filename })
           }
         })
       },
@@ -67,6 +81,7 @@
             this.pipe_json = _.assign({}, response.data)
             this.tryCreatePipe(this.pipe_json)
           }).catch(response => {
+            analytics.track('Created Pipe: Template (File Not Found)', { template: this.json_filename })
             this.is_loading = false
             this.error_markdown =
               '# File not found\n\n' +

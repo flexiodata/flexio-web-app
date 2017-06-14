@@ -2,15 +2,16 @@
   <article class="dt w-100 darken-05 ph3 pv3">
     <div class="dtc w2 v-mid" v-if="is_everyone">
       <div class="db br-100 w2 h2">
-        <i class="material-icons relative black-40" style="font-size: 32px">people</i>
+        <i class="material-icons relative black-40" style="font-size: 32px">{{icon}}</i>
       </div>
     </div>
     <div class="dtc w2 v-mid" v-else>
       <img :src="profile_src" class="ba b--black-10 db br-100 w2 h2">
     </div>
     <div class="dtc v-mid pl2">
-      <h1 class="f6 fw6 lh-title black mv0">{{title}}</h1>
-      <h2 v-if="!is_pending" class="f7 fw4 lh-copy ma0 light-silver">@{{username}}</h2>
+      <div class="f6 fw6 lh-title black">{{title}}</div>
+      <div class="f7 lh-copy light-silver" v-if="is_everyone">{{description}}</div>
+      <div class="f7 lh-copy light-silver" v-else-if="!is_pending">@{{username}}</div>
     </div>
     <div class="dtc v-mid">
       <div v-if="is_owner" class="w-100 tr">
@@ -30,6 +31,7 @@
 </template>
 
 <script>
+  import * as types from '../constants/action-type'
   import { mapState } from 'vuex'
   import RightsDropdown from './RightsDropdown.vue'
 
@@ -69,15 +71,31 @@
       is_pending() {
         return _.get(this.item, 'user.first_name', '').length == 0 && _.get(this.item, 'user.last_name', '').length == 0
       },
+      item_actions() {
+        return _.get(this.item, 'actions', [])
+      },
+      can_read() {
+        return _.includes(this.item_actions, types.ACTION_TYPE_READ)
+      },
+      icon() {
+        if (this.is_everyone)
+          return this.can_read ? 'people' : 'lock'
+
+        return ''
+      },
       title() {
         var email = _.get(this.item, 'user.email', '')
         var first_name = _.get(this.item, 'user.first_name', '')
         var last_name = _.get(this.item, 'user.last_name', '')
 
         if (this.is_everyone)
-          return 'Everyone'
+          return this.can_read ? 'Public' : 'Private'
 
         return this.is_pending ? email : first_name+' '+last_name
+      },
+      description() {
+        if (this.is_everyone)
+          return this.can_read ? 'Anyone on the Internet can view this pipe' : 'Only the members below can access this pipe'
       },
       username() {
         return _.get(this.item, 'user.user_name', '')

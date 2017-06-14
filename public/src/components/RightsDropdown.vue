@@ -13,32 +13,52 @@
       trigger="dropdownTrigger"
       dropdown-position="bottom right"
     >
-      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer bb b--black-05" @click="changeRights('can-edit')">
+      <div
+        class="flex flex-row pl2 pr3 pv3 darken-05 pointer"
+        @click="changeRights('can-view')"
+      >
+        <i class="material-icons md-18 ml1 mr2" :class="!can_edit && can_view ? '' : 'transparent'">check</i>
+        <div v-if="isEveryone">
+          <div class="fw6 lh-title mb1">Public</div>
+          <div class="f7 lh-copy light-silver">Anyone on the Internet can view this pipe</div>
+        </div>
+        <div v-else>
+          <div class="fw6 lh-title mb1">Can View</div>
+          <div class="f7 lh-copy light-silver">This person can view or run this pipe</div>
+        </div>
+      </div>
+      <div
+        class="flex flex-row pl2 pr3 pv3 darken-05 pointer bt b--black-05"
+        @click="removeRight"
+        v-if="isEveryone"
+      >
+        <i class="material-icons md-18 ml1 mr2" :class="!can_edit && !can_view ? '' : 'transparent'">check</i>
+        <div>
+          <div class="fw6 lh-title mb1">Private</div>
+          <div class="f7 lh-copy light-silver">Only members can access this pipe</div>
+        </div>
+      </div>
+      <div
+        class="flex flex-row pl2 pr3 pv3 darken-05 pointer bt b--black-05"
+        @click="changeRights('can-edit')"
+        v-if="!isEveryone"
+      >
         <i class="material-icons md-18 ml1 mr2" :class="can_edit ? '' : 'transparent'">check</i>
         <div>
           <div class="fw6 lh-title mb1">Can Edit</div>
-          <div class="f7 lh-copy light-silver" v-if="isEveryone">Everyone can view, run, edit or delete this pipe</div>
-          <div class="f7 lh-copy light-silver" v-else>People can view, run, edit or delete this pipe</div>
+          <div class="f7 lh-copy light-silver">This person can view, run or edit this pipe</div>
         </div>
       </div>
-      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer" @click="changeRights('can-view')">
-        <i class="material-icons md-18 ml1 mr2" :class="!can_edit && can_view ? '' : 'transparent'">check</i>
-        <div>
-          <div class="fw6 lh-title mb1">Can View</div>
-          <div class="f7 lh-copy light-silver" v-if="isEveryone">Everyone can view or run this pipe</div>
-          <div class="f7 lh-copy light-silver" v-else>People can view or run this pipe</div>
-        </div>
-      </div>
-      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer bt b--black-05" @click="removeRight" v-if="isEveryone">
-        <i class="material-icons md-18 ml1 mr2" :class="!can_edit && !can_view ? '' : 'transparent'">check</i>
-        <div>
-          <div class="fw6 lh-title mb1">Can't View</div>
-          <div class="f7 lh-copy light-silver">No one can view or run this pipe except members</div>
-        </div>
-      </div>
-      <div class="flex flex-row pl2 pr3 pv3 darken-05 pointer bt b--black-05 dark-red" @click="removeRight" v-else>
+      <div
+        class="flex flex-row pl2 pr3 pv3 darken-05 pointer bt b--black-05"
+        @click="removeRight"
+        v-if="!isEveryone"
+      >
         <i class="material-icons md-18 ml1 mr2 transparent">check</i>
-        <div>Remove</div>
+        <div>
+          <div class="fw6 lh-title mb1 dark-red">Remove</div>
+          <div class="f7 lh-copy light-silver">Remove this person from this pipe</div>
+        </div>
       </div>
     </ui-popover>
   </div>
@@ -89,6 +109,9 @@
         return false
       },
       rights_label() {
+        if (this.isEveryone)
+          return ''
+
         return this.can_edit ? 'Can Edit' :
           this.can_view ? 'Can View' :
           "Can't View"
@@ -96,23 +119,25 @@
     },
     methods: {
       changeRights(rights) {
+        var actions = []
+
         switch (rights)
         {
           case 'can-view':
-            this.updateRights([
-              types.ACTION_TYPE_READ,
-              types.ACTION_TYPE_EXECUTE
-            ])
+            actions.push(types.ACTION_TYPE_READ)
+            if (!this.isEveryone)
+              actions.push(types.ACTION_TYPE_EXECUTE)
             break
           case 'can-edit':
-            this.updateRights([
+            actions = [
               types.ACTION_TYPE_READ,
               types.ACTION_TYPE_EXECUTE,
-              types.ACTION_TYPE_WRITE,
-              types.ACTION_TYPE_DELETE
-            ])
+              types.ACTION_TYPE_WRITE
+            ]
             break
         }
+
+        this.updateRights(actions)
 
         this.$refs.popover.close()
       },
