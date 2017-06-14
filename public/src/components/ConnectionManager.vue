@@ -17,7 +17,7 @@
         >
       </div>
       <div class="flex-none">
-        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openAddModal()">New connection</btn>
+        <btn btn-md btn-primary class="btn-add ttu b ba" @click="openAddModal">New connection</btn>
       </div>
     </div>
 
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
+  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import ConnectionList from './ConnectionList.vue'
@@ -76,6 +76,7 @@
       openAddModal() {
         this.show_connection_props_modal = true
         this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
+        analytics.track('Clicked New Connection Button')
       },
       openEditModal(item) {
         this.show_connection_props_modal = true
@@ -87,6 +88,9 @@
       },
       tryUpdateConnection(attrs, modal) {
         var eid = attrs.eid
+        var ctype = _.get(attrs, 'connection_type', '')
+        var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
+
         attrs = _.pick(attrs, ['name', 'ename', 'description', 'rights', 'token', 'host', 'port', 'username', 'password', 'database'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
@@ -98,6 +102,13 @@
 
             // try to connect to the connection
             this.$store.dispatch('testConnection', { eid, attrs })
+
+            if (is_pending)
+            {
+              var analytics_payload = { eid, attrs }
+              _.set(analytics_payload, 'connection_type', ctype)
+              analytics.track('Created Connection', analytics_payload)
+            }
           }
            else
           {

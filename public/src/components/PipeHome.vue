@@ -330,7 +330,13 @@
 
           this.$store.dispatch('createProcess', { attrs }).then(response => {
             if (response.ok)
+            {
+              debugger
+              var steps = _.get(attrs, 'task', [])
+              var step_count = _.size(steps)
+              analytics.track('Ran Pipe: Web App', { step_count, steps })
               this.$nextTick(() => { this.is_prompting = false })
+            }
           })
         }
       },
