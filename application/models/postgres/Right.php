@@ -204,7 +204,6 @@ class Right extends ModelBase
                               from tbl_object tob
                               inner join tbl_acl tac on tob.eid = tac.eid
                               where tac.object_eid = ?
-                              order by tob.created
                              ", $object_eid);
 
         if (!$rows)

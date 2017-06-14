@@ -269,8 +269,8 @@ class Base implements IObject
         // TODO: if the user interface ever allows rights to be limited
         // for the owner, this needs to be removed; right now, the UI allows
         // the owner to do everything, so this is an optimization
-        if ($r['access_code'] = $this->getOwner())
-            return true;
+        //if ($r['access_code'] = $this->getOwner())
+        //    return true;
 
         // get the rights for this object
         $rights = $this->getRights();
