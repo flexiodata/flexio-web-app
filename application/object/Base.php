@@ -269,8 +269,8 @@ class Base implements IObject
         // TODO: if the user interface ever allows rights to be limited
         // for the owner, this needs to be removed; right now, the UI allows
         // the owner to do everything, so this is an optimization
-        //if ($r['access_code'] = $this->getOwner())
-        //    return true;
+        if ($r['access_code'] = $this->getOwner())
+            return true;
 
         // get the rights for this object
         $rights = $this->getRights();
@@ -443,18 +443,11 @@ class Base implements IObject
 
         foreach ($rights_info as $r)
         {
-            $right_eid = $r['eid'];
-            $right = \Flexio\Object\Right::load($right_eid);
-            if ($right === false)
+            if ($r['eid_status'] !== \Model::STATUS_AVAILABLE)
                 continue;
 
-            // only show rights that are available; note: the right list will
-            // return all rights, including ones that have been deleted, so
-            // this check is important
-            if ($right->getStatus() !== \Model::STATUS_AVAILABLE)
-                continue;
-
-            $result[] = $right->get();
+            $r['actions'] = json_decode($r['actions'],true);
+            $result[] = $r;
         }
 
         return $result;
