@@ -125,7 +125,11 @@
 
           if (val == PROCESS_STATUS_FAILED)
           {
-            setTimeout(() => { this.show_error = true  }, 1000)
+            setTimeout(() => {
+              this.show_error = true
+              var message = 'An error occurred while running the pipe.'
+              analytics.track('Ran Pipe: Error', { message })
+            }, 1000)
           }
         }
       }
