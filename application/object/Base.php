@@ -273,7 +273,7 @@ class Base implements IObject
             return true;
 
         // get the rights for this object
-        $rights = $this->getRights();
+        $rights = $this->getRightsInfo();
 
         // get all the allowed actions for the access code or any
         // public access type class
@@ -315,7 +315,7 @@ class Base implements IObject
         // rights entry
 
         $existing_rights_entry = false;
-        $existing_rights = $this->getRights();
+        $existing_rights = $this->getRightsInfo();
         foreach ($existing_rights as $r)
         {
             if ($access_code !== $r['access_code'])
@@ -358,7 +358,7 @@ class Base implements IObject
         // access type; otherwise, revoke the specified actions
 
         // get a list of rights
-        $rights = $this->getRights();
+        $rights = $this->getRightsInfo();
         foreach ($rights as $r)
         {
             if ($access_code !== $r['access_code'])
@@ -391,6 +391,27 @@ class Base implements IObject
                 $this->getModel()->right->set($right_eid, json_encode($new_actions));
             }
         }
+    }
+
+    public function getRights() : array
+    {
+        // note: this is almost the same as getRightsInfo(), but adds user
+        // info for us in the api; checking rights doesn't require this
+        // info, so getRightsInfo() is used internally for speed
+
+        $result = array();
+        $rights = $this->getRightsInfo();
+        foreach ($rights as $r)
+        {
+            $right_eid = $r['eid'];
+            $right_object = \Flexio\Object\Right::load($right_eid);
+            if ($right_object === false)
+                continue;
+
+            $result[] = $right_object->get();
+        }
+
+        return $result;
     }
 
     public function setRights(array $rights) : \Flexio\Object\Base
@@ -434,23 +455,6 @@ class Base implements IObject
         }
 
         return $this;
-    }
-
-    public function getRights() : array
-    {
-        $result = array();
-        $rights_info = $this->getModel()->right->getInfoFromObjectEid($this->getEid());
-
-        foreach ($rights_info as $r)
-        {
-            if ($r['eid_status'] !== \Model::STATUS_AVAILABLE)
-                continue;
-
-            $r['actions'] = json_decode($r['actions'],true);
-            $result[] = $r;
-        }
-
-        return $result;
     }
 
     protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type
@@ -522,6 +526,23 @@ class Base implements IObject
 
         // user is uknown; they're a public user
         return \Flexio\Object\User::MEMBER_PUBLIC;
+    }
+
+    private function getRightsInfo() : array
+    {
+        $result = array();
+        $rights_info = $this->getModel()->right->getInfoFromObjectEid($this->getEid());
+
+        foreach ($rights_info as $r)
+        {
+            if ($r['eid_status'] !== \Model::STATUS_AVAILABLE)
+                continue;
+
+            $r['actions'] = json_decode($r['actions'],true);
+            $result[] = $r;
+        }
+
+        return $result;
     }
 
     private function isOwned(string $identifier) : bool
