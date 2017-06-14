@@ -11,7 +11,7 @@
           class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr2-l"
           input-key="name"
           :val="pipe_name"
-          @save="editPipeSingleton">
+          @save="editPipeName">
         </inline-edit-text>
         <div class="flex flex-row items-center">
           <inline-edit-text
@@ -20,7 +20,7 @@
             input-key="ename"
             :val="pipe_ename"
             :show-edit-button="false"
-            @save="editPipeSingleton">
+            @save="editPipeAlias">
           </inline-edit-text>
           <div
             class="hint--bottom hint--large cursor-default"
@@ -37,7 +37,7 @@
         placeholder-cls="fw6 black-20 hover-black-40"
         input-key="description"
         :val="pipe_description"
-        @save="editPipeSingleton">
+        @save="editPipeDescription">
       </inline-edit-text>
     </div>
     <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
@@ -174,9 +174,39 @@
       setPipeView(view) {
         this.$emit('set-pipe-view', view)
       },
-      editPipeSingleton(attrs, input) {
+      editPipeName(attrs, input) {
         var eid = this.pipeEid
-        this.$store.dispatch('updatePipe', { eid, attrs })
+
+        this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          if (response.ok)
+            analytics.track('Updated Pipe: Name', { eid, attrs })
+             else
+            analytics.track('Updated Pipe: Name (Error)', { eid, attrs })
+        })
+        input.endEdit()
+      },
+      editPipeAlias(attrs, input) {
+        var eid = this.pipeEid
+
+        this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          if (response.ok)
+            analytics.track('Updated Pipe: Alias', { eid, attrs })
+             else
+            analytics.track('Updated Pipe: Alias (Error)', { eid, attrs })
+        })
+
+        input.endEdit()
+      },
+      editPipeDescription(attrs, input) {
+        var eid = this.pipeEid
+
+        this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          if (response.ok)
+            analytics.track('Updated Pipe: Description', { eid, attrs })
+             else
+            analytics.track('Updated Pipe: Description (Error)', { eid, attrs })
+        })
+
         input.endEdit()
       },
       runPipe() {
