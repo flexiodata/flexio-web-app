@@ -104,6 +104,10 @@
           var message = this.invite_info.message
 
           this.$store.dispatch('createRights', { attrs: { rights, message } }).then(response => {
+            var rights_users = response.body
+            analytics.track('Invited People', { user: this.users, member_count: _.size(rights_users) })
+
+            // make sure our follower count matches
             this.$store.dispatch('fetchPipe', { eid: this.objectEid })
             this.reset()
           })
