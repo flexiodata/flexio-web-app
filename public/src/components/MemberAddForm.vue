@@ -10,7 +10,7 @@
         class="flex-fill"
         label="Invite people"
         help=" "
-        placeholder="Email Addresses"
+        placeholder="Email Address (use commas to separate multiple recipients)"
         v-model="invite_info.users_str"
       ></ui-textbox>
       <ui-textbox

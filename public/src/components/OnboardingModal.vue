@@ -86,7 +86,11 @@
         this.$refs['dialog'].open()
       },
       close(close_type) {
-        analytics.track('Closed Onboarding Modal', { close_type })
+        if (close_type == 'close')
+          analytics.track('Closed Onboarding Modal: Clicked Close Button', { close_type })
+           else
+          analytics.track('Closed Onboarding Modal: Clicked Skip Button', { close_type })
+
         this.$refs['dialog'].close()
       },
       updateUserConfig() {
