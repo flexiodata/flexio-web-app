@@ -8,7 +8,7 @@
 
     <member-add-form
       :object-eid="pipe_eid"
-      v-if="pipe_eid.length > 0"
+      v-if="pipe_eid.length > 0 && is_owner"
     ></member-add-form>
 
     <!-- list -->
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import MemberAddForm from './MemberAddForm.vue'
   import MemberList from './MemberList.vue'
 
@@ -44,11 +45,17 @@
       }
     },
     computed: {
+      ...mapState([
+        'active_user_eid'
+      ]),
       pipe_eid() {
         return _.get(this.pipe, 'eid', '')
       },
       owner_eid() {
         return _.get(this.pipe, 'owned_by.eid', '')
+      },
+      is_owner() {
+        return this.owner_eid == this.active_user_eid
       }
     },
     methods: {
