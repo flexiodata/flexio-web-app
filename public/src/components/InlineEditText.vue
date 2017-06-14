@@ -7,7 +7,7 @@
       class="w-100 pa1 ba b--black-10 resize-none input-reset lh-title focus-outline-transparent"
       :class="isBlock ? 'db' : ''"
       :placeholder="placeholder"
-      @keydown.esc="endEdit(false)"
+      @keydown.esc.prevent="endEdit(false)"
       @keydown.enter.ctrl.prevent="save"
       @keydown.enter.prevent="onEnterKeydown"
       @blur="onBlur"
@@ -207,7 +207,7 @@
           this.save()
       },
       onBlur() {
-        if (!this.show_buttons)
+        if (this.is_editing && !this.show_buttons)
           this.save()
       }
     }
