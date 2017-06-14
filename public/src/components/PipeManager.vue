@@ -202,6 +202,9 @@
         this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
           if (response.ok)
           {
+            var analytics_payload = _.get(response.body, 'schedule', {})
+            _.set(analytics_payload, 'schedule_status', _.get(response.body, 'schedule_status', {})
+            analytics.track('Scheduled Pipe', analytics_payload)
             modal.close()
           }
            else
