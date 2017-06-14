@@ -100,7 +100,7 @@ git push
 For minor releases:
 
 ```
-release-patch
+release-minor
 git commit -a -m "Release build (v1.5.0)."
 git push
 ```
