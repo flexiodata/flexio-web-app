@@ -575,7 +575,7 @@
       saveChanges() {
         var edit_json = _.cloneDeep(this.edit_json)
         var edit_attrs = _.pick(edit_json, ['metadata', 'type', 'params'])
-        var task_type = _.get(this, 'item.type')
+        var task_type = _.get(edit_attrs, 'type', '')
         var friendly_task_name = _.capitalize(task_type.replace('flexio.', ''))
 
         if (parser.validate(this.edit_cmd) !== true)
