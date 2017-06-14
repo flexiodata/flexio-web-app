@@ -576,10 +576,13 @@
         var edit_json = _.cloneDeep(this.edit_json)
         var edit_attrs = _.pick(edit_json, ['metadata', 'type', 'params'])
         var task_type = _.get(this, 'item.type')
+        var friendly_task_name = _.capitalize(task_type.replace('flexio.', ''))
 
         if (parser.validate(this.edit_cmd) !== true)
         {
-          this.showSyntaxError('There is an error in the command syntax', 4000)
+          var message = 'There is an error in the command syntax'
+          this.showSyntaxError(message, 4000)
+          analytics.track('Updated Step: Command Syntax Error', { message, command: this.edit_cmd })
           return
         }
 
@@ -599,19 +602,30 @@
           {
             this.validateCode(this.edit_code, (res) => {
               if (res.valid === false)
-                this.showSyntaxError(res.message)
-                 else
+              {
+                var message = res.message
+                this.showSyntaxError(message)
+                analytics.track('Updated Step: '+friendly_task_name+' (Error)', { message, command: this.edit_cmd, code: this.edit_code })
+              }
+               else
+              {
                 this.editTaskSingleton(edit_attrs)
+                analytics.track('Updated Step: '+friendly_task_name, { message, command: this.edit_cmd, code: this.edit_code })
+              }
             })
           }
            else
           {
             this.editTaskSingleton(edit_attrs)
+            analytics.track('Updated Step: '+friendly_task_name, { message, command: this.edit_cmd, code: this.edit_code })
           }
 
           // we're done
           return
         }
+
+        // create analytics payload for all other task types
+        var analytics_payload = { message, command: this.edit_cmd }
 
         if (task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT)
         {
@@ -631,10 +645,15 @@
             .value()
 
           if (!_.isNil(connection))
-            _.set(edit_attrs, 'metadata.connection_type', _.get(connection, 'connection_type', ''))
+          {
+            var ctype = _.get(connection, 'connection_type', '')
+            _.set(edit_attrs, 'metadata.connection_type', ctype)
+            _.set(analytics_payload, 'connection_type', ctype)
+          }
         }
 
         this.editTaskSingleton(edit_attrs)
+        analytics.track('Updated Step: '+friendly_task_name, analytics_payload)
       },
       showSyntaxError(msg, hide_timeout) {
         this.syntax_msg = msg

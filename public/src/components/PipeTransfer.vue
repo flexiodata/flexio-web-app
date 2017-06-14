@@ -253,7 +253,7 @@
             connection_type: ctype
           })
 
-          analytics.track('Added Step: Input', analytics_payload)
+          analytics.track('Created Step: Input', analytics_payload)
         })
       },
       addOutput(connection) {
@@ -286,7 +286,7 @@
               connection_type: ctype
             })
 
-            analytics.track('Added Step: Output', analytics_payload)
+            analytics.track('Created Step: Output', analytics_payload)
           })
 
           return
@@ -329,7 +329,7 @@
             connection_type: ctype
           })
 
-          analytics.track('Added Step: Output', analytics_payload)
+          analytics.track('Created Step: Output', analytics_payload)
         })
       }
     }
