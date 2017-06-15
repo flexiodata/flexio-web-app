@@ -117,10 +117,20 @@
         }
          else if (old_val == PROCESS_STATUS_RUNNING)
         {
+          var eid = this.pipeEid
+          var subprocesses = _.get(this.activeProcess, 'subprocesses', [])
+          var task_types = _.map(subprocesses, (s) => { return _.get(s, 'task_type', '') })
+          var duration = _.get(this.activeProcess, 'duration', -1)
+
           if (val == PROCESS_STATUS_COMPLETED)
           {
-            setTimeout(() => { this.show_success = true  }, 1000)
             setTimeout(() => { this.show_success = false }, 6000)
+
+            setTimeout(() => {
+              this.show_success = true
+              this.show_error = false
+              analytics.track('Ran Pipe: Success', { eid, task_types, duration })
+            }, 1000)
           }
 
           if (val == PROCESS_STATUS_FAILED)
@@ -128,15 +138,16 @@
             setTimeout(() => {
               this.show_success = false
               this.show_error = true
-              var eid = this.pipeEid
-              var subprocesses = _.get(this.activeProcess, 'subprocesses', [])
+
               var subprocess = _.find(subprocesses, { process_status: PROCESS_STATUS_FAILED } )
               var error = _.get(subprocess, 'process_info.error', {})
               var message = _.get(error, 'message', '')
               if (message.length == 0)
                 message = 'An error occurred while running the pipe.'
+
               this.error_message = message
-              analytics.track('Ran Pipe: Error', { eid, message, error, subprocess })
+
+              analytics.track('Ran Pipe: Error', { eid, task_types, duration, message, error, subprocess })
             }, 1000)
           }
         }
