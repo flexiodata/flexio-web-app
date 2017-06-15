@@ -614,14 +614,14 @@
                else
               {
                 this.editTaskSingleton(edit_attrs)
-                analytics.track('Updated Step: '+friendly_task_name, { message, command: this.edit_cmd, code: this.edit_code })
+                analytics.track('Updated Step: '+friendly_task_name, { command: this.edit_cmd, code: this.edit_code })
               }
             })
           }
            else
           {
             this.editTaskSingleton(edit_attrs)
-            analytics.track('Updated Step: '+friendly_task_name, { message, command: this.edit_cmd, code: this.edit_code })
+            analytics.track('Updated Step: '+friendly_task_name, { command: this.edit_cmd, code: this.edit_code })
           }
 
           // we're done
