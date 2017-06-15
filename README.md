@@ -87,11 +87,34 @@ Each of the above commands will run a webpack build script -- these scripts are 
 
 After running either of the above build commands, it is important to do a `git status` to see what files have changed. For release builds, there will always be new files in the `/dist` folder that need to be added to the git repository using `git add` due to the fact that we add cache busting hash values to the end of our files now.
 
-In general, from the `/public` folder, you can simply enter the following commands:
+In general, from the `/public` folder, you can simply enter the following commands with the appropriate release version:
+
+For patch releases:
 
 ```
-git add dist/*
-git commit -a -m "Release build."
+release-patch
+git commit -a -m "Release build (v1.4.5)."
+git push
+```
+
+For minor releases:
+
+```
+release-minor
+git commit -a -m "Release build (v1.5.0)."
+git push
+```
+
+For major releases
+
+```
+npm version major
+yarn run build:release
+erase dist\css\*.map
+git add dist\*.js
+git add dist\css\*.css
+git add package.json
+git commit -a -m "Release build (v2.0.0)."
 git push
 ```
 
