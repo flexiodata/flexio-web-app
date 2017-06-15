@@ -17,7 +17,7 @@
       @dismiss="show_error = false"
       v-show="show_error"
     >
-      An error occurred while running the pipe.
+      {{error_message}}
     </ui-alert>
     <div class="pa4 ml4 ml0-l mr4 bg-white ba b--white-box br2 tc" v-if="tasks.length == 0">
       <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
@@ -126,9 +126,17 @@
           if (val == PROCESS_STATUS_FAILED)
           {
             setTimeout(() => {
+              this.show_success = false
               this.show_error = true
-              var message = 'An error occurred while running the pipe.'
-              analytics.track('Ran Pipe: Error', { message })
+              var subprocesses = _.get(this.activeProcess, 'subprocesses', [])
+              var subprocess = _.find(subprocesses, { process_status: PROCESS_STATUS_FAILED } )
+              var error = _.get(subprocess, 'process_info.error', {})
+              var message = _.get(error, 'message', '')
+              if (message.length == 0)
+                message = 'An error occurred while running the pipe.'
+              this.error_message = message
+              debugger
+              analytics.track('Ran Pipe: Error', { message, error, subprocess })
             }, 1000)
           }
         }
@@ -139,7 +147,8 @@
         is_scrolling: false,
         show_all_previews: true,
         show_success: false,
-        show_error: false
+        show_error: false,
+        error_message: ''
       }
     },
     computed: {
