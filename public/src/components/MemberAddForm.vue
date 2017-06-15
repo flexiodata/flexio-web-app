@@ -101,10 +101,12 @@
             }
           })
 
+          var users = this.users.join(', ')
+          var user_count = _.size(this.users)
           var message = this.invite_info.message
 
           this.$store.dispatch('createRights', { attrs: { rights, message } }).then(response => {
-            analytics.track('Invited People', { user: this.users })
+            analytics.track('Invited People', { users, user_count, message })
 
             // make sure our follower count matches
             this.$store.dispatch('fetchPipe', { eid: this.objectEid })
