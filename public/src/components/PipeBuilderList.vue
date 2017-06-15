@@ -120,7 +120,9 @@
           var eid = this.pipeEid
           var process_eid = _.get(this.activeProcess, 'eid', '')
           var subprocesses = _.get(this.activeProcess, 'subprocesses', [])
-          var task_types = _.map(subprocesses, (s) => { return _.get(s, 'task_type', '') }).join(', ')
+          var task_types_arr = _.map(subprocesses, (s) => { return _.get(s, 'task_type', '') })
+          var task_types = task_types_arr.join(', ')
+          var task_count = _.size(task_types_arr)
           var duration = _.get(this.activeProcess, 'duration', -1)
 
           if (val == PROCESS_STATUS_COMPLETED)
@@ -131,7 +133,7 @@
               this.show_success = true
               this.show_error = false
 
-              analytics.track('Ran Pipe: Success', { eid, process_eid, task_types, duration })
+              analytics.track('Ran Pipe: Success', { eid, process_eid, task_types, task_count, duration })
             }, 1000)
           }
 
