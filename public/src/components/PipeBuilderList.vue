@@ -118,6 +118,7 @@
          else if (old_val == PROCESS_STATUS_RUNNING)
         {
           var eid = this.pipeEid
+          var process_eid = _.get(this.activeProcess, 'eid', '')
           var subprocesses = _.get(this.activeProcess, 'subprocesses', [])
           var task_types = _.map(subprocesses, (s) => { return _.get(s, 'task_type', '') })
           var duration = _.get(this.activeProcess, 'duration', -1)
@@ -129,7 +130,8 @@
             setTimeout(() => {
               this.show_success = true
               this.show_error = false
-              analytics.track('Ran Pipe: Success', { eid, task_types, duration })
+
+              analytics.track('Ran Pipe: Success', { eid, process_eid, task_types, duration })
             }, 1000)
           }
 
@@ -147,7 +149,7 @@
 
               this.error_message = message
 
-              analytics.track('Ran Pipe: Error', { eid, task_types, duration, message, error, subprocess })
+              analytics.track('Ran Pipe: Error', { eid, process_eid, task_types, duration, message, error, subprocess })
             }, 1000)
           }
         }

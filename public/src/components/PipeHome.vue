@@ -332,9 +332,11 @@
             if (response.ok)
             {
               var eid = this.eid
-              var steps = this.tasks
-              var step_count = _.size(steps)
-              analytics.track('Ran Pipe: Web App', { eid, step_count, steps })
+              var task_types = _.map(this.tasks, (t) => { return _.get(t, 'type', '') })
+              var process_eid = _.get(response.body, 'eid', '')
+
+              analytics.track('Ran Pipe: Start', { eid, process_eid, task_types })
+
               this.$nextTick(() => { this.is_prompting = false })
             }
           })
