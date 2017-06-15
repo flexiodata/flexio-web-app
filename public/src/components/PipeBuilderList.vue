@@ -152,7 +152,7 @@
 
               this.error_message = message
 
-              analytics.track('Ran Pipe: Error', { eid, process_eid, task_types, duration, message, error_code })
+              analytics.track('Ran Pipe: Error', { eid, process_eid, task_types, task_count, duration, message, error_code })
             }, 1000)
           }
         }
