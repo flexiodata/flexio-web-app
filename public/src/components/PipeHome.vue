@@ -331,10 +331,10 @@
           this.$store.dispatch('createProcess', { attrs }).then(response => {
             if (response.ok)
             {
-              var pipe_eid = this.eid
+              var eid = this.eid
               var steps = this.tasks
               var step_count = _.size(steps)
-              analytics.track('Ran Pipe: Web App', { pipe_eid, step_count, steps })
+              analytics.track('Ran Pipe: Web App', { eid, step_count, steps })
               this.$nextTick(() => { this.is_prompting = false })
             }
           })
