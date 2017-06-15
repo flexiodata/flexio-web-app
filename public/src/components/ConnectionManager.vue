@@ -105,7 +105,8 @@
 
             if (is_pending)
             {
-              var analytics_payload = { eid, attrs }
+              var analytics_payload = _.pick(attrs, ['name', 'ename', 'description'])
+              _.set(analytics_payload, 'eid', eid)
               _.set(analytics_payload, 'connection_type', ctype)
               analytics.track('Created Connection', analytics_payload)
             }
