@@ -128,6 +128,7 @@
             setTimeout(() => {
               this.show_success = false
               this.show_error = true
+              var eid = this.pipeEid
               var subprocesses = _.get(this.activeProcess, 'subprocesses', [])
               var subprocess = _.find(subprocesses, { process_status: PROCESS_STATUS_FAILED } )
               var error = _.get(subprocess, 'process_info.error', {})
@@ -135,7 +136,7 @@
               if (message.length == 0)
                 message = 'An error occurred while running the pipe.'
               this.error_message = message
-              analytics.track('Ran Pipe: Error', { message, error, subprocess })
+              analytics.track('Ran Pipe: Error', { eid, message, error, subprocess })
             }, 1000)
           }
         }
