@@ -241,7 +241,6 @@
         // add input task
         this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
           var task = response.body
-          var analytics_payload = { eid }
 
           var analytics_payload = {
             eid,
