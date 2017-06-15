@@ -202,9 +202,9 @@
         this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
           if (response.ok)
           {
-            var analytics_payload = _.get(response.body, 'schedule', {})
-            _.set(analytics_payload, 'schedule_status', _.get(response.body, 'schedule_status', {}))
-            analytics.track('Scheduled Pipe', analytics_payload)
+            var frequency = _.get(response.body, 'schedule.frequency', '')
+            var schedule_status = _.get(response.body, 'schedule_status', '')
+            analytics.track('Scheduled Pipe', { eid, frequency, schedule_status })
             modal.close()
           }
            else
