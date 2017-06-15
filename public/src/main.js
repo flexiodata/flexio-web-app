@@ -60,6 +60,11 @@ Vue.directive('select-all', {
 
 // global route guards
 
+router.afterEach((to, from) => {
+  // log each route as a separate page view
+  setTimeout(() => { analytics.page() }, 100)
+})
+
 router.beforeEach((to, from, next) => {
   // update the active document in the store
   store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.eid || to.name)
