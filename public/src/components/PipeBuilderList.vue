@@ -135,7 +135,6 @@
               if (message.length == 0)
                 message = 'An error occurred while running the pipe.'
               this.error_message = message
-              debugger
               analytics.track('Ran Pipe: Error', { message, error, subprocess })
             }, 1000)
           }
