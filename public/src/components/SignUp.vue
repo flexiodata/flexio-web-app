@@ -31,7 +31,7 @@
           <span class="f8 dark-red" v-show="has_password_error">{{password_error}}</span>
         </div>
         <div class="mv3">
-          <btn btn-lg btn-primary :disabled="is_submitting" @click="trySignUp" class="b ttu w-100">
+          <btn btn-lg btn-primary :disabled="is_submitting || disable_submit_button" @click="trySignUp" class="b ttu w-100">
             <span v-if="is_submitting">{{label_submitting}}</span>
             <span v-else>Sign up</span>
           </btn>
@@ -127,6 +127,9 @@
       has_password_error() {
         return this.password_error.length > 0
       },
+      disable_submit_button() {
+        return this.has_email_error || this.has_username_error || this.has_password_error
+      }
     },
     methods: {
       getAttrs() {
