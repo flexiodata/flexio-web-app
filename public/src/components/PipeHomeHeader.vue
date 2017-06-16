@@ -199,11 +199,16 @@
 
         this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
           if (response.ok)
+          {
+            input.endEdit()
             analytics.track('Updated Pipe: Name', { eid, name })
-             else
+          }
+           else
+          {
+            input.endEdit(false)
             analytics.track('Updated Pipe: Name (Error)', { eid, name })
+          }
         })
-        input.endEdit()
       },
       editPipeAlias(attrs, input) {
         var eid = this.pipeEid
@@ -228,12 +233,16 @@
           {
             this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
               if (response.ok)
+              {
+                input.endEdit()
                 analytics.track('Updated Pipe: Alias', { eid, ename })
-                 else
+              }
+               else
+              {
+                input.endEdit(false)
                 analytics.track('Updated Pipe: Alias (Error)', { eid, ename })
+              }
             })
-
-            input.endEdit()
           }
         })
       },
@@ -243,12 +252,16 @@
 
         this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
           if (response.ok)
+          {
+            input.endEdit()
             analytics.track('Updated Pipe: Description', { eid, description })
-             else
+          }
+           else
+          {
+            input.endEdit(false)
             analytics.track('Updated Pipe: Description (Error)', { eid, description })
+          }
         })
-
-        input.endEdit()
       },
       runPipe() {
         this.setPipeView(PIPEHOME_VIEW_BUILDER)
