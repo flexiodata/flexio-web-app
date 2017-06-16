@@ -182,7 +182,7 @@
         }, response => {
           // error callback
         })
-      }, 300),
+      }, 500),
       trySignUp() {
         var attrs = this.getAttrs()
 
