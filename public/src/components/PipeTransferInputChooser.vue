@@ -87,7 +87,7 @@
         this.$nextTick(() => { this.$refs['modal-connection-props'].open(attrs) })
       },
       createPendingConnection(item) {
-        var attrs = _.extend({}, this.connection, {
+        var attrs = _.assign({}, this.connection, {
           name: item.service_name,
           connection_type: item.connection_type,
           eid_status: OBJECT_STATUS_PENDING
@@ -107,7 +107,7 @@
       tryUpdateConnection(attrs, modal) {
         var eid = attrs.eid
         attrs = _.pick(attrs, ['name', 'ename', 'description', 'token', 'host', 'port', 'username', 'password', 'database'])
-        _.extend(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
+        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {

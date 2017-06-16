@@ -68,18 +68,18 @@ const addAbstract = (state, objs, defaults, extra_defaults) => {
   var to_insert = _.keyBy(objs, 'eid')
 
   // make sure we know what defaults we're going to add to each object
-  var obj_defaults = _.extend({}, FETCH_DEFAULTS, defaults, extra_defaults)
+  var obj_defaults = _.assign({}, FETCH_DEFAULTS, defaults, extra_defaults)
 
   // add project defaults to each project
   _.each(to_insert, function(obj, eid, collection) {
     // overwrite object defaults with existing defaults from the store; we do this
     // here to make sure we don't overwrite object defaults once they've been created
     var old_obj = _.get(state, 'objects.'+eid, {})
-    collection[eid] = _.extend({}, obj_defaults, old_obj, obj)
+    collection[eid] = _.assign({}, obj_defaults, old_obj, obj)
   })
 
   // add the objects to the objects node in the state
-  state['objects'] = _.extend({}, state['objects'], to_insert)
+  state['objects'] = _.assign({}, state['objects'], to_insert)
 }
 
 const updateAbstract = (state, eid, attrs) => {

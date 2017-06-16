@@ -205,8 +205,8 @@
         connection_path: '',
         items: [],
         ss_errors: {},
-        pipe: _.extend({}, defaultAttrs()),
-        original_pipe: _.extend({}, defaultAttrs())
+        pipe: _.assign({}, defaultAttrs()),
+        original_pipe: _.assign({}, defaultAttrs())
       }
     },
     computed: {
@@ -346,8 +346,8 @@
         this.ss_errors = {}
         this.connection = {}
         this.connection_path = ''
-        this.pipe = _.extend({}, defaultAttrs(), attrs)
-        this.original_pipe = _.extend({}, defaultAttrs(), attrs)
+        this.pipe = _.assign({}, defaultAttrs(), attrs)
+        this.original_pipe = _.assign({}, defaultAttrs(), attrs)
       },
       onHide() {
         this.reset()

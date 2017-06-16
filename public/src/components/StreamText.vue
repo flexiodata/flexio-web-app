@@ -63,7 +63,7 @@
     },
     data() {
       return {
-        state: _.extend({}, initial_data)
+        state: _.assign({}, initial_data)
       }
     },
     watch: {
@@ -76,7 +76,7 @@
     },
     methods: {
       initialFetch() {
-        this.state = _.extend({}, initial_data)
+        this.state = _.assign({}, initial_data)
 
         if (this.isJson)
           this.fetchAll()

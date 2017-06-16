@@ -68,7 +68,7 @@
         this.$refs['dialog'].close()
       },
       reset(attrs) {
-        this.pipe = _.extend({}, attrs)
+        this.pipe = _.assign({}, attrs)
       },
       selectNone() {
         var el = this.$refs['json-textarea']

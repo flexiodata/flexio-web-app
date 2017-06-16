@@ -59,8 +59,8 @@
       return {
         is_open: false,
         confirm_name: '',
-        project: _.extend({}, DEFAULT_ATTRS),
-        original_project: _.extend({}, DEFAULT_ATTRS)
+        project: _.assign({}, DEFAULT_ATTRS),
+        original_project: _.assign({}, DEFAULT_ATTRS)
       }
     },
     watch: {
@@ -96,8 +96,8 @@
       },
       reset(attrs) {
         this.confirm_name = ''
-        this.project = _.extend({}, DEFAULT_ATTRS, attrs)
-        this.original_project = _.extend({}, DEFAULT_ATTRS, attrs)
+        this.project = _.assign({}, DEFAULT_ATTRS, attrs)
+        this.original_project = _.assign({}, DEFAULT_ATTRS, attrs)
       },
       onHide() {
         this.reset()

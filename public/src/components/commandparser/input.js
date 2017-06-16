@@ -67,7 +67,7 @@ export default {
       }
     })
 
-    var json = _.extend({}, DEFAULT_JSON)
+    var json = _.assign({}, DEFAULT_JSON)
     _.set(json, 'params.items', items)
     _.set(json, 'params.connection.eid', connection_eid)
     _.set(json, 'params.connection.connection_type', connection_type)

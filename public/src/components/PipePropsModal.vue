@@ -151,8 +151,8 @@
       return {
         mode: 'edit-pipe',
         ss_errors: {},
-        pipe: _.extend({}, defaultAttrs()),
-        original_pipe: _.extend({}, defaultAttrs())
+        pipe: _.assign({}, defaultAttrs()),
+        original_pipe: _.assign({}, defaultAttrs())
       }
     },
     computed: {
@@ -218,8 +218,8 @@
       },
       reset(attrs) {
         this.ss_errors = {}
-        this.pipe = _.extend({}, defaultAttrs(), attrs)
-        this.original_pipe = _.extend({}, defaultAttrs(), attrs)
+        this.pipe = _.assign({}, defaultAttrs(), attrs)
+        this.original_pipe = _.assign({}, defaultAttrs(), attrs)
       },
       onHide() {
         this.reset()

@@ -136,7 +136,7 @@
         month_options: month_options,
         timezone_options: timezones,
         frequency_options: frequency_options,
-        pipe: _.extend({}, defaultAttrs())
+        pipe: _.assign({}, defaultAttrs())
       }
     },
     computed: {

@@ -54,7 +54,7 @@ export default {
 
     order = _.compact(order)
 
-    var json = _.extend({}, DEFAULT_JSON)
+    var json = _.assign({}, DEFAULT_JSON)
     _.set(json, 'params.order', order)
 
     return JSON.stringify(json, null, 2)

@@ -12,7 +12,7 @@ import token from './token.js'
 import right from './right.js'
 import trash from './trash.js'
 
-export default _.extend({},
+export default _.assign({},
   core,
   user,
   project,

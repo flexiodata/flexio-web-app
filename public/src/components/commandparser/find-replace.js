@@ -75,7 +75,7 @@ export default {
     var location = this.parseLocation(args) || FIND_REPLACE_LOCATION_ANY
     var match_case = _.includes(args, MATCH_CASE_FLAG)
 
-    var json = _.extend({}, DEFAULT_JSON)
+    var json = _.assign({}, DEFAULT_JSON)
     _.set(json, 'params.find', find)
     _.set(json, 'params.replace', replace)
     _.set(json, 'params.columns', cols)

@@ -14,7 +14,7 @@ export const fetchMembers = ({ commit }, project_eid) => {
     // due to security concerns)
     var members = response.body
     _.map(members, function(m) {
-      return _.extend(m, { following: [project_eid] })
+      return _.assign(m, { following: [project_eid] })
     })
 
     commit(types.FETCHED_MEMBERS, { project_eid, members: members })
@@ -38,7 +38,7 @@ export const createMembers = ({ commit }, { project_eid, attrs }) => {
     // due to security concerns)
     var members = response.body
     _.map(members, function(m) {
-      return _.extend(m, { following: [project_eid] })
+      return _.assign(m, { following: [project_eid] })
     })
 
     // success callback

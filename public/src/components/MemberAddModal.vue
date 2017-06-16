@@ -56,7 +56,7 @@
     },
     data() {
       return {
-        invite_info: _.extend({}, defaultAttrs())
+        invite_info: _.assign({}, defaultAttrs())
       }
     },
     computed: {
@@ -87,7 +87,7 @@
         })
       },
       reset(attrs) {
-        this.invite_info = _.extend({}, defaultAttrs(), attrs)
+        this.invite_info = _.assign({}, defaultAttrs(), attrs)
       },
       onHide() {
         this.$emit('hide', this)

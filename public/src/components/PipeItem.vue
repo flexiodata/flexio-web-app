@@ -231,7 +231,7 @@
         // if we don't have a schedule object, default to scheduling the pipe daily at 8am
         if (!_.isObject(_.get(this.item, 'schedule')))
         {
-          _.extend(attrs, {
+          _.assign(attrs, {
             schedule: {
               frequency: SCHEDULE_FREQUENCY_DAILY,
               timezone: TIMEZONE_UTC,

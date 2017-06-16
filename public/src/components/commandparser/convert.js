@@ -81,7 +81,7 @@ export default {
       header_row = _.includes(args, 'header_row')
     }
 
-    var json = _.extend({}, DEFAULT_JSON)
+    var json = _.assign({}, DEFAULT_JSON)
     _.set(json, 'params.input.delimiter', delimiter)
     _.set(json, 'params.input.text_qualifier', text_qualifier)
     _.set(json, 'params.input.header_row', header_row)

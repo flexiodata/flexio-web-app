@@ -41,7 +41,7 @@
     },
     data() {
       return {
-        pipe: _.extend({}, defaultAttrs())
+        pipe: _.assign({}, defaultAttrs())
       }
     },
     computed: {
@@ -67,7 +67,7 @@
         this.$refs['dialog'].close()
       },
       reset(attrs) {
-        this.pipe = _.extend({}, defaultAttrs(), attrs)
+        this.pipe = _.assign({}, defaultAttrs(), attrs)
       },
       onHide() {
         this.$emit('hide', this)

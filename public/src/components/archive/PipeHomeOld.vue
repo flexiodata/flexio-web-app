@@ -471,7 +471,7 @@
         var me = this
         var eid = attrs.eid
         attrs = _.pick(attrs, ['name', 'ename', 'description', 'token', 'host', 'port', 'username', 'password', 'database'])
-        _.extend(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
+        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
@@ -505,7 +505,7 @@
 
         this.inserting_task = true
         this.insert_idx = idx
-        this.insert_task = _.extend({}, DEFAULT_INSERT_TASK, {
+        this.insert_task = _.assign({}, DEFAULT_INSERT_TASK, {
           type: TASK_TYPE_INPUT,
           params: {
             connection: ''
@@ -530,7 +530,7 @@
 
         this.inserting_task = true
         this.insert_idx = idx
-        this.insert_task = _.extend({}, DEFAULT_INSERT_TASK, {
+        this.insert_task = _.assign({}, DEFAULT_INSERT_TASK, {
           type: TASK_TYPE_OUTPUT,
           params: {
             connection: ''
@@ -552,7 +552,7 @@
 
         this.inserting_task = true
         this.insert_idx = idx >= 0 ? idx : this.raw_tasks.length
-        this.insert_task = _.extend({}, DEFAULT_INSERT_TASK, {
+        this.insert_task = _.assign({}, DEFAULT_INSERT_TASK, {
           metadata: {
             name: 'New Task'
           }

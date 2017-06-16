@@ -20,7 +20,7 @@ export default {
   getJson(args) {
     var rows = _.parseInt(_.nth(args, 0)) || 100
 
-    var json = _.extend({}, DEFAULT_JSON)
+    var json = _.assign({}, DEFAULT_JSON)
     _.set(json, 'params.rows', rows)
 
     return JSON.stringify(json, null, 2)

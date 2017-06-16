@@ -67,7 +67,7 @@
       return {
         is_open: false,
         sent: false,
-        email: _.extend({}, DEFAULT_ATTRS),
+        email: _.assign({}, DEFAULT_ATTRS),
       }
     },
     methods: {
@@ -90,7 +90,7 @@
       },
       reset(attrs) {
         this.sent = false
-        this.email = _.extend({}, DEFAULT_ATTRS, attrs)
+        this.email = _.assign({}, DEFAULT_ATTRS, attrs)
       },
       success() {
         this.sent = true

@@ -35,7 +35,7 @@ export default {
     if (code.length > 0)
       code = btoa(code)
 
-    var json = _.extend({}, DEFAULT_JSON)
+    var json = _.assign({}, DEFAULT_JSON)
     _.set(json, 'params.type', type)
     _.set(json, 'params.code', code)
 

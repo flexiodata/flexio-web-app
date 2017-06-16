@@ -22,7 +22,7 @@ export default {
   getJson(args) {
     var items = args || []
 
-    var json = _.extend({}, DEFAULT_JSON)
+    var json = _.assign({}, DEFAULT_JSON)
     _.set(json, 'params.columns', items)
 
     return JSON.stringify(json, null, 2)
