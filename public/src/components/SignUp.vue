@@ -194,6 +194,7 @@
               this.has_username_error ||
               this.has_password_error)
           {
+            this.is_submitting = false
             return
           }
 
