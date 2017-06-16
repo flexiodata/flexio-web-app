@@ -1,6 +1,12 @@
 <template>
   <div class="css-ios-toggle" @click.stop @dblclick.stop>
-    <input :id="uid" :checked="checked" @click="click" @dblclick="dblclick" type="checkbox">
+    <input
+      type="checkbox"
+      :id="uid"
+      :checked="checked"
+      @click.prevent="onClick"
+      @dblclick.prevent="onDblclick"
+    >
     <label :for="uid"></label>
   </div>
 </template>
@@ -14,11 +20,11 @@
       }
     },
     methods: {
-      click: function(evt) {
-        this.$emit('click', evt)
+      onClick() {
+        this.$emit('toggle-click')
       },
-      dblclick: function(evt) {
-        this.$emit('dblclick', evt)
+      onDblclick() {
+        this.$emit('toggle-dblclick')
       }
     }
   }

@@ -33,8 +33,7 @@
             style="display: block"
             :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
             :checked="is_scheduled"
-            @click.stop="toggleScheduled"
-            @dblclick.stop
+            @toggle-click="toggleScheduled"
           ></toggle-button>
         </div>
       </div>
