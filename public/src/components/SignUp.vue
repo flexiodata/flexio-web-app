@@ -10,28 +10,90 @@
           {{error_msg}}
         </div>
         <div v-if="email_provided" class="mv3">
-          <input v-model="email" :class="input_cls" class="bg-black-10" placeholder="Email" type="email" autocomplete=off spellcheck="false" disabled>
+          <input
+            type="email"
+            class="bg-black-10"
+            placeholder="Email"
+            autocomplete=off
+            spellcheck="false"
+            disabled
+            :class="input_cls"
+            v-model="email"
+          >
         </div>
         <div class="mv3">
-          <input v-model="first_name" v-focus :class="input_cls" placeholder="First name" type="text" autocomplete=off spellcheck="false">
+          <input
+            type="text"
+            placeholder="First name"
+            autocomplete=off
+            spellcheck="false"
+            :class="input_cls"
+            v-model="first_name"
+            v-focus
+            v-validate
+            data-vv-name="first_name"
+            data-vv-as="first name"
+            data-vv-rules="required"
+          >
+          <span class="f8 dark-red" v-show="errors.has('first_name')">{{errors.first('first_name')}}</span>
         </div>
         <div class="mv3">
-          <input v-model="last_name" :class="input_cls" placeholder="Last name" type="text" autocomplete=off spellcheck="false">
+          <input
+            type="text"
+            placeholder="Last name"
+            autocomplete=off
+            spellcheck="false"
+            :class="input_cls"
+            v-model="last_name"
+            v-validate
+            data-vv-name="last_name"
+            data-vv-as="last name"
+            data-vv-rules="required"
+          >
+          <span class="f8 dark-red" v-show="errors.has('last_name')">{{errors.first('last_name')}}</span>
         </div>
         <div class="mv3">
-          <input v-model="user_name" :class="input_cls" placeholder="Pick a username" type="text" autocomplete=off spellcheck="false">
+          <input
+            type="text"
+            placeholder="Pick a username"
+            autocomplete=off
+            spellcheck="false"
+            :class="input_cls"
+            v-model="user_name"
+          >
           <span class="f8 dark-red" v-show="has_username_error">{{username_error}}</span>
         </div>
         <div v-if="!email_provided" class="mv3">
-          <input v-model="email" :class="input_cls" placeholder="Email" type="email" autocomplete=off spellcheck="false">
+          <input
+            type="email"
+            placeholder="Email"
+            autocomplete=off
+            spellcheck="false"
+            :class="input_cls"
+            v-model="email"
+          >
           <span class="f8 dark-red" v-show="has_email_error">{{email_error}}</span>
         </div>
         <div class="mv3">
-          <input v-model="password" @keyup.enter="trySignUp" :class="input_cls" placeholder="Password" type="password" autocomplete=off spellcheck="false">
+          <input
+            type="password"
+            placeholder="Password"
+            autocomplete=off
+            spellcheck="false"
+            :class="input_cls"
+            @keyup.enter="trySignUp"
+            v-model="password"
+          >
           <span class="f8 dark-red" v-show="has_password_error">{{password_error}}</span>
         </div>
         <div class="mv3">
-          <btn btn-lg btn-primary :disabled="is_submitting || disable_submit_button" @click="trySignUp" class="b ttu w-100">
+          <btn
+            btn-lg
+            btn-primary
+            class="b ttu w-100"
+            :disabled="is_submitting || has_errors"
+            @click="trySignUp"
+          >
             <span v-if="is_submitting">{{label_submitting}}</span>
             <span v-else>Sign up</span>
           </btn>
@@ -127,8 +189,15 @@
       has_password_error() {
         return this.password_error.length > 0
       },
-      disable_submit_button() {
+      has_client_errors() {
+        var errors = _.get(this.errors, 'errors', [])
+        return _.size(errors) > 0
+      },
+      has_server_errors() {
         return this.has_email_error || this.has_username_error || this.has_password_error
+      },
+      has_errors() {
+        return this.has_client_errors || this.has_server_errors
       }
     },
     methods: {
@@ -191,11 +260,9 @@
 
         this.is_submitting = true
 
-        // this will show errors below each input
+        // check server-side errors
         this.checkSignup(null, () => {
-          if (this.has_email_error ||
-              this.has_username_error ||
-              this.has_password_error)
+          if (this.has_errors)
           {
             this.is_submitting = false
             return
