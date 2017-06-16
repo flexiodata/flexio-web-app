@@ -4,8 +4,8 @@
       type="checkbox"
       :id="uid"
       :checked="checked"
-      @click.prevent="onClick"
-      @dblclick.prevent="onDblclick"
+      @click.stop="onClick"
+      @dblclick.stop="onDblClick"
     >
     <label :for="uid"></label>
   </div>
@@ -13,18 +13,30 @@
 
 <script>
   export default {
-    props: ['checked'],
+    props: {
+      'checked': {
+        type: Boolean,
+        required: true
+      },
+      'prevent-default': {
+        type: Boolean,
+        default: false
+      }
+    },
     computed: {
       uid() {
         return _.uniqueId('toggle-')
       }
     },
     methods: {
-      onClick() {
-        this.$emit('toggle-click')
+      onClick(evt) {
+        if (this.preventDefault)
+          evt.preventDefault()
+
+        this.$emit('click', evt)
       },
-      onDblclick() {
-        this.$emit('toggle-dblclick')
+      onDblClick(evt) {
+        this.$emit('dblclick', evt)
       }
     }
   }

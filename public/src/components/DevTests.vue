@@ -33,8 +33,7 @@
       <toggle-button
         class="ml3 mr1"
         :checked="show_errors_only"
-        @click.stop="toggleErrorsOnly"
-        @dblclick.stop
+        @click="toggleErrorsOnly"
       ></toggle-button>
       <span class="f5 fw6 pointer black-60" @click.stop="toggleErrorsOnly">Only show errors</span>
       <div class="flex-fill">&nbsp;</div>

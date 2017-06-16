@@ -26,16 +26,15 @@
           :aria-label="follower_tooltip"
         >{{follower_str}} (@{{owner_username}})</span>
       </div>
-      <div class="flex-none mr2">
-        <div :class="isTrash ? 'o-40 no-pointer-events' : ''">
-          <toggle-button
-            class="hint--bottom"
-            style="display: block"
-            :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
-            :checked="is_scheduled"
-            @toggle-click="toggleScheduled"
-          ></toggle-button>
-        </div>
+      <div class="flex-none mr2" :class="isTrash ? 'o-40 no-pointer-events' : ''">
+        <toggle-button
+          class="hint--bottom"
+          style="display: block"
+          :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
+          :checked="is_scheduled"
+          :prevent-default="true"
+          @click="toggleScheduled"
+        ></toggle-button>
       </div>
       <div class="flex-none ml2">
         <a

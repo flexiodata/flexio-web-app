@@ -10,7 +10,7 @@
     <div class="flex flex-row items-center mb3">
       <toggle-button
         :checked="is_scheduled"
-        @click.stop="toggleScheduled"
+        @click="toggleScheduled"
       ></toggle-button>
       <span
         class="f5 pl2 pointer"
