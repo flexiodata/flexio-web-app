@@ -120,7 +120,9 @@
           var eid = this.pipeEid
           var process_eid = _.get(this.activeProcess, 'eid', '')
           var subprocesses = _.get(this.activeProcess, 'subprocesses', [])
-          var task_types = _.map(subprocesses, (s) => { return _.get(s, 'task_type', '') })
+          var task_types_arr = _.map(subprocesses, (s) => { return _.get(s, 'task_type', '') })
+          var task_types = task_types_arr.join(', ')
+          var task_count = _.size(task_types_arr)
           var duration = _.get(this.activeProcess, 'duration', -1)
 
           if (val == PROCESS_STATUS_COMPLETED)
@@ -131,7 +133,7 @@
               this.show_success = true
               this.show_error = false
 
-              analytics.track('Ran Pipe: Success', { eid, process_eid, task_types, duration })
+              analytics.track('Ran Pipe: Success', { eid, process_eid, task_types, task_count, duration })
             }, 1000)
           }
 
@@ -143,13 +145,14 @@
 
               var subprocess = _.find(subprocesses, { process_status: PROCESS_STATUS_FAILED } )
               var error = _.get(subprocess, 'process_info.error', {})
+              var error_code = _.get(error, 'code', '')
               var message = _.get(error, 'message', '')
               if (message.length == 0)
                 message = 'An error occurred while running the pipe.'
 
               this.error_message = message
 
-              analytics.track('Ran Pipe: Error', { eid, process_eid, task_types, duration, message, error, subprocess })
+              analytics.track('Ran Pipe: Error', { eid, process_eid, task_types, task_count, duration, message, error_code })
             }, 1000)
           }
         }

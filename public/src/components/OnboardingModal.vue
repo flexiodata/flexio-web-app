@@ -23,6 +23,7 @@
             v-for="(item, index) in items"
             :item="item"
             :index="index"
+            @use-template-click="close('template')"
           ></onboarding-tile-item>
         </div>
       </div>
@@ -88,7 +89,7 @@
       close(close_type) {
         if (close_type == 'close')
           analytics.track('Closed Onboarding Modal: Close Button', { close_type })
-           else
+           else if (close_type == 'skip')
           analytics.track('Closed Onboarding Modal: Skip Button', { close_type })
 
         this.$refs['dialog'].close()

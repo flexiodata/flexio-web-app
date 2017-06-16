@@ -241,17 +241,12 @@
         // add input task
         this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
           var task = response.body
-          var analytics_payload = { eid, attrs }
 
-          // add Segment-friendly keys
-          _.assign(analytics_payload, {
-            createdAt: _.get(task, 'created')
-          })
-
-          // add connection type
-          _.assign(analytics_payload, {
-            connection_type: ctype
-          })
+          var analytics_payload = {
+            eid,
+            connection_type: ctype,
+            createdAt: _.get(task, 'created') // Segment-friendly key value
+          }
 
           analytics.track('Created Step: Input', analytics_payload)
         })
@@ -274,17 +269,12 @@
           // add email send task
           this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
             var task = response.body
-            var analytics_payload = { eid, attrs }
 
-            // add Segment-friendly keys
-            _.assign(analytics_payload, {
-              createdAt: _.get(task, 'created')
-            })
-
-            // add connection type
-            _.assign(analytics_payload, {
-              connection_type: ctype
-            })
+            var analytics_payload = {
+              eid,
+              connection_type: ctype,
+              createdAt: _.get(task, 'created') // Segment-friendly key value
+            }
 
             analytics.track('Created Step: Output', analytics_payload)
           })
@@ -317,17 +307,12 @@
         // add output task
         this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
           var task = response.body
-          var analytics_payload = { eid, attrs }
 
-          // add Segment-friendly keys
-          _.assign(analytics_payload, {
-            createdAt: _.get(task, 'created')
-          })
-
-          // add connection type
-          _.assign(analytics_payload, {
-            connection_type: ctype
-          })
+          var analytics_payload = {
+            eid,
+            connection_type: ctype,
+            createdAt: _.get(task, 'created') // Segment-friendly key value
+          }
 
           analytics.track('Created Step: Output', analytics_payload)
         })

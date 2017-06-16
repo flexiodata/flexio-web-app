@@ -64,8 +64,9 @@
     },
     methods: {
       useTemplate() {
-        analytics.track('Closed Onboarding Modal: Template', { template: this.json_file_name })
+        analytics.track('Closed Onboarding Modal: Template', { template: this.json_file_url })
         this.$router.push({ path: this.copy_pipe_url })
+        this.$emit('use-template-click')
       }
     }
   }

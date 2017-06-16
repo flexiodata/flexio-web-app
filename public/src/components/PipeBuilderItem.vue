@@ -582,11 +582,14 @@
         var task_type = _.get(edit_attrs, 'type', '')
         var friendly_task_name = _.capitalize(task_type.replace('flexio.', ''))
 
+        var command = this.edit_cmd
+        var code = this.edit_code
+
         if (parser.validate(this.edit_cmd) !== true)
         {
           var message = 'There is an error in the command syntax'
           this.showSyntaxError(message, 4000)
-          analytics.track('Updated Step: Command Syntax Error', { message, command: this.edit_cmd })
+          analytics.track('Updated Step: Command Syntax Error', { command, message })
           return
         }
 
@@ -609,19 +612,19 @@
               {
                 var message = res.message
                 this.showSyntaxError(message)
-                analytics.track('Updated Step: '+friendly_task_name+' (Error)', { message, command: this.edit_cmd, code: this.edit_code })
+                analytics.track('Updated Step: '+friendly_task_name+' (Error)', { command, code, message })
               }
                else
               {
                 this.editTaskSingleton(edit_attrs)
-                analytics.track('Updated Step: '+friendly_task_name, { command: this.edit_cmd, code: this.edit_code })
+                analytics.track('Updated Step: '+friendly_task_name, { command, code })
               }
             })
           }
            else
           {
             this.editTaskSingleton(edit_attrs)
-            analytics.track('Updated Step: '+friendly_task_name, { command: this.edit_cmd, code: this.edit_code })
+            analytics.track('Updated Step: '+friendly_task_name, { command, code })
           }
 
           // we're done
@@ -629,7 +632,7 @@
         }
 
         // create analytics payload for all other task types
-        var analytics_payload = { message, command: this.edit_cmd }
+        var analytics_payload = { command, message }
 
         if (task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT)
         {

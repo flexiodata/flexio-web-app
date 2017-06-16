@@ -195,12 +195,13 @@
       },
       editPipeName(attrs, input) {
         var eid = this.pipeEid
+        var name = _.get(attrs, 'name', '')
 
         this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
           if (response.ok)
-            analytics.track('Updated Pipe: Name', { eid, attrs })
+            analytics.track('Updated Pipe: Name', { eid, name })
              else
-            analytics.track('Updated Pipe: Name (Error)', { eid, attrs })
+            analytics.track('Updated Pipe: Name (Error)', { eid, name })
         })
         input.endEdit()
       },
@@ -217,7 +218,7 @@
 
           if (ename.length > 0 && _.size(errors) > 0)
           {
-            analytics.track('Updated Pipe: Alias (Invalid)', { eid, attrs })
+            analytics.track('Updated Pipe: Alias (Invalid)', { eid, ename })
 
             // show error message
             this.show_alert_modal = true
@@ -227,9 +228,9 @@
           {
             this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
               if (response.ok)
-                analytics.track('Updated Pipe: Alias', { eid, attrs })
+                analytics.track('Updated Pipe: Alias', { eid, ename })
                  else
-                analytics.track('Updated Pipe: Alias (Error)', { eid, attrs })
+                analytics.track('Updated Pipe: Alias (Error)', { eid, ename })
             })
 
             input.endEdit()
@@ -238,12 +239,13 @@
       },
       editPipeDescription(attrs, input) {
         var eid = this.pipeEid
+        var description = _.get(attrs, 'description', '')
 
         this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
           if (response.ok)
-            analytics.track('Updated Pipe: Description', { eid, attrs })
+            analytics.track('Updated Pipe: Description', { eid, description })
              else
-            analytics.track('Updated Pipe: Description (Error)', { eid, attrs })
+            analytics.track('Updated Pipe: Description (Error)', { eid, description })
         })
 
         input.endEdit()

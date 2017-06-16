@@ -7,7 +7,7 @@
     <onboarding-modal
       ref="modal-onboarding"
       @hide="show_onboarding_modal = false"
-      v-if="show_onboarding_modal"
+      v-if="config_show_onboarding && show_onboarding_modal"
     ></onboarding-modal>
 
     <button
@@ -39,9 +39,14 @@
       OnboardingModal
     },
     watch: {
-      show_onboarding_modal(val, old_val) {
+      config_show_onboarding(val, old_val) {
         if (val === true)
           this.$nextTick(() => { this.$refs['modal-onboarding'].open() })
+      }
+    },
+    data() {
+      return {
+        show_onboarding_modal: true
       }
     },
     computed: {
@@ -62,8 +67,8 @@
 
         return true
       },
-      show_onboarding_modal() {
-        // we have to do 'show_onboarding_modal' as a computed value since
+      config_show_onboarding() {
+        // we have to do 'config_show_onboarding' as a computed value since
         // we need to wait to check if we have an active user or not
         if (this.active_user_eid.length == 0)
           return false
