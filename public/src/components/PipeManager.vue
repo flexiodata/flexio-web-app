@@ -6,24 +6,26 @@
   </div>
   <div v-else>
     <!-- control bar -->
-    <div class="flex flex-row pa3 pa4-l bb bb-0-l b--black-10" style="max-width: 1152px">
-      <div class="flex-fill">
-        <input
-          type="text"
-          class="input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue pa2 w-90 w-50-m w-30-l min-w5-m min-w5a-l f6"
-          placeholder="Filter pipes..."
-          @keydown.esc="filter = ''"
-          v-model="filter"
-        >
-      </div>
-      <div class="flex-none">
-        <btn btn-md btn-primary class="btn-add ttu b ba" @click="tryCreatePipe()">New pipe</btn>
+    <div class="pa3 pa4-l pb3-l bb bb-0-l b--black-10" style="max-width: 1152px">
+      <div class="flex flex-row">
+        <div class="flex-fill">
+          <input
+            type="text"
+            class="input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue pa2 w-90 w-50-m w-30-l min-w5-m min-w5a-l f6"
+            placeholder="Filter pipes..."
+            @keydown.esc="filter = ''"
+            v-model="filter"
+          >
+        </div>
+        <div class="flex-none">
+          <btn btn-md btn-primary class="btn-add ttu b ba" @click="tryCreatePipe()">New pipe</btn>
+        </div>
       </div>
     </div>
 
     <!-- list -->
     <pipe-list
-      class="pl4-l pr4-l pb4-l"
+      class="pl4-l pr4-l pb4-l h-100"
       style="max-width: 1152px"
       :filter="filter"
       :show-header="true"
