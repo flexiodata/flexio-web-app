@@ -185,8 +185,55 @@ class GoogleSheets implements \Flexio\Services\IConnection
 
     private $spreadsheets = [];
 
-    // returns an array of GoogleSpreadsheet objects
+
+
     public function getSpreadsheets() // TODO: set return type
+    {
+        if (count($this->spreadsheets) > 0)
+            return $this->spreadsheets;
+
+        if (!$this->authenticated())
+            return null;
+
+        $file_limit = 1000; // limit return results to 1000; max is 1000, default is 100
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Cname%2CmodifiedTime)&q=mimeType%3D'application%2Fvnd.google-apps.spreadsheet'");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        $result = curl_exec($ch);
+
+        $result = json_decode($result,true);
+        if (isset($result['files']))
+            $result = $result['files'];
+             else
+            $result = array();
+
+        $files = array();
+        foreach ($result as $row)
+        {
+            if (!isset($row['name']) || !isset($row['id']) || !isset($row['modifiedTime']))
+                continue;
+            
+            $spreadsheet = new \Flexio\Services\GoogleSpreadsheet;
+            $spreadsheet->access_token = $this->access_token;
+            $spreadsheet->title = $row['name'];
+            $spreadsheet->spreadsheet_id = $row['id'];
+            $spreadsheet->updated = $row['modifiedTime'];
+            $spreadsheet->getWorksheets($ch);
+            $this->spreadsheets[] = $spreadsheet;
+        }
+
+        curl_close($ch);
+        return $this->spreadsheets;
+    }
+
+
+    // returns an array of GoogleSpreadsheet objects
+    public function getSpreadsheetsOld() // TODO: set return type
     {
         if (count($this->spreadsheets) > 0)
             return $this->spreadsheets;
