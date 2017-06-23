@@ -75,7 +75,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
             $files = [];
             foreach ($spreadsheets as $spreadsheet)
             {
-                $worksheets = $spreadsheet->getWorksheets();
+                //$worksheets = $spreadsheet->getWorksheets();
 
                 $fileinfo = array(
                     'spreadsheet_id' => $spreadsheet->spreadsheet_id,
@@ -83,12 +83,13 @@ class GoogleSheets implements \Flexio\Services\IConnection
                     'path' => '/' . $spreadsheet->title,
                     'size' => null, // size unknown
                     'modified' => $spreadsheet->updated,
-                    'is_dir' => (count($worksheets) > 1 ? true:false),
+                    //'is_dir' => (count($worksheets) > 1 ? true:false),
+                    'is_dir' => true,
                     'root' => 'googlesheets'
                 );
 
-                if (count($worksheets) == 1)
-                    $fileinfo['worksheet_id'] = $worksheets[0]->worksheet_id;
+               // if (count($worksheets) == 1)
+               //     $fileinfo['worksheet_id'] = $worksheets[0]->worksheet_id;
 
                 $files[] = $fileinfo;
             }
@@ -101,7 +102,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
                 $path = substr($path,1);
             $spreadsheet = $this->getSpreadsheetByTitle($path);
             if (!$spreadsheet)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Cannot access sheet's worksheets");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Cannot locate spreadsheet '$path'");
             $worksheets = $spreadsheet->getWorksheets();
 
             $files = [];
@@ -150,7 +151,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         if (isset($ids['spreadsheet_id']))
             $spreadsheet_id = $ids['spreadsheet_id'];
         if (isset($ids['worksheet_id']))
-            $worksheet_id = $ids['worksheet_id'];
+            $worksheet_title = $ids['worksheet_title'];
 
         // if we don't have a spreadsheet id, we cannot continue
         if (!isset($spreadsheet_id))
@@ -164,10 +165,10 @@ class GoogleSheets implements \Flexio\Services\IConnection
                 return;
             if (count($spreadsheet->worksheets) < 1)
                 return;
-            $worksheet_id = $spreadsheet->worksheets[0]->worksheet_id;
+            $worksheet_title = $spreadsheet->worksheets[0]->title;
         }
 
-        $this->readFile($spreadsheet_id, $worksheet_id, $callback);
+        $this->readFile($spreadsheet_id, $worksheet_title, $callback);
     }
 
     public function write(array $params, callable $callback)
@@ -205,6 +206,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         $result = curl_exec($ch);
+        curl_close($ch);
 
         $result = json_decode($result,true);
         if (isset($result['files']))
@@ -212,6 +214,8 @@ class GoogleSheets implements \Flexio\Services\IConnection
              else
             $result = array();
 
+
+        $ch = curl_init();
         $files = array();
         foreach ($result as $row)
         {
@@ -223,85 +227,15 @@ class GoogleSheets implements \Flexio\Services\IConnection
             $spreadsheet->title = $row['name'];
             $spreadsheet->spreadsheet_id = $row['id'];
             $spreadsheet->updated = $row['modifiedTime'];
-            $spreadsheet->getWorksheets($ch);
+            //$spreadsheet->getWorksheets($ch);
             $this->spreadsheets[] = $spreadsheet;
         }
-
-        curl_close($ch);
-        return $this->spreadsheets;
-    }
-
-
-    // returns an array of GoogleSpreadsheet objects
-    public function getSpreadsheetsOld() // TODO: set return type
-    {
-        if (count($this->spreadsheets) > 0)
-            return $this->spreadsheets;
-
-        if (!$this->authenticated())
-            return null;
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://spreadsheets.google.com/feeds/spreadsheets/private/full");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token, 'GData-Version: 3.0']);
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-
-        $result = curl_exec($ch);
-        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($http_response_code >= 400)
-        {
-            curl_close($ch);
-            
-            if ($http_response_code == 401)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, "Access unauthorized");
-                 else
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Unable to access sheet");
-        }
-
-        $doc = new \DOMDocument;
-        if ($doc->loadXML($result))
-        {
-            $entries = $doc->getElementsByTagName("entry");
-            foreach ($entries as $entry)
-            {
-                $titles = $entry->getElementsByTagName("title");
-                if (count($titles) != 1)
-                    continue;
-
-                $title = $titles[0]->nodeValue;
-
-                $ids = $entry->getElementsByTagName("id");
-                if (count($ids) != 1)
-                    continue;
-                $id = $ids[0]->nodeValue;
-
-                $id = \Flexio\Base\Util::afterLast($id, '/');
-
-
-                $updateds = $entry->getElementsByTagName("updated");
-                if (count($updateds) != 1)
-                    continue;
-                $updated = $updateds[0]->nodeValue;
-
-
-
-                $spreadsheet = new \Flexio\Services\GoogleSpreadsheet;
-                $spreadsheet->access_token = $this->access_token;
-                $spreadsheet->title = $title;
-                $spreadsheet->spreadsheet_id = $id;
-                $spreadsheet->updated = $updated;
-                $spreadsheet->getWorksheets($ch);
-                $this->spreadsheets[] = $spreadsheet;
-            }
-        }
-
         curl_close($ch);
 
         return $this->spreadsheets;
     }
+
+
 
     public function getSpreadsheetByTitle(string $title) // TODO: set return type
     {
@@ -352,14 +286,58 @@ class GoogleSheets implements \Flexio\Services\IConnection
             if (count($parts) < 2 || $parts[1]=='' || 0 == strcasecmp($parts[1], $obj['name']))
             {
                 return array('spreadsheet_id' => $obj['spreadsheet_id'],
-                             'worksheet_id' => $obj['worksheet_id']);
+                             'worksheet_id' => $obj['worksheet_id'],
+                             'worksheet_title' => $obj['name']);
             }
         }
 
         return false;
     }
 
-    public function readFile(string $spreadsheet_id, string $worksheet_id, callable $callback)
+    public function readFile(string $spreadsheet_id, string $worksheet_title, callable $callback)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://sheets.googleapis.com/v4/spreadsheets/$spreadsheet_id/values/$worksheet_title");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token, 'GData-Version: 3.0']);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+
+        $column_names = array();
+
+        $result = @json_decode($result, true);
+
+        if (isset($result['values']))
+        {
+            foreach ($result['values'] as $row)
+            {
+                $idx = 1;
+                while (count($row) > count($column_names))
+                {
+                    $column_names[] = self::stringFromColumnIndex($idx++);
+                }
+
+                if (count($row) < count($column_names))
+                    $row = array_pad($row, count($column_names), '');
+
+                $row = array_combine($column_names, $row);
+
+                $callback($row);
+            }
+
+
+        }
+
+        return true;
+    }
+
+/*
+    public function readFile(string $spreadsheet_id, string $worksheet_title, callable $callback)
     {
         if (!$this->authenticated())
             return null;
@@ -371,7 +349,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         $error_payload = '';
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://spreadsheets.google.com/feeds/cells/$spreadsheet_id/$worksheet_id/private/full");
+        curl_setopt($ch, CURLOPT_URL, "https://spreadsheets.google.com/feeds/cells/$spreadsheet_id/values/$worksheet_title");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token, 'GData-Version: 3.0']);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -551,7 +529,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         }
     }
 
-
+*/
 
     // creates a new spreadsheet via the google docs v3 api; returns file id
     // or false if something goes wrong
@@ -816,7 +794,7 @@ class GoogleSpreadsheet
             $ch = curl_init();
              else
             $ch = $_ch;
-        curl_setopt($ch, CURLOPT_URL, "https://spreadsheets.google.com/feeds/worksheets/".$this->spreadsheet_id."/private/full");
+        curl_setopt($ch, CURLOPT_URL, "https://sheets.googleapis.com/v4/spreadsheets/".$this->spreadsheet_id."?fields=sheets.properties");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token, 'GData-Version: 3.0']);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -835,59 +813,30 @@ class GoogleSpreadsheet
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Cannot access sheet's worksheets");
         }
 
+        $result = json_decode($result,true);
+        if (isset($result['sheets']))
+            $sheets = $result['sheets'];
+             else
+            $sheets = array();
+
         $this->worksheets = [];
 
-        $doc = new \DOMDocument;
-        if ($doc->loadXML($result))
+        foreach ($sheets as $sheet)
         {
-            $entries = $doc->getElementsByTagName("entry");
-            foreach ($entries as $entry)
-            {
-                $ids = $entry->getElementsByTagName("id");
-                if (!isset($ids) || $ids->length != 1)
-                    continue;
-                $id = $ids[0]->nodeValue;
+            if (!isset($sheet['properties']))
+                continue;
 
-                $titles = $entry->getElementsByTagName("title");
-                if (!isset($titles) || $titles->length != 1)
-                    continue;
-                $title = $titles[0]->nodeValue;
+            $worksheet = new \Flexio\Services\GoogleWorksheet;
+            $worksheet->access_token = $this->access_token;
+            $worksheet->spreadsheet_id = $this->spreadsheet_id;
+            $worksheet->worksheet_id = $sheet['properties']['sheetId'];
+            $worksheet->title = $sheet['properties']['title'];
+            $worksheet->row_count = $sheet['properties']['sheetType'] == 'GRID' ? $sheet['properties']['gridProperties']['rowCount'] : 0;
+            $worksheet->col_count = $sheet['properties']['sheetType'] == 'GRID' ? $sheet['properties']['gridProperties']['columnCount'] : 0;
 
-
-                $edit_link = '';
-                $links = $entry->getElementsByTagName("link");
-                foreach ($links as $link)
-                {
-                    if ($link->getAttribute('rel') == 'edit')
-                    {
-                        $edit_link = $link->getAttribute('href');
-                    }
-                }
-
-                $e = $entry->getElementsByTagNameNS("http://schemas.google.com/spreadsheets/2006", "rowCount");
-                if (!$e || $e->length != 1)
-                    continue;
-                $row_count = (int)$e[0]->textContent;
-                $e = $entry->getElementsByTagNameNS("http://schemas.google.com/spreadsheets/2006", "colCount");
-                if (!$e || $e->length != 1)
-                    continue;
-                $col_count = (int)$e[0]->textContent;
-
-
-                $worksheet_id = \Flexio\Base\Util::afterLast($id, '/');
-
-                $worksheet = new \Flexio\Services\GoogleWorksheet;
-                $worksheet->access_token = $this->access_token;
-                $worksheet->spreadsheet_id = $this->spreadsheet_id;
-                $worksheet->worksheet_id = $worksheet_id;
-                $worksheet->title = $title;
-                $worksheet->row_count = $row_count;
-                $worksheet->col_count = $col_count;
-                $worksheet->edit_link = $edit_link;
-
-                $this->worksheets[] = $worksheet;
-            }
+            $this->worksheets[] = $worksheet;
         }
+
 
         return $this->worksheets;
     }
