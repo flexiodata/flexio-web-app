@@ -97,6 +97,17 @@ class Store
                     $service = \Flexio\Services\Postgres::create($auth_params);
                 break;
 
+            case \Model::CONNECTION_TYPE_ELASTICSEARCH:
+                    $auth_params = array(
+                        'host' => $connection_info['host'] ?? '',
+                        'port' => $connection_info['port'] ?? '',
+                        'username' => $connection_info['username'] ?? '',
+                        'password' => $connection_info['password'] ?? '',
+                        'database' => $connection_info['database'] ?? ''
+                    );
+                    $service = \Flexio\Services\ElasticSearch::create($auth_params);
+                break;
+
             case \Model::CONNECTION_TYPE_DROPBOX:
                     $auth_params = array(
                         'access_token' => $connection_info['token'] ?? ''

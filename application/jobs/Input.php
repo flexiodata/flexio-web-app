@@ -147,6 +147,9 @@ class Input extends \Flexio\Jobs\Base
             case \Model::CONNECTION_TYPE_POSTGRES:
                 return $this->runDatabaseImport($service, $file_info);
 
+            case \Model::CONNECTION_TYPE_ELASTICSEARCH:
+                return $this->runElasticSearchImport($service, $file_info);
+
             // api table type data
             case \Model::CONNECTION_TYPE_RSS:
             case \Model::CONNECTION_TYPE_MAILJET:
@@ -220,6 +223,11 @@ class Input extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+    }
+
+    private function runElasticSearchImport($service, array $file_info) // TODO: set paramater type
+    {
+        // TODO: implement
     }
 
     private function runApiTableImport($service, array $file_info) // TODO: set paramater type

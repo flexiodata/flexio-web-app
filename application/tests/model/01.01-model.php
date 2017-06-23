@@ -343,28 +343,28 @@ class Test
         TestCheck::assertString('H.6', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_ELASTICSEARCH;
+        $expected = 'elasticsearch';
+        TestCheck::assertString('H.7', 'Connection type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_DROPBOX;
         $expected = 'dropbox';
-        TestCheck::assertString('H.7', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.8', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_GOOGLEDRIVE;
         $expected = 'googledrive';
-        TestCheck::assertString('H.8', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.9', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_GOOGLESHEETS;
         $expected = 'googlesheets';
-        TestCheck::assertString('H.9', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.10', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_AMAZONS3;
         $expected = 'amazons3';
-        TestCheck::assertString('H.10', 'Connection type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::CONNECTION_TYPE_ELASTICSEARCH;
-        $expected = 'elasticsearch';
         TestCheck::assertString('H.11', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST

@@ -253,6 +253,10 @@ class Output extends \Flexio\Jobs\Base
                 $output_info['name'] = str_replace('/','_', $output_info['name']);
                 return $this->runDatabaseExport($instream, $service, $output_info);
 
+            case \Model::CONNECTION_TYPE_ELASTICSEARCH:
+                $output_info['name'] = str_replace('/','_', $output_info['name']);
+                return $this->runElasticSearchExport($instream, $service, $output_info);
+
             case \Model::CONNECTION_TYPE_FTP:
             case \Model::CONNECTION_TYPE_SFTP:
             case \Model::CONNECTION_TYPE_DROPBOX:
@@ -312,6 +316,11 @@ class Output extends \Flexio\Jobs\Base
         }
 
         $inserter->finishInsert();
+    }
+
+    private function runElasticSearchExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
+    {
+        // TODO: implement
     }
 
     private function runRemoteFileExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
