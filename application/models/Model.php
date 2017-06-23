@@ -90,6 +90,7 @@ class Model
     const CONNECTION_TYPE_GOOGLEDRIVE   = 'googledrive';
     const CONNECTION_TYPE_GOOGLESHEETS  = 'googlesheets';
     const CONNECTION_TYPE_AMAZONS3      = 'amazons3';
+    const CONNECTION_TYPE_ELASTICSEARCH = 'elasticsearch';
     const CONNECTION_TYPE_UPLOAD        = 'upload';
     const CONNECTION_TYPE_DOWNLOAD      = 'download';
     const CONNECTION_TYPE_STDIN         = 'stdin';
