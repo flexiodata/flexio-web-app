@@ -77,12 +77,47 @@ class ElasticSearch implements \Flexio\Services\IConnection
 
     public function listObjects(string $path = '') : array
     {
+        // note: right now, the list is flat; path isn't used
+
         if (!$this->isOk())
             return array();
 
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
+        // get the indexes
+        $url = $this->getHostUrlString() . '/_stats';
+        $auth = $this->getBasicAuthString();
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+        $result = curl_exec($ch);
+        $result = json_decode($result, true);
+
+        $indexes = [];
+
+        if (isset($result['indices']))
+        {
+            $indices = $result['indices'];
+            foreach ($indices as $index_name => $index_info)
+            {
+                // only show indices that aren't hidden
+                if (substr($index_name, 0, 1) === '.')
+                    continue;
+
+                // TODO: include other information from the stats
+                $indexes[] = array('name' => $index_name,
+                                   'path' => $index_name,
+                                   'size' => null,
+                                   'modified' => null,
+                                   'is_dir' => false,
+                                   'root' => 'elasticsearch');
+            }
+        }
+
+        return $indexes;
     }
 
     public function exists(string $path) : bool
@@ -108,15 +143,100 @@ class ElasticSearch implements \Flexio\Services\IConnection
 
     public function write(array $params, callable $callback)
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        // in elasticsearch, index endpoints follow form:  <host>:port/index/type
+        // TODO: for now, set default type to 'rows'; should be based on path somehow
+
+        $index = $params['path'] ?? '';
+        $type = 'rows';
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+
+        // make sure the index and type are vald
+        $index = strtolower($index);
+        $type = strtolower($type);
+
+        // TODO: for now, only allow output to tables
+        if ($content_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            return false;
+
+        $buffer_size = 1000; // max rows to write at a time
+        $rows_to_write = array();
+
+        while (true)
+        {
+            $row = $callback();
+            if ($row === false)
+                break;
+
+            $rows_to_write[] = $row;
+            if (count($rows_to_write) <= $buffer_size)
+                continue;
+
+            $result = $this->writeRows($index, $type, $rows_to_write);
+            if ($result === false)
+                return false;  // error occurred; TODO: throw exception?
+
+            $rows_to_write = array();
+        }
+
+        // write out whatever's left over
+        $result = $this->writeRows($index, $type, $rows_to_write);
+        if ($result === false)
+            return false;  // error occurred; TODO: throw exception?
+
+        $rows_to_write = array();
+        return true;
     }
 
 
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
+
+    private function writeRows(string $index, string $type, array $rows) : bool
+    {
+        try
+        {
+            // create the post buffer for the bulk api endpoint
+            $buf = '';
+            foreach ($rows as $r)
+            {
+                $buf .= '{"index": {"_index": "' . $index . '", "_type": "' . $type . '"}}';
+                $buf .= "\n";
+                $buf .= json_encode($r, 0); // encode json without returns (each row must be on one line)
+                $buf .= "\n";
+            }
+            $buf .= "\n"; // payload must end with newline
+
+            // write the content
+            $url = $this->getHostUrlString() . '/_bulk';
+            $auth = $this->getBasicAuthString();
+            $content_type = 'application/x-ndjson';
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $buf);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            $result = json_decode($result,true);
+
+            if (!is_array($result))
+                return false;
+            if (!isset($result['errors']))
+                return false;
+
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            return false;
+        }
+    }
 
     private function initialize(string $host, int $port, string $username, string $password) : bool
     {
@@ -175,7 +295,7 @@ class ElasticSearch implements \Flexio\Services\IConnection
 
     private function getHostUrlString() : string
     {
-        return $this->host . ':' . string($this->port);
+        return $this->host . ':' . (string)$this->port;
     }
 
     private function getBasicAuthString() : string

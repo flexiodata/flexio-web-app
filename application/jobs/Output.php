@@ -320,7 +320,20 @@ class Output extends \Flexio\Jobs\Base
 
     private function runElasticSearchExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
     {
-        // TODO: implement
+        // get ready to read the input
+        $streamreader = \Flexio\Object\StreamReader::create($instream);
+
+        $params = array();
+        $params['path'] = $output_info['name'];
+        $params['content_type'] =  $instream->getMimeType();
+
+        // TODO: for now, only allow output of tables
+        if ($params['content_type'] !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+        $service->write($params, function() use (&$streamreader) {
+            return $streamreader->readRow();  // returns false upon EOF
+        });
     }
 
     private function runRemoteFileExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
