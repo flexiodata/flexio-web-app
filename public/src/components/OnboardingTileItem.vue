@@ -56,7 +56,7 @@
         return _.get(this.item, 'slug') + '.json'
       },
       json_file_url() {
-        return 'https://www.flex.io/examples/src/config/json/' + this.json_file_name
+        return 'https://www.flex.io/templates/src/config/json/' + this.json_file_name
       },
       copy_pipe_url() {
         return '/copypipe?path='+encodeURIComponent(this.json_file_url)
