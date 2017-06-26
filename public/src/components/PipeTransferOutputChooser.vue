@@ -17,6 +17,7 @@
     </div>
     <service-list
       item-layout="list"
+      list-type="output"
       @item-activate="createPendingConnection"
       v-if="showServiceList"
     ></service-list>

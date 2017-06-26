@@ -42,6 +42,16 @@ const DROPBOX = {
   service_description: 'Cloud file storage and syncing'
 }
 
+const ELASTICSEARCH = {
+  is_service: true,
+  is_input: false,
+  is_output: true,
+  connection_type: types.CONNECTION_TYPE_ELASTICSEARCH,
+  icon: require('../assets/icon/icon-elasticsearch-128.png'),
+  service_name: 'Elasticsearch',
+  service_description: 'Open source search and analytics'
+}
+
 const EMAIL = {
   is_service: false,
   is_input: true,
@@ -193,6 +203,7 @@ export const CONNECTION_INFO_EMAIL         = EMAIL
 export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BLANK_PIPE    = BLANK_PIPE
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
+export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS  = GOOGLESHEETS
 export const CONNECTION_INFO_HTTP          = HTTP
