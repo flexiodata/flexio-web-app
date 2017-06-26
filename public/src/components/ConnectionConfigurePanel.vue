@@ -71,7 +71,7 @@
           :label="database_label"
           floating-label
           v-model.trim="info.database"
-          v-if="showInput('database') && !is_sftp"
+          v-if="showInput('database') && !is_sftp && !is_elasticsearch"
         ></ui-textbox>
         <div class="mt3 css-btn-test">
           <btn btn-lg btn-primary class="w-100 ttu b" @click="onTestClick">Test connection</btn>
@@ -146,6 +146,9 @@
       },
       is_sftp() {
         return this.ctype == types.CONNECTION_TYPE_SFTP
+      },
+      is_elasticsearch() {
+        return this.ctype == types.CONNECTION_TYPE_ELASTICSEARCH
       },
       cls() {
         return this.is_connected ? 'b--dark-green' : 'b--blue'
