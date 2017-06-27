@@ -146,18 +146,19 @@ class ElasticSearch implements \Flexio\Services\IConnection
         // in elasticsearch, index endpoints follow form:  <host>:port/index/type
         // TODO: for now, set default type to 'rows'; should be based on path somehow
 
-        $index = $params['path'] ?? '';
-        $type = 'rows';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-
-        // make sure the index and type are vald
-        $index = strtolower($index);
-        $type = strtolower($type);
-
         // TODO: for now, only allow output to tables
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
         if ($content_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             return false;
 
+        // make sure the index and type are valid
+        $index = $params['path'] ?? '';
+        $type = self::getDefaultTypeName();
+
+        $index = self::convertToValid($index);
+        $type = self::convertToValid($type);
+
+        // output the rows
         $buffer_size = 1000; // max rows to write at a time
         $rows_to_write = array();
 
@@ -191,6 +192,158 @@ class ElasticSearch implements \Flexio\Services\IConnection
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
+
+    public function createIndex(array $params) : bool
+    {
+        // create an index with the specified mapping
+
+        // TODO: for now, only allow output to tables
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        if ($content_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            return false;
+
+        // make sure the index and type are valid
+        $index = $params['path'] ?? '';
+        $type = self::getDefaultTypeName();
+
+        $index = self::convertToValid($index);
+        $type = self::convertToValid($type);
+
+        // get the structure
+        $structure = $params['structure'];
+        if (!is_array($structure))
+            return false;
+
+        // build the api json payload; payload has the following form
+        /*
+        PUT <table>
+        {
+            "mappings": {
+                "<type>": {
+                    "properties": {
+                        "<field1>": {
+                            "type": text|integer|double|date|boolean
+                            <extra info>
+                        },
+                        "<field2>": {
+                            "type": text|integer|double|date|boolean
+                            <extra info>
+                        }
+                    }
+                }
+            }
+        }
+        */
+
+        $type_info = array('mappings' => array($type => array('properties' => null)));
+        $type_property_list = array();
+
+        foreach ($structure as $field)
+        {
+            $fieldname = $field['name'];
+            $fieldtype = $field['type'];
+            $type_property_list[$fieldname] = self::getIndexTypeInfo($fieldtype);
+        }
+
+        $type_info['mappings'][$type]['_all'] = array('enabled' => false);
+        $type_info['mappings'][$type]['properties'] = $type_property_list;
+        $buf = json_encode($type_info);
+
+        // set the index info
+        try
+        {
+            // write the content
+            $url = $this->getHostUrlString() . '/' . urlencode($index);
+            $auth = $this->getBasicAuthString();
+            $content_type = 'application/x-ndjson';
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $buf);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            $result = json_decode($result,true);
+
+            if (!is_array($result))
+                return false;
+            if (!isset($result['errors']))
+                return false;
+
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            return false;
+        }
+
+    }
+
+    private static function getIndexTypeInfo(string $type) : array
+    {
+        switch ($type)
+        {
+            default:
+            case \Flexio\Base\Structure::TYPE_TEXT:
+            case \Flexio\Base\Structure::TYPE_CHARACTER:
+            case \Flexio\Base\Structure::TYPE_WIDECHARACTER:
+                $info = array(
+                    'type' => 'text',
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+
+            case \Flexio\Base\Structure::TYPE_NUMERIC:
+            case \Flexio\Base\Structure::TYPE_DOUBLE:
+                $info = array(
+                    'type' => 'double',
+                    'coerce' => true,
+                    'doc_values' => true,
+                    'ignore_malformed' => false,
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+
+            case \Flexio\Base\Structure::TYPE_INTEGER:
+                $info = array(
+                    'type' => 'integer',
+                    'coerce' => true,
+                    'doc_values' => true,
+                    'ignore_malformed' => false,
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+
+            case \Flexio\Base\Structure::TYPE_DATE:
+            case \Flexio\Base\Structure::TYPE_DATETIME:
+                $info = array(
+                    'type' => 'date',
+                    'doc_values' => true,
+                    'format' => 'strict_date_optional_time||epoch_millis',
+                    'ignore_malformed' => false,
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+
+            case \Flexio\Base\Structure::TYPE_BOOLEAN:
+                $info = array(
+                    'type' => 'boolean',
+                    'doc_values' => true,
+                    'index' => true,
+                    'store' => false
+                );
+                return $info;
+        }
+    }
 
     private function writeRows(string $index, string $type, array $rows) : bool
     {
@@ -301,5 +454,15 @@ class ElasticSearch implements \Flexio\Services\IConnection
     private function getBasicAuthString() : string
     {
         return base64_encode($this->username . ':' . $this->password);
+    }
+
+    private function convertToValid(string $name) : string
+    {
+        return strtolower($name);
+    }
+
+    private function getDefaultTypeName() : string
+    {
+        return 'rows';
     }
 }

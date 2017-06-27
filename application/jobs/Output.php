@@ -326,11 +326,17 @@ class Output extends \Flexio\Jobs\Base
         $params = array();
         $params['path'] = $output_info['name'];
         $params['content_type'] =  $instream->getMimeType();
+        $params['structure'] = $instream->getStructure()->enum();
 
         // TODO: for now, only allow output of tables
         if ($params['content_type'] !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
+        // create the index; note: subsequent tries to recreate the index will return false
+        // TODO: append vs drop?
+        $result = $service->createIndex($params);
+
+        // write the rows
         $service->write($params, function() use (&$streamreader) {
             return $streamreader->readRow();  // returns false upon EOF
         });
