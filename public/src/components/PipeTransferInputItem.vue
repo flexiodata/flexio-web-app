@@ -237,7 +237,7 @@
         // add wildcards for folders
         var new_items = _.map(items, (f) => {
           return _.get(f, 'is_dir', false)
-            ? { path: _.get(f, 'path') + '/*.*' }
+            ? { path: _.get(f, 'path') + '/*' }
             : _.pick(f, ['path'])
         })
 

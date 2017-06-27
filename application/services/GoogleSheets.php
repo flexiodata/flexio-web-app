@@ -329,8 +329,6 @@ class GoogleSheets implements \Flexio\Services\IConnection
 
                 $callback($row);
             }
-
-
         }
 
         return true;
@@ -581,7 +579,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
             $this->spreadsheets[] = $spreadsheet;
         }
 
-        $spreadsheet->worksheets[0]->setInfo(null, 10, 10);
+        //$spreadsheet->worksheets[0]->setInfo(null, 10, 10);
 
         return $spreadsheet;
     }
@@ -755,7 +753,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return $service;
     }
 
-    private static function stringFromColumnIndex(int $idx)
+    public static function stringFromColumnIndex(int $idx)
     {
         // takes a numeric index and converts it to a suitable
         // spreadsheet column (lowercase):
@@ -853,7 +851,7 @@ class GoogleWorksheet
     public $col_count = 0;
     public $edit_link = '';
 
-
+/*
     public function setInfo($title, $rows, $cols) // TODO: set parameter types
     {
         $title = isset($title) ? $title : $this->title;
@@ -884,7 +882,9 @@ EOL;
         $this->row_count = $rows;
         $this->col_count = $cols;
     }
+    */
 
+/*
     // $cells should be an array like this
     // [ { "row" => 1, "col" => 1, "value" => "contents" }, { ... } ]
 
@@ -941,53 +941,76 @@ EOL;
         curl_close($ch);
     }
 
-    public $insert_cols = 0;
-    public $insert_cells = [];
-    public $insert_row = 1;
-    public $current_rowcount = 0;
+*/
+
+
+    public $rows = [];
 
     public function startInsert($fields) // TODO: set parameter type
     {
-        $this->setInfo(null, 500, count($fields));
-        $this->current_rowcount = 500;
-        $this->insert_row = 1;
+        $this->ch = curl_init();
 
-        $this->insertRow($fields);
+        
+        // are they spreadsheet field names? "A", "B", "C", etc?
+        // If so, we don't want to output them again as the first row
+        $spreadsheet_field_names = true;
+        for ($i = 0; $i < count($fields); ++$i)
+        {
+            if (0 != strcasecmp($fields[$i], GoogleSheets::stringFromColumnIndex($i+1)))
+            {
+                $spreadsheet_field_names = false;
+                break;
+            }
+        }
+
+
+        if (!$spreadsheet_field_names)
+        {
+            $this->insertRow($fields);
+        }
 
         return true;
     }
 
     public function insertRow($row) // TODO: set parameter type
     {
-        $colidx = 1;
-        foreach ($row as $value)
+        if (is_array($row))
         {
-            $this->insert_cells[] = array('row' => $this->insert_row, 'col' => $colidx, 'value' => $value);
-            ++$colidx;
+            $this->rows[] = array_values($row);
         }
-
-        $this->insert_row++;
-
-        if (count($this->insert_cells) > 1000)
+         else
+        {
+            $this->rows[] = array(''.$row);
+        }
+        
+        if (count($this->rows) > 500)
             $this->flush();
     }
 
     public function flush()
     {
-        // if we need to extend the size of our spreadsheet, do so
-        if ($this->insert_row > $this->current_rowcount)
-        {
-            $this->current_rowcount += 500;
-            $this->setInfo(null, $this->current_rowcount, null);
-        }
+        $postdata = json_encode(array(
+            "values" => $this->rows
+        ));
+        $this->rows = [];
 
-        $this->setCells($this->insert_cells);
-        $this->insert_cells = [];
+
+//die("https://sheets.googleapis.com/v4/spreadsheets/".$this->spreadsheet_id."/values/".$this->title.":append?valueInputOption=RAW");
+
+        curl_setopt($this->ch, CURLOPT_URL, "https://sheets.googleapis.com/v4/spreadsheets/".$this->spreadsheet_id."/values/".$this->title.":append?valueInputOption=RAW");
+        curl_setopt($this->ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer '.$this->access_token]);
+        curl_setopt($this->ch, CURLOPT_POST, 1);
+        curl_setopt($this->ch, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+        $result = curl_exec($this->ch);
+        $http_response_code = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
     }
 
     public function finishInsert()
     {
         $this->flush();
-        $this->setInfo(null, $this->insert_row - 1, null);
+        curl_close($this->ch);
     }
 }
