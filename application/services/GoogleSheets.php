@@ -200,7 +200,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Cname%2CmodifiedTime)&q=mimeType%3D'application%2Fvnd.google-apps.spreadsheet'");
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Cname%2CmodifiedTime)&q=mimeType%3D'application%2Fvnd.google-apps.spreadsheet'+and+trashed=false");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -949,25 +949,6 @@ EOL;
     public function startInsert($fields) // TODO: set parameter type
     {
         $this->ch = curl_init();
-
-        
-        // are they spreadsheet field names? "A", "B", "C", etc?
-        // If so, we don't want to output them again as the first row
-        $spreadsheet_field_names = true;
-        for ($i = 0; $i < count($fields); ++$i)
-        {
-            if (0 != strcasecmp($fields[$i], GoogleSheets::stringFromColumnIndex($i+1)))
-            {
-                $spreadsheet_field_names = false;
-                break;
-            }
-        }
-
-
-        if (!$spreadsheet_field_names)
-        {
-            $this->insertRow($fields);
-        }
 
         return true;
     }
