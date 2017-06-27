@@ -352,6 +352,16 @@ class Output extends \Flexio\Jobs\Base
 
     private function runGoogleSheetsExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
     {
+        // do we want to output a header row with field names?
+        $job_definition = $this->getProperties();
+        if (!isset($job_definition['params']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        $params = $job_definition['params'];
+        $header_row = $params['header'] ?? true;
+        $header_row = toBoolean($header_row);
+
+
+
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
 
@@ -382,6 +392,9 @@ class Output extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
+        if ($header_row)
+            $inserter->insertRow($flds);
+        
         // transfer the data
         while (true)
         {

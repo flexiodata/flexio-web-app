@@ -1259,7 +1259,7 @@
 
 
 
-    this.args.output = ['to', 'location', 'file'];
+    this.args.output = ['to', 'location', 'file', 'header'];
     this.keywords.output = function(str)
     {
       var json =
@@ -1279,6 +1279,11 @@
       if (params.hasOwnProperty('location'))
       {
         json.params.location = params['location'].value;
+      }
+
+      if (params.hasOwnProperty('header'))
+      {
+        json.params.header = params['header'].value;
       }
 
       if (params.hasOwnProperty('file'))
@@ -1341,6 +1346,11 @@
       if (json.params.hasOwnProperty('location'))
       {
         res = this.append(res, "location: " + json.params.location);
+      }
+
+      if (json.params.hasOwnProperty('header'))
+      {
+        res = this.append(res, "header: " + json.params.header);
       }
 
       var i, items = [];
