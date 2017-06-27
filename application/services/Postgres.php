@@ -953,7 +953,7 @@ class PostgresIterator
         if ($this->row_pos >= $cnt)
         {
             // need more data
-            $this->rows = $this->getRows($this->fetch_offset, 100);
+            $this->rows = $this->getRows($this->fetch_offset, 1000);
             if ($this->rows)
             {
                 $this->rows = $this->rows->fetchAll();
