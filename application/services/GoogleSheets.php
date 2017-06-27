@@ -974,7 +974,15 @@ EOL;
 
     public function insertRow($row) // TODO: set parameter type
     {
-        $this->rows[] = array_values($row);
+        if (is_array($row))
+        {
+            $this->rows[] = array_values($row);
+        }
+         else
+        {
+            $this->rows[] = array(''.$row);
+        }
+        
         if (count($this->rows) > 500)
             $this->flush();
     }
