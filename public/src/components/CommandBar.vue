@@ -487,6 +487,7 @@
 
           // update the command bar text when the user clicks on a dropdown item
           child_el.addEventListener('mousedown', function(evt) {
+            evt.preventDefault()
             me.replaceFromDropdownItem(this)
           })
         }
@@ -557,8 +558,6 @@
             }
           }
         }
-
-        this.closeDropdown()
       },
 
       setNodeData(el, key, val) {
