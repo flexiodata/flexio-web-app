@@ -30,7 +30,7 @@ class Input extends \Flexio\Jobs\Base
         $params = $job_definition['params'];
 
 
-        if (isset($params['connection']) && $params['connection'] == 'stdin')
+        if (isset($params['connection']) && ($params['connection'] == 'stdin' || $params['connection'] == 'email'))
         {
             // stdin input job is a placeholder -- just pass on all streams
             $this->getOutput()->merge($this->getInput());
