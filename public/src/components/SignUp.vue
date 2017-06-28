@@ -166,9 +166,8 @@
     computed: {
       signin_link() {
         return {
-            name: ROUTE_SIGNIN,
-            query: this.$route.query
-
+          name: ROUTE_SIGNIN,
+          query: this.$route.query
         }
       },
       email_error() {
@@ -199,6 +198,9 @@
       has_errors() {
         return this.has_client_errors || this.has_server_errors
       }
+    },
+    mounted() {
+      analytics.track('Visited Sign Up Page')
     },
     methods: {
       getAttrs() {
