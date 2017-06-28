@@ -51,6 +51,9 @@
       has_user() {
         return this.active_user_eid.length > 0
       }
+    },
+    mounted() {
+      analytics.track('Visited Account Page')
     }
   }
 </script>

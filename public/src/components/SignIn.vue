@@ -78,6 +78,9 @@
         }
       }
     },
+    mounted() {
+      analytics.track('Visited Sign In Page')
+    },
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
