@@ -201,9 +201,10 @@
         // we use a method here since we can't use computed values in the data()
         switch (this.getConnectionType())
         {
-          case types.CONNECTION_TYPE_MYSQL:    return '3306'
-          case types.CONNECTION_TYPE_POSTGRES: return '5432'
-          case types.CONNECTION_TYPE_SFTP:     return '22'
+          case types.CONNECTION_TYPE_ELASTICSEARCH: return '9200'
+          case types.CONNECTION_TYPE_MYSQL:         return '3306'
+          case types.CONNECTION_TYPE_POSTGRES:      return '5432'
+          case types.CONNECTION_TYPE_SFTP:          return '22'
         }
         return ''
       },
