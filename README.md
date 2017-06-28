@@ -113,6 +113,7 @@ yarn run build:release
 erase dist\css\*.map
 git add dist\*.js
 git add dist\css\*.css
+git add dist\assets\*
 git add package.json
 git commit -a -m "Release build (v2.0.0)."
 git push
