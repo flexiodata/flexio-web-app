@@ -21,37 +21,12 @@
   import {} from '../utils/commandbar-lint'
   import parser from '../utils/parser'
 
-  // simple way to accomplish jQuery.data()
-  // ref: http://stackoverflow.com/questions/29222027/vanilla-alternative-to-jquery-data-function-any-native-javascript-alternati
-  window.$ = {
-    data: function(obj, key, val) {
-        if (!obj)
-        {
-          return this._data
-        }
-         else if (!key)
-        {
-          if (!(obj in this._data))
-            return {}
+  function toBase64(str) {
+    try { return btoa(unescape(encodeURIComponent(str))) } catch(e) { return e }
+  }
 
-          return this._data[obj]
-        }
-         else if (arguments.length < 3)
-        {
-          if (!(obj in this._data))
-            return undefined
-
-          return this._data[obj][key]
-        }
-         else
-        {
-          if (!(obj in this._data))
-            this._data[obj] = {}
-
-          this._data[obj][key] = val
-        }
-    },
-    _data: {}
+  function fromBase64(str) {
+    try { return decodeURIComponent(escape(atob(str))) } catch(e) { return e }
   }
 
   // helper function for creating DOM nodes to insert into the dropdown
@@ -508,7 +483,7 @@
           }
 
           // store item data with the DOM node
-          $.data(child_el, 'item', _.cloneDeep(hints.items[i]))
+          this.setNodeData(child_el, 'item', _.cloneDeep(hints.items[i]))
 
           // update the command bar text when the user clicks on a dropdown item
           child_el.addEventListener('mousedown', function(evt) {
@@ -553,7 +528,7 @@
         if (!_.isNil(el))
         {
           var val = ''
-          var item = $.data(el, 'item')
+          var item = this.getNodeData(el, 'item')
 
           if (!_.isNil(item))
           {
@@ -584,6 +559,32 @@
         }
 
         this.closeDropdown()
+      },
+
+      setNodeData(el, key, val) {
+        var str
+        if (_.isObject(val))
+          str = JSON.stringify(val)
+           else
+          str = val
+        str = toBase64(str)
+        el.setAttribute(key, str)
+      },
+
+      getNodeData(el, key) {
+        var str = el.getAttribute(key)
+        str = fromBase64(str)
+
+        try
+        {
+          return JSON.parse(str)
+        }
+        catch(e)
+        {
+          return str
+        }
+
+        return null
       },
 
       highlightPrevDropdownItem() {
