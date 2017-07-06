@@ -48,7 +48,12 @@
       v-else>
     </pipe-builder-list>
 
-    <pre ref="last-prompt" v-show="false">
+    <ui-snackbar-container
+      ref="snackbar-container"
+      position="center"
+    ></ui-snackbar-container>
+
+<pre ref="last-prompt" v-show="false">
 <div class="flex flex-row items-center justify-center">
   <i class="material-icons f2 mr2 dark-green">check_circle</i><span class="f2">Your pipe is ready to be run!</span>
 </div>
@@ -56,7 +61,8 @@
 ### You've got options...
   - Run the pipe once with the values you've chosen, but keep the placeholder variables for the next time the pipe is run.
   - Save the values you've chosen and always run the pipe with those values.
-    </pre>
+</pre>
+
   </div>
 </template>
 
@@ -317,9 +323,12 @@
 
         if (this.has_empty_tasks)
         {
-          alert('The pipe contains empty steps. Please remove the empty steps from the pipe in order to run it.')
           var first_empty_task = _.head(this.empty_tasks)
           var eid = _.get(first_empty_task, 'eid')
+
+          setTimeout(() => {
+            this.showSnackbarMessage('The pipe contains empty steps. Please remove the empty steps from the pipe in order to run it.')
+          }, 50)
 
           // make sure the empty item is in the view
           setTimeout(() => { this.scrollToTask(eid) }, 1000)
@@ -546,6 +555,12 @@
           {
             // TODO: add error handling
           }
+        })
+      },
+
+      showSnackbarMessage(msg) {
+        this.$refs['snackbar-container'].createSnackbar({
+          message: msg
         })
       }
     }
