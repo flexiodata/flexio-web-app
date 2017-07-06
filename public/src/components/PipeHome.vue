@@ -136,6 +136,14 @@
       tasks() {
         return _.get(this.pipe, 'task', [])
       },
+      empty_tasks() {
+        // even if we have tasks with `is_prompt` set to true, only show
+        // the prompting mode if we actually have variables to fill in
+        return _.filter(this.tasks, (t) => { return _.isNil(_.get(t, 'type')) })
+      },
+      has_empty_tasks() {
+        return this.empty_tasks.length > 0
+      },
       has_prompt_tasks() {
         // even if we have tasks with `is_prompt` set to true, only show
         // the prompting mode if we actually have variables to fill in
@@ -307,7 +315,16 @@
         this.prompt_tasks = [].concat(this.getPromptTasks())
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { is_prompt: true })
 
-        if (this.has_prompt_tasks && !this.is_prompting)
+        if (this.has_empty_tasks)
+        {
+          alert('The pipe contains empty steps. Please remove the empty steps from the pipe in order to run it.')
+          var first_empty_task = _.head(this.empty_tasks)
+          var eid = _.get(first_empty_task, 'eid')
+
+          // make sure the empty item is in the view
+          setTimeout(() => { this.scrollToTask(eid) }, 1000)
+        }
+         else if (this.has_prompt_tasks && !this.is_prompting)
         {
           this.is_prompting = true
 
@@ -317,7 +334,7 @@
           this.$router.replace(new_route)
 
           // make sure the active item is in the view
-          setTimeout(() => { this.scrollToTask() }, 1000)
+          setTimeout(() => { this.scrollToPromptTask() }, 1000)
           return
         }
          else
@@ -422,11 +439,22 @@
         _.set(this, variable_set_key, val)
       },
 
-      scrollToTask(idx) {
+      scrollToPromptTask(idx) {
         // default to active task
         idx = _.defaultTo(idx, this.active_prompt_idx)
 
         var task = _.get(this.prompt_tasks, '['+idx+']', null)
+        if (_.isNil(task))
+          return
+
+        this.scrollToTask(_.get(task, 'eid', null))
+      },
+
+      scrollToTask(eid) {
+        if (_.isNil(eid))
+          return
+
+        var task = _.find(this.tasks, { eid }, null)
         if (_.isNil(task))
           return
 
@@ -459,7 +487,7 @@
       goPrevPrompt() {
         var start_idx = Math.max(this.active_prompt_idx-1, 0)
         this.active_prompt_idx = _.findLastIndex(this.prompt_tasks, { is_prompt: true }, start_idx)
-        this.scrollToTask()
+        this.scrollToPromptTask()
       },
 
       goNextPrompt(task_eid) {
@@ -468,7 +496,7 @@
 
         var start_idx = Math.min(this.active_prompt_idx+1, _.size(this.prompt_tasks)-1)
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { is_prompt: true }, start_idx)
-        this.scrollToTask()
+        this.scrollToPromptTask()
       },
 
       // returns a cloned pipe with all of the variables replaced with values

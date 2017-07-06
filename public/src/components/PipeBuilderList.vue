@@ -66,7 +66,6 @@
     PROCESS_STATUS_FAILED,
     PROCESS_STATUS_COMPLETED
   } from '../constants/process'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
   import PipeBuilderItem from './PipeBuilderItem.vue'
 
