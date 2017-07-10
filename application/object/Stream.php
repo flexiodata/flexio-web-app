@@ -292,6 +292,10 @@ class Stream extends \Flexio\Object\Base
         }
     }
 
+    public function copyData(string $where, string $order, \Flexio\Object\Stream $outstream)
+    {
+    }
+
     public function getService()
     {
         $stream_info = $this->get();
