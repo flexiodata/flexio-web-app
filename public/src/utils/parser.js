@@ -1593,6 +1593,60 @@
 
 
 
+
+
+
+    this.args.render = ['url','format'];
+    this.keywords.render = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.render",
+          "params": {
+          }
+        };
+
+      var params = this.split(str, this.args.render);
+
+      if (params.hasOwnProperty('url'))
+      {
+        json.params.url = params['url'].value
+      }
+
+      if (params.hasOwnProperty('format'))
+      {
+        json.params.format = params['format'].value
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.render"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "render";
+
+      if (json.params.hasOwnProperty('url'))
+      {
+        res = this.append(res, "url: " + json.params['url']);
+      }
+
+      if (json.params.hasOwnProperty('format'))
+      {
+        res = this.append(res, "format: " + json.params['format']);
+      }
+
+      return res;
+    }
+
+
+
+
+
+
     this.args.sort = ['col'];
     this.keywords.sort = function(str)
     {
@@ -1769,10 +1823,6 @@
       {
         res = this.append(res, "case: " + op.case);
       }
-
-
-
-
 
       return res;
     };
