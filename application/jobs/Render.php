@@ -44,13 +44,14 @@ class Render extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
 
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle())->setMimeType("application/pdf");
         $this->getOutput()->addStream($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
-        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu  --print-to-pdf --no-sandbox $url && cat output.pdf' > /tmp/output.pdf";
+        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu  --print-to-pdf --no-sandbox $url && cat output.pdf'";
 
         $fp = popen($cmd, "r"); 
+
         while (!feof($fp)) 
         { 
             $buf = fread($fp, 1024); 
