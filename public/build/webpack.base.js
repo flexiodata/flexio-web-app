@@ -15,13 +15,21 @@ module.exports = {
       'vee-validate',
       'vue-scrollto',
       'keen-ui',
+      'axios',
+      'autosize',
       'filesize',
       'clipboard',
       'marked',
       'moment',
       'codemirror',
-      'axios',
-      'autosize'
+      'codemirror/mode/css/css',
+      'codemirror/mode/javascript/javascript',
+      'codemirror/mode/xml/xml',
+      'codemirror/mode/htmlmixed/htmlmixed',
+      'codemirror/mode/python/python',
+      'codemirror/addon/hint/show-hint',
+      'codemirror/addon/display/placeholder',
+      'codemirror/addon/lint/lint'
     ],
     app: options.paths.resolve('src/main.js')
   },
