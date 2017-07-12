@@ -154,6 +154,12 @@ class Task
                 'verb' => 'Renaming columns in'
             ),
             array(
+                'type' => \Flexio\Jobs\Render::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Render',
+                'name' => 'Render Document',
+                'verb' => 'Rendering'
+            ),
+            array(
                 'type' => \Flexio\Jobs\Search::MIME_TYPE,
                 'class' => '\Flexio\Jobs\Search',
                 'name' => 'Search',
