@@ -10,13 +10,18 @@ module.exports = {
       'vuex',
       'vue-resource',
       'vue-router',
+      'vue-simple-spinner',
       'vue2-grid',
       'vee-validate',
+      'vue-scrollto',
       'keen-ui',
       'filesize',
       'clipboard',
+      'marked',
       'moment',
-      'codemirror'
+      'codemirror',
+      'axios',
+      'autosize'
     ],
     app: options.paths.resolve('src/main.js')
   },
