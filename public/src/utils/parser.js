@@ -1597,6 +1597,9 @@
 
 
     this.args.render = ['url','format'];
+    this.hints.render = {
+      "format":      [ "pdf", "png" ]
+    };
     this.keywords.render = function(str)
     {
       var json =
