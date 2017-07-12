@@ -35,6 +35,7 @@ class Render extends \Flexio\Jobs\Base
         $mime_type = $instream->getMimeType();
 
         $url = $job_definition['params']['url'] ?? null;
+        $format = $job_definition['params']['format'] ?? 'pdf';
 
         if (!isset($url))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
@@ -43,12 +44,23 @@ class Render extends \Flexio\Jobs\Base
         if (is_null($dockerbin))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        if ($format == 'pdf')
+            $content_type = 'application/pdf';
+        else if ($format == 'png')
+            $content_type = 'image/png';
+        else
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle())->setMimeType("application/pdf");
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle())->setMimeType($content_type);
         $this->getOutput()->addStream($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
-        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu  --print-to-pdf --no-sandbox $url && cat output.pdf'";
+        if ($format == 'pdf')
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $url && cat output.pdf'";
+        else if ($format == 'png')
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $url && cat screenshot.png'";
+        else
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $fp = popen($cmd, "r"); 
 
