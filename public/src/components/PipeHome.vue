@@ -459,12 +459,8 @@
         this.scrollToTask(_.get(task, 'eid', null))
       },
 
-      scrollToTask(eid) {
-        if (_.isNil(eid))
-          return
-
-        var task = _.find(this.tasks, { eid }, null)
-        if (_.isNil(task))
+      scrollToTask(dom_id) {
+        if (!_.isString(dom_id))
           return
 
         var options = {
@@ -474,7 +470,7 @@
             offset: -60
         }
 
-        this.$scrollTo('#'+task.eid, options)
+        this.$scrollTo('#'+dom_id, options)
       },
 
       validatePrompt(task_eid) {

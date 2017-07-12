@@ -112,6 +112,7 @@
             easing: 'ease-out'
           }
 
+          // scroll back to the top of the pipe list when the process starts
           this.$scrollTo('#'+this.pipeEid, options)
         }
          else if (old_val == PROCESS_STATUS_RUNNING)
