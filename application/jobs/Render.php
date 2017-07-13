@@ -55,11 +55,14 @@ class Render extends \Flexio\Jobs\Base
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
-
+        $windowsize = '';
+        if (isset($width) && isset($height))
+            $windowsize = '--window-size="'.$width.'x'.$height.'"';
+        
         if ($format == 'pdf')
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $url && cat output.pdf'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $url && cat output.pdf'";
         else if ($format == 'png')
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $url && cat screenshot.png'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $url && cat screenshot.png'";
         else
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
