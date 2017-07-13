@@ -28,6 +28,8 @@ class Render extends \Flexio\Jobs\Base
         $format = $job_definition['params']['format'] ?? 'pdf';
         $width = $job_definition['params']['width'] ?? null;
         $height = $job_definition['params']['height'] ?? null;
+        $scrollbars = $job_definition['params']['scrollbars'] ?? true;
+        $scrollbars = toBoolean($scrollbars);
 
         if (!isset($url))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
@@ -59,10 +61,14 @@ class Render extends \Flexio\Jobs\Base
         if (isset($width) && isset($height))
             $windowsize = '--window-size="'.$width.'x'.$height.'"';
         
+        $hide_scrollbars = '';
+        if (!$scrollbars)
+            $hide_scrollbars = '--hide-scrollbars';
+
         if ($format == 'pdf')
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $url && cat output.pdf'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $hide_scrollbars $url && cat output.pdf'";
         else if ($format == 'png')
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $url && cat screenshot.png'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $hide_scrollbars $url && cat screenshot.png'";
         else
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
