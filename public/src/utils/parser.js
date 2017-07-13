@@ -1596,7 +1596,7 @@
 
 
 
-    this.args.render = ['url','format'];
+    this.args.render = ['url','format','width','height','scrollbars'];
     this.hints.render = {
       "format":      [ "pdf", "png" ]
     };
@@ -1614,6 +1614,37 @@
       if (params.hasOwnProperty('url'))
       {
         json.params.url = params['url'].value
+      }
+
+      if (params.hasOwnProperty('width'))
+      {
+        if (!params.hasOwnProperty('height'))
+        {
+          this.errors.push({ "code":     "missing_parameter",
+                    "message":  "Missing parameter 'height:'",
+                    "offset":   str.length-1,
+                    "length":   1 })
+        }
+
+        json.params.width = parseInt(params['width'].value)
+      }
+
+      if (params.hasOwnProperty('height'))
+      {
+        if (!params.hasOwnProperty('width'))
+        {
+          this.errors.push({ "code":     "missing_parameter",
+                    "message":  "Missing parameter 'width:'",
+                    "offset":   str.length-1,
+                    "length":   1 })
+        }
+
+        json.params.height = parseInt(params['height'].value)
+      }
+
+      if (params.hasOwnProperty('scrollbars'))
+      {
+        json.params.scrollbars = this.toBoolean(params['scrollbars'].value);
       }
 
       if (params.hasOwnProperty('format'))
@@ -1640,6 +1671,21 @@
       if (json.params.hasOwnProperty('format'))
       {
         res = this.append(res, "format: " + json.params['format']);
+      }
+
+      if (json.params.hasOwnProperty('width'))
+      {
+        res = this.append(res, "width: " + json.params['width']);
+      }
+
+      if (json.params.hasOwnProperty('height'))
+      {
+        res = this.append(res, "height: " + json.params['height']);
+      }
+
+      if (json.params.hasOwnProperty('scrollbars'))
+      {
+        res = this.append(res, "scrollbars: " + (json.params['scrollbars'] ? 'true' : 'false'));
       }
 
       return res;
