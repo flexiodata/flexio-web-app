@@ -202,9 +202,12 @@
            else
           this.is_editing = false
       },
-      onEnterKeydown() {
+      onEnterKeydown(evt) {
         if (!this.isMarkdown && !this.isMultiline)
+        {
           this.save()
+          evt.preventDefault()
+        }
       },
       onBlur() {
         if (this.is_editing && !this.show_buttons)
