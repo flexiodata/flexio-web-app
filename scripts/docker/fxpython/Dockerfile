@@ -30,14 +30,4 @@ RUN pip3 install tensorflow
 RUN pip3 install keras
 
 COPY flexio.py /usr/lib/python3.5/flexio.py
-USER nobody
-
-RUN apt-get -y install docker.io
-RUN cd /root/fxpython && docker build -t fxpython .
-
-# allow www-data to run docker containers
-RUN usermod -a -G docker www-data
-
-
-RUN service apache2 start
 
