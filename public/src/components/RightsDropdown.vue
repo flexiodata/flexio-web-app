@@ -125,8 +125,16 @@
         {
           case 'can-view':
             actions.push(types.ACTION_TYPE_READ)
+            // 07.13.2017 -- we had disallowed this for some reason
+            // when we initially implemented this, but it seems like
+            // a very useful thing to be able to call public pipes
+            // without having to have an API key, so we're turning
+            // it on for the time being
+            /*
             if (!this.isEveryone)
               actions.push(types.ACTION_TYPE_EXECUTE)
+            */
+            actions.push(types.ACTION_TYPE_EXECUTE)
             break
           case 'can-edit':
             actions = [
