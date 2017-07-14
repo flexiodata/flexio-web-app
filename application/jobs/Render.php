@@ -49,7 +49,7 @@ class Render extends \Flexio\Jobs\Base
 
         // create the output stream
         $outstream_properties = array(
-            'name' => $name,
+            'name' => "output.$format",
             'mime_type' => $content_type
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
