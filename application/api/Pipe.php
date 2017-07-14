@@ -350,7 +350,6 @@ class Pipe
                 // TODO: should we be using filename in the path and form name in the name?
                 $stream_info = array();
                 $stream_info['name'] = $name;
-                //$stream_info['name'] = $filename; // TODO: test
                 $stream_info['mime_type'] = $content_type;
 
                 $stream->set($stream_info);
