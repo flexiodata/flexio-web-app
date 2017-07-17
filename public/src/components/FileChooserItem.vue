@@ -70,8 +70,12 @@
         return false
       },
       size() {
+        // show empty string for null sizes
+        var s = _.get(this.item, 'size', null)
+        if (_.isNil(s))
+          return ''
+
         // show 1 KB as minimium size
-        var s = this.item.size
         return s && s > 0 ? filesize(Math.max(s, 1024)) : '0 KB'
       }
     },
