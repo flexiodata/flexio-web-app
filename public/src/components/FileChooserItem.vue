@@ -17,17 +17,30 @@
     <td class="css-item f7 tr">{{modified}}</td>
     <td class="css-item f7 tr">
       <span v-if="item.is_dir">&nbsp;</span>
+      <span v-else-if="!has_filesize">&nbsp;</span>
       <span v-else>{{size}}</span>
     </td>
   </tr>
 </template>
 
 <script>
+  import * as ctypes from '../constants/connection-type'
   import moment from 'moment'
   import filesize from 'filesize'
 
   export default {
-    props: ['item'],
+    props: {
+      item: {
+        type: Object,
+        required: true
+      },
+      index: {
+        type: Number
+      },
+      connection: {
+        type: Object
+      }
+    },
     data() {
       return {
         double_click: false
@@ -41,7 +54,22 @@
         var m = this.item.modified
         return m ? moment(m).format('l LT') : ''
       },
-      size(s) {
+      ctype() {
+        return _.get(this.connection, 'connection_type', '')
+      },
+      has_filesize() {
+        switch (this.ctype)
+        {
+          case ctypes.CONNECTION_TYPE_AMAZONS3:
+          case ctypes.CONNECTION_TYPE_DROPBOX:
+          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
+          case ctypes.CONNECTION_TYPE_SFTP:
+            return true
+        }
+
+        return false
+      },
+      size() {
         // show 1 KB as minimium size
         var s = this.item.size
         return s && s > 0 ? filesize(Math.max(s, 1024)) : '0 KB'
