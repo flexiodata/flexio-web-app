@@ -26,19 +26,21 @@
           :aria-label="follower_tooltip"
         >{{follower_str}} (@{{owner_username}})</span>
       </div>
-      <div class="flex-none mr2" :class="isTrash ? 'o-40 no-pointer-events' : ''">
-        <toggle-button
-          class="hint--bottom"
-          style="display: block"
-          :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
-          :checked="is_scheduled"
-          :prevent-default="true"
-          @click="toggleScheduled"
-        ></toggle-button>
+      <div class="flex-none mr2 nt3 nb3" :class="isTrash ? 'o-40 no-pointer-events' : ''">
+        <div class="pv3" @click.stop="toggleScheduled">
+          <toggle-button
+            class="hint--bottom"
+            style="display: block"
+            :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
+            :checked="is_scheduled"
+            :prevent-default="true"
+            @click.stop="toggleScheduled"
+          ></toggle-button>
+        </div>
       </div>
-      <div class="flex-none ml2">
+      <div class="flex-none ml2 nt3 nr3 nb3">
         <a
-          class="f5 b dib pointer pa1 black-60 popover-trigger"
+          class="f5 b dib pointer pa3 black-60 hover-black popover-trigger"
           ref="dropdownTrigger"
           tabindex="0"
           @click.stop
