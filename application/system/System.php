@@ -163,81 +163,38 @@ class System
 
             if ($auth_type == 'Bearer')
             {
-
                 $access_code = trim($params_raw);
 
                 $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
-                if (!$token_info)
+                if ($token_info)
                 {
-                    // unknown user
-                    \Flexio\Base\Util::header_error(401);
-                    exit(0);
-                }
-
-                $user = \Flexio\Object\User::load($token_info['user_eid']);
-                if ($user === false)
-                {
-                    // deleted user
-                    \Flexio\Base\Util::header_error(401);
-                    exit(0);
-                }
-
-                $user_info = $user->get();
-            }
-            /*
-             else if ($auth_type == 'FLEXIO1-HMAC-SHA256')
-            {
-                if (strlen($params_raw) == 0)
-                {
-                    $params = [];
-                }
-                else
-                {
-                    $params = explode(',',$params_raw);
-                    $params = array_map('trim', $params);
-                }
-
-                $credential = null;
-                $signature = null;
-                foreach ($params as $param)
-                {
-                    $eq = strpos($param, '=');
-                    if ($eq !== false)
+                    $user = \Flexio\Object\User::load($token_info['user_eid']);
+                    if ($user !== false)
                     {
-                        $param_name = substr($param, 0, $eq);
-                        $param_value = substr($param, $eq+1);
-
-                        if ($param_name == 'Credential') $credential = $param_value;
-                        if ($param_name == 'Signature')  $signature = $param_value;
+                        $user_info = $user->get();
+                        if ($user_info)
+                        {
+                            // set user info
+                            $g_store->user_first_name = $user_info['first_name'];
+                            $g_store->user_last_name = $user_info['last_name'];
+                            $g_store->user_name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+                            $g_store->user_email = $user_info['email'];
+                            $g_store->user_eid = $user_info['eid'];
+                            $g_store->lang = $user_info['locale_language'];
+                            $g_store->thousands_separator = $user_info['locale_thousands'];
+                            $g_store->decimal_separator = $user_info['locale_decimal'];
+                            $g_store->date_format = $user_info['locale_dateformat'];
+                            $g_store->timezone = $user_info['timezone'];
+                        }
                     }
                 }
             }
-            */
              else
             {
                 // unknown algorith/auth type
-                \Flexio\Base\Util::header_error(404);
+                \Flexio\Base\Util::header_error(400); // return 400 Bad Request
                 exit(0);
             }
-
-            if (!$user_info)
-            {
-                // unknown algorith/auth type
-                \Flexio\Base\Util::header_error(404);
-                exit(0);
-            }
-
-            // set user info
-            $g_store->user_first_name = $user_info['first_name'];
-            $g_store->user_last_name = $user_info['last_name'];
-            $g_store->user_name = $user_info['first_name'] . ' ' . $user_info['last_name'];
-            $g_store->user_email = $user_info['email'];
-            $g_store->user_eid = $user_info['eid'];
-            $g_store->lang = $user_info['locale_language'];
-            $g_store->thousands_separator = $user_info['locale_thousands'];
-            $g_store->decimal_separator = $user_info['locale_decimal'];
-            $g_store->date_format = $user_info['locale_dateformat'];
-            $g_store->timezone = $user_info['timezone'];
         }
          else
         {
