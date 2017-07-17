@@ -15,6 +15,7 @@
           v-for="(item, index) in items"
           :item="item"
           :index="index"
+          :connection="connection"
           @click="itemClick"
           @ctrl-click="itemCtrlClick"
           @shift-click="itemShiftClick"
