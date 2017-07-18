@@ -64,7 +64,6 @@ class Process
 
         // check rights
         $pipe = false;
-        $pipe_owner = false;
         if ($pipe_identifier !== false)
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -75,16 +74,10 @@ class Process
             // downstream are expecting
             $params['parent_eid'] = $pipe->getEid();
 
-            // TODO: rights check should be for "execute", not read/write
-
             // we're getting the logic from the pipe, and we're associating the process with
             // the pipe, so we should have both read/write access to the pipe;
-            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_EXECUTE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-            $pipe_owner = $pipe->getOwner();
         }
 
         // STEP 1: create a new process job with the default task
@@ -96,8 +89,8 @@ class Process
         {
             // if the process is created from a pipe, it runs with pipe owner privileges
             // and inherits the rights from the pipe
-            $process->setOwner($pipe_owner);
-            $process->setCreatedBy($pipe_owner);
+            $process->setOwner($pipe->getOwner());
+            $process->setCreatedBy($pipe->getOwner());
             $process->setRights($pipe->getRights());
         }
          else
