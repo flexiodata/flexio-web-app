@@ -94,7 +94,7 @@ class MultipartParser
                 if ($buf_len > 200) // 200 is an arbitrary overlap value
                 {
                     // send data to the callback minus overlap
-                    if (strlen($current_filename) > 0)
+                    if ($current_filename !== false && strlen($current_filename) > 0)
                     {
                         $callback(self::TYPE_FILE_DATA, $current_name, substr($buf, 0, $buf_len - 200), $current_filename, $current_mimetype);
                     }
@@ -106,7 +106,7 @@ class MultipartParser
                     if ($eof)
                     {
                         // end reached -- send rest
-                        if (strlen($current_filename) > 0)
+                        if ($current_filename !== false && strlen($current_filename) > 0)
                         {
                             $callback(self::TYPE_FILE_DATA, $current_name, $buf, $current_filename, $current_mimetype);
                             $buf = '';
