@@ -326,9 +326,11 @@
           var first_empty_task = _.head(this.empty_tasks)
           var eid = _.get(first_empty_task, 'eid')
 
-          setTimeout(() => {
-            this.showSnackbarMessage('The pipe contains empty steps. Please remove the empty steps from the pipe in order to run it.')
-          }, 50)
+          this.showSnackbarMessage({
+            message: 'The pipe contains empty steps. Please remove the empty steps from the pipe in order to run it.',
+            action: 'Remove',
+            onActionClick: this.removeEmptySteps
+          })
 
           // make sure the empty item is in the view
           setTimeout(() => { this.scrollToTask(eid) }, 1000)
@@ -533,6 +535,22 @@
         return run_pipe
       },
 
+      removeEmptySteps() {
+        var task = _.differenceWith(this.tasks, this.empty_tasks, _.isEqual)
+        var attrs = { task }
+
+        this.$store.dispatch('updatePipe', { eid: this.eid, attrs }).then(response => {
+          if (response.ok)
+          {
+            this.showSnackbarMessage({
+              message: 'The empty steps have been removed from the pipe. Would you like to run the pipe now?',
+              action: 'Run',
+              onActionClick: this.runPipe
+            })
+          }
+        })
+      },
+
       runOnceWithPromptValues() {
         var run_pipe = this.getRunPipe()
         this.runPipe(_.pick(run_pipe, 'task'))
@@ -554,10 +572,13 @@
         })
       },
 
-      showSnackbarMessage(msg) {
-        this.$refs['snackbar-container'].createSnackbar({
-          message: msg
-        })
+      showSnackbarMessage(options) {
+        setTimeout(() => {
+          this.$refs['snackbar-container'].createSnackbar(_.assign({
+            actionColor: 'primary',
+            duration: 7500
+          }, options))
+        }, 50)
       }
     }
   }
