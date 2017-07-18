@@ -303,22 +303,14 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // TODO: re-enable rights checking with execute check
-        //if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_EXECUTE) === false)
-        //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-
-        // TODO: check with Aaron if this is right
-        // for public execution of a pipe, process will be owned by pipe owner
-        if ($requesting_user_eid == 'public')
-            $requesting_user_eid = $pipe->getOwner();
-
+        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_EXECUTE) === false)
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // STEP 1: create a new process
         $process_properties = array();
         $process = \Flexio\Object\Process::create($process_properties);
-        $process->setOwner($requesting_user_eid);
-        $process->setCreatedBy($requesting_user_eid);
+        $process->setOwner($pipe->getOwner());
+        $process->setCreatedBy($pipe->getOwner());
         $process->setRights($pipe->getRights());
         $pipe->addProcess($process);
 
