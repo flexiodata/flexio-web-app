@@ -314,7 +314,8 @@ class MySql implements \Flexio\Services\IConnection
         return $this->dbresult->fetch_assoc();
     }
 
-    private static function getFieldInfo(array $info, string &$name, string &$type, int &$width, int &$scale)
+    // NOTE: don't add parameter types as these parameters are used for output
+    private static function getFieldInfo($info, &$name, &$type, &$width, &$scale)
     {
         // MySQL types (from the create statement documentation)
         // note: describe table returns these in lowercase; when
