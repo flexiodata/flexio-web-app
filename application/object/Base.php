@@ -270,6 +270,11 @@ class Base implements IObject
         // for the owner, this needs to be removed; right now, the UI allows
         // the owner to do everything, so this is an optimization
 
+        // TODO: when other access types are added, we'll need to add
+        // a parameter to the function to qualify the access code; for
+        // now, all access types are either eids or the public access
+        // type category
+
         if ($access_code === $this->getOwner())
             return true;
 
@@ -283,18 +288,15 @@ class Base implements IObject
         {
             $access_type = $r['access_type'];
 
-            // merge any allowed actions for matching eid access codes;
-            // TODO: when other access types are added, we'll need to add
-            // a parameter to the function to qualify the access code; for
-            // now, all access types are either eids or the public access
-            // type category
+            // add any rights specific to this access code
             if ($access_type === \Model::ACCESS_CODE_TYPE_EID && $access_code === $r['access_code'])
             {
                 $actions_to_add_to_allowed = array_flip($r['actions']);
                 $allowed_actions = array_merge($allowed_actions, $actions_to_add_to_allowed);
             }
 
-            if ($access_type === \Model::ACCESS_CODE_TYPE_CATEGORY && $access_code === \Flexio\Object\User::MEMBER_PUBLIC)
+            // add any public rights regardless of the access code
+            if ($access_type === \Model::ACCESS_CODE_TYPE_CATEGORY && \Flexio\Object\User::MEMBER_PUBLIC === $r['access_code'])
             {
                 $actions_to_add_to_allowed = array_flip($r['actions']);
                 $allowed_actions = array_merge($allowed_actions, $actions_to_add_to_allowed);
