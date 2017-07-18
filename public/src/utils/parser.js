@@ -1045,8 +1045,6 @@
               str += " => " + json.params.items[i].name;
             }
           }
-
-
         }
 
         res = this.append(res, "file: " + str);
@@ -1596,7 +1594,7 @@
 
 
 
-    this.args.render = ['url','format','width','height','scrollbars'];
+    this.args.render = ['file','format','width','height','scrollbars'];
     this.hints.render = {
       "format":      [ "pdf", "png" ]
     };
@@ -1611,10 +1609,40 @@
 
       var params = this.split(str, this.args.render);
 
-      if (params.hasOwnProperty('url'))
+      if (params.hasOwnProperty('file'))
       {
-        json.params.url = params['url'].value
+        var arr = this.parseList(params['file'].value);
+
+        json.params.items = [];
+
+        for (var i = 0; i < arr.length; ++i)
+        {
+          if (arr[i] instanceof Object)
+          {
+            if (arr[i].hasOwnProperty('key') && arr[i].hasOwnProperty('value'))
+            {
+              // arrow syntax
+              json.params.items.push({"name": arr[i].value, "path": arr[i].key});
+            }
+            else if (arr[i].hasOwnProperty('path'))
+            {
+              var name, path = arr[i].path;
+              if (arr[i].hasOwnProperty('name'))
+                name = arr[i].name;
+                 else
+                name = path;
+              json.params.items.push({"name": name, "path": path});
+            }
+
+          }
+           else
+          {
+            // simple string
+            json.params.items.push({"path": arr[i]});
+          }
+        }
       }
+
 
       if (params.hasOwnProperty('width'))
       {
@@ -1663,10 +1691,32 @@
 
       var res = "render";
 
-      if (json.params.hasOwnProperty('url'))
+      var i, items = [];
+      if (json.params.hasOwnProperty('items') && Array.isArray(json.params.items))
       {
-        res = this.append(res, "url: " + json.params['url']);
+
+        var str = '';
+        for (i = 0; i < json.params.items.length; ++i)
+        {
+          if (str.length > 0)
+          {
+            str += ', ';
+          }
+
+          if (json.params.items[i].hasOwnProperty('path'))
+          {
+            str += json.params.items[i].path;
+
+            if (json.params.items[i].hasOwnProperty('name') && json.params.items[i].name != json.params.items[i].path)
+            {
+              str += " => " + json.params.items[i].name;
+            }
+          }
+        }
+
+        res = this.append(res, "file: " + str);
       }
+
 
       if (json.params.hasOwnProperty('format'))
       {

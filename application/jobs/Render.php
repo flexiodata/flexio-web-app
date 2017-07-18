@@ -24,15 +24,12 @@ class Render extends \Flexio\Jobs\Base
         $input = $this->getInput()->getStreams();
 
         $job_definition = $this->getProperties();
-        $url = $job_definition['params']['url'] ?? null;
+        $items = $job_definition['params']['items'] ?? null;
         $format = $job_definition['params']['format'] ?? 'pdf';
         $width = $job_definition['params']['width'] ?? null;
         $height = $job_definition['params']['height'] ?? null;
         $scrollbars = $job_definition['params']['scrollbars'] ?? true;
         $scrollbars = toBoolean($scrollbars);
-
-        if (!isset($url))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         if ($format == 'pdf')
             $content_type = 'application/pdf';
@@ -46,40 +43,47 @@ class Render extends \Flexio\Jobs\Base
         if (is_null($dockerbin))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        $counter = 0;
+        foreach ($items as $item)
+        {
+            $counter++;
+            $output_name = $item['name'] ?? "output-$counter.$format";
+            $url = $item['path'] ?? 'about:blank';
 
-        // create the output stream
-        $outstream_properties = array(
-            'name' => "output.$format",
-            'mime_type' => $content_type
-        );
-        $outstream = \Flexio\Object\Stream::create($outstream_properties);
-        $this->getOutput()->addStream($outstream);
+            // create the output stream
+            $outstream_properties = array(
+                'name' => $output_name,
+                'mime_type' => $content_type
+            );
+            $outstream = \Flexio\Object\Stream::create($outstream_properties);
+            $this->getOutput()->addStream($outstream);
 
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
-        $windowsize = '';
-        if (isset($width) && isset($height))
-            $windowsize = '--window-size="'.$width.'x'.$height.'"';
-        
-        $hide_scrollbars = '';
-        if (!$scrollbars)
-            $hide_scrollbars = '--hide-scrollbars';
+            $windowsize = '';
+            if (isset($width) && isset($height))
+                $windowsize = '--window-size="'.$width.'x'.$height.'"';
+            
+            $hide_scrollbars = '';
+            if (!$scrollbars)
+                $hide_scrollbars = '--hide-scrollbars';
 
-        if ($format == 'pdf')
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $hide_scrollbars $url && cat output.pdf'";
-        else if ($format == 'png')
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $hide_scrollbars $url && cat screenshot.png'";
-        else
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if ($format == 'pdf')
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $hide_scrollbars $url && cat output.pdf'";
+            else if ($format == 'png')
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $hide_scrollbars $url && cat screenshot.png'";
+            else
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $fp = popen($cmd, "r"); 
+            $fp = popen($cmd, "r"); 
 
-        while (!feof($fp)) 
-        { 
-            $buf = fread($fp, 1024); 
-            $streamwriter->write($buf);
-        } 
-        fclose($fp); 
+            while (!feof($fp)) 
+            { 
+                $buf = fread($fp, 1024); 
+                $streamwriter->write($buf);
+            } 
+            fclose($fp);
+        }
     }
 
     // job definition info
