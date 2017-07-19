@@ -172,6 +172,12 @@ class Task
                 'verb' => 'Selecting columns in'
             ),
             array(
+                'type' => \Flexio\Jobs\SetType::MIME_TYPE,
+                'class' => '\Flexio\Jobs\SetType',
+                'name' => 'Change type',
+                'verb' => 'Processing'
+            ),
+            array(
                 'type' => \Flexio\Jobs\Sleep::MIME_TYPE,
                 'class' => '\Flexio\Jobs\Sleep',
                 'name' => 'Sleep',

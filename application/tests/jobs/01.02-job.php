@@ -155,21 +155,27 @@ class Test
         TestCheck::assertBoolean('A.22', '\Flexio\Jobs\Select schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $schema = \Flexio\Jobs\SetType::SCHEMA;
+        $actual = \Flexio\Base\ValidatorSchema::checkSchema($schema)->hasErrors();
+        $expected = false;
+        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\SetType schema format',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $schema = \Flexio\Jobs\Sleep::SCHEMA;
         $actual = \Flexio\Base\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\Sleep schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.24', '\Flexio\Jobs\Sleep schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\Sort::SCHEMA;
         $actual = \Flexio\Base\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.24', '\Flexio\Jobs\Sort schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.25', '\Flexio\Jobs\Sort schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\Transform::SCHEMA;
         $actual = \Flexio\Base\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.25', '\Flexio\Jobs\Transform schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.26', '\Flexio\Jobs\Transform schema format',  $actual, $expected, $results);
     }
 }

@@ -177,24 +177,31 @@ class Test
         TestCheck::assertBoolean('A.22', '\Flexio\Jobs\Select definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $definition = json_decode(\Flexio\Jobs\SetType::TEMPLATE,true);
+        $mime_type = $definition['type'];
+        $actual = $mime_type == \Flexio\Jobs\SetType::MIME_TYPE && $mime_type == 'flexio.settype';
+        $expected = true;
+        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\SetType definition type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Sleep::TEMPLATE,true);
         $mime_type = $definition['type'];
         $actual = $mime_type == \Flexio\Jobs\Sleep::MIME_TYPE && $mime_type == 'flexio.sleep';
         $expected = true;
-        TestCheck::assertBoolean('A.23', '\Flexio\Jobs\Sleep definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.24', '\Flexio\Jobs\Sleep definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Sort::TEMPLATE,true);
         $mime_type = $definition['type'];
         $actual = $mime_type == \Flexio\Jobs\Sort::MIME_TYPE && $mime_type == 'flexio.sort';
         $expected = true;
-        TestCheck::assertBoolean('A.24', '\Flexio\Jobs\Sort definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.25', '\Flexio\Jobs\Sort definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Transform::TEMPLATE,true);
         $mime_type = $definition['type'];
         $actual = $mime_type == \Flexio\Jobs\Transform::MIME_TYPE && $mime_type == 'flexio.transform';
         $expected = true;
-        TestCheck::assertBoolean('A.25', '\Flexio\Jobs\Transform definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.26', '\Flexio\Jobs\Transform definition type constant',  $actual, $expected, $results);
     }
 }
