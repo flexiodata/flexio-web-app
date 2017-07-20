@@ -61,6 +61,7 @@ class SetType extends \Flexio\Jobs\Base
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->addStream($outstream);
 
+        $columns = $instream->getStructure()->getNames($columns); // get columns satisfying wildcards
         $column_keys = array_flip($columns);
         $output_structure = \Flexio\Base\Structure::create();
         $changed_columns = array();

@@ -91,5 +91,29 @@ class Test
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = [[1,1],[2,2],[3,4]];
         TestCheck::assertString('A.3', 'SetType Job; check basic functionality',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = [
+            "columns" => ["field2"],
+            "type" => "numeric",
+            "width" => 10,
+            "decimals" => 0
+        ];
+        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $expected = [["1","1"],["2","2"],["3","4"]];
+        TestCheck::assertString('A.4', 'SetType Job; check basic functionality',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = [
+            "columns" => ["field[0-9]*"],
+            "type" => "numeric",
+            "width" => 10,
+            "decimals" => 3
+        ];
+        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $expected = [["1.000","1.200"],["2.000","2.300"],["3.000","3.600"]];
+        TestCheck::assertString('A.5', 'SetType Job; check basic functionality',  $actual, $expected, $results);
     }
 }
