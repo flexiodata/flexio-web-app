@@ -22,11 +22,11 @@
     "tachyons": "^4.6.1",
     "vee-validate": "2.0.0-beta.18",
     "vue": "^2.3.0",
+    "vue-grid2": "^0.2.8",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.1.0",
     "vue-scrollto": "^2.6.7",
     "vue-simple-spinner": "^1.2.1",
-    "vue2-grid": "^0.2.3",
     "vuex": "^2.1.1"
   },
   "devDependencies": {

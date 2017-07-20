@@ -11,7 +11,7 @@ module.exports = {
       'vue-resource',
       'vue-router',
       'vue-simple-spinner',
-      'vue2-grid',
+      'vue-grid2',
       'vee-validate',
       'vue-scrollto',
       'keen-ui',

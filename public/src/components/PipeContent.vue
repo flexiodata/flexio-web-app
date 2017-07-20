@@ -31,7 +31,7 @@
 <script>
   import * as mt from '../constants/mimetype'
   import { API_ROOT } from '../api/resources'
-  import { Grid } from 'vue2-grid'
+  import { Grid } from 'vue-grid2'
   import Spinner from 'vue-simple-spinner'
   import StreamText from './StreamText.vue'
 
