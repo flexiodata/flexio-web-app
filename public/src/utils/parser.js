@@ -740,7 +740,7 @@
         res = this.append(res, "type: " + json.params.type);
       }
 
-      if (json.params.hasOwnProperty('decimals') && parseInt(json.params.decimals) > 0)
+      if (json.params.hasOwnProperty('decimals') && parseInt(json.params.decimals) >= 0)
       {
         res = this.append(res, "decimal: " + parseInt(json.params.decimals));
       }
@@ -1335,7 +1335,7 @@
           res = this.append(res, "to: stdout")
           return res
       }
-      
+
       if (json.params.hasOwnProperty('connection'))
       {
         res = this.append(res, "to: " + json.params.connection);
@@ -1590,6 +1590,96 @@
 
 
 
+
+////////////////////////////////////////
+
+
+    this.args.settype = [ 'col', 'type', 'decimal' ];
+    this.hints.settype = {
+      "type":        [ 'text', 'numeric', 'integer', 'date', 'datetime', 'boolean' ]
+    };
+    this.keywords.settype = function(str)
+    {
+      var json =
+        {
+            "type": "flexio.settype",
+            "params": { }
+        }
+
+      var params = this.split(str, this.args.settype);
+
+      if (params.hasOwnProperty('col'))
+      {
+        var columns = this.parseColumns(params['col'].value)
+        json.params.columns = columns;
+      }
+       else
+      {
+          this.errors.push({ "code":     "missing_parameter",
+                             "message":  "Missing parameter 'col:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
+      }
+
+      if (params.hasOwnProperty('type'))
+      {
+        json.params.type = params['type'].value;
+
+        if (!this.contains(this.hints.settype['type'], json.params.type))
+        {
+          this.errors.push({ "code":     "invalid_value",
+                             "message":  "Invalid value: '" + json.params.type +"'",
+                             "offset":   params['type'].offset,
+                             "length":   params['type'].length })
+        }
+      }
+
+      if (params.hasOwnProperty('decimal'))
+      {
+        json.params.decimals = parseInt(params['decimal'].value);
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.settype"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = 'settype';
+
+      if (json.params.hasOwnProperty('columns'))
+      {
+        var str = '';
+        for (var i = 0; i < json.params.columns.length; ++i)
+        {
+          if (i > 0)
+          {
+            str += ', ';
+          }
+          str += this.quoteColumnIfNecessary(json.params.columns[i]);
+        }
+
+        res = this.append(res, "col: " + str);
+      }
+
+      if (json.params.hasOwnProperty('type'))
+      {
+        res = this.append(res, "type: " + json.params.type);
+      }
+
+      if (json.params.hasOwnProperty('decimals') && parseInt(json.params.decimals) >= 0)
+      {
+        res = this.append(res, "decimal: " + parseInt(json.params.decimals));
+      }
+
+      return res;
+    }
+
+
+////////////////
 
 
 
@@ -1999,6 +2089,7 @@
         'limit',
         'select',
         'rename',
+        'settype',
         'sort',
         'filter',
         'calc',
