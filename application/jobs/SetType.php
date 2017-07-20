@@ -112,7 +112,6 @@ class SetType extends \Flexio\Jobs\Base
             {
                 if ($c['name'] === $name)
                 {
-
                     $value = self::convertValue($value, $c);
                     break;
                 }
@@ -127,6 +126,8 @@ class SetType extends \Flexio\Jobs\Base
     private static function convertValue($value, $changed_column)
     {
         $new_type = $changed_column['type'];
+        $new_scale = $changed_column['scale'];
+
         switch ($new_type)
         {
             default:
@@ -135,14 +136,18 @@ class SetType extends \Flexio\Jobs\Base
             case 'text':
             case 'character':
             case 'widecharacter':
-                return (string)$value;
+                return strval($value);
 
             case 'numeric':
             case 'double':
-                return (float)$value;
+                $value = floatval($value);
+                $value = round($value, $new_scale);
+                return floatval($value);
 
             case 'integer':
-                return (int)$value;
+                $value = floatval($value);
+                $value = round($value, 0);
+                return intval($value);
         }
     }
 
