@@ -149,6 +149,28 @@ class SetType extends \Flexio\Jobs\Base
                 $value = floatval($value);
                 $value = round($value, 0);
                 return intval($value);
+
+            case 'date':
+                $value = strval($value);
+                $value = strtotime($value);
+                if ($value === false)
+                    return null;
+                return date('Y-m-d', $value);
+
+            case 'datetime':
+                $value = strval($value);
+                $value = strtotime($value);
+                if ($value === false)
+                    return null;
+                return date('Y-m-d H:i:s.u', $value);
+
+            case 'boolean':
+                $value = strval($value);
+                $value = strtolower(trim($value));
+                if ($value === 'true' || $value === 't' || (is_numeric($value) && intval($value) != 0))
+                    return true;
+                     else
+                    return false;
         }
     }
 
