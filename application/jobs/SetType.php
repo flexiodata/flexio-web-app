@@ -45,40 +45,43 @@ class SetType extends \Flexio\Jobs\Base
     {
         // get the job properties
         $job_definition = $this->getProperties();
-        $name = $job_definition['params']['name'];
+        $columns = $job_definition['params']['columns'];
         $type = $job_definition['params']['type'] ?? 'character';
         $width = $job_definition['params']['width'] ?? null;
         $scale = $job_definition['params']['decimals'] ?? null;
-        $expression = $job_definition['params']['expression'] ?? null;
 
+        if (!isset($columns) || !is_array($columns))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         if (isset($width) && !is_integer($width))
             $width = (int)$width;
         if (isset($scale) && !is_integer($scale))
             $scale = (int)$scale;
 
-        // make sure we have a valid expression
-        $expreval = new \Flexio\Base\ExprEvaluate;
-        $input_structure = $instream->getStructure()->enum();
-        $success = $expreval->prepare($expression, $input_structure);
-
-        if ($success === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // create the output
+        // create the new output structure
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $this->getOutput()->addStream($outstream);
 
-        $output_structure = $outstream->getStructure();
-        $added_field = $output_structure->push(array(
-            'name' => $name,
-            'type' => $type,
-            'width' => $width,
-            'scale' => $scale
-        ));
-        if ($added_field === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        $column_keys = array_flip($columns);
+        $output_structure = \Flexio\Base\Structure::create();
+        $changed_columns = array();
 
-        $name = $added_field['name']; // get the name of the field that was added (in case it was adjusted for duplicate, for example)
+        $input_structure_enum = $instream->getStructure()->enum();
+        foreach ($input_structure_enum as $i)
+        {
+            $output_column = $i;
+            if (array_key_exists($i['name'], $column_keys) === true)
+            {
+                $output_column['type'] = $type;
+                if (isset($width))
+                    $output_column['width'] = $width;
+                if (isset($scale))
+                    $output_column['scale'] = $scale;
+
+                $changed_columns[] = $output_column;
+            }
+
+            $output_structure->push($output_column);
+        }
         $outstream->setStructure($output_structure);
 
         // write to the output
@@ -91,14 +94,56 @@ class SetType extends \Flexio\Jobs\Base
             if ($row === false)
                 break;
 
-            $retval = null;
-            $success = $expreval->execute($row, $retval);
-            $row[$name] = $retval;
+            $row = self::convertRowValues($row, $changed_columns);
             $streamwriter->write($row);
         }
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+    }
+
+    private static function convertRowValues(array $row, array $changed_columns) : array
+    {
+        $output_row = array();
+
+        foreach ($row as $name => $value)
+        {
+            foreach ($changed_columns as $c)
+            {
+                if ($c['name'] === $name)
+                {
+
+                    $value = self::convertValue($value, $c);
+                    break;
+                }
+            }
+
+            $output_row[$name] = $value;
+        }
+
+        return $output_row;
+    }
+
+    private static function convertValue($value, $changed_column)
+    {
+        $new_type = $changed_column['type'];
+        switch ($new_type)
+        {
+            default:
+                return $value;
+
+            case 'text':
+            case 'character':
+            case 'widecharacter':
+                return (string)$value;
+
+            case 'numeric':
+            case 'double':
+                return (float)$value;
+
+            case 'integer':
+                return (int)$value;
+        }
     }
 
 

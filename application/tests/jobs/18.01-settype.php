@@ -45,8 +45,8 @@ class Test
                 "params": {
                     "columns": "${columns}",
                     "type": "${type}",
-                    "scale": "${scale}",
-                    "decimal": "{$decimal}"
+                    "width": "${width}",
+                    "decimals": "${decimals}"
                 }
             }
         ]
@@ -60,24 +60,24 @@ class Test
         $params = [
             "columns" => ["field1"],
             "type" => "numeric",
-            "scale" => 10,
-            "decimal" => 2
+            "width" => 10,
+            "decimals" => 2
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
-        $expected = [["1.00","1.2"],["2.00","2.3"],["3.00","3.4"]];
+        $expected = [["1.00","1.2"],["2.00","2.3"],["3.00","3.6"]];
         TestCheck::assertString('A.1', 'SetType Job; check basic functionality',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = [
             "columns" => ["field2"],
             "type" => "numeric",
-            "scale" => 10,
-            "decimal" => 0
+            "width" => 10,
+            "decimals" => 0
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
-        $expected = [["1","1"],["2","2"],["3","3"]];
+        $expected = [["1","1"],["2","2"],["3","4"]];
         TestCheck::assertString('A.2', 'SetType Job; check basic functionality',  $actual, $expected, $results);
     }
 }
