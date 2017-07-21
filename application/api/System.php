@@ -157,7 +157,33 @@ class System
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return \Flexio\System\System::getModel()->process->getProcessRunStats();
+        $stats = \Flexio\System\System::getModel()->process->getProcessRunStats();
+
+        $result = array();
+        foreach ($stats as $s)
+        {
+            $object = \Flexio\Object\Store::load($s['parent_eid']);
+            if ($object === false)
+                continue;
+
+            $parent_info = $object->get();
+
+            $item = array();
+            $item['parent'] = array();
+            $item['parent']['eid'] = $parent_info['eid'];
+            $item['parent']['eid_type'] = $parent_info['eid_type'];
+            $item['parent']['name'] = $parent_info['name'];
+            $item['parent']['description'] = $parent_info['description'];
+            $item['process_status'] = $s['process_status'];
+            $item['process_created'] = $s['created'];
+            $item['total_count'] = $s['total_count'];
+            $item['total_time'] = $s['total_time'];
+            $item['average_time'] = $s['average_time'];
+
+            $result[] = $item;
+        }
+
+        return $result;
     }
 
     private static function validateObject(string $key, string $value, string $type, string $requesting_user_eid = null) : array
