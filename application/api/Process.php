@@ -242,6 +242,29 @@ class Process
         return $process_info;
     }
 
+    public static function listall(array $params, string $requesting_user_eid = null) : array
+    {
+        // load the object
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // get the processes
+        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $processes = $user->getProcesses($filter);
+
+        $result = array();
+        foreach ($processes as $p)
+        {
+            if ($p->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+                continue;
+
+            $result[] = $p->get();
+        }
+
+        return $result;
+    }
+
     public static function run(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();

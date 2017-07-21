@@ -169,6 +169,10 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
+    public function getProcesses() : array
+    {
+    }
+
     public function getObjects(array $filter = null) : array
     {
         // filter can be contain combinations of the following:

@@ -263,8 +263,8 @@ class Api
             case 'POS /logout'                         : return '\Flexio\Api\System::logout';
 
             // system (adminstrator)
-            case 'GET /system/statistics/processes'    : return '\Flexio\Api\System::getProcessTaskStatistics';
-            case 'GET /system/statistics/tasks'        : return '\Flexio\Api\System::getProcessTaskStatistics';
+            case 'GET /system/statistics/processes'    : return '\Flexio\Api\System::getProcessRunStats';
+            case 'GET /system/statistics/tasks'        : return '\Flexio\Api\System::getProcessTaskStats';
             case 'GET /system/configuration'           : return '\Flexio\Api\System::getConfiguration'; // displays config info
 
             // search
@@ -342,8 +342,9 @@ class Api
 
             // processes
             case 'POS /processes'                      : return '\Flexio\Api\Process::create';
-            case 'GET /processes/:eid'                 : return '\Flexio\Api\Process::get';
+            case 'GET /processes'                      : return '\Flexio\Api\Process::listall';
             case 'POS /processes/:eid'                 : return '\Flexio\Api\Process::set';
+            case 'GET /processes/:eid'                 : return '\Flexio\Api\Process::get';
             case 'POS /processes/:eid/input'           : return '\Flexio\Api\Process::addInput';
             case 'GET /processes/:eid/input'           : return '\Flexio\Api\Process::getInput';
             case 'GET /processes/:eid/output'          : return '\Flexio\Api\Process::getOutput';

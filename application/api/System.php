@@ -134,7 +134,7 @@ class System
         return self::checkServerSettings();
     }
 
-    public static function getProcessTaskStatistics(array $params, string $requesting_user_eid = null) : array
+    public static function getProcessTaskStats(array $params, string $requesting_user_eid = null) : array
     {
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
@@ -147,7 +147,7 @@ class System
         return \Flexio\System\System::getModel()->process->getProcessTaskStats();
     }
 
-    public static function getProcessRunStatistics(array $params, string $requesting_user_eid = null) : array
+    public static function getProcessRunStats(array $params, string $requesting_user_eid = null) : array
     {
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
