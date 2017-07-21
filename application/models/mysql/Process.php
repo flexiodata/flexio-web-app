@@ -293,7 +293,7 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function getProcessStatistics() : array
+    public function getProcessTaskStats() : array
     {
         $db = $this->getDatabase();
         try

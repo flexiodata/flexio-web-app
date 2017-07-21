@@ -263,6 +263,8 @@ class Api
             case 'POS /logout'                         : return '\Flexio\Api\System::logout';
 
             // system (adminstrator)
+            case 'GET /system/statistics/processes'    : return '\Flexio\Api\System::getProcessTaskStatistics';
+            case 'GET /system/statistics/tasks'        : return '\Flexio\Api\System::getProcessTaskStatistics';
             case 'GET /system/configuration'           : return '\Flexio\Api\System::getConfiguration'; // displays config info
 
             // search
@@ -347,7 +349,6 @@ class Api
             case 'GET /processes/:eid/output'          : return '\Flexio\Api\Process::getOutput';
             case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\Process::getTaskInputInfo';
             case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\Process::getTaskOutputInfo';
-            case 'GET /processes/statistics'           : return '\Flexio\Api\System::getProcessStatistics';
 
             // DEPRECATED: another way to do this that doesn't involve a high-level url endpoint verb?
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
