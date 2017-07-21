@@ -293,6 +293,12 @@ class Process extends ModelBase
         return $output;
     }
 
+    public function getProcessRunStats() : array
+    {
+        // TODO: implement
+        return array();
+    }
+
     public function getProcessTaskStats() : array
     {
         $db = $this->getDatabase();
@@ -312,7 +318,7 @@ class Process extends ModelBase
                                          sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
                                          count(*) as total_count
                                    from tbl_process tpr
-                                   where tpr.parent_eid != tpr.eid
+                                   where tpr.process_eid != tpr.eid
                                    group by task_type
                                    order by total_count desc, task_type
                                  ");

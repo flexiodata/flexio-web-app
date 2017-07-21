@@ -157,7 +157,7 @@ class System
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return \Flexio\System\System::getModel()->process->getProcessStatistics();
+        return \Flexio\System\System::getModel()->process->getProcessRunStats();
     }
 
     private static function validateObject(string $key, string $value, string $type, string $requesting_user_eid = null) : array
