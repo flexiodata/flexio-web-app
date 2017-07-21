@@ -171,6 +171,24 @@ class User extends \Flexio\Object\Base
 
     public function getProcesses() : array
     {
+        $eid = $this->getEid();
+
+        // get the processes for the user that are either owned (process may have been created by somebody else) or created by the user
+        $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_CREATED.")->(".\Model::TYPE_PROCESS.")";
+        $processes = \Flexio\Object\Search::exec($search_path);
+
+        $res = array();
+        foreach ($processes as $p)
+        {
+            // load the object
+            $process = \Flexio\Object\Process::load($p);
+            if ($process === false)
+                continue;
+
+            $res[] = $process;
+        }
+
+        return $res;
     }
 
     public function getObjects(array $filter = null) : array
