@@ -460,19 +460,6 @@ class Process
         return $merged_structure->enum();
     }
 
-    public static function getStatistics(array $params, string $requesting_user_eid = null) : array
-    {
-        // only allow users from flex.io to get this info
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        if ($user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        return \Flexio\System\System::getModel()->process->getProcessStatistics();
-    }
-
     private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change) // TODO: set function return type
     {
         // TODO: move part of implemention to some type of function

@@ -121,6 +121,20 @@ class System
         return $result;
     }
 
+    public static function getProcessStatistics(array $params, string $requesting_user_eid = null) : array
+    {
+        // only allow users from flex.io to get this info
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        if ($user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        return \Flexio\System\System::getModel()->process->getProcessStatistics();
+    }
+
+
     public static function validateObject(string $key, string $value, string $type, string $requesting_user_eid = null) : array
     {
         // make sure the user is logged in for certain kinds of validation checks
