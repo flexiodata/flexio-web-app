@@ -310,7 +310,12 @@ class Pipe
         $process_properties = array();
         $process = \Flexio\Object\Process::create($process_properties);
         $process->setOwner($pipe->getOwner());
-        $process->setCreatedBy($pipe->getOwner());
+
+        if ($requesting_user_eid === \Flexio\Object\User::MEMBER_PUBLIC)
+            $process->setCreatedBy($pipe->getOwner());
+             else
+            $process->setCreatedBy($requesting_user_eid);
+
         $process->setRights($pipe->getRights());
         $pipe->addProcess($process);
 

@@ -289,7 +289,7 @@ class Cron
         // STEP 2: create the process
         $process = \Flexio\Object\Process::create($pipe_properties);
         $process->setOwner($pipe->getOwner());
-        $process->setCreatedBy($pipe->getOwner());
+        $process->setCreatedBy($pipe->getOwner()); // scheduled processes are created by the owner
         $process->setRights($pipe->getRights());
 
         // STEP 3: run the process
