@@ -295,8 +295,39 @@ class Process extends ModelBase
 
     public function getProcessRunStats() : array
     {
-        // TODO: implement
-        return array();
+        $db = $this->getDatabase();
+        try
+        {
+            // note: get the process statistics by looking at all the subprocesses
+            $rows = $db->fetchAll("select tpr.parent_eid as parent_eid,
+                                          tpr.process_status as process_status,
+                                          tpr.created::DATE as created,
+                                          avg(extract(epoch from (tpr.finished - tpr.started))) as average_time,
+                                          sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
+                                          count(*) as total_count
+                                   from tbl_process tpr
+                                   where tpr.process_eid = tpr.eid and parent_eid != ''
+                                   group by parent_eid, process_status, created::DATE
+                                   order by created, process_status, parent_eid
+                                 ");
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('parent_eid'   => $row['parent_eid'],
+                              'process_status' => $row['process_status'],
+                              'created' => $row['created'],
+                              'total_count'  => $row['total_count'],
+                              'total_time'   => $row['total_time'],
+                              'average_time' => $row['average_time']);
+        }
+
+        return $output;
     }
 
     public function getProcessTaskStats() : array
