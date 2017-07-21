@@ -121,6 +121,19 @@ class System
         return $result;
     }
 
+    public static function getConfiguration(array $params, string $requesting_user_eid = null) : array
+    {
+        // only allow users from flex.io to get this info
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        if ($user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        return self::checkServerSettings();
+    }
+
     public static function getProcessStatistics(array $params, string $requesting_user_eid = null) : array
     {
         // only allow users from flex.io to get this info
@@ -134,8 +147,7 @@ class System
         return \Flexio\System\System::getModel()->process->getProcessStatistics();
     }
 
-
-    public static function validateObject(string $key, string $value, string $type, string $requesting_user_eid = null) : array
+    private static function validateObject(string $key, string $value, string $type, string $requesting_user_eid = null) : array
     {
         // make sure the user is logged in for certain kinds of validation checks
         if (\Flexio\Base\Eid::isValid($requesting_user_eid) === false)
@@ -267,14 +279,6 @@ class System
         $result['message'] = $message;
 
         return $result;
-    }
-
-    public static function configuration() : array
-    {
-        if (!IS_TESTING())
-            return array();
-
-        return self::checkServerSettings();
     }
 
     private static function checkServerSettings() : array

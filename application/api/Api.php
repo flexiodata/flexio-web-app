@@ -262,6 +262,9 @@ class Api
             case 'POS /login'                          : return '\Flexio\Api\System::login';
             case 'POS /logout'                         : return '\Flexio\Api\System::logout';
 
+            // system (adminstrator)
+            case 'GET /system/configuration'           : return '\Flexio\Api\System::getConfiguration'; // displays config info
+
             // search
             case 'GET /search'                         : return '\Flexio\Api\Search::exec';
 
@@ -365,7 +368,6 @@ class Api
 
             // DEBUG: endpoints for easy debugging using a URL in a browser
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug'; // display process info
-            case 'GET /debug/sysconfig'                : return '\Flexio\Api\System::configuration'; // displays config info
             case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
             case 'GET /debug/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
         }
