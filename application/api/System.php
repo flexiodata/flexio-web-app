@@ -147,7 +147,7 @@ class System
         return \Flexio\System\System::getModel()->process->getProcessTaskStats();
     }
 
-    public static function getProcessRunStats(array $params, string $requesting_user_eid = null) : array
+    public static function getProcessUserStats(array $params, string $requesting_user_eid = null) : array
     {
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
@@ -157,23 +157,74 @@ class System
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $stats = \Flexio\System\System::getModel()->process->getProcessRunStats();
+        $stats = \Flexio\System\System::getModel()->process->getProcessUserStats();
 
         $result = array();
         foreach ($stats as $s)
         {
-            $object = \Flexio\Object\Store::load($s['parent_eid']);
-            if ($object === false)
+            $user = \Flexio\Object\User::load($s['user_eid']);
+            if ($user === false)
                 continue;
 
-            $parent_info = $object->get();
+            $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
+            if ($pipe === false)
+                continue;
+
+            $user_info = $user->get();
+            $pipe_info = $pipe->get();
 
             $item = array();
-            $item['parent'] = array();
-            $item['parent']['eid'] = $parent_info['eid'];
-            $item['parent']['eid_type'] = $parent_info['eid_type'];
-            $item['parent']['name'] = $parent_info['name'];
-            $item['parent']['description'] = $parent_info['description'];
+            $item['user'] = array();
+            $item['user']['eid'] = $user_info['eid'];
+            $item['user']['eid_type'] = $user_info['eid_type'];
+            $item['user']['user_name'] = $user_info['user_name'];
+            $item['user']['first_name'] = $user_info['first_name'];
+            $item['user']['last_name'] = $user_info['last_name'];
+
+            $item['pipe'] = array();
+            $item['pipe']['eid'] = $pipe_info['eid'];
+            $item['pipe']['eid_type'] = $pipe_info['eid_type'];
+            $item['pipe']['name'] = $pipe_info['name'];
+            $item['pipe']['description'] = $pipe_info['description'];
+
+            $item['process_created'] = $s['created'];
+            $item['total_count'] = $s['total_count'];
+            $item['total_time'] = $s['total_time'];
+            $item['average_time'] = $s['average_time'];
+
+            $result[] = $item;
+        }
+
+        return $result;
+    }
+
+    public static function getProcessStatusStats(array $params, string $requesting_user_eid = null) : array
+    {
+        // only allow users from flex.io to get this info
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        if ($user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $stats = \Flexio\System\System::getModel()->process->getProcessStatusStats();
+
+        $result = array();
+        foreach ($stats as $s)
+        {
+            $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
+            if ($pipe === false)
+                continue;
+
+            $pipe_info = $pipe->get();
+
+            $item = array();
+            $item['pipe'] = array();
+            $item['pipe']['eid'] = $pipe_info['eid'];
+            $item['pipe']['eid_type'] = $pipe_info['eid_type'];
+            $item['pipe']['name'] = $pipe_info['name'];
+            $item['pipe']['description'] = $pipe_info['description'];
             $item['process_status'] = $s['process_status'];
             $item['process_created'] = $s['created'];
             $item['total_count'] = $s['total_count'];

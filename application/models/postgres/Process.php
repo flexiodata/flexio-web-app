@@ -293,7 +293,45 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function getProcessRunStats() : array
+    public function getProcessUserStats() : array
+    {
+        $db = $this->getDatabase();
+        try
+        {
+            // note: get the process statistics by looking at all the subprocesses
+            $rows = $db->fetchAll("select tas.target_eid as target_eid,
+                                          tpr.parent_eid as parent_eid,
+                                          tpr.created::DATE as created,
+                                          avg(extract(epoch from (tpr.finished - tpr.started))) as average_time,
+                                          sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
+                                          count(*) as total_count
+                                   from tbl_process tpr
+                                   inner join tbl_association tas on tpr.process_eid = tas.source_eid
+                                   where tpr.process_eid = tpr.eid and tpr.parent_eid != '' and tas.association_type = 'CRB'
+                                   group by tas.target_eid, tpr.parent_eid, tpr.created::DATE
+                                   order by created, parent_eid
+                                 ");
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('user_eid'     => $row['target_eid'], // target for the 'created by' association
+                              'pipe_eid'     => $row['parent_eid'],
+                              'created'      => $row['created'],
+                              'total_count'  => $row['total_count'],
+                              'total_time'   => $row['total_time'],
+                              'average_time' => $row['average_time']);
+        }
+
+        return $output;
+    }
+
+    public function getProcessStatusStats() : array
     {
         $db = $this->getDatabase();
         try
@@ -306,8 +344,8 @@ class Process extends ModelBase
                                           sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
                                           count(*) as total_count
                                    from tbl_process tpr
-                                   where tpr.process_eid = tpr.eid and parent_eid != ''
-                                   group by parent_eid, process_status, created::DATE
+                                   where tpr.process_eid = tpr.eid and tpr.parent_eid != ''
+                                   group by tpr.parent_eid, tpr.process_status, tpr.created::DATE
                                    order by created, process_status, parent_eid
                                  ");
          }
@@ -319,12 +357,12 @@ class Process extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $output[] = array('parent_eid'   => $row['parent_eid'],
+            $output[] = array('pipe_eid'       => $row['parent_eid'],
                               'process_status' => $row['process_status'],
-                              'created' => $row['created'],
-                              'total_count'  => $row['total_count'],
-                              'total_time'   => $row['total_time'],
-                              'average_time' => $row['average_time']);
+                              'created'        => $row['created'],
+                              'total_count'    => $row['total_count'],
+                              'total_time'     => $row['total_time'],
+                              'average_time'   => $row['average_time']);
         }
 
         return $output;

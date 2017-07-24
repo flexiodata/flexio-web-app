@@ -293,7 +293,13 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function getProcessRunStats() : array
+    public function getProcessUserStats() : array
+    {
+        // TODO: implement
+        return array();
+    }
+
+    public function getProcessStatusStats() : array
     {
         // TODO: implement
         return array();
