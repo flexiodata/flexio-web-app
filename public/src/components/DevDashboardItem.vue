@@ -1,21 +1,26 @@
 <template>
   <div class="f6 pa3">
-    <div class="mb3 bb b--black-05"></div>
-    <div class="mb1">
+    <div class="mb3">
       <span class="f4">{{pipe_name}}</span><span class="ml2 silver">({{pipe_eid}})</span>
     </div>
-    <vue-trend
-      :data="pipe_seq"
-      :gradient="['#6fa8dc', '#42b983', '#2c3e50']"
-      auto-draw
-      smooth
-      style="height: 100px"
-    ></vue-trend>
+    <bar-chart
+      :height="100"
+      :config="item.chart"
+      :options="{
+        maintainAspectRatio: false,
+        legend: {
+          display: false
+        },
+        animation: {
+          duration: 0
+        }
+      }"
+    ></bar-chart>
   </div>
 </template>
 
 <script>
-  import VueTrend from 'vuetrend'
+  import BarChart from './BarChart.vue'
 
   export default {
     props: {
@@ -25,7 +30,7 @@
       }
     },
     components: {
-      VueTrend
+      BarChart
     },
     computed: {
       pipe_name() {
