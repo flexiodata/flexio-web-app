@@ -1,7 +1,7 @@
 <template>
   <div class="f6 pa3">
     <div class="mb3 bb b--black-05"></div>
-    <div class="mb3">
+    <div class="mb1">
       <span class="f4">{{pipe_name}}</span><span class="ml2 silver">({{pipe_eid}})</span>
     </div>
     <vue-trend
@@ -9,7 +9,7 @@
       :gradient="['#6fa8dc', '#42b983', '#2c3e50']"
       auto-draw
       smooth
-      style="height: 200px"
+      style="height: 100px"
     ></vue-trend>
   </div>
 </template>
