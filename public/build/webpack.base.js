@@ -14,6 +14,7 @@ module.exports = {
       'vue-grid2',
       'vee-validate',
       'vue-scrollto',
+      'vuetrend',
       'keen-ui',
       'axios',
       'autosize',

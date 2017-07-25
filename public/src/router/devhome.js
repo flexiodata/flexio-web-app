@@ -2,6 +2,7 @@ import store from '../store'
 import * as types from '../store/mutation-types'
 import { ROUTE_DEVHOME } from '../constants/route'
 import DevHome from '../components/DevHome.vue'
+import DevDashboard from '../components/DevDashboard.vue'
 import DevParser from '../components/DevParser.vue'
 import DevCode from '../components/DevCode.vue'
 import DevTests from '../components/DevTests.vue'
@@ -17,8 +18,14 @@ export default {
       // redirect to /dev/parser
       path: '',
       name: ROUTE_DEVHOME,
-      redirect: 'tests',
+      redirect: 'dashboard',
       component: DevTests
+    },
+    {
+      // DevDashboard will be rendered inside DevHome's <router-view>
+      // /dev/dashboard is matched
+      path: 'dashboard',
+      component: DevDashboard
     },
     {
       // DevTests will be rendered inside DevHome's <router-view>
