@@ -337,15 +337,16 @@ class Process extends ModelBase
         try
         {
             // note: get the process statistics by looking at all the subprocesses
-            $rows = $db->fetchAll("select tpr.parent_eid as parent_eid,
+            $rows = $db->fetchAll("select tas.target_eid as target_eid,
                                           tpr.created::DATE as created,
                                           avg(extract(epoch from (tpr.finished - tpr.started))) as average_time,
                                           sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
                                           count(*) as total_count
                                    from tbl_process tpr
-                                   where tpr.process_eid = tpr.eid and tpr.parent_eid != ''
-                                   group by tpr.parent_eid, tpr.created::DATE
-                                   order by created, parent_eid
+                                   inner join tbl_association tas on tpr.process_eid = tas.source_eid
+                                   where tas.association_type = 'PRO'
+                                   group by tas.target_eid, tpr.created::DATE
+                                   order by created, target_eid
                                  ");
          }
          catch (\Exception $e)
@@ -356,7 +357,7 @@ class Process extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $output[] = array('pipe_eid'       => $row['parent_eid'],
+            $output[] = array('pipe_eid'       => $row['target_eid'], // target_eid is what the process was created from
                               'created'        => $row['created'],
                               'total_count'    => $row['total_count'],
                               'total_time'     => $row['total_time'],
