@@ -1,12 +1,13 @@
 <script>
   // CommitChart.js
-  import { Bar } from 'vue-chartjs'
+  import { Line } from 'vue-chartjs'
 
   const default_config = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     datasets: [
       {
-        backgroundColor: '#2196f3',
+        borderColor: '#2196f3',
+        fill: false,
         data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
       }
     ]
@@ -18,7 +19,7 @@
     }
   }
 
-  export default Bar.extend({
+  export default Line.extend({
     props: {
       'config': {
         type: Object,

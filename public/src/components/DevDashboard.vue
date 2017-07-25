@@ -68,6 +68,8 @@
               labels: this.getLabels(),
               datasets: [{
                 backgroundColor: '#2196f3',
+                borderColor: '#2196f3',
+                fill: false,
                 data: this.getSequence(count_vals)
               }]
             }
