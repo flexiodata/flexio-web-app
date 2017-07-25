@@ -1,7 +1,7 @@
 <template>
   <div class="f6 pa3">
     <div class="mb3">
-      <span class="f4">{{pipe_name}}</span><span class="ml2 silver">({{pipe_eid}})</span>
+      <h3 class="ma0 dib mid-gray">{{pipe_name}}</h3><span class="ml2 silver">({{pipe_eid}})</span>
     </div>
     <bar-chart
       :height="100"
