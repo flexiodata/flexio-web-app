@@ -21,7 +21,7 @@
 
   // create a starting array of values for the last month
   var base_seq = []
-  while (month_ago.isBefore(now))
+  while (month_ago.isSameOrBefore(now))
   {
     base_seq.push({
       created: moment(month_ago),
