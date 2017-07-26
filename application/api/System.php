@@ -224,7 +224,9 @@ class System
             $item['pipe']['eid'] = $pipe_info['eid'];
             $item['pipe']['eid_type'] = $pipe_info['eid_type'];
             $item['pipe']['name'] = $pipe_info['name'];
+            $item['pipe']['ename'] = $pipe_info['ename'];
             $item['pipe']['description'] = $pipe_info['description'];
+            $item['pipe']['owned_by'] = $pipe_info['owned_by'] ?? null;
             $item['process_created'] = $s['created'];
             $item['total_count'] = $s['total_count'];
             $item['total_time'] = $s['total_time'];
