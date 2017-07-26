@@ -1,16 +1,54 @@
 <template>
   <div class="pa3">
-    <line-chart
-      :height="height"
-      :labels="labels"
-      :datasets="top_stats"
-      :options="{
-        maintainAspectRatio: false,
-        animation: {
-          duration: 0
-        }
-      }"
-    ></line-chart>
+    <div>
+      <h4>Summary</h4>
+      <line-chart
+        :height="height"
+        :labels="labels"
+        :datasets="stats_by_date"
+        :options="{
+          legend: {
+            display: false
+          }
+        }"
+      ></line-chart>
+    </div>
+    <div
+      class="mv3 bt b--black-10"
+      v-for="(item, index) in top_stats_by_pipe"
+      :item="item"
+      :index="index"
+    >
+      <h4>{{item.label}}</h4>
+      <line-chart
+        :height="100"
+        :labels="labels"
+        :datasets="[item]"
+        :options="{
+          legend: {
+            display: false
+          }
+        }"
+      ></line-chart>
+    </div>
+    <div
+      class="mv3 bt b--black-10"
+      v-for="(item, index) in top_stats_by_pipe"
+      :item="item"
+      :index="index"
+    >
+      <h4>{{item.label}}</h4>
+      <line-chart
+        :height="100"
+        :labels="labels"
+        :datasets="[item]"
+        :options="{
+          legend: {
+            display: false
+          }
+        }"
+      ></line-chart>
+    </div>
   </div>
 </template>
 
@@ -88,30 +126,47 @@
       store_stats() {
         return _.get(this.$store, 'state.statistics.'+this.type, [])
       },
-      reduced_stats() {
+      stats_with_created() {
         // add a moment date to each stat
-        var stats = _.map(this.store_stats, (s) => {
+        return _.map(this.store_stats, (s) => {
           return _.assign(s, {
             created: moment(_.get(s, 'process_created')).startOf('day')
           })
         })
+      },
+      stats_by_date() {
+        // group each stat by date
+        var stats = _.groupBy(this.stats_with_created, (s) => {
+          return _.get(s, 'process_created', '')
+        })
+
+        var count_vals = _.map(stats, (s) => {
+          return {
+            created: _.get(s, '[0].created'),
+            total_count: _.reduce(s, function(sum, v) {
+              return sum + _.get(v, 'total_count', 0)
+            }, 0)
+          }
+        })
+
+        return [{
+          label: 'All Pipes',
+          data: this.getDatasetData(count_vals, this.baseline_vals)
+        }]
+      },
+      stats_by_pipe() {
+        var t = this.stats_by_date
 
         // group each stat by pipe
-        stats = _.groupBy(stats, (s) => {
+        var stats = _.groupBy(this.stats_with_created, (s) => {
           return _.get(s, 'pipe.eid', '')
         })
 
-        // reduce to simply { pipe, values } for the specified time period
+        // reduce to simply { label, data } for the specified time period
         stats = _.map(stats, (s) => {
           // dates that have values for this pipe
           var count_vals = _.map(s, (v) => {
             return _.pick(v, ['created', 'total_count'])
-          })
-
-          // remove out-of-bounds values
-          _.remove(count_vals, (v) => {
-            var created = _.get(v, 'created')
-            return created.isBefore(this.start_date) || created.isAfter(this.end_date)
           })
 
           return {
@@ -122,8 +177,8 @@
 
         return stats
       },
-      top_stats() {
-        var top = _.sortBy(this.reduced_stats, (s) => {
+      top_stats_by_pipe() {
+        var top = _.sortBy(this.stats_by_pipe, (s) => {
           return _.sum(_.get(s, 'data'))
         })
         return _.take(_.reverse(top), this.topNumber)
@@ -134,7 +189,13 @@
     },
     methods: {
       getDatasetData(stats, range) {
-        var seq = _.unionWith(stats, range, (v1, v2) => {
+        // remove out-of-bounds values
+        var seq = _.filter(stats, (v) => {
+          var created = _.get(v, 'created')
+          return created.isAfter(this.start_date) && created.isBefore(this.end_date)
+        })
+
+        seq = _.unionWith(seq, range, (v1, v2) => {
           return _.get(v1, 'created').isSame(_.get(v2, 'created'))
         })
 

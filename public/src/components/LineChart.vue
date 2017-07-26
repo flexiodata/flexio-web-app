@@ -40,11 +40,12 @@
   */
 
   const default_options = {
-    legend: {
-      position: 'bottom'
-    },
+    maintainAspectRatio: false,
     animation: {
       duration: 0
+    },
+    legend: {
+      position: 'bottom'
     }
   }
 
