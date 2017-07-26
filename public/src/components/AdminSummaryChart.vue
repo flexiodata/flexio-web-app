@@ -31,24 +31,6 @@
         }"
       ></line-chart>
     </div>
-    <div
-      class="mv3 bt b--black-10"
-      v-for="(item, index) in top_stats_by_pipe"
-      :item="item"
-      :index="index"
-    >
-      <h4>{{item.label}}</h4>
-      <line-chart
-        :height="100"
-        :labels="labels"
-        :datasets="[item]"
-        :options="{
-          legend: {
-            display: false
-          }
-        }"
-      ></line-chart>
-    </div>
   </div>
 </template>
 
