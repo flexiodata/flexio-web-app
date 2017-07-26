@@ -1,7 +1,7 @@
 <template>
   <div class="pa3">
-    <div>
-      <h4>Summary</h4>
+    <h2 class="ma0">Pipes run over the last month</h2>
+    <div class="mt2 mb3 pb2 ph3 pt4 bt b--black-10">
       <line-chart
         :height="height"
         :labels="labels"
@@ -13,13 +13,16 @@
         }"
       ></line-chart>
     </div>
+    <h2 class="ma0 mt4">Top 10 pipes</h2>
     <div
-      class="mv3 bt b--black-10"
+      class="mt2 mb3 pb2 ph3 bt b--black-10"
       v-for="(item, index) in top_stats_by_pipe"
       :item="item"
       :index="index"
     >
-      <h4>{{item.label}}</h4>
+      <div>
+        <h4 class="dib">{{index+1}}. {{item.label}}</h4><span class="silver"> &ndash; {{item.owned_by.first_name}} {{item.owned_by.last_name}} ({{item.owned_by.eid}})</span>
+      </div>
       <line-chart
         :height="100"
         :labels="labels"
@@ -144,20 +147,25 @@
 
         // reduce to simply { label, data } for the specified time period
         stats = _.map(stats, (s) => {
+          var pipe = _.get(s, '[0].pipe', {})
+
           // dates that have values for this pipe
           var count_vals = _.map(s, (v) => {
             return _.pick(v, ['created', 'total_count'])
           })
 
-          var identifier = _.get(s, '[0].pipe.ename', '')
-          identifier = identifier.length > 0 ? identifier : _.get(s, '[0].pipe.eid')
+          var identifier = _.get(pipe, 'ename', '')
+          identifier = identifier.length > 0 ? identifier : _.get(pipe, 'eid')
 
-          var label = _.get(s, '[0].pipe.name', 'Pipe')
+
+          var label = _.get(pipe, 'name', 'Pipe')
           label = label + ' ('+identifier+')'
 
           return {
             label,
-            data: this.getDatasetData(count_vals, this.baseline_vals)
+            data: this.getDatasetData(count_vals, this.baseline_vals),
+            pipe,
+            owned_by: _.get(pipe, 'owned_by', {})
           }
         })
 
