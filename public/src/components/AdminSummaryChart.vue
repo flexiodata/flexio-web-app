@@ -3,7 +3,7 @@
     <line-chart
       :height="height"
       :labels="labels"
-      :datasets="top5_stats"
+      :datasets="top_stats"
       :options="{
         maintainAspectRatio: false,
         animation: {
@@ -122,7 +122,7 @@
 
         return stats
       },
-      top5_stats() {
+      top_stats() {
         var top = _.sortBy(this.reduced_stats, (s) => {
           return _.sum(_.get(s, 'data'))
         })
