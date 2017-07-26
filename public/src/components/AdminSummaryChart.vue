@@ -137,8 +137,6 @@
         }]
       },
       stats_by_pipe() {
-        var t = this.stats_by_date
-
         // group each stat by pipe
         var stats = _.groupBy(this.stats_with_created, (s) => {
           return _.get(s, 'pipe.eid', '')
@@ -151,8 +149,14 @@
             return _.pick(v, ['created', 'total_count'])
           })
 
+          var identifier = _.get(s, '[0].pipe.ename', '')
+          identifier = identifier.length > 0 ? identifier : _.get(s, '[0].pipe.eid')
+
+          var label = _.get(s, '[0].pipe.name', 'Pipe')
+          label = label + ' ('+identifier+')'
+
           return {
-            label: _.get(s, '[0].pipe.name', 'Pipe'),
+            label,
             data: this.getDatasetData(count_vals, this.baseline_vals)
           }
         })

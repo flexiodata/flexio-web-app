@@ -70,10 +70,12 @@
     },
     watch: {
       datasets: function(val, old_val) {
+        console.log('watch')
         this.doRender()
       }
     },
     mounted() {
+      console.log('mounted')
       this.doRender()
     },
     methods: {
