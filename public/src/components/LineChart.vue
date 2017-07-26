@@ -4,13 +4,12 @@
 
   const default_config = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    datasets: [
-      {
-        borderColor: '#2196f3',
-        fill: false,
-        data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-      }
-    ]
+    datasets: [{
+      label: 'Dataset 1',
+      borderColor: '#2196f3',
+      fill: false,
+      data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
+    }]
   }
 
   const default_options = {

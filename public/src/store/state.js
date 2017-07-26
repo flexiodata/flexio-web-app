@@ -14,6 +14,7 @@ export default () => {
     active_user_eid: '',
     active_document_eid: '',
 
-    objects: {}
+    objects: {},
+    statistics: {}
   }
 }

@@ -2,7 +2,7 @@ import store from '../store'
 import * as types from '../store/mutation-types'
 import { ROUTE_DEVHOME } from '../constants/route'
 import DevHome from '../components/DevHome.vue'
-import DevDashboard from '../components/DevDashboard.vue'
+import AdminDashboard from '../components/AdminDashboard.vue'
 import DevParser from '../components/DevParser.vue'
 import DevCode from '../components/DevCode.vue'
 import DevTests from '../components/DevTests.vue'
@@ -22,10 +22,10 @@ export default {
       component: DevTests
     },
     {
-      // DevDashboard will be rendered inside DevHome's <router-view>
+      // AdminDashboard will be rendered inside DevHome's <router-view>
       // /dev/dashboard is matched
       path: 'dashboard',
-      component: DevDashboard
+      component: AdminDashboard
     },
     {
       // DevTests will be rendered inside DevHome's <router-view>

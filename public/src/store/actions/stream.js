@@ -1,7 +1,7 @@
 import api from '../../api'
 import * as types from '../mutation-types'
 
-/* **** STREAM ACTIONS **** */
+// ----------------------------------------------------------------------- //
 
 export const fetchStream = ({ commit }, { eid }) => {
   commit(types.FETCHING_STREAM, { eid, fetching: true })
@@ -17,3 +17,6 @@ export const fetchStream = ({ commit }, { eid }) => {
     return response
   })
 }
+
+// ----------------------------------------------------------------------- //
+
