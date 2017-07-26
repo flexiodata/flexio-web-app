@@ -1,0 +1,33 @@
+<template>
+  <div class="overflow-y-auto">
+    <admin-summary-item
+      v-for="(item, index) in items"
+      :item="item"
+      :index="index"
+    ></admin-summary-item>
+  </div>
+</template>
+
+<script>
+  import AdminSummaryItem from './AdminSummaryItem.vue'
+
+  export default {
+    components: {
+      AdminSummaryItem
+    },
+    data() {
+      return {
+        items: [{
+          type: 'processes',
+          title: 'Pipe usage over the last month'
+        },{
+          type: 'tasks',
+          title: 'Tasks'
+        },{
+          type: 'users',
+          title: 'Users'
+        }]
+      }
+    }
+  }
+</script>
