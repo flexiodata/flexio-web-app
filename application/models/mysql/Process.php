@@ -299,7 +299,7 @@ class Process extends ModelBase
         return array();
     }
 
-    public function getProcessStatusStats() : array
+    public function getProcessCreationStats() : array
     {
         // TODO: implement
         return array();
