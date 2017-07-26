@@ -26,11 +26,11 @@
       },
       'top-number': {
         type: Number,
-        default: 5
+        default: 10
       },
       'height': {
         type: Number,
-        default: 200
+        default: 300
       },
       // overrides duration if specified
       'start-date': {
@@ -123,7 +123,6 @@
         return stats
       },
       top5_stats() {
-        console.log(this.reduced_stats)
         var top = _.sortBy(this.reduced_stats, (s) => {
           return _.sum(_.get(s, 'data'))
         })

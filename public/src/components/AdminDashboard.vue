@@ -19,7 +19,7 @@
       return {
         items: [{
           type: 'processes',
-          title: 'Pipe usage over the last month'
+          title: 'Top 10 pipes used over the last month'
         }/*,{
           type: 'tasks',
           title: 'Task usage in pipes'

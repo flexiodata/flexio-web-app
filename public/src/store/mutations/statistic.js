@@ -7,7 +7,9 @@ export default {
   [types.FETCHING_STATISTICS] (state, { type, fetching }) {},
 
   [types.FETCHED_STATISTICS] (state, { type, statistics }) {
-    state['statistics'][type] = statistics
+    state['statistics'] = _.assign({}, state['statistics'], {
+      [type]: [].concat(statistics)
+    })
   }
 
   // ----------------------------------------------------------------------- //
