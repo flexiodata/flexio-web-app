@@ -20,13 +20,13 @@
         items: [{
           type: 'processes',
           title: 'Pipe usage over the last month'
-        },{
+        }/*,{
           type: 'tasks',
-          title: 'Tasks'
+          title: 'Task usage in pipes'
         },{
           type: 'users',
           title: 'Users'
-        }]
+        }*/]
       }
     }
   }

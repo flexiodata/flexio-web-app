@@ -1,6 +1,6 @@
 <template>
-  <div class="pa3 bb b--black-10">
-    <h2 class="mt0 mb3">{{title}}</h2>
+  <div class="pb3 ma3 bb b--black-10">
+    <h2 class="ma0">{{title}}</h2>
     <div class="mh3">
       <admin-summary-chart :type="type"></admin-summary-chart>
     </div>
