@@ -1,5 +1,11 @@
 <template>
-  <div class="pa3">
+  <div class="dib" v-if="store_stats.length == 0">
+    <div class="flex flex-row justify-center items-center min-h3 pa3">
+      <spinner size="medium"></spinner>
+      <span class="ml2 f5">Loading statistics...</span>
+    </div>
+  </div>
+  <div class="pa3" v-else>
     <h2 class="ma0">Pipes run over the last month</h2>
     <div class="mt2 mb3 pb2 ph3 pt4 bt b--black-10">
       <line-chart
@@ -39,6 +45,7 @@
 
 <script>
   import moment from 'moment'
+  import Spinner from 'vue-simple-spinner'
   import LineChart from './LineChart.vue'
 
   export default {
@@ -76,6 +83,7 @@
       }
     },
     components: {
+      Spinner,
       LineChart
     },
     computed: {
