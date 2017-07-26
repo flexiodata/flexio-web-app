@@ -51,7 +51,7 @@ class Cron
         $dt = \Flexio\Base\Util::getDateTimeParts();
         printf("Scheduler time is: %02d:%02d\n", $dt['hours'], $dt['minutes']);
 
-        $scheduler = new \Flexio\Api\Cron;
+        $scheduler = new static();
         $scheduler->loop();
     }
 

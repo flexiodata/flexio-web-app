@@ -264,7 +264,7 @@ class Api
 
             // system (adminstrator)
             case 'GET /system/statistics/users'        : return '\Flexio\Api\System::getProcessUserStats';
-            case 'GET /system/statistics/processes'    : return '\Flexio\Api\System::getProcessStatusStats';
+            case 'GET /system/statistics/processes'    : return '\Flexio\Api\System::getProcessCreationStats';
             case 'GET /system/statistics/tasks'        : return '\Flexio\Api\System::getProcessTaskStats';
             case 'GET /system/configuration'           : return '\Flexio\Api\System::getConfiguration'; // displays config info
 

@@ -198,7 +198,7 @@ class System
         return $result;
     }
 
-    public static function getProcessStatusStats(array $params, string $requesting_user_eid = null) : array
+    public static function getProcessCreationStats(array $params, string $requesting_user_eid = null) : array
     {
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
@@ -208,7 +208,7 @@ class System
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $stats = \Flexio\System\System::getModel()->process->getProcessStatusStats();
+        $stats = \Flexio\System\System::getModel()->process->getProcessCreationStats();
 
         $result = array();
         foreach ($stats as $s)
@@ -235,46 +235,7 @@ class System
 
         return $result;
     }
-/*
-    public static function getProcessStatusStats(array $params, string $requesting_user_eid = null) : array
-    {
-        // only allow users from flex.io to get this info
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        if ($user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $stats = \Flexio\System\System::getModel()->process->getProcessStatusStats();
-
-        $result = array();
-        foreach ($stats as $s)
-        {
-            $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-            if ($pipe === false)
-                continue;
-
-            $pipe_info = $pipe->get();
-
-            $item = array();
-            $item['pipe'] = array();
-            $item['pipe']['eid'] = $pipe_info['eid'];
-            $item['pipe']['eid_type'] = $pipe_info['eid_type'];
-            $item['pipe']['name'] = $pipe_info['name'];
-            $item['pipe']['description'] = $pipe_info['description'];
-            $item['process_status'] = $s['process_status'];
-            $item['process_created'] = $s['created'];
-            $item['total_count'] = $s['total_count'];
-            $item['total_time'] = $s['total_time'];
-            $item['average_time'] = $s['average_time'];
-
-            $result[] = $item;
-        }
-
-        return $result;
-    }
-*/
     private static function validateObject(string $key, string $value, string $type, string $requesting_user_eid = null) : array
     {
         // make sure the user is logged in for certain kinds of validation checks
