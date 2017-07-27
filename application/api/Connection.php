@@ -180,7 +180,7 @@ class Connection
             if ($c->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
-            $result[] = $c->get();
+            $result[] = self::filterProperties($c->get());
         }
 
         return $result;
