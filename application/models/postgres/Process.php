@@ -343,7 +343,7 @@ class Process extends ModelBase
                                           sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
                                           count(*) as total_count
                                    from tbl_process tpr
-                                   inner join tbl_association tas on tpr.process_eid = tas.source_eid
+                                   inner join tbl_association tas on tpr.eid = tas.source_eid
                                    where tas.association_type = 'PRO'
                                    group by tas.target_eid, tpr.created::DATE
                                    order by created, target_eid
