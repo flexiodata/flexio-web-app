@@ -50,10 +50,6 @@
 
   export default {
     props: {
-      'type': {
-        type: String,
-        required: true
-      },
       'top-number': {
         type: Number,
         default: 10
@@ -88,16 +84,16 @@
     },
     computed: {
       end_date() {
-        var end = _.isString(this.endDate) ? moment(this.endDate) : moment()
-        return end.startOf('day')
+        var end = _.isString(this.endDate) ? moment(this.endDate).utc() : moment().utc()
+        return end.endOf('day')
       },
       start_date() {
-        var start = _.isString(this.startDate) ? moment(this.startDate) : moment(this.end_date).subtract(this.duration.number, this.duration.type)
+        var start = _.isString(this.startDate) ? moment(this.startDate).utc() : moment(this.end_date).utc().subtract(this.duration.number, this.duration.type)
         return start.startOf('day')
       },
       baseline_vals() {
         // create a starting array of '0' values for the specified period
-        var iter = moment(this.start_date)
+        var iter = moment(this.start_date).utc().startOf('day')
         var arr = []
 
         while (iter.isSameOrBefore(this.end_date))
@@ -117,13 +113,13 @@
         })
       },
       store_stats() {
-        return _.get(this.$store, 'state.statistics.'+this.type, [])
+        return _.get(this.$store, 'state.statistics.processes', [])
       },
       stats_with_created() {
         // add a moment date to each stat
         return _.map(this.store_stats, (s) => {
           return _.assign(s, {
-            created: moment(_.get(s, 'process_created')).startOf('day')
+            created: moment(_.get(s, 'process_created')).utc().startOf('day')
           })
         })
       },
@@ -187,7 +183,7 @@
       }
     },
     mounted() {
-      this.$store.dispatch('fetchStatistics', { type: this.type })
+      this.$store.dispatch('fetchStatistics', { type: 'processes' })
     },
     methods: {
       getDatasetData(stats, range) {
