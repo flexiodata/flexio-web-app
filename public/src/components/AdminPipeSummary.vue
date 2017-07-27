@@ -50,10 +50,6 @@
 
   export default {
     props: {
-      'type': {
-        type: String,
-        required: true
-      },
       'top-number': {
         type: Number,
         default: 10
@@ -117,7 +113,7 @@
         })
       },
       store_stats() {
-        return _.get(this.$store, 'state.statistics.'+this.type, [])
+        return _.get(this.$store, 'state.statistics.processes', [])
       },
       stats_with_created() {
         // add a moment date to each stat
@@ -187,7 +183,7 @@
       }
     },
     mounted() {
-      this.$store.dispatch('fetchStatistics', { type: this.type })
+      this.$store.dispatch('fetchStatistics', { type: 'processes' })
     },
     methods: {
       getDatasetData(stats, range) {
