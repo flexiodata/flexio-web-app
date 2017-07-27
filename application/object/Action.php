@@ -57,13 +57,16 @@ class Action
         return (new static);
     }
 
-    public static function record(string $name, string $user_eid, array $params) : bool
+    public static function record(string $action, string $user_eid, string $subject_eid, string $object_eid = null, array $params = null) : bool
     {
         $action_params = array(
-            'name' => $name,
+            'action' => $action,
             'user_eid' => $user_eid,
+            'subject_eid' => $subject_eid,
+            'object_eid' => $object_eid,
             'params' => json_encode($params)
         );
-        \Flexio\System\System::getModel()->action->record($action_params);
+        $result = \Flexio\System\System::getModel()->action->record($action_params);
+        return $result;
     }
 }

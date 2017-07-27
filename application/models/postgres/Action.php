@@ -19,20 +19,18 @@ class Action extends ModelBase
 {
     public function record(array $params) : bool
     {
-        // TODO: this function is for recording actions; if it fails, no
-        // need to fail the whole action; simply return false
-
         $db = $this->getDatabase();
         try
         {
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
-                'user_eid'       => $params['user_eid'] ?? '',
-                'request_method' => $params['request_method'] ?? '',
-                'url_params'     => $params['url_params'] ?? '',
-                'query_params'   => $params['query_params'] ?? '',
-                'created'        => $timestamp,
-                'updated'        => $timestamp
+                'user_eid' => $params['user_eid'],
+                'subject_eid' => $params['subject_eid'],
+                'object_eid' => $params['object_eid'],
+                'action' => $params['action'],
+                'params' => json_encode($params),
+                'created' => $timestamp,
+                'updated' => $timestamp,
             );
 
             // add the properties
@@ -43,7 +41,7 @@ class Action extends ModelBase
         }
         catch (\Exception $e)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            return false;
         }
     }
 }

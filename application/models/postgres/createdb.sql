@@ -296,43 +296,20 @@ DROP TABLE IF EXISTS tbl_action;
 CREATE TABLE tbl_action (
   id serial,
   user_eid varchar(12) NOT NULL default '',
-  request_method text default '',
-  url_params text default '',
-  query_params text default '',
+  subject_eid varchar(12) NOT NULL default '',
+  object_eid varchar(12) NOT NULL default '',
+  action varchar(80) NOT NULL default '',
+  params json,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id)
 );
 
 CREATE INDEX idx_action_user_eid ON tbl_action (user_eid);
-
-
-
---
--- Table structure for table tbl_notification
---
-
-DROP TABLE IF EXISTS tbl_notification;
-CREATE TABLE tbl_notification (
-  id serial,
-  eid varchar(12) NOT NULL default '',
-  user_eid varchar(12) NOT NULL default '',
-  source_user_eid varchar(12) NOT NULL default '',
-  object_eid varchar(12) NOT NULL default '',
-  subject_eid varchar(12) NOT NULL default '',
-  notice_type varchar(20) NOT NULL default '',
-  created timestamp NULL default NULL,
-  updated timestamp NULL default NULL,
-  PRIMARY KEY (id),
-  UNIQUE (eid)
-);
-
-CREATE INDEX idx_notification_user_eid ON tbl_notification (user_eid);
-CREATE INDEX idx_notification_source_user_eid ON tbl_notification (source_user_eid);
-CREATE INDEX idx_notification_object_eid ON tbl_notification (object_eid);
-CREATE INDEX idx_notification_subject_eid ON tbl_notification (subject_eid);
-CREATE INDEX idx_notification_notice_type ON tbl_notification (notice_type);
-CREATE INDEX idx_notification_created ON tbl_notification (created);
+CREATE INDEX idx_action_subject_eid ON tbl_action (subject_eid);
+CREATE INDEX idx_action_object_eid ON tbl_action (object_eid);
+CREATE INDEX idx_action_action ON tbl_action (action);
+CREATE INDEX idx_action_created ON tbl_action (created);
 
 
 

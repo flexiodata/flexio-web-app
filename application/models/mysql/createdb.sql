@@ -311,45 +311,22 @@ CREATE TABLE tbl_comment (
 
 DROP TABLE IF EXISTS tbl_action;
 CREATE TABLE tbl_action (
-  id int UNSIGNED NOT NULL auto_increment,
-  user_eid char(12) NOT NULL default '',
-  request_method text default '',
-  url_params text default '',
-  query_params text default '',
+  id serial,
+  user_eid varchar(12) NOT NULL default '',
+  subject_eid varchar(12) NOT NULL default '',
+  object_eid varchar(12) NOT NULL default '',
+  action varchar(80) NOT NULL default '',
+  params text default NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id)
 );
 
 CREATE INDEX idx_action_user_eid ON tbl_action (user_eid);
-
-
-
---
--- Table structure for table tbl_notification
---
-
-DROP TABLE IF EXISTS tbl_notification;
-CREATE TABLE tbl_notification (
-  id int UNSIGNED NOT NULL auto_increment,
-  eid char(12) NOT NULL default '',
-  user_eid char(12) NOT NULL default '',
-  source_user_eid char(12) NOT NULL default '',
-  object_eid char(12) NOT NULL default '',
-  subject_eid char(12) NOT NULL default '',
-  notice_type char(20) NOT NULL default '',
-  created timestamp NULL default NULL,
-  updated timestamp NULL default NULL,
-  PRIMARY KEY (id),
-  UNIQUE KEY (eid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE INDEX idx_notification_user_eid ON tbl_notification (user_eid);
-CREATE INDEX idx_notification_source_user_eid ON tbl_notification (source_user_eid);
-CREATE INDEX idx_notification_object_eid ON tbl_notification (object_eid);
-CREATE INDEX idx_notification_subject_eid ON tbl_notification (subject_eid);
-CREATE INDEX idx_notification_notice_type ON tbl_notification (notice_type);
-CREATE INDEX idx_notification_created ON tbl_notification (created);
+CREATE INDEX idx_action_subject_eid ON tbl_action (subject_eid);
+CREATE INDEX idx_action_object_eid ON tbl_action (object_eid);
+CREATE INDEX idx_action_action ON tbl_action (action);
+CREATE INDEX idx_action_created ON tbl_action (created);
 
 
 
