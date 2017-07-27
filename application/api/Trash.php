@@ -40,7 +40,7 @@ class Trash
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
-            if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
+            if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -90,7 +90,7 @@ class Trash
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
-            if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
+            if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -132,7 +132,7 @@ class Trash
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // check the rights on the object
-            if ($object->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_DELETE) === false)
+            if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -171,7 +171,7 @@ class Trash
         $result = array();
         foreach ($pipes as $p)
         {
-            if ($p->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+            if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
             $result[] = $p->get();

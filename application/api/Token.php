@@ -33,7 +33,7 @@ class Token
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the token object
@@ -62,7 +62,7 @@ class Token
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false) // use write, since it's like changing a user property
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false) // use write, since it's like changing a user property
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $token = \Flexio\Object\Token::load($token_identifier);
@@ -87,7 +87,7 @@ class Token
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $token = \Flexio\Object\Token::load($token_identifier);
@@ -114,7 +114,7 @@ class Token
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the tokens

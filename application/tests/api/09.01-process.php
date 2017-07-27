@@ -60,10 +60,10 @@ class Test
         $process_info1 = \Flexio\Api\Process::create($params, $user_eid);
         $process = \Flexio\Object\Process::load($process_info1['eid']);
         $process->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
-            \Flexio\Object\Action::TYPE_READ,
-            \Flexio\Object\Action::TYPE_WRITE,
-            \Flexio\Object\Action::TYPE_DELETE,
-            \Flexio\Object\Action::TYPE_EXECUTE
+            \Flexio\Object\Right::TYPE_READ,
+            \Flexio\Object\Right::TYPE_WRITE,
+            \Flexio\Object\Right::TYPE_DELETE,
+            \Flexio\Object\Right::TYPE_EXECUTE
         ));
         sleep(2);
         $process_info2 = \Flexio\Api\Process::get($process_info1, $user_eid);

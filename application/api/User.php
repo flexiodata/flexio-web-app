@@ -101,11 +101,11 @@ class User
 
             $user->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID,
                 array(
-                    \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                    \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                    \Flexio\Object\Action::TYPE_READ,
-                    \Flexio\Object\Action::TYPE_WRITE,
-                    \Flexio\Object\Action::TYPE_DELETE
+                    \Flexio\Object\Right::TYPE_READ_RIGHTS,
+                    \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
+                    \Flexio\Object\Right::TYPE_READ,
+                    \Flexio\Object\Right::TYPE_WRITE,
+                    \Flexio\Object\Right::TYPE_DELETE
                 )
             );
 
@@ -245,7 +245,7 @@ class User
         // set info for unverified users
         if ($user->getStatus() !== \Model::STATUS_PENDING)
         {
-            if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+            if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
 
@@ -269,7 +269,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $user->get();
@@ -283,7 +283,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_READ) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $filter = array('eid_type' => array(\Model::TYPE_PROJECT), 'eid_status' => array(\Model::STATUS_AVAILABLE));
@@ -352,7 +352,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Action::TYPE_WRITE) === false)
+        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($user->checkPassword($old_password) === false)
@@ -548,11 +548,11 @@ class User
 
                 $project->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID,
                     array(
-                        \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                        \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                        \Flexio\Object\Action::TYPE_READ,
-                        \Flexio\Object\Action::TYPE_WRITE,
-                        \Flexio\Object\Action::TYPE_DELETE
+                        \Flexio\Object\Right::TYPE_READ_RIGHTS,
+                        \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
+                        \Flexio\Object\Right::TYPE_READ,
+                        \Flexio\Object\Right::TYPE_WRITE,
+                        \Flexio\Object\Right::TYPE_DELETE
                     )
                 );
 
@@ -640,12 +640,12 @@ class User
         $pipe->setCreatedBy($user_eid);
 
         $pipe->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
-                \Flexio\Object\Action::TYPE_READ_RIGHTS,
-                \Flexio\Object\Action::TYPE_WRITE_RIGHTS,
-                \Flexio\Object\Action::TYPE_READ,
-                \Flexio\Object\Action::TYPE_WRITE,
-                \Flexio\Object\Action::TYPE_DELETE,
-                \Flexio\Object\Action::TYPE_EXECUTE
+                \Flexio\Object\Right::TYPE_READ_RIGHTS,
+                \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
+                \Flexio\Object\Right::TYPE_READ,
+                \Flexio\Object\Right::TYPE_WRITE,
+                \Flexio\Object\Right::TYPE_DELETE,
+                \Flexio\Object\Right::TYPE_EXECUTE
             )
         );
 
