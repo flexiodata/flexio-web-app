@@ -145,7 +145,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         $path = $params['path'] ?? '';
 
         $spreadsheet_id = null;
-        $worksheet_id = null;
+        $worksheet_title = null;
 
         $ids = $this->getIdsFromPath($path);
         if (isset($ids['spreadsheet_id']))
@@ -158,7 +158,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
             return;
 
         // if we don't have a worksheet id, use the first one inside the spreadsheet
-        if (!isset($worksheet_id))
+        if (!isset($worksheet_title))
         {
             $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
             if (!$spreadsheet)
