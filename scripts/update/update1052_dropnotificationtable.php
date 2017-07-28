@@ -57,7 +57,7 @@ EOT;
 
     // STEP 2: drop the indexes associated with the table
     $sql = <<<EOT
-        'DROP INDEX IF EXISTS idx_notification_user_eid;'
+        DROP INDEX IF EXISTS idx_notification_user_eid;
 EOT;
     $db->exec($sql);
 
