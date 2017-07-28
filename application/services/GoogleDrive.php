@@ -141,9 +141,10 @@ class GoogleDrive implements \Flexio\Services\IConnection
         if (!$this->authenticated())
             return false;
 
-        $fileid = $this->getFileId($path);
-        if (is_null($fileid) || strlen($fileid) == 0 || $fileid == 'root')
+        $fileinfo = $this->getFileInfo($path);
+        if (!isset($fileinfo['id']) || $fileinfo['id'] == '' || $fileinfo['id'] == 'root')
             return false; // bad filename / fileid
+        $fileid = $fileinfo['id'];
 
         $http_response_code = false;
         $error_payload = '';
@@ -288,25 +289,37 @@ class GoogleDrive implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function getFileId(string $folder)  // TODO: set function return type   (: ?string)
+    public function getFileId(string $path)  // TODO: set function return type   (: ?string)
     {
-        if (is_null($folder) || $folder == '' || $folder == '/')
-            return 'root';
+        $info = $this->getFileInfo($path);
+        if (!$info)
+            return $info;
+        return $info['id'];
+    }
 
-        $folder = trim($folder, '/');
-        while (false !== strpos($folder,'//'))
-            $folder = str_replace('//','/',$folder);
-        $parts = explode('/', $folder);
+    public function getFileInfo(string $path)  // TODO: set function return type   (: ?string)
+    {
+        if (is_null($path) || $path == '' || $path == '/')
+        {
+            return array('id' => 'root', 'mimeType' => \Flexio\Base\ContentType::MIME_TYPE_FOLDER);
+        }
+
+        $path = trim($path, '/');
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        $parts = explode('/', $path);
         $file_limit = 1000;
 
         $ch = curl_init();
 
-        $curfolder = 'root';
+        $current_id = 'root'; // stores the current folder id
+        $current_content_type = 'application/octet-stream';
+
         foreach ($parts as $p)
         {
             $p = str_replace("'", "\\'", $p);
             $p = urlencode($p); // necessary for files/folders with spaces
-            $url = "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&q='$curfolder'+in+parents+and+name='$p'+and+trashed=false";
+            $url = "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
 
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
@@ -318,12 +331,13 @@ class GoogleDrive implements \Flexio\Services\IConnection
             $result = @json_decode($result,true);
             if (!isset($result['files'][0]['id']))
                 return null;
-            $curfolder = $result['files'][0]['id'];
+            $current_id = $result['files'][0]['id'];
+            $current_content_type = $result['files'][0]['mimeType'];
         }
 
         curl_close($ch);
 
-        return $curfolder;
+        return array('id' => $current_id, 'mimeType' => $current_content_type);
     }
 
     private static function initialize(array $params)
