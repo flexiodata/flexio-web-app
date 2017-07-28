@@ -18,19 +18,7 @@ namespace Flexio\Object;
 
 class Action
 {
-    private $objects;
-
-    public function __construct()
-    {
-        $this->initialize();
-    }
-
-    public static function create() : \Flexio\Object\Action
-    {
-        return (new static);
-    }
-
-    public static function record(string $action, string $user_eid, string $subject_eid, string $object_eid = null, array $params = null) : bool
+    public static function create(string $action, string $user_eid, string $subject_eid, string $object_eid = null, array $params = null) : bool
     {
         $action_params = array(
             'action' => $action,
