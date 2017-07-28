@@ -311,7 +311,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
     {
         if (is_null($path) || $path == '' || $path == '/')
         {
-            return array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::MIME_TYPE_FOLDER);
+            return array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER);
         }
 
         $path = trim($path, '/');
