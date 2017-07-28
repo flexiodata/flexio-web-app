@@ -142,16 +142,25 @@ class GoogleSheets implements \Flexio\Services\IConnection
 
     public function read(array $params, callable $callback)
     {
-        $path = $params['path'] ?? '';
-
         $spreadsheet_id = null;
         $worksheet_title = null;
 
-        $ids = $this->getIdsFromPath($path);
-        if (isset($ids['spreadsheet_id']))
-            $spreadsheet_id = $ids['spreadsheet_id'];
-        if (isset($ids['worksheet_id']))
-            $worksheet_title = $ids['worksheet_title'];
+        if (isset($params['spreadsheet_id']))
+        {
+            $spreadsheet_id = $params['spreadsheet_id'];
+            if (isset($params['worksheet_title']))
+                $worksheet_title = $params['worksheet_title'];
+        }
+         else
+        {
+            $path = $params['path'] ?? '';
+
+            $ids = $this->getIdsFromPath($path);
+            if (isset($ids['spreadsheet_id']))
+                $spreadsheet_id = $ids['spreadsheet_id'];
+            if (isset($ids['worksheet_title']))
+                $worksheet_title = $ids['worksheet_title'];
+        }
 
         // if we don't have a spreadsheet id, we cannot continue
         if (!isset($spreadsheet_id))
@@ -163,7 +172,8 @@ class GoogleSheets implements \Flexio\Services\IConnection
             $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
             if (!$spreadsheet)
                 return;
-            if (count($spreadsheet->worksheets) < 1)
+            $worksheets = $spreadsheet->getWorksheets();
+            if (count($worksheets) < 1)
                 return;
             $worksheet_title = $spreadsheet->worksheets[0]->title;
         }

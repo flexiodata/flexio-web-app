@@ -145,6 +145,16 @@ class GoogleDrive implements \Flexio\Services\IConnection
         if (!isset($fileinfo['id']) || $fileinfo['id'] == '' || $fileinfo['id'] == 'root')
             return false; // bad filename / fileid
         $fileid = $fileinfo['id'];
+        $filetype = $fileinfo['content_type'];
+
+        if ($fileinfo['content_type'] == 'application/vnd.google-apps.spreadsheet')
+        {
+            $sheets = \Flexio\Services\GoogleSheets::create(array(
+                            'access_token' => $this->access_token,
+                            'refresh_token' => $this->refresh_token,
+                            'expires' => $this->expires));
+            return $sheets->read(array('spreadsheet_id' => $fileid), $callback);
+        }
 
         $http_response_code = false;
         $error_payload = '';
@@ -301,7 +311,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
     {
         if (is_null($path) || $path == '' || $path == '/')
         {
-            return array('id' => 'root', 'mimeType' => \Flexio\Base\ContentType::MIME_TYPE_FOLDER);
+            return array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::MIME_TYPE_FOLDER);
         }
 
         $path = trim($path, '/');
@@ -337,7 +347,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
 
         curl_close($ch);
 
-        return array('id' => $current_id, 'mimeType' => $current_content_type);
+        return array('id' => $current_id, 'content_type' => $current_content_type);
     }
 
     private static function initialize(array $params)
