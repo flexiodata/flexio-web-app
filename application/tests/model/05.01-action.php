@@ -32,9 +32,10 @@ class Test
         // BEGIN TEST
         $action_params = array(
             'user_eid' => \Flexio\Base\Eid::generate(),
-            'request_method' => 'GET',
-            'url_params' => json_encode(array('eid' => \Flexio\Base\Eid::generate())),
-            'query_params' => json_encode(array())
+            'subject_eid' => \Flexio\Base\Eid::generate(),
+            'object_eid' => \Flexio\Base\Eid::generate(),
+            'action' => 'create',
+            'params' => json_encode(array("key" => "value")),
         );
         $actual = $model->action->record($action_params);
         $expected = true;

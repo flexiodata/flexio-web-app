@@ -18,9 +18,35 @@ namespace Flexio\Object;
 
 class Right extends \Flexio\Object\Base
 {
+    const TYPE_UNDEFINED        = '';                 // undefined
+    const TYPE_READ             = 'object.read';      // ability to read the properties of an object
+    const TYPE_WRITE            = 'object.write';     // ability to write the properties of an object
+    const TYPE_DELETE           = 'object.delete';    // ability to delete an object
+    const TYPE_EXECUTE          = 'object.execute';   // ability to run a process object
+    const TYPE_READ_RIGHTS      = 'rights.read';      // ability to see rights
+    const TYPE_WRITE_RIGHTS     = 'rights.write';     // ability to change rights
+
     public function __construct()
     {
         $this->setType(\Model::TYPE_RIGHT);
+    }
+
+    public static function isValidType(string $action) : bool
+    {
+        switch ($action)
+        {
+            default:
+            case self::TYPE_UNDEFINED:
+                return false;
+
+            case self::TYPE_READ:
+            case self::TYPE_WRITE:
+            case self::TYPE_DELETE:
+            case self::TYPE_EXECUTE:
+            case self::TYPE_READ_RIGHTS:
+            case self::TYPE_WRITE_RIGHTS:
+                return true;
+        }
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Right

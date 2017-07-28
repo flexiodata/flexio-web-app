@@ -56,29 +56,9 @@ RUN a2enmod headers rewrite
 #RUN a2enmode ssl
 
 
-# creation of python runtime
-RUN mkdir /root/fxpython
-RUN cp /srv/www/flexio/src/scripts/python_include/flexio.py /root/fxpython/flexio.py
-RUN echo FROM ubuntu:16.04                            > /root/fxpython/Dockerfile
-RUN echo MAINTAINER ben@flex.io                      >> /root/fxpython/Dockerfile
-RUN echo RUN apt-get -y update                       >> /root/fxpython/Dockerfile
-RUN echo RUN apt-get -y install python3-pip          >> /root/fxpython/Dockerfile
-RUN echo RUN pip3 install Pillow                     >> /root/fxpython/Dockerfile
-RUN echo RUN pip3 install numpy                      >> /root/fxpython/Dockerfile
-RUN echo RUN pip3 install scipy                      >> /root/fxpython/Dockerfile
-RUN echo RUN pip3 install pandas                     >> /root/fxpython/Dockerfile
-RUN echo RUN pip3 install beautifulsoup4             >> /root/fxpython/Dockerfile
-RUN echo RUN pip3 install gensim                     >> /root/fxpython/Dockerfile
-RUN echo RUN pip3 install matplotlib                 >> /root/fxpython/Dockerfile
-RUN echo RUN pip3 install plotly                     >> /root/fxpython/Dockerfile
-RUN echo COPY flexio.py /usr/lib/python3.5/flexio.py >> /root/fxpython/Dockerfile
-RUN echo USER nobody                                 >> /root/fxpython/Dockerfile
-
-
-
-
+# creation of docker images
 RUN apt-get -y install docker.io
-RUN cd /root/fxpython && docker build -t fxpython .
+RUN /srv/www/flexio/src/scripts/docker/build-docker-images
 
 # allow www-data to run docker containers
 RUN usermod -a -G docker www-data
