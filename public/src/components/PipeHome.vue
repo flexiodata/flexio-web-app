@@ -22,14 +22,6 @@
       @cancel-process="cancelProcess">
     </pipe-home-header>
 
-    <pipe-transfer
-      class="flex-fill pv0 pv4-l pl4-l bt b--black-10 min-h5"
-      :pipe-eid="eid"
-      :tasks="tasks"
-      @open-builder="showBuilderView"
-      v-if="is_transfer_view">
-    </pipe-transfer>
-
     <pipe-builder-list
       class="flex-fill pv4 pl4-l bt b--black-10"
       style="padding-bottom: 240px"
@@ -45,7 +37,6 @@
       @go-next-prompt="goNextPrompt"
       @run-once-with-values="runOnceWithPromptValues"
       @save-values-and-run="savePromptValuesAndRun"
-      v-else
     ></pipe-builder-list>
 
     <ui-snackbar-container
@@ -74,14 +65,12 @@
   import { TASK_INFO_COMMENT } from '../constants/task-info'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
   import {
-    PIPEHOME_VIEW_TRANSFER,
     PIPEHOME_VIEW_BUILDER,
     PIPEHOME_STATUS_CONFIGURE
   } from '../constants/pipehome'
   import Btn from './Btn.vue'
   import Spinner from 'vue-simple-spinner'
   import PipeHomeHeader from './PipeHomeHeader.vue'
-  import PipeTransfer from './PipeTransfer.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
 
   export default {
@@ -89,7 +78,6 @@
       Btn,
       Spinner,
       PipeHomeHeader,
-      PipeTransfer,
       PipeBuilderList
     },
     provide() {
@@ -164,9 +152,6 @@
       is_process_run_mode() {
         return _.get(this.active_process, 'process_mode', '') == PROCESS_MODE_RUN
       },
-      is_transfer_view() {
-        return this.pipe_view == PIPEHOME_VIEW_TRANSFER
-      },
       is_builder_view()  {
         return this.pipe_view == PIPEHOME_VIEW_BUILDER
       },
@@ -197,7 +182,7 @@
       ]),
 
       setPipeView(view) {
-        if (_.includes([PIPEHOME_VIEW_TRANSFER, PIPEHOME_VIEW_BUILDER], view))
+        if (_.includes([PIPEHOME_VIEW_BUILDER], view))
         {
           // don't strip off query string
           var query = _.get(this.$route, 'query', undefined)
