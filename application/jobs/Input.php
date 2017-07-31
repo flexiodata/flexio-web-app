@@ -164,12 +164,9 @@ class Input extends \Flexio\Jobs\Base
             case \Model::CONNECTION_TYPE_SFTP:
             case \Model::CONNECTION_TYPE_DROPBOX:
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
+            case \Model::CONNECTION_TYPE_GOOGLESHEETS:
             case \Model::CONNECTION_TYPE_AMAZONS3:
                 return $this->runRemoteFileImport($service, $file_info);
-
-            // api-specific type data
-            case \Model::CONNECTION_TYPE_GOOGLESHEETS:
-                return $this->runGoogleSheetsImport($service, $file_info);
         }
     }
 
@@ -259,32 +256,81 @@ class Input extends \Flexio\Jobs\Base
 
     private function runRemoteFileImport($service, array $file_info) // TODO: set paramater type
     {
-        // get the input
+        // get the input path
         $path = $file_info['path'];
         $stream_properties = $file_info;
-        $outstream = self::createDatastoreStream($stream_properties);
-        $this->getOutput()->addStream($outstream);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $output = $this->getOutput();
 
         $mime_data_sample = '';
-        $params = array();
-        $params['path'] = $path;
+        $is_table = null;
+        $streamwriter = false;
+        
+        $service->read(array('path'=>$path), function($data) use (&$output, &$outstream, &$streamwriter, &$stream_properties, &$mime_data_sample, &$is_table) {
 
-        $service->read($params, function($data) use (&$streamwriter, &$mime_data_sample) {
+            if (is_null($is_table))
+            {
+                if (is_array($data))
+                {
+                    // $data payload contains tabular data
+                    $is_table = true;
+                    $structure = \Flexio\Base\Structure::create();
+
+                    for ($i = 0; $i < count($data); ++$i)
+                    {
+                        $colname = self::getSpreadsheetColumnName($i);
+                        $added_field = $structure->push(array(
+                            'name' =>          $colname,
+                            'type' =>          'text',
+                            'width' =>         null,
+                            'scale' =>         0
+                        ));
+
+                        // TODO: make sure the row we're inserting matches with any fieldname adjustments?
+                    }
+
+                    // add an output stream
+                    $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+                    $outstream = self::createDatastoreStream($stream_properties);
+                    $outstream->setStructure($structure);
+                    $this->getOutput()->addStream($outstream);
+
+                    $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+                }
+                 else
+                {
+                    // $data payload contains binary/text data
+                    $is_table = false;
+
+                    // add an output stream
+                    $outstream = self::createDatastoreStream($stream_properties);
+                    $this->getOutput()->addStream($outstream);
+
+                    $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+                }
+            }
+
+            if ($streamwriter !== false)
+                $streamwriter->write($data);
 
             // save a sample of data for determining the mime type
-            if (strlen($mime_data_sample) <= 1024)
-                $mime_data_sample .= $data;
-
-            $streamwriter->write($data);
-            $length = strlen($data);
-            return $length;
+            if (!$is_table)
+            {
+                if (strlen($mime_data_sample) <= 1024)
+                    $mime_data_sample .= $data;
+                $length = strlen($data);
+                return $length;
+            }
         });
 
+        if (!$streamwriter)
+            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
         $streamwriter->close();
 
         // set the mime type
-        $mime_type = \Flexio\Base\ContentType::getMimeType($path, $mime_data_sample);
+        if ($is_table)
+            $mime_type = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+             else
+            $mime_type = \Flexio\Base\ContentType::getMimeType($path, $mime_data_sample);
 
 
         // TODO: we want to identify json content, but this isn't easily distinguishable
@@ -301,76 +347,28 @@ class Input extends \Flexio\Jobs\Base
                 $mime_type = \Flexio\Base\ContentType::MIME_TYPE_JSON;
         }
 
-        $outstream->setMimeType($mime_type);
-        $outstream->setSize($streamwriter->getBytesWritten());
-    }
-
-    private function runGoogleSheetsImport($service, array $file_info) // TODO: set paramater type
-    {
-        // get the input
-        $path = $file_info['path'];
-
-        // create the output
-        $stream_properties = $file_info;
-        $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-        $outstream = self::createDatastoreStream($stream_properties);
-        $this->getOutput()->addStream($outstream);
-
-        $rownum = 0;
-        $structure = \Flexio\Base\Structure::create();
-
-        $streamwriter = false;
-        $params = array();
-        $params['path'] = $path;
-
-        $service->read($params, function($row) use (&$outstream, &$structure, &$streamwriter, &$rownum) {
-
-            $rownum++;
-
-            if ($rownum == 1)
-            {
-                for ($i = 0; $i < count($row); ++$i)
-                {
-                    $colname = self::getSpreadsheetColumnName($i);
-                    $added_field = $structure->push(array(
-                        'name' =>          $colname,
-                        'type' =>          'text',
-                        'width' =>         null,
-                        'scale' =>         0
-                    ));
-
-                    // TODO: make sure the row we're inserting matches with any fieldname adjustments?
-                }
-
-                $outstream->setStructure($structure);
-                $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-                $streamwriter->write($row);
-            }
-             else
-            {
-                if ($streamwriter !== false)
-                    $streamwriter->write($row);
-            }
-        });
-
-        if ($streamwriter !== false)
+        if ($is_table)
         {
-            $streamwriter->close();
-            $outstream->setSize($streamwriter->getBytesWritten());
+            $outstream->set(array('mime_type' => $mime_type));
+        }
+         else
+        {
+            $outstream->set(array('size' => $streamwriter->getBytesWritten(),
+                                  'mime_type' => $mime_type));
         }
     }
 
     private function createDatastoreStream(array $properties) :  \Flexio\Object\Stream
     {
-        // get a default connection and path
-        $properties['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
-        $properties['path'] = \Flexio\Base\Util::generateHandle();
-
-        if (!\Flexio\Base\Eid::isValid($properties['connection_eid']))
+        // use default datastore connection
+        $datastore_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        if (!\Flexio\Base\Eid::isValid($datastore_connection_eid))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-        $stream = \Flexio\Object\Stream::create($properties);
-        return $stream;
+        // use random string for the store table
+        $properties['connection_eid'] = $datastore_connection_eid;
+        $properties['path'] = \Flexio\Base\Util::generateHandle();
+        return \Flexio\Object\Stream::create($properties);
     }
 
     private function getConnectionInfoFromItem(array $params, array $item)

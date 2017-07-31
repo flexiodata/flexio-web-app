@@ -1,9 +1,9 @@
 {
   "app": {
-    "js": "/dist/app-2bf83a17a8ecfb9db2da.js",
+    "js": "/dist/app-7a2f78e28a376baf2e85.js",
     "css": "/dist/css/style-9070aef5625222872241191cc714da70.css"
   },
   "vendor": {
-    "js": "/dist/vendor-45736778fb33df912532.js"
+    "js": "/dist/vendor-ef70bdcd14390df47471.js"
   }
 }

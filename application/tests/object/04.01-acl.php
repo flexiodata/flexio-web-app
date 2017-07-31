@@ -28,6 +28,43 @@ class Test
 
 
 
+        // BEGIN TEST
+        $actual = \Flexio\Object\Right::TYPE_UNDEFINED;
+        $expected = '';
+        TestCheck::assertString('A.1', 'Right type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Object\Right::TYPE_READ;
+        $expected = 'object.read';
+        TestCheck::assertString('A.2', 'Right type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Object\Right::TYPE_WRITE;
+        $expected = 'object.write';
+        TestCheck::assertString('A.3', 'Right type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Object\Right::TYPE_DELETE;
+        $expected = 'object.delete';
+        TestCheck::assertString('A.4', 'Right type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Object\Right::TYPE_EXECUTE;
+        $expected = 'object.execute';
+        TestCheck::assertString('A.5', 'Right type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Object\Right::TYPE_READ_RIGHTS;
+        $expected = 'rights.read';
+        TestCheck::assertString('A.6', 'Right type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Object\Right::TYPE_WRITE_RIGHTS;
+        $expected = 'rights.write';
+        TestCheck::assertString('A.7', 'Right type',  $actual, $expected, $results);
+
+
+
         // TEST: \Model::addRights()
 
         // BEGIN TEST
@@ -39,7 +76,7 @@ class Test
         $object->setRights($rights);
         $actual = $object->getRights();
         $expected = array();
-        TestCheck::assertInArray('A.1', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.1', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights = json_decode('
@@ -55,7 +92,7 @@ class Test
             {"object_eid": "'.$object->getEid().'", "access_type": "a", "access_code": "b", "actions": ["object.read"]}
         ]
         ',true);
-        TestCheck::assertInArray('A.2', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.2', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights = json_decode('
@@ -73,7 +110,7 @@ class Test
             {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertInArray('A.3', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.3', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
@@ -97,7 +134,7 @@ class Test
             {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertInArray('A.4', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.4', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
@@ -121,7 +158,7 @@ class Test
             {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertInArray('A.5', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.5', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
@@ -145,7 +182,7 @@ class Test
             {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertInArray('A.6', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.6', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
@@ -170,7 +207,7 @@ class Test
             {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertInArray('A.7', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.7', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
@@ -197,7 +234,7 @@ class Test
             {"object_eid": "'.$object->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertInArray('A.8', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.8', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
@@ -223,7 +260,7 @@ class Test
             {"object_eid": "'.$object1->getEid().'", "access_type": "b", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertInArray('A.9', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.9', '\Model::addRights(); ',  $actual, $expected, $results);
 
         // BEGIN TEST
         $rights1 = json_decode('
@@ -249,6 +286,6 @@ class Test
             {"object_eid": "'.$object2->getEid().'", "access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        TestCheck::assertInArray('A.10', '\Model::addRights(); ',  $actual, $expected, $results);
+        TestCheck::assertInArray('B.10', '\Model::addRights(); ',  $actual, $expected, $results);
     }
 }

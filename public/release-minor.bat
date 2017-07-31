@@ -1,4 +1,5 @@
 call npm version minor
+call yarn
 call yarn run build:release
 call erase dist\css\*.map
 call git add dist\*.js
