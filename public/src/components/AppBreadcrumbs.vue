@@ -28,6 +28,9 @@
         return this.$route.name == ROUTE_ACCOUNT || this.$route.name == ROUTE_PIPEHOME
       },
       document_name() {
+        if (this.$route.name == ROUTE_ACCOUNT)
+          return 'Account'
+
         return _.get(this.getActiveDocument(), 'name', '')
       }
     },
