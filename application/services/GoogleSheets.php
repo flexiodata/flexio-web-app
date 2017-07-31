@@ -142,28 +142,38 @@ class GoogleSheets implements \Flexio\Services\IConnection
 
     public function read(array $params, callable $callback)
     {
-        $path = $params['path'] ?? '';
-
         $spreadsheet_id = null;
-        $worksheet_id = null;
+        $worksheet_title = null;
 
-        $ids = $this->getIdsFromPath($path);
-        if (isset($ids['spreadsheet_id']))
-            $spreadsheet_id = $ids['spreadsheet_id'];
-        if (isset($ids['worksheet_id']))
-            $worksheet_title = $ids['worksheet_title'];
+        if (isset($params['spreadsheet_id']))
+        {
+            $spreadsheet_id = $params['spreadsheet_id'];
+            if (isset($params['worksheet_title']))
+                $worksheet_title = $params['worksheet_title'];
+        }
+         else
+        {
+            $path = $params['path'] ?? '';
+
+            $ids = $this->getIdsFromPath($path);
+            if (isset($ids['spreadsheet_id']))
+                $spreadsheet_id = $ids['spreadsheet_id'];
+            if (isset($ids['worksheet_title']))
+                $worksheet_title = $ids['worksheet_title'];
+        }
 
         // if we don't have a spreadsheet id, we cannot continue
         if (!isset($spreadsheet_id))
             return;
 
         // if we don't have a worksheet id, use the first one inside the spreadsheet
-        if (!isset($worksheet_id))
+        if (!isset($worksheet_title))
         {
             $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
             if (!$spreadsheet)
                 return;
-            if (count($spreadsheet->worksheets) < 1)
+            $worksheets = $spreadsheet->getWorksheets();
+            if (count($worksheets) < 1)
                 return;
             $worksheet_title = $spreadsheet->worksheets[0]->title;
         }
@@ -334,200 +344,6 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return true;
     }
 
-/*
-    public function readFile(string $spreadsheet_id, string $worksheet_title, callable $callback)
-    {
-        if (!$this->authenticated())
-            return null;
-
-        $buf = '';
-        $info = array( 'currow' => 1, 'data' => [] );
-
-        $http_response_code = false;
-        $error_payload = '';
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://spreadsheets.google.com/feeds/cells/$spreadsheet_id/values/$worksheet_title");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token, 'GData-Version: 3.0']);
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$buf, &$info, &$http_response_code, &$error_payload) {
-            if ($http_response_code === false)
-            {
-                $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            }
-            if ($http_response_code >= 400)
-            {
-                if (strlen($error_payload) < 65536)
-                    $error_payload .= $data;
-                return strlen($data);
-            }
-             else
-            {
-                $buf .= $data;
-
-                if (strlen($buf) > 500000)
-                    self::processChunk($buf, $info, $callback, false);
-
-                return strlen($data);
-            }
-        });
-        $result = curl_exec($ch);
-        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($http_response_code >= 400 || $result !== true)
-        {
-            $error_object = @json_decode($error_payload, true);
-            $message = $error_object['error']['message'] ?? '';
-
-            $exception_message = "Read failed";
-            if ($http_response_code >= 400)
-                $exception_message .= ". HTTP Code: $http_response_code";
-            if (strlen($message) > 0)
-                $exception_message .= ". Google API Error Message: $message";
-            
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $exception_message);
-        }
-        
-        // process last remaining chunk
-
-        self::processChunk($buf, $info, $callback, true);
-
-        return true;
-    }
-
-    private static function processChunk(&$buf, &$info, $callback, $last) // TODO: set parameter/return types
-    {
-        // fetch row and column count from the beginning of the XML stream
-        if (!isset($info['rowcount']) || !isset($info['colcount']))
-        {
-            $idxc = strpos($buf, "</gs:colCount>");
-            if ($idxc === false)
-                return;
-            $idxr = strpos($buf, "</gs:rowCount>");
-            if ($idxr === false)
-                return;
-            $idx = max($idxc, $idxr);
-            $xml = substr($buf, 0, $idx+14);
-            $doc = new \DOMDocument;
-            if (!$doc->loadXML($xml . '</feed>'))
-            {
-                $buf = '';
-                return;
-            }
-            $e = $doc->getElementsByTagNameNS("http://schemas.google.com/spreadsheets/2006", "rowCount");
-            if (!$e || $e->length != 1)
-                return;
-            $info['rowcount'] = $e[0]->textContent;
-            $e = $doc->getElementsByTagNameNS("http://schemas.google.com/spreadsheets/2006", "colCount");
-            if (!$e || $e->length != 1)
-                return;
-            $info['colcount'] = $e[0]->textContent;
-        }
-
-
-        if (!isset($info['prologue']))
-        {
-            $idx = strpos($buf, '<feed');
-            if ($idx === false)
-                return;
-            $idx = strpos($buf, '>', $idx);
-            if ($idx === false)
-                return;
-
-            $info['prologue'] = substr($buf, 0, $idx+1);
-            $buf = substr($buf, $idx+1);
-        }
-
-
-        // find the closing </entry>
-
-        $idx = strrpos($buf, "</entry>");
-        if ($idx === false)
-        {
-            // can't find a closing entry; do nothing
-            return;
-        }
-
-
-        $remainder = substr($buf, $idx+8);
-        $buf = substr($buf, 0, $idx+8);
-
-        // parse the buffer
-        $doc = new \DOMDocument;
-        if (!$doc->loadXML($info['prologue'] . $buf . (strrpos($buf,'</feed>')===false?'</feed>':'')))
-        {
-            //$buf = '';
-            return;
-        }
-
-
-        $buf = $remainder;
-
-        foreach ($doc->getElementsByTagName('entry') as $node)
-        {
-            $content = null;
-            $row = null;
-            $col = null;
-
-            foreach ($node->childNodes as $c)
-            {
-                if ($c->tagName == 'content')
-                {
-                    $content = $c->textContent;
-                }
-                 else if ($c->tagName == 'gs:cell')
-                {
-                    $row = $c->hasAttribute('row') ? $c->getAttribute('row') : null;
-                    $col = $c->hasAttribute('col') ? $c->getAttribute('col') : null;
-                }
-            }
-
-            if (isset($row) && isset($col) && isset($content))
-            {
-                if (!isset($info['data'][$row]))
-                    $info['data'][$row] = [];
-                $info['data'][$row][$col] = $content;
-
-                if ($row != $info['currow'])
-                {
-                    $idx = 0;
-                    $row_data = $info['data'][$info['currow']];
-                    $row_data_to_return = array();
-                    foreach($row_data as $r)
-                    {
-                        $idx++;
-                        $row_data_to_return[self::stringFromColumnIndex($idx)] = $r;
-                    }
-
-                    $callback($row_data_to_return);
-                    unset($info['data'][$info['currow']]);
-                    $info['currow'] = $row;
-                }
-            }
-        }
-
-        if ($last)
-        {
-            if (isset($info['data'][$info['currow']]))
-            {
-                $idx = 0;
-                $row_data = $info['data'][$info['currow']];
-                $row_data_to_return = array();
-                foreach($row_data as $r)
-                {
-                    $idx++;
-                    $row_data_to_return[self::stringFromColumnIndex($idx)] = $r;
-                }
-
-                $callback($row_data_to_return);
-                unset($info['data'][$info['currow']]);
-            }
-        }
-    }
-
-*/
 
     // creates a new spreadsheet via the google docs v3 api; returns file id
     // or false if something goes wrong
@@ -850,99 +666,6 @@ class GoogleWorksheet
     public $row_count = 0;
     public $col_count = 0;
     public $edit_link = '';
-
-/*
-    public function setInfo($title, $rows, $cols) // TODO: set parameter types
-    {
-        $title = isset($title) ? $title : $this->title;
-        $rows = isset($rows) ? (int)$rows : $this->row_count;
-        $cols = isset($cols) ? (int)$cols : $this->col_count;
-
-        $xml = <<<EOL
-        <entry xmlns="http://www.w3.org/2005/Atom"
-               xmlns:gs="http://schemas.google.com/spreadsheets/2006">
-            <title type="text">$title</title>
-            <gs:rowCount>$rows</gs:rowCount>
-            <gs:colCount>$cols</gs:colCount>
-        </entry>
-EOL;
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $this->edit_link);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/atom+xml', 'If-Match: *', 'Authorization: Bearer '.$this->access_token]);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        $this->row_count = $rows;
-        $this->col_count = $cols;
-    }
-    */
-
-/*
-    // $cells should be an array like this
-    // [ { "row" => 1, "col" => 1, "value" => "contents" }, { ... } ]
-
-    public function setCells($cells) // TODO: set parameter type
-    {
-        $spreadsheet_id = $this->spreadsheet_id;
-        $worksheet_id = $this->worksheet_id;
-
-        $id = 0;
-        $entries = '';
-
-        foreach ($cells as $cell)
-        {
-            if (!isset($cell['row']) || !isset($cell['col']) || !isset($cell['value']))
-                continue;
-
-
-            $row = (int)$cell['row'];
-            $col = (int)$cell['col'];
-            $value = htmlspecialchars($cell['value']);
-
-            $id++;
-            $rc = "R" . $row . 'C' . $col;
-
-            $entries .= <<<EOL
-<entry>
-<batch:id>I$id</batch:id>
-<batch:operation type="update"/>
-<id>https://spreadsheets.google.com/feeds/cells/$spreadsheet_id/$worksheet_id/private/full/$rc</id>
-<gs:cell row="$row" col="$col" inputValue="$value"/>
-</entry>
-EOL;
-        }
-
-        $xml = <<<EOL
-            <feed xmlns="http://www.w3.org/2005/Atom"
-                  xmlns:batch="http://schemas.google.com/gdata/batch"
-                  xmlns:gs="http://schemas.google.com/spreadsheets/2006">
-            <id>https://spreadsheets.google.com/feeds/cells/$spreadsheet_id/$worksheet_id/private/full</id>
-            $entries
-            </feed>
-EOL;
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://spreadsheets.google.com/feeds/cells/$spreadsheet_id/$worksheet_id/private/full/batch");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'If-Match: *', 'Authorization: Bearer '.$this->access_token]);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-    }
-
-*/
-
 
     public $rows = [];
 

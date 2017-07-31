@@ -49,7 +49,7 @@ class ContentType
     const MIME_TYPE_NONE         = '';
     const MIME_TYPE_FLEXIO_TABLE = 'application/vnd.flexio.table';
     const MIME_TYPE_FLEXIO_HTML = 'application/vnd.flexio.html';
-
+    const MIME_TYPE_FLEXIO_FOLDER = 'application/vnd.flexio.folder';
 
     public static function getMimeType($extension, $buffer, $content_length = false) : string
     {
