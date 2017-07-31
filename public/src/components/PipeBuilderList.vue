@@ -19,17 +19,23 @@
     >
       {{error_message}}
     </ui-alert>
-    <div class="pa4 ml4 ml0-l mr4 bg-white ba b--white-box br2 tc" v-if="tasks.length == 0">
-      <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
-      <div class="mt3">
-        <btn
-          btn-md
-          btn-primary
-          class="ttu b"
-          @click="insertNewTask(-1)"
-        >
-          Add a step
-        </btn>
+    <div
+      class="relative center"
+      style="max-width: 1574px"
+      v-if="tasks.length == 0"
+    >
+      <div class="pa4 ml4 ml0-l mr4 bg-white ba b--white-box br2 tc">
+        <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
+        <div class="mt3">
+          <btn
+            btn-lg
+            btn-primary
+            class="ttu b"
+            @click="insertNewTask(-1)"
+          >
+            Add a step
+          </btn>
+        </div>
       </div>
     </div>
     <div class="pb3 ml2-m ml3-l" v-else>
