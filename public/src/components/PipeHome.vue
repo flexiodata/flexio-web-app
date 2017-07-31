@@ -100,7 +100,7 @@
     data() {
       return {
         eid: this.$route.params.eid,
-        pipe_view: PIPEHOME_VIEW_TRANSFER,
+        pipe_view: PIPEHOME_VIEW_BUILDER,
         prompt_tasks: [],
         active_prompt_idx: 0,
         is_prompting: false
@@ -178,11 +178,7 @@
       this.tryFetchPipe()
       this.tryFetchProcesses()
       this.tryFetchConnections()
-
-      if (_.get(this.$route, 'params.view') == PIPEHOME_VIEW_BUILDER)
-        this.setPipeView(PIPEHOME_VIEW_BUILDER)
-         else
-        this.setPipeView(PIPEHOME_VIEW_TRANSFER)
+      this.setPipeView(PIPEHOME_VIEW_BUILDER)
     },
     mounted() {
       // only start in configure mode if we have a pipe and it's already been fetched;

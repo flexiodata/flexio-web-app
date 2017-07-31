@@ -41,18 +41,6 @@
       </inline-edit-text>
     </div>
     <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
-      <div
-        class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
-        :class="[pipeView=='overview'?'b--blue':'b--transparent']"
-        @click="setPipeView('overview')"
-        v-if="!isPrompting && !isProcessRunning"
-      >Pipe Overview</div>
-      <div
-        class="f6 fw6 dark-gray pointer mr3-ns dn db-ns bb bw1 ttu css-nav-text"
-        :class="[pipeView=='builder'?'b--blue':'b--transparent']"
-        @click="setPipeView('builder')"
-        v-if="!isPrompting && !isProcessRunning"
-      >Pipe Builder</div>
       <btn
         btn-md
         btn-primary
@@ -80,16 +68,6 @@
           @click="runPipe"
         >Run</btn>
       </div>
-      <div
-        class="f7 fw6 dark-gray pointer mt2 db dn-ns bb bw1 ttu css-nav-text"
-        :class="[pipeView=='overview'?'b--blue':'b--transparent']"
-        @click="setPipeView('overview')"
-      >Pipe Overview</div>
-      <div
-        class="f7 fw6 dark-gray pointer mt2 db dn-ns bb bw1 ttu css-nav-text"
-        :class="[pipeView=='builder'?'b--blue':'b--transparent']"
-        @click="setPipeView('builder')"
-      >Pipe Builder</div>
     </div>
 
     <!-- copy pipe modal -->
