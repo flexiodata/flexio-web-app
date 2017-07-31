@@ -45,8 +45,8 @@
       @go-next-prompt="goNextPrompt"
       @run-once-with-values="runOnceWithPromptValues"
       @save-values-and-run="savePromptValuesAndRun"
-      v-else>
-    </pipe-builder-list>
+      v-else
+    ></pipe-builder-list>
 
     <ui-snackbar-container
       ref="snackbar-container"

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative"
+    class="relative center"
     style="max-width: 1574px"
     :style="style"
     :id="eid"
