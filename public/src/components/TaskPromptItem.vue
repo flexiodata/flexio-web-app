@@ -30,7 +30,7 @@
 <script>
   import { mapState } from 'vuex'
   import Btn from './Btn.vue'
-  import TaskConfigureVariableItem from './TaskConfigureVariableItem.vue'
+  import TaskPromptVariableItem from './TaskPromptVariableItem.vue'
 
   export default {
     props: {
@@ -65,7 +65,7 @@
     },
     components: {
       Btn,
-      TaskConfigureVariableItem
+      TaskPromptVariableItem
     },
     data() {
       return {

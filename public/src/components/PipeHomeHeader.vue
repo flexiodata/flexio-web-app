@@ -23,7 +23,7 @@
             @save="editPipeAlias">
           </inline-edit-text>
           <div
-            class="hint--bottom hint--large cursor-default"
+            class="hint--bottom hint--large cursor-default dib"
             aria-label="When using the Flex.io command line interface (CLI) or API, pipes may be referenced either via their object ID or via an alias created here. Aliases are unique across the app, so we recommend prefixing your username to the alias (e.g., username-foo)."
             v-if="pipe_ename.length == 0"
           >

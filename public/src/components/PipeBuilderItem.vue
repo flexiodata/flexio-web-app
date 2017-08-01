@@ -258,7 +258,7 @@
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
   import ProcessProgressItem from './ProcessProgressItem.vue'
-  import TaskConfigureItem from './TaskConfigureItem.vue'
+  import TaskPromptItem from './TaskPromptItem.vue'
   import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
@@ -316,7 +316,7 @@
       InlineEditText,
       PipeContent,
       ProcessProgressItem,
-      TaskConfigureItem
+      TaskPromptItem
     },
     inject: ['pipeEid'],
     watch: {
