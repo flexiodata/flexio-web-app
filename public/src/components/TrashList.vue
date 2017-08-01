@@ -18,6 +18,7 @@
       :item="trash_item"
       :index="index"
     ></trash-item>
+    <div class="h4"></div>
   </div>
 </template>
 

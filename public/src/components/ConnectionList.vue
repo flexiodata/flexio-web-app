@@ -21,6 +21,7 @@
       @edit="onItemEdit"
       @delete="onItemDelete"
     ></connection-item>
+    <div class="h4"></div>
   </div>
 </template>
 
