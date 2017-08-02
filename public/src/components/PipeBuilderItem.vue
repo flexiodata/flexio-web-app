@@ -212,12 +212,11 @@
           <div v-if="show_helper">
             <div class="tc mv3 f6 fw6 silver">...or auto-fill from these common steps:</div>
             <div class="flex flex-column flex-row-l flex-wrap items-center justify-center center">
-              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Input from Dropbox</div>
-              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Input from Web</div>
-              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Convert From CSV</div>
-              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Execute Python</div>
-              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Send Email</div>
-              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Add Output</div>
+              <div
+                class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10"
+                @click="autofillItemClick(item)"
+                v-for="(item, index) in autofill_items"
+              >{{item.label}}</div>
             </div>
           </div>
 
@@ -278,6 +277,8 @@
   import {
     TASK_TYPE_INPUT,
     TASK_TYPE_OUTPUT,
+    TASK_TYPE_CONVERT,
+    TASK_TYPE_EMAIL_SEND,
     TASK_TYPE_EXECUTE,
     TASK_TYPE_COMMENT
   } from '../constants/task-type'
@@ -297,6 +298,63 @@
   import ServiceList from './ServiceList.vue'
   import TaskPromptItem from './TaskPromptItem.vue'
   import TaskItemHelper from './mixins/task-item-helper'
+
+  const autofill_items = [
+    {
+      label: 'Input from Dropbox',
+      task_cmd: 'input from: Dropbox'
+    },{
+      label: 'Input from Web',
+      task_json: {
+        'type': TASK_TYPE_INPUT,
+        'params': {
+          'items': [
+            {
+              'path': 'https://www.pexels.com/photo/mountain-filled-with-snow-under-blue-sky-during-daytime-51387'
+            }
+          ]
+        },
+        'metadata': {
+          'connection_type': CONNECTION_TYPE_HTTP
+        }
+      }
+    },{
+      label: 'Convert From CSV to JSON',
+      task_json: {
+        'type': TASK_TYPE_CONVERT,
+        'params': {
+          'input': {
+            'format': 'delimited',
+            'delimiter': '{comma}',
+            'qualifier': '{double-quote}'
+          },
+          'output': {
+            'format': 'json'
+          }
+        }
+      }
+    },{
+      label: 'Execute Python',
+      task_json: {
+        'type': TASK_TYPE_EXECUTE,
+        'params': {
+          'lang': 'python',
+          // "Hello, World!" example code
+          'code': 'ZGVmIGZsZXhpb19oYW5kbGVyKGlucHV0LCBvdXRwdXQpOgogICAgd3JpdGVyID0gb3V0cHV0LmNyZWF0ZShuYW1lPSdIZWxsbycpCiAgICBpZiAnbWVzc2FnZScgaW4gaW5wdXQuZW52OgogICAgICAgIHdyaXRlci53cml0ZShpbnB1dC5lbnZbJ21lc3NhZ2UnXSkKICAgIGVsc2U6ICAKICAgICAgICB3cml0ZXIud3JpdGUoJ0hlbGxvLCBXb3JsZCEnKQ=='
+        }
+      }
+    },{
+      label: 'Send Email',
+      task_json: {
+        'type': TASK_TYPE_EMAIL_SEND,
+        'params': {
+          'to': ['john.smith@example.com'],
+          'subject': 'My Subject',
+          'body_text': 'This is a test of Flex.io'
+        }
+      }
+    }
+  ]
 
   export default {
     props: {
@@ -380,7 +438,8 @@
         syntax_msg: '',
         edit_json: this.getOrigJson(),
         edit_cmd: this.getOrigCmd(),
-        edit_code: this.getOrigCode()
+        edit_code: this.getOrigCode(),
+        autofill_items: autofill_items
       }
     },
     computed: {
@@ -785,6 +844,9 @@
       },
       emitGoNextPrompt(task_eid) {
         this.$emit('go-next-prompt', task_eid)
+      },
+      autofillItemClick(item) {
+        alert(JSON.stringify(item.task_json))
       }
     }
   }
