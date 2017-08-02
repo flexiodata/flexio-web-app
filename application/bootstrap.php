@@ -107,10 +107,9 @@ function IS_SECURE()
     return (isset($_SERVER['HTTPS']) && strlen($_SERVER['HTTPS']) > 0);
 }
 
-function getPhpRuntime()
+function getPhpExecTime()
 {
-    $t2 = microtime(true);
-    $t2 - $GLOBALS['g_start_time'];
+    return microtime(true) - $GLOBALS['g_start_time'];
 }
 
 function toBoolean($v)
