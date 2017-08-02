@@ -125,9 +125,9 @@
           v-if="show_progress">
         </process-progress-item>
 
-        <!-- option 2. show task configure item, or... -->
+        <!-- option 2. show task prompt item, or... -->
 
-        <task-configure-item
+        <task-prompt-item
           class="mt4"
           :item="item"
           :index="index"
@@ -142,7 +142,7 @@
           @run-once-with-values="$emit('run-once-with-values')"
           @save-values-and-run="$emit('save-values-and-run')"
           v-else-if="isPrompting && is_prompt"
-        ></task-configure-item>
+        ></task-prompt-item>
 
         <!-- option 3. show normal builder item -->
 

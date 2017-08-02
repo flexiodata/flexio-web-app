@@ -8,14 +8,14 @@
       {{error_msg}}
     </ui-alert>
 
-    <task-configure-variable-item
+    <task-prompt-variable-item
       class="mb3"
       :item="v"
       :index="index"
       :task-item="item"
       @value-change="onValueChange"
       v-for="(v, index) in variables"
-    ></task-configure-variable-item>
+    ></task-prompt-variable-item>
 
     <div class="flex flex-row items-center mt3" v-if="isActivePromptTask">
       <div class="flex-fill"></div>
