@@ -211,9 +211,9 @@
           <!-- helper area -->
           <div v-if="show_helper">
             <div class="tc mv3 f6 fw6 silver">...or auto-fill from these common steps:</div>
-            <div class="flex flex-column flex-row-l flex-wrap items-center justify-center center">
+            <div class="flex flex-row flex-wrap items-center justify-center-l center">
               <div
-                class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10"
+                class="f6 fw6 ttu br1 ma1 ma2-l pa2 pointer bg-near-white darken-10"
                 @click="autofillItemClick(item)"
                 v-for="(item, index) in autofill_items"
               >{{item.label}}</div>
