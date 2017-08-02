@@ -418,8 +418,8 @@
     watch: {
       task: function(val, old_val) {
         this.edit_json = _.assign({}, val)
-        this.edit_cmd = this.getOrigCmd()
-        this.edit_code = this.getOrigCode()
+        this.edit_cmd = this.getEditCmdFromJson()
+        this.edit_code = this.getCodeFromBase64()
       },
       showPreview: function(val, old_val) {
         this.show_preview = val
@@ -437,8 +437,8 @@
         show_preview: this.showPreview,
         syntax_msg: '',
         edit_json: this.getOrigJson(),
-        edit_cmd: this.getOrigCmd(),
-        edit_code: this.getOrigCode(),
+        edit_cmd: this.getEditCmdFromJson(),
+        edit_code: this.getCodeFromBase64(),
         autofill_items: autofill_items
       }
     },
@@ -635,16 +635,19 @@
       getOrigJson() {
         return _.get(this, 'item', {})
       },
-      getOrigCmd() {
-        var cmd_text = _.defaultTo(parser.toCmdbar(this.getOrigJson()), '')
+      // defaults to original task json
+      getEditCmdFromJson(json) {
+        var json = _.isObject(json) ? json : this.getOrigJson()
+        var cmd_text = _.defaultTo(parser.toCmdbar(json), '')
         var end_idx = cmd_text.indexOf(' code:')
 
-        return (_.get(this, 'item.type') == TASK_TYPE_EXECUTE && end_idx != -1)
+        return (_.get(json, 'type') == TASK_TYPE_EXECUTE && end_idx != -1)
           ? cmd_text.substring(0, end_idx)
           : cmd_text
       },
-      getOrigCode() {
-        var code = _.get(this, 'item.params.code', '')
+      // defaults to original task json's base64 code
+      getCodeFromBase64(base64_code) {
+        var code = _.isString(base64_code) ? base64_code : _.get(this, 'item.params.code', '')
         try { return decodeURIComponent(escape(atob(code))) } catch(e) { return e }
       },
       getBase64Code(code) {
@@ -846,7 +849,10 @@
         this.$emit('go-next-prompt', task_eid)
       },
       autofillItemClick(item) {
-        alert(JSON.stringify(item.task_json))
+        this.edit_json = _.assign({}, _.get(item, 'task_json', {}))
+        this.edit_cmd = this.getEditCmdFromJson(this.edit_json)
+        this.edit_code = this.getCodeFromBase64(_.get(this.edit_json, 'params.code', ''))
+        this.saveChanges()
       }
     }
   }
