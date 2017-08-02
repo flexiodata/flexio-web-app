@@ -185,6 +185,42 @@
             v-if="show_command_bar"
           ></command-bar>
 
+          <!-- input chooser -->
+          <transition name="slide-fade">
+            <service-list
+              class="ph3 pv2 ba bt-0 b--black-10"
+              style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
+              list-type="input"
+              item-layout=""
+              :services-only="false"
+              v-if="show_input_list"
+            ></service-list>
+          </transition>
+
+          <!-- output chooser -->
+          <transition name="slide-fade">
+            <service-list
+              class="ph3 pv2 ba bt-0 b--black-10"
+              style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
+              list-type="output"
+              item-layout=""
+              v-if="show_output_list"
+            ></service-list>
+          </transition>
+
+          <!-- helper area -->
+          <div v-if="show_helper">
+            <div class="tc mv3 f6 fw6 silver">...or auto-fill from these common steps:</div>
+            <div class="flex flex-column flex-row-l flex-wrap items-center justify-center center">
+              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Input from Dropbox</div>
+              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Input from Web</div>
+              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Convert From CSV</div>
+              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Execute Python</div>
+              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Send Email</div>
+              <div class="f6 fw6 ttu br2 mh2 pa2 pointer bg-near-white darken-10">Add Output</div>
+            </div>
+          </div>
+
           <!-- code editor -->
           <code-editor
             ref="code"
@@ -258,6 +294,7 @@
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
   import ProcessProgressItem from './ProcessProgressItem.vue'
+  import ServiceList from './ServiceList.vue'
   import TaskPromptItem from './TaskPromptItem.vue'
   import TaskItemHelper from './mixins/task-item-helper'
 
@@ -316,6 +353,7 @@
       InlineEditText,
       PipeContent,
       ProcessProgressItem,
+      ServiceList,
       TaskPromptItem
     },
     inject: ['pipeEid'],
@@ -363,6 +401,36 @@
       },
       show_command_bar() {
         return this.task_type != TASK_TYPE_COMMENT
+      },
+      show_input_list() {
+        if (_.get(this.edit_json, 'type', '') == TASK_TYPE_INPUT &&
+            _.isEqual(_.get(this.edit_json, 'params', {}), {}))
+        {
+          return true
+        }
+
+        return false
+      },
+      show_output_list() {
+        if (_.get(this.edit_json, 'type', '') == TASK_TYPE_OUTPUT &&
+            _.isEqual(_.get(this.edit_json, 'params', {}), {}))
+        {
+          return true
+        }
+
+        return false
+      },
+      show_helper() {
+        if (this.show_input_list || this.show_output_list)
+          return false
+
+        if (this.task_type.length == 0)
+          return true
+
+        if (_.get(this.edit_json, 'type', '') == '')
+          return true
+
+        return false
       },
       orig_cmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
@@ -476,15 +544,15 @@
         var is_last = this.index == task_cnt - 1
 
         if (task_cnt == 1)
-          return ['pb4a','br2','ba'].join(' ')
+          return ['pb4','br2','ba'].join(' ')
 
         if (this.index == 0)
-          return ['pb4a','br2','bt','br--top'].join(' ')
+          return ['pb4','br2','bt','br--top'].join(' ')
 
         if (is_last)
-          return ['pb4a','br2','bb','br--bottom'].join(' ')
+          return ['pb4','br2','bb','br--bottom'].join(' ')
 
-        return 'pb4a'
+        return 'pb4'
       },
       style() {
         return ''

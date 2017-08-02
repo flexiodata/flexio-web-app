@@ -16,18 +16,37 @@
   import ServiceItem from './ServiceItem.vue'
 
   export default {
-    props: ['list-type', 'item-layout'],
+    props: {
+      'list-type': {
+        type: String,
+        required: true
+      },
+      'item-layout': {
+        type: String,
+        default: 'list'
+      },
+      'filter-items': {
+        type: String,
+        default: '' // '', 'services' or 'non-services'
+      }
+    },
     components: {
       ServiceItem
     },
     computed: {
       services() {
+        var services = []
         if (this.listType == 'input')
-          return _.filter(connections, { is_service: true, is_input: true })
+          services = _.filter(connections, { is_input: true })
         if (this.listType == 'output')
-          return _.filter(connections, { is_service: true, is_output: true })
+          services = _.filter(connections, { is_output: true })
 
-        return _.filter(connections, { is_service: true })
+        if (this.filterItems == 'services')
+          services = _.filter(services, { is_service: true })
+        if (this.filterItems == 'non-services')
+          services = _.filter(services, { is_service: false })
+
+        return services
       }
     },
     methods: {
