@@ -34,7 +34,7 @@ export default [
       'params': {
         'items': [
           {
-            'path': 'https://www.pexels.com/photo/mountain-filled-with-snow-under-blue-sky-during-daytime-51387'
+            'path': 'https://static.pexels.com/photos/51387/mount-everest-himalayas-nuptse-lhotse-51387.jpeg'
           }
         ]
       },
