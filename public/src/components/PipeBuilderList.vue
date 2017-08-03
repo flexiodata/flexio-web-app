@@ -73,7 +73,6 @@
           <div class="mt2">{{item.label}}</div>
         </div>
       </div>
-
     </div>
   </div>
 </template>

@@ -19,7 +19,7 @@
     props: {
       'list-type': {
         type: String,
-        required: true
+        default: ''
       },
       'item-layout': {
         type: String,

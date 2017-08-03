@@ -187,25 +187,26 @@
 
           <!-- input chooser -->
           <transition name="slide-fade">
-            <service-list
+            <pipe-builder-input-chooser
               class="ph3 pv2 ba bt-0 b--black-10"
               style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
-              list-type="input"
               item-layout=""
-              :services-only="false"
-              v-if="show_input_list"
-            ></service-list>
+              @choose-input="onChooseInput"
+              v-if="show_input_chooser"
+            ></pipe-builder-input-chooser>
           </transition>
+
+          <!-- input list -->
 
           <!-- output chooser -->
           <transition name="slide-fade">
-            <service-list
+            <pipe-builder-output-chooser
               class="ph3 pv2 ba bt-0 b--black-10"
               style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
-              list-type="output"
               item-layout=""
-              v-if="show_output_list"
-            ></service-list>
+              @choose-output="onChooseOutput"
+              v-if="show_output_chooser"
+            ></pipe-builder-output-chooser>
           </transition>
 
           <!-- helper area -->
@@ -277,15 +278,20 @@
   import {
     TASK_TYPE_INPUT,
     TASK_TYPE_OUTPUT,
-    TASK_TYPE_CONVERT,
-    TASK_TYPE_EMAIL_SEND,
     TASK_TYPE_EXECUTE,
     TASK_TYPE_COMMENT
   } from '../constants/task-type'
   import {
     CONNECTION_TYPE_HTTP,
-    CONNECTION_TYPE_RSS
+    CONNECTION_TYPE_RSS,
+    CONNECTION_TYPE_STDIN,
+    CONNECTION_TYPE_EMAIL,
+    CONNECTION_TYPE_STDOUT,
+    CONNECTION_TYPE_DROPBOX,
+    CONNECTION_TYPE_GOOGLEDRIVE,
+    CONNECTION_TYPE_SFTP
   } from '../constants/connection-type'
+  import autofill_items from '../constants/pipe-autofill'
   import api from '../api'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
@@ -295,77 +301,10 @@
   import InlineEditText from './InlineEditText.vue'
   import PipeContent from './PipeContent.vue'
   import ProcessProgressItem from './ProcessProgressItem.vue'
-  import ServiceList from './ServiceList.vue'
+  import PipeBuilderInputChooser from './PipeBuilderInputChooser.vue'
+  import PipeBuilderOutputChooser from './PipeBuilderOutputChooser.vue'
   import TaskPromptItem from './TaskPromptItem.vue'
   import TaskItemHelper from './mixins/task-item-helper'
-
-  const autofill_items = [
-    {
-      label: 'Add Input',
-      task_json: {
-        'type': TASK_TYPE_INPUT,
-        'params': {
-        }
-      }
-    },{
-      label: 'Add Output',
-      task_json: {
-        'type': TASK_TYPE_OUTPUT,
-        'params': {
-        }
-      }
-    },{
-      label: 'Input from Web',
-      task_json: {
-        'type': TASK_TYPE_INPUT,
-        'params': {
-          'items': [
-            {
-              'path': 'https://www.pexels.com/photo/mountain-filled-with-snow-under-blue-sky-during-daytime-51387'
-            }
-          ]
-        },
-        'metadata': {
-          'connection_type': CONNECTION_TYPE_HTTP
-        }
-      }
-    },{
-      label: 'Convert From CSV to JSON',
-      task_json: {
-        'type': TASK_TYPE_CONVERT,
-        'params': {
-          'input': {
-            'format': 'delimited',
-            'delimiter': '{comma}',
-            'qualifier': '{double-quote}'
-          },
-          'output': {
-            'format': 'json'
-          }
-        }
-      }
-    },{
-      label: 'Execute Python',
-      task_json: {
-        'type': TASK_TYPE_EXECUTE,
-        'params': {
-          'lang': 'python',
-          // "Hello, World!" example code
-          'code': 'ZGVmIGZsZXhpb19oYW5kbGVyKGlucHV0LCBvdXRwdXQpOgogICAgd3JpdGVyID0gb3V0cHV0LmNyZWF0ZShuYW1lPSdIZWxsbycpCiAgICBpZiAnbWVzc2FnZScgaW4gaW5wdXQuZW52OgogICAgICAgIHdyaXRlci53cml0ZShpbnB1dC5lbnZbJ21lc3NhZ2UnXSkKICAgIGVsc2U6ICAKICAgICAgICB3cml0ZXIud3JpdGUoJ0hlbGxvLCBXb3JsZCEnKQ=='
-        }
-      }
-    },{
-      label: 'Send Email',
-      task_json: {
-        'type': TASK_TYPE_EMAIL_SEND,
-        'params': {
-          'to': ['john.smith@example.com'],
-          'subject': 'My Subject',
-          'body_text': 'This is a test of Flex.io'
-        }
-      }
-    }
-  ]
 
   export default {
     props: {
@@ -422,7 +361,8 @@
       InlineEditText,
       PipeContent,
       ProcessProgressItem,
-      ServiceList,
+      PipeBuilderInputChooser,
+      PipeBuilderOutputChooser,
       TaskPromptItem
     },
     inject: ['pipeEid'],
@@ -472,7 +412,7 @@
       show_command_bar() {
         return this.task_type != TASK_TYPE_COMMENT
       },
-      show_input_list() {
+      show_input_chooser() {
         if (_.get(this.edit_json, 'type', '') == TASK_TYPE_INPUT &&
             _.isEqual(_.get(this.edit_json, 'params', {}), {}))
         {
@@ -481,7 +421,7 @@
 
         return false
       },
-      show_output_list() {
+      show_output_chooser() {
         if (_.get(this.edit_json, 'type', '') == TASK_TYPE_OUTPUT &&
             _.isEqual(_.get(this.edit_json, 'params', {}), {}))
         {
@@ -491,7 +431,7 @@
         return false
       },
       show_helper() {
-        if (this.show_input_list || this.show_output_list)
+        if (this.show_input_chooser || this.show_output_chooser)
           return false
 
         if (this.task_type.length == 0)
@@ -864,6 +804,108 @@
         this.edit_cmd = this.getEditCmdFromJson(this.edit_json)
         this.edit_code = this.getCodeFromBase64(_.get(this.edit_json, 'params.code', ''))
         this.saveChanges()
+      },
+      onChooseInput(connection) {
+        var eid = this.pipeEid
+        var task_eid = this.eid
+        var ctype = _.get(connection, 'connection_type', '')
+        var conn_identifier = _.get(connection, 'ename', '')
+        conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(connection, 'eid', '')
+
+        var attrs = {
+          metadata: {
+            connection_type: ctype
+          },
+          type: TASK_TYPE_INPUT,
+          params: {}
+        }
+
+        if (conn_identifier.length > 0)
+          _.set(attrs, 'params.connection', conn_identifier)
+
+        if (ctype === CONNECTION_TYPE_STDIN || ctype === CONNECTION_TYPE_EMAIL)
+          _.set(attrs, 'params.connection', ctype)
+           else
+          _.set(attrs, 'params.items', []) // all other connections start with empty items array
+
+        // update input task
+        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {
+          var task = response.body
+
+          var analytics_payload = {
+            eid,
+            connection_type: ctype,
+            createdAt: _.get(task, 'created') // Segment-friendly key value
+          }
+
+          analytics.track('Created Step: Input', analytics_payload)
+        })
+      },
+      onChooseOutput(connection) {
+        var eid = this.pipeEid
+        var task_eid = this.eid
+        var ctype = _.get(connection, 'connection_type', '')
+        var conn_identifier = _.get(connection, 'ename', '')
+        conn_identifier = conn_identifier.length > 0 ? conn_identifier : _.get(connection, 'eid', '')
+
+        // email output is a one-off output connection
+        if (ctype == CONNECTION_TYPE_EMAIL)
+        {
+          var attrs = {
+            type: TASK_TYPE_EMAIL_SEND,
+            params: {
+              to: ['${email_address}'],
+              subject: 'Flex.io Pipe Email Output',
+              data: 'attachment'
+            }
+          }
+
+          // add email send task
+          this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
+            var task = response.body
+
+            var analytics_payload = {
+              eid,
+              connection_type: ctype,
+              createdAt: _.get(task, 'created') // Segment-friendly key value
+            }
+
+            analytics.track('Created Step: Output (via Chooser List)', analytics_payload)
+          })
+
+          return
+        }
+
+        var attrs = {
+          metadata: {
+            connection_type: ctype
+          },
+          type: TASK_TYPE_OUTPUT,
+          params: {}
+        }
+
+        if (conn_identifier.length > 0)
+          _.set(attrs, 'params.connection', conn_identifier)
+
+        if (ctype === CONNECTION_TYPE_STDOUT)
+          _.set(attrs, 'params.connection', ctype)
+
+        // add default output location for connections that need this
+        if (ctype == CONNECTION_TYPE_DROPBOX || ctype == CONNECTION_TYPE_GOOGLEDRIVE || ctype == CONNECTION_TYPE_SFTP)
+          _.set(attrs, 'params.location', '/')
+
+        // update output task
+        this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {
+          var task = response.body
+
+          var analytics_payload = {
+            eid,
+            connection_type: ctype,
+            createdAt: _.get(task, 'created') // Segment-friendly key value
+          }
+
+          analytics.track('Created Step: Output (via Chooser List)', analytics_payload)
+        })
       }
     }
   }
