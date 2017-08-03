@@ -301,8 +301,19 @@
 
   const autofill_items = [
     {
-      label: 'Input from Dropbox',
-      task_cmd: 'input from: Dropbox'
+      label: 'Add Input',
+      task_json: {
+        'type': TASK_TYPE_INPUT,
+        'params': {
+        }
+      }
+    },{
+      label: 'Add Output',
+      task_json: {
+        'type': TASK_TYPE_OUTPUT,
+        'params': {
+        }
+      }
     },{
       label: 'Input from Web',
       task_json: {
