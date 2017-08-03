@@ -196,7 +196,19 @@
             ></pipe-builder-input-chooser>
           </transition>
 
-          <!-- input list -->
+          <!-- input file list -->
+          <pipe-transfer-input-item
+            :item="task"
+            :index="index"
+            v-if="is_input_task"
+          ></pipe-transfer-input-item>
+
+          <!-- output panel -->
+          <pipe-transfer-output-item
+            :item="task"
+            :index="index"
+            v-if="is_output_task || is_email_task"
+          ></pipe-transfer-output-item>
 
           <!-- output chooser -->
           <transition name="slide-fade">
@@ -228,12 +240,12 @@
             :val="orig_code"
             :lang="code_lang"
             @change="updateCode"
-            v-if="is_task_execute"
+            v-if="is_execute_task"
           ></code-editor>
 
           <!-- syntax error message and cancel/save buttons -->
           <transition name="slide-fade">
-            <div class="flex flex-row items-start mt2" v-if="is_changed">
+            <div class="flex flex-row items-start mt2" v-if="is_changed && !show_helper">
               <div class="flex-fill mr4">
                 <transition name="slide-fade">
                   <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
@@ -304,6 +316,8 @@
   import ProcessProgressItem from './ProcessProgressItem.vue'
   import PipeBuilderInputChooser from './PipeBuilderInputChooser.vue'
   import PipeBuilderOutputChooser from './PipeBuilderOutputChooser.vue'
+  import PipeTransferInputItem from './PipeTransferInputItem.vue'
+  import PipeTransferOutputItem from './PipeTransferOutputItem.vue'
   import TaskPromptItem from './TaskPromptItem.vue'
   import TaskItemHelper from './mixins/task-item-helper'
 
@@ -364,6 +378,8 @@
       ProcessProgressItem,
       PipeBuilderInputChooser,
       PipeBuilderOutputChooser,
+      PipeTransferInputItem,
+      PipeTransferOutputItem,
       TaskPromptItem
     },
     inject: ['pipeEid'],
@@ -404,7 +420,16 @@
       task_type() {
         return _.get(this, 'task.type', '')
       },
-      is_task_execute() {
+      is_input_task() {
+        return this.task_type == TASK_TYPE_INPUT
+      },
+      is_output_task() {
+        return this.task_type == TASK_TYPE_OUTPUT
+      },
+      is_email_task() {
+        return this.task_type == TASK_TYPE_EMAIL_SEND
+      },
+      is_execute_task() {
         return this.task_type == TASK_TYPE_EXECUTE
       },
       is_active_prompt_task() {
@@ -446,7 +471,7 @@
       orig_cmd() {
         var cmd_text = _.defaultTo(parser.toCmdbar(this.task), '')
         var end_idx = cmd_text.indexOf(' code:')
-        return (this.is_task_execute && end_idx != -1)
+        return (this.is_execute_task && end_idx != -1)
           ? cmd_text.substring(0, end_idx)
           : cmd_text
       },
@@ -458,7 +483,7 @@
         if (!this.is_inited)
           return false
 
-        if (this.is_task_execute && this.orig_code != this.edit_code)
+        if (this.is_execute_task && this.orig_code != this.edit_code)
           return true
 
         return this.orig_cmd != this.edit_cmd ? true : false

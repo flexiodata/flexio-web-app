@@ -1,6 +1,6 @@
 <template>
   <article class="mb3">
-    <div class="flex flex-row items-center pa2 bg-black-05">
+    <div class="flex flex-row items-center pa2 bg-black-05" v-if="showTitleBar">
       <connection-icon :type="ctype" class="v-mid br1 square-2 mr2"></connection-icon>
       <div class="f6 fw6 ttu silver">{{title}}</div>
       <div class="flex-fill"></div>
@@ -54,7 +54,7 @@
       </div>
       <div class="tl" v-else-if="is_email">
         <div class="lh-copy mid-gray f6 mb3 i">
-          Files will be output to the email addresses specified in the pipe builder.
+          Files will be output to the specified email addresses.
         </div>
       </div>
       <div class="tl" v-else-if="is_mysql || is_postgres">
@@ -116,7 +116,16 @@
   import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
-    props: ['item'],
+    props: {
+      'item': {
+        type: Object,
+        required: true
+      },
+      'show-title-bar': {
+        type: Boolean,
+        default: false
+      }
+    },
     mixins: [TaskItemHelper],
     components: {
       Btn,
