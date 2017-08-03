@@ -9,6 +9,7 @@
  *
  */
 
+$g_start_time = microtime(true);
 
 if (file_exists(__DIR__ . '/../config/config.json'))
 {
@@ -106,6 +107,11 @@ function IS_SECURE()
     return (isset($_SERVER['HTTPS']) && strlen($_SERVER['HTTPS']) > 0);
 }
 
+function getPhpExecTime()
+{
+    return microtime(true) - $GLOBALS['g_start_time'];
+}
+
 function toBoolean($v)
 {
     if (is_string($v))
@@ -166,7 +172,6 @@ if (IS_DEBUG())
     ini_set('display_startup_errors', 1);
     ini_set('display_errors', 1);
     ini_set('log_errors_max_len', 8192);
-    $GLOBALS['g_start_time'] = microtime(true);
 }
 
 // set session garbage collection lifetime; set this value relatively

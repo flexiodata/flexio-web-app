@@ -40,6 +40,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         $properties = $process->get();
+        
         return $properties;
     }
 
