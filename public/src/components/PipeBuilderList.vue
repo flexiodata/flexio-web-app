@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <div class="pb3 ml2-m ml3-l" v-else>
+    <div class="ml2-m ml3-l" v-else>
       <pipe-builder-item
         v-for="(task, index) in tasks"
         :key="task.eid"
@@ -62,16 +62,16 @@
         @run-once-with-values="$emit('run-once-with-values')"
         @save-values-and-run="$emit('save-values-and-run')"
       ></pipe-builder-item>
-      <div class="flex flex-row flex-wrap items-center justify-center center mv4">
-        <div
-          class="flex flex-column justify-center items-center f6 fw6 ttu br2 ma2 pa2 h4 w4 pointer moon-gray bg-white hover-blue"
-          style="box-shadow: inset 1px 1px 0 rgba(0,0,0,0.05), inset -1px 0 0 rgba(0,0,0,0.05), inset 0 -1px 0 rgba(0,0,0,0.12)"
-          @click="helpItemClick(item)"
-          v-for="(item, index) in help_items"
-        >
-          <i class="material-icons md-48">{{item.icon}}</i>
-          <div class="mt2">{{item.label}}</div>
-        </div>
+    </div>
+    <div class="flex flex-row flex-wrap items-center justify-center center mv4">
+      <div
+        class="flex flex-column justify-center items-center f6 fw6 ttu br2 ma2 pa2 h4 w4 pointer moon-gray bg-white hover-blue"
+        style="box-shadow: inset 1px 1px 0 rgba(0,0,0,0.05), inset -1px 0 0 rgba(0,0,0,0.05), inset 0 -1px 0 rgba(0,0,0,0.12)"
+        @click="helpItemClick(item)"
+        v-for="(item, index) in help_items"
+      >
+        <i class="material-icons md-48">{{item.icon}}</i>
+        <div class="mt2">{{item.label}}</div>
       </div>
     </div>
   </div>
