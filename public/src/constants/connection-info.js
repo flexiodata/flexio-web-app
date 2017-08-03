@@ -12,6 +12,7 @@ const AMAZON_S3 = {
   service_description: 'Amazon Simple Storage Service (S3)'
 }
 
+/*
 const BLANK_PIPE = {
   is_service: false,
   is_input: true,
@@ -21,6 +22,7 @@ const BLANK_PIPE = {
   service_name: 'Blank Pipe',
   service_description: ''
 }
+*/
 
 const DOWNLOAD = {
   is_service: false,
@@ -201,7 +203,7 @@ export const CONNECTION_INFO_STDOUT        = STDOUT
 export const CONNECTION_INFO_EMAIL         = EMAIL
 //export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
 export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
-export const CONNECTION_INFO_BLANK_PIPE    = BLANK_PIPE
+//export const CONNECTION_INFO_BLANK_PIPE    = BLANK_PIPE
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
 export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
