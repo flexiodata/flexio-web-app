@@ -52,6 +52,16 @@
         <div class="flex-fill">{{item.path}}</div>
         <div class="flex-none pointer f3 lh-solid b child black-30 hover-black-60" @click="deleteFile(item)">&times;</div>
       </div>
+      <div class="pv1 pv2">
+        <btn
+          btn-md
+          btn-primary
+          class="ttu b"
+          @click="openFileChooser"
+        >
+          Add files
+        </btn>
+      </div>
     </div>
     <div class="ma3 tc" v-else>
       <div class="tl" v-if="is_stdin">
