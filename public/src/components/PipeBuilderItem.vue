@@ -196,14 +196,6 @@
             ></pipe-builder-input-chooser>
           </transition>
 
-          <!-- input file list -->
-          <pipe-transfer-input-item
-            class="ph3 pv2 ba bt-0 b--black-10"
-            style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
-            :item="task"
-            v-if="is_input_task"
-          ></pipe-transfer-input-item>
-
           <!-- output chooser -->
           <transition name="slide-fade">
             <pipe-builder-output-chooser
@@ -215,10 +207,18 @@
             ></pipe-builder-output-chooser>
           </transition>
 
+          <!-- input file list -->
+          <pipe-transfer-input-item
+            class="ph3 pv2 ba bt-0 b--black-10 overflow-y-auto"
+            style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4); max-height: 280px"
+            :item="task"
+            v-if="is_input_task"
+          ></pipe-transfer-input-item>
+
           <!-- output panel -->
           <pipe-transfer-output-item
-            class="ph3 pv2 ba bt-0 b--black-10"
-            style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
+            class="ph3 pv2 ba bt-0 b--black-10 overflow-y-auto"
+            style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4); max-height: 280px"
             :item="task"
             v-if="is_output_task || is_email_task"
           ></pipe-transfer-output-item>

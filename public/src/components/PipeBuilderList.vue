@@ -66,7 +66,7 @@
     <div class="flex flex-row flex-wrap items-center justify-center center mv4">
       <div
         class="flex flex-column justify-center items-center f6 fw6 ttu br2 ma2 pa2 h4 w4 pointer moon-gray bg-white hover-blue"
-        style="box-shadow: inset 1px 1px 0 rgba(0,0,0,0.05), inset -1px 0 0 rgba(0,0,0,0.05), inset 0 -1px 0 rgba(0,0,0,0.12)"
+        style="box-shadow: inset 1px 1px 0 rgba(0,0,0,0.06), inset -1px 0 0 rgba(0,0,0,0.06), 0 2px 1px -1px rgba(0,0,0,0.24)"
         @click="helpItemClick(item)"
         v-for="(item, index) in help_items"
       >
