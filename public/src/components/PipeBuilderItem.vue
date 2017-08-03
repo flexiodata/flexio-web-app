@@ -153,7 +153,7 @@
             style="top: 4px; left: -33px"
             v-if="has_error"
           >
-            <i class="db material-icons md-18 bg-white dark-red" style="font-size: 23px">error</i>
+            <i class="db material-icons md-18 dark-red" style="font-size: 23px">error</i>
           </div>
 
           <!-- collapser -->
@@ -210,7 +210,7 @@
 
           <!-- helper area -->
           <div v-if="show_helper">
-            <div class="tc mv3 f6 fw6 silver">...or auto-fill from these common steps:</div>
+            <div class="tc mt3 mb2 f6 fw6 silver">...or auto-fill from these common steps:</div>
             <div class="flex flex-row flex-wrap items-center justify-center-l center">
               <div
                 class="f6 fw6 ttu br1 ma1 ma2-l pa2 pointer bg-near-white darken-10"
@@ -587,13 +587,13 @@
       status_icon_cls() {
         switch (this.our_status)
         {
-          case PROCESS_STATUS_PENDING:   return 'bg-white moon-gray'
+          case PROCESS_STATUS_PENDING:   return 'moon-gray'
           case PROCESS_STATUS_WAITING:   return ''
-          case PROCESS_STATUS_RUNNING:   return 'bg-white moon-gray spin'
-          case PROCESS_STATUS_CANCELLED: return 'bg-white dark-red'
+          case PROCESS_STATUS_RUNNING:   return 'moon-gray spin'
+          case PROCESS_STATUS_CANCELLED: return 'dark-red'
           case PROCESS_STATUS_PAUSED:    return ''
-          case PROCESS_STATUS_FAILED:    return 'bg-white dark-red'
-          case PROCESS_STATUS_COMPLETED: return 'bg-white dark-green'
+          case PROCESS_STATUS_FAILED:    return 'dark-red'
+          case PROCESS_STATUS_COMPLETED: return 'dark-green'
         }
 
         return ''
