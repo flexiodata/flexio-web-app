@@ -279,7 +279,8 @@
     TASK_TYPE_INPUT,
     TASK_TYPE_OUTPUT,
     TASK_TYPE_EXECUTE,
-    TASK_TYPE_COMMENT
+    TASK_TYPE_COMMENT,
+    TASK_TYPE_EMAIL_SEND
   } from '../constants/task-type'
   import {
     CONNECTION_TYPE_HTTP,
@@ -838,7 +839,7 @@
             createdAt: _.get(task, 'created') // Segment-friendly key value
           }
 
-          analytics.track('Created Step: Input', analytics_payload)
+          analytics.track('Created Step: Input (via Chooser List)', analytics_payload)
         })
       },
       onChooseOutput(connection) {
@@ -859,40 +860,27 @@
               data: 'attachment'
             }
           }
-
-          // add email send task
-          this.$store.dispatch('createPipeTask', { eid, attrs }).then(response => {
-            var task = response.body
-
-            var analytics_payload = {
-              eid,
-              connection_type: ctype,
-              createdAt: _.get(task, 'created') // Segment-friendly key value
-            }
-
-            analytics.track('Created Step: Output (via Chooser List)', analytics_payload)
-          })
-
-          return
         }
+         else
+        {
+          var attrs = {
+            metadata: {
+              connection_type: ctype
+            },
+            type: TASK_TYPE_OUTPUT,
+            params: {}
+          }
 
-        var attrs = {
-          metadata: {
-            connection_type: ctype
-          },
-          type: TASK_TYPE_OUTPUT,
-          params: {}
+          if (conn_identifier.length > 0)
+            _.set(attrs, 'params.connection', conn_identifier)
+
+          if (ctype === CONNECTION_TYPE_STDOUT)
+            _.set(attrs, 'params.connection', ctype)
+
+          // add default output location for connections that need this
+          if (ctype == CONNECTION_TYPE_DROPBOX || ctype == CONNECTION_TYPE_GOOGLEDRIVE || ctype == CONNECTION_TYPE_SFTP)
+            _.set(attrs, 'params.location', '/')
         }
-
-        if (conn_identifier.length > 0)
-          _.set(attrs, 'params.connection', conn_identifier)
-
-        if (ctype === CONNECTION_TYPE_STDOUT)
-          _.set(attrs, 'params.connection', ctype)
-
-        // add default output location for connections that need this
-        if (ctype == CONNECTION_TYPE_DROPBOX || ctype == CONNECTION_TYPE_GOOGLEDRIVE || ctype == CONNECTION_TYPE_SFTP)
-          _.set(attrs, 'params.location', '/')
 
         // update output task
         this.$store.dispatch('updatePipeTask', { eid, task_eid, attrs }).then(response => {

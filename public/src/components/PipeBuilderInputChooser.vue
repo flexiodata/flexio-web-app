@@ -3,7 +3,7 @@
     <service-list
       list-type="input"
       :item-layout="itemLayout"
-      @item-activate="createPendingConnection"
+      @item-activate="chooseService"
     ></service-list>
 
     <!-- connection props modal -->
@@ -45,6 +45,12 @@
       openConnectionModal(attrs) {
         this.show_connection_props_modal = true
         this.$nextTick(() => { this.$refs['modal-connection-props'].open(attrs) })
+      },
+      chooseService(item) {
+        if (item.is_service)
+          this.createPendingConnection(item)
+           else
+          this.chooseConnection(item)
       },
       createPendingConnection(item) {
         var attrs = _.assign({}, this.connection, {
