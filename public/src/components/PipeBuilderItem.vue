@@ -210,7 +210,7 @@
 
           <!-- helper area -->
           <div v-if="show_helper">
-            <div class="tc mt3 mb2 f6 fw6 silver">...or auto-fill from these common steps:</div>
+            <div class="tc mt3 mb2 f6 fw6 silver">...or autofill from these common steps:</div>
             <div class="flex flex-row flex-wrap items-center justify-center-l center">
               <div
                 class="f6 fw6 ttu br1 ma1 ma2-l pa2 pointer bg-near-white darken-10"
