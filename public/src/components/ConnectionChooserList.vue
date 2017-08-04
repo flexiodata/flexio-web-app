@@ -13,8 +13,7 @@
       :connection-type="connection_type"
       :show-selection="showSelection"
       @activate="onItemActivate"
-    >
-    </connection-chooser-item>
+    ></connection-chooser-item>
     <article
       class="css-connection-ghost dib relative mw5 h4 w4 black-40 br2 pa1 mv2 mh1 v-top darken-10"
       @click="onAddClick"
