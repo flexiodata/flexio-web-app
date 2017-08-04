@@ -23,7 +23,7 @@
       },
       'item-layout': {
         type: String,
-        default: 'list'
+        default: 'grid' // 'grid' or 'list'
       },
       'filter-items': {
         type: String,
@@ -35,11 +35,12 @@
     },
     computed: {
       services() {
-        var services = []
+        var services = connections
+
         if (this.listType == 'input')
-          services = _.filter(connections, { is_input: true })
+          services = _.filter(services, { is_input: true })
         if (this.listType == 'output')
-          services = _.filter(connections, { is_output: true })
+          services = _.filter(services, { is_output: true })
 
         if (this.filterItems == 'services')
           services = _.filter(services, { is_service: true })
