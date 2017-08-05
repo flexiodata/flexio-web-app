@@ -6,6 +6,7 @@
     <connection-chooser-list
       :connection-type-filter="connection_type"
       :show-default-connections="false"
+      @item-activate="submitExisting"
     ></connection-chooser-list>
   </ui-modal>
 </template>
@@ -42,6 +43,9 @@
       reset(connection_type) {
         this.ss_errors = {}
         this.connection_type = connection_type
+      },
+      submitExisting(item) {
+        this.$emit('choose-existing', item, this)
       }
     }
   }

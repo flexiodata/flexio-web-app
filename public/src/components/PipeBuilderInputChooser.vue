@@ -9,7 +9,7 @@
     <!-- connection chooser modal -->
     <connection-chooser-modal
       ref="modal-connection-chooser"
-      @submit="chooseConnection"
+      @choose-existing="chooseConnection"
       @hide="show_connection_chooser_modal = false"
       v-if="show_connection_chooser_modal"
     ></connection-chooser-modal>
