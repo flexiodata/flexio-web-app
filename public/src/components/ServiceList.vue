@@ -27,7 +27,7 @@
       },
       'filter-items': {
         type: String,
-        default: '' // '', 'services' or 'non-services'
+        default: '' // '', 'services' or 'non-services' or by connection type
       }
     },
     components: {
@@ -39,13 +39,15 @@
 
         if (this.listType == 'input')
           services = _.filter(services, { is_input: true })
-        if (this.listType == 'output')
+           else if (this.listType == 'output')
           services = _.filter(services, { is_output: true })
 
         if (this.filterItems == 'services')
           services = _.filter(services, { is_service: true })
-        if (this.filterItems == 'non-services')
+           else if (this.filterItems == 'non-services')
           services = _.filter(services, { is_service: false })
+           else if (_.size(this.filterItems) > 0)
+          services = _.filter(services, { connection_type: this.filterItems })
 
         return services
       }
