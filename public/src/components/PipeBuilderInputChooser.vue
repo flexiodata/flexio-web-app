@@ -6,6 +6,14 @@
       @item-activate="chooseService"
     ></service-list>
 
+    <!-- connection chooser modal -->
+    <connection-chooser-modal
+      ref="modal-connection-chooser"
+      @submit="chooseConnection"
+      @hide="show_connection_chooser_modal = false"
+      v-if="show_connection_chooser_modal"
+    ></connection-chooser-modal>
+
     <!-- connection props modal -->
     <connection-props-modal
       ref="modal-connection-props"
@@ -18,8 +26,10 @@
 </template>
 
 <script>
+  import { mapState, mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import ServiceList from './ServiceList.vue'
+  import ConnectionChooserModal from './ConnectionChooserModal.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
 
   export default {
@@ -31,16 +41,29 @@
     },
     components: {
       ServiceList,
+      ConnectionChooserModal,
       ConnectionPropsModal
     },
     data() {
       return {
+        show_connection_chooser_modal: false,
         show_connection_props_modal: false
       }
     },
     methods: {
+      ...mapGetters([
+        'getAllConnections'
+      ]),
+      getConnectionsByType(connection_type) {
+        return _.filter(this.getAllConnections(), { connection_type })
+      },
       chooseConnection(item) {
         this.$emit('choose-input', item)
+      },
+      openConnectionChooserModal(attrs) {
+        var ctype = _.get(attrs, 'connection_type', '')
+        this.show_connection_chooser_modal = true
+        this.$nextTick(() => { this.$refs['modal-connection-chooser'].open(ctype) })
       },
       openConnectionModal(attrs) {
         this.show_connection_props_modal = true
@@ -48,9 +71,17 @@
       },
       chooseService(item) {
         if (item.is_service)
-          this.createPendingConnection(item)
-           else
+        {
+          var ctype = _.get(item, 'connection_type', '')
+          if (_.size(this.getConnectionsByType(ctype)) > 0)
+            this.openConnectionChooserModal(item)
+             else
+            this.createPendingConnection(item)
+        }
+         else
+        {
           this.chooseConnection(item)
+        }
       },
       createPendingConnection(item) {
         var attrs = _.assign({}, this.connection, {

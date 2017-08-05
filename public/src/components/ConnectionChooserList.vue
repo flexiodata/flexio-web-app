@@ -71,7 +71,8 @@
         default: false
       },
       'item-layout': {
-        type: String // 'list' or 'grid'
+        type: String, // 'list' or 'grid'
+        default: 'grid'
       }
     },
     components: {
