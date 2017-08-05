@@ -72,8 +72,6 @@
           this.$store.dispatch('fetchConnections')
       },
       getOurConnections() {
-        var project_eid = this.projectEid
-
         // NOTE: it's really important to include the '_' on the same line
         // as the 'return', otherwise JS will return without doing anything
         return _
