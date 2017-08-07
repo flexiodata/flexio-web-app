@@ -457,6 +457,9 @@
         if (this.show_input_chooser || this.show_output_chooser)
           return false
 
+        if (this.edit_cmd.length > 0)
+          return false
+
         if (this.edit_type == '')
           return true
 
