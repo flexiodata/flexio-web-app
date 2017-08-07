@@ -420,6 +420,9 @@
       task_type() {
         return _.get(this, 'task.type', '')
       },
+      edit_type() {
+        return _.get(this.edit_json, 'type', '')
+      },
       is_input_task() {
         return this.task_type == TASK_TYPE_INPUT
       },
@@ -439,20 +442,14 @@
         return this.task_type != TASK_TYPE_COMMENT
       },
       show_input_chooser() {
-        if (_.get(this.edit_json, 'type', '') == TASK_TYPE_INPUT &&
-            _.isEqual(_.get(this.edit_json, 'params', {}), {}))
-        {
+        if (this.edit_type == TASK_TYPE_INPUT && _.get(this.edit_json, 'params.connection', '') == '')
           return true
-        }
 
         return false
       },
       show_output_chooser() {
-        if (_.get(this.edit_json, 'type', '') == TASK_TYPE_OUTPUT &&
-            _.isEqual(_.get(this.edit_json, 'params', {}), {}))
-        {
+        if (this.edit_type == TASK_TYPE_OUTPUT && _.get(this.edit_json, 'params.connection', '') == '')
           return true
-        }
 
         return false
       },
@@ -460,10 +457,7 @@
         if (this.show_input_chooser || this.show_output_chooser)
           return false
 
-        if (this.task_type.length == 0)
-          return true
-
-        if (_.get(this.edit_json, 'type', '') == '')
+        if (this.edit_type == '')
           return true
 
         return false
