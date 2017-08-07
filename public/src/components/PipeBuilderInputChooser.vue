@@ -1,7 +1,7 @@
 <template>
   <div>
     <service-list
-      list-type="input"
+      list-type="ioType"
       :item-layout="itemLayout"
       @item-activate="chooseService"
     ></service-list>
@@ -37,7 +37,11 @@
     props: {
       'item-layout': {
         type: String,
-        default: 'list'
+        default: 'grid' // 'grid' or 'list'
+      },
+      'io-type': {
+        type: String,
+        required: true // 'input' or 'output'
       }
     },
     components: {
@@ -59,7 +63,10 @@
         return _.filter(this.getAllConnections(), { connection_type })
       },
       chooseConnection(item) {
-        this.$emit('choose-input', item)
+        if (this.ioType == 'input')
+          this.$emit('choose-input', item)
+           else if (this.ioType == 'output')
+          this.$emit('choose-output', item)
       },
       openConnectionChooserModal(attrs) {
         var ctype = _.get(attrs, 'connection_type', '')

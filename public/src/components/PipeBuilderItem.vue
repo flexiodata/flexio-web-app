@@ -190,7 +190,7 @@
             <pipe-builder-input-chooser
               class="ph3 pv2 ba bt-0 b--black-10"
               style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
-              item-layout=""
+              io-type="input"
               @choose-input="onChooseInput"
               v-if="show_input_chooser"
             ></pipe-builder-input-chooser>
@@ -198,13 +198,13 @@
 
           <!-- output chooser -->
           <transition name="slide-fade">
-            <pipe-builder-output-chooser
+            <pipe-builder-input-chooser
               class="ph3 pv2 ba bt-0 b--black-10"
               style="margin-top: -1px; box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
-              item-layout=""
+              io-type="output"
               @choose-output="onChooseOutput"
               v-if="show_output_chooser"
-            ></pipe-builder-output-chooser>
+            ></pipe-builder-input-chooser>
           </transition>
 
           <!-- input file list -->
@@ -317,7 +317,6 @@
   import PipeContent from './PipeContent.vue'
   import ProcessProgressItem from './ProcessProgressItem.vue'
   import PipeBuilderInputChooser from './PipeBuilderInputChooser.vue'
-  import PipeBuilderOutputChooser from './PipeBuilderOutputChooser.vue'
   import PipeTransferInputItem from './PipeTransferInputItem.vue'
   import PipeTransferOutputItem from './PipeTransferOutputItem.vue'
   import TaskPromptItem from './TaskPromptItem.vue'
@@ -379,7 +378,6 @@
       PipeContent,
       ProcessProgressItem,
       PipeBuilderInputChooser,
-      PipeBuilderOutputChooser,
       PipeTransferInputItem,
       PipeTransferOutputItem,
       TaskPromptItem
