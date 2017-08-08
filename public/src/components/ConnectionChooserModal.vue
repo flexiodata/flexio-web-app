@@ -2,25 +2,22 @@
   <ui-modal
     ref="dialog"
     title="Which connection would you like to use?"
+    class="ui-modal-connection-chooser"
   >
-    <div class="flex flex-row">
-      <div class="flex-fill">
-        <h5 class="ma0 mb2 f6 fw6 ttu silver">Existing Connections</h5>
-        <connection-chooser-list
-          :connection-type-filter="connection_type"
-          :show-default-connections="false"
-          @item-activate="submitExisting"
-        ></connection-chooser-list>
-      </div>
-      <div class="flex-none">
-        <h5 class="ma0 mb2 f6 fw6 ttu silver">Create a New Connection</h5>
-        <service-list
-          list-type="input"
-          :filter-items="connection_type"
-          @item-activate="submitNew"
-        ></service-list>
-      </div>
-    </div>
+    <h5 class="ma0 f6 fw6 ttu silver">Use an existing connection</h5>
+    <connection-chooser-list
+      class="mt2 mb3"
+      :connection-type-filter="connection_type"
+      :show-default-connections="false"
+      @item-activate="submitExisting"
+    ></connection-chooser-list>
+    <h5 class="ma0 f6 fw6 ttu silver">Create a new connection</h5>
+    <service-list
+      class="mt2"
+      list-type="input"
+      :filter-items="connection_type"
+      @item-activate="submitNew"
+    ></service-list>
   </ui-modal>
 </template>
 
@@ -64,3 +61,11 @@
     }
   }
 </script>
+
+<style lang="less">
+  .ui-modal-connection-chooser {
+    .ui-modal__container {
+      min-width: 560px;
+    }
+  }
+</style>

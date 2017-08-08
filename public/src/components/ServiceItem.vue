@@ -18,7 +18,16 @@
   import ConnectionIcon from './ConnectionIcon.vue'
 
   export default {
-    props: ['item', 'layout'],
+    props: {
+      'item': {
+        type: Object,
+        required: true
+      },
+      'layout': {
+        type: String,
+        default: 'list'
+      }
+    },
     components: {
       ConnectionIcon
     },
