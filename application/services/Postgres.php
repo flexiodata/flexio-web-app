@@ -372,6 +372,22 @@ class Postgres implements \Flexio\Services\IConnection
         return true;
     }
 
+    public function selectInto(string $where, string $order, string $output)
+    {
+        try
+        {
+            $sql = "select ...";
+            $this->db->exec($sql);
+        }
+        catch (\Exception $e)
+        {
+            \Flexio\System\System::log('Could not execute statement. Exception message: ' . $e->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
     public function createFile(string $path, string $mime_type = "text/plain", string $encoding = "default") : bool
     {
         $this->deleteFile($path);

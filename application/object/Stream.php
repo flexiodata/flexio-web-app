@@ -294,6 +294,7 @@ class Stream extends \Flexio\Object\Base
 
     public function copyData(string $where, string $order, \Flexio\Object\Stream $outstream)
     {
+        $where = \Flexio\Base\ExprTranslatorPostgres::translate($where, $structure);
     }
 
     public function getService()
