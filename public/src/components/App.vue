@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <app-navbar class="flex-none" v-if="show_intercom_button"></app-navbar>
+    <app-navbar class="flex-none" v-if="show_navbar && show_intercom_button"></app-navbar>
     <router-view class="flex-fill"></router-view>
 
     <!-- onboarding modal -->
@@ -22,6 +22,7 @@
 
 <script>
   import {
+    ROUTE_PIPEHOME,
     ROUTE_EMBEDHOME,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
@@ -53,6 +54,16 @@
       ...mapState([
         'active_user_eid'
       ]),
+      show_navbar() {
+        return true
+        switch (_.get(this.$route, 'name', ''))
+        {
+          case ROUTE_PIPEHOME:
+            return false
+        }
+
+        return true
+      },
       show_intercom_button() {
         switch (_.get(this.$route, 'name', ''))
         {

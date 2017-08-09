@@ -12,7 +12,6 @@
   </div>
   <div v-else class="flex flex-column items-stretch bg-nearer-white">
     <pipe-home-header
-      class="flex-none pv2a ph3 ph4-l bg-near-white"
       :pipe-eid="eid"
       :pipe-view="pipe_view"
       :is-prompting="is_prompting"
@@ -23,7 +22,7 @@
     </pipe-home-header>
 
     <pipe-builder-list
-      class="flex-fill pv4 pl4-l bt b--black-10"
+      class="flex-fill pv4 pl4-l"
       style="padding-bottom: 240px"
       :id="eid"
       :pipe-eid="eid"

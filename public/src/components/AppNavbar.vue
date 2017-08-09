@@ -5,7 +5,7 @@
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <app-breadcrumbs class="flex flex-row items-center lh-title f6 fw6 f4-ns fw4-ns"></app-breadcrumbs>
+        <app-breadcrumbs class="lh-title f6 fw6 f4-ns fw4-ns"></app-breadcrumbs>
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
@@ -23,17 +23,7 @@
 </template>
 
 <script>
-  import {
-    ROUTE_ACCOUNT,
-    ROUTE_EMBEDHOME,
-    ROUTE_HOME,
-    ROUTE_SIGNIN,
-    ROUTE_SIGNUP,
-    ROUTE_FORGOTPASSWORD,
-    ROUTE_RESETPASSWORD
-  } from '../constants/route'
-  import { HOSTNAME } from '../constants/common'
-  import { mapState, mapGetters } from 'vuex'
+  import { mapState } from 'vuex'
   import AppBreadcrumbs from './AppBreadcrumbs.vue'
   import UserDropdown from './UserDropdown.vue'
 
@@ -44,19 +34,12 @@
     },
     computed: {
       ...mapState([
-        'user_fetching'
+        'user_fetching',
+        'active_user_eid'
       ]),
-      user_eid() {
-        return _.get(this.getActiveUser(), 'eid', '')
-      },
       logged_in() {
-        return this.user_eid.length > 0
+        return this.active_user_eid.length > 0
       }
-    },
-    methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ])
     }
   }
 </script>
