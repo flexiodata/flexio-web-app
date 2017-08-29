@@ -423,6 +423,9 @@
       edit_type() {
         return _.get(this.edit_json, 'type', '')
       },
+      meta_ctype() {
+        return _.get(this, 'task.metadata.connection_type', '')
+      },
       is_input_task() {
         return this.task_type == TASK_TYPE_INPUT
       },
@@ -442,14 +445,23 @@
         return this.task_type != TASK_TYPE_COMMENT
       },
       show_input_chooser() {
-        if (this.edit_type == TASK_TYPE_INPUT && _.get(this.edit_json, 'params.connection', '') == '')
-          return true
+        if (this.edit_type == TASK_TYPE_INPUT)
+        {
+          if (this.meta_ctype == CONNECTION_TYPE_HTTP || this.meta_ctype == CONNECTION_TYPE_RSS)
+            return false
+
+          if (_.get(this.edit_json, 'params.connection', '') == '')
+            return true
+        }
 
         return false
       },
       show_output_chooser() {
-        if (this.edit_type == TASK_TYPE_OUTPUT && _.get(this.edit_json, 'params.connection', '') == '')
-          return true
+        if (this.edit_type == TASK_TYPE_OUTPUT)
+        {
+          if (_.get(this.edit_json, 'params.connection', '') == '')
+            return true
+        }
 
         return false
       },
