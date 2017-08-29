@@ -390,7 +390,7 @@
 
 
     this.hints.convert = {
-      "from":      [ "delimited", "json", "pdf", "table", "text" ],
+      "from":      [ "delimited", "json", "pdf", "rss", "table", "text" ],
       "to":        [ "delimited", "json", "pdf", "table", "text" ],
       "delimiter": [ "comma", "none", "pipe", "semicolon", "tab" ],
       "qualifier": [ "none", "single-quote", "double-quote" ],
@@ -426,6 +426,8 @@
           json.params.input.format = 'table';
         else if (from_format == 'pdf')
           json.params.input.format = 'pdf';
+        else if (from_format == 'rss')
+          json.params.input.format = 'rss';
         else
           this.errors.push({ "code":     "invalid_value",
                              "message":  "Invalid value: '" + from_format +"'",
@@ -593,6 +595,8 @@
           res = this.append(res, 'from: pdf');
         else if (input.format == 'text')
           res = this.append(res, 'from: text');
+        else if (input.format == 'rss')
+          res = this.append(res, 'from: rss');
       }
 
       if (output.hasOwnProperty('format'))

@@ -36,6 +36,7 @@ class ContentType
     const MIME_TYPE_MD      = 'text/markdown';
     const MIME_TYPE_PDF     = 'application/pdf';
     const MIME_TYPE_PNG     = 'image/png';
+    const MIME_TYPE_RSS     = 'application/rss+xml';
     const MIME_TYPE_STREAM  = 'application/octet-stream';
     const MIME_TYPE_SVG     = 'image/svg+xml';
     const MIME_TYPE_TIFF    = 'image/tiff';

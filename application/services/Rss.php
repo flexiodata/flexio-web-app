@@ -15,16 +15,21 @@
 declare(strict_types=1);
 namespace Flexio\Services;
 
-
+/*
 // include for RSS library
 if (!isset($GLOBALS['simplepie_included']))
 {
     $GLOBALS['simplepie_included'] = true;
     set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'simplepie' . DIRECTORY_SEPARATOR . 'library'));
 }
+*/
 
-require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'idn' . DIRECTORY_SEPARATOR . 'idna_convert.class.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
+require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'autoloader.php';
+
+
+//require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'idn' . DIRECTORY_SEPARATOR . 'idna_convert.class.php';
+
+
 
 class Rss implements \Flexio\Services\IConnection
 {
@@ -84,11 +89,12 @@ class Rss implements \Flexio\Services\IConnection
 
     public function read(array $params, callable $callback)
     {
-        $path = $params['path'] ?? '';
-
         $feed = new \SimplePie();
         $feed->enable_cache(false);
-        $feed->set_feed_url($path);
+        if (isset($params['data']))
+            $feed->set_raw_data($params['data']);
+        else if (isset($params['path']))
+            $feed->set_feed_url($params['path']);
         $feed->init();
         $feed->handle_content_type();
         $items = $feed->get_items();

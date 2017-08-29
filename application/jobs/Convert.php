@@ -35,6 +35,7 @@ class Convert extends \Flexio\Jobs\Base
     const FORMAT_DELIMITED_TEXT = 'delimited';
     const FORMAT_FIXED_LENGTH   = 'fixed';
     const FORMAT_JSON           = 'json';
+    const FORMAT_RSS            = 'rss';
     const FORMAT_PDF            = 'pdf';
     const FORMAT_TABLE          = 'table';
 
@@ -78,8 +79,12 @@ class Convert extends \Flexio\Jobs\Base
                     $this->createOutputFromTableInput($instream, $output_content_type_from_definition);
                     break;
 
+                // rss input
+                case \Flexio\Base\ContentType::MIME_TYPE_RSS:
+                    $this->createOutputFromRssAtom($instream, $output_content_type_from_definition);
+                    break;
+                
                 // json input
-
                 case \Flexio\Base\ContentType::MIME_TYPE_JSON:
                     $this->createOutputFromJsonInput($instream, $output_content_type_from_definition);
                     break;
@@ -214,9 +219,44 @@ class Convert extends \Flexio\Jobs\Base
             $streamwriter->close();
             $outstream->setSize($streamwriter->getBytesWritten());
         }
-
     }
 
+
+    private function createOutputFromRssAtom(\Flexio\Object\Stream $instream, string $output_mime_type)
+    {
+        $outstream = $instream->copy();
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
+ 
+        $structure = [
+            [ 'name' => 'link', 'type' => 'text' ],
+            [ 'name' => 'title', 'type' => 'text' ],
+            [ 'name' => 'description', 'type' => 'text' ],
+            [ 'name' => 'content', 'type' => 'text' ],
+            [ 'name' => 'source', 'type' => 'text' ],
+            [ 'name' => 'author', 'type' => 'text' ],
+            [ 'name' => 'date', 'type' => 'text' ]
+        ];
+
+        $outstream->setStructure($structure);
+        $this->getOutput()->addStream($outstream);
+       
+        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+
+
+        $rss_payload = '';
+        while (($piece = $streamreader->read(16384)) !== false)
+        {
+            $rss_payload .= $piece;
+        }
+
+
+        $rss = new \Flexio\Services\Rss;
+        $rss->read(array('data'=> $rss_payload), function ($row) use (&$streamwriter) {
+            $result = $streamwriter->write($row);
+        });
+    }
 
     private function createOutputFromPdfInput(\Flexio\Object\Stream $instream, string $output_mime_type)
     {
@@ -1144,6 +1184,8 @@ class Convert extends \Flexio\Jobs\Base
             return \Flexio\Base\ContentType::MIME_TYPE_TXT;
         else if ($format == self::FORMAT_JSON)
             return \Flexio\Base\ContentType::MIME_TYPE_JSON;
+        else if ($format == self::FORMAT_RSS)
+            return \Flexio\Base\ContentType::MIME_TYPE_RSS;
         else if ($format == self::FORMAT_PDF)
             return \Flexio\Base\ContentType::MIME_TYPE_PDF;
         else if ($format == self::FORMAT_TABLE)
