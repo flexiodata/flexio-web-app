@@ -1,7 +1,7 @@
 <template>
   <div>
     <service-list
-      list-type="ioType"
+      :list-type="ioType"
       :item-layout="itemLayout"
       @item-activate="chooseService"
     ></service-list>
