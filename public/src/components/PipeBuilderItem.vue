@@ -60,7 +60,7 @@
         v-show="!show_progress"
         v-if="index==0 && !show_progress && !isPrompting && showInsertBeforeFirstTask"
       >
-        <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
+        <div class="pointer blue hover-dark-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
           <i class="db material-icons f3">add_circle</i>
         </div>
       </div>
@@ -70,7 +70,7 @@
         class="absolute"
         style="bottom: 5px; left: 8px"
         v-show="!show_progress && !isPrompting">
-        <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
+        <div class="pointer blue hover-dark-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
           <i class="db material-icons f3">add_circle</i>
         </div>
       </div>
