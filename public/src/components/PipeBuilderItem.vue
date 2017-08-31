@@ -5,7 +5,7 @@
     :style="style"
     :id="eid"
   >
-    <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l">
+    <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l hide-child">
 
       <div
         class="flex-none"
@@ -13,27 +13,22 @@
       >
         <div class="flex flex-row items-center">
           <!-- task icon -->
-          <div @click="deleteTask">
-            <div class="mr2 mr3-ns swap-child" v-if="show_connection_icon">
+          <div>
+            <div class="mr2 mr3-ns" v-if="show_connection_icon">
               <connection-icon
-                class="br1 pointer child"
+                class="br1"
                 style="width: 40px; height: 40px"
                 :type="ctype"
               ></connection-icon>
-              <div class="pointer pa2 br1 bg-task-gray white tc relative other-child">
-                <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
-              </div>
             </div>
-            <div class="pointer pa2 mr2 mr3-ns br1 white tc relative swap-child" :class="[ bg_color ]" v-else>
-              <i class="db material-icons f3 child">{{task_icon}}</i>
-              <i class="db material-icons f3 other-child hint--bottom-right" aria-label="Remove this step">close</i>
+            <div class="cursor-default pa2 mr2 mr3-ns br1 white tc relative" :class="[ bg_color ]" v-else>
+              <i class="db material-icons f3">{{task_icon}}</i>
             </div>
           </div>
 
           <!-- feedback icon when prompting -->
           <div class="mr1" v-if="false">
             <i
-              class="material-icons md-24"
               :class="{
                 'dark-green': true
               }"
@@ -60,7 +55,7 @@
         v-show="!show_progress"
         v-if="index==0 && !show_progress && !isPrompting && showInsertBeforeFirstTask"
       >
-        <div class="pointer blue hover-dark-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
+        <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
           <i class="db material-icons f3">add_circle</i>
         </div>
       </div>
@@ -70,7 +65,7 @@
         class="absolute"
         style="bottom: 5px; left: 8px"
         v-show="!show_progress && !isPrompting">
-        <div class="pointer blue hover-dark-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
+        <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
           <i class="db material-icons f3">add_circle</i>
         </div>
       </div>
@@ -274,6 +269,20 @@
           </transition>
         </div>
       </div>
+
+      <div
+        class="w2 pv1 tc"
+        :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
+      >
+        <div
+          class="dib pointer moon-gray hover-blue tc relative child"
+          @click="deleteTask"
+          v-show="!show_progress && !isPrompting"
+        >
+          <i class="db material-icons f3 other-child hint--top-left" aria-label="Remove this step">close</i>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
