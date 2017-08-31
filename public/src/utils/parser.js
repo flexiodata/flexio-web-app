@@ -394,9 +394,10 @@
       "to":        [ "delimited", "json", "pdf", "table", "text" ],
       "delimiter": [ "comma", "none", "pipe", "semicolon", "tab" ],
       "qualifier": [ "none", "single-quote", "double-quote" ],
-      "header":    [ "true", "false" ]
+      "header":    [ "true", "false" ],
+      "encoding":  [ "autosense", "utf-8", "iso-8599-1", "ascii" ]
     };
-    this.args.convert = ['from','to','delimiter','qualifier','header'];
+    this.args.convert = ['from','to','delimiter','qualifier','header','encoding'];
     this.keywords.convert = function(str)
     {
       var json =
@@ -569,6 +570,28 @@
         if (to_format   == 'delimited') json.params.output.header = is_var ? header : (header == 'true' ? true : false);
       }
 
+      if (params.hasOwnProperty('encoding'))
+      {
+        var json_value, encoding = params['encoding'].value.toLowerCase();
+
+        if (encoding == 'autosense')
+          json_value = 'autosense';
+        else if (encoding == 'utf-8')
+          json_value = 'utf-8';
+        else if (encoding == 'ascii')
+          json_value = 'ascii';
+        else if (encoding == 'iso-8599-1')
+          json_value = 'iso-8599-1';
+        else
+          this.errors.push({ "code":     "invalid_value",
+                             "message":  "Invalid value: '" + encoding + "'",
+                             "offset":   params['encoding'].offset,
+                             "length":   params['encoding'].length })
+
+        if (from_format == 'delimited') json.params.input.encoding  = json_value;
+        if (to_format   == 'delimited') json.params.output.encoding = json_value;
+      }
+
       return json;
     };
 
@@ -650,6 +673,11 @@
         if (obj.hasOwnProperty('header'))
         {
           res = this.append(res, "header: " + (obj.header ? "true":"false"));
+        }
+
+        if (obj.hasOwnProperty('encoding'))
+        {
+          res = this.append(res, "encoding: " + obj.encoding);
         }
       }
 

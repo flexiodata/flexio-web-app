@@ -385,6 +385,9 @@ class Convert extends \Flexio\Jobs\Base
         $qualifier = $job_definition['params']['input']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
         $encoding = $job_definition['params']['input']['encoding'] ?? '';
 
+        if (strtolower($encoding) == 'ascii')
+            $encoding = 'ISO-8599-1'; // use this as it is a superset of ASCII
+        
         switch ($delimiter)
         {
             // convert the delimiter tokens into their literal equivalent;
