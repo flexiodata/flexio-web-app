@@ -395,7 +395,7 @@
       "delimiter": [ "comma", "none", "pipe", "semicolon", "tab" ],
       "qualifier": [ "none", "single-quote", "double-quote" ],
       "header":    [ "true", "false" ],
-      "encoding":  [ "autosense", "utf-8", "iso-8599-1", "ascii" ]
+      "encoding":  [ "autosense", "utf-8", "iso-8859-1", "ascii" ]
     };
     this.args.convert = ['from','to','delimiter','qualifier','header','encoding'];
     this.keywords.convert = function(str)
@@ -580,8 +580,8 @@
           json_value = 'utf-8';
         else if (encoding == 'ascii')
           json_value = 'ascii';
-        else if (encoding == 'iso-8599-1')
-          json_value = 'iso-8599-1';
+        else if (encoding == 'iso-8859-1')
+          json_value = 'iso-8859-1';
         else
           this.errors.push({ "code":     "invalid_value",
                              "message":  "Invalid value: '" + encoding + "'",

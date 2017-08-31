@@ -386,7 +386,7 @@ class Convert extends \Flexio\Jobs\Base
         $encoding = $job_definition['params']['input']['encoding'] ?? '';
 
         if (strtolower($encoding) == 'ascii')
-            $encoding = 'ISO-8599-1'; // use this as it is a superset of ASCII
+            $encoding = 'ISO-8859-1'; // use this as it is a superset of ASCII
         
         switch ($delimiter)
         {
@@ -541,7 +541,11 @@ class Convert extends \Flexio\Jobs\Base
                 break; // reached EOF
 
             if ($encoding != 'UTF-8')
+            {
                 $row = iconv($encoding, 'UTF-8', $row);
+                if ($row === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Conversion from $encoding to UTF-8 failed");
+            }
 
             // parse the row
             if ($use_text_qualifier)
