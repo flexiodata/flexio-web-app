@@ -450,134 +450,114 @@ class Convert extends \Flexio\Jobs\Base
 
         while (true)
         {
-            // parse the row
-            if ($use_text_qualifier)
+            $row = false;
+
+            while (true)
             {
-                $row = false;
-/*
-                // read the row
-                for ($n = 0; $n < 500; ++$n)
+                $lineend_pos = self::indexOfLineTerminator($buf, $qualifier, $buf_head);
+                if ($lineend_pos !== false)
                 {
-                    $buf = $streamreader->readRow();
+                    $row = substr($buf, $buf_head, $lineend_pos - $buf_head + 1);
 
-                    if ($buf === false)
-                        break; // we're done
-                    if ($row === false)
-                        $row = $buf;
-                         else
-                        $row .= $buf;
-
-                    $lfpos = self::indexOfLineTerminator($row, $qualifier);
-                    if ($lfpos !== false)
-                        break; // if we found an LF, we have the whole CSV row; if not, read in another row
-                }
-*/
-                while (true)
-                {
-                    $lineend_pos = self::indexOfLineTerminator($buf, $qualifier, $buf_head);
-                    if ($lineend_pos !== false)
+                    if ($buf[$lineend_pos] == "\r")
                     {
-                        $row = substr($buf, $buf_head, $lineend_pos - $buf_head + 1);
+                        // if next char is a \n, skip past it, because it's a \r\n line ending
 
-                        if ($buf[$lineend_pos] == "\r")
+                        if ($lineend_pos == strlen($buf)-1)
                         {
-                            // if next char is a \n, skip past it, because it's a \r\n line ending
-
-                            if ($lineend_pos == strlen($buf)-1)
-                            {
-                                // need more data to determine if next char is \n
-                                $chunk = $streamreader->read(8192);
-                                if ($chunk !== false)
-                                    $buf .= $chunk;
-                            }
-
-                            if ($lineend_pos+1 < strlen($buf) && $buf[$lineend_pos+1] == "\n")
-                                $lineend_pos++;
+                            // need more data to determine if next char is \n
+                            $chunk = $streamreader->read(8192);
+                            if ($chunk !== false)
+                                $buf .= $chunk;
                         }
 
-                        $buf_head = $lineend_pos + 1;
+                        if ($lineend_pos+1 < strlen($buf) && $buf[$lineend_pos+1] == "\n")
+                            $lineend_pos++;
+                    }
 
+                    $buf_head = $lineend_pos + 1;
+
+                    break;
+                }
+                 else
+                {
+                    if ($buf_head > 0 && $buf_head < strlen($buf))
+                    {
+                        $buf = substr($buf, $buf_head);
+                        $buf_head = 0;
+                    }
+                    
+                    if ($eof_reached)
+                    {
+                        // get any last row without LF
+                        $row = substr($buf, $buf_head);
+                        $buf_head += strlen($row);
+                        if (strlen($row) == 0)
+                            $row = false;
                         break;
                     }
                      else
                     {
-                        if ($buf_head > 0 && $buf_head < strlen($buf))
+                        $chunk = $streamreader->read(16384);
+                        if ($chunk !== false)
                         {
-                            $buf = substr($buf, $buf_head);
-                            $buf_head = 0;
-                        }
-                        
-                        if ($eof_reached)
-                        {
-                            // get any last row without LF
-                            $row = substr($buf, $buf_head);
-                            $buf_head += strlen($row);
-                            if (strlen($row) == 0)
-                                $row = false;
-                            break;
+                            if ($first)
+                            {
+                                $first = false;
+
+                                // look for utf-8 byte-order mark
+                                if (substr($chunk, 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf))
+                                {
+                                    $chunk = substr($chunk, 3);
+                                    if ($encoding == '')
+                                        $encoding = 'UTF-8';
+                                }
+
+                                if ($encoding == '')
+                                {
+                                    $encoding = mb_detect_encoding($chunk,'UTF-8,ISO-8859-1');
+                                    if ($encoding === false)
+                                    {
+                                        // encoding could not be detected, default to UTF-8
+                                        $encoding = 'UTF-8';
+                                    }
+                                }
+                            }
+
+                            $buf .= $chunk;
                         }
                          else
                         {
-                            $chunk = $streamreader->read(8192);
-                            if ($chunk !== false)
-                            {
-                                if ($first)
-                                {
-                                    $first = false;
-
-                                    // look for utf-8 byte-order mark
-                                    if (substr($chunk, 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf))
-                                    {
-                                        $chunk = substr($chunk, 3);
-                                        if ($encoding == '')
-                                            $encoding = 'UTF-8';
-                                    }
-
-                                    if ($encoding == '')
-                                    {
-                                        $encoding = mb_detect_encoding($chunk,'UTF-8,ISO-8859-1');
-                                        if ($encoding === false)
-                                        {
-                                            // encoding could not be detected, default to UTF-8
-                                            $encoding = 'UTF-8';
-                                        }
-                                    }
-                                }
-
-                                $buf .= $chunk;
-                            }
-                             else
-                            {
-                                $eof_reached = true;
-                            }
+                            $eof_reached = true;
                         }
                     }
                 }
+            }
 
-                if ($row === false)
-                    break; // reached EOF
+            if ($row === false)
+                break; // reached EOF
 
-                if ($encoding != 'UTF-8')
-                    $row = iconv($encoding, 'UTF-8', $row);
+            if ($encoding != 'UTF-8')
+                $row = iconv($encoding, 'UTF-8', $row);
 
+            // parse the row
+            if ($use_text_qualifier)
+            {
                 $row = str_getcsv($row, $delimiter, $qualifier);
-                if ($row === false)
-                    break;
-                if ($first_row && $row === array(null)) // skip blank rows
-                    continue;
             }
              else
             {
-                // read the row
-                $row = $streamreader->readRow();
-                if ($row === false)
-                    break; // we're done
-
                 $row = trim($row,"\r\n");
                 if ($first_row && $row == '')
                     continue;
                 $row = explode($delimiter, $row);
             }
+
+            if ($row === false)
+                break;
+            if ($first_row && $row === array(null)) // skip blank rows
+                continue;
+
 
             // if we're on the first row, try to determine the structure
             // and the initial writer
@@ -837,6 +817,17 @@ class Convert extends \Flexio\Jobs\Base
 
     public static function indexOfLineTerminator(string $haystack, string $qualifier, $start = 0)
     {
+        if (empty($qualifier))
+        {
+            $off1 = strpos($haystack, "\r", $start);
+            $off2 = strpos($haystack, "\n", $start);
+            if ($off1 === false)
+                return $off2;
+            if ($off2 === false)
+                return $off1;
+            return min($off1, $off2);
+        }
+        
         $haystack_len = strlen($haystack);
         $offset = $start;
         $quotec = false;
