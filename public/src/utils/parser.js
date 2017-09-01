@@ -896,7 +896,7 @@
 
 
 
-    this.args.execute = ['lang'/*, 'code'*/];
+    this.args.execute = ['lang'/*, 'code'*/, 'file'];
     this.hints.execute = {
       "lang":       [ /*'javascript',*/ 'python', 'html' ]
     };
@@ -930,6 +930,11 @@
                              "length":   1 })
       }
 
+      if (params.hasOwnProperty('file'))
+      {
+        json.params.file = params['file'].value;
+      }
+
       if (params.hasOwnProperty('code'))
       {
         json.params.code = params['code'].value;
@@ -949,6 +954,11 @@
       if (json.params.hasOwnProperty('lang'))
       {
         res = this.append(res, "lang: " + json.params['lang']);
+      }
+
+      if (json.params.hasOwnProperty('file'))
+      {
+        res = this.append(res, "file: " + json.params['file']);
       }
 
       if (json.params.hasOwnProperty('code'))

@@ -21,7 +21,7 @@ class BinaryData
 {
     public $data = '';
     public function __construct($data)
-    { 
+    {
         $this->data = $data;
     }
     public function __toString()
@@ -78,7 +78,7 @@ class ExecuteProxy
             if ($res > 0)
             {
                 $ch = fread($this->pipes[1], 1);
-    
+
                 $this->check_sig = substr($this->check_sig . $ch, 0, 12);
 
                 if ($this->check_sig == self::MESSAGE_SIGNATURE)
@@ -283,7 +283,7 @@ class ExecuteProxy
             // bad parse -- send exception
             $this->sendMessage("E19,Request parse error");
             return;
-        }  
+        }
 
         $func = array_shift($arr);
 
@@ -315,6 +315,26 @@ class Execute extends \Flexio\Jobs\Base
     private $output_writers = [];
     private $managed_stream_index = 0;   // "current stream" index running in managed mode
 
+    private static function getFileContents(string $url) : string
+    {
+        // load the service
+        $connection_info = array(
+            'connection_type' => \Model::CONNECTION_TYPE_HTTP
+        );
+
+        $service = \Flexio\Services\Store::load($connection_info);
+        if ($service === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        // get the contents
+        $contents = '';
+        $service->read(array('path'=>$url), function($data) use (&$contents) {
+            $contents .= $data;
+        });
+
+        return $contents;
+    }
+
     public function run()
     {
         $this->getOutput()->setEnv($this->getInput()->getEnv()); // by default, pass on all params; however, execute script can change them
@@ -324,14 +344,29 @@ class Execute extends \Flexio\Jobs\Base
         // properties
         $job_definition = $this->getProperties();
 
-        // get the code from the template
-        // 'code' contains the base64-encoded program source
+        // get the language
         $this->lang = $job_definition['params']['lang'];
-        $this->code_base64 = $job_definition['params']['code'] ?? '';
-        if (strlen($this->code_base64) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
-        $this->code = base64_decode($this->code_base64);
+        // if a file is specified, get the contents from the file location;
+        // this allows remote storing of code
+        $file = $job_definition['params']['file'] ?? false;
+        if ($file !== false)
+        {
+            $this->code = self::getFileContents($file);
+            $this->code_base64 = base64_encode($this->code);
+
+            // TODO: perform sha256 security check on contents if 'integrity' parameter is specified
+        }
+         else
+        {
+            // if code isn't specified in a file location, see if it's specified as a param
+            // 'code' contains the base64-encoded program source
+            $this->code_base64 = $job_definition['params']['code'] ?? '';
+            if (strlen($this->code_base64) == 0)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+
+            $this->code = base64_decode($this->code_base64);
+        }
 
         if ($this->lang == 'python')
         {
@@ -374,7 +409,7 @@ class Execute extends \Flexio\Jobs\Base
                     $this->managed_stream_index = $idx;
                     $this->doStream($this->inputs[$idx], $this->outputs[$idx]);
                 }
-                
+
                 return true;
             }
              else
@@ -410,7 +445,7 @@ class Execute extends \Flexio\Jobs\Base
                 $ep->run();
 
                 $err = $ep->getStdError();
-                
+
                 if (isset($err))
                 {
                     $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
@@ -651,7 +686,7 @@ class Execute extends \Flexio\Jobs\Base
 
         if (isset($properties['content_type']))
             $properties['mime_type'] = $properties['content_type'];
-        
+
         $properties = \Flexio\Base\Util::filterArray($properties, ["name","mime_type"]);
         $this->outputs[$idx]->set($properties);
 
@@ -704,7 +739,7 @@ class Execute extends \Flexio\Jobs\Base
             $set['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
             $set['structure'] = $properties['structure'];
         }
-        
+
         $stream->set($set);
 
         return true;
@@ -743,7 +778,7 @@ class Execute extends \Flexio\Jobs\Base
         $writer = $this->getOutputWriter($stream_idx);
         if (is_null($writer))
             return null;
-        
+
         foreach ($rows as $row)
         {
             $writer->write($row);
