@@ -44,13 +44,13 @@ class ApiController extends \Flexio\System\FxControllerAction
         }
         else
         {
-            if (0 == strncmp($request->REQUEST_URI, '/api/v1/processes/', 18) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/pipes/', 14) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/streams/', 16))
+            if (0 == strncmp($request->REQUEST_URI, '/api/v1/processes', 17) ||
+                0 == strncmp($request->REQUEST_URI, '/api/v1/pipes', 13) ||
+                0 == strncmp($request->REQUEST_URI, '/api/v1/streams', 15))
             {
                 header('Access-Control-Allow-Origin: *');
                 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
-                header('Access-Control-Allow-Headers: authorization');
+                header('Access-Control-Allow-Headers: authorization, content-type');
             }
         }
 
