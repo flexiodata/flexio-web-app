@@ -98,6 +98,7 @@
 <script>
   import {
     CONNECTION_TYPE_AMAZONS3,
+    CONNECTION_TYPE_BOX,
     CONNECTION_TYPE_DROPBOX,
     CONNECTION_TYPE_EMAIL,
     CONNECTION_TYPE_GOOGLEDRIVE,
@@ -204,6 +205,7 @@
       },
 
       is_amazon_s3()     { return this.ctype == CONNECTION_TYPE_AMAZONS3 },
+      is_box()           { return this.ctype == CONNECTION_TYPE_BOX },
       is_dropbox()       { return this.ctype == CONNECTION_TYPE_DROPBOX },
       is_email()         { return this.ctype == CONNECTION_TYPE_EMAIL },
       is_google_drive()  { return this.ctype == CONNECTION_TYPE_GOOGLEDRIVE },
@@ -216,7 +218,7 @@
       menu_options() {
         var items = []
 
-        if ((this.is_dropbox || this.is_google_drive) && !this.has_variables)
+        if ((this.is_box || this.is_dropbox || this.is_google_drive) && !this.has_variables)
         {
           items = [{
             id: 'change-folder',
