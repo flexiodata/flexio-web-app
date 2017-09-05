@@ -19,7 +19,7 @@ namespace Flexio\Services;
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Dropbox implements \Flexio\Services\IConnection
+class Box implements \Flexio\Services\IConnection
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -269,8 +269,8 @@ class Dropbox implements \Flexio\Services\IConnection
 
     private static function initialize(array $params)
     {
-        $client_id = $GLOBALS['g_config']->dropbox_client_id ?? '';
-        $client_secret = $GLOBALS['g_config']->dropbox_client_secret ?? '';
+        $client_id = $GLOBALS['g_config']->box_client_id ?? '';
+        $client_secret = $GLOBALS['g_config']->box_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
             return null;
@@ -315,7 +315,7 @@ class Dropbox implements \Flexio\Services\IConnection
 
         // instantiate the dropbox service using the credentials,
         // http client and storage mechanism for the token
-        $service = $service_factory->createService('dropbox', $credentials, $storage, array());
+        $service = $service_factory->createService('box', $credentials, $storage, array());
         if (!isset($service))
             return null;
 

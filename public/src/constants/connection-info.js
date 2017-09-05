@@ -29,7 +29,7 @@ const BOX = {
   is_input: true,
   is_output: true,
   connection_type: types.CONNECTION_TYPE_BOX,
-  icon: require('../assets/icon/icon-dropbox-128.png'),
+  icon: require('../assets/icon/icon-box-128.png'),
   service_name: 'Box',
   service_description: 'Cloud file storage and syncing'
 }
