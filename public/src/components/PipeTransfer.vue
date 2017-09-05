@@ -127,6 +127,7 @@
   import {
     CONNECTION_TYPE_STDIN,
     CONNECTION_TYPE_STDOUT,
+    CONNECTION_TYPE_BOX,
     CONNECTION_TYPE_DROPBOX,
     CONNECTION_TYPE_GOOGLEDRIVE,
     CONNECTION_TYPE_SFTP,
@@ -301,7 +302,7 @@
           _.set(attrs, 'params.connection', ctype)
 
         // add default output location for connections that need this
-        if (ctype == CONNECTION_TYPE_DROPBOX || ctype == CONNECTION_TYPE_GOOGLEDRIVE || ctype == CONNECTION_TYPE_SFTP)
+        if (ctype == CONNECTION_TYPE_BOX || ctype == CONNECTION_TYPE_DROPBOX || ctype == CONNECTION_TYPE_GOOGLEDRIVE || ctype == CONNECTION_TYPE_SFTP)
           _.set(attrs, 'params.location', '/')
 
         // add output task

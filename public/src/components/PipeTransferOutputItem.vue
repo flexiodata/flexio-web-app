@@ -29,7 +29,7 @@
       <div v-if="has_variables">
         <div class="lh-copy mid-gray f6 mb2 i">This output will be configured when the pipe is run.</div>
       </div>
-      <div class="tl" v-else-if="is_dropbox || is_google_drive || is_sftp">
+      <div class="tl" v-else-if="is_box || is_dropbox || is_google_drive || is_sftp">
         <div class="lh-copy mid-gray f6 mb2">Files will be output to the following folder:</div>
         <div class="flex flex-row items-stretch">
           <div class="flex-fill f6 pa2 black bt bb bl b--black-10 br1 br--left">
@@ -98,6 +98,7 @@
 <script>
   import {
     CONNECTION_TYPE_AMAZONS3,
+    CONNECTION_TYPE_BOX,
     CONNECTION_TYPE_DROPBOX,
     CONNECTION_TYPE_EMAIL,
     CONNECTION_TYPE_GOOGLEDRIVE,
@@ -204,6 +205,7 @@
       },
 
       is_amazon_s3()     { return this.ctype == CONNECTION_TYPE_AMAZONS3 },
+      is_box()           { return this.ctype == CONNECTION_TYPE_BOX },
       is_dropbox()       { return this.ctype == CONNECTION_TYPE_DROPBOX },
       is_email()         { return this.ctype == CONNECTION_TYPE_EMAIL },
       is_google_drive()  { return this.ctype == CONNECTION_TYPE_GOOGLEDRIVE },
@@ -216,7 +218,7 @@
       menu_options() {
         var items = []
 
-        if ((this.is_dropbox || this.is_google_drive) && !this.has_variables)
+        if ((this.is_box || this.is_dropbox || this.is_google_drive) && !this.has_variables)
         {
           items = [{
             id: 'change-folder',

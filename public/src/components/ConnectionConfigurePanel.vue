@@ -162,6 +162,7 @@
       is_oath() {
         switch (this.ctype)
         {
+          case types.CONNECTION_TYPE_BOX:
           case types.CONNECTION_TYPE_DROPBOX:
           case types.CONNECTION_TYPE_GOOGLEDRIVE:
           case types.CONNECTION_TYPE_GOOGLESHEETS:
