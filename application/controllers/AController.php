@@ -83,6 +83,15 @@ class AController extends \Flexio\System\FxControllerAction
             }
         }
 
+        if (($params['service'] ?? '') == 'box')
+        {
+            if (strlen(''.($GLOBALS['g_config']->box_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->box_client_secret ?? '')) == 0)
+            {
+                die('This function is presently not available.');
+            }
+        }
+
         if (($params['service'] ?? '') == 'googledrive' || ($params['service'] ?? '') == 'googlesheets')
         {
             if (strlen(''.($GLOBALS['g_config']->googledrive_client_id ?? '')) == 0 ||

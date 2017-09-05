@@ -260,6 +260,7 @@ class Output extends \Flexio\Jobs\Base
             case \Model::CONNECTION_TYPE_FTP:
             case \Model::CONNECTION_TYPE_SFTP:
             case \Model::CONNECTION_TYPE_DROPBOX:
+            case \Model::CONNECTION_TYPE_BOX:
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
             case \Model::CONNECTION_TYPE_AMAZONS3:
                 return $this->runRemoteFileExport($instream, $service, $output_info);
