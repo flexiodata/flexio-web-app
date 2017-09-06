@@ -88,6 +88,7 @@ class Model
     const CONNECTION_TYPE_POSTGRES      = 'postgres';
     const CONNECTION_TYPE_ELASTICSEARCH = 'elasticsearch';
     const CONNECTION_TYPE_DROPBOX       = 'dropbox';
+    const CONNECTION_TYPE_BOX           = 'box';
     const CONNECTION_TYPE_GOOGLEDRIVE   = 'googledrive';
     const CONNECTION_TYPE_GOOGLESHEETS  = 'googlesheets';
     const CONNECTION_TYPE_AMAZONS3      = 'amazons3';

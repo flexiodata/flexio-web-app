@@ -24,6 +24,16 @@ const BLANK_PIPE = {
 }
 */
 
+const BOX = {
+  is_service: true,
+  is_input: true,
+  is_output: true,
+  connection_type: types.CONNECTION_TYPE_BOX,
+  icon: require('../assets/icon/icon-box-128.png'),
+  service_name: 'Box',
+  service_description: 'Secure, share and edit all your files from anywhere'
+}
+
 const DOWNLOAD = {
   is_service: false,
   is_input: false,
@@ -204,6 +214,7 @@ export const CONNECTION_INFO_EMAIL         = EMAIL
 //export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
 export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 //export const CONNECTION_INFO_BLANK_PIPE    = BLANK_PIPE
+export const CONNECTION_INFO_BOX           = BOX
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
 export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE

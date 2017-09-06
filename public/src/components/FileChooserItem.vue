@@ -61,6 +61,7 @@
         switch (this.ctype)
         {
           case ctypes.CONNECTION_TYPE_AMAZONS3:
+          case ctypes.CONNECTION_TYPE_BOX:
           case ctypes.CONNECTION_TYPE_DROPBOX:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_SFTP:

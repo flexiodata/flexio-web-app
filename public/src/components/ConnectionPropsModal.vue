@@ -218,6 +218,7 @@
 
         switch (this.ctype)
         {
+          case types.CONNECTION_TYPE_BOX:          return base_url+'?service=box&eid='+eid
           case types.CONNECTION_TYPE_DROPBOX:      return base_url+'?service=dropbox&eid='+eid
           case types.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
           case types.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid

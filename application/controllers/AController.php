@@ -18,40 +18,6 @@ namespace Flexio\Controllers;
 
 class AController extends \Flexio\System\FxControllerAction
 {
-    /*
-        NOTE: DO NOT REMOVE THESE -- THEY ARE HERE FOR TRANSLATION PURPOSES
-
-        // Date Range Picker (in public folder)
-
-        _('All Dates')
-        _('Today')
-        _('Last 7 Days')
-        _('Month to Date')
-        _('Year to Date')
-        _('Previous Month')
-        _('Previous Year')
-        _('Specific Date')
-        _('Date Range')
-        _('Start Date')
-        _('End Date')
-        _('Next')
-        _('Prev')
-        _('Set Date Range')
-
-        _('January')
-        _('February')
-        _('March')
-        _('April')
-        _('May')
-        _('June')
-        _('July')
-        _('August')
-        _('September')
-        _('October')
-        _('November')
-        _('December')
-    */
-
     public function init()
     {
         parent::init();
@@ -78,6 +44,15 @@ class AController extends \Flexio\System\FxControllerAction
         {
             if (strlen(''.($GLOBALS['g_config']->dropbox_client_id ?? '')) == 0 ||
                 strlen(''.($GLOBALS['g_config']->dropbox_client_secret ?? '')) == 0)
+            {
+                die('This function is presently not available.');
+            }
+        }
+
+        if (($params['service'] ?? '') == 'box')
+        {
+            if (strlen(''.($GLOBALS['g_config']->box_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->box_client_secret ?? '')) == 0)
             {
                 die('This function is presently not available.');
             }

@@ -1,6 +1,7 @@
 export const CONNECTION_TYPE_UNKNOWN       = ''
 export const CONNECTION_TYPE_AMAZONS3      = 'amazons3'
 export const CONNECTION_TYPE_BLANK_PIPE    = 'blank-pipe'
+export const CONNECTION_TYPE_BOX           = 'box'
 export const CONNECTION_TYPE_DOWNLOAD      = 'download'
 export const CONNECTION_TYPE_DROPBOX       = 'dropbox'
 export const CONNECTION_TYPE_ELASTICSEARCH = 'elasticsearch'
@@ -14,7 +15,7 @@ export const CONNECTION_TYPE_POSTGRES      = 'postgres'
 export const CONNECTION_TYPE_RSS           = 'rss'
 export const CONNECTION_TYPE_SFTP          = 'sftp'
 export const CONNECTION_TYPE_SOCRATA       = 'socrata'
-export const CONNECTION_TYPE_STDIN         = 'stdin';
-export const CONNECTION_TYPE_STDOUT        = 'stdout';
+export const CONNECTION_TYPE_STDIN         = 'stdin'
+export const CONNECTION_TYPE_STDOUT        = 'stdout'
 export const CONNECTION_TYPE_PIPELINEDEALS = 'pipelinedeals'
 export const CONNECTION_TYPE_UPLOAD        = 'upload'

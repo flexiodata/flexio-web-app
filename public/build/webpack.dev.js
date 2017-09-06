@@ -12,7 +12,7 @@ const config = merge(base, {
       index: './src/index-dev.html'
     },
     noInfo: true,
-	proxy: {
+    proxy: {
       '/api/**': {
         target: 'https://localhost',
         secure: false
