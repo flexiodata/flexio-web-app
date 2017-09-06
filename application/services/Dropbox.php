@@ -81,6 +81,7 @@ class Dropbox implements \Flexio\Services\IConnection
 
         //execute post
         $result = curl_exec($ch);
+        curl_close($ch);
         $result = json_decode($result, true);
 
         $files = [];
