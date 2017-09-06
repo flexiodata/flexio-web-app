@@ -77,105 +77,111 @@ class Test
         TestCheck::assertString('A.9', '\Flexio\Jobs\Filter::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = \Flexio\Jobs\HttpRequest::create();
+        $actual = ($task !== false ? $task->getType() : false);
+        $expected = \Flexio\Jobs\HttpRequest::MIME_TYPE;
+        TestCheck::assertString('A.10', '\Flexio\Jobs\HttpRequest::create()',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $task = \Flexio\Jobs\Replace::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Replace::MIME_TYPE;
-        TestCheck::assertString('A.10', '\Flexio\Jobs\Replace::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.11', '\Flexio\Jobs\Replace::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Grep::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Grep::MIME_TYPE;
-        TestCheck::assertString('A.11', '\Flexio\Jobs\Grep::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.12', '\Flexio\Jobs\Grep::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Group::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Group::MIME_TYPE;
-        TestCheck::assertString('A.12', '\Flexio\Jobs\Group::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.13', '\Flexio\Jobs\Group::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Input::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Input::MIME_TYPE;
-        TestCheck::assertString('A.13', '\Flexio\Jobs\Input::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.14', '\Flexio\Jobs\Input::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Limit::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Limit::MIME_TYPE;
-        TestCheck::assertString('A.14', '\Flexio\Jobs\Limit::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.15', '\Flexio\Jobs\Limit::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Merge::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Merge::MIME_TYPE;
-        TestCheck::assertString('A.15', '\Flexio\Jobs\Merge::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.16', '\Flexio\Jobs\Merge::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Nop::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Nop::MIME_TYPE;
-        TestCheck::assertString('A.16', '\Flexio\Jobs\Nop::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.17', '\Flexio\Jobs\Nop::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Output::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Output::MIME_TYPE;
-        TestCheck::assertString('A.17', '\Flexio\Jobs\Output::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.18', '\Flexio\Jobs\Output::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Prompt::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Prompt::MIME_TYPE;
-        TestCheck::assertString('A.18', '\Flexio\Jobs\Prompt::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.19', '\Flexio\Jobs\Prompt::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Execute::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Execute::MIME_TYPE;
-        TestCheck::assertString('A.19', '\Flexio\Jobs\Execute::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.20', '\Flexio\Jobs\Execute::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Rename::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Rename::MIME_TYPE;
-        TestCheck::assertString('A.20', '\Flexio\Jobs\Rename::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.21', '\Flexio\Jobs\Rename::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Search::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Search::MIME_TYPE;
-        TestCheck::assertString('A.21', '\Flexio\Jobs\Search::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.22', '\Flexio\Jobs\Search::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Select::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Select::MIME_TYPE;
-        TestCheck::assertString('A.22', '\Flexio\Jobs\Select::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.23', '\Flexio\Jobs\Select::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\SetType::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\SetType::MIME_TYPE;
-        TestCheck::assertString('A.23', '\Flexio\Jobs\SetType::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.24', '\Flexio\Jobs\SetType::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Sleep::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Sleep::MIME_TYPE;
-        TestCheck::assertString('A.24', '\Flexio\Jobs\Sleep::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.25', '\Flexio\Jobs\Sleep::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Sort::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Sort::MIME_TYPE;
-        TestCheck::assertString('A.25', '\Flexio\Jobs\Sort::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.26', '\Flexio\Jobs\Sort::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Transform::create();
         $actual = ($task !== false ? $task->getType() : false);
         $expected = \Flexio\Jobs\Transform::MIME_TYPE;
-        TestCheck::assertString('A.26', '\Flexio\Jobs\Transform::create()',  $actual, $expected, $results);
+        TestCheck::assertString('A.27', '\Flexio\Jobs\Transform::create()',  $actual, $expected, $results);
     }
 }
