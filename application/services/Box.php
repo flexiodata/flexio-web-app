@@ -136,18 +136,23 @@ class Box implements \Flexio\Services\IConnection
 
     public function read(array $params, callable $callback)
     {
+        if (!$this->authenticated())
+            return false;
+        
         $path = $params['path'] ?? '';
-
-
-        $dropbox_args = json_encode(array('path' => $path));
+        if (strlen($path) == 0)
+            return false;
+        
+        $fileid = $this->getFileId($path);
 
         // download the file
         $ch = curl_init();
 
         $filename = rawurlencode($path);
-        curl_setopt($ch, CURLOPT_URL, "https://content.dropboxapi.com/2/files/download");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: "));
+        curl_setopt($ch, CURLOPT_URL, "https://api.box.com/2.0/files/$fileid/content");
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token));
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback) {
@@ -397,9 +402,8 @@ class Box implements \Flexio\Services\IConnection
                 $refresh_token = $params['refresh_token'];
 
                 $token = new \OAuth\OAuth2\Token\StdOAuth2Token($access_token, $refresh_token);
-                if (isset($params['token_expires']) && !is_null($params['token_expires']) && $params['token_expires'] > 0)
-                    $token->setEndOfLife($params['token_expires']);
-
+                $token->setEndOfLife($expires);
+                
                 try
                 {
                     $token = $oauth->refreshAccessToken($token);
