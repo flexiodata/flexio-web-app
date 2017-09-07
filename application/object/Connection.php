@@ -236,6 +236,8 @@ class Connection extends \Flexio\Object\Base
 
                     $connection_params = array();
                     $connection_params['token'] = $tokens['access_token'];
+                    if (isset($tokens['refresh_token']))
+                        $connection_params['refresh_token'] = $tokens['refresh_token'];
                     $connection_params['token_expires'] = $token_expires;
                     $this->getModel()->connection->set($this->getEid(), $connection_params);
                 }

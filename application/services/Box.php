@@ -167,6 +167,14 @@ class Box implements \Flexio\Services\IConnection
 
     public function write(array $params, callable $callback)
     {
+        if (!$this->authenticated())
+            return false;
+        
+        // Box unfortunately requires a content size
+        $size = $params['size'] ?? null;
+        if (!isset($size))
+            return false;
+
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
 
@@ -183,116 +191,110 @@ class Box implements \Flexio\Services\IConnection
             return false; // bad folderid
 
         // see if the file already exists by getting its id
-        //$fileid = $this->getFileId($folder . '/' . $filename);
+        $fileid = $this->getFileId($folder . '/' . $filename);
 
 
-        $box_args = json_encode(['name' => $filename, 'parent' => ['id' => $folderid]]);
+        if ($fileid !== false)
+        {
+            // file already exists -- update content
+            $box_args = null;
+            $url = "https://upload.box.com/api/2.0/files/$fileid/content";
+        }
+         else
+        {
+            // file doesn't exist yet -- create new file
+            $box_args = json_encode(['name' => $filename, 'parent' => ['id' => $folderid]]);
+            $url = "https://upload.box.com/api/2.0/files/content";
+        }
         
 
         // upload/write the file
         $ch = curl_init();
 
         $boundary = "---------------------------2523643".time()."1927533";
-        $content_type = 'multipart/form-data; boundary=$boundary';
-        $first = true;
-        $last = false;
+        $content_type = "multipart/form-data; boundary=$boundary";
+        $content_finished = false;
+        $total_written = 0;
 
-        $dropbox_args = json_encode(array('close' => false));
-        curl_setopt($ch, CURLOPT_URL, "https://upload.box.com/api/2.0/files/content");
+        $header = fopen('php://memory', 'rw+');
+        $buf = '';
+        
+        if (isset($box_args))
+        {
+            $buf .= "--$boundary\r\n".
+                    "Content-Disposition: form-data; name=\"attributes\"\r\n".
+                    "\r\n".
+                    "$box_args\r\n";
+        }
+
+        $buf .= "--$boundary\r\n".
+                "Content-Disposition: form-data; name=\"file\"; filename=\"$filename\"\r\n".
+                "Content-Type: application/octet-stream\r\n".
+                "\r\n";
+
+        $header_len = strlen($buf);
+        fwrite($header, $buf);
+        fseek($header, 0);
+
+        $footer = fopen('php://memory', 'rw+');
+        $buf = "\r\n--$boundary--";
+        $footer_len = strlen($buf);
+        fwrite($footer, $buf);
+        fseek($footer, 0);
+
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_UPLOAD, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: '.$content_type, 'Authorization: Bearer '.$this->access_token));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Length: " . ($header_len + $size + $footer_len), 'Content-Type: '.$content_type, 'Authorization: Bearer '.$this->access_token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$callback, &$total_written, &$box_args, &$boundary, &$first, &$last) {
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$callback, &$total_written, &$header, &$footer, &$content_finished) {
 
-            if ($last)
-                return '';
-            
-            if ($first)
+            $res = '';
+            if ($length > 0 && $header)
             {
-                $res =  "$boundary\r\n".
-                        "Content-Disposition: form-data; name=\"attributes\"\r\n".
-                        "Content-Type: application/octet-stream\r\n".
-                        "\r\n".
-                        "$box_args\r\n".
-                        "$boundary\r\n".
-                        "Content-Disposition: form-data; name=\"payload\"; filename=\"payload.bin\"\r\n".
-                        "Content-Type: application/octet-stream\r\n".
-                        "\r\n";
+                $chunk = fread($header, $length);
+                $chunk_len = strlen($chunk);
+                if ($chunk_len < $length)
+                    $header = null;
+                $res .= $chunk;
+                $length -= $chunk_len;
             }
-             else
+
+
+            if ($length > 0 && !$content_finished)
             {
-                $res = $callback($length);
-                if ($res === false)
+                $chunk = $callback($length);
+                if ($chunk === false)
                 {
-                    $res = "\r\n$boundary--";
-                    $last = true;
+                    $content_finished = true; 
+                }
+                else
+                {
+                    $chunk_len = strlen($chunk);
+                    if ($chunk_len < $length)
+                        $content_finished = true;
+                    $length -= $chunk_len;
+                    $res .= $chunk;
                 }
             }
 
+
+            if ($length > 0 && $content_finished && $footer)
+            {
+                $chunk = fread($footer, $length);
+                $chunk_len = strlen($chunk);
+                if ($chunk_len < $length)
+                    $footer = null;
+                $res .= $chunk;
+                $length -= $chunk_len;
+            }
 
             $total_written += strlen($res);
             return $res;
         });
         $result = curl_exec($ch);
-
-        $result = @json_decode($result, true);
-        $session_id = $result['session_id'] ?? '';
-        if (strlen($session_id) == 0)
-            return false; // TODO: throw exception?
-
-
-        $offset = 0;
-        $first = true;
-        while (true)
-        {
-            if ($first == true)
-            {
-                $first = false;
-
-
-                $content = "$boundary\r\n".
-                           "Content-Disposition: form-data; name=\"attributes\"\r\n".
-                           "Content-Type: application/octet-stream\r\n".
-                           "\r\n".
-                           "$box_args\r\n".
-                           "$boundary\r\n".
-                           "Content-Disposition: form-data; name=\"payload\"; filename=\"payload.bin\"\r\n".
-                           "Content-Type: application/octet-stream\r\n".
-                           "\r\n";
-
-                return $test_info;
-            }
-             else
-            {
-                $buf = $callback(65536);
-
-                if ($buf === false)
-                    break;
-            }
-
-            $buflen = strlen($buf);
-
-            if ($buflen > 0)
-            {
-                $dropbox_args = json_encode(array('close' => false, 'cursor' => array('session_id' => $session_id, 'offset' => $offset)));
-                curl_setopt($ch, CURLOPT_URL, "https://content.dropboxapi.com/2/files/upload_session/append_v2");
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $buf);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: application/octet-stream", "Content-Length: $buflen" ));
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-
-                $result = curl_exec($ch);
-                $offset += $buflen;
-
-                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                if ($httpcode != 200 && $httpcode != 201 && $httpcode != 202)
-                    return false; // bad status code; TODO: throw exception?
-            }
-        }
-
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
         return true;
     }
@@ -451,7 +453,7 @@ class Box implements \Flexio\Services\IConnection
 
                 $object = new self;
                 $object->access_token = $token->getAccessToken();
-                $object->refresh_token = $refresh_token;
+                $object->refresh_token = $token->getRefreshToken();
                 $object->expires = $token->getEndOfLife();
                 $object->is_ok = true;
                 if (is_null($object->refresh_token)) $object->refresh_token = '';
