@@ -169,18 +169,72 @@ class Box implements \Flexio\Services\IConnection
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-        $filename = rawurlencode($path);
+
+        $folder = trim($path,'/');
+        while (false !== strpos($folder,'//'))
+            $folder = str_replace('//','/',$folder);
+        $parts = explode('/',$folder);
+
+        $filename = array_pop($parts);
+        $folder = '/' . join('/',$parts);
+
+        $folderid = $this->getFileId($folder);
+        if (is_null($folderid) || strlen($folderid) == 0)
+            return false; // bad folderid
+
+        // see if the file already exists by getting its id
+        //$fileid = $this->getFileId($folder . '/' . $filename);
+
+
+        $box_args = json_encode(['name' => $filename, 'parent' => ['id' => $folderid]]);
         
+
         // upload/write the file
         $ch = curl_init();
 
+        $boundary = "---------------------------2523643".time()."1927533";
+        $content_type = 'multipart/form-data; boundary=$boundary';
+        $first = true;
+        $last = false;
+
         $dropbox_args = json_encode(array('close' => false));
-        curl_setopt($ch, CURLOPT_URL, "https://content.dropboxapi.com/2/files/upload_session/start");
+        curl_setopt($ch, CURLOPT_URL, "https://upload.box.com/api/2.0/files/content");
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: application/octet-stream", "Content-Length: 0" ));
+        curl_setopt($ch, CURLOPT_UPLOAD, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: '.$content_type, 'Authorization: Bearer '.$this->access_token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$callback, &$total_written, &$box_args, &$boundary, &$first, &$last) {
+
+            if ($last)
+                return '';
+            
+            if ($first)
+            {
+                $res =  "$boundary\r\n".
+                        "Content-Disposition: form-data; name=\"attributes\"\r\n".
+                        "Content-Type: application/octet-stream\r\n".
+                        "\r\n".
+                        "$box_args\r\n".
+                        "$boundary\r\n".
+                        "Content-Disposition: form-data; name=\"payload\"; filename=\"payload.bin\"\r\n".
+                        "Content-Type: application/octet-stream\r\n".
+                        "\r\n";
+            }
+             else
+            {
+                $res = $callback($length);
+                if ($res === false)
+                {
+                    $res = "\r\n$boundary--";
+                    $last = true;
+                }
+            }
+
+
+            $total_written += strlen($res);
+            return $res;
+        });
         $result = curl_exec($ch);
 
         $result = @json_decode($result, true);
@@ -188,14 +242,36 @@ class Box implements \Flexio\Services\IConnection
         if (strlen($session_id) == 0)
             return false; // TODO: throw exception?
 
+
         $offset = 0;
+        $first = true;
         while (true)
         {
-            $buf = $callback(65536);
+            if ($first == true)
+            {
+                $first = false;
 
-            if ($buf === false)
-                break;
-            
+
+                $content = "$boundary\r\n".
+                           "Content-Disposition: form-data; name=\"attributes\"\r\n".
+                           "Content-Type: application/octet-stream\r\n".
+                           "\r\n".
+                           "$box_args\r\n".
+                           "$boundary\r\n".
+                           "Content-Disposition: form-data; name=\"payload\"; filename=\"payload.bin\"\r\n".
+                           "Content-Type: application/octet-stream\r\n".
+                           "\r\n";
+
+                return $test_info;
+            }
+             else
+            {
+                $buf = $callback(65536);
+
+                if ($buf === false)
+                    break;
+            }
+
             $buflen = strlen($buf);
 
             if ($buflen > 0)
@@ -217,26 +293,6 @@ class Box implements \Flexio\Services\IConnection
             }
         }
 
-
-        $dropbox_args = json_encode(array('cursor' => array('session_id' => $session_id, 'offset' => $offset),
-                                          'commit' => array('path' => $path, 'mode' => 'overwrite')));
-        curl_setopt($ch, CURLOPT_URL, "https://content.dropboxapi.com/2/files/upload_session/finish");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: application/octet-stream", "Content-Length: 0" ));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        $result = curl_exec($ch);
-        $result = @json_decode($result, true);
-
-        curl_close($ch);
-
-        if (isset($result['error']))
-        {
-            // error occurred
-            $msg = $result['error_summary'] ?? '';
-            return false;  // error occurred; TODO: throw exception?
-        }
 
         return true;
     }

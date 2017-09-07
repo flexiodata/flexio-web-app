@@ -187,6 +187,9 @@ class Connection extends \Flexio\Object\Base
         $service_object = $response;
         $tokens = $service_object->getTokens();
 
+        file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
+
+
         $token_expires = null;
         if (!is_null($tokens['expires']) && $tokens['expires'] > 0)
             $token_expires = date("Y-m-d H:i:s", $tokens['expires']);
@@ -227,6 +230,8 @@ class Connection extends \Flexio\Object\Base
 
                 if (isset($tokens['access_token']) && isset($tokens['expires']) && $tokens['access_token'] != $connection_info['token'])
                 {
+                    file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
+
                     $token_expires = date("Y-m-d H:i:s", $tokens['expires']);
 
                     $connection_params = array();
