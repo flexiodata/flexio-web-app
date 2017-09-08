@@ -44,7 +44,8 @@ class ApiController extends \Flexio\System\FxControllerAction
         }
         else
         {
-            if (0 == strncmp($request->REQUEST_URI, '/api/v1/processes', 17) ||
+            if (0 == strncmp($request->REQUEST_URI, '/api/v1/connections', 19) ||
+                0 == strncmp($request->REQUEST_URI, '/api/v1/processes', 17) ||
                 0 == strncmp($request->REQUEST_URI, '/api/v1/pipes', 13) ||
                 0 == strncmp($request->REQUEST_URI, '/api/v1/streams', 15))
             {
