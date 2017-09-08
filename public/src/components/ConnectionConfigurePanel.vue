@@ -114,6 +114,9 @@
         case types.CONNECTION_TYPE_AMAZONS3:
           attrs = _.pick(attrs, ['host', 'username', 'password', 'database'])
           break
+        case types.CONNECTION_TYPE_FIREBASE:
+          attrs = _.pick(attrs, ['host', 'username', 'password'])
+          break
         case types.CONNECTION_TYPE_PIPELINEDEALS:
           attrs = _.pick(attrs, ['token'])
           break

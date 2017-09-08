@@ -74,6 +74,16 @@ const EMAIL = {
   service_description: ''
 }
 
+const FIREBASE = {
+  is_service: true,
+  is_input: true,
+  is_output: false,
+  connection_type: types.CONNECTION_TYPE_FIREBASE,
+  icon: require('../assets/icon/icon-firebase-128.png'),
+  service_name: 'Firebase',
+  service_description: 'Mobile and web application development platform '
+}
+
 const GOOGLEDRIVE = {
   is_service: true,
   is_input: true,
@@ -217,6 +227,7 @@ export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BOX           = BOX
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
 export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
+export const CONNECTION_INFO_FIREBASE      = FIREBASE
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS  = GOOGLESHEETS
 export const CONNECTION_INFO_HTTP          = HTTP
