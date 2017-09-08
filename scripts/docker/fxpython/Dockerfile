@@ -29,5 +29,8 @@ RUN pip3 install gensim
 RUN pip3 install tensorflow
 RUN pip3 install keras
 
+# Amazon AWS
+RUN pip3 install boto3
+
 COPY flexio.py /usr/lib/python3.5/flexio.py
 

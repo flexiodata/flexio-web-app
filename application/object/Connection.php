@@ -187,6 +187,9 @@ class Connection extends \Flexio\Object\Base
         $service_object = $response;
         $tokens = $service_object->getTokens();
 
+        file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
+
+
         $token_expires = null;
         if (!is_null($tokens['expires']) && $tokens['expires'] > 0)
             $token_expires = date("Y-m-d H:i:s", $tokens['expires']);
@@ -215,6 +218,7 @@ class Connection extends \Flexio\Object\Base
         $connection_type = $connection_info['connection_type'] ?? '';
         switch ($connection_type)
         {
+            case \Model::CONNECTION_TYPE_BOX:
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
             case \Model::CONNECTION_TYPE_GOOGLESHEETS:
             {
@@ -223,12 +227,17 @@ class Connection extends \Flexio\Object\Base
                 // in every subsequent call
 
                 $tokens = $service->getTokens();
+
                 if (isset($tokens['access_token']) && isset($tokens['expires']) && $tokens['access_token'] != $connection_info['token'])
                 {
+                    file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
+
                     $token_expires = date("Y-m-d H:i:s", $tokens['expires']);
 
                     $connection_params = array();
                     $connection_params['token'] = $tokens['access_token'];
+                    if (isset($tokens['refresh_token']))
+                        $connection_params['refresh_token'] = $tokens['refresh_token'];
                     $connection_params['token_expires'] = $token_expires;
                     $this->getModel()->connection->set($this->getEid(), $connection_params);
                 }

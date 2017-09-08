@@ -115,7 +115,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream = \Flexio\Object\Stream::create();
         $outstream->setName($instream->getName());
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
-        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);
+        $outstream->setMimeType($output_mime_type);
 
         $this->getOutput()->addStream($outstream);
 

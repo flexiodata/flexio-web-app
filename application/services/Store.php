@@ -117,7 +117,9 @@ class Store
 
             case \Model::CONNECTION_TYPE_BOX:
                     $auth_params = array(
-                        'access_token' => $connection_info['token'] ?? ''
+                        'access_token' => $connection_info['token'] ?? '',
+                        'refresh_token' => $connection_info['refresh_token'] ?? '',
+                        'expires' => $connection_info['token_expires'] ?? 0
                     );
                     $service = \Flexio\Services\Box::create($auth_params);
                 break;
