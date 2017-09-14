@@ -76,8 +76,8 @@ class Task
                 'verb' => 'Sending email'
             ),
             array(
-                'type' => \Flexio\Jobs\HttpRequest::MIME_TYPE,
-                'class' => '\Flexio\Jobs\HttpRequest',
+                'type' => \Flexio\Jobs\Request::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Request',
                 'name' => 'Http Request',
                 'verb' => 'Making Http Request'
             ),

@@ -1875,6 +1875,69 @@
 
 
 
+/*
+    {
+  type: 'flexio.request',
+  params: {
+    method: 'GET',
+    url: 'https://github.com/my-api-endpoint',
+    params: { foo: 'bar' },
+    headers: {'X-Custom-Header': 'foobar'}
+  }
+}
+*/
+    this.args.request = ['method', 'url', 'params', 'headers'];
+    this.hints.request = {
+      'method':      [ 'GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD', 'OPTIONS' ]
+    }
+    this.keywords.request = function(str)
+    {
+      var json =
+        {
+            "type": "flexio.request",
+            "params": {
+            }
+        };
+      
+      var params = this.split(str, this.args.request)
+      
+      if (params.hasOwnProperty('method'))
+      {
+        json.params.method = params['method'].value;
+      }
+
+      if (params.hasOwnProperty('url'))
+      {
+        json.params.url = params['url'].value;
+      }
+
+      return json
+    };
+
+    this.templates["flexio.request"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "request";
+
+      if (json.params.hasOwnProperty('method'))
+      {
+        res = this.append(res, "method: " + json.params.method)
+      }
+
+      if (json.params.hasOwnProperty('url'))
+      {
+        res = this.append(res, "url: " + json.params.url)
+      }
+
+      return res;
+    }
+
+
+
+
+
 
 
 

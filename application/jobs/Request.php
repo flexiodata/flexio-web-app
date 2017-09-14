@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class HttpRequest extends \Flexio\Jobs\Base
+class Request extends \Flexio\Jobs\Base
 {
     public function run()
     {
@@ -108,10 +108,10 @@ class HttpRequest extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.httprequest';
+    const MIME_TYPE = 'flexio.request';
     const TEMPLATE = <<<EOD
     {
-        "type": "flexio.httprequest",
+        "type": "flexio.request",
         "params": {
             "method": "head|get|put|post|patch|delete|options",
             "url": "https://www.flex.io",
@@ -126,7 +126,7 @@ EOD;
         "properties": {
             "type": {
                 "type": "string",
-                "enum": ["flexio.httprequest"]
+                "enum": ["flexio.request"]
             },
             "params": {
                 "type": "object"
