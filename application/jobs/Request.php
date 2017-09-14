@@ -43,11 +43,9 @@ class Request extends \Flexio\Jobs\Base
         $method = strtolower($method);
         switch ($method)
         {
-            default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            case 'head':    curl_setopt($ch, CURLOPT_HTTPHEAD, true); break;
+            default: // default to get
             case 'get':     curl_setopt($ch, CURLOPT_HTTPGET, true); break;
+            case 'head':    curl_setopt($ch, CURLOPT_HTTPHEAD, true); break;
             case 'put':     curl_setopt($ch, CURLOPT_HTTPPUT, true); break;
             case 'post':    curl_setopt($ch, CURLOPT_HTTPPOST, true); break;
             case 'patch':   curl_setopt($ch, CURLOPT_HTTPPATCH, true); break;
