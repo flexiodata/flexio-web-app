@@ -292,12 +292,13 @@ class Process
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
-                'background'  => array('type' => 'boolean', 'required' => false, 'default' => true),
+                'stream' => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $process_identifier = $params['eid'];
-        $background = toBoolean($params['background']);
+        $stream_to_echo = $params['stream'] ?? false;
+        $background = false;
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -305,10 +306,62 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
-        //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return $process->run($background)->get();
+        // parse the content and set the stream info
+        $php_stream_handle = fopen('php://input', 'rb');
+        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+         \Flexio\Object\Process::addProcessInputFromStream($php_stream_handle, $post_content_type, $process);
+
+         // run the process and get the output
+        $process->run($background);
+        $output_streams = $process->getOutput()->getStreams();
+
+        // if a stream wasn't specified, echo the last stream; otherwise, try to
+        // return the requested stream
+        if ($stream_to_echo === false)
+        {
+            $last_stream_idx = count($output_streams) - 1;
+            if ($last_stream_idx >= 0)
+                $stream_to_echo = $output_streams[$last_stream_idx]->getName();
+                 else
+                exit(0); // nothing was requested, but nothing to return
+        }
+
+        for ($i = 0; $i < count($output_streams); ++$i)
+        {
+            if ($output_streams[$i]->getName() == $stream_to_echo || (is_numeric($stream_to_echo) && $i == $stream_to_echo))
+            {
+                $stream = $output_streams[$i];
+                $stream_info = $stream->get();
+                if ($stream_info === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+                $mime_type = $stream_info['mime_type'];
+                $start = 0;
+                $limit = PHP_INT_MAX;
+                $content = $stream->content($start, $limit);
+
+                if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+                {
+                    // return content as-is
+                    header('Content-Type: ' . $mime_type);
+                }
+                else
+                {
+                    // flexio table; return application/json in place of internal mime
+                    header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON);
+                    $content = json_encode($content);
+                }
+
+                echo($content);
+                exit(0);
+            }
+        }
+
+        header('HTTP/1.0 404 Not Found');
+        exit(0);
     }
 
     public static function addInput(array $params, string $requesting_user_eid = null) : array
