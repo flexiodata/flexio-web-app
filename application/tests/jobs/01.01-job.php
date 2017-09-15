@@ -86,11 +86,11 @@ class Test
         TestCheck::assertBoolean('A.9', '\Flexio\Jobs\Filter definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\HttpRequest::TEMPLATE,true);
+        $definition = json_decode(\Flexio\Jobs\Request::TEMPLATE,true);
         $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\HttpRequest::MIME_TYPE && $mime_type == 'flexio.httprequest';
+        $actual = $mime_type == \Flexio\Jobs\Request::MIME_TYPE && $mime_type == 'flexio.request';
         $expected = true;
-        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\HttpRequest definition type constant',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\Request definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Replace::TEMPLATE,true);

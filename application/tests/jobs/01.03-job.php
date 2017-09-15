@@ -77,10 +77,10 @@ class Test
         TestCheck::assertString('A.9', '\Flexio\Jobs\Filter::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Jobs\HttpRequest::create();
+        $task = \Flexio\Jobs\Request::create();
         $actual = ($task !== false ? $task->getType() : false);
-        $expected = \Flexio\Jobs\HttpRequest::MIME_TYPE;
-        TestCheck::assertString('A.10', '\Flexio\Jobs\HttpRequest::create()',  $actual, $expected, $results);
+        $expected = \Flexio\Jobs\Request::MIME_TYPE;
+        TestCheck::assertString('A.10', '\Flexio\Jobs\Request::create()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Jobs\Replace::create();

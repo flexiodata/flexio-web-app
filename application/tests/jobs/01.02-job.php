@@ -77,10 +77,10 @@ class Test
         TestCheck::assertBoolean('A.9', '\Flexio\Jobs\Filter schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\HttpRequest::SCHEMA;
+        $schema = \Flexio\Jobs\Request::SCHEMA;
         $actual = \Flexio\Base\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\HttpRequest schema format',  $actual, $expected, $results);
+        TestCheck::assertBoolean('A.10', '\Flexio\Jobs\Request schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Jobs\Replace::SCHEMA;

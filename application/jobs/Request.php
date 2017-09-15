@@ -113,7 +113,7 @@ class Request extends \Flexio\Jobs\Base
         "params": {
             "method": "head|get|put|post|patch|delete|options",
             "url": "https://www.flex.io",
-            "headers: []
+            "headers": []
         }
     }
 EOD;

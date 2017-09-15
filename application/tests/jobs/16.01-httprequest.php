@@ -26,7 +26,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.httprequest",
+                "type": "flexio.request",
                 "params": {
                     "method": "get",
                     "url": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
@@ -37,7 +37,7 @@ class Test
 
 
 
-        // TEST: HttpRequest Job
+        // TEST: Request Job
 
         // BEGIN TEST
         $params = [
@@ -46,6 +46,6 @@ class Test
         $result = TestUtil::getProcessResult($process,0,34);
         $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
         $expected = 'def flexio_handler(input, output):';
-        TestCheck::assertString('A.1', 'HttpRequest; check basic functionality',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'Request; check basic functionality',  $actual, $expected, $results);
     }
 }
