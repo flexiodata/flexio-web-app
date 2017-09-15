@@ -40,7 +40,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         $properties = $process->get();
-        
+
         return $properties;
     }
 
@@ -309,50 +309,6 @@ class Process
         //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         return $process->run($background)->get();
-    }
-
-    public static function cancel(array $params, string $requesting_user_eid = null) : array
-    {
-        $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $process_identifier = $params['eid'];
-
-        // load the object
-        $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        // if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
-        //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        return $process->cancel()->get();
-    }
-
-    public static function pause(array $params, string $requesting_user_eid = null) : array
-    {
-        $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $process_identifier = $params['eid'];
-
-        // load the object
-        $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        // if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
-        //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        return $process->pause()->get();
     }
 
     public static function addInput(array $params, string $requesting_user_eid = null) : array

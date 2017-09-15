@@ -341,11 +341,7 @@ class Api
             case 'GET /processes/:eid/output'          : return '\Flexio\Api\Process::getOutput';
             case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\Process::getTaskInputInfo';
             case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\Process::getTaskOutputInfo';
-
-            // DEPRECATED: another way to do this that doesn't involve a high-level url endpoint verb?
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
-            case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\Process::cancel';
-            case 'POS /processes/:eid/pause'           : return '\Flexio\Api\Process::pause';
 
             // streams
             case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
