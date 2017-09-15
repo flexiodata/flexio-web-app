@@ -326,61 +326,12 @@ class Pipe
         // STEP 2: parse the content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');
         $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+         \Flexio\Object\Process::addProcessInputFromStream($php_stream_handle, $post_content_type, $process);
 
-        $stream = false;
-        $streamwriter = false;
-        $form_params = array();
-
-        $parser = \Flexio\Base\MultipartParser::create();
-
-        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params) {
-            if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
-            {
-                $stream = \Flexio\Object\Stream::create();
-
-                if ($content_type === false)
-                {
-                    $content_type = \Flexio\Base\ContentType::getMimeType($filename, '');
-                }
-
-                // stream name will be the post variable name, not the multipart filename
-                // TODO: should we be using filename in the path and form name in the name?
-                $stream_info = array();
-                $stream_info['name'] = $name;
-                $stream_info['mime_type'] = $content_type;
-
-                $stream->set($stream_info);
-
-                $streamwriter = \Flexio\Object\StreamWriter::create($stream);
-            }
-             else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_DATA)
-            {
-                if ($streamwriter !== false)
-                {
-                    // write out the data
-                    $streamwriter->write($data);
-                }
-            }
-             else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_END)
-            {
-                $process->addInput($stream);
-                $streamwriter = false;
-                $stream = false;
-            }
-             else if ($type == \Flexio\Base\MultipartParser::TYPE_KEY_VALUE)
-            {
-                $form_params[$name] = $data;
-            }
-        });
-        fclose($php_stream_handle);
-
-
-
-        $process->setParams($form_params);
+         // STEP 3: run the process
         $process->run($background);
 
-
-
+        // STEP 4: echo the stream content if streams were specified
         if (isset($_GET['stream']))
         {
             $desired_stream = $_GET['stream'];
@@ -421,30 +372,7 @@ class Pipe
             exit(0);
         }
 
-
-
         return $process->get();
-
-        /*
-        // TODO: experimental
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $pipe_identifier= $params['eid'];
-
-        // get the raw post input and feed it into the 'params' parameter
-        $p = array();
-        $p['parent_eid'] = $pipe_identifier;
-        $p['background'] = true;
-        $p['run'] = true;
-        $p['params'] = $_POST;
-
-        return Process::create($p, $requesting_user_eid);
-        */
     }
 
     public static function validate(array $params, string $requesting_user_eid = null) : array

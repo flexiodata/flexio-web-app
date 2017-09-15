@@ -56,6 +56,58 @@ class Process extends \Flexio\Object\Base
         return $object;
     }
 
+    public static function addProcessInputFromStream($php_stream_handle, string $post_content_type, \Flexio\Object\Process $process) // TODO: add type checking for handle
+    {
+        $stream = false;
+        $streamwriter = false;
+        $form_params = array();
+
+        $parser = \Flexio\Base\MultipartParser::create();
+
+        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params) {
+            if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
+            {
+                $stream = \Flexio\Object\Stream::create();
+
+                if ($content_type === false)
+                {
+                    $content_type = \Flexio\Base\ContentType::getMimeType($filename, '');
+                }
+
+                // stream name will be the post variable name, not the multipart filename
+                // TODO: should we be using filename in the path and form name in the name?
+                $stream_info = array();
+                $stream_info['name'] = $name;
+                $stream_info['mime_type'] = $content_type;
+
+                $stream->set($stream_info);
+
+                $streamwriter = \Flexio\Object\StreamWriter::create($stream);
+            }
+            else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_DATA)
+            {
+                if ($streamwriter !== false)
+                {
+                    // write out the data
+                    $streamwriter->write($data);
+                }
+            }
+            else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_END)
+            {
+                $process->addInput($stream);
+                $streamwriter = false;
+                $stream = false;
+            }
+            else if ($type == \Flexio\Base\MultipartParser::TYPE_KEY_VALUE)
+            {
+                $form_params[$name] = $data;
+            }
+        });
+        fclose($php_stream_handle);
+
+        $process->setParams($form_params);
+    }
+
     public function set(array $properties) : \Flexio\Object\Process
     {
         // TODO: add properties check
