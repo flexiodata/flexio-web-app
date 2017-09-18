@@ -898,7 +898,7 @@
 
     this.args.execute = ['lang'/*, 'code'*/, 'file'];
     this.hints.execute = {
-      "lang":       [ /*'javascript',*/ 'python', 'html' ]
+      "lang":       [ 'javascript', 'python', 'html' ]
     };
     this.keywords.execute = function(str)
     {
@@ -1900,7 +1900,7 @@
         };
       
       var params = this.split(str, this.args.request)
-      
+
       if (params.hasOwnProperty('method'))
       {
         json.params.method = params['method'].value;
