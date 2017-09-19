@@ -30,6 +30,8 @@ class Request extends \Flexio\Jobs\Base
         $method = $params['method'] ?? false;
         $url = $params['url'] ?? false;
         $headers = $params['headers'] ?? array();
+        $get_params = $params['params'] ?? array();
+        $post_data = $params['data'] ?? array();
 
         if ($method === false || $url === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
@@ -45,12 +47,19 @@ class Request extends \Flexio\Jobs\Base
         {
             default: // default to get
             case 'get':     curl_setopt($ch, CURLOPT_HTTPGET, true); break;
-            case 'head':    curl_setopt($ch, CURLOPT_HTTPHEAD, true); break;
-            case 'put':     curl_setopt($ch, CURLOPT_HTTPPUT, true); break;
-            case 'post':    curl_setopt($ch, CURLOPT_HTTPPOST, true); break;
-            case 'patch':   curl_setopt($ch, CURLOPT_HTTPPATCH, true); break;
-            case 'delete':  curl_setopt($ch, CURLOPT_HTTPDELETE, true); break;
-            case 'options': curl_setopt($ch, CURLOPT_HTTPOPTIONS, true); break;
+            //case 'head':    curl_setopt($ch, CURLOPT_HTTPHEAD, true); break;
+            //case 'put':     curl_setopt($ch, CURLOPT_HTTPPUT, true); break;
+            case 'post':    curl_setopt($ch, CURLOPT_POST, true); break;
+            //case 'patch':   curl_setopt($ch, CURLOPT_HTTPPATCH, true); break;
+            //case 'delete':  curl_setopt($ch, CURLOPT_HTTPDELETE, true); break;
+            //case 'options': curl_setopt($ch, CURLOPT_HTTPOPTIONS, true); break;
+        }
+
+        if ($method == 'post')
+        {
+            // use `application/x-www-form-urlencoded` instead of `multipart/form-data`
+            $urlencoded_post_data = http_build_query($post_data);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $urlencoded_post_data);
         }
 
         // TODO: for now, configure some defaults; remove defaults; use info provided in header
