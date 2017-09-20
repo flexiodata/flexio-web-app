@@ -1,6 +1,7 @@
 "use strict"
 
 var utf8 = require('utf8')
+var fs = require('fs')
 
 class StdinoutProxy {
 
@@ -8,24 +9,65 @@ class StdinoutProxy {
     }
 
 
-    invoke(func, params) {
+    invokeSync(func, params) {
         var payload = this.encodePart(func)
         for (var i = 0; i < params.length; ++i) {
             payload += this.encodePart(param)
         }
-        this.sendMessage(payload)
-        var response = this.readMessage()
+        
+        this.sendMessageSync(payload)
+
+        const response = this.readMessageSync()
+        if (response === null)
+            throw('Cannot read message')
         //console.log("Received reply " + response)
         var decoded_part = this.decodePart(response, 0)
         return decoded_part.value
     }
 
-    sendMessage(payload) {
+    sendMessageSync(payload) {
         var msg = '--MSGqQp8mf~' + payload.length + ',' + payload
-        process.stdout.write(msg)
-        sys.stdout.flush()
+        fs.writeSync(process.stdout.fd, msg, null, 'binary')
+        //fs.fdatasyncSync(process.stdout.fd)
     }
 
+
+    readMessageSync(self) {
+        var buf = ''
+        var data = new Uint8Array(1)
+        var ch
+        while (true) {
+            fs.readSync(process.stdin.fd, data, 0, 1, null)
+            ch = String.fromCharCode(data[0])
+            buf += ch
+            if (buf.length > 100) {
+                break
+            }
+            if (buf == '--MSGqQp8mf~') {
+                var lenstr = ''
+                var ch
+                while (true) {
+                    fs.readSync(process.stdin.fd, data, 0, 1, null)
+                    ch = String.fromCharCode(data[0])
+                    if (ch < '0' || ch > '9') {
+                        break
+                    }
+                    lenstr += ch
+                }
+                if (ch != ',') {
+                    //print("***" + ch.decode() + "***" + lenstr.decode())
+                    return null
+                }
+                var msglen = parseInt(lenstr)
+                data = new Uint8Array(msglen)
+                fs.readSync(process.stdin.fd, data, 0, msglen, null)
+                return this.u8arrToString(data)
+            }
+        }
+        return null
+    }
+    
+    
 
     encodePart(v) {
         if (v === null)
@@ -139,6 +181,25 @@ class StdinoutProxy {
         else if (type == 'N') {
             return { value: null, next: end }
         }
+    }
+
+
+    u8arrToString(u8arr) {
+        var len = u8arr.length
+        var res = ''
+        for (var i = 0; i < len; ++i) {
+            res += String.fromCharCode(u8arr[i])
+        }
+        return res
+    }
+
+    stringToU8arr(str) {
+        var len = str.length
+        var res = new Uint8Array(str.length)
+        for (var i = 0; i < len; ++i) {
+            res[i] = str.charCodeAt(i)
+        }
+        return res
     }
 
 
