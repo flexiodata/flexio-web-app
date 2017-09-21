@@ -9,6 +9,14 @@ class StdinoutProxy {
     }
 
 
+    invoke(func, params, callback) {
+        // placeholder for future async version of invoke
+        var res = this.invokeSync(func, params)
+        var err = null
+        callback(err, res)
+    }
+
+
     invokeSync(func, params) {
         var payload = this.encodePart(func)
         for (var i = 0; i < params.length; ++i) {
@@ -30,7 +38,6 @@ class StdinoutProxy {
         fs.writeSync(process.stdout.fd, msg, null, 'binary')
         //fs.fdatasyncSync(process.stdout.fd)
     }
-
 
     readMessageSync(self) {
         var buf = ''
@@ -208,8 +215,98 @@ class StdinoutProxy {
     }
 }
 
+
+
+
+
+
+class Inputs {
+
+    constructor() {
+        this.inputs = []
+    }
+
+    initialize(callback) {
+        proxy.invoke('getInputStreamInfo', [], function(err, res) {
+            stream_infos = res
+            for (var i = 0; i < stream_infos.length; ++i) {
+                this.inputs.push(new Input(stream_infos[i]))
+            }
+        })
+    }
+}
+
+class Outputs {
+
+    constructor() {
+        this.outputs = []
+    }
+
+    initialize(callback) {
+        proxy.invoke('getOutputStreamInfo', [], function(err, res) {
+            stream_infos = res
+            for (var i = 0; i < stream_infos.length; ++i) {
+                this.outputs.push(new Output(stream_infos[i]))
+            }
+        })
+    }
+
+}
+
+
+
+
+var proxy = new StdinoutProxy()
+var inputs = new Inputs()
+var outputs = new Outputs()
+var inited = false
+
+
+
+function checkModuleInit(callback) {
+    if (initied) {
+        callback()
+        return
+    } else {
+        inited = true
+        inputs.initialize(function() {
+            outputs.initialize(function() {
+                callback()
+            })
+        })
+    }
+}
+
+
+function runStream(handler) {
+
+    checkModuleInit(function() {
+
+        proxy.invoke('getManagedStreamIndex', [], function(err, stream_idx) {
+            var input = inputs.inputs[stream_idx]
+            var output = outputs.outputs[stream_idx]
+            handler(input, output)
+        })
+
+    })
+}
+
+
+
+
+
+function run(handler) {
+    checkModuleInit(function() {
+        handler(inputs, outputs)
+    })
+}
+
+
+
 module.exports = {
 
-    StdinoutProxy
+    StdinoutProxy,
+    run,
+    runStream
 
 };
