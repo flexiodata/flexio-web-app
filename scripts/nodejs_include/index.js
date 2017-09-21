@@ -9,7 +9,7 @@ class StdinoutProxy {
     }
 
 
-    invoke(func, params, callback) {
+    invokeAsync(func, params, callback) {
         // placeholder for future async version of invoke
         var res = this.invokeSync(func, params)
         var err = null
@@ -216,6 +216,197 @@ class StdinoutProxy {
 }
 
 
+var proxy = new StdinoutProxy()
+
+
+class InputEnv {
+}
+
+class OutputEnv {
+}
+
+var inputEnv = new InputEnv()
+var outputEnv = new OutputEnv()
+
+
+
+class Input {
+
+    constructor(info) {
+        // used for setting fetch style
+        this.FETCH_OBJECT = 1
+        this.FETCH_ARRAY = 2
+
+        if (info) {
+            this._name = info['name']
+            this._contentType = info['content_type']
+            this._isTable = (self.content_type == 'application/vnd.flexio.table') ? true:false
+            this._size = info['size']
+            this._idx = info['idx']
+            this._structure = null
+            this._dict = false
+            this._fetchStyle = this.Dictionary
+            this._casts = null
+            this._casting = true
+        } else {
+            this._name = ''
+            this._contentType = 'application/octet-stream'
+            this._isTable = false
+            this._size = 0
+            this._idx = -1
+            this._structure = null
+            this._dict = false
+            this._fetchStyle = this.Dictionary
+            this._casts = null
+            this._casting = true
+        }
+    }
+    
+    get env() {
+        return inputEnv
+    }
+
+    get name() {
+        return this._name
+    }
+
+    get contentType() {
+        return this._contentType
+    }
+
+    get size() {
+        return this._size
+    }
+
+    get structure() {
+        if (!this.isTable) {
+            return null
+        }
+        if (!this._structure) {
+            self._structure = proxy.invokeSync('getInputStreamStructure', [self._idx])
+        }
+        return self._structure
+    }
+    
+    get isTable() {
+        return this.isTable
+    }
+
+    get fetchStyle() {
+        return this.fetchStyle
+    }
+
+    set fetchStyle(value) {
+        this._casts = null
+        if (value == Object || value == this.FETCH_OBJECT) {
+            self._fetchStyle = this.FETCH_OBJECT
+        } else if value == Array || value == this.FETCH_ARRAY) {
+            self._fetchStyle = this.FETCH_ARRAY
+        }
+    }
+
+    get casting() {
+        return this._casting
+    }
+
+
+    set casting(value) {
+        this._casting = value
+    }
+
+
+    read(length) {
+        if (length === undefined || length === null) {
+            return this.readAll()
+        }
+        if (this._isTable) {
+            return null
+        }
+        data = proxy.invokeSync('read', [this._idx, length])
+        if (data === false || data === null) {
+            return null
+        }
+        return data
+    }
+
+    readLine() {
+        if (this._fetchStyle == this.FETCH_ARRAY) {
+            var row = proxy.invokeSync('readline', [self._idx, (this._fetchStyle == this.FETCH_ARRAY ? false : true)])
+        }
+        if (row === false || row === null) {
+            return null
+        }
+        if (this._casting) {
+            this.typeCasts(row)
+        }
+        return row
+    }
+    
+    readAll() {
+        var rows = [], row
+        if (this._isTable) {
+            rows = []
+            while (true) {
+                row = this.readLine()
+                if (row === null) {
+                    break
+                }
+                rows.push(row)
+            }
+            return rows
+        } else {
+            buf = ''
+            while (true) {
+                chunk = self.read(4096)
+                if (chunk === null) {
+                    break
+                }
+                buf += chunk
+            }
+            return buf
+        }
+    }
+}
+
+/*
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        row = self.readline()
+        if row is None:
+            raise StopIteration
+        return row
+
+    def type_casts(self, row):
+        if self._casts is None:
+            self._casts = {}
+            structure = self.structure
+            idx = 0
+            for col in self.structure:
+                if self._fetch_style == self.Tuple:
+                    key = idx
+                else:
+                    key = col['name']
+                if col['type'] == 'numeric':
+                    self._casts[key] = float
+                elif col['type'] == 'integer':
+                    self._casts[key] = int
+                elif col['type'] == 'date':
+                    self._casts[key] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
+                elif col['type'] == 'datetime':
+                    self._casts[key] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
+                idx = idx + 1
+        for key,func in self._casts.items():
+            try:
+                row[key] = func(row[key])
+            except IndexError:
+                continue
+            except KeyError:
+                continue
+*/
+
+
 
 
 
@@ -227,7 +418,7 @@ class Inputs {
     }
 
     initialize(callback) {
-        proxy.invoke('getInputStreamInfo', [], function(err, res) {
+        proxy.invokeAsync('getInputStreamInfo', [], function(err, res) {
             stream_infos = res
             for (var i = 0; i < stream_infos.length; ++i) {
                 this.inputs.push(new Input(stream_infos[i]))
@@ -243,7 +434,7 @@ class Outputs {
     }
 
     initialize(callback) {
-        proxy.invoke('getOutputStreamInfo', [], function(err, res) {
+        proxy.invokeAsync('getOutputStreamInfo', [], function(err, res) {
             stream_infos = res
             for (var i = 0; i < stream_infos.length; ++i) {
                 this.outputs.push(new Output(stream_infos[i]))
@@ -256,7 +447,7 @@ class Outputs {
 
 
 
-var proxy = new StdinoutProxy()
+
 var inputs = new Inputs()
 var outputs = new Outputs()
 var inited = false
@@ -282,7 +473,7 @@ function runStream(handler) {
 
     checkModuleInit(function() {
 
-        proxy.invoke('getManagedStreamIndex', [], function(err, stream_idx) {
+        proxy.invokeAsync('getManagedStreamIndex', [], function(err, stream_idx) {
             var input = inputs.inputs[stream_idx]
             var output = outputs.outputs[stream_idx]
             handler(input, output)
