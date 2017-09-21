@@ -10,6 +10,8 @@
   "license": "proprietary",
   "private": true,
   "dependencies": {
-    "utf8": ">=2.1.2"
+    "utf8": ">=2.1.2",
+    "lodash": ">=4.17.4",
+    "request": ">=2.82.0"
   }
 }
