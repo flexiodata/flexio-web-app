@@ -6,6 +6,8 @@ var fs = require('fs')
 class StdinoutProxy {
 
     constructor() {
+        this.stdin = fs.openSync('/dev/stdin', 'rs')
+        this.stdout = fs.openSync('/dev/stdout', 'w')
     }
 
 
@@ -20,7 +22,7 @@ class StdinoutProxy {
     invokeSync(func, params) {
         var payload = this.encodePart(func)
         for (var i = 0; i < params.length; ++i) {
-            payload += this.encodePart(param)
+            payload += this.encodePart(params[i])
         }
         
         this.sendMessageSync(payload)
@@ -35,16 +37,16 @@ class StdinoutProxy {
 
     sendMessageSync(payload) {
         var msg = '--MSGqQp8mf~' + payload.length + ',' + payload
-        fs.writeSync(process.stdout.fd, msg, null, 'binary')
+        fs.writeSync(this.stdout, msg, null, 'binary')
         //fs.fdatasyncSync(process.stdout.fd)
     }
 
-    readMessageSync(self) {
+    readMessageSync() {
         var buf = ''
-        var data = new Uint8Array(1)
+        var data = new Buffer(1)
         var ch
         while (true) {
-            fs.readSync(process.stdin.fd, data, 0, 1, null)
+            fs.readSync(this.stdin, data, 0, 1, null)
             ch = String.fromCharCode(data[0])
             buf += ch
             if (buf.length > 100) {
@@ -54,7 +56,7 @@ class StdinoutProxy {
                 var lenstr = ''
                 var ch
                 while (true) {
-                    fs.readSync(process.stdin.fd, data, 0, 1, null)
+                    fs.readSync(this.stdin, data, 0, 1, null)
                     ch = String.fromCharCode(data[0])
                     if (ch < '0' || ch > '9') {
                         break
@@ -66,9 +68,10 @@ class StdinoutProxy {
                     return null
                 }
                 var msglen = parseInt(lenstr)
-                data = new Uint8Array(msglen)
-                fs.readSync(process.stdin.fd, data, 0, msglen, null)
-                return this.u8arrToString(data)
+                data = new Buffer(msglen)
+                fs.readSync(this.stdin, data, 0, msglen, null)
+                //return this.u8arrToString(data)
+                return data.toString('binary')
             }
         }
         return null
@@ -80,14 +83,9 @@ class StdinoutProxy {
         if (v === null)
             return 'N0,'
         var type = 's'
-        if (v instanceof Uint8Array) {
+        if (v instanceof Buffer) {
             type = 'B'
-            var len = v.length
-            var res = ''
-            for (var i = 0; i < len; ++i) {
-                res += String.fromCharCode(v[i])
-            }
-            v = res
+            v = v.toString('binary')
         } else if (typeof(v) === 'boolean') {
             type = 'b'
             v = (v ? '1' : '0')
@@ -125,6 +123,9 @@ class StdinoutProxy {
         var off = 0
         var res = []
         while (off !== null) {
+            if (off >= vars.length) {
+                break;
+            }
             var decoded_part = this.decodePart(vars, off)
             res.push(decoded_part.value)
             off = decoded_part.next
@@ -156,10 +157,7 @@ class StdinoutProxy {
         }
         else if (type == 'B') {
             var len = part.length
-            var buf = new Uint8Array(len)
-            for (var i = 0; i < len; ++i) {
-                buf[i] = part.charCodeAt(i)
-            }
+            var buf = new Buffer(part, 'binary')
             return { value: buf, next: end }
         }
         else if (type == 's') {
@@ -190,26 +188,6 @@ class StdinoutProxy {
         }
     }
 
-
-    u8arrToString(u8arr) {
-        var len = u8arr.length
-        var res = ''
-        for (var i = 0; i < len; ++i) {
-            res += String.fromCharCode(u8arr[i])
-        }
-        return res
-    }
-
-    stringToU8arr(str) {
-        var len = str.length
-        var res = new Uint8Array(str.length)
-        for (var i = 0; i < len; ++i) {
-            res[i] = str.charCodeAt(i)
-        }
-        return res
-    }
-
-
     test() {
         console.log("Hello")
     }
@@ -230,6 +208,7 @@ var outputEnv = new OutputEnv()
 
 
 
+
 class Input {
 
     constructor(info) {
@@ -240,7 +219,7 @@ class Input {
         if (info) {
             this._name = info['name']
             this._contentType = info['content_type']
-            this._isTable = (self.content_type == 'application/vnd.flexio.table') ? true:false
+            this._isTable = (this.content_type == 'application/vnd.flexio.table') ? true:false
             this._size = info['size']
             this._idx = info['idx']
             this._structure = null
@@ -283,9 +262,9 @@ class Input {
             return null
         }
         if (!this._structure) {
-            self._structure = proxy.invokeSync('getInputStreamStructure', [self._idx])
+            this._structure = proxy.invokeSync('getInputStreamStructure', [this._idx])
         }
-        return self._structure
+        return this._structure
     }
     
     get isTable() {
@@ -314,7 +293,6 @@ class Input {
         this._casting = value
     }
 
-
     read(length) {
         if (length === undefined || length === null) {
             return this.readAll()
@@ -322,7 +300,7 @@ class Input {
         if (this._isTable) {
             return null
         }
-        data = proxy.invokeSync('read', [this._idx, length])
+        var data = proxy.invokeSync('read', [this._idx, length])
         if (data === false || data === null) {
             return null
         }
@@ -331,7 +309,7 @@ class Input {
 
     readLine() {
         if (this._fetchStyle == this.FETCH_ARRAY) {
-            var row = proxy.invokeSync('readline', [self._idx, (this._fetchStyle == this.FETCH_ARRAY ? false : true)])
+            var row = proxy.invokeSync('readline', [this._idx, (this._fetchStyle == this.FETCH_ARRAY ? false : true)])
         }
         if (row === false || row === null) {
             return null
@@ -343,9 +321,8 @@ class Input {
     }
     
     readAll() {
-        var rows = [], row
         if (this._isTable) {
-            rows = []
+            var rows = [], row
             while (true) {
                 row = this.readLine()
                 if (row === null) {
@@ -355,9 +332,9 @@ class Input {
             }
             return rows
         } else {
-            buf = ''
+            var buf = '', chunk
             while (true) {
-                chunk = self.read(4096)
+                chunk = this.read(4096)
                 if (chunk === null) {
                     break
                 }
@@ -411,6 +388,79 @@ class Input {
 
 
 
+class Output {
+
+
+    constructor(info) {
+        if (info) {
+            this._name = info['name']
+            this._contentType = info['content_type']
+            this._size = info['size']
+            this._idx = info['idx']
+        } else {
+            this._name = ''
+            this._contentType = 'application/octet-stream'
+            this._size = 0
+            this._idx = -1
+        }
+    }
+    
+    get name() {
+        return this._name
+    }
+
+    set name(value) {
+        this._name = value
+        proxy.invoke('setOutputStreamInfo', [this._idx, {'name':value}])
+    }
+
+    get contentType() {
+        return this._contentType
+    }
+
+    set contentType(value) {
+        this._contentType = value
+        proxy.invoke('setOutputStreamInfo', [this._idx, {'content_type':value}])
+    }
+
+    get env() {
+        return outputEnv
+    }
+
+    create(self, name, structure, contentType) /* default text/plain*/ {
+        name = (name === undefined) ? null : name
+        structure = (structure === undefined) ? null : structure
+        contentType = (contentType === undefined) ? null : 'text/plain' 
+        properties = { 'content_type': contentType }
+        if (name) {
+            properties['name'] = name
+        }
+        if (structure) {
+            properties['structure'] = structure
+        }
+        var res = proxy.invokeSync('managedCreate', [self._idx, properties])
+
+        if (res === false) {
+            return false
+        } else {
+            return this
+        }
+    }
+
+    write(data) {
+        proxy.invokeSync('write', [this._idx, data])
+    }
+
+    insertRow(row) {
+        proxy.invokeSync('insertRow', [this._idx, row])
+    }
+    
+    insertRows(rows) {
+        proxy.invokeSync('insertRows', [this._idx, rows])
+    }
+
+}
+
 
 
 
@@ -420,12 +470,17 @@ class Inputs {
         this.inputs = []
     }
 
+        hello(msg) {
+        return proxy.invokeSync('hello', [msg])
+    }
+
     initialize(callback) {
-        proxy.invokeAsync('getInputStreamInfo', [], function(err, res) {
-            stream_infos = res
+        var me = this
+        proxy.invokeAsync('getInputStreamInfo', [], function(err, stream_infos) {
             for (var i = 0; i < stream_infos.length; ++i) {
-                this.inputs.push(new Input(stream_infos[i]))
+                me.inputs.push(new Input(stream_infos[i]))
             }
+            callback()
         })
     }
 }
@@ -437,11 +492,12 @@ class Outputs {
     }
 
     initialize(callback) {
-        proxy.invokeAsync('getOutputStreamInfo', [], function(err, res) {
-            stream_infos = res
+        var me = this
+        proxy.invokeAsync('getOutputStreamInfo', [], function(err, stream_infos) {
             for (var i = 0; i < stream_infos.length; ++i) {
-                this.outputs.push(new Output(stream_infos[i]))
+                me.outputs.push(new Output(stream_infos[i]))
             }
+            callback()
         })
     }
 
@@ -458,7 +514,7 @@ var inited = false
 
 
 function checkModuleInit(callback) {
-    if (initied) {
+    if (inited) {
         callback()
         return
     } else {

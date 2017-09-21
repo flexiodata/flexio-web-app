@@ -79,6 +79,8 @@ class StdinoutProxy(object):
         off = 0
         res = []
         while off is not None:
+            if off >= len(vars):
+                break
             content, off = self.decodepart(vars, off)
             res.append(content)
         return res
