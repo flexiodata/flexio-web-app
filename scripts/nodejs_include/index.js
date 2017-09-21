@@ -299,9 +299,9 @@ class Input {
     set fetchStyle(value) {
         this._casts = null
         if (value == Object || value == this.FETCH_OBJECT) {
-            self._fetchStyle = this.FETCH_OBJECT
-        } else if value == Array || value == this.FETCH_ARRAY) {
-            self._fetchStyle = this.FETCH_ARRAY
+            this._fetchStyle = this.FETCH_OBJECT
+        } else if (value == Array || value == this.FETCH_ARRAY) {
+            this._fetchStyle = this.FETCH_ARRAY
         }
     }
 
