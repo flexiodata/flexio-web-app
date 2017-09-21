@@ -433,33 +433,34 @@ class Execute extends \Flexio\Jobs\Base
 
                     $this->code_base64 = base64_encode($this->code);
                 }
-
-                $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-                if (is_null($dockerbin))
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
-
-                $ep = new ExecuteProxy;
-                $ep->initialize($cmd, $this);
-                $ep->run();
-
-                $err = $ep->getStdError();
-
-                if (isset($err))
-                {
-                    $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
-                    if (strlen($err) == 0)
-                        $err = null;
-                }
-
-                if (isset($err))
-                {
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-                }
-
-                return true;
             }
+
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
+
+            $ep = new ExecuteProxy;
+            $ep->initialize($cmd, $this);
+            $ep->run();
+
+            $err = $ep->getStdError();
+
+            if (isset($err))
+            {
+                $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
+                if (strlen($err) == 0)
+                    $err = null;
+            }
+
+            if (isset($err))
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+            }
+
+            return true;
+
         }
         else if ($this->lang == 'javascript')
         {
@@ -502,33 +503,35 @@ class Execute extends \Flexio\Jobs\Base
                 {
                     $this->code_base64 = base64_encode($this->code);
                 }
-
-                $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-                if (is_null($dockerbin))
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
-
-                $ep = new ExecuteProxy;
-                $ep->initialize($cmd, $this);
-                $ep->run();
-
-                $err = $ep->getStdError();
-
-                if (isset($err))
-                {
-                    $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
-                    if (strlen($err) == 0)
-                        $err = null;
-                }
-
-                if (isset($err))
-                {
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-                }
-
-                return true;
             }
+
+
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.js && timeout 30s nodejs /tmp/script.js)'";
+
+            $ep = new ExecuteProxy;
+            $ep->initialize($cmd, $this);
+            $ep->run();
+
+            $err = $ep->getStdError();
+
+            if (isset($err))
+            {
+                $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
+                if (strlen($err) == 0)
+                    $err = null;
+            }
+
+            if (isset($err))
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+            }
+
+            return true;
+
         }
 
 
