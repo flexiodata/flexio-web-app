@@ -366,6 +366,9 @@ class Input {
             return buf
         }
     }
+
+    typeCasts(row) {
+    }
 }
 
 /*
