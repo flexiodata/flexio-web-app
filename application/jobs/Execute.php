@@ -508,7 +508,7 @@ class Execute extends \Flexio\Jobs\Base
                 if (is_null($dockerbin))
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.js && timeout 30s nodejs /srv/fxutil/run.js unmanaged /tmp/script.js)'";
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /srv/fx/script.js && timeout 30s nodejs /srv/fx/run.js unmanaged /srv/fx/script.js)'";
 
                 $ep = new ExecuteProxy;
                 $ep->initialize($cmd, $this);
@@ -627,7 +627,7 @@ class Execute extends \Flexio\Jobs\Base
             if (is_null($dockerbin))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.js && timeout 30s nodejs /srv/fxutil/run.js managed /tmp/script.js)'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /srv/fx/script.js && timeout 30s nodejs /srv/fx/run.js managed /srv/fx/script.js)'";
 
             $ep = new ExecuteProxy;
             $ep->initialize($cmd, $this);

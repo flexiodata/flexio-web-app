@@ -38,9 +38,8 @@ COPY flexio.py /usr/lib/python3.5/flexio.py
 
 # nodejs javascript runtime
 RUN apt-get -y install nodejs npm
-RUN npm install -g lodash
-RUN mkdir /srv/fxutil
-COPY index.js /srv/fxutil/index.js
-COPY run.js /srv/fxutil/run.js
-COPY package.json /srv/fxutil/package.json
-RUN cd /srv/fxutil && npm install
+RUN mkdir /srv/fx
+COPY index.js /srv/fx/index.js
+COPY run.js /srv/fx/run.js
+COPY package.json /srv/fx/package.json
+RUN cd /srv/fx && npm install
