@@ -245,6 +245,7 @@ class System
         {
             switch ($type)
             {
+                case 'javascript':
                 case 'python':
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
             }
@@ -343,11 +344,12 @@ class System
                 }
                 break;
 
-            // python requires an active user to validate
+            // python/javascript requires an active user to validate
+            case 'javascript':
             case 'python':
                 {
                     $code = base64_decode($value);
-                    $err = \Flexio\Jobs\Execute::checkScript('python', $code);
+                    $err = \Flexio\Jobs\Execute::checkScript($type, $code);
                     if ($err === true)
                     {
                         $valid = true;

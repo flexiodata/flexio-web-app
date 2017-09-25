@@ -658,11 +658,12 @@
       },
       validateCode(code, callback) {
         var base64_code = this.getBase64Code(code)
+        var lang = _.get(this.edit_json, 'params.lang', '')
 
         var validate_attrs = [{
           key: 'code',
           value: base64_code,
-          type: 'python'
+          type: lang
         }]
 
         api.validate({ attrs: validate_attrs }).then(response => {

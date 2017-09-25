@@ -32,5 +32,14 @@ RUN pip3 install keras
 # Amazon AWS
 RUN pip3 install boto3
 
+# flexio bindings for python
 COPY flexio.py /usr/lib/python3.5/flexio.py
 
+
+# nodejs javascript runtime
+RUN apt-get -y install nodejs npm
+RUN mkdir /srv/fx
+COPY index.js /srv/fx/index.js
+COPY run.js /srv/fx/run.js
+COPY package.json /srv/fx/package.json
+RUN cd /srv/fx && npm install

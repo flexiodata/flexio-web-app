@@ -632,6 +632,7 @@ class System
                 case 'grep':        return 'grep';
                 case 'docker':      return 'docker';
                 case 'python':      return 'python3';
+                case 'nodejs':      return 'nodejs';
                 case 'javascript':  return 'nodejs';
                 case 'go':          return 'go run';
                 case 'r':           return 'rscript';

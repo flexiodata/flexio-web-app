@@ -461,6 +461,72 @@ class Execute extends \Flexio\Jobs\Base
                 return true;
             }
         }
+        else if ($this->lang == 'javascript')
+        {
+            if (strpos($this->code, "flexio_file_handler") !== false)
+            {
+                // "MANAGED MODE" - script is called once for each stream
+
+
+                // set up one output stream for each input stream
+                foreach ($this->inputs as $instream)
+                {
+                    // input/output
+                    $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+                    $this->getOutput()->addStream($outstream);
+
+                    // by default, set output content type to text
+                    $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
+
+                    $this->outputs[] = $outstream;
+                }
+
+                $this->code_base64 = base64_encode($this->code);
+
+                $stream_count = count($this->inputs);
+                for ($idx = 0; $idx < $stream_count; ++$idx)
+                {
+                    $this->managed_stream_index = $idx;
+                    $this->doStream($this->inputs[$idx], $this->outputs[$idx]);
+                }
+
+                return true;
+            }
+             else
+            {
+                // "UNMANAGED MODE" - script is called once per job (once per all streams)
+
+                // if a flexio_hander is specified, call it, otherwise let the script
+                // handle everything
+                if (strpos($this->code, "flexio_handler") !== false)
+                {
+                    $this->code_base64 = base64_encode($this->code);
+                }
+
+
+                $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+                if (is_null($dockerbin))
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /srv/fx/script.js && timeout 30s nodejs /srv/fx/run.js unmanaged /srv/fx/script.js)'";
+
+                $ep = new ExecuteProxy;
+                $ep->initialize($cmd, $this);
+                $ep->run();
+
+                $err = $ep->getStdError();
+
+
+                if (isset($err))
+                {
+                                    //die("<pre>".$err);
+
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+                }
+
+                return true;
+            }
+        }
 
 
         foreach ($inputs as $instream)
@@ -555,6 +621,27 @@ class Execute extends \Flexio\Jobs\Base
 
             return true;
         }
+         else if ($this->lang == 'javascript')
+        {
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /srv/fx/script.js && timeout 30s nodejs /srv/fx/run.js managed /srv/fx/script.js)'";
+
+            $ep = new ExecuteProxy;
+            $ep->initialize($cmd, $this);
+            $ep->run();
+
+            $err = $ep->getStdError();
+
+            if (isset($err))
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+            }
+
+            return true;
+        }
          else if ($this->lang == 'html')
         {
             if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
@@ -589,6 +676,7 @@ class Execute extends \Flexio\Jobs\Base
             return true;
         }
 
+        
     }
 
     // checks a script for compile errors;  If script compiles cleanly, returns true,
@@ -616,6 +704,10 @@ class Execute extends \Flexio\Jobs\Base
 
             return $str;
         }
+         else if ($lang == 'javascript')
+        {
+            return true;
+        }
          else
         {
             // unknown language
@@ -626,6 +718,10 @@ class Execute extends \Flexio\Jobs\Base
 
 
 
+    public function func_hello($message)
+    {
+        return "Parameter = $message";
+    }
 
     public function func_getInputEnv()
     {
