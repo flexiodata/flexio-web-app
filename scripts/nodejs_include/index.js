@@ -219,7 +219,7 @@ class Input {
         if (info) {
             this._name = info['name']
             this._contentType = info['content_type']
-            this._isTable = (this.content_type == 'application/vnd.flexio.table') ? true:false
+            this._isTable = (this.contentType == 'application/vnd.flexio.table') ? true:false
             this._size = info['size']
             this._idx = info['idx']
             this._structure = null
@@ -258,21 +258,22 @@ class Input {
     }
 
     get structure() {
-        if (!this.isTable) {
+        if (!this._isTable) {
             return null
         }
         if (!this._structure) {
+
             this._structure = proxy.invokeSync('getInputStreamStructure', [this._idx])
         }
         return this._structure
     }
     
     get isTable() {
-        return this.isTable
+        return this._isTable
     }
 
     get fetchStyle() {
-        return this.fetchStyle
+        return this._fetchStyle
     }
 
     set fetchStyle(value) {
@@ -287,7 +288,6 @@ class Input {
     get casting() {
         return this._casting
     }
-
 
     set casting(value) {
         this._casting = value
@@ -308,9 +308,7 @@ class Input {
     }
 
     readLine() {
-        if (this._fetchStyle == this.FETCH_ARRAY) {
-            var row = proxy.invokeSync('readline', [this._idx, (this._fetchStyle == this.FETCH_ARRAY ? false : true)])
-        }
+        var row = proxy.invokeSync('readline', [this._idx, (this._fetchStyle == this.FETCH_ARRAY ? false : true)])
         if (row === false || row === null) {
             return null
         }
@@ -345,6 +343,35 @@ class Input {
     }
 
     typeCasts(row) {
+        var key
+        if (this._casts === null) {
+            this._casts = {}
+            var structure = this.structure
+            var i, idx = 0, colCount = structure.length, col
+            for (i = 0; i < colCount; ++i) {
+                col = structure[i]
+                if (this._fetchStyle == this.FETCH_ARRAY) {
+                    key = idx
+                } else {
+                    key = col['name']
+                }
+                if (col['type'] == 'numeric') 
+                    this._casts[key] = function(val) { return parseFloat(val) }
+                else if (col['type'] == 'integer')
+                    this._casts[key] = function(val) { return parseInt(val) }
+                else if (col['type'] == 'date')
+                    this._casts[key] = function(val) { return new Date(val) }
+                else if (col['type'] == 'datetime')
+                    this._casts[key] = function(val) { return new Date(val) }
+                idx = idx + 1
+            }
+        }
+
+        for (key in this._casts) {
+            if (this._casts.hasOwnProperty(key) && row.hasOwnProperty(key)) {
+                row[key] = this._casts[key](row[key])
+            }
+        }
     }
 }
 
@@ -358,32 +385,7 @@ class Input {
             raise StopIteration
         return row
 
-    def type_casts(self, row):
-        if self._casts is None:
-            self._casts = {}
-            structure = self.structure
-            idx = 0
-            for col in self.structure:
-                if self._fetch_style == self.Tuple:
-                    key = idx
-                else:
-                    key = col['name']
-                if col['type'] == 'numeric':
-                    self._casts[key] = float
-                elif col['type'] == 'integer':
-                    self._casts[key] = int
-                elif col['type'] == 'date':
-                    self._casts[key] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d').date()
-                elif col['type'] == 'datetime':
-                    self._casts[key] = lambda s: datetime.datetime.strptime(s, '%Y-%m-%d')
-                idx = idx + 1
-        for key,func in self._casts.items():
-            try:
-                row[key] = func(row[key])
-            except IndexError:
-                continue
-            except KeyError:
-                continue
+
 */
 
 
