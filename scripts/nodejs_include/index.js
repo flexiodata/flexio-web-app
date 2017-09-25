@@ -262,7 +262,6 @@ class Input {
             return null
         }
         if (!this._structure) {
-
             this._structure = proxy.invokeSync('getInputStreamStructure', [this._idx])
         }
         return this._structure
@@ -318,6 +317,12 @@ class Input {
         return row
     }
     
+    forEach(callback) {
+        var row
+        while ((row = this.readLine()) !== null) {
+            callback(row)
+        }
+    }
     readAll() {
         if (this._isTable) {
             var rows = [], row
