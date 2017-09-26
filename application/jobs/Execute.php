@@ -819,7 +819,7 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_managedCreate($stream_idx, $properties)
     {
-        if ($stream_idx < 0 || $idx >= count($this->outputs))
+        if ($stream_idx < 0 || $stream_idx >= count($this->outputs))
             return false;
 
         $stream = $this->outputs[$stream_idx];
@@ -838,6 +838,9 @@ class Execute extends \Flexio\Jobs\Base
 
         $stream->set($set);
 
+        // ensure the table/file is actually created
+        $writer = $this->getOutputWriter($stream_idx);
+        
         return true;
     }
 
@@ -849,7 +852,7 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_getInputStreamStructure($stream_idx)
     {
-        if ($stream_idx < 0 || $idx >= count($this->inputs))
+        if ($stream_idx < 0 || $stream_idx >= count($this->inputs))
             return false;
 
         $stream = $this->inputs[$stream_idx];

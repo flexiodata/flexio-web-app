@@ -397,7 +397,7 @@ class Output(object):
     def env(self):
         return output_env
 
-    def create(self, name=None, structure=None, content_type='text/plain'):
+    def create(self, name=None, content_type='text/plain', structure=None):
         properties = { 'content_type': content_type }
         if name:
             properties['name'] = name
@@ -457,7 +457,7 @@ class Outputs(object):
             self.initialize()
         return self.outputs[idx]
 
-    def create(self, name=None, structure=None, content_type='text/plain'):
+    def create(self, name=None, content_type='text/plain', structure=None):
         properties = { 'content_type': content_type }
         if name:
             properties['name'] = name

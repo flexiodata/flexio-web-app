@@ -186,6 +186,10 @@ class StdinoutProxy {
         else if (type == 'N') {
             return { value: null, next: end }
         }
+        else if (type == 'E') {
+            throw new Error(part)
+        }
+        else throw "Unknown marshal payload: " + v
     }
 
     test() {
@@ -434,10 +438,28 @@ class Output {
         return outputEnv
     }
 
-    create(self, name, structure, contentType) /* default text/plain*/ {
-        name = (name === undefined) ? null : name
-        structure = (structure === undefined) ? null : structure
-        contentType = (contentType === undefined) ? null : 'text/plain' 
+//  create(structure)
+//  create(name, structure)
+//  create(name, contentType, structure)
+    create(p1,p2,p3) {
+        var name, structure, contentType, properties
+        if (Array.isArray(p1)) {
+            // handle this call format:  create(structure)
+            structure = p1
+            name = null
+            contentType = 'application/vnd.flexio.table'
+        }
+        else if (Array.isArray(p2)) {
+            // handle this call format:  create(name, structure)
+            name = p1
+            structure = p2
+            contentType = 'application/vnd.flexio.table'
+        }
+        else {
+            name = (p1 === undefined) ? null : p1
+            structure = (p2 === undefined) ? null : p2
+            contentType = (p3 === undefined) ? 'text/plain' : p3
+        }
         properties = { 'content_type': contentType }
         if (name) {
             properties['name'] = name
@@ -445,7 +467,7 @@ class Output {
         if (structure) {
             properties['structure'] = structure
         }
-        var res = proxy.invokeSync('managedCreate', [self._idx, properties])
+        var res = proxy.invokeSync('managedCreate', [this._idx, properties])
 
         if (res === false) {
             return false
@@ -465,7 +487,6 @@ class Output {
     insertRows(rows) {
         proxy.invokeSync('insertRows', [this._idx, rows])
     }
-
 }
 
 
@@ -475,10 +496,6 @@ class Inputs {
 
     constructor() {
         this.inputs = []
-    }
-
-        hello(msg) {
-        return proxy.invokeSync('hello', [msg])
     }
 
     initialize(callback) {
