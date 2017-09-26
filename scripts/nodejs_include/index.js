@@ -399,6 +399,8 @@ class Input {
 
 
 
+
+
 class Output {
 
 
@@ -477,16 +479,48 @@ class Output {
     }
 
     write(data) {
+        this.typeCasts(data)
         proxy.invokeSync('write', [this._idx, data])
     }
 
     insertRow(row) {
+        this.typeCasts(row)
         proxy.invokeSync('insertRow', [this._idx, row])
     }
     
     insertRows(rows) {
+        for (var i = 0, cnt = rows.length; i < cnt; ++i) {
+            this.typeCasts(rows[i])
+        }
         proxy.invokeSync('insertRows', [this._idx, rows])
     }
+
+
+    castValue(value) {
+        if (value instanceof Date) {
+            var y = value.getFullYear(), m = value.getMonth()+1, d = value.getDate()
+            return '' + y + '-' + (m<10?'0':'') + m + '-' + (d<10?'0':'') + d
+        } else {
+            return value
+        }
+    }
+
+    typeCasts(row) {
+        if (row instanceof Buffer) {
+        } else if (Array.isArray(row)) {
+            for (var i = 0, cnt = row.length; i < cnt; ++i) {
+                row[i] = this.castValue(row[i])
+            }
+        } else if (typeof row === 'object') {
+            for (var key in row) {
+                if (row.hasOwnProperty(key)) {
+                    row[key] = this.castValue(row[key])
+                }
+            }
+        }
+    }
+
+
 }
 
 
