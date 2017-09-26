@@ -208,7 +208,7 @@ class ExecuteProxy
             $type = substr($s, $offset, 1);
             $offset++;
 
-            if (strpos("sibaoBN", $type) === false)
+            if (strpos("sibfaoBN", $type) === false)
                 return false; // unsupported type
 
             // find comma
@@ -238,6 +238,8 @@ class ExecuteProxy
                 $content = new BinaryData($content);
             if ($type == 'i')
                 $content = (int)$content;
+            if ($type == 'f')
+                $content = floatval($content);
             else if ($type == 'N')
                 $content = null;
             else if ($type == 'b')
@@ -282,6 +284,11 @@ class ExecuteProxy
         {
             // bad parse -- send exception
             $this->sendMessage("E19,Request parse error");
+            /*
+            $msg = "Request parse error" . var_export($msg,true);
+            $msg = "E" . strlen($msg) . ',' . $msg;
+            $this->sendMessage($msg);
+            */
             return;
         }
 
