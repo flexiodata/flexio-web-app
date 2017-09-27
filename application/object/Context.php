@@ -18,8 +18,11 @@ namespace Flexio\Object;
 
 class Context
 {
-    private $objects;
+    private $stdin;
+    private $stdout;
+    private $params;
     private $env;
+    private $streams;
 
     public function __construct()
     {
@@ -29,17 +32,28 @@ class Context
     public function __toString()
     {
         $items = array();
-        foreach ($this->objects as $o)
+        foreach ($this->streams as $s)
         {
-            $items[] = array('eid' => $o->getEid(), 'eid_type' => $o->getType());
+            $items[] = array('eid' => $s->getEid(), 'eid_type' => $s->getType());
         }
 
         return json_encode($items);
     }
 
-    public static function create() : \Flexio\Object\Context
+    public static function create(array $properties = null) : \Flexio\Object\Context
     {
         return (new static);
+    }
+
+    public static function copy(\Flexio\Object\Context $context) : \Flexio\Object\Context
+    {
+        $object = (new static);
+        $object->stdin = $context->getStdin();
+        $object->stdout = $context->getStdout();
+        $object->params = $context->getParams();
+        $object->env = $context->getEnv();
+        $object->streams = $context->getStreams();
+        return $object;
     }
 
     public static function stringifyCollectionEids(\Flexio\Object\Context $context) : string
@@ -79,62 +93,95 @@ class Context
 
     public function set(\Flexio\Object\Context $context) : \Flexio\Object\Context
     {
-        // sets the context to the input context
-        $this->objects = $context->getStreams();
-        $this->env = $context->getEnv();
+        $this->streams = $context->getStreams();
+        $this->environment = $context->getEnv();
         return $this;
     }
 
     public function merge(\Flexio\Object\Context $context) : \Flexio\Object\Context
     {
         // merge the streams
-        $context_objects = $context->getStreams();
-        foreach ($context_objects as $object)
+        $context_streams = $context->getStreams();
+        foreach ($context_objects as $stream)
         {
-            $this->objects[] = $object;
+            $this->streams[] = $stream;
         }
 
         // merge the environment variables
-        $this->env = array_merge($this->env, $context->getEnv());
+        $this->environment = array_merge($this->environment, $context->getEnv());
 
         return $this;
     }
 
-    public function addStream(\Flexio\Object\Base $object) : \Flexio\Object\Context
+    public function setStdin(\Flexio\Object\Base $stream) : \Flexio\Object\Context
     {
-        // adds an object onto the end of the context
-        $this->objects[] = $object;
+        $this->stdin = $stream;
+        return $this;
+    }
+
+    public function getStdin(\Flexio\Object\Base $stream) // TODO: when we get memory streams, initialize stdin to stdin and always return a stream
+    {
+        return $this->stdin;
+    }
+
+    public function setStdout(\Flexio\Object\Base $stream) : \Flexio\Object\Context
+    {
+        $this->stdout = $stream;
+        return $this;
+    }
+
+    public function getStdout(\Flexio\Object\Base $stream) // TODO: when we get memory streams, initialize stdin to stdin and always return a stream
+    {
+        return $this->stdout;
+    }
+
+    public function setParams(array $arr) : \Flexio\Object\Context
+    {
+        $this->params = $arr;
+        return $this;
+    }
+
+    public function getParams() : array
+    {
+        return $this->params;
+    }
+
+    public function setEnv(array $arr) : \Flexio\Object\Context
+    {
+        $this->environment = $arr;
+        return $this;
+    }
+
+    public function getEnv() : array
+    {
+        return $this->environment;
+    }
+
+    public function addStream(\Flexio\Object\Base $stream) : \Flexio\Object\Context
+    {
+        $this->streams[] = $stream;
         return $this;
     }
 
     public function getStreams() : array
     {
         // returns the streams in the context
-        return $this->objects;
-    }
-
-    public function getEnv() : array
-    {
-        // returns context environment variables
-        return $this->env;
-    }
-
-    public function setEnv(array $arr)
-    {
-        $this->env = array_merge($this->env, $arr);
+        return $this->streams;
     }
 
     public function clear() : \Flexio\Object\Context
     {
-        // removes all items from the context
         $this->initialize();
         return $this;
     }
 
     private function initialize()
     {
-        $this->objects = array();
-        $this->env = array();
+        $this->stdin = false;
+        $this->stdout = false;
+        $this->params = array();
+        $this->environment = array();
+        $this->streams = array();
     }
 }
 
