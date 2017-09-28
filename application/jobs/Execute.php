@@ -315,11 +315,22 @@ class Execute extends \Flexio\Jobs\Base
 {
     private $code_base64 = '';
     private $code = '';
+    private $context = null;
     private $inputs = [];
     private $input_readers = [];
     private $outputs = [];
     private $output_writers = [];
     private $managed_stream_index = 0;   // "current stream" index running in managed mode
+
+    private function getContext()
+    {
+        return $this->context;
+    }
+
+    private function setContext(\Flexio\Object\Context $context)
+    {
+        $this->context = $context;
+    }
 
     private static function getFileContents(string $url) : string
     {
@@ -343,9 +354,9 @@ class Execute extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->getOutput()->setEnv($this->getInput()->getEnv()); // by default, pass on all params; however, execute script can change them
-        $this->inputs = $this->getInput()->getStreams();
-
+        $this->inputs = $context->getStreams();
+        $this->setContext($context);
+        $this->getContext()->clearStreams();
 
         // properties
         $job_definition = $this->getProperties();
@@ -386,7 +397,7 @@ class Execute extends \Flexio\Jobs\Base
                 {
                     // input/output
                     $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-                    $this->getOutput()->addStream($outstream);
+                    $this->getContext()->addStream($outstream);
 
                     // by default, set output content type to text
                     $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
@@ -479,7 +490,7 @@ class Execute extends \Flexio\Jobs\Base
                 {
                     // input/output
                     $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-                    $this->getOutput()->addStream($outstream);
+                    $this->getContext()->addStream($outstream);
 
                     // by default, set output content type to text
                     $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
@@ -544,7 +555,7 @@ class Execute extends \Flexio\Jobs\Base
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->addStream($instream->copy());
+                    $this->getContext()->addStream($instream->copy());
                     break;
 
                 // stream/text/csv input
@@ -731,19 +742,22 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_getInputEnv()
     {
-        return $this->getInput()->getEnv();
+        // TODO: need to save input environment variables for this work;
+        // however, can't these just be saved in the script before changing them?
+        //return $this->getContext()->getEnv();
     }
 
     public function func_getOutputEnv()
     {
-        return $this->getOutput()->getEnv();
+        // TODO: // rename this function? to func_getEnv() ?
+        return $this->getContext()->getEnv();
     }
 
     public function func_setOutputEnvValue($key, $value)
     {
-        $env = $this->getOutput()->getEnv();
+        $env = $this->getContext()->getEnv();
         $env[(string)$key] = (string)$value;
-        $this->getOutput()->setEnv($env);
+        $this->getContext()->setEnv($env);
         return true;
     }
 
@@ -814,7 +828,7 @@ class Execute extends \Flexio\Jobs\Base
         }
 
         $stream = \Flexio\Object\Stream::create($properties);
-        $this->getOutput()->addStream($stream);
+        $this->getContext()->addStream($stream);
         $this->outputs[] = $stream;
 
         return array('idx' => count($this->outputs)-1,

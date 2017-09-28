@@ -20,23 +20,32 @@ class Input extends \Flexio\Jobs\Base
 {
     // job-global connection properties
     private $cached_connection_properties = null;
+    private $context = null;
+
+    private function getContext()
+    {
+        return $this->context;
+    }
+
+    private function setContext(\Flexio\Object\Context $context)
+    {
+        $this->context = $context;
+    }
 
     public function run(\Flexio\Object\Context &$context)
     {
+        // store a reference to the context
+        $this->setContext($context);
+
         // make sure we have a params node
         $job_definition = $this->getProperties();
         if (!isset($job_definition['params']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $params = $job_definition['params'];
 
-
+        // stdin input job is a placeholder -- just pass on all streams
         if (isset($params['connection']) && ($params['connection'] == 'stdin' || $params['connection'] == 'email'))
-        {
-            // stdin input job is a placeholder -- just pass on all streams
-            $this->getOutput()->merge($this->getInput());
             return;
-        }
-
 
         // make fully qualified path, if necessary
         $location = $params['location'] ?? '';
@@ -63,9 +72,6 @@ class Input extends \Flexio\Jobs\Base
         $items = $this->resolveInputItems($params);
         if ($items === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "No input items specified. Please add one or more input items, for example with file: ...");
-
-        // input job adds new streams; add streams onto inputs we've already received
-        $this->getOutput()->merge($this->getInput());
 
         // many variants of the input job specify a job-scope connection
         foreach ($items as $item)
@@ -119,7 +125,7 @@ class Input extends \Flexio\Jobs\Base
         {
             $stream_properties = $file_info;
             $outstream = \Flexio\Object\Stream::create($stream_properties);
-            $this->getOutput()->addStream($outstream);
+            $this->getContext()->addStream($outstream);
             return;
         }
 
@@ -177,7 +183,7 @@ class Input extends \Flexio\Jobs\Base
         // the output
         $stream_properties = $file_info;
         $outstream = \Flexio\Object\Stream::create($stream_properties);
-        $this->getOutput()->addStream($outstream);
+        $this->getContext()->addStream($outstream);
     }
 
     private function runEmail($service, array $file_info) // TODO: set paramater type
@@ -199,7 +205,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        $this->getOutput()->addStream($outstream);
+        $this->getContext()->addStream($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
         // create the iterator
@@ -241,7 +247,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        $this->getOutput()->addStream($outstream);
+        $this->getContext()->addStream($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
         // transfer the data
@@ -260,13 +266,13 @@ class Input extends \Flexio\Jobs\Base
         // get the input path
         $path = $file_info['path'];
         $stream_properties = $file_info;
-        $output = $this->getOutput();
 
         $mime_data_sample = '';
         $is_table = null;
         $streamwriter = false;
+        $outstream = false;
 
-        $service->read(array('path'=>$path), function($data) use (&$output, &$outstream, &$streamwriter, &$stream_properties, &$mime_data_sample, &$is_table) {
+        $service->read(array('path'=>$path), function($data) use (&$outstream, &$streamwriter, &$stream_properties, &$mime_data_sample, &$is_table) {
 
             if (is_null($is_table))
             {
@@ -293,7 +299,7 @@ class Input extends \Flexio\Jobs\Base
                     $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
                     $outstream = self::createDatastoreStream($stream_properties);
                     $outstream->setStructure($structure);
-                    $this->getOutput()->addStream($outstream);
+                    $this->getContext()->addStream($outstream);
 
                     $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
                 }
@@ -304,7 +310,7 @@ class Input extends \Flexio\Jobs\Base
 
                     // add an output stream
                     $outstream = self::createDatastoreStream($stream_properties);
-                    $this->getOutput()->addStream($outstream);
+                    $this->getContext()->addStream($outstream);
 
                     $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
                 }
