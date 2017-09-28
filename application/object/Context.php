@@ -102,7 +102,7 @@ class Context
     {
         // merge the streams
         $context_streams = $context->getStreams();
-        foreach ($context_objects as $stream)
+        foreach ($context_streams as $stream)
         {
             $this->streams[] = $stream;
         }
