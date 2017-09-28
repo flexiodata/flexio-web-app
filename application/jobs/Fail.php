@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 
 class Fail extends \Flexio\Jobs\Base
 {
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         $job_definition = $this->getProperties();
         $code = $job_definition['params']['code'] ?? '';

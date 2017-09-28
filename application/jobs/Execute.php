@@ -63,7 +63,6 @@ class ExecuteProxy
         stream_set_blocking($this->pipes[1], false); // read from here
     }
 
-
     public function run()
     {
         while (!feof($this->pipes[1]))
@@ -342,7 +341,7 @@ class Execute extends \Flexio\Jobs\Base
         return $contents;
     }
 
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         $this->getOutput()->setEnv($this->getInput()->getEnv()); // by default, pass on all params; however, execute script can change them
         $this->inputs = $this->getInput()->getStreams();
@@ -683,7 +682,7 @@ class Execute extends \Flexio\Jobs\Base
             return true;
         }
 
-        
+
     }
 
     // checks a script for compile errors;  If script compiles cleanly, returns true,
@@ -847,7 +846,7 @@ class Execute extends \Flexio\Jobs\Base
 
         // ensure the table/file is actually created
         $writer = $this->getOutputWriter($stream_idx);
-        
+
         return true;
     }
 

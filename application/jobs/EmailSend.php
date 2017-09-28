@@ -23,7 +23,7 @@ class EmailSend extends \Flexio\Jobs\Base
     const DATA_MODE_ATTACHMENT = 'attachment';
 
 
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         // pass on the streams so that they can be further handled
         $this->getOutput()->merge($this->getInput());

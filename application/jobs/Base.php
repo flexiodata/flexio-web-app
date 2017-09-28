@@ -99,7 +99,7 @@ EOD;
         return $this->output;
     }
 
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
     }
 }

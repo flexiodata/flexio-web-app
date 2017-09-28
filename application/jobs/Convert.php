@@ -39,7 +39,7 @@ class Convert extends \Flexio\Jobs\Base
     const FORMAT_PDF            = 'pdf';
     const FORMAT_TABLE          = 'table';
 
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         // if a job format is specified, get the mime type from the job definition
         $job_definition = $this->getProperties();

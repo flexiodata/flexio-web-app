@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 
 class Search extends \Flexio\Jobs\Base
 {
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         // TODO: right now, search works like a filter, so only run it on tables
         // and pass everything through; however search should be stream search

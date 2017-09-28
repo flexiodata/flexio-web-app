@@ -96,7 +96,7 @@ class Transform extends \Flexio\Jobs\Base
     const CHARACTER_CLASS_XDIGIT = 'xdigit';
 
 
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         $this->getOutput()->setEnv($this->getInput()->getEnv());
         $input = $this->getInput()->getStreams();

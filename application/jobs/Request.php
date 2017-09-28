@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 
 class Request extends \Flexio\Jobs\Base
 {
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];

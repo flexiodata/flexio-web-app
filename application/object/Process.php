@@ -715,10 +715,15 @@ class Process extends \Flexio\Object\Base
         // create the job with the task
         try
         {
+            // TODO:
+            // placeholder for run parameter; not used currently, but needed to start passing
+            // parameters into run()
+            $context = \Flexio\Object\Context::create();
+
             // set the job input, run the job, and get the output
             $job = self::createJob($this, $task);
             $job->getInput()->set($input);
-            $job->run();
+            $job->run($context);
             $output = $job->getOutput();
         }
         catch (\Flexio\Base\Exception $e)

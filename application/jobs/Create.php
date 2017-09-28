@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 
 class Create extends \Flexio\Jobs\Base
 {
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         // create job adds new streams; add streams onto inputs we've
         // already received

@@ -22,9 +22,7 @@ class Output extends \Flexio\Jobs\Base
     private $cached_connection_properties = null;
     private $streams = [];
 
-
-
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         // make sure we have a params node
         $job_definition = $this->getProperties();

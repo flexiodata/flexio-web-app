@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 
 class Merge extends \Flexio\Jobs\Base
 {
-    public function run()
+    public function run(\Flexio\Object\Context &$context)
     {
         // TODO: merge content by compatible mime_type; pass on files
         // that aren't handled

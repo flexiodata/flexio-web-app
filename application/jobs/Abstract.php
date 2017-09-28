@@ -25,5 +25,5 @@ interface IJob
     public function getInput() : \Flexio\Object\Context;
     public function getOutput() : \Flexio\Object\Context;
 
-    public function run();
+    public function run(\Flexio\Object\Context &$context);
 }
