@@ -89,16 +89,6 @@ EOD;
         return $this->properties;
     }
 
-    public function getInput() : \Flexio\Object\Context
-    {
-        return $this->input;
-    }
-
-    public function getOutput() : \Flexio\Object\Context
-    {
-        return $this->output;
-    }
-
     public function run(\Flexio\Object\Context &$context)
     {
     }

@@ -21,9 +21,5 @@ interface IJob
     public static function create(array $properties = null);
     public function getType() : string;
     public function getProperties() : array;
-
-    public function getInput() : \Flexio\Object\Context;
-    public function getOutput() : \Flexio\Object\Context;
-
     public function run(\Flexio\Object\Context &$context);
 }
