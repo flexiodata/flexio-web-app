@@ -58,27 +58,30 @@ class Select extends \Flexio\Jobs\Base
                 return;
         }
 
+        $outstream = false;
         $mime_type = $instream->getMimeType();
+
         switch ($mime_type)
         {
             // if we don't have a table, we only care about selecting the file,
             // so we're done
             default:
-                $this->getOutput()->addStream($instream->copy());
+                $outstream = $instream->copy();
                 break;
 
             // if we have a table input, perform additional column selection
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                $this->createOutputFromTable($instream);
+                $outstream = $this->createOutputFromTable($instream);
                 break;
         }
+
+        $this->getOutput()->addStream($outstream);
     }
 
-    private function createOutputFromTable(\Flexio\Object\Stream $instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // input/output
         $outstream = $instream->copy(); // copy everything, including the original path (since we're only selecting fields)
-        $this->getOutput()->addStream($outstream);
 
         // get the selected columns
         $job_definition = $this->getProperties();
@@ -88,6 +91,7 @@ class Select extends \Flexio\Jobs\Base
 
         $output_structure = $instream->getStructure()->enum($params['columns']);
         $outstream->setStructure($output_structure);
+        return $outstream;
     }
 
 

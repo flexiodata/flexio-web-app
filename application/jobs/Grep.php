@@ -25,25 +25,27 @@ class Grep extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
+            $outstream = false;
             $mime_type = $instream->getMimeType();
+
             switch ($mime_type)
             {
                 // TODO: are there any types that are restricted for grep?
                 default:
-                    $this->createOutputFromInput($instream);
+                    $outstream = $this->createOutputFromInput($instream);
                     break;
             }
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    private function createOutputFromInput(\Flexio\Object\Stream $instream)
+    private function createOutputFromInput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-
 
         // get the code from the template
         $job_definition = $this->getProperties();
@@ -170,7 +172,6 @@ class Grep extends \Flexio\Jobs\Base
                 break;
 
         }
-//die($buf);
 
         $external_process->closeRead();
         $external_process->closeError();
@@ -180,6 +181,7 @@ class Grep extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        return $outstream;
     }
 
     // job definition info
@@ -255,7 +257,6 @@ class WindowsPipe
         return ($this->exec->Status == 0);
     }
 
-
     public function closeWrite()
     {
         if (!$this->open_streams[0])
@@ -283,8 +284,6 @@ class WindowsPipe
         }
     }
 
-
-
     public function write($buf)
     {
         $this->exec->Stdin->Write($buf);
@@ -296,7 +295,6 @@ class WindowsPipe
             $stderr = $this->exec->Stderr->ReadAll();
         return $this->exec->Stdout->Read($size);
     }
-
 
     public function canRead()
     {

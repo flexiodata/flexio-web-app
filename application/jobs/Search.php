@@ -31,27 +31,30 @@ class Search extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
+            $outstream = false;
             $mime_type = $instream->getMimeType();
+
             switch ($mime_type)
             {
                 // unhandled input; TODO: see note above
                 default:
-                    $this->getOutput()->addStream($instream->copy());
+                    $outstream = $instream->copy();
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutputFromTable($instream);
+                    $outstream = $this->createOutputFromTable($instream);
                     break;
             }
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    private function createOutputFromTable(\Flexio\Object\Stream $instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
 
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
@@ -59,9 +62,10 @@ class Search extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-
         if ($outstream->getService()->exec($job_statement) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+        return $outstream;
     }
 
     private static function prepareOutput(array $job_definition, \Flexio\Object\Stream $instream, \Flexio\Object\Stream &$outstream)

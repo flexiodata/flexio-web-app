@@ -25,23 +25,27 @@ class SetType extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
+            $outstream = false;
             $mime_type = $instream->getMimeType();
+
             switch ($mime_type)
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->addStream($instream->copy());
+                    $outstream = $instream->copy();
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutput($instream);
+                    $outstream = $this->createOutput($instream);
                     break;
             }
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream)
+    private function createOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // get the job properties
         $job_definition = $this->getProperties();
@@ -59,8 +63,6 @@ class SetType extends \Flexio\Jobs\Base
 
         // create the new output structure
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
-
         $columns = $instream->getStructure()->getNames($columns); // get columns satisfying wildcards
         $column_keys = array_flip($columns);
         $output_structure = \Flexio\Base\Structure::create();
@@ -101,6 +103,7 @@ class SetType extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        return $outstream;
     }
 
     private static function convertRowValues(array $row, array $changed_columns) : array

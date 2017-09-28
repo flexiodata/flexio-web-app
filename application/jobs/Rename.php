@@ -25,18 +25,17 @@ class Rename extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $this->createOutput($instream);
+            $outstream = $this->createOutput($instream);
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream)
+    private function createOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // copy everything, including the original path; any renames will be
         // handled by the file/column rename handler; if there aren't any
         // operations, the stream will simply be copied to the output
         $outstream = $instream->copy();
-        $this->getOutput()->addStream($outstream);
-
         $job_definition = $this->getProperties();
         $mime_type = $outstream->getMimeType();
 
@@ -61,6 +60,8 @@ class Rename extends \Flexio\Jobs\Base
                     break;
             }
         }
+
+        return $outstream;
     }
 
     private function renameStream(\Flexio\Object\Stream $outstream)

@@ -25,23 +25,27 @@ class CalcField extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
+            $outstream = false;
             $mime_type = $instream->getMimeType();
+
             switch ($mime_type)
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->addStream($instream->copy());
+                    $outstream = $instream->copy();
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutput($instream);
+                    $outstream = $this->createOutput($instream);
                     break;
             }
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream)
+    private function createOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // get the job properties
         $job_definition = $this->getProperties();
@@ -66,8 +70,6 @@ class CalcField extends \Flexio\Jobs\Base
 
         // create the output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
-
         $output_structure = $outstream->getStructure();
         $added_field = $output_structure->push(array(
             'name' => $name,
@@ -99,6 +101,7 @@ class CalcField extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        return $outstream;
     }
 
 

@@ -57,7 +57,6 @@ class Merge extends \Flexio\Jobs\Base
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_TXT
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
-        $this->getOutput()->addStream($outstream);
 
         // write to the output
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
@@ -78,6 +77,7 @@ class Merge extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        $this->getOutput()->addStream($outstream);
     }
 
     private function mergeTables()
@@ -92,7 +92,6 @@ class Merge extends \Flexio\Jobs\Base
             'structure' => $outstream_structure
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
-        $this->getOutput()->addStream($outstream);
 
         // write to the output
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
@@ -118,6 +117,7 @@ class Merge extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        $this->getOutput()->addStream($outstream);
     }
 
     private function determineStructure() : array

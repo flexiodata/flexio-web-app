@@ -25,27 +25,30 @@ class Group extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
+            $outstream = false;
             $mime_type = $instream->getMimeType();
+
             switch ($mime_type)
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->addStream($instream->copy());
+                    $outstream = $instream->copy();
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutputFromTable($instream);
+                    $outstream = $this->createOutputFromTable($instream);
                     break;
             }
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    public function createOutputFromTable(\Flexio\Object\Stream $instream)
+    public function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
 
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
@@ -64,6 +67,7 @@ class Group extends \Flexio\Jobs\Base
         $output_columns = $outstream->getStructure()->enum();
         $output_columns = self::mergeColumnInfo($output_columns, $store_columns);
         $outstream->setStructure($output_columns);
+        return $outstream;
     }
 
     private static function prepareOutput(array $job_definition, \Flexio\Object\Stream $instream, \Flexio\Object\Stream &$outstream)

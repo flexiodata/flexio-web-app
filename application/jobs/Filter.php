@@ -25,23 +25,27 @@ class Filter extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
+            $outstream = false;
             $mime_type = $instream->getMimeType();
+
             switch ($mime_type)
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->addStream($instream->copy());
+                    $outstream = $instream->copy();
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutput($instream);
+                    $outstream = $this->createOutput($instream);
                     break;
             }
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream)
+    private function createOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // get the job properties
         $job_definition = $this->getProperties();
@@ -69,11 +73,10 @@ class Filter extends \Flexio\Jobs\Base
 
         // create the output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
 
         // if we don't have a filter expression, then there's no output; we're done
         if ($filter_expression === false)
-            return;
+            return $outstream;
 
         // write to the output
         $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -95,6 +98,7 @@ class Filter extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        return $outstream;
     }
 
     // job definition info

@@ -56,14 +56,12 @@ class Render extends \Flexio\Jobs\Base
                 'mime_type' => $content_type
             );
             $outstream = \Flexio\Object\Stream::create($outstream_properties);
-            $this->getOutput()->addStream($outstream);
-
             $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
             $windowsize = '';
             if (isset($width) && isset($height))
                 $windowsize = '--window-size="'.$width.'x'.$height.'"';
-            
+
             $hide_scrollbars = '';
             if (!$scrollbars)
                 $hide_scrollbars = '--hide-scrollbars';
@@ -75,14 +73,16 @@ class Render extends \Flexio\Jobs\Base
             else
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            $fp = popen($cmd, "r"); 
+            $fp = popen($cmd, "r");
 
-            while (!feof($fp)) 
-            { 
-                $buf = fread($fp, 1024); 
+            while (!feof($fp))
+            {
+                $buf = fread($fp, 1024);
                 $streamwriter->write($buf);
-            } 
+            }
             fclose($fp);
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 

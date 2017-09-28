@@ -25,34 +25,37 @@ class Limit extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
+            $outstream = false;
             $mime_type = $instream->getMimeType();
+
             switch ($mime_type)
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->addStream($instream->copy());
+                    $outstream = $instream->copy();
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutput($instream);
+                    $outstream = $this->createOutput($instream);
                     break;
 
                 // stream/text/csv input
                 case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
                 case \Flexio\Base\ContentType::MIME_TYPE_TXT:
                 case \Flexio\Base\ContentType::MIME_TYPE_CSV:
-                    $this->createOutput($instream);
+                    $outstream = $this->createOutput($instream);
                     break;
             }
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream)
+    private function createOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
 
         // get the number of rows to return
         $job_definition = $this->getProperties();
@@ -77,6 +80,7 @@ class Limit extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        return $outstream;
     }
 
 

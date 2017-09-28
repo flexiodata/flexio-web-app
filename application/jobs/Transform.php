@@ -103,30 +103,34 @@ class Transform extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
+            $outstream = false;
             $mime_type = $instream->getMimeType();
+
             switch ($mime_type)
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->addStream($instream->copy());
+                    $outstream = $instream->copy();
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutputFromTable($instream);
+                    $outstream = $this->createOutputFromTable($instream);
                     break;
 
                 // stream/text/csv input
                 case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
                 case \Flexio\Base\ContentType::MIME_TYPE_TXT:
                 case \Flexio\Base\ContentType::MIME_TYPE_CSV:
-                    $this->createOutputFromStream($instream);
+                    $outstream = $this->createOutputFromStream($instream);
                     break;
             }
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    private function createOutputFromTable(\Flexio\Object\Stream $instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         $column_expression_map = $this->getTableExpressionMap($instream);
         if ($column_expression_map === false)
@@ -135,14 +139,10 @@ class Transform extends \Flexio\Jobs\Base
         // if there aren't any operations, simply create an output stream
         // pointing to the original content
         if (count($column_expression_map) === 0)
-        {
-            $this->getOutput()->addStream($instream->copy());
-            return;
-        }
+            return $instream->copy();
 
         // create the output with the replaced values
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
 
         $output_columns = $outstream->getStructure()->enum();
         foreach ($output_columns as &$column)
@@ -157,8 +157,6 @@ class Transform extends \Flexio\Jobs\Base
             }
         }
         $outstream->setStructure($output_columns);
-
-
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
@@ -191,9 +189,10 @@ class Transform extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        return $outstream;
     }
 
-    private function createOutputFromStream(\Flexio\Object\Stream $instream)
+    private function createOutputFromStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         $column_expression_map = $this->getStreamExpressionMap($instream);
         if ($column_expression_map === false)
@@ -202,15 +201,10 @@ class Transform extends \Flexio\Jobs\Base
         // if there aren't any operations, simply create an output stream
         // pointing to the original content
         if (count($column_expression_map) === 0)
-        {
-            $this->getOutput()->addStream($instream->copy());
-            return;
-        }
+            return $instream->copy();
 
         // create the output with the replaced values
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
-
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
@@ -236,6 +230,7 @@ class Transform extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        return $outstream;
     }
 
     private function getTableExpressionMap(\Flexio\Object\Stream $instream)

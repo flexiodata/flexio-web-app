@@ -375,8 +375,7 @@ class Output extends \Flexio\Jobs\Base
 
         // create the output
         $outstream = self::createOutputStream($instream, $output_info);
-        // note: don't add to the output stream since the input was passed on
-        // $this->getOutput()->addStream($outstream);
+        // note: this is an external output, so don't add to list of output files, since these are already passed on
 
         $service = $outstream->getService();
         if ($service === false)
@@ -402,7 +401,7 @@ class Output extends \Flexio\Jobs\Base
 
         if ($header_row)
             $inserter->insertRow($flds);
-        
+
         // transfer the data
         while (true)
         {
@@ -424,8 +423,7 @@ class Output extends \Flexio\Jobs\Base
 
         // create the output
         $outstream = self::createOutputStream($instream, $output_info);
-        // note: don't add to the output stream since the input was passed on
-        // $this->getOutput()->addStream($outstream);
+        // note: this is an external output, so don't add to list of output files, since these are already passed on
 
         $service = $outstream->getService();
         if ($service === false)

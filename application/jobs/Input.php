@@ -265,7 +265,7 @@ class Input extends \Flexio\Jobs\Base
         $mime_data_sample = '';
         $is_table = null;
         $streamwriter = false;
-        
+
         $service->read(array('path'=>$path), function($data) use (&$output, &$outstream, &$streamwriter, &$stream_properties, &$mime_data_sample, &$is_table) {
 
             if (is_null($is_table))

@@ -25,23 +25,27 @@ class Replace extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
+            $outstream = false;
             $mime_type = $instream->getMimeType();
+
             switch ($mime_type)
             {
                 // unhandled input
                 default:
-                    $this->getOutput()->addStream($instream->copy());
+                    $outstream = $instream->copy();
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutputFromTable($instream);
+                    $outstream = $this->createOutputFromTable($instream);
                     break;
             }
+
+            $this->getOutput()->addStream($outstream);
         }
     }
 
-    private function createOutputFromTable(\Flexio\Object\Stream $instream)
+    private function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         $column_expression_map = $this->getColumnExpressionMap($instream);
         if ($column_expression_map === false)
@@ -50,15 +54,10 @@ class Replace extends \Flexio\Jobs\Base
         // if there aren't any operations, simply create an output stream
         // pointing to the origina content
         if (count($column_expression_map) === 0)
-        {
-            $this->getOutput()->addStream($instream->copy());
-            return;
-        }
+            return $instream->copy();
 
         // create the output with the replaced values
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $this->getOutput()->addStream($outstream);
-
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
@@ -91,6 +90,7 @@ class Replace extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        return $outstream;
     }
 
     private function getColumnExpressionMap(\Flexio\Object\Stream $instream)

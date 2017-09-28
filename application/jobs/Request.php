@@ -78,7 +78,6 @@ class Request extends \Flexio\Jobs\Base
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_STREAM // default
         );
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
-        $this->getOutput()->addStream($outstream);
 
         // TODO: get header info?
         //curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$streamwriter) {});
@@ -94,6 +93,7 @@ class Request extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        $this->getOutput()->addStream($outstream);
 
         // TODO: get the mime type from the returned info
 
