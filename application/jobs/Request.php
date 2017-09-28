@@ -23,8 +23,7 @@ class Request extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
 
-        // pass on the streams
-        $this->getOutput()->merge($this->getInput());
+        // note: don't clear out the streams; this job simply adds a new stream
 
         // get the parameters
         $method = $params['method'] ?? false;
@@ -93,7 +92,7 @@ class Request extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        $this->getOutput()->addStream($outstream);
+        $context->addStream($outstream);
 
         // TODO: get the mime type from the returned info
 

@@ -20,16 +20,17 @@ class Select extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->getOutput()->setEnv($this->getInput()->getEnv());
-        $input = $this->getInput()->getStreams();
+        $input = $context->getStreams();
+        $context->clearStreams();
 
         foreach ($input as $instream)
         {
-            $this->createOutput($instream);
+            $outstream = $this->createOutput($instream);
+            $context->addStream($outstream);
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream)
+    private function createOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         $job_definition = $this->getProperties();
         $mime_type = $instream->getMimeType();
@@ -55,7 +56,7 @@ class Select extends \Flexio\Jobs\Base
 
             // file doesn't match any of the paths; we're done
             if ($filematches === false)
-                return;
+                return $instream->copy();
         }
 
         $outstream = false;
@@ -75,7 +76,7 @@ class Select extends \Flexio\Jobs\Base
                 break;
         }
 
-        $this->getOutput()->addStream($outstream);
+        return $outstream;
     }
 
     private function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream

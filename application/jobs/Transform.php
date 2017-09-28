@@ -98,8 +98,8 @@ class Transform extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->getOutput()->setEnv($this->getInput()->getEnv());
-        $input = $this->getInput()->getStreams();
+        $input = $context->getStreams();
+        $context->clearStreams();
 
         foreach ($input as $instream)
         {
@@ -126,7 +126,7 @@ class Transform extends \Flexio\Jobs\Base
                     break;
             }
 
-            $this->getOutput()->addStream($outstream);
+            $context->addStream($outstream);
         }
     }
 

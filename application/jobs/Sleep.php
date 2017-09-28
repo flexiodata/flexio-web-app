@@ -42,11 +42,6 @@ class Sleep extends \Flexio\Jobs\Base
             // wait
             usleep($milliseconds_to_update_status*1000);
         }
-
-        // TODO: update the status
-
-        // pass on the streams
-        $this->getOutput()->merge($this->getInput());
     }
 
 

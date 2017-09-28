@@ -28,28 +28,34 @@ class Merge extends \Flexio\Jobs\Base
         // them as text
 
         $table_merge_mode = true;
+        $input = $context->getStreams();
 
-        $this->getOutput()->setEnv($this->getInput()->getEnv());
-        $input = $this->getInput()->getStreams();
-
+        $merge_mode = 'table';
         foreach ($input as $instream)
         {
             if ($instream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
                 continue;
 
-            $table_merge_mode = false;
+            $merge_mode = 'stream';
             break;
         }
 
-        if ($table_merge_mode === false)
-            return $this->mergeStreams();
+        switch ($merge_mode)
+        {
+            default:
+            case 'stream':
+                return $this->mergeStreams($context);
 
-        if ($table_merge_mode === true)
-            return $this->mergeTables();
+            case 'table':
+                return $this->mergeTables($context);
+        }
     }
 
-    private function mergeStreams()
+    private function mergeStreams(\Flexio\Object\Context &$context)
     {
+        $input = $context->getStreams();
+        $context->clearStreams();
+
         // set the default output mime type; for now, use text, but should be
         // based on content
         $outstream_properties = array(
@@ -60,8 +66,6 @@ class Merge extends \Flexio\Jobs\Base
 
         // write to the output
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-
-        $input = $this->getInput()->getStreams();
         foreach ($input as $instream)
         {
             $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -77,15 +81,18 @@ class Merge extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        $this->getOutput()->addStream($outstream);
+        $context->addStream($outstream);
     }
 
-    private function mergeTables()
+    private function mergeTables(\Flexio\Object\Context &$context)
     {
+        $input = $context->getStreams();
+        $context->clearStreams();
+
         // create a merged structure and a row template for insertion
         // (the bulk insert, which the row inserter uses, requires the fields
         // to match the structure based on offset)
-        $outstream_structure = $this->determineStructure();
+        $outstream_structure = $this->determineStructure($input);
         $outstream_properties = array(
             'name' => 'merged',
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
@@ -101,7 +108,6 @@ class Merge extends \Flexio\Jobs\Base
             $row_template[$s['name']] = null;
 
         // insert the rows from each of the streams
-        $input = $this->getInput()->getStreams();
         foreach ($input as $instream)
         {
             $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -117,18 +123,16 @@ class Merge extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        $this->getOutput()->addStream($outstream);
+        $context->addStream($outstream);
     }
 
-    private function determineStructure() : array
+    private function determineStructure(array $streams) : array
     {
         // this function finds out a "superset" structure from a list
-        // of inputs that can be safely appended to
+        // of streams that can be safely appended to
         $structures = array();
-        $input = $this->getInput()->getStreams();
-
-        foreach ($input as $instream)
-            $structures[] = $instream->getStructure();
+        foreach ($streams as $s)
+            $structures[] = $s->getStructure();
 
         $merged_structure = \Flexio\Base\Structure::union($structures);
         return $merged_structure->enum();

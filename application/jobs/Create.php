@@ -20,10 +20,8 @@ class Create extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
-        // create job adds new streams; add streams onto inputs we've
-        // already received
+        // create job adds new streams; don't clear existing streams
         $job_definition = $this->getProperties();
-        $this->getOutput()->merge($this->getInput());
 
         $validator = \Flexio\Base\ValidatorSchema::check($job_definition, \Flexio\Jobs\Create::SCHEMA);
         if ($validator->hasErrors() === true)
@@ -47,7 +45,7 @@ class Create extends \Flexio\Jobs\Base
                 break;
         }
 
-        $this->getOutput()->addStream($outstream);
+        $context->addStream($outstream);
     }
 
     private function createStreamOutput() : \Flexio\Object\Stream

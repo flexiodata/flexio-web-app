@@ -568,9 +568,8 @@ class Process extends \Flexio\Object\Base
         // make sure we have the latest list of subprocesses
         $local_properties = $this->get();
 
-        // create stream inputs and output contexts
-        $input = \Flexio\Object\Context::create();
-        $output = \Flexio\Object\Context::create();
+        // create a context for passing stdin/stdout and other parameters
+        $context = \Flexio\Object\Context::create();
 
         // STEP 1: get the list of subprocesses
         $subprocesses = $local_properties['subprocesses'];
@@ -580,12 +579,12 @@ class Process extends \Flexio\Object\Base
         $current_process_properties = $this->getModel()->process->get($this->getEid());
         $current_input = $current_process_properties['input'];
         $current_input_context = \Flexio\Object\Context::unstringifyCollectionEids($current_input);
-        $input->set($current_input_context);
+        $context->set($current_input_context);
 
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getParams();
         $variables = array_merge($user_variables, $environment_variables);
-        $input->setEnv($variables);
+        $context->setEnv($variables);
 
         // STEP 4: iterate through the subprocesses and run each one
         $cache_used_on_subprocess = false;
@@ -598,7 +597,7 @@ class Process extends \Flexio\Object\Base
 
             // save the input from the output of the previous step
             $subprocess_params = array();
-            $subprocess_params['input'] = \Flexio\Object\Context::stringifyCollectionEids($input);
+            $subprocess_params['input'] = \Flexio\Object\Context::stringifyCollectionEids($context);
             $subprocess_params['started'] = self::getProcessTimestamp();
             $subprocess_params['process_status'] = \Model::PROCESS_STATUS_RUNNING;
             $subprocess_params['impl_revision'] = $implementation_revision;
@@ -612,7 +611,7 @@ class Process extends \Flexio\Object\Base
             $result_exists = false;
             if ($this->isBuildMode())
             {
-                $result_exists = $this->findCachedResult($implementation_revision, $task, $input, $output);
+                $result_exists = $this->findCachedResult($implementation_revision, $task, $context);
                 if ($result_exists)
                 {
                     $cache_used = true;
@@ -623,8 +622,8 @@ class Process extends \Flexio\Object\Base
             if ($result_exists === false)
             {
                 // execute the step and generate a result hash
-                $this->executeStep($task, $input, $output);
-                $process_hash = $this->generateTaskHash($implementation_revision, $task, $input);
+                $this->executeStep($task, $context);
+                $process_hash = $this->generateTaskHash($implementation_revision, $task, $context);
             }
 
             // if the implementation has changed during the task, the result is
@@ -635,7 +634,7 @@ class Process extends \Flexio\Object\Base
 
             // save the output from the last step
             $subprocess_params = array();
-            $subprocess_params['output'] = \Flexio\Object\Context::stringifyCollectionEids($output);
+            $subprocess_params['output'] = \Flexio\Object\Context::stringifyCollectionEids($context);
             $subprocess_params['finished'] = self::getProcessTimestamp();
             $subprocess_params['process_status'] = \Model::PROCESS_STATUS_COMPLETED;
             $subprocess_params['process_hash'] = $process_hash;
@@ -668,8 +667,7 @@ class Process extends \Flexio\Object\Base
 
             // set the input for the next job step to be the output from the previous
             // step; reset the output for the next job step
-            $input->set($output);
-            $output->clear();
+            // TODO: set stdin from stdout
 
             // if the step failed, stop the job
             if ($this->hasError())
@@ -687,7 +685,7 @@ class Process extends \Flexio\Object\Base
         $this->clearCache();
     }
 
-    private function executeStep(array $task, \Flexio\Object\Context $input, \Flexio\Object\Context &$output)
+    private function executeStep(array $task, \Flexio\Object\Context &$context)
     {
         // if the process is something besides running, we're done
         $status = $this->getModel()->process->getProcessStatus($this->getEid());
@@ -703,7 +701,7 @@ class Process extends \Flexio\Object\Base
         // parameterization should be on the base job object?
 
         // replace the task variables with the environment values;
-        $variables = $input->getEnv();
+        $variables = $context->getEnv();
         if (count($variables) > 0)
         {
             $task_wrapper = \Flexio\Object\Task::create()->push($task);
@@ -715,16 +713,11 @@ class Process extends \Flexio\Object\Base
         // create the job with the task
         try
         {
-            // TODO:
-            // placeholder for run parameter; not used currently, but needed to start passing
-            // parameters into run()
-            $context = \Flexio\Object\Context::create();
+            // TODO: experimental: pass context parameters through run function parameter
 
             // set the job input, run the job, and get the output
             $job = self::createJob($this, $task);
-            $job->getInput()->set($input);
             $job->run($context);
-            $output = $job->getOutput();
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -948,10 +941,10 @@ class Process extends \Flexio\Object\Base
         return $result;
     }
 
-    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Context $input, \Flexio\Object\Context &$output) : bool
+    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Context &$context) : bool
     {
         // find the hash for the input and the task
-        $hash = self::generateTaskHash($implementation_revision, $task, $input);
+        $hash = self::generateTaskHash($implementation_revision, $task, $context);
         if (strlen($hash) === 0)
             return false;
 
@@ -963,19 +956,20 @@ class Process extends \Flexio\Object\Base
         if (!is_array($process_output))
             return false;
 
+        $context->clear(); // set the context streams to the cached result from the job
         foreach ($process_output as $o)
         {
             $stream = \Flexio\Object\Stream::load($o['eid']);
             if ($stream === false)
                 continue;
 
-            $output->addStream($stream);
+            $context->addStream($stream);
         }
 
         return true;
     }
 
-    private static function generateTaskHash(string $implementation_version, array $task, \Flexio\Object\Context $input) : string
+    private static function generateTaskHash(string $implementation_version, array $task, \Flexio\Object\Context $context) : string
     {
         // if we dont' have an implementation version or an invalid implementation
         // version (git revision), don't cache anything
@@ -1002,12 +996,14 @@ class Process extends \Flexio\Object\Base
             return '';
 
         // require an input
-        $task_input = $input->getStreams();
+        $task_input = $context->getStreams();
         if (count($task_input) === 0)
             return '';
 
+        // TODO: need to use more than streams now; if jobs use parameters, these
+        // also need to be encoded, along with stdin/stdout
         $encoded_task_parameters = json_encode($task_parameters);
-        $encoded_task_input = \Flexio\Object\Context::stringifyCollectionEids($input);
+        $encoded_task_input = \Flexio\Object\Context::stringifyCollectionEids($context);
 
         $hash = md5(
             $implementation_version .

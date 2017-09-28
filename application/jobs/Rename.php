@@ -20,17 +20,17 @@ class Rename extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->getOutput()->setEnv($this->getInput()->getEnv());
-        $input = $this->getInput()->getStreams();
+        $input = $context->getStreams();
+        $context->clearStreams();
 
         foreach ($input as $instream)
         {
-            $outstream = $this->createOutput($instream);
-            $this->getOutput()->addStream($outstream);
+            $outstream = $this->createOutput($instream, $context->getEnv());
+            $context->addStream($outstream);
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function createOutput(\Flexio\Object\Stream $instream, $env) : \Flexio\Object\Stream
     {
         // copy everything, including the original path; any renames will be
         // handled by the file/column rename handler; if there aren't any
@@ -41,7 +41,7 @@ class Rename extends \Flexio\Jobs\Base
 
         // rename the output stream if appropriate
         if (isset($job_definition['params']['files']))
-            $this->renameStream($outstream);
+            $this->renameStream($outstream, $env);
 
         // if we have a table, rename any columns if specified; note: this may
         // works in conjunction with renaming the file, so a file that's renamed
@@ -64,7 +64,7 @@ class Rename extends \Flexio\Jobs\Base
         return $outstream;
     }
 
-    private function renameStream(\Flexio\Object\Stream $outstream)
+    private function renameStream(\Flexio\Object\Stream $outstream, array $env)
     {
         // get the files to rename
         $job_definition = $this->getProperties();
@@ -93,8 +93,6 @@ class Rename extends \Flexio\Jobs\Base
             $variables['stream.name.ext'] = \Flexio\Base\File::getFileExtension($outstream->getName());
             $variables['stream.path'] = $outstream->getPath();
             $variables['stream.content.type'] = $outstream->getMimeType();
-
-            $env = $this->getInput()->getEnv();
             $variables = array_merge($env, $variables);
 
             $retval = '';

@@ -51,8 +51,8 @@ class Convert extends \Flexio\Jobs\Base
             $output_content_type_from_definition = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
 
         // iterate through the inputs
-        $this->getOutput()->setEnv($this->getInput()->getEnv());
-        $input = $this->getInput()->getStreams();
+        $input = $context->getStreams();
+        $context->clearStreams();
 
         foreach ($input as $instream)
         {
@@ -108,7 +108,7 @@ class Convert extends \Flexio\Jobs\Base
                     break;
             }
 
-            $this->getOutput()->addStream($outstream);
+            $context->addStream($outstream);
         }
     }
 

@@ -20,8 +20,8 @@ class Render extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->getOutput()->setEnv($this->getInput()->getEnv());
-        $input = $this->getInput()->getStreams();
+        $input = $context->getStreams();
+        $context->clearStreams();
 
         $job_definition = $this->getProperties();
         $items = $job_definition['params']['items'] ?? null;
@@ -44,7 +44,7 @@ class Render extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $counter = 0;
-        foreach ($items as $item)
+        foreach ($input as $item)
         {
             $counter++;
             $output_name = $item['name'] ?? "output-$counter.$format";
@@ -82,7 +82,7 @@ class Render extends \Flexio\Jobs\Base
             }
             fclose($fp);
 
-            $this->getOutput()->addStream($outstream);
+            $context->addStream($outstream);
         }
     }
 

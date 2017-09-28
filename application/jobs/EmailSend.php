@@ -25,23 +25,13 @@ class EmailSend extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
-        // pass on the streams so that they can be further handled
-        $this->getOutput()->merge($this->getInput());
-
-        // note: current behavior is to only allow outputs (including email)
-        // in runtime; right now, we only use runtime, so disable this for now
-        // TODO: need to implement isRunMode() by checking environment variable
-        // if ($this->isRunMode() === false)
-        //     return;
-
-        // send the email
         $this->sendEmail();
     }
 
-    private function sendEmail()
+    private function sendEmail(\Flexio\Object\Context &$context)
     {
         // get the attachments
-        $instream_list = $this->getInput()->getStreams();
+        $instream_list = $context->getStreams();
         $attachments = self::getAttachmentsFromInput($instream_list);
 
         // build the email

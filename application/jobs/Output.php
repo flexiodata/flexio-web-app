@@ -32,14 +32,14 @@ class Output extends \Flexio\Jobs\Base
 
         if (isset($params['connection']) && $params['connection'] == 'stdout')
         {
-            // stdin input job is a placeholder -- just pass on all streams
-            $this->getOutput()->merge($this->getInput());
+            // stdin input job is a placeholder -- just pass everything on
             return;
         }
 
 
-        // get an array of stream objects
-        $this->streams = $this->getInput()->getStreams();
+        // get an array of stream objects; don't clear the context streams: we simply want to
+        // output each one to some external store and pass on the list as we received it
+        $this->streams = $context->getStreams();
 
         // resolve the output items, determining the appropriate connection type/eid for each item
         // in addition, a member will be populated called stream_idx, which will reference the
@@ -49,8 +49,6 @@ class Output extends \Flexio\Jobs\Base
         $items = $this->resolveOutputItems($params);
         if ($items === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $this->getOutput()->merge($this->getInput());
 
         // current behavior is to only allow outputs in runtime;
         // right now, we only use runtime, so disable this for now

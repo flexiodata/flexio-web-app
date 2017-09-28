@@ -20,8 +20,6 @@ class Nop extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
-        // pass on the streams
-        $this->getOutput()->merge($this->getInput());
     }
 
 

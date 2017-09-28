@@ -169,6 +169,12 @@ class Context
         return $this->streams;
     }
 
+    public function clearStreams() : \Flexio\Object\Context
+    {
+        $this->streams = array();
+        return $this;
+    }
+
     public function clear() : \Flexio\Object\Context
     {
         $this->initialize();

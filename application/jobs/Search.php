@@ -26,8 +26,8 @@ class Search extends \Flexio\Jobs\Base
         // items in question; when we switch to this mode, don't pass on unhandled
         // output
 
-        $this->getOutput()->setEnv($this->getInput()->getEnv());
-        $input = $this->getInput()->getStreams();
+        $input = $context->getStreams();
+        $context->clearStreams();
 
         foreach ($input as $instream)
         {
@@ -47,7 +47,7 @@ class Search extends \Flexio\Jobs\Base
                     break;
             }
 
-            $this->getOutput()->addStream($outstream);
+            $context->addStream($outstream);
         }
     }
 
