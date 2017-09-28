@@ -98,21 +98,6 @@ class Context
         return $this;
     }
 
-    public function merge(\Flexio\Object\Context $context) : \Flexio\Object\Context
-    {
-        // merge the streams
-        $context_streams = $context->getStreams();
-        foreach ($context_streams as $stream)
-        {
-            $this->streams[] = $stream;
-        }
-
-        // merge the environment variables
-        $this->environment = array_merge($this->environment, $context->getEnv());
-
-        return $this;
-    }
-
     public function setStdin(\Flexio\Object\Base $stream) : \Flexio\Object\Context
     {
         $this->stdin = $stream;
