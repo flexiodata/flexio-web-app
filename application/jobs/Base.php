@@ -47,10 +47,6 @@ EOD;
         // set the type
         $object->type = static::MIME_TYPE;
 
-        // create the empty input and output context
-        $object->input = \Flexio\Object\Context::create();
-        $object->output = \Flexio\Object\Context::create();
-
         // set the default properties
         $object->properties = json_decode($object::TEMPLATE,true);
 
