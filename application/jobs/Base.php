@@ -32,8 +32,6 @@ EOD;
 
     // job properties
     private $type;
-    private $input;
-    private $output;
 
     // properties for derived classes; these the job parameters
     protected $properties;
@@ -48,10 +46,6 @@ EOD;
 
         // set the type
         $object->type = static::MIME_TYPE;
-
-        // create the empty input and output context
-        $object->input = \Flexio\Object\Context::create();
-        $object->output = \Flexio\Object\Context::create();
 
         // set the default properties
         $object->properties = json_decode($object::TEMPLATE,true);

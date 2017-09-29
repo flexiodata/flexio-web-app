@@ -41,6 +41,24 @@ class Convert extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
+        // process stdin
+        $stdin = $context->getStdin();
+        if (isset($stdin))
+            $context->setStdout($this->processStream($stdin));
+
+        // process stream array
+        $input = $context->getStreams();
+        $context->clearStreams();
+
+        foreach ($input as $instream)
+        {
+            $outstream = $this->processStream($instream);
+            $context->addStream($outstream);
+        }
+    }
+
+    private function processStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    {
         // if a job format is specified, get the mime type from the job definition
         $job_definition = $this->getProperties();
         $input_content_type_from_definition = self::getInputMimeTypeFromDefinition($job_definition);
@@ -50,67 +68,48 @@ class Convert extends \Flexio\Jobs\Base
         if ($output_content_type_from_definition === false)
             $output_content_type_from_definition = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
 
-        // iterate through the inputs
-        $input = $context->getStreams();
-        $context->clearStreams();
 
-        foreach ($input as $instream)
+        // get the mime type for the input; use the job format if it's
+        // specified, as long as the input format isn't a flexio table
+        $instream_mime_type = $instream->getMimeType();
+        if ($instream_mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
-            // get the mime type for the input; use the job format if it's
-            // specified, as long as the input format isn't a flexio table
-            $instream_mime_type = $instream->getMimeType();
-            if ($instream_mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            {
-                if ($input_content_type_from_definition === false)
-                    $instream_mime_type = $instream->getMimeType();
-                     else
-                    $instream_mime_type = $input_content_type_from_definition;
-            }
+            if ($input_content_type_from_definition === false)
+                $instream_mime_type = $instream->getMimeType();
+                    else
+                $instream_mime_type = $input_content_type_from_definition;
+        }
 
-            switch ($instream_mime_type)
-            {
-                // unhandled input
-                default:
-                    $context->addStream($instream);
-                    break;
+        switch ($instream_mime_type)
+        {
+            // unhandled input
+            default:
+                return $instream;
 
-                // table input
-                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $outstream = $this->createOutputFromTableInput($instream, $output_content_type_from_definition);
-                    $context->addStream($outstream);
-                    break;
+            // table input
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                return $this->createOutputFromTableInput($instream, $output_content_type_from_definition);
 
-                // rss input
-                case \Flexio\Base\ContentType::MIME_TYPE_RSS:
-                    $outstream = $this->createOutputFromRssAtom($instream, $output_content_type_from_definition);
-                    $context->addStream($outstream);
-                    break;
+            // rss input
+            case \Flexio\Base\ContentType::MIME_TYPE_RSS:
+                return $this->createOutputFromRssAtom($instream, $output_content_type_from_definition);
 
-                // json input
-                case \Flexio\Base\ContentType::MIME_TYPE_JSON:
-                    $outstream = $this->createOutputFromJsonInput($instream, $output_content_type_from_definition);
-                    $context->addStream($outstream);
-                    break;
+            // json input
+            case \Flexio\Base\ContentType::MIME_TYPE_JSON:
+                return $this->createOutputFromJsonInput($instream, $output_content_type_from_definition);
 
-                // csv input; also handle raw stream content with csv handler
-                case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
-                case \Flexio\Base\ContentType::MIME_TYPE_CSV:
-                    $outstream = $this->createOutputFromCsvInput($instream, $output_content_type_from_definition);
-                    $context->addStream($outstream);
-                    break;
+            // csv input; also handle raw stream content with csv handler
+            case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
+            case \Flexio\Base\ContentType::MIME_TYPE_CSV:
+                return $this->createOutputFromCsvInput($instream, $output_content_type_from_definition);
 
-                // text input
-                case \Flexio\Base\ContentType::MIME_TYPE_TXT:
-                    $outstream = $this->createOutputFromFixedLengthInput($instream, $output_content_type_from_definition);
-                    $context->addStream($outstream);
-                    break;
+            // text input
+            case \Flexio\Base\ContentType::MIME_TYPE_TXT:
+                return $this->createOutputFromFixedLengthInput($instream, $output_content_type_from_definition);
 
-                // text input
-                case \Flexio\Base\ContentType::MIME_TYPE_PDF:
-                    $outstream = $this->createOutputFromPdfInput($instream, $output_content_type_from_definition);
-                    $context->addStream($outstream);
-                    break;
-            }
+            // text input
+            case \Flexio\Base\ContentType::MIME_TYPE_PDF:
+                return $this->createOutputFromPdfInput($instream, $output_content_type_from_definition);
         }
     }
 
