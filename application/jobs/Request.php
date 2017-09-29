@@ -61,6 +61,21 @@ class Request extends \Flexio\Jobs\Base
             curl_setopt($ch, CURLOPT_POSTFIELDS, $urlencoded_post_data);
         }
 
+        if (count($headers) > 0)
+        {
+            if (\Flexio\Base\Util::isAssociativeArray($headers))
+            {
+                $h = [];
+                foreach ($headers as $k => $v)
+                {
+                    $h[] = "$k: $v";
+                }
+                $headers = $h;
+            }
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
+
         // TODO: for now, configure some defaults; remove defaults; use info provided in header
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);  // 30 seconds connection timeout
         curl_setopt($ch, CURLOPT_USERAGENT, 'Flex.io');
