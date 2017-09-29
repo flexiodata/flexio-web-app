@@ -46,7 +46,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[20]]';
         TestCheck::assertArray('A.1', 'Group Job; aggregate functions with no group parameters',  $actual, $expected, $results);
 
@@ -58,7 +58,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[20]]';
         TestCheck::assertArray('A.2', 'Group Job; aggregate functions with no group parameters',  $actual, $expected, $results);
 
@@ -70,7 +70,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[20]]';
         TestCheck::assertArray('A.3', 'Group Job; aggregate functions with no group parameters',  $actual, $expected, $results);
 
@@ -100,7 +100,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[15,"a","E"]]';
         TestCheck::assertArray('B.1', 'Group Job; aggregate functions on char column with no group parameters',  $actual, $expected, $results);
 
@@ -144,7 +144,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[15,"-4","5","15","1"]]';
         TestCheck::assertArray('C.1', 'Group Job; aggregate functions on numeric column with no group parameters',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
@@ -164,7 +164,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[15,"-4","5","15","1"]]';
         TestCheck::assertArray('D.1', 'Group Job; aggregate functions on double column with no group parameters',  $actual, $expected, $results);
 
@@ -184,7 +184,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[15,"-4","5","15","1"]]';
         TestCheck::assertArray('E.1', 'Group Job; aggregate functions on integer column with no group parameters',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
@@ -202,7 +202,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[15,"2000-12-28","2001-01-06"]]';
         TestCheck::assertArray('F.1', 'Group Job; aggregate functions on date column with no group parameters',  $actual, $expected, $results);
 
@@ -244,7 +244,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[15,"2000-12-28 01:01:01","2001-01-06 01:01:01"]]';
         TestCheck::assertArray('G.1', 'Group Job; aggregate functions on datetime column with no group parameters',  $actual, $expected, $results);
 
@@ -286,7 +286,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["15",false,true]]';
         TestCheck::assertArray('H.1', 'Group Job; aggregate functions on boolean column with no group parameters',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 

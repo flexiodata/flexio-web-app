@@ -352,11 +352,11 @@ class Process extends \Flexio\Object\Base
         // get the current input
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
-        $input_context = \Flexio\Object\Context::unstringifyCollectionEids($input);
+        $input_context = \Flexio\Object\Context::fromString($input);
 
         // add on the new input
         $input_context->addStream($stream);
-        $input_updated = \Flexio\Object\Context::stringifyCollectionEids($input_context);
+        $input_updated = \Flexio\Object\Context::toString($input_context);
         $this->getModel()->process->set($this->getEid(), array('input' => $input_updated));
 
         return $this;
@@ -370,19 +370,7 @@ class Process extends \Flexio\Object\Base
         // get whatever is in the input of the initial process step
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
-        $input_context = \Flexio\Object\Context::unstringifyCollectionEids($input);
-
-        $input_context = \Flexio\Object\Context::create();
-        foreach ($input_context as $input)
-        {
-            $stream = \Flexio\Object\Stream::load($input['eid']);
-            if ($stream === false)
-                continue;
-
-            $input_context->addStream($stream);
-        }
-
-        return $input_context;
+        return \Flexio\Object\Context::fromString($input);
     }
 
     public function getOutput() : \Flexio\Object\Context
@@ -393,6 +381,20 @@ class Process extends \Flexio\Object\Base
         $this->getTaskStreams($input_context, $output_context, $task_identifier);
 
         return $output_context;
+    }
+
+    public function getStdout() // TODO: add return type; can be a string or null
+    {
+        $task_identifier = null; // last task
+        $input_context = \Flexio\Object\Context::create();
+        $output_context = \Flexio\Object\Context::create();
+        $this->getTaskStreams($input_context, $output_context, $task_identifier);
+
+        $stdout = $output_context->getStdout();
+        if (!isset($stdout))
+            return null;
+
+        return $stdout->content();
     }
 
     public function getTaskStreams(\Flexio\Object\Context &$input_context, \Flexio\Object\Context &$output_context, string $task_eid = null)
@@ -433,26 +435,8 @@ class Process extends \Flexio\Object\Base
                 return;
         }
 
-        // get the streams
-        $input_stream_list = $specified_subprocess['input'];
-        foreach ($input_stream_list as $item)
-        {
-            $stream = \Flexio\Object\Stream::load($item['eid']);
-            if ($stream === false)
-                continue;
-
-            $input_context->addStream($stream);
-        }
-
-        $output_stream_list = $specified_subprocess['output'];
-        foreach ($output_stream_list as $item)
-        {
-            $stream = \Flexio\Object\Stream::load($item['eid']);
-            if ($stream === false)
-                continue;
-
-            $output_context->addStream($stream);
-        }
+        $input_context = \Flexio\Object\Context::fromString(json_encode($specified_subprocess['input']));  // TODO: cumbersome; the context uses stream objects, but we only have eid info, so we need to repack and unpack
+        $output_context = \Flexio\Object\Context::fromString(json_encode($specified_subprocess['output']));  // TODO: cumbersome; the context uses stream objects, but we only have eid info, so we need to repack and unpack
     }
 
     public function isBuildMode() : bool
@@ -542,8 +526,8 @@ class Process extends \Flexio\Object\Base
         $subprocess_properties['task_type'] = $step['type'] ?? '';
         $subprocess_properties['parent_eid'] = $sub_process_eid;
         $subprocess_properties['task'] = json_encode($step);
-        $subprocess_properties['input'] = json_encode("[]"); // set by the loop
-        $subprocess_properties['output'] = json_encode("[]"); // set by the loop
+        $subprocess_properties['input'] = json_encode("{}"); // set by the loop
+        $subprocess_properties['output'] = json_encode("{}"); // set by the loop
 
         $process_model = $this->getModel()->process;
         return $process_model->create($subprocess_properties, false); // false parameter: create subprocess; TODO: change parameter? this is confusing
@@ -568,9 +552,6 @@ class Process extends \Flexio\Object\Base
         // make sure we have the latest list of subprocesses
         $local_properties = $this->get();
 
-        // create a context for passing stdin/stdout and other parameters
-        $context = \Flexio\Object\Context::create();
-
         // STEP 1: get the list of subprocesses
         $subprocesses = $local_properties['subprocesses'];
 
@@ -578,9 +559,9 @@ class Process extends \Flexio\Object\Base
         // set by an experimental api endpoint
         $current_process_properties = $this->getModel()->process->get($this->getEid());
         $current_input = $current_process_properties['input'];
-        $current_input_context = \Flexio\Object\Context::unstringifyCollectionEids($current_input);
-        $context->set($current_input_context);
+        $context = \Flexio\Object\Context::fromString($current_input);
 
+        // needs to be reworked because context object now stores env and params seperately
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getParams();
         $variables = array_merge($user_variables, $environment_variables);
@@ -597,7 +578,7 @@ class Process extends \Flexio\Object\Base
 
             // save the input from the output of the previous step
             $subprocess_params = array();
-            $subprocess_params['input'] = \Flexio\Object\Context::stringifyCollectionEids($context);
+            $subprocess_params['input'] = \Flexio\Object\Context::toString($context);
             $subprocess_params['started'] = self::getProcessTimestamp();
             $subprocess_params['process_status'] = \Model::PROCESS_STATUS_RUNNING;
             $subprocess_params['impl_revision'] = $implementation_revision;
@@ -634,7 +615,7 @@ class Process extends \Flexio\Object\Base
 
             // save the output from the last step
             $subprocess_params = array();
-            $subprocess_params['output'] = \Flexio\Object\Context::stringifyCollectionEids($context);
+            $subprocess_params['output'] = \Flexio\Object\Context::toString($context);
             $subprocess_params['finished'] = self::getProcessTimestamp();
             $subprocess_params['process_status'] = \Model::PROCESS_STATUS_COMPLETED;
             $subprocess_params['process_hash'] = $process_hash;
@@ -915,6 +896,10 @@ class Process extends \Flexio\Object\Base
 
     private function populateProcessIOStreamInfo(array $stream_eid_arr) : array
     {
+        return $stream_eid_arr; // TODO: this is now actually the context array
+
+/*
+// TODO: determine if we want to do return this info now with the new stdin/stdout work
         $result = array();
         foreach ($stream_eid_arr as $item)
         {
@@ -940,6 +925,7 @@ class Process extends \Flexio\Object\Base
         }
 
         return $result;
+*/
     }
 
     private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Context &$context) : bool
@@ -953,20 +939,10 @@ class Process extends \Flexio\Object\Base
         if ($process_output === false)
             return false;
 
-        $process_output = json_decode($process_output,true);
-        if (!is_array($process_output))
-            return false;
+        $process_output_context = \Flexio\Object\Context::fromString($process_output);
 
-        $context->clear(); // set the context streams to the cached result from the job
-        foreach ($process_output as $o)
-        {
-            $stream = \Flexio\Object\Stream::load($o['eid']);
-            if ($stream === false)
-                continue;
-
-            $context->addStream($stream);
-        }
-
+        $context->clear();
+        $context->set($process_output_context);
         return true;
     }
 
@@ -1001,10 +977,8 @@ class Process extends \Flexio\Object\Base
         if (count($task_input) === 0)
             return '';
 
-        // TODO: need to use more than streams now; if jobs use parameters, these
-        // also need to be encoded, along with stdin/stdout
         $encoded_task_parameters = json_encode($task_parameters);
-        $encoded_task_input = \Flexio\Object\Context::stringifyCollectionEids($context);
+        $encoded_task_input = \Flexio\Object\Context::toString($context);
 
         $hash = md5(
             $implementation_version .

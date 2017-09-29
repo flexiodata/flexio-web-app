@@ -31,13 +31,74 @@ class Context
 
     public function __toString()
     {
-        $items = array();
+        $result = array();
+
+        $result['stdin'] = null;
+        if (isset($this->stdin))
+            $result['stdin'] = array('eid' => $this->stdin->getEid(), 'eid_type' => $this->stdin->getType());
+
+        $result['stdout'] = null;
+        if (isset($this->stdout))
+            $result['stdout'] = array('eid' => $this->stdout->getEid(), 'eid_type' => $this->stdout->getType());
+
+        $result['params'] = $this->params;
+        $result['env'] = $this->env;
+        $result['streams'] = array();
+
         foreach ($this->streams as $s)
         {
-            $items[] = array('eid' => $s->getEid(), 'eid_type' => $s->getType());
+            $result['streams'][] = array('eid' => $s->getEid(), 'eid_type' => $s->getType());
         }
 
-        return json_encode($items);
+        return json_encode($result);
+    }
+
+    public static function fromString(string $str = null) : \Flexio\Object\Context
+    {
+        $context = self::create();
+        if (!isset($str))
+            return $context;
+
+        $arr = json_decode($str, true);
+        if ($arr === false)
+            return $context;
+
+        if (isset($arr['stdin']) && isset($arr['stdin']['eid']))
+        {
+            $stream = \Flexio\Object\Stream::load($arr['stdin']['eid']);
+            if ($stream !== false)
+                $context->setStdin($stream);
+        }
+
+        if (isset($arr['stdout']) && isset($arr['stdout']['eid']))
+        {
+            $stream = \Flexio\Object\Stream::load($arr['stdout']['eid']);
+            if ($stream !== false)
+                $context->setStdout($stream);
+        }
+
+        if (isset($arr['params']) && is_array($arr['params']))
+            $context->setParams($arr['params']);
+
+        if (isset($arr['env']) && is_array($arr['env']))
+            $context->setEnv($arr['env']);
+
+        if (isset($arr['streams']) && is_array($arr['streams']))
+        {
+            foreach ($arr['streams'] as $info)
+            {
+                $stream = \Flexio\Object\Stream::load($info['eid']);
+                if ($stream !== false)
+                    $context->addStream($stream);
+            }
+        }
+
+        return $context;
+    }
+
+    public static function toString(\Flexio\Object\Context $context) : string
+    {
+        return $context->__toString();
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Context
@@ -54,41 +115,6 @@ class Context
         $object->env = $context->getEnv();
         $object->streams = $context->getStreams();
         return $object;
-    }
-
-    public static function stringifyCollectionEids(\Flexio\Object\Context $context) : string
-    {
-        $result = array();
-        $stream_objects = $context->getStreams();
-        foreach ($stream_objects as $stream)
-        {
-            $stream_eid = $stream->getEid();
-            if ($stream_eid === false)
-                continue;
-
-            $result[] = array('eid' => $stream_eid);
-        }
-
-        return json_encode($result);
-    }
-
-    public static function unstringifyCollectionEids(string $string) : \Flexio\Object\Context
-    {
-        $context = \Flexio\Object\Context::create();
-        $items = json_decode($string,true);
-        if (!is_array($items))
-            return $context;
-
-        foreach ($items as $i)
-        {
-            $stream = \Flexio\Object\Stream::load($i['eid']);
-            if ($stream === false)
-                continue;
-
-            $context->addStream($stream);
-        }
-
-        return $context;
     }
 
     public function set(\Flexio\Object\Context $context) : \Flexio\Object\Context

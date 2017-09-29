@@ -54,7 +54,7 @@ class Test
             {
                 "type": "flexio.create",
                 "params": {
-                    "name": "Test Table",
+                    "name": "table",
                     "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                     "columns": [
                     ],
@@ -231,7 +231,7 @@ class Test
             {
                 "type": "flexio.create",
                 "params": {
-                    "name": "Test Table",
+                    "name": "table",
                     "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                     "columns": [
                         { "name": "f1", "type": "character", "width": 10, "scale": 0 },
@@ -253,7 +253,7 @@ class Test
             {
                 "type": "flexio.create",
                 "params": {
-                    "name": "Test Table",
+                    "name": "table",
                     "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                     "columns": [
                         { "name": "f1", "type": "character", "width": 10, "scale": 0 },
