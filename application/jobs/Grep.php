@@ -25,19 +25,25 @@ class Grep extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $mime_type = $instream->getMimeType();
-            switch ($mime_type)
-            {
-                // TODO: are there any types that are restricted for grep?
-                default:
-                    $outstream = $this->createOutputFromInput($instream);
-                    $context->addStream($outstream);
-                    break;
-            }
+            $outstream = $this->processStream($instream);
+            $context->addStream($outstream);
         }
     }
 
-    private function createOutputFromInput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function processStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    {
+        $mime_type = $instream->getMimeType();
+        switch ($mime_type)
+        {
+            default:
+                return $instream;
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                return $this->getOutput($instream);
+        }
+    }
+
+    private function getOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());

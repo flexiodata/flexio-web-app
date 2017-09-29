@@ -25,24 +25,25 @@ class Group extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $mime_type = $instream->getMimeType();
-            switch ($mime_type)
-            {
-                // unhandled input
-                default:
-                    $context->addStream($instream);
-                    break;
-
-                // table input
-                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $outstream = $this->createOutputFromTable($instream);
-                    $context->addStream($outstream);
-                    break;
-            }
+            $outstream = $this->processStream($instream);
+            $context->addStream($outstream);
         }
     }
 
-    public function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function processStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    {
+        $mime_type = $instream->getMimeType();
+        switch ($mime_type)
+        {
+            default:
+                return $instream;
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                return $this->getOutput($instream);
+        }
+    }
+
+    public function getOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());

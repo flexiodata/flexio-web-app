@@ -35,18 +35,18 @@ class Create extends \Flexio\Jobs\Base
             case \Flexio\Base\ContentType::MIME_TYPE_TXT:
             case \Flexio\Base\ContentType::MIME_TYPE_CSV:
             case \Flexio\Base\ContentType::MIME_TYPE_JSON:
-                $outstream = $this->createStreamOutput();
+                $outstream = $this->createFileStream();
                 $context->addStream($outstream);
                 break;
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                $outstream = $this->createTableOutput();
+                $outstream = $this->createTableStream();
                 $context->addStream($outstream);
                 break;
         }
     }
 
-    private function createStreamOutput() : \Flexio\Object\Stream
+    private function createFileStream() : \Flexio\Object\Stream
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New File');
@@ -78,7 +78,7 @@ class Create extends \Flexio\Jobs\Base
         return $outstream;
     }
 
-    private function createTableOutput() : \Flexio\Object\Stream
+    private function createTableStream() : \Flexio\Object\Stream
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New Table');

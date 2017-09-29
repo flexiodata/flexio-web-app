@@ -20,35 +20,36 @@ class Search extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        $input = $context->getStreams();
+        $context->clearStreams();
+
+        foreach ($input as $instream)
+        {
+            $outstream = $this->processStream($instream);
+            $context->addStream($outstream);
+        }
+    }
+
+    private function processStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    {
         // TODO: right now, search works like a filter, so only run it on tables
         // and pass everything through; however search should be stream search
         // where the only streams that get passed on are streams that have the
         // items in question; when we switch to this mode, don't pass on unhandled
         // output
 
-        $input = $context->getStreams();
-        $context->clearStreams();
-
-        foreach ($input as $instream)
+        $mime_type = $instream->getMimeType();
+        switch ($mime_type)
         {
-            $mime_type = $instream->getMimeType();
-            switch ($mime_type)
-            {
-                // unhandled input; TODO: see note above
-                default:
-                    $context->addStream($instream);
-                    break;
+            default:
+                return $instream;
 
-                // table input
-                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $outstream = $this->createOutputFromTable($instream);
-                    $context->addStream($outstream);
-                    break;
-            }
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                return $this->getOutput($instream);
         }
     }
 
-    private function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function getOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());

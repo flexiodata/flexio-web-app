@@ -25,12 +25,12 @@ class Select extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = $this->createOutput($instream);
+            $outstream = $this->processStream($instream);
             $context->addStream($outstream);
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function processStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         $job_definition = $this->getProperties();
         $mime_type = $instream->getMimeType();
@@ -69,11 +69,11 @@ class Select extends \Flexio\Jobs\Base
 
             // if we have a table input, perform additional column selection
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                return $this->createOutputFromTable($instream);
+                return $this->getOutput($instream);
         }
     }
 
-    private function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function getOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         // input/output
         $outstream = $instream->copy(); // copy everything, including the original path (since we're only selecting fields)

@@ -25,24 +25,25 @@ class Replace extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $mime_type = $instream->getMimeType();
-            switch ($mime_type)
-            {
-                // unhandled input
-                default:
-                    $context->addStream($instream);
-                    break;
-
-                // table input
-                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $outstream = $this->createOutputFromTable($instream);
-                    $context->addStream($outstream);
-                    break;
-            }
+            $outstream = $this->processStream($instream);
+            $context->addStream($outstream);
         }
     }
 
-    private function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function processStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    {
+        $mime_type = $instream->getMimeType();
+        switch ($mime_type)
+        {
+            default:
+                return $instream;
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                return $this->getOutput($instream);
+        }
+    }
+
+    private function getOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         $column_expression_map = $this->getColumnExpressionMap($instream);
         if ($column_expression_map === false)
