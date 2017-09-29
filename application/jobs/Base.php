@@ -32,8 +32,6 @@ EOD;
 
     // job properties
     private $type;
-    private $input;
-    private $output;
 
     // properties for derived classes; these the job parameters
     protected $properties;
