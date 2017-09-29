@@ -25,23 +25,20 @@ class Duplicate extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = false;
             $mime_type = $instream->getMimeType();
-
             switch ($mime_type)
             {
                 // unhandled input; TODO: should handle for other types of content
                 default:
-                    $outstream = $instream->copy();
+                    $context->addStream($instream);
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $outstream = $this->createOutputFromTable($instream);
+                    $context->addStream($outstream);
                     break;
             }
-
-            $context->addStream($outstream);
         }
     }
 

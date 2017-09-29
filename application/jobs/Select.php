@@ -56,27 +56,21 @@ class Select extends \Flexio\Jobs\Base
 
             // file doesn't match any of the paths; we're done
             if ($filematches === false)
-                return $instream->copy();
+                return $instream;
         }
 
-        $outstream = false;
         $mime_type = $instream->getMimeType();
-
         switch ($mime_type)
         {
             // if we don't have a table, we only care about selecting the file,
             // so we're done
             default:
-                $outstream = $instream->copy();
-                break;
+                return $instream;
 
             // if we have a table input, perform additional column selection
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                $outstream = $this->createOutputFromTable($instream);
-                break;
+                return $this->createOutputFromTable($instream);
         }
-
-        return $outstream;
     }
 
     private function createOutputFromTable(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream

@@ -27,9 +27,7 @@ class Create extends \Flexio\Jobs\Base
         if ($validator->hasErrors() === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $outstream = false;
         $mime_type = $job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-
         switch ($mime_type)
         {
             default:
@@ -38,14 +36,14 @@ class Create extends \Flexio\Jobs\Base
             case \Flexio\Base\ContentType::MIME_TYPE_CSV:
             case \Flexio\Base\ContentType::MIME_TYPE_JSON:
                 $outstream = $this->createStreamOutput();
+                $context->addStream($outstream);
                 break;
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                 $outstream = $this->createTableOutput();
+                $context->addStream($outstream);
                 break;
         }
-
-        $context->addStream($outstream);
     }
 
     private function createStreamOutput() : \Flexio\Object\Stream

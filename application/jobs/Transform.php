@@ -103,19 +103,18 @@ class Transform extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = false;
             $mime_type = $instream->getMimeType();
-
             switch ($mime_type)
             {
                 // unhandled input
                 default:
-                    $outstream = $instream->copy();
+                    $context->addStream($instream);
                     break;
 
                 // table input
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                     $outstream = $this->createOutputFromTable($instream);
+                    $context->addStream($outstream);
                     break;
 
                 // stream/text/csv input
@@ -123,10 +122,10 @@ class Transform extends \Flexio\Jobs\Base
                 case \Flexio\Base\ContentType::MIME_TYPE_TXT:
                 case \Flexio\Base\ContentType::MIME_TYPE_CSV:
                     $outstream = $this->createOutputFromStream($instream);
+                    $context->addStream($outstream);
                     break;
             }
 
-            $context->addStream($outstream);
         }
     }
 
@@ -139,7 +138,7 @@ class Transform extends \Flexio\Jobs\Base
         // if there aren't any operations, simply create an output stream
         // pointing to the original content
         if (count($column_expression_map) === 0)
-            return $instream->copy();
+            return $instream;
 
         // create the output with the replaced values
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
@@ -201,7 +200,7 @@ class Transform extends \Flexio\Jobs\Base
         // if there aren't any operations, simply create an output stream
         // pointing to the original content
         if (count($column_expression_map) === 0)
-            return $instream->copy();
+            return $instream;
 
         // create the output with the replaced values
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());

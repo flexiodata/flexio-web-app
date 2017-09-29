@@ -41,30 +41,21 @@ class Rename extends \Flexio\Jobs\Base
 
         // rename the output stream if appropriate
         if (isset($job_definition['params']['files']))
-            $this->renameStream($outstream, $env);
+            $outstream = $this->renameStream($outstream, $env);
 
         // if we have a table, rename any columns if specified; note: this may
         // works in conjunction with renaming the file, so a file that's renamed
         // may also have columns renamed
         if (isset($job_definition['params']['columns']))
         {
-            switch ($mime_type)
-            {
-                // don't do anything
-                default:
-                    break;
-
-                // table input
-                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->renameColumns($outstream);
-                    break;
-            }
+            if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+                $outstream = $this->renameColumns($outstream);
         }
 
         return $outstream;
     }
 
-    private function renameStream(\Flexio\Object\Stream $outstream, array $env)
+    private function renameStream(\Flexio\Object\Stream $outstream, array $env) : \Flexio\Object\Stream
     {
         // get the files to rename
         $job_definition = $this->getProperties();
@@ -103,9 +94,11 @@ class Rename extends \Flexio\Jobs\Base
             $outstream->setName($new_name);
             break; // rename based on the first valid match
         }
+
+        return $outstream;
     }
 
-    private function renameColumns(\Flexio\Object\Stream $outstream)
+    private function renameColumns(\Flexio\Object\Stream $outstream) : \Flexio\Object\Stream
     {
         // get the columns to rename
         $job_definition = $this->getProperties();
@@ -138,6 +131,7 @@ class Rename extends \Flexio\Jobs\Base
 
         // update the structure
         $outstream->setStructure($renamed_columns);
+        return $outstream;
     }
 
     private function evaluateExpr(string $expr, array $variables, &$retval) : bool

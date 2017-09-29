@@ -555,7 +555,7 @@ class Execute extends \Flexio\Jobs\Base
             {
                 // unhandled input
                 default:
-                    $this->getContext()->addStream($instream->copy());
+                    $this->getContext()->addStream($instream);
                     break;
 
                 // stream/text/csv input
@@ -563,7 +563,8 @@ class Execute extends \Flexio\Jobs\Base
                 case \Flexio\Base\ContentType::MIME_TYPE_TXT:
                 case \Flexio\Base\ContentType::MIME_TYPE_CSV:
                 case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $this->createOutput($instream);
+                    $outstream = $this->createOutput($instream);
+                    $this->getContext()->addStream($outstream);
                     break;
             }
 */
