@@ -20,17 +20,23 @@ class Rename extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        // process stdin
+        $stdin = $context->getStdin();
+        if (isset($stdin))
+            $context->setStdout($this->processStream($stdin, $context->getEnv()));
+
+        // process stream array
         $input = $context->getStreams();
         $context->clearStreams();
 
         foreach ($input as $instream)
         {
-            $outstream = $this->createOutput($instream, $context->getEnv());
+            $outstream = $this->processStream($instream, $context->getEnv());
             $context->addStream($outstream);
         }
     }
 
-    private function createOutput(\Flexio\Object\Stream $instream, $env) : \Flexio\Object\Stream
+    private function processStream(\Flexio\Object\Stream $instream, $env) : \Flexio\Object\Stream
     {
         // copy everything, including the original path; any renames will be
         // handled by the file/column rename handler; if there aren't any

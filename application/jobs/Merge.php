@@ -20,6 +20,13 @@ class Merge extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        // process stdin; since stdin is a single stream, the merged output is the same as the input
+        $stdin = $context->getStdin();
+        if (isset($stdin))
+            $context->setStdout($stdin);
+
+        // process stream array
+
         // TODO: merge content by compatible mime_type; pass on files
         // that aren't handled
 

@@ -20,6 +20,12 @@ class Replace extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        // process stdin
+        $stdin = $context->getStdin();
+        if (isset($stdin))
+            $context->setStdout($this->processStream($stdin));
+
+        // process stream array
         $input = $context->getStreams();
         $context->clearStreams();
 
