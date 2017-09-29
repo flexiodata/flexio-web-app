@@ -98,24 +98,24 @@ class Context
         return $this;
     }
 
-    public function setStdin(\Flexio\Object\Base $stream) : \Flexio\Object\Context
+    public function setStdin(\Flexio\Object\Base $stream = null) : \Flexio\Object\Context
     {
         $this->stdin = $stream;
         return $this;
     }
 
-    public function getStdin(\Flexio\Object\Base $stream) // TODO: when we get memory streams, initialize stdin to stdin and always return a stream
+    public function getStdin() // TODO: when we get memory streams, initialize stdin to stdin and always return a stream
     {
         return $this->stdin;
     }
 
-    public function setStdout(\Flexio\Object\Base $stream) : \Flexio\Object\Context
+    public function setStdout(\Flexio\Object\Base $stream = null) : \Flexio\Object\Context
     {
         $this->stdout = $stream;
         return $this;
     }
 
-    public function getStdout(\Flexio\Object\Base $stream) // TODO: when we get memory streams, initialize stdin to stdin and always return a stream
+    public function getStdout() // TODO: when we get memory streams, initialize stdin to stdin and always return a stream
     {
         return $this->stdout;
     }
@@ -168,8 +168,8 @@ class Context
 
     private function initialize()
     {
-        $this->stdin = false;
-        $this->stdout = false;
+        $this->stdin = null;
+        $this->stdout = null;
         $this->params = array();
         $this->environment = array();
         $this->streams = array();

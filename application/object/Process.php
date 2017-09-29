@@ -665,9 +665,10 @@ class Process extends \Flexio\Object\Base
 
             $this->getModel()->process->set($subprocess_eid, $subprocess_params);
 
-            // set the input for the next job step to be the output from the previous
-            // step; reset the output for the next job step
-            // TODO: set stdin from stdout
+            // set the stdin for the next job step to be the output from the stdout
+            // of the step just executed
+            $context->setStdin($context->getStdout());
+            $context->setStdout(null);
 
             // if the step failed, stop the job
             if ($this->hasError())
