@@ -28,6 +28,7 @@ class Test
             {
                 "type": "flexio.create",
                 "params": {
+                    "name": "table",
                     "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                     "columns": [
                         { "name": "field1", "type": "character", "width": 3, "scale": 0 },

@@ -34,6 +34,7 @@ EOD;
             {
                 "type": "flexio.create",
                 "params": {
+                    "name": "table",
                     "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
                     "columns": [
                         { "name": "c1", "type": "character", "width": 3 }

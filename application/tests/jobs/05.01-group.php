@@ -221,7 +221,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '
         {
             "columns": [

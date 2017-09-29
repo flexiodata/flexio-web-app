@@ -63,7 +63,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = [["a"],["b"],["c"]];
         TestCheck::assertString('C.1', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);
 
@@ -77,7 +77,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = [["c"],["b"],["a"]];
         TestCheck::assertString('C.2', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);
 
@@ -188,7 +188,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = [["a"],["b"],["c"]];
         TestCheck::assertString('C.1', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);
 
@@ -202,7 +202,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = [["c"],["b"],["a"]];
         TestCheck::assertString('C.2', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);
     }

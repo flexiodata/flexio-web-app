@@ -408,6 +408,20 @@ class TestUtil
         return $result;
     }
 
+    public static function removeKeys($arr)
+    {
+        $result = array();
+        if (is_array($arr))
+        {
+            foreach ($arr as $r)
+            {
+                $result[] = array_values($r);
+            }
+        }
+
+        return $result;
+    }
+
     public static function generateEmail()
     {
         $handle1 = \Flexio\Base\Util::generateHandle();

@@ -46,7 +46,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["A"]]';
         TestCheck::assertArray('A.1', 'Group Job; grouping on single char column',  $actual, $expected, $results);
 
@@ -58,7 +58,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["a"],["A"],["b"],["B"],["c"],["C"],["d"],["D"],["E"],[null]]';
         TestCheck::assertArray('A.2', 'Group Job; grouping on single char column',  $actual, $expected, $results);
 
@@ -74,7 +74,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["1"]]';
         TestCheck::assertArray('B.1', 'Group Job; grouping on single numeric column',  $actual, $expected, $results);
 
@@ -86,7 +86,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["-4"],["-3"],["-2"],["-1"],["1"],["2"],["3"],["4"],["5"],[null]]';
         TestCheck::assertArray('B.2', 'Group Job; grouping on single numeric column',  $actual, $expected, $results);
 
@@ -102,7 +102,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["1"]]';
         TestCheck::assertArray('C.1', 'Group Job; grouping on single double column',  $actual, $expected, $results);
 
@@ -114,7 +114,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["-4"],["-3"],["-2"],["-1"],["1"],["2"],["3"],["4"],["5"],[null]]';
         TestCheck::assertArray('C.2', 'Group Job; grouping on single double column',  $actual, $expected, $results);
 
@@ -130,7 +130,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["2001-01-01"]]';
         TestCheck::assertArray('D.1', 'Group Job; grouping on single date column',  $actual, $expected, $results);
 
@@ -142,7 +142,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["2000-12-28"],["2000-12-29"],["2000-12-30"],["2000-12-31"],["2001-01-02"],["2001-01-03"],["2001-01-04"],["2001-01-05"],["2001-01-06"],[null]]';
         TestCheck::assertArray('D.2', 'Group Job; grouping on single date column',  $actual, $expected, $results);
 
@@ -158,7 +158,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["2001-01-01 01:01:01"]]';
         TestCheck::assertArray('E.1', 'Group Job; grouping on single datetime column',  $actual, $expected, $results);
 
@@ -170,7 +170,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[["2000-12-28 01:01:01"],["2000-12-29 01:01:01"],["2000-12-30 01:01:01"],["2000-12-31 01:01:01"],["2001-01-02 01:01:01"],["2001-01-03 01:01:01"],["2001-01-04 01:01:01"],["2001-01-05 01:01:01"],["2001-01-06 01:01:01"],[null]]';
         TestCheck::assertArray('E.2', 'Group Job; grouping on single datetime column',  $actual, $expected, $results);
 
@@ -186,7 +186,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[true]]';
         TestCheck::assertArray('F.1', 'Group Job; grouping on single boolean column',  $actual, $expected, $results);
 
@@ -198,7 +198,7 @@ class Test
             ]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputRowResult($process);
+        $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '[[false],[true],[null]]';
         TestCheck::assertArray('F.2', 'Group Job; grouping on single boolean column',  $actual, $expected, $results);
     }

@@ -200,7 +200,7 @@ class Stream extends \Flexio\Object\Base
         return $info;
     }
 
-    public function content(int $start, int $limit, int $readsize = 1024 /* testing */) // TODO: add function return type
+    public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */) // TODO: add function return type
     {
         if ($start < 0 )
             $start = 0;
@@ -268,7 +268,7 @@ class Stream extends \Flexio\Object\Base
          else
         {
             return $streamreader->getRows($start,$limit);
-            
+
             /*
             // read table content
             $result = array();
