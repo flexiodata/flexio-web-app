@@ -223,18 +223,11 @@ class Test
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
         $actual = TestUtil::removeKeys($process->getStdout());
         $expected = '
-        {
-            "columns": [
-                { "name": "char_1a", "type": "character", "width": 10 },
-                { "name": "char_1b_1", "type": "character", "width": 10 },
-                { "name": "char_1b_2", "type": "character", "width": 10 }
-            ],
-            "content": [
+            [
                 ["A","",""],
                 ["A","A","A"]
             ]
-        }
         ';
-        TestCheck::assertInArray('E.1', 'Group Job; make sure columns are renamed correctly',  $actual, $expected, $results);
+        TestCheck::assertInArray('E.1', 'Group Job; make sure column names can be changed',  $actual, $expected, $results);
     }
 }
