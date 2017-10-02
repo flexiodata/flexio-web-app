@@ -567,6 +567,21 @@ class Process extends \Flexio\Object\Base
         $variables = array_merge($user_variables, $environment_variables);
         $context->setEnv($variables);
 
+        // STEP 3: if stdin/stdout aren't initialized with a stream object, initialize them
+        $stdin = $context->getStdin();
+        if (!isset($stdin))
+        {
+            $stdin = \Flexio\Object\Stream::create();
+            $context->setStdin($stdin);
+        }
+
+        $stdout= $context->getStdout();
+        if (!isset($stdout))
+        {
+            $stdout = \Flexio\Object\Stream::create();
+            $context->setStdout($stdout);
+        }
+
         // STEP 4: iterate through the subprocesses and run each one
         $cache_used_on_subprocess = false;
 
