@@ -62,7 +62,7 @@ EOD;
             "qualifier" => "{double_quote}"
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 
         // note: this line uses excel's rules
         //$expected = '[["a1"," \\"b1\\""],["a2"," \\"b2\\""]]';

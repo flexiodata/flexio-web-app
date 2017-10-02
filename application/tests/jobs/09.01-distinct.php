@@ -57,7 +57,7 @@ class Test
         $params = [
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
         $expected = [["a","b"]];
         TestCheck::assertString('A.1', 'Distinct Job; check basic functionality',  $actual, $expected, $results);
     }

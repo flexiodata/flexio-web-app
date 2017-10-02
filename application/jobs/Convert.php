@@ -43,8 +43,7 @@ class Convert extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-        if (isset($stdin))
-            $context->setStdout($this->processStream($stdin));
+        $context->setStdout($this->processStream($stdin));
 
         // process stream array
         $input = $context->getStreams();

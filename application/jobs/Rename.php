@@ -22,8 +22,7 @@ class Rename extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-        if (isset($stdin))
-            $context->setStdout($this->processStream($stdin, $context->getEnv()));
+        $context->setStdout($this->processStream($stdin, $context->getEnv()));
 
         // process stream array
         $input = $context->getStreams();
