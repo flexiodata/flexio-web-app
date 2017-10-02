@@ -408,7 +408,7 @@ class TestUtil
         return $result;
     }
 
-    public static function removeKeys($arr)
+    public static function getColumns($stdout)
     {
         $result = array();
         if (is_array($arr))
@@ -416,6 +416,21 @@ class TestUtil
             foreach ($arr as $r)
             {
                 $result[] = array_values($r);
+            }
+        }
+
+        return $result;
+    }
+
+    public static function getContent(\Flexio\Object\Stream $stdout)
+    {
+        $content = $stdout->content();
+        $result = array();
+        if (is_array($content))
+        {
+            foreach ($content as $row)
+            {
+                $result[] = array_values($row);
             }
         }
 

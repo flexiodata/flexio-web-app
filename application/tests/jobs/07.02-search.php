@@ -64,7 +64,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 		]
@@ -77,7 +77,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 		]
@@ -90,7 +90,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 		]
@@ -107,7 +107,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true]
@@ -121,7 +121,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["0% ",",.?","1","4.56","2000-01-01",null]
@@ -135,7 +135,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["c a","| \/",null,"0.00","1970-11-22",null]
@@ -149,7 +149,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["0% ",",.?","1","4.56","2000-01-01",null]
@@ -163,7 +163,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true],
@@ -178,7 +178,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["0% ",",.?","1","4.56","2000-01-01",null]
@@ -192,7 +192,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["c a","| \/",null,"0.00","1970-11-22",null]
@@ -206,7 +206,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			[" -1",":;\"\'","0","0.99","1999-12-31",false]
@@ -224,7 +224,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["c a","| \/",null,"0.00","1970-11-22",null]
@@ -242,7 +242,7 @@ class Test
             "columns" => ["c1"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true]
@@ -256,7 +256,7 @@ class Test
             "columns" => ["c2"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 		]
@@ -273,7 +273,7 @@ class Test
             "columns" => ["c1","c1"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true]
@@ -287,7 +287,7 @@ class Test
             "columns" => ["c1","c2"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			[" -1",":;\"\'","0","0.99","1999-12-31",false]
@@ -301,7 +301,7 @@ class Test
             "columns" => ["c2","n1"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true]
@@ -315,7 +315,7 @@ class Test
             "columns" => ["c1","n1"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true],
@@ -330,7 +330,7 @@ class Test
             "columns" => ["b1","d1","n1","n2","c1"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true],
@@ -345,7 +345,7 @@ class Test
             "columns" => ["n1","*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true],
@@ -364,7 +364,7 @@ class Test
             "columns" => ["*"]
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::removeKeys($process->getStdout());
+        $actual = TestUtil::getContent($process->getStdout());
 		$expected = '
 		[
 			["aBC","()[]{}\u003C\u003E","-1","-1.23","1776-07-04",true],
