@@ -383,18 +383,13 @@ class Process extends \Flexio\Object\Base
         return $output_context;
     }
 
-    public function getStdout() // TODO: add return type; can be a string or null
+    public function getStdout() : \Flexio\Object\Stream
     {
         $task_identifier = null; // last task
         $input_context = \Flexio\Object\Context::create();
         $output_context = \Flexio\Object\Context::create();
         $this->getTaskStreams($input_context, $output_context, $task_identifier);
-
-        $stdout = $output_context->getStdout();
-        if (!isset($stdout))
-            return null;
-
-        return $stdout->content();
+        return $output_context->getStdout();
     }
 
     public function getTaskStreams(\Flexio\Object\Context &$input_context, \Flexio\Object\Context &$output_context, string $task_eid = null)
