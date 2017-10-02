@@ -316,11 +316,12 @@ class Execute extends \Flexio\Jobs\Base
     private $code_base64 = '';
     private $code = '';
     private $context = null;
-    private $inputs = [];
+    private $input_map = [];
+    private $input_streams = [];
     private $input_readers = [];
-    private $outputs = [];
+    private $output_map = [];
+    private $output_streams = [];
     private $output_writers = [];
-    private $managed_stream_index = 0;   // "current stream" index running in managed mode
 
     private function getContext()
     {
@@ -354,7 +355,7 @@ class Execute extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->inputs = $context->getStreams();
+        $this->input_streams = $context->getStreams();
         $this->setContext($context);
         $this->getContext()->clearStreams();
 
@@ -387,25 +388,12 @@ class Execute extends \Flexio\Jobs\Base
 
         if ($this->lang == 'python')
         {
-            if (strpos($this->code, "flexio_file_handler") !== false)
+            // "UNMANAGED MODE" - script is called once per job (once per all streams)
+
+            // if a flexio_hander is specified, call it, otherwise let the script
+            // handle everything
+            if (strpos($this->code, "flexio_handler") !== false)
             {
-                // "MANAGED MODE" - script is called once for each stream
-
-
-                // set up one output stream for each input stream
-                foreach ($this->inputs as $instream)
-                {
-                    // input/output
-                    $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-                    $this->getContext()->addStream($outstream);
-
-                    // by default, set output content type to text
-                    $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
-
-                    $this->outputs[] = $outstream;
-                }
-
-
                 // add code that invokes the main handler -- this is the preferred
                 // way of coding python scripts
                 if (false !== strpos($this->code, "\r\n"))
@@ -414,167 +402,75 @@ class Execute extends \Flexio\Jobs\Base
                     $endl = "\n";
 
                 $this->code .= $endl . "import flexio as flexioext";
-                $this->code .= $endl . "flexioext.run_stream(flexio_file_handler)";
+                $this->code .= $endl . "flexioext.run(flexio_handler)";
                 $this->code .= $endl;
 
                 $this->code_base64 = base64_encode($this->code);
-
-
-                $stream_count = count($this->inputs);
-                for ($idx = 0; $idx < $stream_count; ++$idx)
-                {
-                    $this->managed_stream_index = $idx;
-                    $this->doStream($this->inputs[$idx], $this->outputs[$idx]);
-                }
-
-                return true;
             }
-             else
+
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
+
+            $ep = new ExecuteProxy;
+            $ep->initialize($cmd, $this);
+            $ep->run();
+
+            $err = $ep->getStdError();
+
+            if (isset($err))
             {
-                // "UNMANAGED MODE" - script is called once per job (once per all streams)
-
-                // if a flexio_hander is specified, call it, otherwise let the script
-                // handle everything
-                if (strpos($this->code, "flexio_handler") !== false)
-                {
-                    // add code that invokes the main handler -- this is the preferred
-                    // way of coding python scripts
-                    if (false !== strpos($this->code, "\r\n"))
-                        $endl = "\r\n";
-                        else
-                        $endl = "\n";
-
-                    $this->code .= $endl . "import flexio as flexioext";
-                    $this->code .= $endl . "flexioext.run(flexio_handler)";
-                    $this->code .= $endl;
-
-                    $this->code_base64 = base64_encode($this->code);
-                }
-
-                $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-                if (is_null($dockerbin))
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
-
-                $ep = new ExecuteProxy;
-                $ep->initialize($cmd, $this);
-                $ep->run();
-
-                $err = $ep->getStdError();
-
-                if (isset($err))
-                {
-                    $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
-                    if (strlen($err) == 0)
-                        $err = null;
-                }
-
-                if (isset($err))
-                {
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-                }
-
-                return true;
+                $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
+                if (strlen($err) == 0)
+                    $err = null;
             }
+
+            if (isset($err))
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+            }
+
+            return true;
         }
         else if ($this->lang == 'javascript')
         {
-            if (strpos($this->code, "flexio_file_handler") !== false)
+            // if a flexio_hander is specified, call it, otherwise let the script
+            // handle everything
+            if (strpos($this->code, "flexio_handler") !== false)
             {
-                // "MANAGED MODE" - script is called once for each stream
-
-
-                // set up one output stream for each input stream
-                foreach ($this->inputs as $instream)
-                {
-                    // input/output
-                    $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-                    $this->getContext()->addStream($outstream);
-
-                    // by default, set output content type to text
-                    $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
-
-                    $this->outputs[] = $outstream;
-                }
-
                 $this->code_base64 = base64_encode($this->code);
-
-                $stream_count = count($this->inputs);
-                for ($idx = 0; $idx < $stream_count; ++$idx)
-                {
-                    $this->managed_stream_index = $idx;
-                    $this->doStream($this->inputs[$idx], $this->outputs[$idx]);
-                }
-
-                return true;
             }
-             else
+
+
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /srv/fx/script.js && timeout 30s nodejs /srv/fx/run.js unmanaged /srv/fx/script.js)'";
+
+            $ep = new ExecuteProxy;
+            $ep->initialize($cmd, $this);
+            $ep->run();
+
+            $err = $ep->getStdError();
+
+
+            if (isset($err))
             {
-                // "UNMANAGED MODE" - script is called once per job (once per all streams)
-
-                // if a flexio_hander is specified, call it, otherwise let the script
-                // handle everything
-                if (strpos($this->code, "flexio_handler") !== false)
-                {
-                    $this->code_base64 = base64_encode($this->code);
-                }
-
-
-                $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-                if (is_null($dockerbin))
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /srv/fx/script.js && timeout 30s nodejs /srv/fx/run.js unmanaged /srv/fx/script.js)'";
-
-                $ep = new ExecuteProxy;
-                $ep->initialize($cmd, $this);
-                $ep->run();
-
-                $err = $ep->getStdError();
-
-
-                if (isset($err))
-                {
-                                    //die("<pre>".$err);
-
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-                }
-
-                return true;
+                                //die("<pre>".$err);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
-        }
 
-
-        foreach ($inputs as $instream)
-        {
-            $mime_type = $instream->getMimeType();
-            $this->doStream($instream);
-/*
-            switch ($mime_type)
-            {
-                // unhandled input
-                default:
-                    $this->getContext()->addStream($instream);
-                    break;
-
-                // stream/text/csv input
-                case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
-                case \Flexio\Base\ContentType::MIME_TYPE_TXT:
-                case \Flexio\Base\ContentType::MIME_TYPE_CSV:
-                case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                    $outstream = $this->createOutput($instream);
-                    $this->getContext()->addStream($outstream);
-                    break;
-            }
-*/
+            return true;
         }
     }
 
     private function getInputReader($idx)
     {
-        if (count($this->input_readers) != count($this->inputs))
-            $this->input_readers = array_pad($this->input_readers, count($this->inputs), null);
+        if (count($this->input_readers) != count($this->input_streams))
+            $this->input_readers = array_pad($this->input_readers, count($this->input_streams), null);
 
         if ($idx < 0 || $idx >= count($this->input_readers))
             return null;
@@ -582,7 +478,7 @@ class Execute extends \Flexio\Jobs\Base
         $ret = $this->input_readers[$idx];
         if (is_null($ret))
         {
-            $ret = \Flexio\Object\StreamReader::create($this->inputs[$idx]);
+            $ret = \Flexio\Object\StreamReader::create($this->input_streams[$idx]);
             $this->input_readers[$idx] = $ret;
         }
 
@@ -591,8 +487,8 @@ class Execute extends \Flexio\Jobs\Base
 
     private function getOutputWriter($idx)
     {
-        if (count($this->output_writers) != count($this->outputs))
-            $this->output_writers = array_pad($this->output_writers, count($this->outputs), null);
+        if (count($this->output_writers) != count($this->output_streams))
+            $this->output_writers = array_pad($this->output_writers, count($this->output_streams), null);
 
         if ($idx < 0 || $idx >= count($this->output_writers))
             return null;
@@ -600,7 +496,7 @@ class Execute extends \Flexio\Jobs\Base
         $ret = $this->output_writers[$idx];
         if (is_null($ret))
         {
-            $ret = \Flexio\Object\StreamWriter::create($this->outputs[$idx]);
+            $ret = \Flexio\Object\StreamWriter::create($this->output_streams[$idx]);
             $this->output_writers[$idx] = $ret;
         }
 
@@ -762,50 +658,86 @@ class Execute extends \Flexio\Jobs\Base
         return true;
     }
 
-    public function func_getInputStreamInfo()
+
+
+    public $stream_cache = array();
+
+    public function __getInputStreamInfo($name)
     {
-        $res = [];
-        $idx = 0;
-        foreach ($this->inputs as $stream)
+        if ($name === '_fxstdin_')
         {
-            $res[] = array('idx' => $idx++,
-                           'name' => $stream->getName(),
-                           'size' => $stream->getSize(),
-                           'content_type' => $stream->getMimeType());
+            $stdin = $this->context->getStdin();
+            $this->input_streams[] = $stdin;
+            return array('handle' => count($this->input_streams)-1,
+                         'name' => '',
+                         'size' => 0,
+                         'content_type' => (isset($stdin) ? $stdin->getMimeType() : 'application/octet-stream'));
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public function func_getInputStreamInfo($name)
+    {
+        if (isset($this->input_map[$name]))
+        {
+            return $this->input_map[$name];
         }
 
+        $res = $this->__getInputStreamInfo($name);
+        if ($res === null)
+            return null;
+
+        $this->input_map[$name] = $res;
         return $res;
     }
 
-    public function func_getOutputStreamInfo()
-    {
-        $res = [];
 
-        if ($this->outputs)
+    public function __getOutputStreamInfo($name)
+    {
+        if ($name === '_fxstdout_')
         {
-            $idx = 0;
-            foreach ($this->outputs as $stream)
-            {
-                $res[] = array('idx' => $idx++,
-                               'name' => $stream->getName(),
-                               'size' => $stream->getSize(),
-                               'content_type' => $stream->getMimeType());
-            }
+            $stdout = $this->context->getStdout();
+            $this->output_streams[] = $stdout;
+            return array('handle' => count($this->output_streams)-1,
+                         'name' => '',
+                         'size' => 0,
+                         'content_type' => $stdout->getMimeType());
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public function func_getOutputStreamInfo($name)
+    {
+        if (isset($this->input_map[$name]))
+        {
+            return $this->input_map[$name];
         }
 
+        $res = $this->__getOutputStreamInfo($name);
+        if ($res === null)
+            return null;
+
+        $this->input_map[$name] = $res;
         return $res;
     }
+
 
     public function func_setOutputStreamInfo($idx, $properties)
     {
-        if ($idx < 0 || $idx >= count($this->outputs))
+        if ($idx < 0 || $idx >= count($this->output_streams))
             return false;
 
         if (isset($properties['content_type']))
             $properties['mime_type'] = $properties['content_type'];
 
         $properties = \Flexio\Base\Util::filterArray($properties, ["name","mime_type"]);
-        $this->outputs[$idx]->set($properties);
+        $this->output_streams[$idx]->set($properties);
 
         return true;
     }
@@ -830,9 +762,9 @@ class Execute extends \Flexio\Jobs\Base
 
         $stream = \Flexio\Object\Stream::create($properties);
         $this->getContext()->addStream($stream);
-        $this->outputs[] = $stream;
+        $this->output_streams[] = $stream;
 
-        return array('idx' => count($this->outputs)-1,
+        return array('idx' => count($this->output_streams)-1,
                      'name' => $stream->getName(),
                      'size' => $stream->getSize(),
                      'content_type' => $stream->getMimeType());
@@ -840,10 +772,10 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_managedCreate($stream_idx, $properties)
     {
-        if ($stream_idx < 0 || $stream_idx >= count($this->outputs))
+        if ($stream_idx < 0 || $stream_idx >= count($this->output_streams))
             return false;
 
-        $stream = $this->outputs[$stream_idx];
+        $stream = $this->output_streams[$stream_idx];
 
         $set = array();
 
@@ -865,18 +797,12 @@ class Execute extends \Flexio\Jobs\Base
         return true;
     }
 
-
-    public function func_getManagedStreamIndex()
-    {
-        return $this->managed_stream_index;
-    }
-
     public function func_getInputStreamStructure($stream_idx)
     {
-        if ($stream_idx < 0 || $stream_idx >= count($this->inputs))
+        if ($stream_idx < 0 || $stream_idx >= count($this->input_streams))
             return false;
 
-        $stream = $this->inputs[$stream_idx];
+        $stream = $this->input_streams[$stream_idx];
 
         return $stream->getStructure()->enum();
     }
@@ -905,9 +831,9 @@ class Execute extends \Flexio\Jobs\Base
         }
     }
 
-    public function func_write($stream_idx, $data)
+    public function func_write($handle, $data)
     {
-        $writer = $this->getOutputWriter($stream_idx);
+        $writer = $this->getOutputWriter($handle);
         if (is_null($writer))
             return null;
 
