@@ -225,7 +225,7 @@ class Input {
             this._contentType = info['content_type']
             this._isTable = (this.contentType == 'application/vnd.flexio.table') ? true:false
             this._size = info['size']
-            this._idx = info['idx']
+            this._handle = info['handle']
             this._structure = null
             this._dict = false
             this._fetchStyle = this.Dictionary
@@ -236,7 +236,7 @@ class Input {
             this._contentType = 'application/octet-stream'
             this._isTable = false
             this._size = 0
-            this._idx = -1
+            this._handle = -1
             this._structure = null
             this._dict = false
             this._fetchStyle = this.Dictionary
@@ -266,7 +266,7 @@ class Input {
             return null
         }
         if (!this._structure) {
-            this._structure = proxy.invokeSync('getInputStreamStructure', [this._idx])
+            this._structure = proxy.invokeSync('getInputStreamStructure', [this._handle])
         }
         return this._structure
     }
@@ -303,7 +303,7 @@ class Input {
         if (this._isTable) {
             return null
         }
-        var data = proxy.invokeSync('read', [this._idx, length])
+        var data = proxy.invokeSync('read', [this._handle, length])
         if (data === false || data === null) {
             return null
         }
@@ -311,7 +311,7 @@ class Input {
     }
 
     readLine() {
-        var row = proxy.invokeSync('readline', [this._idx, (this._fetchStyle == this.FETCH_ARRAY ? false : true)])
+        var row = proxy.invokeSync('readline', [this._handle, (this._fetchStyle == this.FETCH_ARRAY ? false : true)])
         if (row === false || row === null) {
             return null
         }
@@ -409,12 +409,12 @@ class Output {
             this._name = info['name']
             this._contentType = info['content_type']
             this._size = info['size']
-            this._idx = info['idx']
+            this._handle = info['handle']
         } else {
             this._name = ''
             this._contentType = 'application/octet-stream'
             this._size = 0
-            this._idx = -1
+            this._handle = -1
         }
     }
     
@@ -424,7 +424,7 @@ class Output {
 
     set name(value) {
         this._name = value
-        proxy.invoke('setOutputStreamInfo', [this._idx, {'name':value}])
+        proxy.invoke('setOutputStreamInfo', [this._handle, {'name':value}])
     }
 
     get contentType() {
@@ -433,7 +433,7 @@ class Output {
 
     set contentType(value) {
         this._contentType = value
-        proxy.invoke('setOutputStreamInfo', [this._idx, {'content_type':value}])
+        proxy.invoke('setOutputStreamInfo', [this._handle, {'content_type':value}])
     }
 
     get env() {
@@ -469,7 +469,7 @@ class Output {
         if (structure) {
             properties['structure'] = structure
         }
-        var res = proxy.invokeSync('managedCreate', [this._idx, properties])
+        var res = proxy.invokeSync('managedCreate', [this._handle, properties])
 
         if (res === false) {
             return false
@@ -480,19 +480,19 @@ class Output {
 
     write(data) {
         this.typeCasts(data)
-        proxy.invokeSync('write', [this._idx, data])
+        proxy.invokeSync('write', [this._handle, data])
     }
 
     insertRow(row) {
         this.typeCasts(row)
-        proxy.invokeSync('insertRow', [this._idx, row])
+        proxy.invokeSync('insertRow', [this._handle, row])
     }
     
     insertRows(rows) {
         for (var i = 0, cnt = rows.length; i < cnt; ++i) {
             this.typeCasts(rows[i])
         }
-        proxy.invokeSync('insertRows', [this._idx, rows])
+        proxy.invokeSync('insertRows', [this._handle, rows])
     }
 
 
@@ -526,49 +526,12 @@ class Output {
 
 
 
-class Inputs {
-
-    constructor() {
-        this.inputs = []
-    }
-
-    initialize(callback) {
-        var me = this
-        proxy.invokeAsync('getInputStreamInfo', [], function(err, stream_infos) {
-            for (var i = 0; i < stream_infos.length; ++i) {
-                me.inputs.push(new Input(stream_infos[i]))
-            }
-            callback()
-        })
-    }
-}
-
-class Outputs {
-
-    constructor() {
-        this.outputs = []
-    }
-
-    initialize(callback) {
-        var me = this
-        proxy.invokeAsync('getOutputStreamInfo', [], function(err, stream_infos) {
-            for (var i = 0; i < stream_infos.length; ++i) {
-                me.outputs.push(new Output(stream_infos[i]))
-            }
-            callback()
-        })
-    }
-
-}
 
 
 
-
-
-var inputs = new Inputs()
-var outputs = new Outputs()
 var inited = false
-
+var input = null
+var output = null
 
 
 function checkModuleInit(callback) {
@@ -577,8 +540,10 @@ function checkModuleInit(callback) {
         return
     } else {
         inited = true
-        inputs.initialize(function() {
-            outputs.initialize(function() {
+        proxy.invokeAsync('getInputStreamInfo', ['_fxstdin_'], function(err, stdin_stream_info) {
+            input = new Input(stdin_stream_info)
+            proxy.invokeAsync('getOutputStreamInfo', ['_fxstdout_'], function(err, stdout_stream_info) {
+                output = new Output(stdout_stream_info)
                 callback()
             })
         })
@@ -586,26 +551,11 @@ function checkModuleInit(callback) {
 }
 
 
-function runStream(handler) {
-
-    checkModuleInit(function() {
-
-        proxy.invokeAsync('getManagedStreamIndex', [], function(err, stream_idx) {
-            var input = inputs.inputs[stream_idx]
-            var output = outputs.outputs[stream_idx]
-            handler(input, output)
-        })
-
-    })
-}
-
-
-
 
 
 function run(handler) {
     checkModuleInit(function() {
-        handler(inputs, outputs)
+        handler(input, output)
     })
 }
 
@@ -614,7 +564,6 @@ function run(handler) {
 module.exports = {
 
     StdinoutProxy,
-    run,
-    runStream
+    run
 
 };
