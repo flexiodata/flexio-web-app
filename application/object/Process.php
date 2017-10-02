@@ -659,7 +659,7 @@ class Process extends \Flexio\Object\Base
             // set the stdin for the next job step to be the output from the stdout
             // of the step just executed
             $context->setStdin($context->getStdout());
-            $context->setStdout(null);
+            $context->setStdout(\Flexio\Object\Stream::create());
 
             // if the step failed, stop the job
             if ($this->hasError())
