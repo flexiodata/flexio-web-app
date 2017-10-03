@@ -1,8 +1,8 @@
 import {
-  ROUTE_PROJECTPIPES,
-  ROUTE_PROJECTMEMBERS,
-  ROUTE_PROJECTCONNECTIONS,
-  ROUTE_PROJECTTRASH
+  ROUTE_HOMEPIPES,
+  ROUTE_HOMEMEMBERS,
+  ROUTE_HOMECONNECTIONS,
+  ROUTE_HOMETRASH
 } from '../constants/route'
 import * as types from '../store/mutation-types'
 import store from '../store'
@@ -26,28 +26,28 @@ export default {
       // PipeManager will be rendered inside ProjectHome's <router-view>
       // when /project/:eid/pipes is matched
       path: 'pipes',
-      name: ROUTE_PROJECTPIPES,
+      name: ROUTE_HOMEPIPES,
       component: PipeManager
     },
     {
       // MemberManager will be rendered inside ProjectHome's <router-view>
       // when /project/:eid/members is matched
       path: 'members',
-      name: ROUTE_PROJECTMEMBERS,
+      name: ROUTE_HOMEMEMBERS,
       component: MemberManager
     },
     {
       // ConnectionManager will be rendered inside ProjectHome's <router-view>
       // when /project/:eid/connections is matched
       path: 'connections',
-      name: ROUTE_PROJECTCONNECTIONS,
+      name: ROUTE_HOMECONNECTIONS,
       component: ConnectionManager
     },
     {
       // TrashManager will be rendered inside ProjectHome's <router-view>
       // when /project/:eid/trash is matched
       path: 'trash',
-      name: ROUTE_PROJECTTRASH,
+      name: ROUTE_HOMETRASH,
       component: TrashManager
     }
   ]

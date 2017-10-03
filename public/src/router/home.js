@@ -1,9 +1,11 @@
 import {
   ROUTE_HOME,
-  ROUTE_PROJECTPIPES,
-  ROUTE_PROJECTMEMBERS,
-  ROUTE_PROJECTCONNECTIONS,
-  ROUTE_PROJECTTRASH
+  ROUTE_HOMEDASHBOARD,
+  ROUTE_HOMEPIPES,
+  ROUTE_HOMEMEMBERS,
+  ROUTE_HOMECONNECTIONS,
+  ROUTE_HOMESTORAGE,
+  ROUTE_HOMETRASH
 } from '../constants/route'
 import * as types from '../store/mutation-types'
 import store from '../store'
@@ -25,19 +27,24 @@ export const home = {
   meta: { requiresAuth: true },
   children: [
     {
-      // redirect to /home/pipes
+      // redirect to /home/dashboard
       path: '',
       name: ROUTE_HOME,
-      redirect: 'pipes'
+      redirect: 'dashboard'
+    },
+    {
+      path: 'dashboard',
+      name: ROUTE_HOMEDASHBOARD,
+      component: { template: '<div class="pa4">TODO: Dashboard</div>' }
     },
     {
       path: 'pipes',
-      name: ROUTE_PROJECTPIPES,
+      name: ROUTE_HOMEPIPES,
       component: PipeManager
     },
     {
       path: 'members',
-      name: ROUTE_PROJECTMEMBERS,
+      name: ROUTE_HOMEMEMBERS,
       component: MemberManager
     },
     {
@@ -46,12 +53,17 @@ export const home = {
     },
     {
       path: 'connections',
-      name: ROUTE_PROJECTCONNECTIONS,
+      name: ROUTE_HOMECONNECTIONS,
+      component: { template: '<div class="pa4">TODO: Connections</div>' }
+    },
+    {
+      path: 'storage',
+      name: ROUTE_HOMESTORAGE,
       component: ConnectionManager
     },
     {
       path: 'trash',
-      name: ROUTE_PROJECTTRASH,
+      name: ROUTE_HOMETRASH,
       component: TrashManager
     }
   ]

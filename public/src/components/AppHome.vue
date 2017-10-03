@@ -16,6 +16,11 @@
 <script>
   const nav_items = [
     {
+      route: 'dashboard',
+      name: 'Dashboard',
+      icon: 'dashboard'
+    },
+    {
       route: 'pipes',
       name: 'Pipes',
       icon: 'storage'
@@ -24,6 +29,11 @@
       route: 'connections',
       name: 'Connections',
       icon: 'repeat'
+    },
+    {
+      route: 'storage',
+      name: 'Storage',
+      icon: 'layers'
     },
     /*{
       route: 'members',
