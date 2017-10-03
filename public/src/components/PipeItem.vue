@@ -1,6 +1,6 @@
 <template>
   <article
-    class="css-pipe-item mv3-l pv3 pv2a-l ph3 bb ba-l br2-l no-select shadow-sui-segment-l trans-pm"
+    class="css-list-item mv3-l pv3 pv2a-l ph3 bb ba-l br2-l no-select shadow-sui-segment-l trans-pm"
     :class="isTrash ? 'css-trash-item' : 'pointer'"
     @click="openPipe"
     @mouseenter="onMouseEnter"
@@ -14,7 +14,7 @@
         <connection-icon :type="output_type" class="dib v-mid br2 square-3"></connection-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns">
-        <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-pipe-title">{{item.name}}</h1>
+        <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-list-title">{{item.name}}</h1>
         <div class="dn db-l mw7" v-if="has_description">
           <h2 class="f6 fw4 mt1 mb0 mid-gray lh-copy">{{item.description}}</h2>
         </div>
@@ -246,21 +246,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  // match .blue color to Material Design's 'Blue A600' color
-  @blue: #1e88e5;
-
-  .css-pipe-item {
-    border-color: rgba(34, 36, 38, 0.15);
-
-    &:hover {
-      background-color: rgba(0,0,0,0.05);
-      border-color: rgba(0,0,0,0.2);
-    }
-  }
-
-  .css-pipe-item:not(.css-trash-item):hover .css-pipe-title {
-    color: @blue;
-  }
-</style>

@@ -95,8 +95,9 @@
 <style lang="less">
   // match .blue color to Material Design's 'Blue A600' color
   @blue: #1e88e5;
-  @black-60: rgba(0,0,0,.6);
+  @black-60: rgba(0,0,0,0.6);
   @bg-color: #eee;
+  @bg-near-white: #f4f4f4;
 
   .css-nav {
     border-color: transparent;
@@ -111,5 +112,19 @@
       border-color: @blue;
       color: @blue;
     }
+  }
+
+  .css-list-item {
+    border-color: rgba(0,0,0,0.1);
+
+    &:hover {
+      background-color: @bg-near-white;
+      border-color: rgba(0,0,0,0.1);
+      border-bottom-color: rgba(0,0,0,0.15);
+    }
+  }
+
+  .css-list-item:not(.css-trash-item):hover .css-list-title {
+    color: @blue;
   }
 </style>

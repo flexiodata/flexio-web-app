@@ -3,7 +3,7 @@
     <a
       target="_blank"
       rel="noopener noreferrer"
-      class="css-pipe-item db link ma0 pv2a ph3 ba br2 cursor-default shadow-sui-segment trans-pm no-select no-underline"
+      class="css-list-item db link ma0 pv2a ph3 ba br2 cursor-default shadow-sui-segment trans-pm no-select no-underline"
       :href="pipe_src"
     >
       <div class="flex flex-row items-center">
@@ -57,18 +57,3 @@
     }
   }
 </script>
-
-<style lang="less" scoped>
-  .css-pipe-item {
-    border-color: rgba(34, 36, 38, 0.15);
-
-    &:hover {
-      background-color: rgba(0,0,0,0.05);
-      border-color: rgba(0,0,0,0.2);
-    }
-  }
-
-  .css-footer:hover {
-    box-shadow: 0 1px rgba(0,0,0,0.3);
-  }
-</style>

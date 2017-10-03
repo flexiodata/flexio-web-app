@@ -1,6 +1,6 @@
 <template>
   <article
-    class="css-connection-item ma0 mv3-l pv3 pv2a-l ph3 bb ba-l br2-l pointer no-select shadow-sui-segment-l trans-pm"
+    class="css-list-item ma0 mv3-l pv3 pv2a-l ph3 bb ba-l br2-l pointer no-select shadow-sui-segment-l trans-pm"
     @click="editConnection"
     @mouseenter="onMouseEnter"
     @mouseover="onMouseOver"
@@ -11,7 +11,7 @@
         <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3"></connection-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title">
-        <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-connection-title">{{item.name}}</h1>
+        <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-list-title">{{item.name}}</h1>
         <div
           class="mw7 hint--bottom-right hint--large"
           :aria-label="item.description"
@@ -147,21 +147,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  // match .blue color to Material Design's 'Blue A600' color
-  @blue: #1e88e5;
-
-  .css-connection-item {
-    border-color: rgba(34, 36, 38, 0.15);
-
-    &:hover {
-      background-color: rgba(0,0,0,0.05);
-      border-color: rgba(0,0,0,0.2);
-    }
-  }
-
-  .css-connection-item:hover .css-connection-title {
-    color: @blue;
-  }
-</style>
