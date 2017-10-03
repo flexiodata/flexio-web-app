@@ -3,7 +3,7 @@
     <div
       class="flex flex-column justify-center items-center f6 fw6 ttu br2 mh2 pa2 h4 w4 pointer moon-gray bg-white hover-blue css-help-item"
       @click="helpItemClick(item)"
-      v-for="(item, index) in help_items"
+      v-for="(item, index) in filtered_items"
     >
       <i class="material-icons md-48">{{item.icon}}</i>
       <div class="mt2">{{item.label}}</div>
@@ -12,25 +12,49 @@
 </template>
 
 <script>
+  const help_items = [{
+    id: 'quick-start',
+    icon: 'launch',
+    label: 'Quick Start',
+    href: 'https://www.flex.io/docs/getting-started'
+  },{
+    id: 'api-docs',
+    icon: 'help',
+    label: 'API Reference',
+    href: 'https://www.flex.io/docs/api'
+  },{
+    id: 'command-bar-docs',
+    icon: 'help',
+    label: 'Docs',
+    href: 'https://www.flex.io/docs/web-app/#command-bar-operations'
+  },{
+    id: 'templates',
+    icon: 'now_widgets',
+    label: 'Templates',
+    href: 'https://www.flex.io/templates'
+  },{
+    id: 'help',
+    icon: 'chat',
+    label: 'Get Help',
+    action: 'open-intercom'
+  }]
+
   export default {
+    props: {
+      'items': {
+        type: Array,
+        default: () => { return ['command-bar-docs', 'templates', 'help'] }
+      },
+      'help-message': {
+        type: String,
+        default: 'I have a question about how to use the pipe builder.'
+      }
+    },
     computed: {
-      help_items() {
-        return [{
-          id: 'docs',
-          icon: 'help',
-          label: 'Docs',
-          href: 'https://www.flex.io/docs/web-app/#command-bar-operations'
-        },{
-          id: 'templates',
-          icon: 'now_widgets',
-          label: 'Templates',
-          href: 'https://www.flex.io/templates/'
-        },{
-          id: 'chat',
-          icon: 'chat',
-          label: 'Get Help',
-          action: 'open-intercom'
-        }]
+      filtered_items() {
+        return _.filter(help_items, (item) => {
+          return _.includes(this.items, item.id)
+        })
       }
     },
     methods: {
@@ -41,15 +65,13 @@
         }
          else
         {
-          var msg = 'I have a question about how to use the pipe builder.'
-
           if (!_.isNil(window.Intercom) && item.action == 'open-intercom')
           {
-            window.Intercom('showNewMessage', msg)
+            window.Intercom('showNewMessage', this.helpMessage)
           }
            else
           {
-            var mailto_link = 'mailto:support@flex.io?subject='+msg
+            var mailto_link = 'mailto:support@flex.io?subject=' + this.helpMessage
             window.open(mailto_link)
           }
         }
