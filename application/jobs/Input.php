@@ -126,6 +126,7 @@ class Input extends \Flexio\Jobs\Base
             $stream_properties = $file_info;
             $outstream = \Flexio\Object\Stream::create($stream_properties);
             $this->getContext()->addStream($outstream);
+            $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
             return;
         }
 
@@ -139,10 +140,6 @@ class Input extends \Flexio\Jobs\Base
         {
             default:
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            // upload
-            case \Model::CONNECTION_TYPE_UPLOAD:
-                return $this->runUpload($service, $file_info);
 
             // upload
             case \Model::CONNECTION_TYPE_EMAIL:
@@ -184,6 +181,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $outstream = \Flexio\Object\Stream::create($stream_properties);
         $this->getContext()->addStream($outstream);
+        $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function runEmail($service, array $file_info) // TODO: set paramater type
@@ -205,7 +203,6 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        $this->getContext()->addStream($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
         // create the iterator
@@ -227,6 +224,9 @@ class Input extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+
+        $this->getContext()->addStream($outstream);
+        $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function runElasticSearchImport($service, array $file_info) // TODO: set paramater type
@@ -247,7 +247,6 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        $this->getContext()->addStream($outstream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
         // transfer the data
@@ -259,6 +258,9 @@ class Input extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+
+        $this->getContext()->addStream($outstream);
+        $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function runRemoteFileImport($service, array $file_info) // TODO: set paramater type
@@ -299,8 +301,6 @@ class Input extends \Flexio\Jobs\Base
                     $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
                     $outstream = self::createDatastoreStream($stream_properties);
                     $outstream->setStructure($structure);
-                    $this->getContext()->addStream($outstream);
-
                     $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
                 }
                  else
@@ -310,8 +310,6 @@ class Input extends \Flexio\Jobs\Base
 
                     // add an output stream
                     $outstream = self::createDatastoreStream($stream_properties);
-                    $this->getContext()->addStream($outstream);
-
                     $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
                 }
             }
@@ -363,6 +361,9 @@ class Input extends \Flexio\Jobs\Base
             $outstream->set(array('size' => $streamwriter->getBytesWritten(),
                                   'mime_type' => $mime_type));
         }
+
+        $this->getContext()->addStream($outstream);
+        $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function createDatastoreStream(array $properties) :  \Flexio\Object\Stream
