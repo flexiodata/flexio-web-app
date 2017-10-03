@@ -892,50 +892,12 @@ class Process extends \Flexio\Object\Base
                 $info = array();
             $p['process_info'] = $info;
 
-            // further fill out the input/output info with names, paths, etc
-            $p['input'] = self::populateProcessIOStreamInfo($p['input']);
-            $p['output'] = self::populateProcessIOStreamInfo($p['output']);
-
             // save the info
             $subprocesses[] = $p;
         }
 
         $properties['subprocesses'] = $subprocesses;
         return $properties;
-    }
-
-    private function populateProcessIOStreamInfo(array $stream_eid_arr) : array
-    {
-        return $stream_eid_arr; // TODO: this is now actually the context array
-
-/*
-// TODO: determine if we want to do return this info now with the new stdin/stdout work
-        $result = array();
-        foreach ($stream_eid_arr as $item)
-        {
-            if (!isset($item['eid']))
-                continue;
-
-            $stream_eid = $item['eid'];
-            $stream = \Flexio\Object\Stream::load($stream_eid);
-            if ($stream === false)
-                continue;
-
-            $stream_properties = $stream->get();
-
-            $result_item = array();
-            $result_item['eid'] = $stream_properties['eid'];
-            $result_item['eid_type'] = $stream_properties['eid_type'];
-            $result_item['name'] = $stream_properties['name'];
-            $result_item['path'] = $stream_properties['path'];
-            $result_item['mime_type'] = $stream_properties['mime_type'];
-            $result_item['size'] = $stream_properties['size'];
-
-            $result[] = $result_item;
-        }
-
-        return $result;
-*/
     }
 
     private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Context &$context) : bool
