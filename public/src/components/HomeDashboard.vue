@@ -29,6 +29,6 @@
 
 <style lang="less">
   .css-dashboard-box {
-    box-shadow: 0 4px 24px -4px rgba(0,0,0,0.125);
+    box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2);
   }
 </style>
