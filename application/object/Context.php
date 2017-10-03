@@ -46,7 +46,7 @@ class Context
         {
             $result['stdout'] = array('eid' => $this->stdout->getEid(),
                                       'eid_type' => $this->stdout->getType(),
-                                      'mime_type' => $this->stdin->getMimeType());
+                                      'mime_type' => $this->stdout->getMimeType());
         }
 
         $result['params'] = $this->params;
@@ -57,7 +57,7 @@ class Context
         {
             $result['streams'][] = array('eid' => $s->getEid(),
                                          'eid_type' => $s->getType(),
-                                         'mime_type' => $this->stdin->getMimeType());
+                                         'mime_type' => $s->getMimeType());
         }
 
         return json_encode($result);

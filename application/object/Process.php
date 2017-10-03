@@ -664,7 +664,7 @@ class Process extends \Flexio\Object\Base
 
             $stdout = \Flexio\Object\Stream::create();
             $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_STREAM); // default mime type
-            $context->setStdout(\Flexio\Object\Stream::create());
+            $context->setStdout($stdout);
 
             // if the step failed, stop the job
             if ($this->hasError())
