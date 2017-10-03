@@ -35,11 +35,19 @@ class Context
 
         $result['stdin'] = null;
         if (isset($this->stdin))
-            $result['stdin'] = array('eid' => $this->stdin->getEid(), 'eid_type' => $this->stdin->getType());
+        {
+            $result['stdin'] = array('eid' => $this->stdin->getEid(),
+                                     'eid_type' => $this->stdin->getType(),
+                                     'mime_type' => $this->stdin->getMimeType());
+        }
 
         $result['stdout'] = null;
         if (isset($this->stdout))
-            $result['stdout'] = array('eid' => $this->stdout->getEid(), 'eid_type' => $this->stdout->getType());
+        {
+            $result['stdout'] = array('eid' => $this->stdout->getEid(),
+                                      'eid_type' => $this->stdout->getType(),
+                                      'mime_type' => $this->stdin->getMimeType());
+        }
 
         $result['params'] = $this->params;
         $result['env'] = $this->env;
@@ -47,7 +55,9 @@ class Context
 
         foreach ($this->streams as $s)
         {
-            $result['streams'][] = array('eid' => $s->getEid(), 'eid_type' => $s->getType());
+            $result['streams'][] = array('eid' => $s->getEid(),
+                                         'eid_type' => $s->getType(),
+                                         'mime_type' => $this->stdin->getMimeType());
         }
 
         return json_encode($result);
