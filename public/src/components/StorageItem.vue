@@ -8,7 +8,7 @@
   >
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
-        <connection-icon :type="item.connection_type" class="dib v-mid br2 square-3"></connection-icon>
+        <service-icon :type="item.connection_type" class="dib v-mid br2 square-3"></service-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns mv0 lh-title">
         <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-list-title">{{item.name}}</h1>
@@ -76,12 +76,12 @@
     CONNECTION_STATUS_UNAVAILABLE,
     CONNECTION_STATUS_ERROR
   } from '../constants/connection-status'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
 
   export default {
     props: ['item'],
     components: {
-      ConnectionIcon
+      ServiceIcon
     },
     data() {
       return {

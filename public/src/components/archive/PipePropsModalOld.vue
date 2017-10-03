@@ -21,7 +21,7 @@
       <div v-if="show_file_chooser">
         <div class="flex flex-row mt1 mb3 pt2 bt b--black-10">
           <div class="flex-fill flex flex-row items-center">
-            <connection-icon :type="ctype" class="dib v-top br2 square-3"></connection-icon>
+            <service-icon :type="ctype" class="dib v-top br2 square-3"></service-icon>
             <div class="ml2 mid-gray f5 fw6">{{cname}}</div>
           </div>
           <div class="mid-gray" v-if="mode != 'edit-pipe'">
@@ -170,7 +170,7 @@
   import { mapGetters } from 'vuex'
   import api from '../api'
   import Btn from './Btn.vue'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
@@ -189,7 +189,7 @@
     props: ['project-eid'],
     components: {
       Btn,
-      ConnectionIcon,
+      ServiceIcon,
       ConnectionChooserList,
       FileExplorerBar,
       FileChooserList,

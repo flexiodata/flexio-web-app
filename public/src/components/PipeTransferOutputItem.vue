@@ -1,7 +1,7 @@
 <template>
   <article class="mb3">
     <div class="flex flex-row items-center pa2 bg-black-05" v-if="showTitleBar">
-      <connection-icon :type="ctype" class="v-mid br1 square-2 mr2"></connection-icon>
+      <service-icon :type="ctype" class="v-mid br1 square-2 mr2"></service-icon>
       <div class="f6 fw6 ttu silver">{{title}}</div>
       <div class="flex-fill"></div>
       <a
@@ -112,7 +112,7 @@
   import { TASK_TYPE_EMAIL_SEND } from '../constants/task-type'
   import { mapGetters } from 'vuex'
   import Btn from './Btn.vue'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import OutputChooserModal from './OutputChooserModal.vue'
   import TaskItemHelper from './mixins/task-item-helper'
 
@@ -130,7 +130,7 @@
     mixins: [TaskItemHelper],
     components: {
       Btn,
-      ConnectionIcon,
+      ServiceIcon,
       OutputChooserModal
     },
     inject: ['pipeEid'],

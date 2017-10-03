@@ -8,12 +8,12 @@
       :class="iconOnly ? 'hint--top mr1' : 'mr2'"
       :aria-label="display_name"
     >
-      <connection-icon
+      <service-icon
         class="db br1"
         style="width: 28px; height: 28px"
         :type="ctype"
         v-if="show_connection_icon"
-      ></connection-icon>
+      ></service-icon>
       <div
         class="pa1 br1 white trans-wh tc relative"
         :class="[ bg_color ]"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import TaskItemHelper from './mixins/task-item-helper'
 
   export default {
@@ -54,7 +54,7 @@
     },
     mixins: [TaskItemHelper],
     components: {
-      ConnectionIcon
+      ServiceIcon
     },
     computed: {
       task() {

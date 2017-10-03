@@ -84,7 +84,7 @@
   import * as at from '../constants/action-type'
   import * as connections from '../constants/connection-info'
   import Btn from './Btn.vue'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
@@ -129,7 +129,7 @@
     mixins: [Validation],
     components: {
       Btn,
-      ConnectionIcon,
+      ServiceIcon,
       ConnectionChooserList,
       FileExplorerBar,
       FileChooserList,

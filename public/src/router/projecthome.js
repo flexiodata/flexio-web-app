@@ -9,7 +9,7 @@ import store from '../store'
 import ProjectHome from '../components/ProjectHome.vue'
 import PipeManager from '../components/PipeManager.vue'
 import MemberManager from '../components/MemberManager.vue'
-import ConnectionManager from '../components/ConnectionManager.vue'
+import StorageManager from '../components/StorageManager.vue'
 import TrashManager from '../components/TrashManager.vue'
 
 export default {
@@ -37,11 +37,11 @@ export default {
       component: MemberManager
     },
     {
-      // ConnectionManager will be rendered inside ProjectHome's <router-view>
+      // StorageManager will be rendered inside ProjectHome's <router-view>
       // when /project/:eid/connections is matched
       path: 'connections',
       name: ROUTE_HOMECONNECTIONS,
-      component: ConnectionManager
+      component: StorageManager
     },
     {
       // TrashManager will be rendered inside ProjectHome's <router-view>

@@ -8,9 +8,9 @@
     >
       <div class="flex flex-row items-center">
         <div class="flex-none mr2">
-          <connection-icon :type="input_type" class="dib v-mid br2 square-3"></connection-icon>
+          <service-icon :type="input_type" class="dib v-mid br2 square-3"></service-icon>
           <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px">arrow_drop_down</i>
-          <connection-icon :type="output_type" class="dib v-mid br2 square-3"></connection-icon>
+          <service-icon :type="output_type" class="dib v-mid br2 square-3"></service-icon>
         </div>
         <div class="flex-fill mh2 fw6 f6 f5-ns black-60 mv0 lh-title truncate">
           <span :title="item.name">{{item.name}}</span>
@@ -34,12 +34,12 @@
 
 <script>
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
 
   export default {
     props: ['item'],
     components: {
-      ConnectionIcon
+      ServiceIcon
     },
     computed: {
       input_type() { return this.getTaskConnectionType(TASK_TYPE_INPUT) },

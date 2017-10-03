@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="flex flex-row mt1 pt2 bt b--black-10" v-if="has_connection">
-        <connection-icon :type="ctype" class="flex-none dib v-top br2 square-4" style="max-height: 3rem"></connection-icon>
+        <service-icon :type="ctype" class="flex-none dib v-top br2 square-4" style="max-height: 3rem"></service-icon>
         <div class="flex-fill flex flex-column ml2">
           <div class="mid-gray f4 fw6">{{service_name}}</div>
           <div class="mid-gray f6 fw4 mt1">{{service_description}}</div>
@@ -121,7 +121,7 @@
   import api from '../api'
   import Btn from './Btn.vue'
   import ServiceList from './ServiceList.vue'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
   import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
@@ -172,7 +172,7 @@
     components: {
       Btn,
       ServiceList,
-      ConnectionIcon,
+      ServiceIcon,
       ConnectionConfigurePanel,
       RightsList
     },

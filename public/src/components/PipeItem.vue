@@ -9,9 +9,9 @@
   >
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
-        <connection-icon :type="input_type" class="dib v-mid br2 square-3"></connection-icon>
+        <service-icon :type="input_type" class="dib v-mid br2 square-3"></service-icon>
         <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px">arrow_drop_down</i>
-        <connection-icon :type="output_type" class="dib v-mid br2 square-3"></connection-icon>
+        <service-icon :type="output_type" class="dib v-mid br2 square-3"></service-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns">
         <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-list-title">{{item.name}}</h1>
@@ -74,7 +74,7 @@
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import { OBJECT_STATUS_TRASH } from '../constants/object-status'
   import util from '../utils'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import ToggleButton from './ToggleButton.vue'
   import TaskSummaryList from './TaskSummaryList.vue'
 
@@ -96,7 +96,7 @@
       }
     },
     components: {
-      ConnectionIcon,
+      ServiceIcon,
       ToggleButton,
       TaskSummaryList
     },

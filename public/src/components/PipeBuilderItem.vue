@@ -15,11 +15,11 @@
           <!-- task icon -->
           <div>
             <div class="mr2 mr3-ns" v-if="show_connection_icon">
-              <connection-icon
+              <service-icon
                 class="br1"
                 style="width: 40px; height: 40px"
                 :type="ctype"
-              ></connection-icon>
+              ></service-icon>
             </div>
             <div class="cursor-default pa2 mr2 mr3-ns br1 white tc relative" :class="[ bg_color ]" v-else>
               <i class="db material-icons f3">{{task_icon}}</i>
@@ -320,7 +320,7 @@
   import api from '../api'
   import parser from '../utils/parser'
   import Btn from './Btn.vue'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import CodeEditor from './CodeEditor.vue'
   import CommandBar from './CommandBar.vue'
   import InlineEditText from './InlineEditText.vue'
@@ -381,7 +381,7 @@
     mixins: [TaskItemHelper],
     components: {
       Btn,
-      ConnectionIcon,
+      ServiceIcon,
       CodeEditor,
       CommandBar,
       InlineEditText,

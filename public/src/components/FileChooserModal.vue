@@ -69,7 +69,7 @@
   import { mapGetters } from 'vuex'
   import api from '../api'
   import Btn from './Btn.vue'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'

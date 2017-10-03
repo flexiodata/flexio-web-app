@@ -14,13 +14,13 @@
   </empty-item>
   <div v-else>
     <connection-header-item v-if="showHeader && false"></connection-header-item>
-    <connection-item
+    <storage-item
       v-for="(connection, index) in connections"
       :item="connection"
       :index="index"
       @edit="onItemEdit"
       @delete="onItemDelete"
-    ></connection-item>
+    ></storage-item>
     <div class="h4"></div>
   </div>
 </template>
@@ -29,7 +29,7 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import ConnectionHeaderItem from './ConnectionHeaderItem.vue'
-  import ConnectionItem from './ConnectionItem.vue'
+  import StorageItem from './StorageItem.vue'
   import EmptyItem from './EmptyItem.vue'
   import CommonFilter from './mixins/common-filter'
 
@@ -47,7 +47,7 @@
     components: {
       Spinner,
       ConnectionHeaderItem,
-      ConnectionItem,
+      StorageItem,
       EmptyItem
     },
     computed: {

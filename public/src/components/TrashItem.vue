@@ -13,7 +13,7 @@
 <script>
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
-  import ConnectionItem from './ConnectionItem.vue'
+  import StorageItem from './StorageItem.vue'
   import PipeItem from './PipeItem.vue'
 
   export default {

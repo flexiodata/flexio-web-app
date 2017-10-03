@@ -25,14 +25,14 @@
     </div>
 
     <!-- list -->
-    <connection-list
+    <storage-list
       class="pl4-l pr4-l pb4-l h-100"
       style="max-width: 1152px"
       :filter="filter"
       :show-header="true"
       @item-edit="openEditModal"
       @item-delete="tryDeleteConnection"
-    ></connection-list>
+    ></storage-list>
 
     <!-- props modal (used for both add and edit) -->
     <connection-props-modal
@@ -48,14 +48,14 @@
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import ConnectionList from './ConnectionList.vue'
+  import StorageList from './StorageList.vue'
   import ConnectionPropsModal from './ConnectionPropsModal.vue'
   import Btn from './Btn.vue'
 
   export default {
     components: {
       Spinner,
-      ConnectionList,
+      StorageList,
       ConnectionPropsModal,
       Btn
     },

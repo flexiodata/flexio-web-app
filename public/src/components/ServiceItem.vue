@@ -4,18 +4,18 @@
     @click="onClick"
   >
     <div class="flex flex-row items-center" v-if="layout == 'list'">
-      <connection-icon :type="item.connection_type" class="br1 square-3 mr3"></connection-icon>
+      <service-icon :type="item.connection_type" class="br1 square-3 mr3"></service-icon>
       <div class="mid-gray f5 fw6 cursor-default">{{item.service_name}}</div>
     </div>
     <div class="tc css-valign" v-else>
-      <connection-icon :type="item.connection_type" class="dib v-mid br2 square-5"></connection-icon>
+      <service-icon :type="item.connection_type" class="dib v-mid br2 square-5"></service-icon>
       <div class="mid-gray f6 fw6 mt2 cursor-default">{{item.service_name}}</div>
     </div>
   </article>
 </template>
 
 <script>
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
 
   export default {
     props: {
@@ -29,7 +29,7 @@
       }
     },
     components: {
-      ConnectionIcon
+      ServiceIcon
     },
     computed: {
       cls() {

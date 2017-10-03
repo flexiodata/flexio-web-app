@@ -12,7 +12,7 @@ import store from '../store'
 import AppHome from '../components/AppHome.vue'
 import PipeManager from '../components/PipeManager.vue'
 import MemberManager from '../components/MemberManager.vue'
-import ConnectionManager from '../components/ConnectionManager.vue'
+import StorageManager from '../components/StorageManager.vue'
 import TrashManager from '../components/TrashManager.vue'
 
 export const basepath_redirect = {
@@ -59,7 +59,7 @@ export const home = {
     {
       path: 'storage',
       name: ROUTE_HOMESTORAGE,
-      component: ConnectionManager
+      component: StorageManager
     },
     {
       path: 'trash',

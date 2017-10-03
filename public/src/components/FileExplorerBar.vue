@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="flex-none flex flex-row items-center cursor-default no-select">
-      <connection-icon
+      <service-icon
         class="dib v-top br2 css-icon"
         :type="ctype"
-      ></connection-icon>
+      ></service-icon>
       <div
         class="fw6 mid-gray underline-hover ml1"
         @click="openFolder('/')"
@@ -30,13 +30,13 @@
 
 <script>
   import * as connections from '../constants/connection-info'
-  import ConnectionIcon from './ConnectionIcon.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import FileChooserList from './FileChooserList.vue'
 
   export default {
     props: ['connection', 'path'],
     components: {
-      ConnectionIcon,
+      ServiceIcon,
       FileChooserList
     },
     computed: {
