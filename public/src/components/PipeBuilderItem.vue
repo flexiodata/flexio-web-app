@@ -527,16 +527,6 @@
           .find((s) => { return _.get(s, 'task.eid') == this.eid })
           .value()
       },
-      our_inputs() {
-        var inputs = _.get(this.active_subprocess, 'output', [])
-
-        // use the inputs specified in the input task
-        if (inputs.length == 0 && this.task_type == TASK_TYPE_INPUT)
-          return _.get(this.task, 'params.items', [])
-
-        // ...otherwise, use the output array from the active subprocess
-        return inputs
-      },
       variables() {
         return _.get(this, 'task.variables', [])
       },
@@ -544,8 +534,7 @@
         return _.get(this, 'task.is_prompt', false)
       },
       active_stream_eid() {
-        var stream = _.head(this.our_inputs)
-        return _.get(stream, 'eid', '')
+        return _.get(this.active_subprocess, 'output.stdout.eid', '')
       },
       show_progress() {
         return _.includes([
