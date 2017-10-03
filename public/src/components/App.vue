@@ -91,3 +91,25 @@
     }
   }
 </script>
+
+<style lang="less">
+  // match .blue color to Material Design's 'Blue A600' color
+  @blue: #1e88e5;
+  @black-60: rgba(0,0,0,.6);
+  @bg-color: #eee;
+
+  .css-nav {
+    border-color: transparent;
+    color: @black-60;
+
+    &:hover {
+      border-color: @black-60;
+      color: #222;
+    }
+
+    &.router-link-active {
+      border-color: @blue;
+      color: @blue;
+    }
+  }
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <nav class="bb b--black-20">
+  <nav class="z-1" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
     <div class="flex flex-row bg-white pa1 pl3-ns pr2-ns items-center" style="min-height: 50px">
       <div class="flex-fill flex flex-row items-center truncate">
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">

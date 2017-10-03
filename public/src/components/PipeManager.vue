@@ -8,16 +8,17 @@
     <!-- control bar -->
     <div class="pa3 pa4-l pb3-l bb bb-0-l b--black-10" style="max-width: 1152px">
       <div class="flex flex-row">
-        <div class="flex-fill">
+        <div class="flex-fill flex flex-row items-center">
+          <div class="f2 dn db-ns mr3">Pipes</div>
           <input
             type="text"
-            class="input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue pa2 w-90 w-50-m w-30-l min-w5-m min-w5a-l f6"
-            placeholder="Filter pipes..."
+            class="input-reset ba b--black-10 focus-b--transparent focus-outline focus-ow1 focus-o--blue pa2 w-100 mw5 mr3 f6"
+            placeholder="Filter items..."
             @keydown.esc="filter = ''"
             v-model="filter"
           >
         </div>
-        <div class="flex-none">
+        <div class="flex-none flex flex-row items-center">
           <btn btn-md btn-primary class="btn-add ttu b ba" @click="tryCreatePipe()">New pipe</btn>
         </div>
       </div>
