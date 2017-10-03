@@ -1,58 +1,40 @@
 <template>
-  <div class="dib" v-if="store_stats.length == 0">
+  <div v-if="is_fetching">
     <div class="flex flex-row justify-center items-center min-h4 pa3">
       <spinner size="medium"></spinner>
       <span class="ml2 f5">Loading...</span>
     </div>
   </div>
   <div class="pa3" v-else>
-    <h2 class="ma0">Pipes run over the last month</h2>
-    <div class="mt2 mb3 pb2 ph3 pt4 bt b--black-10">
-      <line-chart
-        :height="300"
-        :labels="labels"
-        :datasets="stats_by_date"
-        :options="{
-          legend: {
-            display: false
-          }
-        }"
-      ></line-chart>
-    </div>
-    <h2 class="ma0 mt4">Top 10 pipes</h2>
-    <div
-      class="mt2 mb3 pb2 ph3 bt b--black-10"
-      v-for="(item, index) in top_stats_by_pipe"
-      :item="item"
-      :index="index"
-    >
-      <div>
-        <h4 class="dib">{{index+1}}. {{item.label}}</h4><span class="silver"> &ndash; {{item.owned_by.first_name}} {{item.owned_by.last_name}} ({{item.owned_by.eid}})</span>
-      </div>
-      <line-chart
-        :height="100"
-        :labels="labels"
-        :datasets="[item]"
-        :options="{
-          legend: {
-            display: false
-          }
-        }"
-      ></line-chart>
-    </div>
+    <div class="f3 ma0 pb2 mb3" v-if="title.length > 0">{{title}}</div>
+    <line-chart
+      :height="chartHeight"
+      :labels="labels"
+      :datasets="datasets"
+      :options="{
+        legend: {
+          display: false
+        }
+      }"
+    ></line-chart>
   </div>
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import moment from 'moment'
   import Spinner from 'vue-simple-spinner'
   import LineChart from './LineChart.vue'
 
   export default {
     props: {
-      'top-number': {
+      'title': {
+        type: String,
+        default: ''
+      },
+      'chart-height': {
         type: Number,
-        default: 10
+        default: 300
       },
       // overrides duration if specified
       'start-date': {
@@ -79,6 +61,11 @@
       LineChart
     },
     computed: {
+      // mix this into the outer object with the object spread operator
+      ...mapState({
+        'is_fetching': 'stats_processes_fetching',
+        'is_fetched': 'stats_processes_fetched'
+      }),
       end_date() {
         var end = _.isString(this.endDate) ? moment(this.endDate).utc() : moment().utc()
         return end.endOf('day')
@@ -119,7 +106,7 @@
           })
         })
       },
-      stats_by_date() {
+      datasets() {
         // group each stat by date
         var stats = _.groupBy(this.stats_with_created, (s) => {
           return _.get(s, 'process_created', '')
@@ -138,50 +125,16 @@
           label: 'All Pipes',
           data: this.getDatasetData(count_vals, this.baseline_vals)
         }]
-      },
-      stats_by_pipe() {
-        // group each stat by pipe
-        var stats = _.groupBy(this.stats_with_created, (s) => {
-          return _.get(s, 'pipe.eid', '')
-        })
-
-        // reduce to simply { label, data } for the specified time period
-        stats = _.map(stats, (s) => {
-          var pipe = _.get(s, '[0].pipe', {})
-
-          // dates that have values for this pipe
-          var count_vals = _.map(s, (v) => {
-            return _.pick(v, ['created', 'total_count'])
-          })
-
-          var identifier = _.get(pipe, 'ename', '')
-          identifier = identifier.length > 0 ? identifier : _.get(pipe, 'eid')
-
-
-          var label = _.get(pipe, 'name', 'Pipe')
-          label = label + ' ('+identifier+')'
-
-          return {
-            label,
-            data: this.getDatasetData(count_vals, this.baseline_vals),
-            pipe,
-            owned_by: _.get(pipe, 'owned_by', {})
-          }
-        })
-
-        return stats
-      },
-      top_stats_by_pipe() {
-        var top = _.sortBy(this.stats_by_pipe, (s) => {
-          return _.sum(_.get(s, 'data'))
-        })
-        return _.take(_.reverse(top), this.topNumber)
       }
     },
-    mounted() {
-      this.$store.dispatch('fetchStatistics', { type: 'processes' })
+    created() {
+      this.tryFetchStats()
     },
     methods: {
+      tryFetchStats() {
+        if (!this.is_fetched)
+          this.$store.dispatch('fetchStatistics', { type: 'processes' })
+      },
       getDatasetData(stats, range) {
         // remove out-of-bounds values
         var seq = _.filter(stats, (v) => {
