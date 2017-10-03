@@ -63,17 +63,8 @@
         @save-values-and-run="$emit('save-values-and-run')"
       ></pipe-builder-item>
     </div>
-    <div class="flex flex-row flex-wrap items-center justify-center center mv4">
-      <div
-        class="flex flex-column justify-center items-center f6 fw6 ttu br2 ma2 pa2 h4 w4 pointer moon-gray bg-white hover-blue"
-        style="box-shadow: inset 1px 1px 0 rgba(0,0,0,0.06), inset -1px 0 0 rgba(0,0,0,0.06), 0 2px 1px -1px rgba(0,0,0,0.24)"
-        @click="helpItemClick(item)"
-        v-for="(item, index) in help_items"
-      >
-        <i class="material-icons md-48">{{item.icon}}</i>
-        <div class="mt2">{{item.label}}</div>
-      </div>
-    </div>
+
+    <help-items class="mv4"></help-items>
   </div>
 </template>
 
@@ -85,22 +76,7 @@
   } from '../constants/process'
   import Btn from './Btn.vue'
   import PipeBuilderItem from './PipeBuilderItem.vue'
-
-  const help_items = [{
-    icon: 'help',
-    label: 'Docs',
-    href: 'https://www.flex.io/docs/web-app/#command-bar-operations'
-  },{
-    icon: 'now_widgets',
-    label: 'Templates',
-    href: 'https://www.flex.io/templates/'
-  },{
-    icon: 'chat',
-    label: 'Get Help',
-    action: 'open-intercom'
-  }]
-
-  const email_window = null
+  import HelpItems from './HelpItems.vue'
 
   export default {
     props: {
@@ -130,7 +106,8 @@
     },
     components: {
       Btn,
-      PipeBuilderItem
+      PipeBuilderItem,
+      HelpItems
     },
     watch: {
       active_process_status: function(val, old_val) {
@@ -197,8 +174,7 @@
         show_all_previews: true,
         show_success: false,
         show_error: false,
-        error_message: '',
-        help_items: help_items
+        error_message: ''
       }
     },
     computed: {
@@ -233,27 +209,6 @@
 
       emitGoNextPrompt(task_eid) {
         this.$emit('go-next-prompt', task_eid)
-      },
-
-      helpItemClick(item) {
-        if (_.isString(item.href))
-        {
-          window.open(item.href, '_blank')
-        }
-         else
-        {
-          var msg = 'I have a question about how to use the pipe builder.'
-
-          if (!_.isNil(window.Intercom) && item.action == 'open-intercom')
-          {
-            window.Intercom('showNewMessage', msg)
-          }
-           else
-          {
-            var mailto_link = 'mailto:support@flex.io?subject='+msg
-            window.open(mailto_link)
-          }
-        }
       },
 
       resetScroll: _.debounce(function() {
