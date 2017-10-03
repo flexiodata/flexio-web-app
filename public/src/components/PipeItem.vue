@@ -10,8 +10,8 @@
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
         <service-icon :type="input_type" class="dib v-mid br2 square-3"></service-icon>
-        <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px">arrow_drop_down</i>
-        <service-icon :type="output_type" class="dib v-mid br2 square-3"></service-icon>
+        <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px" v-if="false">arrow_drop_down</i>
+        <service-icon :type="output_type" class="dib v-mid br2 square-3 ml2"></service-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns">
         <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-list-title">{{item.name}}</h1>
@@ -26,7 +26,7 @@
           :aria-label="follower_tooltip"
         >{{follower_str}} (@{{owner_username}})</span>
       </div>
-      <div class="flex-none mr2 nt3 nb3" :class="isTrash ? 'o-40 no-pointer-events' : ''">
+      <div class="flex-none mr2 nt3 nb3" v-if="!isTrash">
         <div class="pv3" @click.stop="toggleScheduled">
           <toggle-button
             class="hint--bottom"
