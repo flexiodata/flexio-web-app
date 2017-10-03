@@ -35,12 +35,12 @@
     ></storage-list>
 
     <!-- props modal (used for both add and edit) -->
-    <connection-props-modal
+    <storage-props-modal
       ref="modal-connection-props"
       @submit="tryUpdateConnection"
       @hide="show_connection_props_modal = false"
       v-if="show_connection_props_modal"
-    ></connection-props-modal>
+    ></storage-props-modal>
   </div>
 </template>
 
@@ -49,14 +49,14 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import StorageList from './StorageList.vue'
-  import ConnectionPropsModal from './ConnectionPropsModal.vue'
+  import StoragePropsModal from './StoragePropsModal.vue'
   import Btn from './Btn.vue'
 
   export default {
     components: {
       Spinner,
       StorageList,
-      ConnectionPropsModal,
+      StoragePropsModal,
       Btn
     },
     data() {

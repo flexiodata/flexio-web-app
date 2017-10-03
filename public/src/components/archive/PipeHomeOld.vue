@@ -150,11 +150,11 @@
     ></pipe-props-modal>
 
     <!-- connection modal -->
-    <connection-props-modal
+    <storage-props-modal
       ref="modal-add-connection"
       :project-eid="project_eid"
       @submit="tryAddConnection"
-    ></connection-props-modal>
+    ></storage-props-modal>
 
   </div>
 </template>
@@ -183,7 +183,7 @@
   import PipeContent from './PipeContent.vue'
   import ProcessProgressList from './ProcessProgressList.vue'
   import PipePropsModal from './PipePropsModal.vue'
-  import ConnectionPropsModal from './ConnectionPropsModal.vue'
+  import StoragePropsModal from './StoragePropsModal.vue'
   import SetActiveProject from './mixins/set-active-project'
 
   const DEFAULT_INSERT_TASK = {
@@ -205,7 +205,7 @@
       PipeContent,
       ProcessProgressList,
       PipePropsModal,
-      ConnectionPropsModal
+      StoragePropsModal
     },
     data() {
       return {

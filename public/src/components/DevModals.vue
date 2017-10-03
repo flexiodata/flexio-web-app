@@ -52,11 +52,11 @@
       v-if="show_project_delete_modal"
     ></project-delete-modal>
 
-    <connection-props-modal
+    <storage-props-modal
       ref="modal-connection-props"
       @hide="show_connection_props_modal = false"
       v-if="show_connection_props_modal"
-    ></connection-props-modal>
+    ></storage-props-modal>
 
     <pipe-props-modal
       ref="modal-pipe-props"
@@ -124,7 +124,7 @@
   import ConfirmModal from './ConfirmModal.vue'
   import ProjectPropsModal from './ProjectPropsModal.vue'
   import ProjectDeleteModal from './ProjectDeleteModal.vue'
-  import ConnectionPropsModal from './ConnectionPropsModal.vue'
+  import StoragePropsModal from './StoragePropsModal.vue'
   import PipePropsModal from './PipePropsModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
   import PipeShareModal from './PipeShareModal.vue'
@@ -160,7 +160,7 @@
       ConfirmModal,
       ProjectPropsModal,
       ProjectDeleteModal,
-      ConnectionPropsModal,
+      StoragePropsModal,
       PipePropsModal,
       PipeScheduleModal,
       PipeShareModal,

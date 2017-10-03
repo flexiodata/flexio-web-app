@@ -23,13 +23,13 @@
     ></service-list>
 
     <!-- connection props modal -->
-    <connection-props-modal
+    <storage-props-modal
       ref="modal-connection-props"
       :show-steps="false"
       @submit="tryUpdateConnection"
       @hide="show_connection_props_modal = false"
       v-if="show_connection_props_modal"
-    ></connection-props-modal>
+    ></storage-props-modal>
   </div>
 </template>
 
@@ -37,7 +37,7 @@
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import ServiceList from './ServiceList.vue'
-  import ConnectionPropsModal from './ConnectionPropsModal.vue'
+  import StoragePropsModal from './StoragePropsModal.vue'
 
   export default {
     props: {
@@ -76,7 +76,7 @@
     components: {
       ConnectionChooserList,
       ServiceList,
-      ConnectionPropsModal
+      StoragePropsModal
     },
     data() {
       return {
