@@ -567,6 +567,7 @@ class Process extends \Flexio\Object\Base
         if (!isset($stdin))
         {
             $stdin = \Flexio\Object\Stream::create();
+            $stdin->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_STREAM); // default mime type
             $context->setStdin($stdin);
         }
 
@@ -574,6 +575,7 @@ class Process extends \Flexio\Object\Base
         if (!isset($stdout))
         {
             $stdout = \Flexio\Object\Stream::create();
+            $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_STREAM); // default mime type
             $context->setStdout($stdout);
         }
 
@@ -659,6 +661,9 @@ class Process extends \Flexio\Object\Base
             // set the stdin for the next job step to be the output from the stdout
             // of the step just executed
             $context->setStdin($context->getStdout());
+
+            $stdout = \Flexio\Object\Stream::create();
+            $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_STREAM); // default mime type
             $context->setStdout(\Flexio\Object\Stream::create());
 
             // if the step failed, stop the job
