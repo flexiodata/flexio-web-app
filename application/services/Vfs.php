@@ -20,7 +20,51 @@ class Vfs
 {
     public function listObjects(string $path = '') : array
     {
-        
+        $results = [];
+
+        if ($path == '' || $path == '/')
+        {
+            $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+            if (strlen($current_user_eid)==0)
+            {
+                // no user logged in; return empty array
+                return [];
+            }
+
+            // load the object
+            $user = \Flexio\Object\User::load($current_user_eid);
+            if ($user === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+            // get the connections
+            $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+            $connections = $user->getObjects($filter);
+
+            $result = array();
+            foreach ($connections as $c)
+            {
+                if ($c->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+                    continue;
+
+                $info = $c->get();
+                $name = $info['ename'];
+                if (strlen($name) == 0)
+                    $name = $info['eid'];
+                
+                $results[] = array(
+                    'name' => $name,
+                    'path' => '/'.$name,
+                    'size' => null,
+                    'modified' => null,
+                    'type' => 'DIR'
+                );
+            }
+
+            return $results;
+        }
+
+
+        $arr = $this->splitPath($path);
 
 
         $f = array(
@@ -32,22 +76,25 @@ class Vfs
             'root' => 'googledrive'
         );
 
-        // filesystem is always ready
-        return true;
+        return $results;
     }
 
-    public function getConnectionEname(string $path) : string
+    public function splitPath(string $path) : array
     {
         $path = trim($path);
         if (strlen($path) == 0)
-            return '';
+            return [];
 
         $off = ($path[0] == '/' ? 1:0);
 
         $pos = strpos($path, '/', $off);
         if ($pos === false)
-            return substr($path, $off);
-                else
-            return substr($path, $off, $pos-$off);
+        {
+            return [ substr($path, $off), '/' ];
+        }
+         else
+        {
+            return [ substr($path, $off, $pos-$off), substr($path, $pos) ];
+        }
     }
 }
