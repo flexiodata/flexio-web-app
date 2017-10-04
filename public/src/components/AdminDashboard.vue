@@ -1,17 +1,17 @@
 <template>
   <div class="overflow-y-auto">
-    <admin-pipe-summary></admin-pipe-summary>
+    <chart-process-stats title="Pipes Run (Last 30 days)"></chart-process-stats>
     <admin-task-summary></admin-task-summary>
   </div>
 </template>
 
 <script>
-  import AdminPipeSummary from './AdminPipeSummary.vue'
+  import ChartProcessStats from './ChartProcessStats.vue'
   import AdminTaskSummary from './AdminTaskSummary.vue'
 
   export default {
     components: {
-      AdminPipeSummary,
+      ChartProcessStats,
       AdminTaskSummary
     }
   }

@@ -14,6 +14,14 @@
       :options="{
         legend: {
           display: false
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1
+            }
+          }]
         }
       }"
     ></line-chart>
