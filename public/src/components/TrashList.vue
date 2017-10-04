@@ -6,11 +6,11 @@
   </div>
   <empty-item v-else-if="trash_items.length == 0 && filter.length > 0">
     <i slot="icon" class="material-icons">delete</i>
-    <span slot="text">No trash match the filter criteria</span>
+    <span slot="text">No trash items match the filter criteria</span>
   </empty-item>
   <empty-item v-else-if="trash_items.length == 0">
     <i slot="icon" class="material-icons">delete</i>
-    <span slot="text">No trash to show</span>
+    <span slot="text">No trash items to show</span>
   </empty-item>
   <div v-else>
     <trash-item

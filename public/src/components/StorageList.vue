@@ -1,16 +1,16 @@
 <template>
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
-      <spinner size="large" message="Loading connections..."></spinner>
+      <spinner size="large" message="Loading storage..."></spinner>
     </div>
   </div>
   <empty-item v-else-if="connections.length == 0 && filter.length > 0">
     <i slot="icon" class="material-icons">repeat</i>
-    <span slot="text">No connections match the filter criteria</span>
+    <span slot="text">No storage items match the filter criteria</span>
   </empty-item>
   <empty-item v-else-if="connections.length == 0">
     <i slot="icon" class="material-icons">repeat</i>
-    <span slot="text">No connections to show</span>
+    <span slot="text">No storage items to show</span>
   </empty-item>
   <div v-else>
     <connection-header-item v-if="showHeader && false"></connection-header-item>

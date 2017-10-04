@@ -18,7 +18,7 @@
           &times;
         </div>
       </div>
-      <div class="flex flex-row mt1 pt2 bt b--black-10" v-if="has_connection">
+      <div class="flex flex-row mt2 pt2 bt b--black-10" v-if="has_connection">
         <service-icon :type="ctype" class="flex-none dib v-top br2 square-4" style="max-height: 3rem"></service-icon>
         <div class="flex-fill flex flex-column ml2">
           <div class="mid-gray f4 fw6">{{service_name}}</div>
@@ -228,11 +228,11 @@
       },
       title() {
         return this.mode == 'edit'
-          ? 'Edit "' + _.get(this.original_connection, 'name') + '" Connection'
-          : 'New Connection'
+          ? 'Edit "' + _.get(this.original_connection, 'name') + '" Storage'
+          : 'New Storage'
       },
       submit_label() {
-        return this.mode == 'edit' ? 'Save changes' : 'Create connection'
+        return this.mode == 'edit' ? 'Save changes' : 'Create storage'
       },
       active_username() {
         return _.get(this.getActiveUser(), 'user_name', '')
