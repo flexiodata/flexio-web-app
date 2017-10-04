@@ -43,6 +43,10 @@ class Connection extends \Flexio\Object\Base
 
     public static function create(array $properties = null) : \Flexio\Object\Connection
     {
+        // connection info is stored as an encrypted json string, so this need to be encoded; encryption will happen elsewhere
+        if (isset($properties) && isset($properties['connection_info']))
+            $properties['connection_info'] = json_encode($properties['connection_info']);
+
         $object = new static();
         $model = \Flexio\Object\Store::getModel();
         $local_eid = $model->create($object->getType(), $properties);
@@ -57,6 +61,10 @@ class Connection extends \Flexio\Object\Base
     public function set(array $properties) : \Flexio\Object\Connection
     {
         // TODO: add properties check
+
+        // task and schedule are stored as a json string, so these need to be encoded
+        if (isset($properties) && isset($properties['connection_info']))
+            $properties['connection_info'] = json_encode($properties['connection_info']);
 
         $this->clearCache();
         $connection_model = $this->getModel()->connection;
@@ -96,10 +104,11 @@ class Connection extends \Flexio\Object\Base
         $this->clearCache();
 
         // TODO: what values do we want to use to reset the params?
+        // if we want to reset anything within the connection_info, we need
+        // to feed the info into the service, which should be responsible for
+        // returning us valid initializated params
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
-        $properties['password'] = '';
-        $properties['token'] = '';
         $properties['expires'] = \Flexio\System\System::getTimestamp(); // set the expiration to the current time
 
         $connection_model = $this->getModel()->connection;
@@ -195,10 +204,18 @@ class Connection extends \Flexio\Object\Base
             $expires = date("Y-m-d H:i:s", $tokens['expires']);
 
         $properties = array();
-        $properties['token'] = $tokens['access_token'];
-        $properties['refresh_token'] = $tokens['refresh_token'];
         $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
         $properties['expires'] = $expires;
+        $properties['token'] = $tokens['access_token'];
+        $properties['refresh_token'] = $tokens['refresh_token'];
+
+/*
+// TODO: read the connection info; serialize the token and refresh token,
+// then resave the connection info
+        $connection_info = array();
+        $connection_info['token'] = $tokens['access_token'];
+        $connection_info['refresh_token'] = $tokens['refresh_token'];
+*/
         $this->set($properties);
 
         return true;
@@ -233,6 +250,14 @@ class Connection extends \Flexio\Object\Base
                     file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
 
                     $expires = date("Y-m-d H:i:s", $tokens['expires']);
+
+/*
+// TODO: read the connection info; serialize the token and refresh token,
+// then resave the connection info
+        $connection_info = array();
+        $connection_info['token'] = $tokens['access_token'];
+        $connection_info['refresh_token'] = $tokens['refresh_token'];
+*/
 
                     $connection_params = array();
                     $connection_params['token'] = $tokens['access_token'];
@@ -282,15 +307,9 @@ class Connection extends \Flexio\Object\Base
             "ename" : null,
             "name" : null,
             "description" : null,
-            "host" : null,
-            "port" : null,
-            "username" : null,
-            "database" : null,
-            "password" : null,
-            "token" : null,
-            "refresh_token" : null,
             "connection_type" : null,
             "connection_status" : null,
+            "connection_info" : null,
             "expires" : null,
             "owned_by='.\Model::EDGE_OWNED_BY.'" : {
                 "eid" : null,
@@ -319,6 +338,11 @@ class Connection extends \Flexio\Object\Base
         if (!$properties)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // unpack the connection info json
+        $connection_info = @json_decode($properties['connection_info'],true);
+        if ($connection_info !== false)
+            $properties['connection_info'] = $connection_info;
+
         return $properties;
     }
 
@@ -332,12 +356,16 @@ class Connection extends \Flexio\Object\Base
         if (!isset($dbconfig['datastore_dbname']) || strlen($dbconfig['datastore_dbname']) === 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $params = array('host'            => $dbconfig['datastore_host'],
-                        'port'            => $dbconfig['datastore_port'],
-                        'database'        => $dbconfig['datastore_dbname'],
-                        'username'        => $dbconfig['datastore_username'],
-                        'password'        => $dbconfig['datastore_password'],
-                        'connection_type' => \Model::CONNECTION_TYPE_POSTGRES
+        $connection_info = array();
+        $connection_info['host'] = $dbconfig['datastore_host'];
+        $connection_info['port'] = $dbconfig['datastore_port'];
+        $connection_info['database'] = $dbconfig['datastore_dbname'];
+        $connection_info['username'] = $dbconfig['datastore_username'];
+        $connection_info['password'] = $dbconfig['datastore_password'];
+        $connection_info_str = json_encode($connection_info);
+
+        $params = array('connection_type' => \Model::CONNECTION_TYPE_POSTGRES,
+                        'connection_info' => $connection_info_str
                         );
 
         $connection_eid = \Flexio\Object\Store::getModel()->create(\Model::TYPE_CONNECTION, $params);

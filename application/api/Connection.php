@@ -27,14 +27,9 @@ class Connection
                 'ename'             => array('type' => 'identifier', 'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
-                'host'              => array('type' => 'string',  'required' => false),
-                'port'              => array('type' => 'integer', 'required' => false),
-                'username'          => array('type' => 'string',  'required' => false),
-                'password'          => array('type' => 'string',  'required' => false),
-                'token'             => array('type' => 'string',  'required' => false),
-                'database'          => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
-                'connection_status' => array('type' => 'string',  'required' => false)
+                'connection_status' => array('type' => 'string',  'required' => false),
+                'connection_info'   => array('type' => 'string',  'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -109,14 +104,9 @@ class Connection
                 'ename'             => array('type' => 'identifier', 'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
-                'host'              => array('type' => 'string',  'required' => false),
-                'port'              => array('type' => 'integer', 'required' => false),
-                'username'          => array('type' => 'string',  'required' => false),
-                'password'          => array('type' => 'string',  'required' => false),
-                'token'             => array('type' => 'string',  'required' => false),
-                'database'          => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
-                'connection_status' => array('type' => 'string',  'required' => false)
+                'connection_status' => array('type' => 'string',  'required' => false),
+                'connection_info'    => array('type' => 'string', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -281,16 +271,24 @@ class Connection
         // on the object so we can use the full object internally,
         // but not expose these on the api
 
-        // remove tokens and passwords if they are set
-        if (isset($properties['password']))
-            unset($properties['password']);
-        if (isset($properties['token']))
-            unset($properties['token']);
-        if (isset($properties['refresh_token']))
-            unset($properties['refresh_token']);
-        if (isset($properties['expires']))
-            unset($properties['expires']);
+        if (!isset($properties['connection_info']))
+            return $properties;
 
+        if (!is_array($properties['connection_info']))
+            return $properties;
+
+        // remove tokens and passwords if they are set
+        $connection_info = $properties['connection_info'];
+        if (isset($connection_info['password']))
+            unset($connection_info['password']);
+        if (isset($connection_info['token']))
+            unset($connection_info['token']);
+        if (isset($connection_info['refresh_token']))
+            unset($connection_info['refresh_token']);
+        if (isset($connection_info['expires']))
+            unset($connection_info['expires']);
+
+        $properties['connection_info'] = $connection_info;
         return $properties;
     }
 }

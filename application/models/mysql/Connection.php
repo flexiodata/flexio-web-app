@@ -49,24 +49,16 @@ class Connection extends ModelBase
                 'name'              => $params['name'] ?? '',
                 'description'       => $params['description'] ?? '',
                 'display_icon'      => $params['display_icon'] ?? '',
-                'host'              => $params['host'] ?? '',
-                'port'              => $params['port'] ?? 0,
-                'username'          => $params['username'] ?? '',
-                'password'          => $params['password'] ?? '',
-                'token'             => $params['token'] ?? '',
-                'refresh_token'     => $params['refresh_token'] ?? '',
-                'database'          => $params['database'] ?? '',
                 'connection_type'   => $params['connection_type'] ?? '',
                 'connection_status' => $params['connection_status'] ?? \Model::CONNECTION_STATUS_UNAVAILABLE,
+                'connection_info'   => $params['connection_info'] ?? '',
                 'expires'           => $params['expires'] ?? '',
                 'created'           => $timestamp,
                 'updated'           => $timestamp
             );
 
-            $process_arr['username'] = \Flexio\Base\Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
-            $process_arr['password'] = \Flexio\Base\Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
-            $process_arr['token'] = \Flexio\Base\Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
-            $process_arr['refresh_token'] = \Flexio\Base\Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+            // encrypt the connection info
+            $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
 
             // add the properties
             if ($db->insert('tbl_connection', $process_arr) === false)
@@ -110,24 +102,17 @@ class Connection extends ModelBase
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
                 'display_icon'      => array('type' => 'string',  'required' => false),
-                'host'              => array('type' => 'string',  'required' => false),
-                'port'              => array('type' => 'integer', 'required' => false),
-                'username'          => array('type' => 'string',  'required' => false),
-                'password'          => array('type' => 'string',  'required' => false),
-                'token'             => array('type' => 'string',  'required' => false),
-                'refresh_token'     => array('type' => 'string',  'required' => false),
-                'database'          => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false),
+                'connection_info'   => array('type' => 'string',  'required' => false),
                 'expires'           => array('type' => 'string',  'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
-        if (isset($process_arr['username'])) $process_arr['username'] = \Flexio\Base\Util::encrypt($process_arr['username'], $GLOBALS['g_store']->connection_enckey);
-        if (isset($process_arr['password'])) $process_arr['password'] = \Flexio\Base\Util::encrypt($process_arr['password'], $GLOBALS['g_store']->connection_enckey);
-        if (isset($process_arr['token'])) $process_arr['token'] = \Flexio\Base\Util::encrypt($process_arr['token'], $GLOBALS['g_store']->connection_enckey);
-        if (isset($process_arr['refresh_token'])) $process_arr['refresh_token'] = \Flexio\Base\Util::encrypt($process_arr['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+        // encrypt the connection info
+        if (isset($process_arr['connection_info']))
+            $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
 
         // if the connection_status parameter is set, make sure the status is set
         // to a valid value
@@ -187,15 +172,9 @@ class Connection extends ModelBase
                                         tco.name as name,
                                         tco.description as description,
                                         tco.display_icon as display_icon,
-                                        tco.host as host,
-                                        tco.port as port,
-                                        tco.username as username,
-                                        tco.password as password,
-                                        tco.token as token,
-                                        tco.refresh_token as refresh_token,
-                                        tco.database as database,
                                         tco.connection_type as connection_type,
                                         tco.connection_status as connection_status,
+                                        tco.connection_info as connection_info,
                                         tco.expires as expires,
                                         tob.eid_status as eid_status,
                                         tob.created as created,
@@ -213,10 +192,7 @@ class Connection extends ModelBase
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row['username'] = \Flexio\Base\Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
-        $row['password'] = \Flexio\Base\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
-        $row['token'] = \Flexio\Base\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
-        $row['refresh_token'] = \Flexio\Base\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+        $row['connection_info'] = \Flexio\Base\Util::decrypt($row['connection_info'], $GLOBALS['g_store']->connection_enckey);
 
         return array('eid'               => $row['eid'],
                      'eid_type'          => $row['eid_type'],
@@ -224,15 +200,9 @@ class Connection extends ModelBase
                      'name'              => $row['name'],
                      'description'       => $row['description'],
                      'display_icon'      => $row['display_icon'],
-                     'host'              => $row['host'],
-                     'port'              => (int)$row['port'],
-                     'username'          => $row['username'],
-                     'password'          => $row['password'],
-                     'token'             => $row['token'],
-                     'refresh_token'     => $row['refresh_token'],
-                     'database'          => $row['database'],
                      'connection_type'   => $row['connection_type'],
                      'connection_status' => $row['connection_status'],
+                     'connection_info'   => $row['connection_info'],
                      'expires'           => $row['expires'],
                      'eid_status'        => $row['eid_status'],
                      'created'           => \Flexio\Base\Util::formatDate($row['created']),
