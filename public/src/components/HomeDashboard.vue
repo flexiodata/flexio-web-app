@@ -25,21 +25,21 @@
       </div>
     </div>
     <div class="ma4 mt0 bg-white css-dashboard-box">
-      <chart-process-stats title="Pipes Run (Last 30 days)"></chart-process-stats>
+      <stats-pipes-run title="Pipes Run (Last 30 days)"></stats-pipes-run>
     </div>
   </div>
 </template>
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import ChartProcessStats from './ChartProcessStats.vue'
+  import StatsPipesRun from './StatsPipesRun.vue'
   import AccountApiForm from './AccountApiForm.vue'
   import HelpItems from './HelpItems.vue'
   import Btn from './Btn.vue'
 
   export default {
     components: {
-      ChartProcessStats,
+      StatsPipesRun,
       AccountApiForm,
       HelpItems,
       Btn
