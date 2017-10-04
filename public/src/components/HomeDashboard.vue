@@ -13,7 +13,16 @@
       </div>
     </div>
     <div class="ma4 mt0 bg-white css-dashboard-box">
-      <chart-process-stats title="Pipes Run (Last 30 days)"></chart-process-stats>
+      <div class="pa3">
+        <div class="flex flex-row items-start mb3">
+          <div class="flex-fill f3">API Keys</div>
+          <btn btn-md btn-primary class="ttu b" @click="$refs['account-api-form'].createApiKey()">Create API Key</btn>
+        </div>
+        <account-api-form
+          ref="account-api-form"
+          :show-create-button="false"
+        ></account-api-form>
+      </div>
     </div>
     <div class="ma4 mt0 bg-white css-dashboard-box">
       <chart-process-stats title="Pipes Run (Last 30 days)"></chart-process-stats>
@@ -24,12 +33,16 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import ChartProcessStats from './ChartProcessStats.vue'
+  import AccountApiForm from './AccountApiForm.vue'
   import HelpItems from './HelpItems.vue'
+  import Btn from './Btn.vue'
 
   export default {
     components: {
       ChartProcessStats,
-      HelpItems
+      AccountApiForm,
+      HelpItems,
+      Btn
     },
     computed: {
       ...mapState([

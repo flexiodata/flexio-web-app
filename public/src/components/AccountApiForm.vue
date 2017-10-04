@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="pb2 bb b--black-10">
+    <div class="pb2 bb b--black-10" v-if="showCreateButton">
         <btn btn-md btn-primary class="ttu b" @click="createApiKey">Create API Key</btn>
     </div>
     <div>
@@ -47,6 +47,12 @@
   import Btn from './Btn.vue'
 
   export default {
+    props: {
+      'show-create-button': {
+        type: Boolean,
+        default: true
+      }
+    },
     components: {
       EmptyItem,
       Btn
