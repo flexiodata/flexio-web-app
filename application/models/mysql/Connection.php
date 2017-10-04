@@ -55,10 +55,10 @@ class Connection extends ModelBase
                 'password'          => $params['password'] ?? '',
                 'token'             => $params['token'] ?? '',
                 'refresh_token'     => $params['refresh_token'] ?? '',
-                'token_expires'     => $params['token_expires'] ?? '',
                 'database'          => $params['database'] ?? '',
                 'connection_type'   => $params['connection_type'] ?? '',
                 'connection_status' => $params['connection_status'] ?? \Model::CONNECTION_STATUS_UNAVAILABLE,
+                'expires'           => $params['expires'] ?? '',
                 'created'           => $timestamp,
                 'updated'           => $timestamp
             );
@@ -116,10 +116,10 @@ class Connection extends ModelBase
                 'password'          => array('type' => 'string',  'required' => false),
                 'token'             => array('type' => 'string',  'required' => false),
                 'refresh_token'     => array('type' => 'string',  'required' => false),
-                'token_expires'     => array('type' => 'string',  'required' => false),
                 'database'          => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
-                'connection_status' => array('type' => 'string',  'required' => false)
+                'connection_status' => array('type' => 'string',  'required' => false),
+                'expires'           => array('type' => 'string',  'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
@@ -193,10 +193,10 @@ class Connection extends ModelBase
                                         tco.password as password,
                                         tco.token as token,
                                         tco.refresh_token as refresh_token,
-                                        tco.token_expires as token_expires,
                                         tco.database as database,
                                         tco.connection_type as connection_type,
                                         tco.connection_status as connection_status,
+                                        tco.expires as expires,
                                         tob.eid_status as eid_status,
                                         tob.created as created,
                                         tob.updated as updated
@@ -230,10 +230,10 @@ class Connection extends ModelBase
                      'password'          => $row['password'],
                      'token'             => $row['token'],
                      'refresh_token'     => $row['refresh_token'],
-                     'token_expires'     => $row['token_expires'],
                      'database'          => $row['database'],
                      'connection_type'   => $row['connection_type'],
                      'connection_status' => $row['connection_status'],
+                     'expires'           => $row['expires'],
                      'eid_status'        => $row['eid_status'],
                      'created'           => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'           => \Flexio\Base\Util::formatDate($row['updated']));

@@ -100,7 +100,7 @@ class Connection extends \Flexio\Object\Base
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
         $properties['password'] = '';
         $properties['token'] = '';
-        $properties['token_expires'] = \Flexio\System\System::getTimestamp(); // set the expiration to the current time
+        $properties['expires'] = \Flexio\System\System::getTimestamp(); // set the expiration to the current time
 
         $connection_model = $this->getModel()->connection;
         $connection_model->set($this->getEid(), $properties);
@@ -158,7 +158,7 @@ class Connection extends \Flexio\Object\Base
             case 'box':
                 $response = \Flexio\Services\Box::create($auth_params);
                 break;
-            
+
             case 'googledrive':
                 $response = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
@@ -190,15 +190,15 @@ class Connection extends \Flexio\Object\Base
         file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
 
 
-        $token_expires = null;
+        $expires = null;
         if (!is_null($tokens['expires']) && $tokens['expires'] > 0)
-            $token_expires = date("Y-m-d H:i:s", $tokens['expires']);
+            $expires = date("Y-m-d H:i:s", $tokens['expires']);
 
         $properties = array();
         $properties['token'] = $tokens['access_token'];
         $properties['refresh_token'] = $tokens['refresh_token'];
-        $properties['token_expires'] = $token_expires;
         $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+        $properties['expires'] = $expires;
         $this->set($properties);
 
         return true;
@@ -232,13 +232,13 @@ class Connection extends \Flexio\Object\Base
                 {
                     file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
 
-                    $token_expires = date("Y-m-d H:i:s", $tokens['expires']);
+                    $expires = date("Y-m-d H:i:s", $tokens['expires']);
 
                     $connection_params = array();
                     $connection_params['token'] = $tokens['access_token'];
                     if (isset($tokens['refresh_token']))
                         $connection_params['refresh_token'] = $tokens['refresh_token'];
-                    $connection_params['token_expires'] = $token_expires;
+                    $connection_params['expires'] = $expires;
                     $this->getModel()->connection->set($this->getEid(), $connection_params);
                 }
             }
@@ -289,9 +289,9 @@ class Connection extends \Flexio\Object\Base
             "password" : null,
             "token" : null,
             "refresh_token" : null,
-            "token_expires" : null,
             "connection_type" : null,
             "connection_status" : null,
+            "expires" : null,
             "owned_by='.\Model::EDGE_OWNED_BY.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_USER.'",

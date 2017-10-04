@@ -288,8 +288,8 @@ class Connection
             unset($properties['token']);
         if (isset($properties['refresh_token']))
             unset($properties['refresh_token']);
-        if (isset($properties['token_expires']))
-            unset($properties['token_expires']);
+        if (isset($properties['expires']))
+            unset($properties['expires']);
 
         return $properties;
     }

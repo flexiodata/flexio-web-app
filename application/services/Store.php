@@ -119,16 +119,16 @@ class Store
                     $auth_params = array(
                         'access_token' => $connection_info['token'] ?? '',
                         'refresh_token' => $connection_info['refresh_token'] ?? '',
-                        'expires' => $connection_info['token_expires'] ?? 0
+                        'expires' => $connection_info['expires'] ?? 0
                     );
                     $service = \Flexio\Services\Box::create($auth_params);
                 break;
-            
+
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
                     $auth_params = array(
                         'access_token' => $connection_info['token'] ?? '',
                         'refresh_token' => $connection_info['refresh_token'] ?? '',
-                        'expires' => $connection_info['token_expires'] ?? 0
+                        'expires' => $connection_info['expires'] ?? 0
                     );
                     $service = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
@@ -137,7 +137,7 @@ class Store
                     $auth_params = array(
                         'access_token' => $connection_info['token'] ?? '',
                         'refresh_token' => $connection_info['refresh_token'] ?? '',
-                        'expires' => $connection_info['token_expires'] ?? 0
+                        'expires' => $connection_info['expires'] ?? 0
                     );
                     $service = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;

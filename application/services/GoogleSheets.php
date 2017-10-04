@@ -231,7 +231,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         {
             if (!isset($row['name']) || !isset($row['id']) || !isset($row['modifiedTime']))
                 continue;
-            
+
             $spreadsheet = new \Flexio\Services\GoogleSpreadsheet;
             $spreadsheet->access_token = $this->access_token;
             $spreadsheet->title = $row['name'];
@@ -312,7 +312,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        
+
         $result = curl_exec($ch);
         $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -477,8 +477,8 @@ class GoogleSheets implements \Flexio\Services\IConnection
                 $refresh_token = $params['refresh_token'];
 
                 $token = new \OAuth\OAuth2\Token\StdOAuth2Token($access_token, $refresh_token);
-                if (isset($params['token_expires']) && !is_null($params['token_expires']) && $params['token_expires'] > 0)
-                    $token->setEndOfLife($params['token_expires']);
+                if (isset($params['expires']) && !is_null($params['expires']) && $params['expires'] > 0)
+                    $token->setEndOfLife($params['expires']);
 
                 try
                 {
@@ -489,7 +489,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
                 catch (\OAuth\Common\Http\Exception\TokenResponseException $e)
                 {
                     // this happens when offline
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");                    
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");
                 }
 
                 $object = new self;
@@ -686,7 +686,7 @@ class GoogleWorksheet
         {
             $this->rows[] = array(''.$row);
         }
-        
+
         if (count($this->rows) > 500)
             $this->flush();
     }

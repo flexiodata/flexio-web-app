@@ -199,7 +199,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
                 $exception_message .= ". HTTP Code: $http_response_code";
             if (strlen($message) > 0)
                 $exception_message .= ". Google API Error Message: $message";
-            
+
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $exception_message);
         }
     }
@@ -412,8 +412,8 @@ class GoogleDrive implements \Flexio\Services\IConnection
                 $refresh_token = $params['refresh_token'];
 
                 $token = new \OAuth\OAuth2\Token\StdOAuth2Token($access_token, $refresh_token);
-                if (isset($params['token_expires']) && !is_null($params['token_expires']) && $params['token_expires'] > 0)
-                    $token->setEndOfLife($params['token_expires']);
+                if (isset($params['expires']) && !is_null($params['expires']) && $params['expires'] > 0)
+                    $token->setEndOfLife($params['expires']);
 
                 try
                 {
@@ -424,7 +424,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
                 catch (\OAuth\Common\Http\Exception\TokenResponseException $e)
                 {
                     // this happens when offline
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");                    
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");
                 }
 
                 $object = new self;

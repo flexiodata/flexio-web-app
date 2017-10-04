@@ -193,9 +193,9 @@ class Test
             "password" : null,
             "token" : null,
             "refresh_token" : null,
-            "token_expires" : null,
             "connection_type" : null,
             "connection_status" : null,
+            "expires" : null,
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null,
