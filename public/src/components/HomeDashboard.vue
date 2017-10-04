@@ -1,10 +1,10 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
     <div class="ma4">
-      <div class="f2 mb2">Hey, Dave!</div>
-      <div class="f3">Welcome to the Flex.io Dashboard.</div>
-      <div class="mt4">
-        <div class="dib nl2">
+      <div class="f3 f2-ns mb2">Hey, {{active_user_firstname}}!</div>
+      <div class="f4 f3-ns">Welcome to the Flex.io Dashboard.</div>
+      <div class="mt3">
+        <div class="dib nl2 nb2 nr2">
           <help-items
             help-message="I need help getting started with Flex.io..."
             :items="['quick-start', 'api-docs', 'templates', 'help']"
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+  import { mapState, mapGetters } from 'vuex'
   import ChartProcessStats from './ChartProcessStats.vue'
   import HelpItems from './HelpItems.vue'
 
@@ -29,6 +30,23 @@
     components: {
       ChartProcessStats,
       HelpItems
+    },
+    computed: {
+      ...mapState([
+        'active_user_eid'
+      ]),
+      active_user() {
+        var user = this.getActiveUser()
+        return user ? user : {}
+      },
+      active_user_firstname() {
+        return _.get(this.active_user, 'first_name', '')
+      }
+    },
+    methods: {
+      ...mapGetters([
+        'getActiveUser'
+      ])
     }
   }
 </script>
