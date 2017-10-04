@@ -353,6 +353,9 @@ class Api
             case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\Process::getTaskOutputInfo';
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
 
+            // vfs
+            case 'GET /vfs/list'                       : return '\Flexio\Api\Vfs::list';
+
             // streams
             case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
             case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
