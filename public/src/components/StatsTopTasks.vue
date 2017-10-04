@@ -45,7 +45,7 @@
     props: {
       'title': {
         type: String,
-        default: 'Task usage'
+        default: 'Task Usage'
       }
     },
     components: {
