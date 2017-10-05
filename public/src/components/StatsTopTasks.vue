@@ -38,7 +38,6 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
 
   export default {
@@ -52,11 +51,12 @@
       Spinner
     },
     computed: {
-      // mix this into the outer object with the object spread operator
-      ...mapState({
-        'is_fetching': 'stats_processes_fetching',
-        'is_fetched': 'stats_processes_fetched'
-      }),
+      is_fetching() {
+        return _.get(this.$store, 'state.statistics_fetching.tasks', false)
+      },
+      is_fetched() {
+        return _.get(this.$store, 'state.statistics_fetched.tasks', false)
+      },
       store_stats() {
         return _.get(this.$store, 'state.statistics.tasks', [])
       }

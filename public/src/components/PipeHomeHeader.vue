@@ -259,16 +259,6 @@
 <style lang="less">
   @import "../stylesheets/variables.less";
 
-  .css-nav-text {
-    transition: border 0.3s ease-in-out;
-    padding: 3px 2px 2px;
-
-    &:hover,
-    &.css-nav-active {
-      border-bottom: 2px solid @blue;
-    }
-  }
-
   .css-back-button {
     margin-left: -12px;
   }

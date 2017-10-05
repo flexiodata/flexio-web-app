@@ -8,13 +8,13 @@
   <div class="pa3" v-else>
     <div class="f3 ma0 pb2 mb3" v-if="title.length > 0">{{title}}</div>
     <div
-      class=""
+      class="mb4"
       v-for="(item, index) in top_stats_by_pipe"
       :item="item"
       :index="index"
     >
       <div>
-        <h4 class="dib">{{index+1}}. {{item.label}}</h4><span class="silver"> &ndash; {{item.owned_by.first_name}} {{item.owned_by.last_name}} ({{item.owned_by.eid}})</span>
+        <div class="f5 mb3 dib">{{index+1}}. {{item.label}}</div><span class="silver"> &ndash; {{item.owned_by.first_name}} {{item.owned_by.last_name}} ({{item.owned_by.eid}})</span>
       </div>
       <line-chart
         :height="chartHeight"
@@ -39,7 +39,6 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
   import moment from 'moment'
   import Spinner from 'vue-simple-spinner'
   import LineChart from './LineChart.vue'
@@ -83,11 +82,12 @@
       LineChart
     },
     computed: {
-      // mix this into the outer object with the object spread operator
-      ...mapState({
-        'is_fetching': 'stats_processes_fetching',
-        'is_fetched': 'stats_processes_fetched'
-      }),
+      is_fetching() {
+        return _.get(this.$store, 'state.statistics_fetching.processes', false)
+      },
+      is_fetched() {
+        return _.get(this.$store, 'state.statistics_fetched.processes', false)
+      },
       end_date() {
         var end = _.isString(this.endDate) ? moment(this.endDate).utc() : moment().utc()
         return end.endOf('day')

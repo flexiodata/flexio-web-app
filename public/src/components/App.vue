@@ -99,7 +99,7 @@
   @bg-color: #eee;
   @bg-near-white: #f4f4f4;
 
-  .css-nav {
+  .css-nav-item {
     border-color: transparent;
     color: @black-60;
 
