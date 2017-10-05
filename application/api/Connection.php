@@ -106,7 +106,7 @@ class Connection
                 'description'       => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
                 'connection_status' => array('type' => 'string',  'required' => false),
-                'connection_info'    => array('type' => 'string', 'required' => false)
+                'connection_info'    => array('type' => 'object', 'required' => false)
             ))->getParams()) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
