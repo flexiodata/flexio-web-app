@@ -196,8 +196,8 @@ class Connection extends \Flexio\Object\Base
         $service_object = $response;
         $tokens = $service_object->getTokens();
 
-        file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
-
+        // DEBUG:
+        // file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
 
         $expires = null;
         if (!is_null($tokens['expires']) && $tokens['expires'] > 0)
@@ -206,33 +206,27 @@ class Connection extends \Flexio\Object\Base
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
         $properties['expires'] = $expires;
-        $properties['access_token'] = $tokens['access_token'];
-        $properties['refresh_token'] = $tokens['refresh_token'];
+        $properties['connection_info']['access_token'] = $tokens['access_token'];
+        $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
 
-/*
-// TODO: read the connection info; serialize the token and refresh token,
-// then resave the connection info
-        $connection_info = array();
-        $connection_info['access_token'] = $tokens['access_token'];
-        $connection_info['refresh_token'] = $tokens['refresh_token'];
-*/
-        $this->set($properties);
+        $connection_params_to_update = $this->getConnectionPropertiesToUpdate($properties);
+        $this->getModel()->connection->set($this->getEid(), $connection_params_to_update);
 
         return true;
     }
 
     public function getService() // TODO: add function return type
     {
-        // get the connection info
-        $connection_info = $this->get();
+        // get the connection properties
+        $connection_properties = $this->get();
 
         // load the services from the services store
-        $service = \Flexio\Services\Store::load($connection_info);
+        $service = \Flexio\Services\Store::load($connection_properties);
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         // for some of the connections, refresh the token
-        $connection_type = $connection_info['connection_type'] ?? '';
+        $connection_type = $connection_properties['connection_type'] ?? '';
         switch ($connection_type)
         {
             case \Model::CONNECTION_TYPE_BOX:
@@ -244,33 +238,77 @@ class Connection extends \Flexio\Object\Base
                 // in every subsequent call
 
                 $tokens = $service->getTokens();
+                $connection_info = $connection_properties['connection_info'];
 
-                if (isset($tokens['access_token']) && isset($tokens['expires']) && $tokens['access_token'] != $connection_info['access_token'])
+                if (isset($tokens['access_token']) && isset($tokens['expires']) && isset($connection_info) &&
+                    $tokens['access_token'] != $connection_info['access_token'])
                 {
-                    file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
+                    $properties = array();
+                    $properties['expires'] = date("Y-m-d H:i:s", $tokens['expires']);
+                    $properties['connection_info']['access_token'] = $tokens['access_token'];
+                    $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
 
-                    $expires = date("Y-m-d H:i:s", $tokens['expires']);
+                    $connection_params_to_update = $this->getConnectionPropertiesToUpdate($properties);
+                    $this->getModel()->connection->set($this->getEid(), $connection_params_to_update);
 
-/*
-// TODO: read the connection info; serialize the token and refresh token,
-// then resave the connection info
-        $connection_info = array();
-        $connection_info['access_token'] = $tokens['access_token'];
-        $connection_info['refresh_token'] = $tokens['refresh_token'];
-*/
-
-                    $connection_params = array();
-                    $connection_params['access_token'] = $tokens['access_token'];
-                    if (isset($tokens['refresh_token']))
-                        $connection_params['refresh_token'] = $tokens['refresh_token'];
-                    $connection_params['expires'] = $expires;
-                    $this->getModel()->connection->set($this->getEid(), $connection_params);
+                    // DEBUG:
+                    // file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
                 }
             }
             break;
         }
 
         return $service;
+    }
+
+    private function getConnectionPropertiesToUpdate(array $properties) : array
+    {
+        // takes a list of connection properties (including info) and returns
+        // the key/values to set in the database; this function is aimed to
+        // make it easier to set specific connection properties and specific
+        // keys within the connection info
+
+        // get a current list of connection properties
+        $connection_properties = $this->get();
+
+        // iterate through the connection properties, and if they are specified
+        // then include them in the connection properties to update
+        $connection_properties_to_update = array();
+        foreach ($properties as $key => $value)
+        {
+            // if we don't have a connection property, move on
+            if (array_key_exists($key, $connection_properties) === false)
+                continue;
+
+            if ($key !== 'connection_info')
+            {
+                // if we're not on the the connection object, simply update the value
+                $connection_properties_to_update[$key] = $value;
+            }
+             else
+            {
+                // if we're changing the connection_info, update the specific
+                // values in this that are specified
+
+                if (!is_array($value))
+                    continue;
+
+                $connection_info = $value;
+                $connection_info_updated = $value; // initialize with entire set of values since we get one write for the whole payload
+
+                foreach ($connection_info as $connection_info_key => $connection_info_value)
+                {
+                    if (array_key_exists($connection_info_key, $connnection_info) === false)
+                        continue;
+
+                    $connection_info_updated[$key] = $connection_info_value;
+                }
+
+                $connection_properties_to_update[$key] = $connection_info_updated;
+            }
+        }
+
+        return $connection_properties_to_update;
     }
 
     private function isCached() : bool
