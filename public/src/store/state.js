@@ -1,5 +1,6 @@
 export default () => {
   return {
+    // TODO: move all of these into `objects_fetched` and `objects_fetching` objects?
     user_fetched: false,
     user_fetching: false,
     projects_fetched: false,
