@@ -39,7 +39,6 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
   import moment from 'moment'
   import Spinner from 'vue-simple-spinner'
   import LineChart from './LineChart.vue'
@@ -83,11 +82,12 @@
       LineChart
     },
     computed: {
-      // mix this into the outer object with the object spread operator
-      ...mapState({
-        'is_fetching': 'stats_processes_fetching',
-        'is_fetched': 'stats_processes_fetched'
-      }),
+      is_fetching() {
+        return _.get(this.$store, 'state.statistics_fetching.processes', false)
+      },
+      is_fetched() {
+        return _.get(this.$store, 'state.statistics_fetched.processes', false)
+      },
       end_date() {
         var end = _.isString(this.endDate) ? moment(this.endDate).utc() : moment().utc()
         return end.endOf('day')

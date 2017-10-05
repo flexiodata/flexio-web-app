@@ -11,8 +11,8 @@ export default () => {
     trash_fetched: false,
     trash_fetching: false,
 
-    stats_processes_fetched: false,
-    stats_processes_fetching: false,
+    statistics_fetched: {},
+    statistics_fetching: {},
 
     active_user_eid: '',
     active_document_eid: '',
