@@ -52,7 +52,7 @@ try
     $sql = <<<EOT
         ALTER TABLE tbl_connection RENAME COLUMN token_expires TO expires;
 EOT;
-    $db->exec($sql);
+$db->exec($sql);
 
 
     // STEP 2: add the new connection info column
@@ -100,6 +100,8 @@ function copyConnectionInfo($db)
     $objects = array();
     while ($result && ($row = $result->fetch()))
     {
+        $eid = $row['eid'];
+
         // unencrypt the parameters
         $connection_info = array();
         $connection_info['host'] = $row['host'];
@@ -117,8 +119,6 @@ function copyConnectionInfo($db)
         // set the connection_info
         $update = array();
         $update['connection_info'] = $connection_str_encrypted;
-        $update['created'] = $row['created'];
-        $update['updated'] = $row['updated'];
         $db->update('tbl_connection', $update, 'eid = ' . $db->quote($eid));
     }
 }
