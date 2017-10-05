@@ -281,8 +281,8 @@ class Connection
         $connection_info = $properties['connection_info'];
         if (isset($connection_info['password']))
             unset($connection_info['password']);
-        if (isset($connection_info['token']))
-            unset($connection_info['token']);
+        if (isset($connection_info['access_token']))
+            unset($connection_info['access_token']);
         if (isset($connection_info['refresh_token']))
             unset($connection_info['refresh_token']);
         if (isset($connection_info['expires']))

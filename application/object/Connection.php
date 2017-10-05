@@ -206,14 +206,14 @@ class Connection extends \Flexio\Object\Base
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
         $properties['expires'] = $expires;
-        $properties['token'] = $tokens['access_token'];
+        $properties['access_token'] = $tokens['access_token'];
         $properties['refresh_token'] = $tokens['refresh_token'];
 
 /*
 // TODO: read the connection info; serialize the token and refresh token,
 // then resave the connection info
         $connection_info = array();
-        $connection_info['token'] = $tokens['access_token'];
+        $connection_info['access_token'] = $tokens['access_token'];
         $connection_info['refresh_token'] = $tokens['refresh_token'];
 */
         $this->set($properties);
@@ -245,7 +245,7 @@ class Connection extends \Flexio\Object\Base
 
                 $tokens = $service->getTokens();
 
-                if (isset($tokens['access_token']) && isset($tokens['expires']) && $tokens['access_token'] != $connection_info['token'])
+                if (isset($tokens['access_token']) && isset($tokens['expires']) && $tokens['access_token'] != $connection_info['access_token'])
                 {
                     file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
 
@@ -255,12 +255,12 @@ class Connection extends \Flexio\Object\Base
 // TODO: read the connection info; serialize the token and refresh token,
 // then resave the connection info
         $connection_info = array();
-        $connection_info['token'] = $tokens['access_token'];
+        $connection_info['access_token'] = $tokens['access_token'];
         $connection_info['refresh_token'] = $tokens['refresh_token'];
 */
 
                     $connection_params = array();
-                    $connection_params['token'] = $tokens['access_token'];
+                    $connection_params['access_token'] = $tokens['access_token'];
                     if (isset($tokens['refresh_token']))
                         $connection_params['refresh_token'] = $tokens['refresh_token'];
                     $connection_params['expires'] = $expires;

@@ -44,10 +44,10 @@ class PipelineDeals implements \Flexio\Services\IConnection
     {
         $this->close();
 
-        if (!isset($params['token']))
+        if (!isset($params['access_token']))
             return false;
 
-        $apikey = $params['token'];
+        $apikey = $params['access_token'];
         $this->initialize($apikey);
         return $this->isOk();
     }

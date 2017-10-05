@@ -52,12 +52,12 @@ class Twilio implements \Flexio\Services\IConnection
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'key'   => array('type' => 'string', 'required' => true),
-                'token' => array('type' => 'string', 'required' => true)
+                'access_token' => array('type' => 'string', 'required' => true)
             ))->getParams()) === false)
             return false;
 
         $apikey = $params['key'];
-        $apitoken = $params['token'];
+        $apitoken = $params['access_token'];
         $this->initialize($apikey, $apitoken);
         return $this->isOk();
     }

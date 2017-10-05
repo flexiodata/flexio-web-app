@@ -110,14 +110,14 @@ class Store
 
             case \Model::CONNECTION_TYPE_DROPBOX:
                     $auth_params = array(
-                        'access_token' => $connection_info['token'] ?? ''
+                        'access_token' => $connection_info['access_token'] ?? ''
                     );
                     $service = \Flexio\Services\Dropbox::create($auth_params);
                 break;
 
             case \Model::CONNECTION_TYPE_BOX:
                     $auth_params = array(
-                        'access_token' => $connection_info['token'] ?? '',
+                        'access_token' => $connection_info['access_token'] ?? '',
                         'refresh_token' => $connection_info['refresh_token'] ?? '',
                         'expires' => $connection_info['expires'] ?? 0
                     );
@@ -126,7 +126,7 @@ class Store
 
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
                     $auth_params = array(
-                        'access_token' => $connection_info['token'] ?? '',
+                        'access_token' => $connection_info['access_token'] ?? '',
                         'refresh_token' => $connection_info['refresh_token'] ?? '',
                         'expires' => $connection_info['expires'] ?? 0
                     );
@@ -135,7 +135,7 @@ class Store
 
             case \Model::CONNECTION_TYPE_GOOGLESHEETS:
                     $auth_params = array(
-                        'access_token' => $connection_info['token'] ?? '',
+                        'access_token' => $connection_info['access_token'] ?? '',
                         'refresh_token' => $connection_info['refresh_token'] ?? '',
                         'expires' => $connection_info['expires'] ?? 0
                     );
@@ -164,7 +164,7 @@ class Store
 
             case \Model::CONNECTION_TYPE_PIPELINEDEALS:
                    $auth_params = array(
-                        'token' => $connection_info['token'] ?? ''
+                        'access_token' => $connection_info['access_token'] ?? ''
                     );
                     $service = \Flexio\Services\PipelineDeals::create($auth_params);
                 break;
@@ -180,7 +180,7 @@ class Store
             case \Model::CONNECTION_TYPE_TWILIO:
                     $auth_params = array(
                         'key' => $connection_info['username'] ?? '',
-                        'token' => $connection_info['token'] ?? ''
+                        'access_token' => $connection_info['access_token'] ?? ''
                     );
                     $service = \Flexio\Services\Twilio::create($auth_params);
                 break;

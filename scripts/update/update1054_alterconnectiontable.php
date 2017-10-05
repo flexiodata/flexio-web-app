@@ -122,7 +122,7 @@ function copyConnectionInfo($db)
         $connection_info['port'] = $row['port'];
         $connection_info['username'] = \Flexio\Base\Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
         $connection_info['password'] = \Flexio\Base\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
-        $connection_info['token'] = \Flexio\Base\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
+        $connection_info['access_token'] = \Flexio\Base\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
         $connection_info['refresh_token'] = \Flexio\Base\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
         $connection_info['database'] = $row['database'];
 
