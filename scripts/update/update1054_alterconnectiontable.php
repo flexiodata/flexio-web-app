@@ -84,6 +84,7 @@ function copyConnectionInfo($db)
     // STEP 1: get a list of the existing connection info
     $query_sql = "select
                       eid,
+                      connection_type,
                       host,
                       port,
                       username,
@@ -102,15 +103,8 @@ function copyConnectionInfo($db)
     {
         $eid = $row['eid'];
 
-        // unencrypt the parameters
-        $connection_info = array();
-        $connection_info['host'] = $row['host'];
-        $connection_info['port'] = $row['port'];
-        $connection_info['username'] = \Flexio\Base\Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
-        $connection_info['password'] = \Flexio\Base\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
-        $connection_info['access_token'] = \Flexio\Base\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
-        $connection_info['refresh_token'] = \Flexio\Base\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
-        $connection_info['database'] = $row['database'];
+        // get the relevant connection parameters to save
+        $connection_info = getConnectionInfo($row);
 
         // stringify and encrypt the connection info
         $connection_str = json_encode($connection_info);
@@ -122,3 +116,79 @@ function copyConnectionInfo($db)
         $db->update('tbl_connection', $update, 'eid = ' . $db->quote($eid));
     }
 }
+
+
+function getConnectionInfo($row) : array
+{
+    // unencrypt the parameters
+    $connection_type = $row['connection_type'];
+    $host = $row['host'];
+    $port = $row['port'];
+    $database = $row['database'];
+    $username = \Flexio\Base\Util::decrypt($row['username'], $GLOBALS['g_store']->connection_enckey);
+    $password = \Flexio\Base\Util::decrypt($row['password'], $GLOBALS['g_store']->connection_enckey);
+    $access_token = \Flexio\Base\Util::decrypt($row['token'], $GLOBALS['g_store']->connection_enckey);
+    $refresh_token = \Flexio\Base\Util::decrypt($row['refresh_token'], $GLOBALS['g_store']->connection_enckey);
+
+    switch ($connection_type)
+    {
+        default:
+            return array();
+
+        case \Model::CONNECTION_TYPE_FTP:
+        case \Model::CONNECTION_TYPE_SFTP:
+        case \Model::CONNECTION_TYPE_SOCRATA:
+           return array(
+                'host' => $host ?? '',
+                'port' => $port ?? '',
+                'username' => $username ?? '',
+                'password' => $password ?? ''
+            );
+
+        case \Model::CONNECTION_TYPE_MYSQL:
+        case \Model::CONNECTION_TYPE_POSTGRES:
+        case \Model::CONNECTION_TYPE_ELASTICSEARCH:
+            return array(
+                'host' => $host ?? '',
+                'port' => $port ?? '',
+                'username' => $username ?? '',
+                'password' => $password ?? '',
+                'database' => $database ?? ''
+            );
+
+        case \Model::CONNECTION_TYPE_DROPBOX:
+        case \Model::CONNECTION_TYPE_BOX:
+        case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
+        case \Model::CONNECTION_TYPE_GOOGLESHEETS:
+            return array(
+                'access_token' => $access_token ?? '',
+                'refresh_token' => $refresh_token ?? '',
+            );
+
+        case \Model::CONNECTION_TYPE_AMAZONS3:
+            return array(
+                'host' => $host ?? '',
+                'username' => $username ?? '',
+                'password' => $password ?? '',
+                'database' => $database ?? ''
+            );
+
+        case \Model::CONNECTION_TYPE_PIPELINEDEALS:
+            return array(
+                'access_token' => $access_token ?? ''
+            );
+
+        case \Model::CONNECTION_TYPE_MAILJET:
+            return array(
+                'username' => $username ?? '',
+                'password' => $password ?? ''
+            );
+
+        case \Model::CONNECTION_TYPE_TWILIO:
+            return array(
+                'username' => $username ?? '',
+                'access_token' => $access_token ?? ''
+            );
+    }
+}
+
