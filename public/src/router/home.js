@@ -10,7 +10,7 @@ import {
 import * as types from '../store/mutation-types'
 import store from '../store'
 import AppHome from '../components/AppHome.vue'
-import HomeDashboard from '../components/HomeDashboard.vue'
+import AppDashboard from '../components/AppDashboard.vue'
 import PipeManager from '../components/PipeManager.vue'
 import MemberManager from '../components/MemberManager.vue'
 import StorageManager from '../components/StorageManager.vue'
@@ -36,7 +36,7 @@ export const home = {
     {
       path: 'dashboard',
       name: ROUTE_HOMEDASHBOARD,
-      component: HomeDashboard
+      component: AppDashboard
     },
     {
       path: 'pipes',
