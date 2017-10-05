@@ -18,13 +18,13 @@ namespace Flexio\Services;
 
 class Store
 {
-    public static function load(array $connection_info)
+    public static function load(array $connection_properties)
     {
         global $g_store;
 
         // create a connection hash for storing/retrieving caches of
         // the service
-        $connection_hash = self::createConnectionHash($connection_info);
+        $connection_hash = self::createConnectionHash($connection_properties);
 
         // if we have a cached connection, use it
         if ($connection_hash !== false && isset($g_store->connections[$connection_hash]))
@@ -35,7 +35,12 @@ class Store
         }
 
         // get the connection type and the corresponding service
-        $connection_type = $connection_info['connection_type'] ?? '';
+        $connection_type = $connection_properties['connection_type'] ?? '';
+        $connection_info = $connection_properties['connection_info'] ?? false;
+
+        if ($connection_info === false)
+            return false;
+
         switch ($connection_type)
         {
             default:

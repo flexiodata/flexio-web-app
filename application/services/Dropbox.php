@@ -154,7 +154,7 @@ class Dropbox implements \Flexio\Services\IConnection
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
         $filename = rawurlencode($path);
-        
+
         // upload/write the file
         $ch = curl_init();
 
@@ -179,7 +179,7 @@ class Dropbox implements \Flexio\Services\IConnection
 
             if ($buf === false)
                 break;
-            
+
             $buflen = strlen($buf);
 
             if ($buflen > 0)
@@ -287,7 +287,6 @@ class Dropbox implements \Flexio\Services\IConnection
         // initialize process, the following will return a string with the
         // authentication url; when initialization is complete the following
         // will return an object with a serialized access token
-
 
         // STEP 1: if we have an access token, create an object
         // from the access token and return it
