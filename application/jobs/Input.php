@@ -43,9 +43,6 @@ class Input extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         $params = $job_definition['params'];
 
-        // stdin input job is a placeholder -- just pass on all streams
-        if (isset($params['connection']) && ($params['connection'] == 'stdin' || $params['connection'] == 'email'))
-            return;
 
         // make fully qualified path, if necessary
         $location = $params['location'] ?? '';
