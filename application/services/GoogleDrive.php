@@ -429,7 +429,7 @@ class GoogleDrive implements \Flexio\Services\IConnection
 
                 $object = new self;
                 $object->access_token = $token->getAccessToken();
-                $object->refresh_token = $refresh_token;
+                $object->refresh_token = $token->getRefreshToken();
                 $object->expires = $token->getEndOfLife();
                 $object->is_ok = true;
                 if (is_null($object->refresh_token)) $object->refresh_token = '';

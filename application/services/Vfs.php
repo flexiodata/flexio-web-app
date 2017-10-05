@@ -22,9 +22,10 @@ class Vfs
     {
         $results = [];
 
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+
         if ($path == '' || $path == '/')
         {
-            $current_user_eid = \Flexio\System\System::getCurrentUserEid();
             if (strlen($current_user_eid)==0)
             {
                 // no user logged in; return empty array
@@ -56,7 +57,8 @@ class Vfs
                     'path' => '/'.$name,
                     'size' => null,
                     'modified' => null,
-                    'type' => 'DIR'
+                    'type' => 'DIR',
+                    'is_dir' => true
                 );
             }
 
@@ -65,19 +67,70 @@ class Vfs
 
 
         $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+        
 
+        // load the connection
+        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        if ($connection === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $f = array(
-            'name' => $file,
-            'path' => $full_path,
-            'size' => null,
-            'modified' => null,
-            'is_dir' => ($row['mimeType'] == 'application/vnd.google-apps.folder' ? true : false),
-            'root' => 'googledrive'
-        );
+        // check the rights on the connection
+        if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        $connection_info = $connection->get();
+
+        $service = \Flexio\Services\Store::load($connection_info);
+        if ($service === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        $results = $service->listObjects($rpath);
+        if (is_array($results))
+        {
+            foreach ($results as &$v)
+            {
+                $v['type'] = ($v['is_dir'] ? 'DIR' : 'FILE');
+                $v['path'] = '/' . $connection_identifier . $v['path'];    
+            }
+            unset($v);
+        }
         return $results;
     }
+
+
+    public function read($path, callable $callback)
+    {
+        // path can either be an array [ 'path' => value ] or a string containing the path
+        if (is_array($path))
+        {
+            $path = $path['path'] ?? '';
+        }
+
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+        
+        // load the connection
+        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        if ($connection === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the connection
+        if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $connection_info = $connection->get();
+        $service = \Flexio\Services\Store::load($connection_info);
+        if ($service === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service->read([ 'path' => $rpath ], $callback);
+    }
+
 
     public function splitPath(string $path) : array
     {
