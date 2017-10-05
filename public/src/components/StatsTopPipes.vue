@@ -8,13 +8,13 @@
   <div class="pa3" v-else>
     <div class="f3 ma0 pb2 mb3" v-if="title.length > 0">{{title}}</div>
     <div
-      class=""
+      class="mb4"
       v-for="(item, index) in top_stats_by_pipe"
       :item="item"
       :index="index"
     >
       <div>
-        <h4 class="dib">{{index+1}}. {{item.label}}</h4><span class="silver"> &ndash; {{item.owned_by.first_name}} {{item.owned_by.last_name}} ({{item.owned_by.eid}})</span>
+        <div class="f5 mb3 dib">{{index+1}}. {{item.label}}</div><span class="silver"> &ndash; {{item.owned_by.first_name}} {{item.owned_by.last_name}} ({{item.owned_by.eid}})</span>
       </div>
       <line-chart
         :height="chartHeight"
