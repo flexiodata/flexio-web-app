@@ -241,9 +241,6 @@ class Output extends \Flexio\Jobs\Base
         // route the request based on the connection type
         switch ($connection_type)
         {
-            case \Model::CONNECTION_TYPE_DOWNLOAD:
-                return $this->runDownloadExport($instream, $service, $output_info);
-
             case \Model::CONNECTION_TYPE_MYSQL:
             case \Model::CONNECTION_TYPE_POSTGRES:
                 $output_info['name'] = str_replace('/','_', $output_info['name']);
@@ -272,11 +269,6 @@ class Output extends \Flexio\Jobs\Base
             case \Model::CONNECTION_TYPE_EMAIL:
                 return $this->runEmailExport($instream, $service, $output_info);
         }
-    }
-
-    private function runDownloadExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
-    {
-        // note: don't do anything; the output stream was already passed on
     }
 
     private function runDatabaseExport(\Flexio\Object\Stream$instream, $service, array $output_info) // TODO: add parameter type

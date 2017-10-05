@@ -368,26 +368,6 @@ class Test
         TestCheck::assertString('H.11', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::CONNECTION_TYPE_UPLOAD;
-        $expected = 'upload';
-        TestCheck::assertString('H.12', 'Connection type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::CONNECTION_TYPE_DOWNLOAD;
-        $expected = 'download';
-        TestCheck::assertString('H.13', 'Connection type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::CONNECTION_TYPE_STDIN;
-        $expected = 'stdin';
-        TestCheck::assertString('H.14', 'Connection type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::CONNECTION_TYPE_STDOUT;
-        $expected = 'stdout';
-        TestCheck::assertString('H.15', 'Connection type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_EMAIL;
         $expected = 'email';
         TestCheck::assertString('H.16', 'Connection type constant',  $actual, $expected, $results);
