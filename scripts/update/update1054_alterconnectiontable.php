@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2017-06-02
+ * Created:  2017-10-04
  *
  * @package flexio
  * @subpackage Database_Update
@@ -64,22 +64,6 @@ $db->exec($sql);
 
     // STEP 3: copy the existing connection info to the new connection_info column
     copyConnectionInfo($db);
-
-
-    // STEP 4: drop the existing connection_info columns
-/*
-    $sql = <<<EOT
-        ALTER TABLE tbl_connection
-            DROP COLUMN host,
-            DROP COLUMN port,
-            DROP COLUMN username,
-            DROP COLUMN password,
-            DROP COLUMN token,
-            DROP COLUMN refresh_token,
-            DROP COLUMN database;
-EOT;
-$db->exec($sql);
-*/
 }
 catch(\Exception $e)
 {
