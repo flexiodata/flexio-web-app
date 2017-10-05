@@ -325,6 +325,10 @@ class Identifier
             case 'passwords':
             case 'token':
             case 'tokens':
+            case 'access_token':
+            case 'access_tokens':
+            case 'refresh_token':
+            case 'refresh_tokens':
             case 'refresh':
             case 'auth':
             case 'authorize':
