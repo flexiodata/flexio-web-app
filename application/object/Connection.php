@@ -210,7 +210,7 @@ class Connection extends \Flexio\Object\Base
         $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
 
         $connection_params_to_update = $this->getConnectionPropertiesToUpdate($properties);
-        $this->getModel()->connection->set($this->getEid(), $connection_params_to_update);
+        $this->set($connection_params_to_update);
 
         return true;
     }
@@ -249,7 +249,7 @@ class Connection extends \Flexio\Object\Base
                     $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
 
                     $connection_params_to_update = $this->getConnectionPropertiesToUpdate($properties);
-                    $this->getModel()->connection->set($this->getEid(), $connection_params_to_update);
+                    $this->set($connection_params_to_update);
 
                     // DEBUG:
                     // file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
@@ -298,10 +298,10 @@ class Connection extends \Flexio\Object\Base
 
                 foreach ($connection_info as $connection_info_key => $connection_info_value)
                 {
-                    if (array_key_exists($connection_info_key, $connnection_info) === false)
+                    if (array_key_exists($connection_info_key, $connection_info) === false)
                         continue;
 
-                    $connection_info_updated[$key] = $connection_info_value;
+                    $connection_info_updated[$connection_info_key] = $connection_info_value;
                 }
 
                 $connection_properties_to_update[$key] = $connection_info_updated;
