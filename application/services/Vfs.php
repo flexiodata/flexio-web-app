@@ -131,6 +131,36 @@ class Vfs
         return $service->read([ 'path' => $rpath ], $callback);
     }
 
+    public function write($path, callable $callback)
+    {
+        // path can either be an array [ 'path' => value ] or a string containing the path
+        if (is_array($path))
+        {
+            $path = $path['path'] ?? '';
+        }
+
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+        
+        // load the connection
+        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        if ($connection === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the connection
+        if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $connection_info = $connection->get();
+        $service = \Flexio\Services\Store::load($connection_info);
+        if ($service === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service->write([ 'path' => $rpath ], $callback);
+    }
 
     public function splitPath(string $path) : array
     {
