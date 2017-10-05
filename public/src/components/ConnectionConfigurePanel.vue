@@ -98,12 +98,12 @@
     },
     data() {
       var attrs = {
-        token: _.get(this, 'connection.token', ''),
-        host: this.mode == 'edit' ? _.get(this, 'connection.host', '') : this.getDefaultHost(),
-        port: this.mode == 'edit' ? _.get(this, 'connection.port', '') : this.getDefaultPort(),
-        username: _.get(this, 'connection.username', ''),
-        password: _.get(this, 'connection.password', ''),
-        database: _.get(this, 'connection.database', '')
+        token: _.get(this.connection, 'connection_info.token', ''),
+        host: this.mode == 'edit' ? _.get(this.connection, 'connection_info.host', '') : this.getDefaultHost(),
+        port: this.mode == 'edit' ? _.get(this.connection, 'connection_info.port', '') : this.getDefaultPort(),
+        username: _.get(this.connection, 'connection_info.username', ''),
+        password: _.get(this.connection, 'connection_info.password', ''),
+        database: _.get(this.connection, 'connection_info.database', '')
       }
 
       switch (this.getConnectionType())
@@ -127,12 +127,12 @@
       }
     },
     watch: {
-      'info.token'()    { this.$emit('change', this.info) },
-      'info.host'()     { this.$emit('change', this.info) },
-      'info.port'()     { this.$emit('change', this.info) },
-      'info.username'() { this.$emit('change', this.info) },
-      'info.password'() { this.$emit('change', this.info) },
-      'info.database'() { this.$emit('change', this.info) }
+      'info.token'()    { this.$emit('change', { connection_info: this.info }) },
+      'info.host'()     { this.$emit('change', { connection_info: this.info }) },
+      'info.port'()     { this.$emit('change', { connection_info: this.info }) },
+      'info.username'() { this.$emit('change', { connection_info: this.info }) },
+      'info.password'() { this.$emit('change', { connection_info: this.info }) },
+      'info.database'() { this.$emit('change', { connection_info: this.info }) }
     },
     computed: {
       ctype() {

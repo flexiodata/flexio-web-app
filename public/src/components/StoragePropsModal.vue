@@ -157,6 +157,7 @@
       name: '',
       description: '',
       connection_type: '',
+      connection_info: {},
       rights: defaultRights()
     }
   }
@@ -310,8 +311,8 @@
           }
         })
       },
-      updateConnection(info) {
-        this.connection = _.assign({}, this.connection, info)
+      updateConnection(attrs) {
+        this.connection = _.assign({}, this.connection, attrs)
       },
       tryDisconnect(attrs) {
         var me = this
@@ -332,7 +333,7 @@
       tryTest(attrs) {
         var me = this
         var eid = attrs.eid
-        attrs = _.pick(attrs, ['name', 'ename', 'description', 'token', 'host', 'port', 'username', 'password', 'database'])
+        attrs = _.pick(attrs, ['name', 'ename', 'description', 'connection_info'])
 
         // update the connection
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
@@ -342,7 +343,7 @@
             me.$store.dispatch('testConnection', { eid, attrs }).then(response => {
               if (response.ok)
               {
-                me.updateConnection(_.omit(response.body, ['name', 'ename', 'description', 'token', 'host', 'port', 'username', 'password', 'database']))
+                me.updateConnection(_.omit(response.body, ['name', 'ename', 'description', 'connection_info']))
               }
                else
               {
