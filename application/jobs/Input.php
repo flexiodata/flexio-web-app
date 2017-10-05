@@ -109,28 +109,21 @@ class Input extends \Flexio\Jobs\Base
         return $resolved_items;
     }
 
-    private function runImport(array $connection_info, array $file_info)
+    private function runImport($connection_info, array $file_info) // connection_info is null for vfs
     {
         $connection_eid = $connection_info['eid'] ?? false;
         $connection_type = $connection_info['connection_type'] ?? false;
 
-        // handle cases where data is already imported; if the input
-        // connection is the default connection, then the data is internal, so
-        // just set the output pointer to the existing location and we're done
-        // TODO: this is experimental
-        if ($connection_eid === \Flexio\Object\Connection::getDatastoreConnectionEid())
-        {
-            $stream_properties = $file_info;
-            $outstream = \Flexio\Object\Stream::create($stream_properties);
-            $this->getContext()->addStream($outstream);
-            $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
-            return;
-        }
-
         // load the service
-        $service = \Flexio\Services\Store::load($connection_info);
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        if ($connection_info)
+        {
+            $service = \Flexio\Services\Store::load($connection_info);
+        }
+         else
+        {
+            return $this->runRemoteFileImport(null, $file_info);
+        }
 
         // route the request based on the connection type
         switch ($connection_type)
@@ -189,6 +182,9 @@ class Input extends \Flexio\Jobs\Base
 
     private function runDatabaseImport($service, array $file_info) // TODO: set paramater type
     {
+        if (!$service)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
         // get the input
         $path = $file_info['path'];
         $structure = $service->describeTable($path);
@@ -228,11 +224,17 @@ class Input extends \Flexio\Jobs\Base
 
     private function runElasticSearchImport($service, array $file_info) // TODO: set paramater type
     {
+        if (!$service)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
         // TODO: implement
     }
 
     private function runApiTableImport($service, array $file_info) // TODO: set paramater type
     {
+        if (!$service)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
         // get the input
         $path = $file_info['path'];
         $structure = $service->describeTable($path);
@@ -262,6 +264,11 @@ class Input extends \Flexio\Jobs\Base
 
     private function runRemoteFileImport($service, array $file_info) // TODO: set paramater type
     {
+        if (!$service)
+        {
+            $service = new \Flexio\Services\Vfs();
+        }
+
         // get the input path
         $path = $file_info['path'];
         $stream_properties = $file_info;
@@ -409,7 +416,7 @@ class Input extends \Flexio\Jobs\Base
         return null;
     }
 
-    private function getMatchingFileInfo(array $connection_info, array $item) : array
+    private function getMatchingFileInfo($connection_info, array $item) : array   // connection_info is null for vfs
     {
         $matching_paths = array();
 
@@ -448,35 +455,31 @@ class Input extends \Flexio\Jobs\Base
             return $matching_paths;
         }
 
-        // get the path and the name part of the path; for now, assume that any wildcard
-        // is only in the name part (i.e., don't allow directory searches); TODO: expand
-        // to allow directory searches
+
         $directory = dirname($path);
         $pattern = basename($path);
 
-        // get the service; TODO: error if we can't do it? similar to not getting the path?
-        $service = \Flexio\Services\Store::load($connection_info);
-        if ($service === false)
-            return array();
-
-        // TODO: check for straight-up existence of full path; if it exists, we have a single
-        // item, so simply return that
-
-/*
-// TODO: handle renames for direct paths that don't have a name
-
-        // if the name isn't specified, use the path name
-        if (!isset($file_info['name']))
+        if (is_null($connection_info))
         {
-            $file_info['name'] = basename($file_info['path']);
+            $vfs = new \Flexio\Services\Vfs();
 
-            // sanitize filename - remove bad characters from beginning and end; convert them to dashes in the middle
-            $file_info['name'] = preg_replace("/^([^\w\s\d\-_~,;\[\]\(\).])/", '', $file_info['name']);
-            $file_info['name'] = preg_replace("/([^\w\s\d\-_~,;\[\]\(\).])/", '-', $file_info['name']);
-            $file_info['name'] = preg_replace("/([^\w\s\d\-_~,;\[\]\(\).])$/", '', $file_info['name']);
+            $files_in_directory = $vfs->listObjects($directory);
         }
-*/
-        $files_in_directory = $service->listObjects($directory);
+         else
+        {
+            // get the path and the name part of the path; for now, assume that any wildcard
+            // is only in the name part (i.e., don't allow directory searches); TODO: expand
+            // to allow directory searches
+
+            // get the service; TODO: error if we can't do it? similar to not getting the path?
+            $service = \Flexio\Services\Store::load($connection_info);
+            if ($service === false)
+                return array();
+
+            $files_in_directory = $service->listObjects($directory);
+        }
+
+
         foreach ($files_in_directory as $file_item_info)
         {
             $is_dir = $file_item_info['is_dir'];

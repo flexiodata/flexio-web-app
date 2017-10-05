@@ -100,8 +100,16 @@ class Vfs
     }
 
 
-    public function read(string $path, callable $callback)
+    public function read($path, callable $callback)
     {
+        // path can either be an array [ 'path' => value ] or a string containing the path
+        if (is_array($path))
+        {
+            $path = $path['path'] ?? '';
+        }
+
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
@@ -120,7 +128,7 @@ class Vfs
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        return $service->read([ 'path' => $path ], $callback);
+        return $service->read([ 'path' => $rpath ], $callback);
     }
 
 
