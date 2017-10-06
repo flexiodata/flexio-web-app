@@ -44,12 +44,19 @@ class List1 extends \Flexio\Jobs\Base
         $results = [];
         foreach ($files as $f)
         {
-            $results[] = array(
+            $entry = array(
                 'name' => $f['name'],
                 'size' => $f['size'],
                 'modified' => $f['modified'],
                 'type' => $f['type']
             );
+
+            if (isset($f['.connection_type']))
+            {
+                $entry['.connection_type'] = $f['.connection_type'];
+            }
+
+            $results[] = $entry;
         }
 
         $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);

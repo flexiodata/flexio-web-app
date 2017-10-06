@@ -52,7 +52,7 @@ class Vfs
                 if (strlen($name) == 0)
                     $name = $info['eid'];
                 
-                $results[] = array(
+                $entry = array(
                     'name' => $name,
                     'path' => '/'.$name,
                     'size' => null,
@@ -60,6 +60,9 @@ class Vfs
                     'type' => 'DIR',
                     'is_dir' => true
                 );
+
+                $entry['.connection_type'] = $info['connection_type'];
+                $results[] = $entry;
             }
 
             return $results;
