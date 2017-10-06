@@ -12,9 +12,24 @@
         filter-items="storage"
         item-cls="bg-white pa3 pr5-l darken-05"
         :override-item-cls="true"
+        :selected-item="connection"
+        @item-activate="onServiceActivate"
       />
       <div class="flex-fill">
-        <file-chooser class="pa3" />
+        <div v-if="has_connection">
+          <div class="flex flex-row pa2 pa3-ns bb b--black-10 bg-nearer-white">
+            <div class="flex-fill flex flex-row items-center">
+              <div class="f2 dn db-ns mr3">{{sname}}</div>
+            </div>
+            <div class="flex-none flex flex-row items-center">
+              <btn btn-md btn-primary class="btn-add ttu b ba">New</btn>
+            </div>
+          </div>
+          <file-chooser
+            class="pa2"
+            :connection="connection"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -23,6 +38,7 @@
 <script>
   import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
+  import Btn from './Btn.vue'
   import ServiceList from './ServiceList.vue'
   import FileChooser from './FileChooser.vue'
   import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
@@ -30,19 +46,34 @@
   export default {
     components: {
       Spinner,
+      Btn,
       ServiceList,
       FileChooser,
       ConnectionConfigurePanel
     },
     data() {
-      connection: {}
+      return {
+        connection: {}
+      }
     },
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
         'is_fetching': 'connections_fetching',
         'is_fetched': 'connections_fetched'
-      })
+      }),
+      ctype() {
+        return _.get(this.connection, 'connection_type', '')
+      },
+      cname() {
+        return _.get(this.connection, 'name', '')
+      },
+      sname() {
+        return _.get(this.connection, 'service_name', '')
+      },
+      has_connection() {
+        return this.ctype.length > 0
+      }
     },
     created() {
       this.tryFetchConnections()
@@ -51,6 +82,9 @@
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
+      },
+      onServiceActivate(item) {
+        this.connection = _.assign({}, item)
       }
     }
   }

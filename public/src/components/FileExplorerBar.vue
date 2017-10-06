@@ -23,7 +23,6 @@
           {{item.name}}
         </span>
       </div>
-
     </div>
   </div>
 </template>
