@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import account from './accounthome'
+import account from './account'
 import copypipe from './copypipe'
-import dev from './devhome'
-import embed from './embedhome'
+import dev from './dev'
+import embed from './embed'
 import home from './home'
-import pipe from './pipehome'
+import pipes from './pipes'
 
 import {
   ROUTE_HOME,
@@ -38,7 +38,7 @@ const routes = [
   dev,
   embed,
   home,
-  pipe,
+  pipes,
   { path: '/signin',         name: ROUTE_SIGNIN,         component: SignIn         },
   { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUp         },
   { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPassword },
