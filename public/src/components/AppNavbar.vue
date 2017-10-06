@@ -25,7 +25,7 @@
 <script>
   import {
     ROUTE_ACCOUNT,
-    ROUTE_EMBEDHOME,
+    ROUTE_EMBED,
     ROUTE_HOME,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,

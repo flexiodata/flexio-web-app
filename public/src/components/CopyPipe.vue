@@ -14,7 +14,7 @@
 <script>
   import axios from 'axios'
   import marked from 'marked'
-  import { ROUTE_PIPEHOME } from '../constants/route'
+  import { ROUTE_PIPES } from '../constants/route'
   import { PIPEHOME_VIEW_BUILDER, PIPEHOME_STATUS_CONFIGURE } from '../constants/pipehome'
   import Spinner from 'vue-simple-spinner'
 
@@ -101,7 +101,7 @@
       },
       openPipe(eid) {
         this.$router.replace({
-          name: ROUTE_PIPEHOME,
+          name: ROUTE_PIPES,
           params: {
             eid,
             view: PIPEHOME_VIEW_BUILDER,

@@ -1,6 +1,6 @@
 import store from '../store'
 import * as types from '../store/mutation-types'
-import { ROUTE_DEVHOME } from '../constants/route'
+import { ROUTE_DEV } from '../constants/route'
 import DevHome from '../components/DevHome.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
 import DevParser from '../components/DevParser.vue'
@@ -17,7 +17,7 @@ export default {
     {
       // redirect to /dev/parser
       path: '',
-      name: ROUTE_DEVHOME,
+      name: ROUTE_DEV,
       redirect: 'dashboard',
       component: DevTests
     },

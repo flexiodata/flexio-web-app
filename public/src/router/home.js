@@ -1,12 +1,12 @@
 import {
   ROUTE_HOME,
-  ROUTE_HOMEDASHBOARD,
-  ROUTE_HOMEPIPES,
-  ROUTE_HOMEMEMBERS,
-  ROUTE_HOMECONNECTIONS,
-  ROUTE_HOMESTORAGE,
-  ROUTE_HOMESTORAGEOLD,
-  ROUTE_HOMETRASH
+  ROUTE_HOME_DASHBOARD,
+  ROUTE_HOME_PIPES,
+  ROUTE_HOME_MEMBERS,
+  ROUTE_HOME_CONNECTIONS,
+  ROUTE_HOME_STORAGE,
+  ROUTE_HOME_STORAGE_OLD,
+  ROUTE_HOME_TRASH
 } from '../constants/route'
 import * as types from '../store/mutation-types'
 import store from '../store'
@@ -30,37 +30,37 @@ export default {
     },
     {
       path: '/dashboard',
-      name: ROUTE_HOMEDASHBOARD,
+      name: ROUTE_HOME_DASHBOARD,
       component: AppDashboard
     },
     {
       path: '/pipes',
-      name: ROUTE_HOMEPIPES,
+      name: ROUTE_HOME_PIPES,
       component: PipeManager
     },
     {
       path: '/members',
-      name: ROUTE_HOMEMEMBERS,
+      name: ROUTE_HOME_MEMBERS,
       component: MemberManager
     },
     {
       path: '/connections',
-      name: ROUTE_HOMECONNECTIONS,
+      name: ROUTE_HOME_CONNECTIONS,
       component: { template: '<div class="pa4">TODO: Connections</div>' }
     },
     {
       path: '/storage',
-      name: ROUTE_HOMESTORAGE,
+      name: ROUTE_HOME_STORAGE,
       component: { template: '<div class="pa4">TODO: Storage</div>' }
     },
     {
       path: '/storage-old',
-      name: ROUTE_HOMESTORAGEOLD,
+      name: ROUTE_HOME_STORAGE_OLD,
       component: StorageManager
     },
     {
       path: '/trash',
-      name: ROUTE_HOMETRASH,
+      name: ROUTE_HOME_TRASH,
       component: TrashManager
     }
   ]

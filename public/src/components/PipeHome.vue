@@ -59,7 +59,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_SIGNIN, ROUTE_PIPEHOME } from '../constants/route'
+  import { ROUTE_SIGNIN, ROUTE_PIPES } from '../constants/route'
   import { VARIABLE_REGEX } from '../constants/common'
   import { TASK_TYPE_COMMENT } from '../constants/task-type'
   import { TASK_INFO_COMMENT } from '../constants/task-info'
@@ -195,7 +195,7 @@
           if (view == PIPEHOME_VIEW_BUILDER)
             _.assign(params, { state: _.get(this.$route, 'params.state', undefined) })
 
-          this.$router.replace({ name: ROUTE_PIPEHOME, params, query })
+          this.$router.replace({ name: ROUTE_PIPES, params, query })
         }
       },
 

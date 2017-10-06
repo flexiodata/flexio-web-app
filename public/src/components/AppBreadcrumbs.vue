@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import { ROUTE_ACCOUNT, ROUTE_PIPEHOME } from '../constants/route'
+  import { ROUTE_ACCOUNT, ROUTE_PIPES } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
 
   export default {
@@ -25,7 +25,7 @@
         'active_document_eid'
       ]),
       show_breadcrumbs() {
-        return this.$route.name == ROUTE_ACCOUNT || this.$route.name == ROUTE_PIPEHOME
+        return this.$route.name == ROUTE_ACCOUNT || this.$route.name == ROUTE_PIPES
       },
       document_name() {
         if (this.$route.name == ROUTE_ACCOUNT)

@@ -22,7 +22,7 @@
 
 <script>
   import {
-    ROUTE_EMBEDHOME,
+    ROUTE_EMBED,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
     ROUTE_FORGOTPASSWORD,
@@ -57,7 +57,7 @@
         switch (_.get(this.$route, 'name', ''))
         {
           case null:
-          case ROUTE_EMBEDHOME:
+          case ROUTE_EMBED:
           case ROUTE_SIGNIN:
           case ROUTE_SIGNUP:
           case ROUTE_FORGOTPASSWORD:

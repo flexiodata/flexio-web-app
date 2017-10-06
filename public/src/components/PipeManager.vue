@@ -78,7 +78,7 @@
 </template>
 
 <script>
-  import { ROUTE_PIPEHOME } from '../constants/route'
+  import { ROUTE_PIPES } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
@@ -122,7 +122,7 @@
     },
     methods: {
       openPipe(eid) {
-        this.$router.push({ name: ROUTE_PIPEHOME, params: { eid } })
+        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
       },
       openPipeAddModal(ref, attrs) {
         this.show_pipe_add_modal = true

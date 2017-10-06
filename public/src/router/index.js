@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import home from './home'
+
 import account from './accounthome'
 import copypipe from './copypipe'
 import dev from './devhome'
 import embed from './embedhome'
+import home from './home'
 import pipe from './pipehome'
 
 import {
