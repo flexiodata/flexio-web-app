@@ -20,7 +20,7 @@
   },{
     id: 'api-docs',
     icon: 'help',
-    label: 'API Reference',
+    label: 'API Docs',
     href: 'https://www.flex.io/docs/api'
   },{
     id: 'command-bar-docs',
