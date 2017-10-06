@@ -1108,11 +1108,18 @@
           "params": { }
         };
 
-      var params = this.split(str, this.args.fail);
+      var params = this.split(str, this.args.list);
 
       if (params.hasOwnProperty('path'))
       {
         json.params.path = params['path'].value;
+      }
+       else
+      {
+          this.errors.push({ "code":     "missing_parameter",
+                             "message":  "Missing parameter 'path:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
       }
 
       return json;

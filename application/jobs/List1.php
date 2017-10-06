@@ -25,8 +25,35 @@ class List1 extends \Flexio\Jobs\Base
         $stdout = $stdin->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $context->setStdout($stdout);
 
+        $job_definition = $this->getProperties();
+        $path = $job_definition['params']['path'] ?? null;
+
+        if (is_null($path))
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
+        }
+
+
         $streamwriter = \Flexio\Object\StreamWriter::create($stdout);
-        $streamwriter->write("Hello");
+
+        
+        $vfs = new \Flexio\Services\Vfs();
+
+        $files = $vfs->listObjects($path);
+
+        $results = [];
+        foreach ($files as $f)
+        {
+            $results[] = array(
+                'name' => $f['name'],
+                'size' => $f['size'],
+                'modified' => $f['modified'],
+                'type' => $f['type']
+            );
+        }
+
+        $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);
+        $streamwriter->write(json_encode($results));
     }
 
 
