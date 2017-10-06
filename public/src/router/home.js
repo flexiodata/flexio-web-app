@@ -5,6 +5,7 @@ import {
   ROUTE_HOMEMEMBERS,
   ROUTE_HOMECONNECTIONS,
   ROUTE_HOMESTORAGE,
+  ROUTE_HOMESTORAGEOLD,
   ROUTE_HOMETRASH
 } from '../constants/route'
 import * as types from '../store/mutation-types'
@@ -49,10 +50,6 @@ export const home = {
       component: MemberManager
     },
     {
-      path: 'sharing',
-      component: { template: '<div class="pa4">TODO: Sharing</div>' }
-    },
-    {
       path: 'connections',
       name: ROUTE_HOMECONNECTIONS,
       component: { template: '<div class="pa4">TODO: Connections</div>' }
@@ -60,6 +57,11 @@ export const home = {
     {
       path: 'storage',
       name: ROUTE_HOMESTORAGE,
+      component: { template: '<div class="pa4">TODO: Storage</div>' }
+    },
+    {
+      path: 'storage-old',
+      name: ROUTE_HOMESTORAGEOLD,
       component: StorageManager
     },
     {
