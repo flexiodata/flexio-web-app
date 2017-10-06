@@ -12,23 +12,24 @@
         filter-items="storage"
         item-cls="bg-white pa3 pr5-l darken-05"
         :override-item-cls="true"
-        :selected-item="connection"
         @item-activate="onServiceActivate"
       />
       <div class="flex-fill">
         <div v-if="has_connection">
-          <div class="flex flex-row pa2 pa3-ns bb b--black-10 bg-nearer-white">
+          <div class="flex flex-row pa2 pa3-ns">
             <div class="flex-fill flex flex-row items-center">
-              <div class="f2 dn db-ns mr3">{{sname}}</div>
-            </div>
-            <div class="flex-none flex flex-row items-center">
-              <btn btn-md btn-primary class="btn-add ttu b ba">New</btn>
+              <div class="f4 f3-m f2-l">{{sname}}</div>
             </div>
           </div>
           <file-chooser
-            class="pa2"
+            class="pa2 pa3-ns pt0 pt0-ns"
             :connection="connection"
           />
+        </div>
+        <div v-else-if="has_service">
+          <div class="pa2 pa3-ns">
+            <div class="f4 f3-m f2-l">{{sname}}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -53,6 +54,7 @@
     },
     data() {
       return {
+        service: {},
         connection: {}
       }
     },
@@ -62,14 +64,17 @@
         'is_fetching': 'connections_fetching',
         'is_fetched': 'connections_fetched'
       }),
+      stype() {
+        return _.get(this.service, 'connection_type', '')
+      },
+      sname() {
+        return _.get(this.service, 'service_name', '')
+      },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
       },
-      cname() {
-        return _.get(this.connection, 'name', '')
-      },
-      sname() {
-        return _.get(this.connection, 'service_name', '')
+      has_service() {
+        return this.stype.length > 0
       },
       has_connection() {
         return this.ctype.length > 0
@@ -84,7 +89,7 @@
           this.$store.dispatch('fetchConnections')
       },
       onServiceActivate(item) {
-        this.connection = _.assign({}, item)
+        this.service = _.assign({}, item)
       }
     }
   }
