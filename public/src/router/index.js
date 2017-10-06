@@ -6,7 +6,7 @@ import copypipe from './copypipe'
 import devhome from './devhome'
 import embedhome from './embedhome'
 import pipehome from './pipehome'
-import projecthome from './projecthome'
+//import projecthome from './projecthome'
 
 import {
   ROUTE_SIGNIN,
@@ -31,7 +31,7 @@ const routes = [
   embedhome,
   home,
   pipehome,
-  projecthome,
+  //projecthome,
   { path: '/signin',         name: ROUTE_SIGNIN,         component: SignIn         },
   { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUp         },
   { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPassword },

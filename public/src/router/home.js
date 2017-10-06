@@ -32,40 +32,40 @@ export const home = {
       // redirect to /home/dashboard
       path: '',
       name: ROUTE_HOME,
-      redirect: 'dashboard'
+      redirect: '/dashboard'
     },
     {
-      path: 'dashboard',
+      path: '/dashboard',
       name: ROUTE_HOMEDASHBOARD,
       component: AppDashboard
     },
     {
-      path: 'pipes',
+      path: '/pipes',
       name: ROUTE_HOMEPIPES,
       component: PipeManager
     },
     {
-      path: 'members',
+      path: '/members',
       name: ROUTE_HOMEMEMBERS,
       component: MemberManager
     },
     {
-      path: 'connections',
+      path: '/connections',
       name: ROUTE_HOMECONNECTIONS,
       component: { template: '<div class="pa4">TODO: Connections</div>' }
     },
     {
-      path: 'storage',
+      path: '/storage',
       name: ROUTE_HOMESTORAGE,
       component: { template: '<div class="pa4">TODO: Storage</div>' }
     },
     {
-      path: 'storage-old',
+      path: '/storage-old',
       name: ROUTE_HOMESTORAGEOLD,
       component: StorageManager
     },
     {
-      path: 'trash',
+      path: '/trash',
       name: ROUTE_HOMETRASH,
       component: TrashManager
     }
