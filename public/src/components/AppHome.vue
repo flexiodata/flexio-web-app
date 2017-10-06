@@ -32,16 +32,11 @@
       name: 'Storage',
       icon: 'layers'
     },
-    /*{
-      route: 'members',
-      name: 'Members',
-      icon: 'person'
-    },
     {
-      route: 'sharing',
-      name: 'Sharing',
-      icon: 'share'
-    },*/
+      route: 'storage-old',
+      name: 'Storage Old',
+      icon: 'layers'
+    },
     {
       route: 'trash',
       name: 'Trash',
