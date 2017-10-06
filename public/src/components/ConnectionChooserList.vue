@@ -8,7 +8,7 @@
       v-for="(input_service, index) in input_services"
       :item="input_service"
       :index="index"
-      :layout="itemLayout"
+      :layout="layout"
       :connection-eid="connection_eid"
       :connection-type="connection_type"
       :show-selection="showSelection"
@@ -70,7 +70,7 @@
         type: Boolean,
         default: false
       },
-      'item-layout': {
+      'layout': {
         type: String, // 'list' or 'grid'
         default: 'grid'
       }

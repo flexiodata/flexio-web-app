@@ -2,7 +2,7 @@
   <div>
     <service-list
       :list-type="ioType"
-      :item-layout="itemLayout"
+      :layout="layout"
       @item-activate="chooseService"
     ></service-list>
 
@@ -35,7 +35,7 @@
 
   export default {
     props: {
-      'item-layout': {
+      'layout': {
         type: String,
         default: 'grid' // 'grid' or 'list'
       },

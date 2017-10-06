@@ -14,6 +14,7 @@ import AppHome from '../components/AppHome.vue'
 import AppDashboard from '../components/AppDashboard.vue'
 import PipeManager from '../components/PipeManager.vue'
 import MemberManager from '../components/MemberManager.vue'
+import Storage from '../components/Storage.vue'
 import StorageManager from '../components/StorageManager.vue'
 import TrashManager from '../components/TrashManager.vue'
 
@@ -51,7 +52,7 @@ export default {
     {
       path: '/storage',
       name: ROUTE_HOME_STORAGE,
-      component: { template: '<div class="pa4">TODO: Storage</div>' }
+      component: Storage
     },
     {
       path: '/storage-old',

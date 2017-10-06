@@ -5,7 +5,7 @@
     </div>
     <connection-chooser-list
       list-type="input"
-      :item-layout="itemLayout"
+      :layout="layout"
       :connection-type-filter="connectionTypeFilter"
       :show-selection="showConnectionChooserSelection"
       :show-default-connections="showDefaultConnectionsInChooserList"
@@ -17,7 +17,7 @@
     </div>
     <service-list
       list-type="input"
-      :item-layout="itemLayout"
+      :layout="layout"
       @item-activate="createPendingConnection"
       v-if="showServiceList"
     ></service-list>
@@ -68,7 +68,7 @@
       'connection-type-filter': {
         type: String
       },
-      'item-layout': {
+      'layout': {
         type: String,
         default: 'list'
       }

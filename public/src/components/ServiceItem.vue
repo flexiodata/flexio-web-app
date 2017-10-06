@@ -25,7 +25,11 @@
       },
       'layout': {
         type: String,
-        default: 'list'
+        default: 'list' // 'grid' or 'list'
+      },
+      'override-cls': {
+        type: Boolean,
+        default: false
       }
     },
     components: {
@@ -33,7 +37,10 @@
     },
     computed: {
       cls() {
-        if (_.get(this, 'layout', '') == 'list')
+        if (this.overrideCls)
+          return ''
+
+        if (this.layout == 'list')
           return 'bg-white pa3 bb b--light-gray darken-05'
            else
           return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10'

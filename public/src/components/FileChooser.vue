@@ -1,33 +1,13 @@
 <template>
-  <ui-modal
-    ref="dialog"
-    remove-close-button
-    dismiss-on="close-button"
-    size="large"
-    class="ui-modal--body-margin"
-    @hide="onHide"
-  >
-    <div slot="header" class="w-100">
-      <div class="flex flex-row items-center">
-        <div class="flex-fill">
-          <span class="f4">{{title}}</span>
-        </div>
-        <div
-          class="pointer f3 lh-solid b child black-30 hover-black-60"
-          @click="close"
-        >
-          &times;
-        </div>
-      </div>
-      <div class="mt3" style="margin-bottom: -1rem">
-        <file-explorer-bar
-          class="fw4 f6 ba b--black-20 mb2 css-explorer-bar"
-          :connection="connection"
-          :path="connection_path"
-          @open-folder="openFolder"
-          v-if="file_chooser_mode == 'filechooser'"
-        ></file-explorer-bar>
-      </div>
+  <div>
+    <div>
+      <file-explorer-bar
+        class="fw4 f6 ba b--black-20 mb2 css-explorer-bar"
+        :connection="connection"
+        :path="connection_path"
+        @open-folder="openFolder"
+        v-if="file_chooser_mode == 'filechooser'"
+      ></file-explorer-bar>
     </div>
 
     <div class="relative">
@@ -47,13 +27,7 @@
         v-if="file_chooser_mode == 'textentry'"
       ></url-input-list>
     </div>
-
-    <div slot="footer" class="flex flex-row w-100">
-      <div class="flex-fill">&nbsp;</div>
-      <btn btn-md class="b ttu blue mr2" @click="close()">Cancel</btn>
-      <btn btn-md class="b ttu blue" @click="submit()">{{submit_label}}</btn>
-    </div>
-  </ui-modal>
+  </div>
 </template>
 
 <script>

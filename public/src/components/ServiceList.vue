@@ -1,10 +1,12 @@
 <template>
   <div>
     <service-item
-      v-for="(service, index) in services"
+      v-for="(service, ctype) in services"
+      :key="ctype"
       :item="service"
-      :index="index"
-      :layout="itemLayout"
+      :layout="layout"
+      :class="itemCls"
+      :override-cls="overrideItemCls"
       @activate="onItemActivate"
     >
     </service-item>
@@ -21,9 +23,17 @@
         type: String,
         default: ''
       },
-      'item-layout': {
+      'layout': {
         type: String,
         default: 'grid' // 'grid' or 'list'
+      },
+      'item-cls': {
+        type: String,
+        default: ''
+      },
+      'override-item-cls': {
+        type: Boolean,
+        default: false
       },
       'filter-items': {
         type: String,
