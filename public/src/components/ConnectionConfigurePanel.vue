@@ -92,7 +92,16 @@
   import Btn from './Btn.vue'
 
   export default {
-    props: ['connection', 'mode'],
+    props: {
+      'connection': {
+        type: Object,
+        required: true
+      },
+      'mode': {
+        type: String,
+        default: 'add'
+      }
+    },
     components: {
       Btn
     },

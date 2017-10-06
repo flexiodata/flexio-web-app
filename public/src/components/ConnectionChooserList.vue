@@ -29,7 +29,6 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_BLANK_PIPE } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
@@ -53,10 +52,6 @@
       'add-button-label': {
         type: String,
         default: ''
-      },
-      'show-blank-pipe': {
-        type: Boolean,
-        default: false
       },
       'show-default-connections': {
         type: Boolean,
@@ -111,9 +106,6 @@
             })
           })
           .value()
-
-        if (this.showBlankPipe !== true)
-          items = _.reject(items, (c) => { return c.connection_type == CONNECTION_TYPE_BLANK_PIPE })
 
         return items
       },

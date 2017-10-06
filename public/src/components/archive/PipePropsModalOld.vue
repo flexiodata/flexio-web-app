@@ -127,7 +127,6 @@
             :connection-type="ctype"
             :show-add="true"
             :list-type="connection_list_mode"
-            :show-blank-pipe="mode == 'create-pipe'"
             @add="addConnection"
             @item-activate="setConnection"
           >
@@ -159,7 +158,6 @@
 
 <script>
   import {
-    CONNECTION_TYPE_BLANK_PIPE,
     CONNECTION_TYPE_HTTP,
     CONNECTION_TYPE_RSS,
     CONNECTION_TYPE_MYSQL,
@@ -217,13 +215,13 @@
         return _.result(this, 'cinfo.service_name', '')
       },
       ctype() {
-        return _.get(this.connection, 'connection_type', CONNECTION_TYPE_BLANK_PIPE)
+        return _.get(this.connection, 'connection_type', '')
       },
       cname() {
         return _.get(this.connection, 'name', this.service_name)
       },
       has_connection() {
-        return this.ctype.length > 0 && this.ctype != CONNECTION_TYPE_BLANK_PIPE
+        return this.ctype.length > 0
       },
       is_database_connection() {
         return _.includes([CONNECTION_TYPE_MYSQL, CONNECTION_TYPE_POSTGRES], this.ctype)

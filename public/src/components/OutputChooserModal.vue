@@ -64,7 +64,6 @@
 
 <script>
   import {
-    CONNECTION_TYPE_BLANK_PIPE,
     CONNECTION_TYPE_HTTP,
     CONNECTION_TYPE_RSS,
     CONNECTION_TYPE_MYSQL,
@@ -113,7 +112,7 @@
     },
     computed: {
       ctype() {
-        return _.get(this.connection, 'connection_type', CONNECTION_TYPE_BLANK_PIPE)
+        return _.get(this.connection, 'connection_type', '')
       },
       title() {
         return 'Choose Folder'

@@ -32,7 +32,6 @@
 
 <script>
   import {
-    CONNECTION_TYPE_BLANK_PIPE,
     CONNECTION_TYPE_HTTP,
     CONNECTION_TYPE_RSS,
     CONNECTION_TYPE_MYSQL,
@@ -55,7 +54,12 @@
   }
 
   export default {
-    props: ['connection'],
+    props: {
+      'connection': {
+        type: Object,
+        required: true
+      }
+    },
     components: {
       Btn,
       FileExplorerBar,
@@ -70,7 +74,7 @@
     },
     computed: {
       ctype() {
-        return _.get(this.connection, 'connection_type', CONNECTION_TYPE_BLANK_PIPE)
+        return _.get(this.connection, 'connection_type', '')
       },
       file_chooser_mode() {
         switch (this.ctype)

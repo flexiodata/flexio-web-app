@@ -1,6 +1,5 @@
 export const CONNECTION_TYPE_UNKNOWN       = ''
 export const CONNECTION_TYPE_AMAZONS3      = 'amazons3'
-export const CONNECTION_TYPE_BLANK_PIPE    = 'blank-pipe'
 export const CONNECTION_TYPE_BOX           = 'box'
 export const CONNECTION_TYPE_DOWNLOAD      = 'download'
 export const CONNECTION_TYPE_DROPBOX       = 'dropbox'

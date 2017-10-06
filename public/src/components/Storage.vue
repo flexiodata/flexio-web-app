@@ -7,8 +7,9 @@
   <div v-else>
     <div class="flex flex-row h-100">
       <service-list
-        class="br b--black-05"
+        class="br b--black-05 overflow-y-auto"
         layout="list"
+        filter-items="storage"
         item-cls="bg-white pa3 pr5-l darken-05"
         :override-item-cls="true"
       />
@@ -24,12 +25,17 @@
   import Spinner from 'vue-simple-spinner'
   import ServiceList from './ServiceList.vue'
   import FileChooser from './FileChooser.vue'
+  import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
 
   export default {
     components: {
       Spinner,
       ServiceList,
-      FileChooser
+      FileChooser,
+      ConnectionConfigurePanel
+    },
+    data() {
+      connection: {}
     },
     computed: {
       // mix this into the outer object with the object spread operator

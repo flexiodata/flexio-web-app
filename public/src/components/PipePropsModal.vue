@@ -73,7 +73,6 @@
 <script>
   import { mapGetters } from 'vuex'
   import {
-    CONNECTION_TYPE_BLANK_PIPE,
     CONNECTION_TYPE_HTTP,
     CONNECTION_TYPE_RSS,
     CONNECTION_TYPE_MYSQL,
