@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { basepath_redirect, home } from './home'
-import accounthome from './accounthome'
+import home from './home'
+import account from './accounthome'
 import copypipe from './copypipe'
-import devhome from './devhome'
-import embedhome from './embedhome'
-import pipehome from './pipehome'
-//import projecthome from './projecthome'
+import dev from './devhome'
+import embed from './embedhome'
+import pipe from './pipehome'
 
 import {
+  ROUTE_HOME,
   ROUTE_SIGNIN,
   ROUTE_SIGNUP,
   ROUTE_FORGOTPASSWORD,
@@ -23,15 +23,21 @@ import ResetPassword from '../components/ResetPassword.vue'
 // use VueRouter for handling browser history
 Vue.use(VueRouter)
 
+const basepath_redirect = {
+  path: '/',
+  redirect: {
+    name: ROUTE_HOME
+  }
+}
+
 const routes = [
   basepath_redirect,
-  accounthome,
+  account,
   copypipe,
-  devhome,
-  embedhome,
+  dev,
+  embed,
   home,
-  pipehome,
-  //projecthome,
+  pipe,
   { path: '/signin',         name: ROUTE_SIGNIN,         component: SignIn         },
   { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUp         },
   { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPassword },

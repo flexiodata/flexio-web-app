@@ -17,13 +17,7 @@ import MemberManager from '../components/MemberManager.vue'
 import StorageManager from '../components/StorageManager.vue'
 import TrashManager from '../components/TrashManager.vue'
 
-export const basepath_redirect = {
-  path: '/',
-  component: AppHome,
-  redirect: '/home' // TODO: use 'alias' here instead of 'redirect'?
-}
-
-export const home = {
+export default {
   path: '/home',
   component: AppHome,
   meta: { requiresAuth: true },

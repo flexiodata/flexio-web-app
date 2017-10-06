@@ -46,7 +46,7 @@
       output_type() { return this.getTaskConnectionType(TASK_TYPE_OUTPUT) },
       pipe_src() {
         var loc = window.location
-        return loc.protocol+'//'+loc.host+'/app/pipe/'+this.item.eid
+        return loc.protocol+'//'+loc.host+'/app/pipes/'+this.item.eid
       }
     },
     methods: {
