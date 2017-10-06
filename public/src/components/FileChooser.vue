@@ -2,7 +2,7 @@
   <div>
     <div>
       <file-explorer-bar
-        class="fw4 f6 ba b--black-20 mb2 css-explorer-bar"
+        class="fw4 f6 ba b--black-10 mb2 css-explorer-bar"
         :connection="connection"
         :path="connection_path"
         @open-folder="openFolder"
