@@ -1097,6 +1097,51 @@
     };
 
 
+    this.args.list = ['path'];
+    this.hints.list = {
+    };
+    this.keywords.list = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.list",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.list);
+
+      if (params.hasOwnProperty('path'))
+      {
+        json.params.path = params['path'].value;
+      }
+       else
+      {
+          this.errors.push({ "code":     "missing_parameter",
+                             "message":  "Missing parameter 'path:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.list"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "list";
+
+      if (json.params.hasOwnProperty('path'))
+      {
+        res = this.append(res, "path: " + json.params['path']);
+      }
+
+      return res;
+    };
+
+
 
 
     this.args.fail = ['code','message'];
@@ -2192,6 +2237,7 @@
         'output',
         'convert',
         'limit',
+        'list',
         'select',
         'rename',
         'settype',

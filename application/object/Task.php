@@ -200,6 +200,12 @@ class Task
                 'class' => '\Flexio\Jobs\Transform',
                 'name' => 'Transform',
                 'verb' => 'Transforming'
+            ),
+            array(
+                'type' => \Flexio\Jobs\List1::MIME_TYPE,
+                'class' => '\Flexio\Jobs\List1',
+                'name' => 'List',
+                'verb' => 'Listing'
             )
         );
 
