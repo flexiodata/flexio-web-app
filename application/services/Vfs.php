@@ -61,6 +61,7 @@ class Vfs
                     'is_dir' => true
                 );
 
+                $entry['.connection_eid'] = $info['eid'];
                 $entry['.connection_type'] = $info['connection_type'];
                 $results[] = $entry;
             }
