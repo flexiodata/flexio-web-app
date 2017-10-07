@@ -1,23 +1,27 @@
 <template>
   <div>
-    <div class="flex-none flex flex-row items-center cursor-default no-select">
-      <service-icon
-        class="dib v-top br2 css-icon"
-        :type="ctype"
-      ></service-icon>
+    <div class="flex-none flex flex-row items-stretch cursor-default no-select">
       <div
-        class="fw6 mid-gray underline-hover ml1"
-        @click="openFolder('/')"
+        class="flex flex-row items-center darken-05" @click="openFolder('/')"
+        style="padding: 0.25rem 0.375rem"
       >
-        {{service_name}}
+        <service-icon
+          class="br2 css-icon"
+          style="width: 1rem; height; 1rem"
+          :type="ctype"
+        ></service-icon>
+        <div class="f7 ml1">
+          {{service_name}}
+        </div>
       </div>
       <div
         class="flex flex-row items-center"
         v-for="(item, index) in items"
       >
-        <i class="material-icons md-24 black-20 rotate-270" style="margin: -2px">arrow_drop_down</i>
+        <i class="material-icons md-24 black-20 rotate-270 na1">arrow_drop_down</i>
         <span
-          class="fw6 mid-gray underline-hover"
+          class="f7 darken-05"
+          style="padding: 0.3125rem 0.375rem"
           @click="openFolder(item.path)"
         >
           {{item.name}}
@@ -33,7 +37,16 @@
   import FileChooserList from './FileChooserList.vue'
 
   export default {
-    props: ['connection', 'path'],
+    props: {
+      'connection': {
+        type: Object,
+        required: true
+      },
+      'path': {
+        type: String,
+        default: '/'
+      }
+    },
     components: {
       ServiceIcon,
       FileChooserList
@@ -70,10 +83,3 @@
     }
   }
 </script>
-
-<style>
-  .css-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-</style>

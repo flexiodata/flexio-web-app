@@ -34,23 +34,29 @@
 
   export default {
     props: {
-      'connection': {},
-      'path': {},
+      'connection': {
+        type: Object,
+        required: true
+      },
+      'path': {
+        type: String,
+        default: '/'
+      },
       'empty-message': {
-        default: '',
-        type: String
+        type: String,
+        default: ''
       },
       'folders-only': {
-        default: false,
-        type: Boolean
+        type: Boolean,
+        default: false
       },
       'allow-multiple': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
       },
       'allow-folders': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
       }
     },
     components: {
@@ -66,6 +72,9 @@
       }
     },
     watch: {
+      connection(val, old_val) {
+        this.refreshList()
+      },
       path(val, old_val) {
         this.refreshList()
       }

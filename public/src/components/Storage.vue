@@ -1,46 +1,48 @@
 <template>
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
-      <spinner size="large" message="Loading storage..."></spinner>
+      <spinner size="large" message="Loading storage items..."></spinner>
     </div>
   </div>
   <div v-else>
+    <!-- control bar -->
+    <div class="pa3 ph4-l bb b--black-05">
+      <div class="flex flex-row">
+        <div class="flex-fill flex flex-row items-center">
+          <div class="f2">Storage</div>
+        </div>
+        <div class="flex-none flex flex-row items-center">
+          <btn btn-md btn-primary class="btn-add ttu b ba">New</btn>
+        </div>
+      </div>
+    </div>
+
     <div class="flex flex-row h-100">
-      <service-list
+      <connection-chooser-list
         class="br b--black-05 overflow-y-auto"
         layout="list"
         filter-items="storage"
         item-cls="bg-white pa3 pr5-l darken-05"
+        :show-default-connections="false"
         :override-item-cls="true"
-        @item-activate="onServiceActivate"
+        @item-activate="onConnectionActivate"
       />
       <div class="flex-fill">
-        <div v-if="has_connection">
-          <div class="flex flex-row pa2 pa3-ns">
-            <div class="flex-fill flex flex-row items-center">
-              <div class="f4 f3-m f2-l">{{sname}}</div>
-            </div>
-          </div>
-          <file-chooser
-            class="pa2 pa3-ns pt0 pt0-ns"
-            :connection="connection"
-          />
-        </div>
-        <div v-else-if="has_service">
-          <div class="pa2 pa3-ns">
-            <div class="f4 f3-m f2-l">{{sname}}</div>
-          </div>
-        </div>
+        <file-chooser
+          class="pa1"
+          :connection="connection"
+          v-if="has_connection"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import Btn from './Btn.vue'
-  import ServiceList from './ServiceList.vue'
+  import ConnectionChooserList from './ConnectionChooserList.vue'
   import FileChooser from './FileChooser.vue'
   import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
 
@@ -48,13 +50,13 @@
     components: {
       Spinner,
       Btn,
-      ServiceList,
+      ConnectionChooserList,
       FileChooser,
       ConnectionConfigurePanel
     },
     data() {
       return {
-        service: {},
+        connection: {},
         connection: {}
       }
     },
@@ -64,17 +66,11 @@
         'is_fetching': 'connections_fetching',
         'is_fetched': 'connections_fetched'
       }),
-      stype() {
-        return _.get(this.service, 'connection_type', '')
-      },
-      sname() {
-        return _.get(this.service, 'service_name', '')
-      },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
       },
-      has_service() {
-        return this.stype.length > 0
+      cname() {
+        return _.get(this.connection, 'name', '')
       },
       has_connection() {
         return this.ctype.length > 0
@@ -84,12 +80,24 @@
       this.tryFetchConnections()
     },
     methods: {
+      ...mapGetters([
+        'getAllConnections'
+      ]),
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
       },
-      onServiceActivate(item) {
-        this.service = _.assign({}, item)
+      getOurConnections() {
+        // NOTE: it's really important to include the '_' on the same line
+        // as the 'return', otherwise JS will return without doing anything
+        return _
+          .chain(this.getAllConnections())
+          .sortBy([ function(p) { return p.name } ])
+          .reverse()
+          .value()
+      },
+      onConnectionActivate(item) {
+        this.connection = _.assign({}, item)
       }
     }
   }
