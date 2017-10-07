@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="flex flex-row h-100">
+    <div class="flex flex-row h-100" v-if="connections.length > 0">
       <connection-chooser-list
         class="br b--black-05 overflow-y-auto"
         layout="list"
@@ -36,6 +36,12 @@
         />
       </div>
     </div>
+    <div class="flex flex-column justify-center h-100" v-else>
+      <empty-item>
+        <i slot="icon" class="material-icons">repeat</i>
+        <span slot="text">No storage items to show</span>
+      </empty-item>
+    </div>
 
     <!-- props modal (used for both add and edit) -->
     <storage-props-modal
@@ -49,11 +55,12 @@
 
 <script>
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import StoragePropsModal from './StoragePropsModal.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import FileChooser from './FileChooser.vue'
+  import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
 
   export default {
@@ -62,6 +69,7 @@
       StoragePropsModal,
       ConnectionChooserList,
       FileChooser,
+      EmptyItem,
       Btn
     },
     data() {
@@ -76,6 +84,9 @@
         'is_fetching': 'connections_fetching',
         'is_fetched': 'connections_fetched'
       }),
+      connections() {
+        return this.getAllConnections()
+      },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
       },
@@ -90,6 +101,9 @@
       this.tryFetchConnections()
     },
     methods: {
+      ...mapGetters([
+        'getAllConnections'
+      ]),
       openAddModal() {
         this.show_connection_props_modal = true
         this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
