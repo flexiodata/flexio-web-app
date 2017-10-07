@@ -46,7 +46,7 @@
 
 <script>
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import { mapState, mapGetters } from 'vuex'
+  import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import StorageList from './StorageList.vue'
   import StoragePropsModal from './StoragePropsModal.vue'
