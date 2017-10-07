@@ -8,6 +8,7 @@
       :layout="layout"
       :connection-type-filter="connectionTypeFilter"
       :show-selection="showConnectionChooserSelection"
+      :show-selection-checkmark="showConnectionChooserSelection"
       :show-default-connections="showDefaultConnectionsInChooserList"
       @item-activate="chooseConnection"
       v-if="showConnectionChooserList"

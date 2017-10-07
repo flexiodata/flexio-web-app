@@ -22,14 +22,15 @@
         class="br b--black-05 overflow-y-auto"
         layout="list"
         filter-items="storage"
-        item-cls="bg-white pa3 pr5-l darken-05"
-        :show-default-connections="false"
+        item-cls="pa3 pr5-l darken-05"
         :override-item-cls="true"
+        :show-selection="true"
+        :show-default-connections="false"
         @item-activate="onConnectionActivate"
       />
       <div class="flex-fill">
         <file-chooser
-          class="pa1"
+          class="pa2"
           :connection="connection"
           v-if="has_connection"
         />

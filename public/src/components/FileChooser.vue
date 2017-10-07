@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-column h-100">
     <file-explorer-bar
-      class="flex-none fw4 f6 ba b--black-10 mb1" style="padding: 0.125rem"
+      class="flex-none fw4 f6 ba b--black-10 mb2" style="padding: 0.125rem"
       :connection="connection"
       :path="connection_path"
       @open-folder="openFolder"

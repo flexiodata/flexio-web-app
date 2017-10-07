@@ -5,13 +5,16 @@
   </div>
   <div v-else>
     <connection-chooser-item
-      v-for="(input_service, index) in input_services"
+      v-for="(input_service, ctype) in input_services"
+      :key="ctype"
       :item="input_service"
-      :index="index"
       :layout="layout"
+      :class="itemCls"
+      :override-cls="overrideItemCls"
       :connection-eid="connection_eid"
       :connection-type="connection_type"
       :show-selection="showSelection"
+      :show-selection-checkmark="showSelectionCheckmark"
       @activate="onItemActivate"
     ></connection-chooser-item>
     <article
@@ -65,9 +68,21 @@
         type: Boolean,
         default: false
       },
+      'show-selection-checkmark': {
+        type: Boolean,
+        default: false
+      },
       'layout': {
         type: String, // 'list' or 'grid'
         default: 'grid'
+      },
+      'item-cls': {
+        type: String,
+        default: ''
+      },
+      'override-item-cls': {
+        type: Boolean,
+        default: false
       }
     },
     components: {

@@ -4,8 +4,8 @@
     @click="onClick"
   >
     <div class="flex flex-row items-center" v-if="layout == 'list'">
-      <i class="material-icons mid-gray md-18 b mr3" v-if="showSelection && is_selected">check</i>
-      <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showSelection">check</i>
+      <i class="material-icons mid-gray md-18 b mr3" v-if="showSelectionCheckmark && is_selected">check</i>
+      <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showSelectionCheckmark">check</i>
       <service-icon :type="ctype" class="br1 square-3 mr3"></service-icon>
       <div class="mid-gray f5 fw6 cursor-default">{{item.name}}</div>
     </div>
@@ -29,6 +29,10 @@
         type: String,
         default: 'list'
       },
+      'override-cls': {
+        type: Boolean,
+        default: false
+      },
       'connection-eid': {
         type: String,
         required: false
@@ -38,6 +42,10 @@
         required: false
       },
       'show-selection': {
+        type: Boolean,
+        default: false
+      },
+      'show-selection-checkmark': {
         type: Boolean,
         default: false
       }
@@ -56,7 +64,10 @@
         return this.eid.length > 0 ? this.connectionEid == this.eid : this.connectionType == this.ctype
       },
       cls() {
-        var sel_cls = this.is_selected ? 'bg-black-10' : 'bg-white'
+        var sel_cls = this.is_selected ? 'bg-black-05' : 'bg-white'
+
+        if (this.overrideCls)
+          return this.class + ' ' + sel_cls
 
         if (_.get(this, 'layout', '') == 'list')
           return 'bg-white pa3 bb b--light-gray darken-05 ' + sel_cls
