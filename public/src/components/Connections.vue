@@ -1,7 +1,7 @@
 <template>
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
-      <spinner size="large" message="Loading storage items..."></spinner>
+      <spinner size="large" message="Loading connections..."></spinner>
     </div>
   </div>
   <div v-else>
@@ -9,7 +9,7 @@
     <div class="pa3 ph4-l bb b--black-05">
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
-          <div class="f2">Storage</div>
+          <div class="f2">Connections</div>
         </div>
         <div class="flex-none flex flex-row items-center">
           <btn btn-md btn-primary class="btn-add ttu b ba" @click="openAddModal">New</btn>
@@ -29,17 +29,15 @@
         @item-activate="onConnectionActivate"
       />
       <div class="flex-fill">
-        <file-chooser
-          class="pa2"
-          :connection="connection"
-          v-if="has_connection"
-        />
+        <div v-if="connection">
+          <pre class="ma3 f6"><code>{{ JSON.stringify(connection, null, 2) }}</code></pre>
+        </div>
       </div>
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
       <empty-item>
         <i slot="icon" class="material-icons">repeat</i>
-        <span slot="text">No storage items to show</span>
+        <span slot="text">No connections to show</span>
       </empty-item>
     </div>
 
@@ -59,7 +57,6 @@
   import Spinner from 'vue-simple-spinner'
   import StoragePropsModal from './StoragePropsModal.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
-  import FileChooser from './FileChooser.vue'
   import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
 
@@ -68,7 +65,6 @@
       Spinner,
       StoragePropsModal,
       ConnectionChooserList,
-      FileChooser,
       EmptyItem,
       Btn
     },

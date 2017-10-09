@@ -14,6 +14,7 @@ import AppHome from '../components/AppHome.vue'
 import AppDashboard from '../components/AppDashboard.vue'
 import PipeManager from '../components/PipeManager.vue'
 import MemberManager from '../components/MemberManager.vue'
+import Connections from '../components/Connections.vue'
 import Storage from '../components/Storage.vue'
 import StorageManager from '../components/StorageManager.vue'
 import TrashManager from '../components/TrashManager.vue'
@@ -47,7 +48,7 @@ export default {
     {
       path: '/connections',
       name: ROUTE_HOME_CONNECTIONS,
-      component: { template: '<div class="pa4">TODO: Connections</div>' }
+      component: Connections
     },
     {
       path: '/storage',
