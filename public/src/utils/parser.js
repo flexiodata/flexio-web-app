@@ -785,6 +785,45 @@
 
 
 
+    
+    this.args.echo = ['msg'];
+    this.hints.echo = {
+    };
+    this.keywords.echo = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.echo",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.echo);
+
+      if (params.hasOwnProperty('msg'))
+      {
+        json.params.msg = params['msg'].value;
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.echo"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "echo";
+
+      if (json.params.hasOwnProperty('msg'))
+      {
+        res = this.append(res, "msg: " + json.params['msg']);
+      }
+
+      return res;
+    };
+
+
 
     this.args.email = ['to','from','subject','body','html','reply-to','data'];
     this.hints.email = {
@@ -2235,20 +2274,21 @@
       return [
         'input',
         'output',
-        'convert',
-        'limit',
-        'list',
-        'select',
-        'rename',
-        'settype',
-        'sort',
-        'filter',
         'calc',
+        'comment',
+        'convert',
+        'echo',
         'email',
         'execute',
-        'transform',
+        'filter',
+        'limit',
+        'list',
         'merge',
-        'comment'
+        'rename',
+        'select',
+        'settype',
+        'sort',
+        'transform'
       ]
     },
 

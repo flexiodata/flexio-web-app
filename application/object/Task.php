@@ -70,6 +70,12 @@ class Task
                 'verb' => 'Identifying duplicates in'
             ),
             array(
+                'type' => \Flexio\Jobs\Echo1::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Echo1',
+                'name' => 'Echo',
+                'verb' => 'Echoing'
+            ),
+            array(
                 'type' => \Flexio\Jobs\EmailSend::MIME_TYPE,
                 'class' => '\Flexio\Jobs\EmailSend',
                 'name' => 'Email',
