@@ -21,16 +21,17 @@ class Vfs
     public static function list(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'q' => array('type' => 'string', 'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $vfs = new \Flexio\Services\Vfs();
+        $validated_params = $validator->getParams();
+        $path = $validated_params['q'] ?? '';
 
-        $path = $params['q'] ?? '';
+        $vfs = new \Flexio\Services\Vfs();
         $result = $vfs->listObjects($path);
-        
+
         if (!is_array($result))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 

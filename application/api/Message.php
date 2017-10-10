@@ -82,14 +82,15 @@ class Message
     private static function createWelcomeEmail(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             return false;
 
-        $to = $params['email'];
-        $verify_code = $params['verify_code'];
+        $validated_params = $validator->getParams();
+        $to = $validated_params['email'];
+        $verify_code = $validated_params['verify_code'];
 
         $activation_link = self::getBaseUrl() . '/app/signin?ref=verification_email&email='.urlencode($to).'&verify_code='.$verify_code;
 
@@ -111,14 +112,15 @@ class Message
     private static function createResetPasswordEmail(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             return false;
 
-        $to = $params['email'];
-        $verify_code = $params['verify_code'];
+        $validated_params = $validator->getParams();
+        $to = $validated_params['email'];
+        $verify_code = $validated_params['verify_code'];
 
         // prepare info structure for create account
         $reset_link = self::getBaseUrl() . '/app/resetpassword?email='.urlencode($to).'&verify_code='.$verify_code;
@@ -141,7 +143,7 @@ class Message
     private static function createShareProjectEmail(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
                 'from_email'  => array('type' => 'string', 'required' => true),
@@ -149,16 +151,17 @@ class Message
                 'object_eid'  => array('type' => 'string', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => false),
                 'message'     => array('type' => 'string', 'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             return false;
 
-        $to = $params['email'];
-        $from_name = $params['from_name'];
-        $from_email = $params['from_email'];
-        $object_name = $params['object_name'];
-        $object_eid = $params['object_eid'];
-        $message = $params['message'] ?? '';
-        $verify_code_str = isset($params['verify_code']) ? '&verify_code='.$params['verify_code'] : '';
+        $validated_params = $validator->getParams();
+        $to = $validated_params['email'];
+        $from_name = $validated_params['from_name'];
+        $from_email = $validated_params['from_email'];
+        $object_name = $validated_params['object_name'];
+        $object_eid = $validated_params['object_eid'];
+        $message = $validated_params['message'] ?? '';
+        $verify_code_str = isset($validated_params['verify_code']) ? '&verify_code='.$validated_params['verify_code'] : '';
         $share_link = self::getBaseUrl() . '/a/shareauth?ref=share_email&email='.urlencode($to).'&object_eid='. $object_eid . $verify_code_str;
 
         // get text template from the application res directory
@@ -192,22 +195,23 @@ class Message
     private static function createSharePipeEmail(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'email'       => array('type' => 'string', 'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
                 'from_email'  => array('type' => 'string', 'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
                 'object_eid'  => array('type' => 'string', 'required' => true),
                 'message'     => array('type' => 'string', 'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             return false;
 
-        $to = $params['email'];
-        $from_name = $params['from_name'];
-        $from_email = $params['from_email'];
-        $object_name = $params['object_name'];
-        $object_eid = $params['object_eid'];
-        $message = $params['message'] ?? '';
+        $validated_params = $validator->getParams();
+        $to = $validated_params['email'];
+        $from_name = $validated_params['from_name'];
+        $from_email = $validated_params['from_email'];
+        $object_name = $validated_params['object_name'];
+        $object_eid = $validated_params['object_eid'];
+        $message = $validated_params['message'] ?? '';
         $share_link = self::getBaseUrl() . "/app/pipe/$object_eid";
 
         // get text template from the application res directory

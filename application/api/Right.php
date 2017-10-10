@@ -21,14 +21,15 @@ class Right
     public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'rights' => array('type' => 'object', 'required' => true),
                 'message' => array('type' => 'string', 'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $rights = $params['rights'];
-        $message = $params['message'] ?? '';
+        $validated_params = $validator->getParams();
+        $rights = $validated_params['rights'];
+        $message = $validated_params['message'] ?? '';
 
         // validate the rights
         $object_rights_to_add = array();
@@ -135,14 +136,15 @@ class Right
         // else
 
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'actions' => array('type' => 'object', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $right_eid = $params['eid'];
-        $actions = $params['actions'];
+        $validated_params = $this->getParams();
+        $right_eid = $validated_params['eid'];
+        $actions = $validated_params['actions'];
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -168,12 +170,13 @@ class Right
     public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $right_eid = $params['eid'];
+        $validated_params = $this->getParams();
+        $right_eid = $validated_params['eid'];
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -202,12 +205,13 @@ class Right
     public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $right_eid = $params['eid'];
+        $validated_params = $this->getParams();
+        $right_eid = $validated_params['eid'];
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -230,11 +234,12 @@ class Right
     public static function listall(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'objects' => array('type' => 'string', 'array' => true, 'required' => false),
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        $validated_params = $this->getParams();
         $user_eid = $requesting_user_eid;
 
         // build the filter for the rights we want to get
@@ -243,8 +248,8 @@ class Right
             'eid_status' => array(\Model::STATUS_AVAILABLE)
         );
 
-        if (isset($params['objects']))
-            $filter['target_eids'] = $params['objects']; // filter for specific objects
+        if (isset($validated_params['objects']))
+            $filter['target_eids'] = $validated_params['objects']; // filter for specific objects
 
         // get the rights for the user
         $user = \Flexio\Object\User::load($user_eid);

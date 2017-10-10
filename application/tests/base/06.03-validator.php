@@ -31,7 +31,7 @@ class Test
         $actual = $result === false && $has_errors === true;
         $expected = true;
         TestCheck::assertBoolean('A.1', '\Flexio\Base\Validator::check(); should return false and flag an error if values param isn\'t an array',  $actual, $expected, $results);
-return;
+
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
         $values = true;

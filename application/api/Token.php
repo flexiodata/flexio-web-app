@@ -21,12 +21,13 @@ class Token
     public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $user_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $user_identifier = $validated_params['eid'];
 
         // load the object and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($user_identifier);
@@ -37,25 +38,24 @@ class Token
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the token object
-        $token_properties = $params;
+        $token_properties = array();
         $token_properties['user_eid'] = $user->getEid(); // TODO: use setOwner() like other objects?
         unset($token_properties['eid']);
 
         $token = \Flexio\Object\Token::create($token_properties);
-
-        // get the token properties
         return $token->get();
     }
 
     public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $token_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $token_identifier = $validated_params['eid'];
 
         // load the user and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($requesting_user_eid);
@@ -75,12 +75,13 @@ class Token
     public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $token_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $token_identifier = $validated_params['eid'];
 
         // load the user and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($requesting_user_eid);
@@ -102,12 +103,13 @@ class Token
     public static function listall(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-            'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
+        if (($validator->check($params, array(
+                'eid' => array('type' => 'identifier', 'required' => true)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $user_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $user_identifier = $validated_params['eid'];
 
         // load the user and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($user_identifier);

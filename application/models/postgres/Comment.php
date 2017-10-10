@@ -71,10 +71,12 @@ class Comment extends ModelBase
             return false;
 
         $validator = \Flexio\Base\Validator::create();
-        if (($process_arr = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'comment' => array('type' => 'string', 'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         $db = $this->getDatabase();

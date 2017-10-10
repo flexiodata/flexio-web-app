@@ -46,13 +46,14 @@ class MailJet implements \Flexio\Services\IConnection
         $this->close();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             return false;
 
-        $this->initialize($params);
+        $validated_params = $validator->getParams();
+        $this->initialize($validated_params);
         return $this->isOk();
     }
 

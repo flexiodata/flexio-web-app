@@ -58,11 +58,12 @@ class Validator
         // example of how this function might be used
 
         // $validator = \Flexio\Base\Validator::create();
-        // if (($params = $validator->check($params, array(
+        // if (($validator->check($params, array(
         //         'eid'   => array('type' => 'eid',    'required' => true),
         //         'name'  => array('type' => 'string', 'required' => false, 'default' => 'sample')
-        //     ))->getParams()) === false)
+        //     ))->hasErrors()) === true)
         //     throw new Exception;
+        // $validated_params = $validator->getParams();
 
         $this->check_params($params, $checks);
         return $this;
