@@ -31,8 +31,6 @@ export const getAllUsers = state => {
 }
 
 export const getAllConnections = state => {
-  //var all_connections = _.filter(state.objects, { eid_type: OBJECT_TYPE_CONNECTION, eid_status: OBJECT_STATUS_AVAILABLE })
-
   // NOTE: it's really important to include the '_' on the same line
   // as the 'return', otherwise JS will return without doing anything
   return _
@@ -52,7 +50,15 @@ export const getAllStreams = state => {
 }
 
 export const getAllTokens = state => {
-  return _.filter(state.objects, { eid_type: OBJECT_TYPE_TOKEN })
+  // NOTE: it's really important to include the '_' on the same line
+  // as the 'return', otherwise JS will return without doing anything
+  return _
+    .chain(state.objects)
+    .filter({ eid_type: OBJECT_TYPE_TOKEN })
+    .filter(function(t) { return _.get(t, 'user_eid') == state.active_user_eid })
+    .sortBy([ function(t) { return new Date(t.created) } ])
+    .reverse()
+    .value()
 }
 
 export const getAllRights = state => {
