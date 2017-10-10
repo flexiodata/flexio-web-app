@@ -52,18 +52,19 @@ class AmazonS3 implements \Flexio\Services\IConnection
         $this->close();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'region' => array('type' => 'string', 'required' => true),
                 'bucket' => array('type' => 'string', 'required' => true),
                 'accesskey' => array('type' => 'string', 'required' => true),
                 'secretkey' => array('type' => 'string', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             return false;
 
-        $region = $params['region'];
-        $bucket = $params['bucket'];
-        $accesskey = $params['accesskey'];
-        $secretkey = $params['secretkey'];
+        $validated_params = $validator->getParams();
+        $region = $validated_params['region'];
+        $bucket = $validated_params['bucket'];
+        $accesskey = $validated_params['accesskey'];
+        $secretkey = $validated_params['secretkey'];
         $this->initialize($region, $bucket, $accesskey, $secretkey);
         return $this->isOk();
     }
@@ -244,7 +245,7 @@ class AmazonS3 implements \Flexio\Services\IConnection
                 $message = "An error occurred while attempting to access the requested resource";
                  else
                 $message = "AWS Error Message: $message";
-            
+
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $message);
         }
         catch (\Exception $e)

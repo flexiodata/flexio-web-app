@@ -102,7 +102,7 @@ class Process extends ModelBase
             return false;
 
         $validator = \Flexio\Base\Validator::create();
-        if (($process_arr = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'parent_eid'     => array('type' => 'string',  'required' => false),
                 'process_eid'    => array('type' => 'string',  'required' => false),
                 'process_mode'   => array('type' => 'string',  'required' => false),
@@ -121,8 +121,10 @@ class Process extends ModelBase
                 'process_info'   => array('type' => 'string',  'required' => false),
                 'process_status' => array('type' => 'string',  'required' => false),
                 'cache_used'     => array('type' => 'string',  'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         $db = $this->getDatabase();

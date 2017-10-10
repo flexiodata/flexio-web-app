@@ -21,12 +21,14 @@ class Project
     public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid_status'   => array('type' => 'string', 'required' => false),
                 'name'         => array('type' => 'string', 'required' => false),
                 'description'  => array('type' => 'string', 'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_params = $validator->getParams();
 
         // right now, only allow a project to be created by an actual user since
         // we have no other way of knowing who the intended owner is (until we allow
@@ -36,7 +38,7 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         // create the object
-        $project = \Flexio\Object\Project::create($params);
+        $project = \Flexio\Object\Project::create($validated_params);
 
         $project->setCreatedBy($requesting_user_eid);
         $project->setOwner($requesting_user_eid);
@@ -58,12 +60,13 @@ class Project
     public static function delete(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $project_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $project_identifier = $validated_params['eid'];
 
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
@@ -81,15 +84,16 @@ class Project
     public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid'          => array('type' => 'identifier', 'required' => true),
                 'eid_status'   => array('type' => 'string', 'required' => false),
                 'name'         => array('type' => 'string', 'required' => false),
                 'description'  => array('type' => 'string', 'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $project_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $project_identifier = $validated_params['eid'];
 
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);
@@ -101,19 +105,20 @@ class Project
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the project params
-        $project->set($params);
+        $project->set($validated_params);
         return $project->get();
     }
 
     public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $project_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $project_identifier = $validated_params['eid'];
 
         // load the object
         $project = \Flexio\Object\Project::load($project_identifier);

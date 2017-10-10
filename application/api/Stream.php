@@ -21,27 +21,25 @@ class Stream
     public static function create(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid_status'    => array('type' => 'string', 'required' => false),
                 'name'          => array('type' => 'string',  'required' => false),
                 'size'          => array('type' => 'integer', 'required' => false),
                 'mime_type'     => array('type' => 'string',  'required' => false),
                 'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
                 'file_modified' => array('type' => 'string',  'required' => false)  // TODO: date type?
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // create the stream
-        $stream = \Flexio\Object\Stream::create($params); // the \Flexio\Object\Stream::create() creates a default connection and path
-
-        // return the stream info
+        $validated_params = $validator->getParams();
+        $stream = \Flexio\Object\Stream::create($validated_params); // the \Flexio\Object\Stream::create() creates a default connection and path
         return $stream->get();
     }
 
     public static function set(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid'           => array('type' => 'identifier', 'required' => true),
                 'eid_status'    => array('type' => 'string', 'required' => false),
                 'name'          => array('type' => 'string',  'required' => false),
@@ -49,15 +47,15 @@ class Stream
                 'mime_type'     => array('type' => 'string',  'required' => false),
                 'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
                 'file_modified' => array('type' => 'string',  'required' => false)  // TODO: date type?
-
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $stream_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $stream_identifier = $validated_params['eid'];
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream !== false)
-            $stream->set($params);
+            $stream->set($validated_params);
 
         return $stream->get();
     }
@@ -65,12 +63,13 @@ class Stream
     public static function get(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $stream_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $stream_identifier = $validated_params['eid'];
 
         // check the rights on the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
@@ -87,22 +86,23 @@ class Stream
     public static function content(array $params, string $requesting_user_eid = null) // TODO: set function return type
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid'          => array('type' => 'identifier', 'required' => true),
                 'start'        => array('type' => 'integer', 'required' => false),
                 'limit'        => array('type' => 'integer', 'required' => false),
                 'metadata'     => array('type' => 'string', 'required' => false),
                 'content_type' => array('type' => 'string', 'required' => false),
                 'encode'       => array('type' => 'string', 'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $stream_identifier = $params['eid'];
-        $start = isset($params['start']) ? (int)$params['start'] : 0;  // start isn't specified, start at the beginning
-        $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
-        $metadata = isset($params['metadata']) ? \toBoolean($params['metadata']) : false;
-        $content_type = isset($params['content_type']) ? $params['content_type'] : false;
-        $encode = $params['encode'] ?? null;
+        $validated_params = $validator->getParams();
+        $stream_identifier = $validated_params['eid'];
+        $start = isset($validated_params['start']) ? (int)$validated_params['start'] : 0;  // start isn't specified, start at the beginning
+        $limit = isset($validated_params['limit']) ? (int)$validated_params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
+        $metadata = isset($validated_params['metadata']) ? \toBoolean($validated_params['metadata']) : false;
+        $content_type = isset($validated_params['content_type']) ? $validated_params['content_type'] : false;
+        $encode = $validated_params['encode'] ?? null;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
@@ -160,7 +160,7 @@ class Stream
     public static function upload(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid'           => array('type' => 'identifier', 'required' => true),
                 'name'          => array('type' => 'string',  'required' => false),
                 'size'          => array('type' => 'integer', 'required' => false),
@@ -168,19 +168,18 @@ class Stream
                 'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
                 'file_modified' => array('type' => 'string',  'required' => false), // TODO: date type?
                 'filename_hint' => array('type' => 'string',  'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $stream_identifier = $params['eid'];
+        $validated_params = $validator->getParams();
+        $stream_identifier = $validated_params['eid'];
 
         // get the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        self::handleStreamUpload($params, $stream);
-
-        // return the stream info
+        self::handleStreamUpload($validated_params, $stream);
         return $stream->get();
     }
 
@@ -313,16 +312,18 @@ class Stream
         // table content into a CSV and then set appropriate http headers
 
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'eid'      => array('type' => 'identifier', 'required' => true),
                 'start'    => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false)
-            ))->getParams()) === false)
+                'limit'    => array('type' => 'integer', 'required' => false),
+                'name'     => array('type' => 'string', 'required' => false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $stream_identifier = $params['eid'];
-        $start = isset($params['start']) ? (int)$params['start'] : 0;  // start isn't specified, start at the beginning
-        $limit = isset($params['limit']) ? (int)$params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
+        $validated_params = $validator->getParams();
+        $stream_identifier = $validated_params['eid'];
+        $start = isset($validated_params['start']) ? (int)$validated_params['start'] : 0;  // start isn't specified, start at the beginning
+        $limit = isset($validated_params['limit']) ? (int)$validated_params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
         if ($stream === false)
@@ -345,8 +346,8 @@ class Stream
 
         if (isset($stream_info['name']) && strlen($stream_info['name']) > 0)
             $output_filename = $stream_info['name'];
-        if (isset($params['name']))
-            $output_filename = $params['name'];
+        if (isset($validated_params['name']))
+            $output_filename = $validated_params['name'];
         if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // Flexio tables are exported as csv, so add an appropriate extension

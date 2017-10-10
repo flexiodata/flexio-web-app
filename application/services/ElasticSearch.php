@@ -49,15 +49,16 @@ class ElasticSearch implements \Flexio\Services\IConnection
             $params['port'] = (string)$params['port'];
 
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             return false;
 
-        $this->initialize($params['host'], intval($params['port']), $params['username'], $params['password']);
+        $validated_params = $validator->getParams();
+        $this->initialize($validated_params['host'], intval($validated_params['port']), $validated_params['username'], $validated_params['password']);
         return $this->isOk();
     }
 

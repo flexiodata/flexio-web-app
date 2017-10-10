@@ -21,12 +21,13 @@ class Trash
     public static function add(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'items' => array('type' => 'object', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $objects = self::filterEidItems($params['items']);
+        $validated_params = $validator->getParams();
+        $objects = self::filterEidItems($validated_params['items']);
         if ($objects === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -70,12 +71,13 @@ class Trash
     public static function restore(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'items' => array('type' => 'object', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $objects = self::filterEidItems($params['items']);
+        $validated_params = $validator->getParams();
+        $objects = self::filterEidItems($validated_params['items']);
         if ($objects === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -113,12 +115,13 @@ class Trash
     public static function empty(array $params, string $requesting_user_eid = null) : bool
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'items' => array('type' => 'object', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $objects = self::filterEidItems($params['items']);
+        $validated_params = $validator->getParams();
+        $objects = self::filterEidItems($validated_params['items']);
         if ($objects === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -155,8 +158,8 @@ class Trash
     public static function listall(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-            ))->getParams()) === false)
+        if (($validator->check($params, array(
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // load the object

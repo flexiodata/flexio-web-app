@@ -21,12 +21,13 @@ class Search
     public static function search(array $params, string $requesting_user_eid = null) : array
     {
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'owner'    => array('type' => 'string', 'required' => false),
                 'name'     => array('type' => 'string', 'required' => false)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        $validated_params = $validator->getParams();
         if (!isset($requesting_user_eid))
             return array();
 
@@ -57,15 +58,15 @@ class Search
 
             $pipe_properties = $pipe->get();
 
-            if (isset($params['name']))
+            if (isset($validated_params['name']))
             {
-                if ($pipe_properties['name'] != $params['name'])
+                if ($pipe_properties['name'] != $validated_params['name'])
                     continue;
             }
 
-            if (isset($params['owner']))
+            if (isset($validated_params['owner']))
             {
-                if ($pipe->getOwner() != $params['owner'])
+                if ($pipe->getOwner() != $validated_params['owner'])
                     continue;
             }
 

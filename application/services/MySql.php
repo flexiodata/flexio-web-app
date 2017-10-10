@@ -58,18 +58,19 @@ class MySql implements \Flexio\Services\IConnection
             $params['port'] = (string)$params['port'];
 
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true),
                 'database' => array('type' => 'string', 'required' => true),
                 'path' => array('type' => 'string', 'required' => false, 'default' => '')
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             return false;
 
-        $this->initialize($params['host'], intval($params['port']), $params['database'], $params['username'], $params['password']);
-        $this->dbtable = $params['path'];
+        $validated_params = $validator->getParams();
+        $this->initialize($validated_params['host'], intval($validated_params['port']), $validated_params['database'], $validated_params['username'], $validated_params['password']);
+        $this->dbtable = $validated_params['path'];
 
         return $this->isOk();
     }

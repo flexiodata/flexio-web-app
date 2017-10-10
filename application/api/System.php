@@ -23,15 +23,17 @@ class System
         // note: should return the same as User::about();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
+        if (($validator->check($params, array(
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
-            ))->getParams()) === false)
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_params = $validator->getParams();
 
         // try to log in to the system
         $error_message = _('Authentication failed'); // default error message
-        $result = \Flexio\System\System::login($params['username'], $params['password'], $error_message);
+        $result = \Flexio\System\System::login($validated_params['username'], $validated_params['password'], $error_message);
 
         if (!$result)
         {
@@ -57,8 +59,8 @@ class System
     {
         // validation placeholder; no parameters are used
         $validator = \Flexio\Base\Validator::create();
-        if (($params = $validator->check($params, array(
-            ))->getParams()) === false)
+        if (($validator->check($params, array(
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         \Flexio\System\System::clearLoginIdentity();

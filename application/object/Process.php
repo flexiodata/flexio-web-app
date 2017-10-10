@@ -62,6 +62,12 @@ class Process extends \Flexio\Object\Base
         $streamwriter = false;
         $form_params = array();
 
+        // first fetch query string parameters
+        foreach ($_GET as $key => $value)
+        {
+            $form_params["query.$key"] = $value;
+        }
+
         $parser = \Flexio\Base\MultipartParser::create();
 
         $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params) {
