@@ -69,6 +69,14 @@ class Connection
 
         // get the connection properties
         $properties = self::filterProperties($connection->get());
+
+        // coerce an empty connection_info array() from [] into object {};
+
+        if (isset($properties['connection_info']) && is_array($properties['connection_info']) && count($properties['connection_info']))
+        {
+            $properties['connection_info'] = (object)count($properties['connection_info']);
+        }
+
         return $properties;
     }
 
