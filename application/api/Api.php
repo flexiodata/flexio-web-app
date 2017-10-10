@@ -39,15 +39,9 @@ class Api
         {
             // if we're testing a failure, throw an error right away
             if (isset($query_params['testfail']) && strlen($query_params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
-            {
-                $fail_string = $query_params['testfail'];
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $fail_string);
-            }
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $query_params['testfail']);
 
-            if ($url_params['apibase'] !== 'api')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
-
-            if ($url_params['apiversion'] !== 'v1')
+            if ($url_params['apibase'] !== 'api' || $url_params['apiversion'] !== 'v1')
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
             // get the requesting user
@@ -56,7 +50,7 @@ class Api
                 $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC;
 
             // send the response
-            $content = self::processRequest($method, $url_params, $combined_params, $requesting_user_eid);  // TODO: pass in query params and post params separately
+            $content = self::processRequest($method, $url_params, $combined_params, $query_params, $post_params, $requesting_user_eid);
             self::sendContentResponse($content, $echo);
         }
         catch (\Flexio\Base\Exception $e)
@@ -115,7 +109,7 @@ class Api
         }
     }
 
-    private static function processRequest(string $request_method, array $url_params, array $combined_params, string $requesting_user_eid = null)
+    private static function processRequest(string $request_method, array $url_params, array $combined_params, array $query_params, array $post_params, string $requesting_user_eid = null)
     {
         // make sure we have a valid request method
         switch ($request_method)
