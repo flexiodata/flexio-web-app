@@ -453,7 +453,7 @@ class Task
         foreach ($variables as $variable_key => $variable_value)
         {
             // make sure variables are appropriately named
-            if (!preg_match('/^[a-zA-Z_-][a-zA-Z0-9_-]*$/', (string)$variable_key))
+            if (!preg_match('/^[a-zA-Z_-][a-zA-Z0-9._-]*$/', (string)$variable_key))
                 continue;
 
             $variable_match_name = '${'.$variable_key.'}';
