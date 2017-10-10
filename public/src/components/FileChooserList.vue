@@ -6,6 +6,9 @@
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>
+    <div class="pa1 f7 silver i" v-else-if="error_message.length > 0">
+      {{error_message}}
+    </div>
     <div class="pa1 f7 silver i" v-else-if="items.length == 0">
       {{empty_message}}
     </div>
@@ -68,7 +71,8 @@
         is_fetching: false,
         is_inited: false,
         last_selected_item: {},
-        items: []
+        items: [],
+        error_message: ''
       }
     },
     watch: {
@@ -195,7 +199,8 @@
 
           this.is_inited = true
         }, response => {
-          console.log(response)
+          this.is_fetching = false
+          this.error_message = _.get(response.body, 'error.message', '')
         })
       }
     }
