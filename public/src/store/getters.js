@@ -19,10 +19,14 @@ export const getAllProjects = state => {
 }
 
 export const getAllPipes = state => {
+  // NOTE: it's really important to include the '_' on the same line
+  // as the 'return', otherwise JS will return without doing anything
   return _
     .chain(state.objects)
     .filter({ eid_type: OBJECT_TYPE_PIPE })
     .reject({ eid_status: OBJECT_STATUS_TRASH })
+    .sortBy([ function(p) { return new Date(p.created) } ])
+    .reverse()
     .value()
 }
 

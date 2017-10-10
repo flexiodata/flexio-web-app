@@ -60,7 +60,7 @@
         'is_fetched': 'pipes_fetched'
       }),
       pipes() {
-        return this.commonFilter(this.getOurPipes(), this.filter, ['name', 'description'])
+        return this.commonFilter(this.getAllPipes(), this.filter, ['name', 'description'])
       }
     },
     created() {
@@ -73,15 +73,6 @@
       tryFetchPipes() {
         if (!this.is_fetched)
           this.$store.dispatch('fetchPipes')
-      },
-      getOurPipes() {
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(this.getAllPipes())
-          .sortBy([ function(p) { return new Date(p.created) } ])
-          .reverse()
-          .value()
       },
       onItemEdit(item) {
         this.$emit('item-edit', item)
