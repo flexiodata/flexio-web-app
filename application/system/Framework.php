@@ -86,6 +86,20 @@ class FrameworkRequest
         $result += $this->params;
         return $result;
     }
+
+    public function getQueryParams()
+    {
+        $result = array();
+        if (isset($_GET))  $result += $_GET;
+        return $result;
+    }
+
+    public function getPostParams()
+    {
+        $result = array();
+        if (isset($_POST)) $result += $_POST;
+        return $result;
+    }
 }
 
 class FrameworkResponse
