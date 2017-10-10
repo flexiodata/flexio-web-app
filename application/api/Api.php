@@ -18,62 +18,37 @@ namespace Flexio\Api;
 
 class Api
 {
-    public static function request(\Flexio\System\FrameworkRequest $server_request, array $params, $echo = true)
+    public static function request(\Flexio\System\FrameworkRequest $server_request, array $combined_params, array $query_params, array $post_params, bool $echo = true)
     {
         // get the method
         $method = $server_request->getMethod();
 
         // get the url parts and map them to the api parameters
-        $urlpart0 = $server_request->getUrlPathPart(0);
-        $urlpart1 = $server_request->getUrlPathPart(1);
-        $urlpart2 = $server_request->getUrlPathPart(2);
-        $urlpart3 = $server_request->getUrlPathPart(3);
-        $urlpart4 = $server_request->getUrlPathPart(4);
-        $urlpart5 = $server_request->getUrlPathPart(5);
-        $urlpart6 = $server_request->getUrlPathPart(6);
-        $urlpart7 = $server_request->getUrlPathPart(7);
-
-        if (isset($urlpart1)) $params['apiversion'] = $urlpart1;
-        if (isset($urlpart2)) $params['apiparam1']  = $urlpart2;
-        if (isset($urlpart3)) $params['apiparam2']  = $urlpart3;
-        if (isset($urlpart4)) $params['apiparam3']  = $urlpart4;
-        if (isset($urlpart5)) $params['apiparam4']  = $urlpart5;
-        if (isset($urlpart6)) $params['apiparam5']  = $urlpart6;
-        if (isset($urlpart7)) $params['apiparam6']  = $urlpart7;
+        $url_params = array();
+        $url_params['apibase']    = $server_request->getUrlPathPart(0) ?? '';
+        $url_params['apiversion'] = $server_request->getUrlPathPart(1) ?? '';
+        $url_params['apiparam1']  = $server_request->getUrlPathPart(2) ?? '';
+        $url_params['apiparam2']  = $server_request->getUrlPathPart(3) ?? '';
+        $url_params['apiparam3']  = $server_request->getUrlPathPart(4) ?? '';
+        $url_params['apiparam4']  = $server_request->getUrlPathPart(5) ?? '';
+        $url_params['apiparam5']  = $server_request->getUrlPathPart(6) ?? '';
+        $url_params['apiparam6']  = $server_request->getUrlPathPart(7) ?? '';
 
         // process the request
         try
         {
             // if we're testing a failure, throw an error right away
-            if (isset($params['testfail']) && strlen($params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
+            if (isset($query_params['testfail']) && strlen($query_params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
             {
-                $fail_string = $params['testfail'];
+                $fail_string = $query_params['testfail'];
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $fail_string);
             }
 
-            if (!isset($params['apiversion']) || $params['apiversion'] !== 'v1')
+            if ($url_params['apibase'] !== 'api')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
+
+            if ($url_params['apiversion'] !== 'v1')
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
-
-            if (!isset($params['apiparam1']) || strlen($params['apiparam1']) == 0)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
-
-            // split the request into the url params and the query params;
-            $url_params = array();
-            if (isset($params['apiparam1'])) $url_params['apiparam1'] = $params['apiparam1'];
-            if (isset($params['apiparam2'])) $url_params['apiparam2'] = $params['apiparam2'];
-            if (isset($params['apiparam3'])) $url_params['apiparam3'] = $params['apiparam3'];
-            if (isset($params['apiparam4'])) $url_params['apiparam4'] = $params['apiparam4'];
-            if (isset($params['apiparam5'])) $url_params['apiparam5'] = $params['apiparam5'];
-            if (isset($params['apiparam6'])) $url_params['apiparam6'] = $params['apiparam6'];
-
-            $query_params = $params;
-            unset($query_params['apiversion']);
-            unset($query_params['apiparam1']);
-            unset($query_params['apiparam2']);
-            unset($query_params['apiparam3']);
-            unset($query_params['apiparam4']);
-            unset($query_params['apiparam5']);
-            unset($query_params['apiparam6']);
 
             // get the requesting user
             $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
@@ -81,11 +56,8 @@ class Api
                 $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC;
 
             // send the response
-            $response = self::processRequest($method, $url_params, $query_params, $requesting_user_eid);
-            if ($echo === false)
-                return $response;
-
-            self::sendContentResponse($response);
+            $content = self::processRequest($method, $url_params, $combined_params, $requesting_user_eid);  // TODO: pass in query params and post params separately
+            self::sendContentResponse($content, $echo);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -98,21 +70,14 @@ class Api
 
             if (IS_DEBUG() !== false)
             {
-                $file = $e->getFile();
-                $line = $e->getLine();
                 $error['type'] = 'flexio exception';
-                $error['file'] = $file;
-                $error['line'] = $line;
+                $error['file'] = $e->getFile();
+                $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
             }
 
-            $response = array();
-            $response['error'] = $error;
-            if ($echo === false)
-                return $response;
-
-            self::sendErrorResponse($response);
+            self::sendErrorResponse($error, $echo);
         }
         catch (\Exception $e)
         {
@@ -122,21 +87,14 @@ class Api
 
             if (IS_DEBUG() !== false)
             {
-                $file = $e->getFile();
-                $line = $e->getLine();
                 $error['type'] = 'php exception';
-                $error['file'] = $file;
-                $error['line'] = $line;
+                $error['file'] = $e->getFile();
+                $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
             }
 
-            $response = array();
-            $response['error'] = $error;
-            if ($echo === false)
-                return $response;
-
-            self::sendErrorResponse($response);
+            self::sendErrorResponse($error, $echo);
         }
         catch (\Error $e)
         {
@@ -146,25 +104,18 @@ class Api
 
             if (IS_DEBUG() !== false)
             {
-                $file = $e->getFile();
-                $line = $e->getLine();
                 $error['type'] = 'php error';
-                $error['file'] = $file;
-                $error['line'] = $line;
+                $error['file'] = $e->getFile();
+                $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
             }
 
-            $response = array();
-            $response['error'] = $error;
-            if ($echo === false)
-                return $response;
-
-            self::sendErrorResponse($response);
+            self::sendErrorResponse($error, $echo);
         }
     }
 
-    private static function processRequest(string $request_method, array $url_params, array $query_params, string $requesting_user_eid = null)
+    private static function processRequest(string $request_method, array $url_params, array $combined_params, string $requesting_user_eid = null)
     {
         // make sure we have a valid request method
         switch ($request_method)
@@ -179,39 +130,28 @@ class Api
                 break;
         }
 
-        // check url parameter count; has to be at least 1
-        $url_param_count = count($url_params);
-        if ($url_param_count < 1)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
-
         // ROUTE 1: try to route the request "as is" before looking for any
         // eids or identifiers in the path; if we can route the request,
         // we're done; this gives precedence to api keywords over eids and
         // identifiers
-        $api_params = self::mapUrlParamsToApiParams($url_params);
-        $api_path = self::createApiPath($request_method, $api_params);
-
-        $function = self::getApiEndpoint($api_path);
+        $url_params_route1 = $url_params;
+        $function = self::getApiEndpoint($request_method, $url_params_route1);
         if (is_callable($function) === true)
-            return $function($query_params, $requesting_user_eid);
-
+            return $function($combined_params, $requesting_user_eid);
 
         // ROUTE 2: if we weren't able to route the request "as is", try to
         // route the request based on checking for eids or identifiers in the
         // second and forth api parameters
-        $api_params = self::mapUrlParamsToApiParams($url_params);
-
-        if (\Flexio\Base\Eid::isValid($api_params['apiparam2']) || \Flexio\Base\Identifier::isValid($api_params['apiparam2']))
-            $api_params['apiparam2'] = ':eid';
-        if (\Flexio\Base\Eid::isValid($api_params['apiparam4']) || \Flexio\Base\Identifier::isValid($api_params['apiparam4']))
-            $api_params['apiparam4'] = ':eid';
-
-        $api_path = self::createApiPath($request_method, $api_params);
+        $url_params_route2 = $url_params;
+        if (\Flexio\Base\Eid::isValid($url_params_route2['apiparam2']) || \Flexio\Base\Identifier::isValid($url_params_route2['apiparam2']))
+            $url_params_route2['apiparam2'] = ':eid';
+        if (\Flexio\Base\Eid::isValid($url_params_route2['apiparam4']) || \Flexio\Base\Identifier::isValid($url_params_route2['apiparam4']))
+            $url_params_route2['apiparam4'] = ':eid';
 
         // create the input parameters by merging the eid(s) specified
         // in the url with the query parameters;
         $p = array();
-        if ($api_params['apiparam2'] === ':eid' && $api_params['apiparam4'] === ':eid')
+        if ($url_params_route2['apiparam2'] === ':eid' && $url_params_route2['apiparam4'] === ':eid')
         {
             // if the second and fourth api parameters are eids,
             // the first is the parent and the second the primary
@@ -219,29 +159,45 @@ class Api
             $p['eid'] = $url_params['apiparam4'];
         }
 
-        if ($api_params['apiparam2'] === ':eid' && $api_params['apiparam4'] !== ':eid')
+        if ($url_params_route2['apiparam2'] === ':eid' && $url_params_route2['apiparam4'] !== ':eid')
         {
             // if the second parameter is an eid, but the fourth
             // isn't, treat the second eid as the parent eid if there's
             // a third parameter and eid is a query parameter; otherwise
             // treat the second parameter as the primary eid
-            if (isset($url_params['apiparam3']) && isset($query_params['eid']))
+            if (strlen($url_params['apiparam3']) > 0 && isset($combined_params['eid']))
                 $p['parent_eid'] = $url_params['apiparam2'];
                  else
                 $p['eid'] = $url_params['apiparam2'];
         }
-        $query_params = array_merge($p, $query_params);
+        $combined_params = array_merge($p, $combined_params);
 
-        $function = self::getApiEndpoint($api_path);
+        $function = self::getApiEndpoint($request_method, $url_params_route2);
         if (is_callable($function) === true)
-            return $function($query_params, $requesting_user_eid);
+            return $function($combined_params, $requesting_user_eid);
 
         // we can't find the specified api endpoint
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
     }
 
-    private static function getApiEndpoint(string $apiendpoint) : string
+    private static function getApiEndpoint(string $request_method, array $url_params) : string
     {
+        // creates an api endpoint string that's used to lookup the
+        // appropriate api implementation
+        $apiendpoint = '';
+
+        if ($request_method === 'GET')    $apiendpoint .= 'GET ';
+        if ($request_method === 'POST')   $apiendpoint .= 'POS ';
+        if ($request_method === 'PUT')    $apiendpoint .= 'PUT ';
+        if ($request_method === 'DELETE') $apiendpoint .= 'DEL ';
+
+        $apiendpoint .= (strlen($url_params['apiparam1']) > 0 ? ('/' . $url_params['apiparam1']) : '');
+        $apiendpoint .= (strlen($url_params['apiparam2']) > 0 ? ('/' . $url_params['apiparam2']) : '');
+        $apiendpoint .= (strlen($url_params['apiparam3']) > 0 ? ('/' . $url_params['apiparam3']) : '');
+        $apiendpoint .= (strlen($url_params['apiparam4']) > 0 ? ('/' . $url_params['apiparam4']) : '');
+        $apiendpoint .= (strlen($url_params['apiparam5']) > 0 ? ('/' . $url_params['apiparam5']) : '');
+        $apiendpoint .= (strlen($url_params['apiparam6']) > 0 ? ('/' . $url_params['apiparam6']) : '');
+
         switch ($apiendpoint)
         {
             default:
@@ -376,8 +332,11 @@ class Api
         }
     }
 
-    private static function sendContentResponse($response)
+    private static function sendContentResponse($content, bool $echo)
     {
+        if ($echo === false)
+            return $content;
+
         // set the default headers; note: never cache api calls
         header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
         header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -388,12 +347,17 @@ class Api
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
 
-        $response = @json_encode($response, JSON_PRETTY_PRINT);
+        $response = @json_encode($content, JSON_PRETTY_PRINT);
         echo $response;
     }
 
-    private static function sendErrorResponse($response)
+    private static function sendErrorResponse(array $error, bool $echo)
     {
+        $response = array();
+        $response['error'] = $error;
+        if ($echo === false)
+            return $response;
+
         // set the default headers; note: never cache api calls
         header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
         header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -482,39 +446,5 @@ class Api
     private static function sessionAuthExpired() : bool
     {
         return (isset($_COOKIE['FXSESSID']) && strlen($_COOKIE['FXSESSID']) > 0 && $GLOBALS['g_store']->user_eid == '') ? true:false;
-    }
-
-    private static function mapUrlParamsToApiParams(array $url_params) : array
-    {
-        // get the api params from the url params
-        $api_params = array();
-        $api_params['apiparam1'] = $url_params['apiparam1'] ?? '';
-        $api_params['apiparam2'] = $url_params['apiparam2'] ?? '';
-        $api_params['apiparam3'] = $url_params['apiparam3'] ?? '';
-        $api_params['apiparam4'] = $url_params['apiparam4'] ?? '';
-        $api_params['apiparam5'] = $url_params['apiparam5'] ?? '';
-        $api_params['apiparam6'] = $url_params['apiparam6'] ?? '';
-        return $api_params;
-    }
-
-    private static function createApiPath(string $request_method, array $params) : string
-    {
-        // creates an api endpoint string that's used to lookup the
-        // appropriate api implementation
-        $apiendpoint = '';
-
-        if ($request_method === 'GET')    $apiendpoint .= 'GET ';
-        if ($request_method === 'POST')   $apiendpoint .= 'POS ';
-        if ($request_method === 'PUT')    $apiendpoint .= 'PUT ';
-        if ($request_method === 'DELETE') $apiendpoint .= 'DEL ';
-
-        $apiendpoint .= (strlen($params['apiparam1']) > 0 ? ('/' . $params['apiparam1']) : '');
-        $apiendpoint .= (strlen($params['apiparam2']) > 0 ? ('/' . $params['apiparam2']) : '');
-        $apiendpoint .= (strlen($params['apiparam3']) > 0 ? ('/' . $params['apiparam3']) : '');
-        $apiendpoint .= (strlen($params['apiparam4']) > 0 ? ('/' . $params['apiparam4']) : '');
-        $apiendpoint .= (strlen($params['apiparam5']) > 0 ? ('/' . $params['apiparam5']) : '');
-        $apiendpoint .= (strlen($params['apiparam6']) > 0 ? ('/' . $params['apiparam6']) : '');
-
-        return $apiendpoint;
     }
 }

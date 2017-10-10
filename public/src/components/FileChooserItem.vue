@@ -1,6 +1,6 @@
 <template>
   <tr
-    class="darken-05 no-select cursor-default"
+    class="no-select cursor-default darken-05"
     :class="cls"
     @click="onClick"
     @click.ctrl="onCtrlClick"
@@ -48,7 +48,7 @@
     },
     computed: {
       cls() {
-        return this.item.is_selected ? 'bg-black-10' : 'bg-white'
+        return this.item.is_selected ? 'bg-light-gray' : 'bg-white'
       },
       modified() {
         var m = this.item.modified

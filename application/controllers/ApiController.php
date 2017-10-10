@@ -29,7 +29,9 @@ class ApiController extends \Flexio\System\FxControllerAction
         // get the request and related info
         $request = $this->getRequest();
         $method = $request->getMethod();
-        $params = $request->getParams();
+        $combined_params = $request->getParams();
+        $query_params = $request->getQueryParams();
+        $post_params = $request->getPostParams();
 
 
 
@@ -126,7 +128,8 @@ class ApiController extends \Flexio\System\FxControllerAction
                             exit(0);
                         }
 
-                        $params = array_merge($params, $obj);
+                        $combined_params = array_merge($combined_params, $obj); // DEPRECATED: old combined post/get params
+                        $post_params = $obj; // if we're posting JSON, this will take the place of the post params
                     }
 
                     break;
@@ -135,6 +138,6 @@ class ApiController extends \Flexio\System\FxControllerAction
         }
 
         // process the request
-        \Flexio\Api\Api::request($request, $params);
+        \Flexio\Api\Api::request($request, $combined_params, $query_params, $post_params);
     }
 }

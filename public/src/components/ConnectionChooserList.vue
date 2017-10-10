@@ -56,13 +56,13 @@
         type: String,
         default: ''
       },
-      'show-default-connections': {
-        type: Boolean,
-        default: true
-      },
       'connection-type-filter': {
         type: String,
         default: ''
+      },
+      'show-default-connections': {
+        type: Boolean,
+        default: false
       },
       'show-selection': {
         type: Boolean,
@@ -81,6 +81,10 @@
         default: ''
       },
       'override-item-cls': {
+        type: Boolean,
+        default: false
+      },
+      'auto-select-first-item': {
         type: Boolean,
         default: false
       }
@@ -125,7 +129,7 @@
         return items
       },
       input_services() {
-        var items = [].concat(this.default_connections, this.getOurConnections())
+        var items = [].concat(this.default_connections, this.getAllConnections())
 
         if (this.connectionTypeFilter.length == 0)
           return items
@@ -138,6 +142,9 @@
     },
     created() {
       this.tryFetchConnections()
+
+      if (this.autoSelectFirstItem === true)
+        this.trySelectFirstItem()
     },
     methods: {
       ...mapGetters([
@@ -147,14 +154,15 @@
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
       },
-      getOurConnections() {
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(this.getAllConnections())
-          .sortBy([ function(p) { return new Date(p.created) } ])
-          .reverse()
-          .value()
+      trySelectFirstItem() {
+        if (this.input_services.length == 0)
+        {
+          setTimeout(() => { this.trySelectFirstItem() }, 500)
+        }
+         else
+        {
+          this.onItemActivate(_.first(this.input_services))
+        }
       },
       onAddClick() {
         this.$emit('add')

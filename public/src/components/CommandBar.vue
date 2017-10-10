@@ -243,15 +243,6 @@
         'getAllConnections'
       ]),
 
-      getOurConnections() {
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(this.getAllConnections())
-          .sortBy([ function(p) { return new Date(p.created) } ])
-          .value()
-      },
-
       setValue(val) {
         // this 'freeze_cursor_activity' variable helps us know not to show
         // the dropdown on cursor activity in the CodeMirror editor
@@ -293,7 +284,7 @@
           idx = Math.max(this.editor.getCursor().ch, 0)
 
         var hints = parser.getHints(val, idx, {
-          connections: this.getOurConnections(),
+          connections: this.getAllConnections(),
           columns: this.input_columns
         })
         hints.items = this.getFilteredDropdownItems(hints)

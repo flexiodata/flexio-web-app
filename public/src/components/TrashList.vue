@@ -44,22 +44,13 @@
         'is_fetched': 'trash_fetched'
       }),
       trash_items() {
-        return this.commonFilter(this.getOurTrash(), this.filter, ['name', 'description'])
+        return this.commonFilter(this.getAllTrash(), this.filter, ['name', 'description'])
       },
     },
     methods: {
       ...mapGetters([
         'getAllTrash'
-      ]),
-      getOurTrash() {
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(this.getAllTrash())
-          .sortBy([ function(p) { return new Date(p.created) } ])
-          .reverse()
-          .value()
-      }
+      ])
     }
   }
 </script>

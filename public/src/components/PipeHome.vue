@@ -156,7 +156,7 @@
         return this.pipe_view == PIPEHOME_VIEW_BUILDER
       },
       connections() {
-        return this.getOurConnections()
+        return this.getAllConnections()
       }
     },
     created() {
@@ -370,16 +370,6 @@
           var eid = _.get(this.active_process, 'eid', '')
           this.$store.dispatch('cancelProcess', { eid })
         }
-      },
-
-      getOurConnections() {
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(this.getAllConnections())
-          .sortBy([ function(p) { return new Date(p.created) } ])
-          .reverse()
-          .value()
       },
 
       tryFetchPipe() {

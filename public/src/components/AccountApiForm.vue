@@ -13,8 +13,8 @@
             class="darken-05 hide-child"
             v-for="(token, index) in tokens"
           >
-            <td class="pv2a ph3 w-100">{{token.access_code}}</td>
-            <td class="pv2a tr">
+            <td class="pv2 ph3 w-100"><pre class="f6 ma0"><code>{{token.access_code}}</code></pre></td>
+            <td class="pv2 tr">
               <btn
                 btn-md
                 btn-primary
@@ -25,7 +25,7 @@
                 <span class="ttu b">Copy</span>
               </btn>
             </td>
-            <td class="pv2a ph3 tr">
+            <td class="pv2 ph3 tr">
               <span
                 class="pointer f3 lh-solid b child hint--top"
                 aria-label="Delete API Key"
@@ -68,7 +68,7 @@
         return _.get(_.find(this.getAllUsers(), { eid: this.active_user_eid }), 'tokens_fetching', true)
       },
       tokens() {
-        return this.getOurTokens()
+        return this.getAllTokens()
       }
     },
     mounted() {
@@ -82,18 +82,6 @@
       tryFetchTokens() {
         if (!this.is_fetched)
           this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
-      },
-      getOurTokens() {
-        var me = this
-
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(this.getAllTokens())
-          .filter(function(t) { return _.get(t, 'user_eid') == me.active_user_eid })
-          .sortBy([ function(t) { return new Date(t.created) } ])
-          .reverse()
-          .value()
       },
       createApiKey() {
         this.$store.dispatch('createUserToken', { eid: this.active_user_eid, attrs: {} })
