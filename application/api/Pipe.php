@@ -481,7 +481,16 @@ class Pipe
         unset($task['index']);
 
         $task_identifier = $pipe->addTaskStep($task, $index);
-        return $pipe->getTaskStep($task_identifier);
+
+        $result = $pipe->getTaskStep($task_identifier);
+
+        // coerce an empty associative array() from [] into object {};
+        if (isset($result['params']) && is_array($result['params']) && count($result['params'])==0)
+        {
+            $result['params'] = (object)$result['params'];
+        }
+
+        return $result;
     }
 
     public static function deleteTaskStep(array $params, string $requesting_user_eid = null) : bool
