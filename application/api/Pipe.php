@@ -333,45 +333,29 @@ class Pipe
          // STEP 3: run the process
         $process->run($background);
 
-        // STEP 4: if we're not echoing a stream, simply return success; otherwise
-        // return the requested stream
-        // TODO: handle this way, or return some type of message?
-        if ($stream_to_echo === false)
-            return true;
+        $stream = $process->getStdout();
+        $stream_info = $stream->get();
+        if ($stream_info === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $output_streams = $process->getOutput()->getStreams();
-        for ($i = 0; $i < count($output_streams); ++$i)
+        $mime_type = $stream_info['mime_type'];
+        $start = 0;
+        $limit = PHP_INT_MAX;
+        $content = $stream->content($start, $limit);
+
+        if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
-            if ($output_streams[$i]->getName() == $stream_to_echo || (is_numeric($stream_to_echo) && $i == $stream_to_echo))
-            {
-                $stream = $output_streams[$i];
-                $stream_info = $stream->get();
-                if ($stream_info === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-                $mime_type = $stream_info['mime_type'];
-                $start = 0;
-                $limit = PHP_INT_MAX;
-                $content = $stream->content($start, $limit);
-
-                if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-                {
-                    // return content as-is
-                    header('Content-Type: ' . $mime_type);
-                }
-                else
-                {
-                    // flexio table; return application/json in place of internal mime
-                    header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON);
-                    $content = json_encode($content);
-                }
-
-                echo($content);
-                exit(0);
-            }
+            // return content as-is
+            header('Content-Type: ' . $mime_type);
+        }
+        else
+        {
+            // flexio table; return application/json in place of internal mime
+            header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON);
+            $content = json_encode($content);
         }
 
-        header('HTTP/1.0 404 Not Found');
+        echo($content);
         exit(0);
     }
 
