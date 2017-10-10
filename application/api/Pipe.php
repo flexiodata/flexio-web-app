@@ -481,6 +481,13 @@ class Pipe
         unset($task['index']);
 
         $task_identifier = $pipe->addTaskStep($task, $index);
+
+        // coerce an empty associative array() from [] into object {};
+        if (isset($properties['params']) && is_array($properties['params']) && count($properties['params'])==0)
+        {
+            $properties['params'] = (object)$properties['params'];
+        }
+
         return $pipe->getTaskStep($task_identifier);
     }
 
