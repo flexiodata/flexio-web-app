@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Api
 {
-    public static function request(\Flexio\System\FrameworkRequest $server_request, array $params, $echo = true)
+    public static function request(\Flexio\System\FrameworkRequest $server_request, array $params, array $query_params, array $combined_params, bool $echo = true)
     {
         // get the method
         $method = $server_request->getMethod();
