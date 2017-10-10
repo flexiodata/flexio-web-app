@@ -64,10 +64,10 @@
         return this.eid.length > 0 ? this.connectionEid == this.eid : this.connectionType == this.ctype
       },
       cls() {
-        var sel_cls = this.is_selected ? 'bg-black-05' : 'bg-white'
+        var sel_cls = this.is_selected ? 'bg-light-gray' : 'bg-white'
 
         if (this.overrideCls)
-          return this.class + ' ' + sel_cls
+          return sel_cls
 
         if (_.get(this, 'layout', '') == 'list')
           return 'bg-white pa3 bb b--light-gray darken-05 ' + sel_cls
