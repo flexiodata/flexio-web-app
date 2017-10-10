@@ -74,7 +74,7 @@ class Connection
 
         if (isset($properties['connection_info']) && is_array($properties['connection_info']) && count($properties['connection_info']))
         {
-            $properties['connection_info'] = (object)count($properties['connection_info']);
+            $properties['connection_info'] = (object)$properties['connection_info'];
         }
 
         return $properties;
