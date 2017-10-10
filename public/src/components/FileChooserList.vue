@@ -6,6 +6,9 @@
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>
+    <div class="pa1 f7 silver i" v-else-if="error_message.length > 0">
+      {{error_message}}
+    </div>
     <div class="pa1 f7 silver i" v-else-if="items.length == 0">
       {{empty_message}}
     </div>
@@ -20,8 +23,7 @@
           @ctrl-click="itemCtrlClick"
           @shift-click="itemShiftClick"
           @dblclick="itemDblClick"
-        >
-        </file-chooser-item>
+        />
       </tbody>
     </table>
   </div>
@@ -68,7 +70,8 @@
         is_fetching: false,
         is_inited: false,
         last_selected_item: {},
-        items: []
+        items: [],
+        error_message: ''
       }
     },
     watch: {
@@ -187,15 +190,18 @@
           if (this.foldersOnly)
             items = _.filter(items, (item) => { return _.get(item, 'is_dir') === true })
 
-          this.items = [].concat(items)
           this.is_fetching = false
+          this.items = [].concat(items)
+          this.error_message = ''
 
           if (this.is_inited)
             this.fireSelectionChangeEvent()
 
           this.is_inited = true
         }, response => {
-          console.log(response)
+          this.is_fetching = false
+          this.items = [].concat([])
+          this.error_message = _.get(response.body, 'error.message', '')
         })
       }
     }

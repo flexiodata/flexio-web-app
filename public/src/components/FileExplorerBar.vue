@@ -6,7 +6,7 @@
         style="padding: 0.25rem 0.375rem"
       >
         <service-icon
-          class="br2 css-icon"
+          class="br1"
           style="width: 1rem; height; 1rem"
           :type="ctype"
         ></service-icon>

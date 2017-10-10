@@ -57,7 +57,7 @@
         'is_fetched': 'connections_fetched'
       }),
       connections() {
-        return this.commonFilter(this.getOurConnections(), this.filter, ['name', 'description'])
+        return this.commonFilter(this.getAllConnections(), this.filter, ['name', 'description'])
       }
     },
     created() {
@@ -70,15 +70,6 @@
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
-      },
-      getOurConnections() {
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(this.getAllConnections())
-          .sortBy([ function(p) { return new Date(p.created) } ])
-          .reverse()
-          .value()
       },
       onItemEdit(item) {
         this.$emit('item-edit', item)
