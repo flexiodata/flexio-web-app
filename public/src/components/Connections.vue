@@ -22,7 +22,7 @@
         class="br b--black-05 overflow-y-auto"
         layout="list"
         filter-items="storage"
-        item-cls="pa2 pr5-l darken-05"
+        item-cls="ma1 pa2 pr5-l br1 darken-05"
         :override-item-cls="true"
         :show-selection="true"
         :show-default-connections="false"
