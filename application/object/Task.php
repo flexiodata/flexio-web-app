@@ -160,6 +160,12 @@ class Task
                 'verb' => 'Running a program on'
             ),
             array(
+                'type' => \Flexio\Jobs\Exit1::MIME_TYPE,
+                'class' => '\Flexio\Jobs\Exit1',
+                'name' => 'Exit',
+                'verb' => 'Exiting'
+            ),
+            array(
                 'type' => \Flexio\Jobs\Rename::MIME_TYPE,
                 'class' => '\Flexio\Jobs\Rename',
                 'name' => 'Rename Columns',

@@ -825,6 +825,47 @@
 
 
 
+
+    this.args.exit = ['code'];
+    this.hints.exit = {
+    };
+    this.keywords.exit = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.exit",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.exit);
+
+      if (params.hasOwnProperty('code'))
+      {
+        json.params.code = params['code'].value;
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.exit"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "exit";
+
+      if (json.params.hasOwnProperty('code'))
+      {
+        res = this.append(res, "code: " + json.params['code']);
+      }
+
+      return res;
+    };
+
+
+
+
     this.args.email = ['to','from','subject','body','html','reply-to','data'];
     this.hints.email = {
       "data":       [ 'none','body','attachment' ]
@@ -2279,6 +2320,7 @@
         'convert',
         'echo',
         'email',
+        'exit',
         'execute',
         'filter',
         'limit',

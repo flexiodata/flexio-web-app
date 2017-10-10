@@ -24,6 +24,7 @@ class Process extends \Flexio\Object\Base
     // variables and errors
     private $debug;
     private $errors;
+    private $response_code = 200;
 
     public function __construct()
     {
@@ -675,6 +676,14 @@ class Process extends \Flexio\Object\Base
             // if the step failed, stop the job
             if ($this->hasError())
                 break;
+
+            // if the step exited, stop the job
+            $response_code = $context->getExitCode();
+            if ($response_code !== null)
+            {
+                $this->response_code = $response_code;
+                break;
+            }
         }
 
         // set final job status
@@ -765,6 +774,12 @@ class Process extends \Flexio\Object\Base
             if ($this->getDebug() === true)
                 die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
         }
+    }
+
+
+    public function getResponseCode() : int
+    {
+        return $this->response_code;
     }
 
     private function isCached() : bool
