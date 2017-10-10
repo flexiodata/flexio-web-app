@@ -56,13 +56,13 @@
         type: String,
         default: ''
       },
-      'show-default-connections': {
-        type: Boolean,
-        default: true
-      },
       'connection-type-filter': {
         type: String,
         default: ''
+      },
+      'show-default-connections': {
+        type: Boolean,
+        default: false
       },
       'show-selection': {
         type: Boolean,
