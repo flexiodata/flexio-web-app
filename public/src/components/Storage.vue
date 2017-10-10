@@ -25,7 +25,7 @@
         item-cls="ma1 pa2 pr5-l br1 darken-05"
         :override-item-cls="true"
         :show-selection="true"
-        :show-default-connections="false"
+        :auto-select-first-item="true"
         @item-activate="onConnectionActivate"
       />
       <div class="flex-fill">

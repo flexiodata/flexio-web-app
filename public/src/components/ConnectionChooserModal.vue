@@ -8,7 +8,6 @@
     <connection-chooser-list
       class="mt2 mb3"
       :connection-type-filter="connection_type"
-      :show-default-connections="false"
       @item-activate="submitExisting"
     ></connection-chooser-list>
     <h5 class="ma0 f6 fw6 ttu silver">Create a new connection</h5>
