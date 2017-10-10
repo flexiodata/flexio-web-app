@@ -31,7 +31,16 @@ export const getAllUsers = state => {
 }
 
 export const getAllConnections = state => {
-  return _.filter(state.objects, { eid_type: OBJECT_TYPE_CONNECTION, eid_status: OBJECT_STATUS_AVAILABLE })
+  //var all_connections = _.filter(state.objects, { eid_type: OBJECT_TYPE_CONNECTION, eid_status: OBJECT_STATUS_AVAILABLE })
+
+  // NOTE: it's really important to include the '_' on the same line
+  // as the 'return', otherwise JS will return without doing anything
+  return _
+    .chain(state.objects)
+    .filter({ eid_type: OBJECT_TYPE_CONNECTION, eid_status: OBJECT_STATUS_AVAILABLE })
+    .sortBy([ function(c) { return new Date(c.created) } ])
+    .reverse()
+    .value()
 }
 
 export const getAllProcesses = state => {

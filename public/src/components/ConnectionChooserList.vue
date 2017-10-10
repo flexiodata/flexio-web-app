@@ -125,7 +125,7 @@
         return items
       },
       input_services() {
-        var items = [].concat(this.default_connections, this.getOurConnections())
+        var items = [].concat(this.default_connections, this.getAllConnections())
 
         if (this.connectionTypeFilter.length == 0)
           return items
@@ -146,15 +146,6 @@
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
-      },
-      getOurConnections() {
-        // NOTE: it's really important to include the '_' on the same line
-        // as the 'return', otherwise JS will return without doing anything
-        return _
-          .chain(this.getAllConnections())
-          .sortBy([ function(p) { return new Date(p.created) } ])
-          .reverse()
-          .value()
       },
       onAddClick() {
         this.$emit('add')
