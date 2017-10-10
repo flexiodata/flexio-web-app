@@ -70,7 +70,14 @@ export const getAllRights = state => {
 }
 
 export const getAllTrash = state => {
-  return _.filter(state.objects, { eid_status: OBJECT_STATUS_TRASH })
+  // NOTE: it's really important to include the '_' on the same line
+  // as the 'return', otherwise JS will return without doing anything
+  return _
+    .chain(state.objects)
+    .filter({ eid_status: OBJECT_STATUS_TRASH })
+    .sortBy([ function(t) { return new Date(t.created) } ])
+    .reverse()
+    .value()
 }
 
 export const getActiveUser = state => {
