@@ -23,8 +23,7 @@
           @ctrl-click="itemCtrlClick"
           @shift-click="itemShiftClick"
           @dblclick="itemDblClick"
-        >
-        </file-chooser-item>
+        />
       </tbody>
     </table>
   </div>
@@ -191,8 +190,9 @@
           if (this.foldersOnly)
             items = _.filter(items, (item) => { return _.get(item, 'is_dir') === true })
 
-          this.items = [].concat(items)
           this.is_fetching = false
+          this.items = [].concat(items)
+          this.error_message = ''
 
           if (this.is_inited)
             this.fireSelectionChangeEvent()
@@ -200,6 +200,7 @@
           this.is_inited = true
         }, response => {
           this.is_fetching = false
+          this.items = [].concat([])
           this.error_message = _.get(response.body, 'error.message', '')
         })
       }
