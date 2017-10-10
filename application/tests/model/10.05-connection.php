@@ -90,27 +90,12 @@ class Test
             'name' => '',
             'description' => '',
             'display_icon' => '',
-            'host' => '',
-            'port' => 0,
             'connection_type' => '',
             'connection_status' => \Model::CONNECTION_STATUS_UNAVAILABLE,
+            'connection_info' => '',
             'eid_status' => \Model::STATUS_AVAILABLE
         );
         TestCheck::assertInArray('B.2', '\Model::create(); in connection creation, make sure essential fields are created',  $actual, $expected, $results);
-
-
-/*
-BIW: Jan, 2016: this test is no longer valid because connection model now does straight value storage
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-        );
-        $eid = $model->create(\Model::TYPE_CONNECTION, $info);
-        $object = $model->get($eid);
-        $actual = isset($object['database']) && \Flexio\Base\Eid::isValid($object['database']);
-        $expected = true;
-        TestCheck::assertBoolean('B.3', '\Model::create(); in connection creation, make sure essential fields are created',  $actual, $expected, $results);
-*/
 
 
 
@@ -179,37 +164,25 @@ BIW: Jan, 2016: this test is no longer valid because connection model now does s
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'port' => 3025
+            'connection_type' => 'ct'
         );
         $eid = $model->create(\Model::TYPE_CONNECTION, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'port' => 3025
+            'connection_type' => 'ct'
         );
         TestCheck::assertInArray('C.6', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'database' => 'db'
+            'connection_info' => 'ci'
         );
         $eid = $model->create(\Model::TYPE_CONNECTION, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'database' => 'db'
+            'connection_info' => 'ci'
         );
         TestCheck::assertInArray('C.7', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'connection_type' => 'ct'
-        );
-        $eid = $model->create(\Model::TYPE_CONNECTION, $info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'connection_type' => 'ct'
-        );
-        TestCheck::assertInArray('C.8', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }
