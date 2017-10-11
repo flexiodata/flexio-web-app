@@ -42,6 +42,18 @@ class Vfs
             $connections = $user->getObjects($filter);
 
             $result = array();
+
+            // add an entry for local storage
+            $result[] = array(
+                'name' => 'local',
+                'path' => '/local',
+                'size' => null,
+                'modified' => null,
+                'type' => 'DIR',
+                'is_dir' => true,
+                '.connection_type' => 'local'
+            );
+
             foreach ($connections as $c)
             {
                 if ($c->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
