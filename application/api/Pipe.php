@@ -349,16 +349,18 @@ class Pipe
         $start = 0;
         $limit = PHP_INT_MAX;
         $content = $stream->content($start, $limit);
+        $response_code = $process->getResponseCode();
+
 
         if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // return content as-is
-            header('Content-Type: ' . $mime_type);
+            header('Content-Type: ' . $mime_type, true, $response_code);
         }
         else
         {
             // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON);
+            header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON, true, $response_code);
             $content = json_encode($content);
         }
 

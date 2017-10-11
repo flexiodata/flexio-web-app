@@ -23,6 +23,7 @@ class Context
     private $params;
     private $env;
     private $streams;
+    private $exit_code = null;
 
     public function __construct()
     {
@@ -178,6 +179,17 @@ class Context
         return $this->environment;
     }
 
+
+    public function setExitCode(int $code)
+    {
+        $this->exit_code = $code;
+    }
+
+    public function getExitCode()
+    {
+        return $this->exit_code;
+    }
+    
     public function addStream(\Flexio\Object\Base $stream) : \Flexio\Object\Context
     {
         $this->streams[] = $stream;
@@ -209,6 +221,7 @@ class Context
         $this->params = array();
         $this->environment = array();
         $this->streams = array();
+        $this->exit_code = null;
     }
 }
 

@@ -16,31 +16,28 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class Echo1 extends \Flexio\Jobs\Base
+class Exit1 extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
         // process stdin
         $stdin = $context->getStdin();
-        $stdout = $context->getStdout();
-
-        $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
-        //$stdout = $stdin->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        //$context->setStdout($stdout);
+        $context->setStdout($stdin);
 
         $job_definition = $this->getProperties();
-        $msg = $job_definition['params']['msg'] ?? '';
+        $code = $job_definition['params']['code'] ?? 200;
 
-        $streamwriter = \Flexio\Object\StreamWriter::create($stdout);
-        $streamwriter->write($msg);
+        // this next line will cause the proces loop to exit
+        // and return the http response code in $code
+        $context->setExitCode((int)$code);
     }
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.echo';
+    const MIME_TYPE = 'flexio.exit';
     const TEMPLATE = <<<EOD
     {
-        "type": "flexio.echo",
+        "type": "flexio.exit",
         "params": {
             "path": ""
         }
@@ -54,7 +51,7 @@ EOD;
         "properties": {
             "type": {
                 "type": "string",
-                "enum": ["flexio.echo"]
+                "enum": ["flexio.exit"]
             },
             "params": {
                 "type": "object",
