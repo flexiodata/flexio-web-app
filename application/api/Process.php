@@ -37,10 +37,10 @@ class Process
 
         // run the specified job in blocking mode
         $params['background'] = $params['background'] ?? false;
-        $params['debug'] = true;
+        $params['run'] = true;
 
         $copied_request = $request->copy();
-        $copied_request->setQueryParams($params);
+        $copied_request->setPostParams($params);
 
         $process = self::create_internal($copied_request);
         if ($process === false)
@@ -297,7 +297,7 @@ class Process
             $process_info_subset['eid'] = $process_info['eid'];
             $process_info_subset['eid_type'] = $process_info['eid_type'];
             $process_info_subset['eid_status'] = $process_info['eid_status'];
-            $process_info_subset['parent'] = $process_info['parent'];
+            $process_info_subset['parent'] = $process_info['parent'] ?? null;
             $process_info_subset['owned_by'] = $process_info['owned_by'];
             $process_info_subset['started_by'] = $process_info['started_by'];
             $process_info_subset['started'] = $process_info['started'];

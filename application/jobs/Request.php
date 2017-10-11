@@ -35,6 +35,17 @@ class Request extends \Flexio\Jobs\Base
         if ($method === false || $url === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
+        $updated_url = $url;
+        $updated_headers = $headers;
+        $connection_info_merged = self::mergeInfoIfConnectionUrl($updated_url, $updated_headers);
+
+        if ($connection_info_merged)
+        {
+            // adjust the header and the headers with the info supplied in the connection
+            $url = $updated_url;
+            $headers = $updated_headers;
+        }
+
         $ch = curl_init();
 
         // configure the URL
@@ -126,6 +137,54 @@ class Request extends \Flexio\Jobs\Base
         {
             curl_close($ch);
         }
+    }
+
+    private static function mergeInfoIfConnectionUrl(&$url, &$headers) : bool
+    {
+        // returns true if url contains a connection; false otherwise
+
+        // if the first part of the URL contains a connection eid, get the
+        // base URL and header info from the connection; then add on the
+        // rest of the supplied info; otherwise, use the info as-is
+        $url_parts = parse_url($url);
+        if (is_array($url_parts) === false)
+            return false;
+
+        if (array_key_exists('scheme', $url_parts) === true)
+            return false;
+
+        if (array_key_exists('path', $url_parts) === false)
+            return false;
+
+        $url_path = $url_parts['path'];
+        $url_path_parts = explode('/', $url_path);
+        $potential_connection_eid = $url_path_parts[0] ?? '';
+
+        $connection = \Flexio\Object\Connection::load($potential_connection_eid);
+        if ($connection === false)
+            return false;
+
+        // we have a connection; get the connection info and adjust the url
+        $connection_properties = $connection->get();
+        $connection_info = $connection_properties['connection_info'];
+
+        $connection_url = $connection_info['url'] ?? false;
+        $connection_headers = $connection_info['headers'] ?? false;
+
+        if (is_string($connection_url))
+        {
+            $path = implode('/',array_splice($url_path_parts,1)); // recombine everything else besides the connection
+            $query = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+            $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+            $url_str_to_append = "$path$query$fragment";
+            $new_url = \Flexio\Base\Util::appendUrlPath($connection_url, $url_str_to_append);
+            $url = $new_url;
+        }
+
+        if (is_array($connection_headers))
+            $headers = array_merge($connection_headers, $headers);
+
+        return true;
     }
 
 
