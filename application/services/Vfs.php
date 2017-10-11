@@ -41,10 +41,8 @@ class Vfs
             $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
             $connections = $user->getObjects($filter);
 
-            $result = array();
-
             // add an entry for local storage
-            $result[] = array(
+            $results[] = array(
                 'name' => 'local',
                 'path' => '/local',
                 'size' => null,
@@ -86,6 +84,13 @@ class Vfs
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
         
+
+        if ($connection_identifier == 'local')
+        {
+            return [];
+        }
+
+
 
         // load the connection
         $connection = \Flexio\Object\Connection::load($connection_identifier);
