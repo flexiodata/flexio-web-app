@@ -18,8 +18,11 @@ namespace Flexio\Api;
 
 class Search
 {
-    public static function search(array $params, string $requesting_user_eid = null) : array
+    public static function search(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'owner'    => array('type' => 'string', 'required' => false),

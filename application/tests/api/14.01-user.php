@@ -36,7 +36,9 @@ class Test
             "create_examples": false
         }
         ',true);
-        $actual= \Flexio\Api\User::create($params, null);
+        $request = \Flexio\Api\Request::create();
+        $request->setPostParams($params);
+        $actual= \Flexio\Api\User::create($request);
         $expected = '
         {
             "eid_type": "'.\Model::TYPE_USER.'",

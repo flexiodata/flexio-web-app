@@ -18,9 +18,11 @@ namespace Flexio\Api;
 
 class Pipe
 {
-    public static function create(array $params, string $requesting_user_eid = null) : array
+    public static function create(\Flexio\Api\Request $request) : array
     {
-        $params_original = $params;
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'copy_eid'        => array('type' => 'identifier', 'required' => false),
@@ -42,7 +44,7 @@ class Pipe
         // using the original parameters; this simply allows us to reuse
         // the create api call, even though the two functions are distinct
         if (isset($validated_params['copy_eid']))
-            return self::copy($params_original, $requesting_user_eid);
+            return self::copy($request);
 
         // check rights
         $project = false;
@@ -82,8 +84,11 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function copy(array $params, string $requesting_user_eid = null) : array
+    public static function copy(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'copy_eid'    => array('type' => 'identifier', 'required' => true),
@@ -144,8 +149,11 @@ class Pipe
         return $new_pipe->get();
     }
 
-    public static function delete(array $params, string $requesting_user_eid = null) : bool
+    public static function delete(\Flexio\Api\Request $request) : bool
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -168,8 +176,11 @@ class Pipe
         return true;
     }
 
-    public static function set(array $params, string $requesting_user_eid = null) : array
+    public static function set(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid'             => array('type' => 'identifier', 'required' => true),
@@ -201,8 +212,11 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function get(array $params, string $requesting_user_eid = null) : array
+    public static function get(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -225,8 +239,11 @@ class Pipe
         return $pipe->get();
     }
 
-    public static function listall(array $params, string $requesting_user_eid = null) : array
+    public static function listall(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
@@ -248,8 +265,11 @@ class Pipe
         return $result;
     }
 
-    public static function processes(array $params, string $requesting_user_eid = null) : array
+    public static function processes(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
@@ -292,8 +312,11 @@ class Pipe
         return $result;
     }
 
-    public static function run(array $params, string $requesting_user_eid = null) // TODO: add return type
+    public static function run(\Flexio\Api\Request $request) // TODO: add return type
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
@@ -368,8 +391,11 @@ class Pipe
         exit(0);
     }
 
-    public static function validate(array $params, string $requesting_user_eid = null) : array
+    public static function validate(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid'      => array('type' => 'identifier', 'required' => true),
@@ -458,8 +484,11 @@ class Pipe
         return $result;
     }
 
-    public static function addTaskStep(array $params, string $requesting_user_eid = null) : array
+    public static function addTaskStep(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
         // here or validate them; simply make sure we have a parent_eid
@@ -505,8 +534,11 @@ class Pipe
         return $result;
     }
 
-    public static function deleteTaskStep(array $params, string $requesting_user_eid = null) : bool
+    public static function deleteTaskStep(\Flexio\Api\Request $request) : bool
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid'        => array('type' => 'identifier', 'required' => true),
@@ -532,8 +564,11 @@ class Pipe
         return true;
     }
 
-    public static function setTaskStep(array $params, string $requesting_user_eid = null) /* : array */ // TODO: set function return type
+    public static function setTaskStep(\Flexio\Api\Request $request) /* : array */ // TODO: set function return type
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // the params that are posted is the task step; note: tasks don't
         // restrict key/values that can be passed, so don't limit them
         // here or validate them; simply make sure we have an eid and a
@@ -568,8 +603,11 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    public static function getTaskStep(array $params, string $requesting_user_eid = null) /* : array */ // TODO: set function return type
+    public static function getTaskStep(\Flexio\Api\Request $request) /* : array */ // TODO: set function return type
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid'        => array('type' => 'identifier', 'required' => true),

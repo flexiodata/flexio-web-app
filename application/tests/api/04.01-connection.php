@@ -31,8 +31,10 @@ class Test
             "description": "Test connection"
         }
         ',true);
-        $user_eid = TestUtil::getDefaultTestUser();
-        $actual = \Flexio\Api\Connection::create($params, $user_eid);
+        $request = \Flexio\Api\Request::create();
+        $request->setPostParams($params);
+        $request->setRequestingUser(TestUtil::getDefaultTestUser());
+        $actual = \Flexio\Api\Connection::create($request);
         $expected = '
         {
             "eid_type": "'.\Model::TYPE_CONNECTION.'",

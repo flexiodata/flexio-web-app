@@ -18,8 +18,11 @@ namespace Flexio\Api;
 
 class Connection
 {
-    public static function create(array $params, string $requesting_user_eid = null) : array
+    public static function create(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'parent_eid'        => array('type' => 'identifier', 'required' => false),
@@ -80,8 +83,11 @@ class Connection
         return $properties;
     }
 
-    public static function delete(array $params, string $requesting_user_eid = null) : bool
+    public static function delete(\Flexio\Api\Request $request) : bool
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -104,8 +110,11 @@ class Connection
         return true;
     }
 
-    public static function set(array $params, string $requesting_user_eid = null) : array
+    public static function set(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid'               => array('type' => 'identifier', 'required' => true),
@@ -139,8 +148,11 @@ class Connection
         return $properties;
     }
 
-    public static function get(array $params, string $requesting_user_eid = null) : array
+    public static function get(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -164,8 +176,11 @@ class Connection
         return $properties;
     }
 
-    public static function listall(array $params, string $requesting_user_eid = null) : array
+    public static function listall(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
@@ -187,8 +202,11 @@ class Connection
         return $result;
     }
 
-    public static function describe(array $params, string $requesting_user_eid = null) : array
+    public static function describe(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
@@ -224,8 +242,11 @@ class Connection
         return $result;
     }
 
-    public static function connect(array $params, string $requesting_user_eid = null) : array
+    public static function connect(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -252,8 +273,11 @@ class Connection
         return $properties;
     }
 
-    public static function disconnect(array $params, string $requesting_user_eid = null) : array
+    public static function disconnect(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)

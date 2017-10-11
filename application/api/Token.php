@@ -18,8 +18,11 @@ namespace Flexio\Api;
 
 class Token
 {
-    public static function create(array $params, string $requesting_user_eid = null) : array
+    public static function create(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -46,8 +49,11 @@ class Token
         return $token->get();
     }
 
-    public static function delete(array $params, string $requesting_user_eid = null) : bool
+    public static function delete(\Flexio\Api\Request $request) : bool
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -72,8 +78,11 @@ class Token
         return true;
     }
 
-    public static function get(array $params, string $requesting_user_eid = null) : array
+    public static function get(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -100,8 +109,11 @@ class Token
         return $properties;
     }
 
-    public static function listall(array $params, string $requesting_user_eid = null) : array
+    public static function listall(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)

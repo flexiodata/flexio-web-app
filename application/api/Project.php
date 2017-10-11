@@ -18,8 +18,11 @@ namespace Flexio\Api;
 
 class Project
 {
-    public static function create(array $params, string $requesting_user_eid = null) : array
+    public static function create(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'   => array('type' => 'string', 'required' => false),
@@ -57,8 +60,11 @@ class Project
         return $project->get();
     }
 
-    public static function delete(array $params, string $requesting_user_eid = null) : bool
+    public static function delete(\Flexio\Api\Request $request) : bool
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -81,8 +87,11 @@ class Project
         return true;
     }
 
-    public static function set(array $params, string $requesting_user_eid = null) : array
+    public static function set(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid'          => array('type' => 'identifier', 'required' => true),
@@ -109,8 +118,11 @@ class Project
         return $project->get();
     }
 
-    public static function get(array $params, string $requesting_user_eid = null) : array
+    public static function get(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -137,8 +149,11 @@ class Project
         return $properties;
     }
 
-    public static function listall(array $params, string $requesting_user_eid = null) : array
+    public static function listall(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)

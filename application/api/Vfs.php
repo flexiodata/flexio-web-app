@@ -18,8 +18,11 @@ namespace Flexio\Api;
 
 class Vfs
 {
-    public static function list(array $params, string $requesting_user_eid = null) : array
+    public static function list(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'q' => array('type' => 'string', 'required' => false)
@@ -39,8 +42,11 @@ class Vfs
     }
 
 
-    public static function get(array $params, string $requesting_user_eid = null) : array
+    public static function get(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $path = $_SERVER['REQUEST_URI'];
         if (substr($path,0,12) != '/api/v1/vfs/')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
@@ -54,8 +60,11 @@ class Vfs
         });
     }
 
-    public static function put(array $params, string $requesting_user_eid = null) : array
+    public static function put(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $path = $_SERVER['REQUEST_URI'];
         if (substr($path,0,12) != '/api/v1/vfs/')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
@@ -79,6 +88,6 @@ class Vfs
         fclose($php_stream_handle);
 
         return array('success' => true);
-                     
+
     }
 }
