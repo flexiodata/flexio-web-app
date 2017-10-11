@@ -22,14 +22,16 @@ class Echo1 extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-        $stdout = $stdin->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $context->setStdout($stdout);
+        $stdout = $context->getStdout();
+
+        $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
+        //$stdout = $stdin->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        //$context->setStdout($stdout);
 
         $job_definition = $this->getProperties();
         $msg = $job_definition['params']['msg'] ?? '';
 
         $streamwriter = \Flexio\Object\StreamWriter::create($stdout);
-        $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
         $streamwriter->write($msg);
     }
 

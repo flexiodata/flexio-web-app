@@ -22,7 +22,6 @@ class Exit1 extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-      //  $stdout = $stdin->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $context->setStdout($stdin);
 
         $job_definition = $this->getProperties();
