@@ -192,6 +192,13 @@ class Api
         $apiendpoint .= (strlen($url_params['apiparam5']) > 0 ? ('/' . $url_params['apiparam5']) : '');
         $apiendpoint .= (strlen($url_params['apiparam6']) > 0 ? ('/' . $url_params['apiparam6']) : '');
 
+        if (($url_params['apiparam1'] ?? '') == 'vfs')
+        {
+                 if ($apiendpoint == 'GET /vfs/list')         return '\Flexio\Api\Vfs::list';
+            else if (substr($apiendpoint,0,9) == 'GET /vfs/') return '\Flexio\Api\Vfs::get';
+            else if (substr($apiendpoint,0,9) == 'PUT /vfs/') return '\Flexio\Api\Vfs::put';
+        }
+
         switch ($apiendpoint)
         {
             default:
@@ -303,9 +310,6 @@ class Api
             case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\Process::getTaskInputInfo';
             case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\Process::getTaskOutputInfo';
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
-
-            // vfs
-            case 'GET /vfs/list'                       : return '\Flexio\Api\Vfs::list';
 
             // streams
             case 'POS /streams'                        : return '\Flexio\Api\Stream::create';

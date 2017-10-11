@@ -37,4 +37,48 @@ class Vfs
 
         return $result;
     }
+
+
+    public static function get(array $params, string $requesting_user_eid = null) : array
+    {
+        $path = $_SERVER['REQUEST_URI'];
+        if (substr($path,0,12) != '/api/v1/vfs/')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+        // grab path, including preceding slash
+        $path = substr($path,11);
+
+        $vfs = new \Flexio\Services\Vfs();
+        $vfs->read($path, function($data) {
+            echo $data;
+        });
+    }
+
+    public static function put(array $params, string $requesting_user_eid = null) : array
+    {
+        $path = $_SERVER['REQUEST_URI'];
+        if (substr($path,0,12) != '/api/v1/vfs/')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+        // grab path, including preceding slash
+        $path = substr($path,11);
+
+        $php_stream_handle = fopen('php://input', 'rb');
+        $done = false;
+
+        $vfs = new \Flexio\Services\Vfs();
+        $vfs->write($path, function($len) use (&$php_stream_handle, &$done) {
+            if ($done)
+                return false;
+            $buf = fread($php_stream_handle, $len);
+            if (strlen($buf) != $len)
+                $done = true;
+            return $buf;
+        });
+
+        fclose($php_stream_handle);
+
+        return array('success' => true);
+                     
+    }
 }

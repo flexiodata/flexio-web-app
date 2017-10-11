@@ -87,7 +87,7 @@ class Vfs
 
         if ($connection_identifier == 'local')
         {
-            return [];
+            return $this->listLocal();
         }
 
 
@@ -120,6 +120,31 @@ class Vfs
         return $results;
     }
 
+
+    public function listLocal() : array
+    {
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        
+        // load the object
+        $user = \Flexio\Object\User::load($current_user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // get the pipes
+        $filter = array('eid_type' => array(\Model::TYPE_STREAM), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $streams = $user->getObjects($filter);
+
+        $result = array();
+        foreach ($streams as $s)
+        {
+            if ($s->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+                continue;
+
+            $result[] = $s->get();
+        }
+
+        return $result;
+    }
 
     public function read($path, callable $callback)
     {
