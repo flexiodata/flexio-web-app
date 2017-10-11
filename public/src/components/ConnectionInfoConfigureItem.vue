@@ -1,26 +1,38 @@
 <template>
   <div class="dn db-ns" v-if="isStatic">
     <div class="flex flex-column flex-row-ns">
-      <div class="mb2 mr1-ns ph2 fw6 w-third-ns">{{key}}</div>
-      <div class="mb2 ph2 fw6 w-two-thirds-ns">{{val}}</div>
+      <div class="mb2 mr1-ns ph1 fw6 w-third-ns">{{key}}</div>
+      <div class="mb2 mr1-ns ph1 fw6 w-two-thirds-ns">{{val}}</div>
+    <div class="o-0">
+      <span class="pointer f3">
+        &times;
+      </span>
+    </div>
     </div>
   </div>
-  <div class="flex flex-column flex-row-ns" v-else>
+  <div class="flex flex-column flex-row-ns items-center hide-child" v-else>
     <input
       type="text"
-      class="mb1 mr1-ns ph2 pv1 w-third-ns lh-copy ba b--light-gray"
+      class="mb1 mb0-ns mr1-ns ph2 pv1 w-third-ns f6 lh-copy ba b--light-gray focus-b--transparent focus-outline focus-ow1 focus-o--blue"
       :placeholder="keyPlaceholder"
       @input="onInputChange"
       v-model="key"
     >
     <input
       type="text"
-      class="mb1 ph2 pv1 w-two-thirds-ns lh-copy ba b--light-gray"
+      class="mb1 mb0-ns mr1-ns ph2 pv1 w-two-thirds-ns f6 lh-copy ba b--light-gray focus-b--transparent focus-outline focus-ow1 focus-o--blue"
       :placeholder="valPlaceholder"
       @input="onInputChange"
       v-model="val"
     >
-    <div class="db dn-ns bb mv3 b--light-gray"></div>
+    <div class="mb1 mb0-ns">
+      <span
+        class="pointer f3 lh-copy b child"
+        @click="onDeleteClick"
+      >
+        &times;
+      </span>
+    </div>
   </div>
 </template>
 
@@ -55,8 +67,14 @@
       }
     },
     methods: {
+      getItem() {
+        return { key: this.key, val: this.val }
+      },
       onInputChange() {
-        this.$emit('change', { key: this.key, val: this.val }, this.index)
+        this.$emit('change', this.getItem(), this.index)
+      },
+      onDeleteClick() {
+        this.$emit('delete', this.getItem(), this.index)
       }
     }
   }

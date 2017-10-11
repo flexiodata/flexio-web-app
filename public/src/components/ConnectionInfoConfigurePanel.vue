@@ -6,14 +6,15 @@
     />
     <connection-info-configure-item
       v-for="(item, index) in headers"
-      :key="item.key"
+      :key="index"
       :item="item"
       :index="index"
       @change="onItemChange"
+      @delete="onItemDelete"
     />
-    <div class="flex flex-row justify-end mt2">
-      <btn btn-md class="b ttu blue mr2">Cancel</btn>
-      <btn btn-md class="b ttu blue">Save</btn>
+    <div class="flex flex-row justify-end pt2 mt2 bt b--light-gray">
+      <btn btn-md class="b ttu blue mr2" :disabled="!is_changed" @click="onCancel">Cancel</btn>
+      <btn btn-md btn-primary class="ttu b" :disabled="!is_changed" @click="onSave">Save</btn>
     </div>
   </div>
 </template>
@@ -45,13 +46,32 @@
       headers.push(newItem())
 
       return {
-        headers
+        headers,
+        output_headers: _.cloneDeep(headers),
+        original_headers: _.cloneDeep(headers)
+      }
+    },
+    computed: {
+      is_changed() {
+        return !_.isEqual(this.headers, this.original_headers)
       }
     },
     methods: {
       onItemChange(item, index) {
         if (index == _.size(this.headers) - 1)
           this.headers = [].concat(this.headers).concat(newItem())
+      },
+      onItemDelete(item, index) {
+        debugger
+        _.pullAt(this.headers, [index])
+        this.$nextTick(() => { this.headers = [].concat(this.headers) })
+      },
+      onCancel() {
+        this.headers = []
+        this.$nextTick(() => { this.headers = [].concat(this.original_headers) })
+      },
+      onSave() {
+
       }
     }
   }
