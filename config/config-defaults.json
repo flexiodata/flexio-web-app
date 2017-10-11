@@ -41,5 +41,8 @@
     "googledrive_client_secret": "",
 
     "dropbox_client_id": "",
-    "dropbox_client_secret": ""
+    "dropbox_client_secret": "",
+
+    "box_client_id": "",
+    "box_client_secret": ""
 }
