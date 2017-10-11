@@ -363,13 +363,13 @@ class Test
         TestCheck::assertString('H.10', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::CONNECTION_TYPE_AMAZONS3;
-        $expected = 'amazons3';
+        $actual = \Model::CONNECTION_TYPE_GITHUB;
+        $expected = 'github';
         TestCheck::assertString('H.11', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::CONNECTION_TYPE_GITHUB;
-        $expected = 'github';
+        $actual = \Model::CONNECTION_TYPE_AMAZONS3;
+        $expected = 'amazons3';
         TestCheck::assertString('H.12', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST

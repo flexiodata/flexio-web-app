@@ -44,5 +44,8 @@
     "dropbox_client_secret": "",
 
     "box_client_id": "",
-    "box_client_secret": ""
+    "box_client_secret": "",
+
+    "github_client_id": "",
+    "github_client_secret": ""
 }
