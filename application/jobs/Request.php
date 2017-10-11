@@ -107,6 +107,7 @@ class Request extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
+        $context->setStdout($outstream);
         $context->addStream($outstream);
 
         // TODO: get the mime type from the returned info
