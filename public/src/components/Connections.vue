@@ -29,8 +29,9 @@
         @item-activate="onConnectionActivate"
       />
       <div class="flex-fill">
-        <div v-if="connection">
-          <pre class="ma3 f6"><code>{{ JSON.stringify(connection, null, 2) }}</code></pre>
+        <div class="pa3 pa4-l pb3-l " style="max-width: 1152px" v-if="connection">
+          <div class="f4 mb3">Headers</div>
+          <connection-info-configure-panel :connection="connection" />
         </div>
       </div>
     </div>
@@ -57,6 +58,7 @@
   import Spinner from 'vue-simple-spinner'
   import StoragePropsModal from './StoragePropsModal.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
+  import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
   import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
 
@@ -65,6 +67,7 @@
       Spinner,
       StoragePropsModal,
       ConnectionChooserList,
+      ConnectionInfoConfigurePanel,
       EmptyItem,
       Btn
     },
