@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-column">
-    <div class="flex-none flex flex-row w-100 pa2 bb b--light-gray bg-nearer-white">
+    <div class="flex-none flex flex-row items-center w-100 pa2 bb b--light-gray bg-nearer-white">
+      <div><span class="f4 mid-gray">{{connection.name}}</span> <span class="moon-gray">({{connection.eid}})</span></div>
       <div class="flex-fill">&nbsp;</div>
       <btn btn-md class="b ttu blue mr2" @click="cancel">Cancel</btn>
       <btn btn-md class="b ttu blue" @click="submit">Save</btn>
