@@ -74,16 +74,14 @@ class Connection
         // get the connection properties
         $properties = self::filterProperties($connection->get());
 
-        // coerce an empty connection_info array() from [] into object {};
-        if (isset($properties['connection_info']) && is_array($properties['connection_info']) && count($properties['connection_info'])==0)
-        {
-            $properties['connection_info'] = (object)$properties['connection_info'];
-        }
+        // coerce an empty connection_info array() from [] into object {}
 
         if (isset($properties['connection_info']['headers']) && is_array($properties['connection_info']['headers']) && count($properties['connection_info']['headers'])==0)
-        {
             $properties['connection_info']['headers'] = (object)$properties['connection_info']['headers'];
-        }
+
+        if (isset($properties['connection_info']) && is_array($properties['connection_info']) && count($properties['connection_info'])==0)
+            $properties['connection_info'] = (object)$properties['connection_info'];
+
         return $properties;
     }
 
@@ -200,7 +198,16 @@ class Connection
             if ($c->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
-            $result[] = self::filterProperties($c->get());
+            $properties = self::filterProperties($c->get());
+
+            // coerce [] -> {}
+            if (isset($properties['connection_info']['headers']) && is_array($properties['connection_info']['headers']) && count($properties['connection_info']['headers'])==0)
+                $properties['connection_info']['headers'] = (object)$properties['connection_info']['headers'];
+
+            if (isset($properties['connection_info']) && is_array($properties['connection_info']) && count($properties['connection_info'])==0)
+                $properties['connection_info'] = (object)$properties['connection_info'];
+
+            $result[] = $properties;
         }
 
         return $result;
