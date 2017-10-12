@@ -86,6 +86,7 @@ class GitHub implements \Flexio\Services\IConnection
         // [
         //    {
         //      "id": 1296269,
+        //      "full_name": "octocat/octokit.rb",
         //      "owner": {
         //        "login": "octocat",
         //        "id": 1,
@@ -96,7 +97,8 @@ class GitHub implements \Flexio\Services\IConnection
 
         // STEP 2: get the folders/files for a repository
         // Request: GET https://api.github.com/repos/:owner/:repo/contents/:path
-        // Use the :owner and :repo from STEP 1 for the request
+        // Use the "full_name" from STEP 1 for the ":owner/:repo":
+        //      https://api.github.com/repos/octocat/octokit.rb/contents/:path
         // Returns an array of objects containing info about subdirectories and files;
         // note: API limits results to 1000 items in a directory; tree API supports
         // additional files; return from this API call looks like:
