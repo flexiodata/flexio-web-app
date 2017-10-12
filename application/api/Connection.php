@@ -80,6 +80,10 @@ class Connection
             $properties['connection_info'] = (object)$properties['connection_info'];
         }
 
+        if (isset($properties['connection_info']['headers']) && is_array($properties['connection_info']['headers']) && count($properties['connection_info']['headers'])==0)
+        {
+            $properties['connection_info']['headers'] = (object)$properties['connection_info']['headers'];
+        }
         return $properties;
     }
 
