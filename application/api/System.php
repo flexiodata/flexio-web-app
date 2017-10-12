@@ -18,9 +18,12 @@ namespace Flexio\Api;
 
 class System
 {
-    public static function login(array $params, string $requesting_user_eid = null) : array
+    public static function login(\Flexio\Api\Request $request) : array
     {
         // note: should return the same as User::about();
+
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -55,8 +58,11 @@ class System
         return $user->get();
     }
 
-    public static function logout(array $params, string $requesting_user_eid = null) : array
+    public static function logout(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // validation placeholder; no parameters are used
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -74,8 +80,11 @@ class System
         return $properties;
     }
 
-    public static function validate(array $params, string $requesting_user_eid = null) : array
+    public static function validate(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // the input for a validation is an array of objects that each
         // have a key, value and type; only 10 items can be validated at a time
         /*
@@ -123,8 +132,11 @@ class System
         return $result;
     }
 
-    public static function getConfiguration(array $params, string $requesting_user_eid = null) : array
+    public static function getConfiguration(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
@@ -136,8 +148,14 @@ class System
         return self::checkServerSettings();
     }
 
-    public static function getProcessTaskStats(array $params, string $requesting_user_eid = null) : array
+    public static function getProcessTaskStats(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
+var_export($requesting_user_eid);
+die;
+
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
@@ -149,8 +167,11 @@ class System
         return \Flexio\System\System::getModel()->process->getProcessTaskStats();
     }
 
-    public static function getProcessUserStats(array $params, string $requesting_user_eid = null) : array
+    public static function getProcessUserStats(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)
@@ -200,8 +221,11 @@ class System
         return $result;
     }
 
-    public static function getProcessCreationStats(array $params, string $requesting_user_eid = null) : array
+    public static function getProcessCreationStats(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)

@@ -41,7 +41,17 @@ class Vfs
             $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
             $connections = $user->getObjects($filter);
 
-            $result = array();
+            // add an entry for local storage
+            $results[] = array(
+                'name' => 'local',
+                'path' => '/local',
+                'size' => null,
+                'modified' => null,
+                'type' => 'DIR',
+                'is_dir' => true,
+                '.connection_type' => 'local'
+            );
+
             foreach ($connections as $c)
             {
                 if ($c->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -75,6 +85,13 @@ class Vfs
         $rpath = rtrim(trim($arr[1]), '/');
         
 
+        if ($connection_identifier == 'local')
+        {
+            return $this->listLocal();
+        }
+
+
+
         // load the connection
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
@@ -103,6 +120,31 @@ class Vfs
         return $results;
     }
 
+
+    public function listLocal() : array
+    {
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        
+        // load the object
+        $user = \Flexio\Object\User::load($current_user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // get the pipes
+        $filter = array('eid_type' => array(\Model::TYPE_STREAM), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $streams = $user->getObjects($filter);
+
+        $result = array();
+        foreach ($streams as $s)
+        {
+            if ($s->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+                continue;
+
+            $result[] = $s->get();
+        }
+
+        return $result;
+    }
 
     public function read($path, callable $callback)
     {

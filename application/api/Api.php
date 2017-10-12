@@ -16,6 +16,96 @@ declare(strict_types=1);
 namespace Flexio\Api;
 
 
+class Request
+{
+    private $method;
+    private $url_params;
+    private $query_params;
+    private $post_params;
+    private $requesting_user;
+
+    public function __construct()
+    {
+        $this->initialize();
+    }
+
+    public static function create() : \Flexio\Api\Request
+    {
+        return (new static);
+    }
+
+    public function copy() : \Flexio\Api\Request
+    {
+        // create a new object and set the properties
+        $new_request = static::create();
+        $new_request->setMethod($this->getMethod());
+        $new_request->setUrlParams($this->getUrlParams());
+        $new_request->setQueryParams($this->getQueryParams());
+        $new_request->setPostParams($this->getPostParams());
+        $new_request->setRequestingUser($this->getRequestingUser());
+        return $new_request;
+    }
+
+    public function setMethod(string $method)
+    {
+        $this->method = $method;
+    }
+
+    public function getMethod() : string
+    {
+        return $this->method;
+    }
+
+    public function setUrlParams(array $params)
+    {
+        $this->url_params = $params;
+    }
+
+    public function getUrlParams() : array
+    {
+        return $this->url_params;
+    }
+
+    public function setQueryParams(array $params)
+    {
+        $this->query_params = $params;
+    }
+
+    public function getQueryParams() : array
+    {
+        return $this->query_params;
+    }
+
+    public function setPostParams(array $params)
+    {
+        $this->post_params = $params;
+    }
+
+    public function getPostParams() : array
+    {
+        return $this->post_params;
+    }
+
+    public function setRequestingUser(string $param)
+    {
+        $this->requesting_user = $param;
+    }
+
+    public function getRequestingUser() : string
+    {
+        return $this->requesting_user;
+    }
+
+    private function initialize()
+    {
+        $this->method = '';
+        $this->url_params = array();
+        $this->query_params = array();
+        $this->post_params = array();
+        $this->requesting_user = '';
+    }
+}
+
 class Api
 {
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $combined_params, array $query_params, array $post_params, bool $echo = true)
@@ -34,23 +124,23 @@ class Api
         $url_params['apiparam5']  = $server_request->getUrlPathPart(6) ?? '';
         $url_params['apiparam6']  = $server_request->getUrlPathPart(7) ?? '';
 
+        // package the request info
+        $api_request = \Flexio\Api\Request::create();
+        $api_request->setMethod($method);
+        $api_request->setUrlParams($url_params);
+        $api_request->setQueryParams($query_params);
+        $api_request->setPostParams($post_params);
+
+        $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
+        if (\Flexio\Base\Eid::isValid($requesting_user_eid))
+            $api_request->setRequestingUser($requesting_user_eid);
+             else
+            $api_request->setRequestingUser(\Flexio\Object\User::MEMBER_PUBLIC);
+
         // process the request
         try
         {
-            // if we're testing a failure, throw an error right away
-            if (isset($query_params['testfail']) && strlen($query_params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $query_params['testfail']);
-
-            if ($url_params['apibase'] !== 'api' || $url_params['apiversion'] !== 'v1')
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
-
-            // get the requesting user
-            $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
-            if (!\Flexio\Base\Eid::isValid($requesting_user_eid))
-                $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC;
-
-            // send the response
-            $content = self::processRequest($method, $url_params, $combined_params, $query_params, $post_params, $requesting_user_eid);
+            $content = self::processRequest($api_request);
             self::sendContentResponse($content, $echo);
         }
         catch (\Flexio\Base\Exception $e)
@@ -109,34 +199,30 @@ class Api
         }
     }
 
-    private static function processRequest(string $request_method, array $url_params, array $combined_params, array $query_params, array $post_params, string $requesting_user_eid = null)
+    private static function processRequest(\Flexio\Api\Request $request)
     {
-        // make sure we have a valid request method
-        switch ($request_method)
-        {
-            default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+        $request_method = $request->getMethod();
+        $url_params = $request->getUrlParams();
+        $query_params = $request->getQueryParams();
+        $post_params = $request->getPostParams();
 
-            case 'GET':
-            case 'POST':
-            case 'PUT':
-            case 'DELETE':
-                break;
-        }
+        if (isset($query_params['testfail']) && strlen($query_params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $query_params['testfail']);
 
-        // ROUTE 1: try to route the request "as is" before looking for any
-        // eids or identifiers in the path; if we can route the request,
-        // we're done; this gives precedence to api keywords over eids and
-        // identifiers
-        $url_params_route1 = $url_params;
-        $function = self::getApiEndpoint($request_method, $url_params_route1);
-        if (is_callable($function) === true)
-            return $function($combined_params, $requesting_user_eid);
+        if ($url_params['apibase'] !== 'api' || $url_params['apiversion'] !== 'v1')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
-        // ROUTE 2: if we weren't able to route the request "as is", try to
-        // route the request based on checking for eids or identifiers in the
-        // second and forth api parameters
-        $url_params_route2 = $url_params;
+        // ROUTE 1: create a route for the request "as is" without looking for
+        // any identifiers in the path; this gives precedence to api keywords over
+        // eids and identifiers
+        $request_route1 = $request->copy();
+        $url_params_route1 = $request_route1->getUrlParams();
+
+        // ROUTE 2: create a route for the request using eids or identifiers for
+        // the second and forth api parameters
+        $request_route2 = $request->copy();
+        $url_params_route2 = $request_route2->getUrlParams();
+
         if (\Flexio\Base\Eid::isValid($url_params_route2['apiparam2']) || \Flexio\Base\Identifier::isValid($url_params_route2['apiparam2']))
             $url_params_route2['apiparam2'] = ':eid';
         if (\Flexio\Base\Eid::isValid($url_params_route2['apiparam4']) || \Flexio\Base\Identifier::isValid($url_params_route2['apiparam4']))
@@ -159,16 +245,25 @@ class Api
             // isn't, treat the second eid as the parent eid if there's
             // a third parameter and eid is a query parameter; otherwise
             // treat the second parameter as the primary eid
-            if (strlen($url_params['apiparam3']) > 0 && isset($combined_params['eid']))
+            if (strlen($url_params['apiparam3']) > 0 && isset($query_params['eid']))
                 $p['parent_eid'] = $url_params['apiparam2'];
                  else
                 $p['eid'] = $url_params['apiparam2'];
         }
-        $combined_params = array_merge($p, $combined_params);
+        $updated_query_params = array_merge($p, $query_params);
+        $updated_post_params = array_merge($p, $post_params);
+        $request_route2->setQueryParams($updated_query_params);
+        $request_route2->setPostParams($updated_post_params);
 
+        // try a request with the URL as is
+        $function = self::getApiEndpoint($request_method, $url_params_route1);
+        if (is_callable($function) === true)
+            return $function($request_route1);
+
+        // try a request, treating the second and forth as eids or identifiers
         $function = self::getApiEndpoint($request_method, $url_params_route2);
         if (is_callable($function) === true)
-            return $function($combined_params, $requesting_user_eid);
+            return $function($request_route2);
 
         // we can't find the specified api endpoint
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
@@ -179,11 +274,16 @@ class Api
         // creates an api endpoint string that's used to lookup the
         // appropriate api implementation
         $apiendpoint = '';
+        switch ($request_method)
+        {
+            default:
+                return ''; // invalid request
 
-        if ($request_method === 'GET')    $apiendpoint .= 'GET ';
-        if ($request_method === 'POST')   $apiendpoint .= 'POS ';
-        if ($request_method === 'PUT')    $apiendpoint .= 'PUT ';
-        if ($request_method === 'DELETE') $apiendpoint .= 'DEL ';
+            case 'GET':     $apiendpoint .= 'GET '; break;
+            case 'POST':    $apiendpoint .= 'POS '; break;
+            case 'PUT':     $apiendpoint .= 'PUT '; break;
+            case 'DELETE':  $apiendpoint .= 'DEL '; break;
+        }
 
         $apiendpoint .= (strlen($url_params['apiparam1']) > 0 ? ('/' . $url_params['apiparam1']) : '');
         $apiendpoint .= (strlen($url_params['apiparam2']) > 0 ? ('/' . $url_params['apiparam2']) : '');
@@ -191,6 +291,13 @@ class Api
         $apiendpoint .= (strlen($url_params['apiparam4']) > 0 ? ('/' . $url_params['apiparam4']) : '');
         $apiendpoint .= (strlen($url_params['apiparam5']) > 0 ? ('/' . $url_params['apiparam5']) : '');
         $apiendpoint .= (strlen($url_params['apiparam6']) > 0 ? ('/' . $url_params['apiparam6']) : '');
+
+        if (($url_params['apiparam1'] ?? '') == 'vfs')
+        {
+                 if ($apiendpoint == 'GET /vfs/list')         return '\Flexio\Api\Vfs::list';
+            else if (substr($apiendpoint,0,9) == 'GET /vfs/') return '\Flexio\Api\Vfs::get';
+            else if (substr($apiendpoint,0,9) == 'PUT /vfs/') return '\Flexio\Api\Vfs::put';
+        }
 
         switch ($apiendpoint)
         {
@@ -269,7 +376,6 @@ class Api
 
             // experimental API endpoint for running a pipe with form parameters
             case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
-            case 'GET /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
             case 'GET /pipes/:eid/validate'            : return '\Flexio\Api\Pipe::validate';
 
             // connections
@@ -303,9 +409,6 @@ class Api
             case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\Process::getTaskInputInfo';
             case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\Process::getTaskOutputInfo';
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
-
-            // vfs
-            case 'GET /vfs/list'                       : return '\Flexio\Api\Vfs::list';
 
             // streams
             case 'POS /streams'                        : return '\Flexio\Api\Stream::create';

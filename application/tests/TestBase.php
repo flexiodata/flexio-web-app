@@ -39,7 +39,7 @@ class TestBase
         return (isset($GLOBALS['g_config']->tests_allowed) ? $GLOBALS['g_config']->tests_allowed : false);
     }
 
-    public static function configure($params)
+    public static function configure(\Flexio\Api\Request $request)
     {
         if (!TestBase::testsAllowed())
             return array();
@@ -58,8 +58,10 @@ class TestBase
         return $tests;
     }
 
-    public static function run($params)
+    public static function run(\Flexio\Api\Request $request)
     {
+        $params = $request->getQueryParams();
+
         if (!TestBase::testsAllowed())
             return false;
 

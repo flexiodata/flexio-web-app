@@ -147,6 +147,15 @@ class Store
                     $service = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
+            case \Model::CONNECTION_TYPE_GITHUB:
+                $auth_params = array(
+                    'access_token' => $connection_info['access_token'] ?? '',
+                    'refresh_token' => $connection_info['refresh_token'] ?? '',
+                    'expires' => $connection_info['expires'] ?? 0
+                );
+                $service = \Flexio\Services\GitHub::create($auth_params);
+                break;
+
             case \Model::CONNECTION_TYPE_AMAZONS3:
                     $auth_params = array(
                         'region' => $connection_info['host'] ?? '',

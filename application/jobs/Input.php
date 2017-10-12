@@ -159,6 +159,7 @@ class Input extends \Flexio\Jobs\Base
             case \Model::CONNECTION_TYPE_BOX:
             case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
             case \Model::CONNECTION_TYPE_GOOGLESHEETS:
+            case \Model::CONNECTION_TYPE_GITHUB:
             case \Model::CONNECTION_TYPE_AMAZONS3:
                 return $this->runRemoteFileImport($service, $file_info);
         }

@@ -18,8 +18,11 @@ namespace Flexio\Api;
 
 class Trash
 {
-    public static function add(array $params, string $requesting_user_eid = null) : bool
+    public static function add(\Flexio\Api\Request $request) : bool
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'items' => array('type' => 'object', 'required' => true)
@@ -67,9 +70,11 @@ class Trash
         return true;
     }
 
-
-    public static function restore(array $params, string $requesting_user_eid = null) : bool
+    public static function restore(\Flexio\Api\Request $request) : bool
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'items' => array('type' => 'object', 'required' => true)
@@ -112,8 +117,11 @@ class Trash
         return true;
     }
 
-    public static function empty(array $params, string $requesting_user_eid = null) : bool
+    public static function empty(\Flexio\Api\Request $request) : bool
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'items' => array('type' => 'object', 'required' => true)
@@ -155,8 +163,11 @@ class Trash
         return true;
     }
 
-    public static function listall(array $params, string $requesting_user_eid = null) : array
+    public static function listall(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
             ))->hasErrors()) === true)

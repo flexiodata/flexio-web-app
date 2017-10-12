@@ -18,8 +18,11 @@ namespace Flexio\Api;
 
 class Right
 {
-    public static function create(array $params, string $requesting_user_eid = null) : array
+    public static function create(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'rights' => array('type' => 'object', 'required' => true),
@@ -128,8 +131,11 @@ class Right
         return $result;
     }
 
-    public static function set(array $params, string $requesting_user_eid = null) : array
+    public static function set(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         // note: only allow the actions to be changed; don't allow the object
         // or the user to be changed since this would allow a user to simply
         // change the object and/or user to give themselves rights to something
@@ -167,8 +173,11 @@ class Right
         return $right->get();
     }
 
-    public static function delete(array $params, string $requesting_user_eid = null) : bool
+    public static function delete(\Flexio\Api\Request $request) : bool
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -202,8 +211,11 @@ class Right
         return true;
     }
 
-    public static function get(array $params, string $requesting_user_eid = null) : array
+    public static function get(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
@@ -231,8 +243,11 @@ class Right
         return $right->get();
     }
 
-    public static function listall(array $params, string $requesting_user_eid = null) : array
+    public static function listall(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'objects' => array('type' => 'string', 'array' => true, 'required' => false),
@@ -269,19 +284,23 @@ class Right
         $verify_code = \Flexio\Base\Util::generateHandle(); // code to verify user's email address
 
         $new_user_info = array('user_name' => $username,
-                                'email' => $user_email,
-                                'eid_status' => \Model::STATUS_PENDING,
-                                'password' => $password,
-                                'verify_code' => $verify_code,
-                                'first_name' => '',
-                                'last_name' => '',
-                                'full_name' => '',
-                                'send_email' => false,
-                                'create_examples' => false,
-                                'require_verification' => true); // require verification to give user a chance to fill out their info
+                               'email' => $user_email,
+                               'eid_status' => \Model::STATUS_PENDING,
+                               'password' => $password,
+                               'verify_code' => $verify_code,
+                               'first_name' => '',
+                               'last_name' => '',
+                               'full_name' => '',
+                               'send_email' => false,
+                               'create_examples' => false,
+                               'require_verification' => true); // require verification to give user a chance to fill out their info
 
         // if the user isn't invited, create the user; if something went wrong, move on
-        $user_info = \Flexio\Api\User::create($new_user_info, $requesting_user_eid);
+        $new_user_request = \Flexio\Api\Request::create();
+        $new_user_request->setRequestingUser($requesting_user_eid);
+        $new_user_request->setPostParams($new_user_info);
+
+        $user_info = \Flexio\Api\User::create($new_user_request);
         if (!isset($user_info) || $user_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
