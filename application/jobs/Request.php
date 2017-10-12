@@ -157,7 +157,7 @@ class Request extends \Flexio\Jobs\Base
             return false;
 
         $url_path = $url_parts['path'];
-        $url_path_parts = explode('/', $url_path);
+        $url_path_parts = explode('/', trim($url_path, '/'));
         $potential_connection_eid = $url_path_parts[0] ?? '';
 
         $connection = \Flexio\Object\Connection::load($potential_connection_eid);
