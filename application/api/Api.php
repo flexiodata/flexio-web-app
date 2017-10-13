@@ -376,6 +376,7 @@ class Api
 
             // experimental API endpoint for running a pipe with form parameters
             case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
+            case 'GET /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
             case 'GET /pipes/:eid/validate'            : return '\Flexio\Api\Pipe::validate';
 
             // connections

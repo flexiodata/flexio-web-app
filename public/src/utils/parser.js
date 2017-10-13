@@ -2011,7 +2011,7 @@
   }
 }
 */
-    this.args.request = ['method', 'url', 'params', 'headers'];
+    this.args.request = ['method', 'url', 'params', 'headers', 'userpwd', 'data', 'formdata', 'connection'];
     this.hints.request = {
       'method':      [ 'GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD', 'OPTIONS' ]
     }
@@ -2026,6 +2026,11 @@
       
       var params = this.split(str, this.args.request)
 
+      if (params.hasOwnProperty('connection'))
+      {
+        json.params.connection = params['connection'].value;
+      }
+
       if (params.hasOwnProperty('method'))
       {
         json.params.method = params['method'].value;
@@ -2034,6 +2039,36 @@
       if (params.hasOwnProperty('url'))
       {
         json.params.url = params['url'].value;
+      }
+
+      if (params.hasOwnProperty('userpwd'))
+      {
+        json.params.userpwd = params['userpwd'].value;
+      }
+
+      if (params.hasOwnProperty('headers'))
+      {
+        json.params.headers = {}
+        var i, parsed = this.parseList(params['headers'].value)
+        for (i = 0; i < parsed.length; ++i)
+        {
+          json.params.headers[ parsed[i].key ] = parsed[i].value
+        }
+      }
+
+      if (params.hasOwnProperty('data'))
+      {
+        json.params.data = params['data'].value;
+      }
+
+      if (params.hasOwnProperty('formdata'))
+      {
+        json.params.formdata = {}
+        var i, parsed = this.parseList(params['formdata'].value)
+        for (i = 0; i < parsed.length; ++i)
+        {
+          json.params.formdata[ parsed[i].key ] = parsed[i].value
+        }
       }
 
       return json
@@ -2046,6 +2081,11 @@
 
       var res = "request";
 
+      if (json.params.hasOwnProperty('connection'))
+      {
+        res = this.append(res, "connection: " + json.params.connection)
+      }
+
       if (json.params.hasOwnProperty('method'))
       {
         res = this.append(res, "method: " + json.params.method)
@@ -2055,6 +2095,55 @@
       {
         res = this.append(res, "url: " + json.params.url)
       }
+
+      if (json.params.hasOwnProperty('userpwd'))
+      {
+        res = this.append(res, "userpwd: " + json.params.userpwd)
+      }
+
+      if (json.params.hasOwnProperty('data'))
+      {
+        res = this.append(res, "data: " + json.params.data)
+      }
+
+      if (json.params.hasOwnProperty('headers'))
+      {
+        var str = '';
+        var first = true;
+        for (var k in json.params.headers)
+        {
+          if (json.params.headers.hasOwnProperty(k))
+          {
+            if (first === false)
+              str += ', ';
+
+            str += (k + " => " + json.params.headers[k]);
+
+            first = false;
+          }
+        }
+
+        res = this.append(res, "headers: " + str);
+      }
+
+      if (json.params.hasOwnProperty('formdata'))
+      {
+        var str = '';
+        var first = true;
+        for (var k in json.params.formdata)
+        {
+          if (json.params.formdata.hasOwnProperty(k))
+          {
+            if (first === false)
+              str += ', ';
+            str += (k + " => " + json.params.formdata[k]);
+            first = false;
+          }
+        }
+
+        res = this.append(res, "formdata: " + str);
+      }
+
 
       return res;
     }
