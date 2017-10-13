@@ -438,15 +438,27 @@ class GitHub implements \Flexio\Services\IConnection
 
         // TODO: read through the headers and look for the link header;
         // if we don't find the link header, return false; if we find the
-        // link header, see if there's a next or last page; if there is
-        // set the next_url to this url and return true
+        // link header, see if there's a next page, and if there isn't,
+        // return false, but if there is, then set the next_url to this url
+        // and return true; if there isn't a next page, return false
+
+        // example link header:
+        //     Link: <https://api.github.com/resource?page=2>; rel="next", <https://api.github.com/resource?page=5>; rel="last"
 
         foreach ($headers as $h)
         {
+            if (!preg_match('/link:/i', $h))
+                continue;
 
+            $matches = array();
+            preg_match('/<(.+)>\s*;\s*rel="next"/i', $h, $matches);
+            if (count($matches) < 1)
+                break;
+
+            $next_url = $matches[0];
+            return true;
         }
 
-        // TODO: implement
         return false;
     }
 }
