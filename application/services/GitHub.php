@@ -86,16 +86,7 @@ class GitHub implements \Flexio\Services\IConnection
         $folder_path = '';
         $repository_to_find = implode('/', array_splice($path_parts,0,2));
         $folder_path = implode('/', $path_parts); // everything left over
-
-        $repositories = $this->getRepositories();
-        foreach ($repositories as $r)
-        {
-            if ($r['path'] === $repository_to_find)
-                return $this->getFolderItems($repository_to_find, $folder_path);
-        }
-
-        // we couldn't find any matching repositories
-        return array();
+        return $this->getFolderItems($repository_to_find, $folder_path);
     }
 
     public function exists(string $path) : bool
