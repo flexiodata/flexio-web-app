@@ -23,19 +23,21 @@ class Request extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
 
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+
         // note: don't clear out the streams; this job simply adds a new stream
 
         // get the parameters
-        $method = $params['method'] ?? false;
-        $url = $params['url'] ?? false;
+        $connection_identifier = $params['connection'] ?? false;
+        $method = $params['method'] ?? null;
+        $url = $params['url'] ?? '';
         $headers = $params['headers'] ?? array();
         $get_params = $params['params'] ?? array();
         $post_data = $params['data'] ?? '';
         $form_data = $params['formdata'] ?? null;
         $userpwd = $params['userpwd'] ?? null;
-        if ($method === false || $url === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
+/*
         $updated_url = $url;
         $updated_headers = $headers;
         $connection_info_merged = self::mergeInfoIfConnectionUrl($updated_url, $updated_headers);
@@ -46,6 +48,61 @@ class Request extends \Flexio\Jobs\Base
             $url = $updated_url;
             $headers = $updated_headers;
         }
+*/
+
+        if ($connection_identifier !== false)
+        {
+            $connection = \Flexio\Object\Connection::load($connection_identifier);
+            if ($connection === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            
+            // TODO: rights
+            //if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+            // we have a connection; get the connection info and adjust the url
+            $connection_properties = $connection->get();
+            $connection_info = $connection_properties['connection_info'] ?? [];
+
+            if (isset($connection_info['url']))
+            {
+                $base = $connection_info['url'];
+                if (strlen($url) > 0)
+                {
+                    if (substr($base, -1) != '/')
+                        $base .= '/';
+                    $url = $base . (substr($url,0,1) == '/' ? substr($url,1) : $url);
+                }
+                 else
+                {
+                    $url = $base;
+                }
+            }
+
+            if ($method === null && isset($connection_info['method']))
+            {
+                $method = $connection_info['method'];
+            }
+
+            if ($userpwd === null && isset($connection_info['auth']) && $connection_info['auth'] == 'basic' && isset($connection_info['username']))
+            {
+                $userpwd = $connection_info['username'] . ':' . $connection_info['password'];
+            }
+
+            if (isset($connection_info['formdata']) && is_array($connection_info['formdata']) && count($connection_info['formdata']) > 0)
+            {
+                $newformdata = $connection_info['formdata'];
+                if ($form_data !== null)
+                    $newformdata = array_merge($newformdata, $form_data);
+                $form_data = $newformdata;
+            }
+
+            $connection_headers = $connection_info['headers'] ?? false;
+        }
+
+
+        if (strlen($url) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter: 'url'");
 
         $ch = curl_init();
 
