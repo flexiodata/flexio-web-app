@@ -30,8 +30,9 @@ class Request extends \Flexio\Jobs\Base
         $url = $params['url'] ?? false;
         $headers = $params['headers'] ?? array();
         $get_params = $params['params'] ?? array();
-        $post_data = $params['data'] ?? array();
-
+        $post_data = $params['data'] ?? '';
+        $form_data = $params['formdata'] ?? null;
+        $userpwd = $params['userpwd'] ?? null;
         if ($method === false || $url === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
@@ -65,11 +66,26 @@ class Request extends \Flexio\Jobs\Base
             //case 'options': curl_setopt($ch, CURLOPT_HTTPOPTIONS, true); break;
         }
 
+        if (isset($userpwd))
+        {
+            curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
+        }
+
         if ($method == 'post')
         {
             // use `application/x-www-form-urlencoded` instead of `multipart/form-data`
-            $urlencoded_post_data = http_build_query($post_data);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $urlencoded_post_data);
+            //$urlencoded_post_data = http_build_query($post_data);
+            //curl_setopt($ch, CURLOPT_POSTFIELDS, $urlencoded_post_data);
+
+            if (isset($form_data))
+            {
+                // form data is a php array; php will do the encoding
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $form_data);
+            }
+             else
+            {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+            }
         }
 
         if (count($headers) > 0)
