@@ -72,7 +72,7 @@ class Connection
             $project->addMember($connection);
 
         // get the connection properties
-        $properties = self::filterProperties($connection->get());
+        $properties = self::maskProperties($connection->get());
 
         // coerce an empty connection_info array() from [] into object {}
 
@@ -146,7 +146,7 @@ class Connection
         $connection->set($validated_params);
 
         // get the $connection properties
-        $properties = self::filterProperties($connection->get());
+        $properties = self::maskProperties($connection->get());
         return $properties;
     }
 
@@ -174,7 +174,7 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the connection properties
-        $properties = self::filterProperties($connection->get());
+        $properties = self::maskProperties($connection->get());
         return $properties;
     }
 
@@ -198,7 +198,7 @@ class Connection
             if ($c->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
-            $properties = self::filterProperties($c->get());
+            $properties = self::maskProperties($c->get());
 
             // coerce [] -> {}
             if (isset($properties['connection_info']['headers']) && is_array($properties['connection_info']['headers']) && count($properties['connection_info']['headers'])==0)
@@ -280,7 +280,7 @@ class Connection
 
         // try to connect
         $connection->connect();
-        $properties = self::filterProperties($connection->get());
+        $properties = self::maskProperties($connection->get());
         return $properties;
     }
 
@@ -309,11 +309,11 @@ class Connection
 
         // disconnect
         $connection->disconnect();
-        $properties = self::filterProperties($connection->get());
+        $properties = self::maskProperties($connection->get());
         return $properties;
     }
 
-    private static function filterProperties(array $properties) : array
+    private static function maskProperties(array $properties) : array
     {
         // TODO: figure out a way to make public/private properties
         // on the object so we can use the full object internally,
@@ -327,14 +327,10 @@ class Connection
 
         // remove tokens and passwords if they are set
         $connection_info = $properties['connection_info'];
-        if (isset($connection_info['password']))
-            unset($connection_info['password']);
-        if (isset($connection_info['access_token']))
-            unset($connection_info['access_token']);
-        if (isset($connection_info['refresh_token']))
-            unset($connection_info['refresh_token']);
-        if (isset($connection_info['expires']))
-            unset($connection_info['expires']);
+        $connection_info['password'] = "*****";
+        $connection_info['access_token'] = "*****";
+        $connection_info['refresh_token'] = "*****";
+        $connection_info['expires'] = "*****";
 
         $properties['connection_info'] = $connection_info;
         return $properties;

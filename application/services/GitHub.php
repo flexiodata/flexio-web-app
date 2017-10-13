@@ -65,83 +65,49 @@ class GitHub implements \Flexio\Services\IConnection
         if (!$this->authenticated())
             return array();
 
-        // General Request Notes:
-        // Headers:
-        //    Set Oauth Authorization:  'Authorization: Bearer token'
-        //    Use Version 3 API using header:  'Accept: application/vnd.github.v3+json'
-        //    User Agent Required:  'User-Agent: Flex.io'
-        //    Follow redirects
-        //    When sending non-URL parameters, specify content type header: 'Content-Type: application/json'
-        // Pagination: iterate through pages, looking at the "Link" header (items paginated to 30 by default):
-        //    Link: <https://api.github.com/resource?page=2>; rel="next", <https://api.github.com/resource?page=5>; rel="last"
-        //    Possible values for "rel" are:
-        //        next:  the link relation for the immediate next page of results.
-        //        last:  the link relation for the last page of results.
-        //        first: the link relation for the first page of results.
-        //        prev:  the link relation for the immediate previous page of results.
+        // note: the base path for a repository is :owner/:repository
+        $path = trim($path,'/');
+        $path_parts = explode('/', $path);
 
-        // STEP 1: list the respositories:
-        // Request: GET https://api.github.com/user/repos
-        // Returns an array of repository objects with "id" and "owner" in the main object:
-        // [
-        //    {
-        //      "id": 1296269,
-        //      "full_name": "octocat/octokit.rb",
-        //      "owner": {
-        //        "login": "octocat",
-        //        "id": 1,
-        //        ...
-        //      }
-        //    }
-        //  ]
+        // if there isn't any path, return the repositories
+        if (count($path_parts) < 2)
+            return $this->getRepositories();
 
-        // STEP 2: get the folders/files for a repository
-        // Request: GET https://api.github.com/repos/:owner/:repo/contents/:path
-        // Use the "full_name" from STEP 1 for the ":owner/:repo":
-        //      https://api.github.com/repos/octocat/octokit.rb/contents/:path
-        // Returns an array of objects containing info about subdirectories and files;
-        // note: API limits results to 1000 items in a directory; tree API supports
-        // additional files; return from this API call looks like:
-        // [
-        //    {
-        //      "type": "file",
-        //      "size": 625,
-        //      "name": "octokit.rb",
-        //      "path": "lib/octokit.rb",
-        //      "sha": "fff6fe3a23bf1c8ea0692b4a883af99bee26fd3b",
-        //      ...
-        //    },
-        //    {
-        //      "type": "dir",
-        //      "size": 0,
-        //      "name": "octokit",
-        //      "path": "lib/octokit",
-        //      "sha": "a84d88e7554fc1fa21bcbc4efae3c782a70d2b9d",
-        //      ...
-        //    }
-        // ]
+        // if a path is specified, look for the matching repository, and
+        // if it exists, return the directories
 
-        $files = array();
-        return $files;
+        $folder_path = '';
+        $repository_to_find = implode('/', array_splice($path_parts,0,2));
+        $folder_path = implode('/', $path_parts); // everything left over
+
+        $repositories = $this->getRepositories();
+        foreach ($repositories as $r)
+        {
+            if ($r['path'] === $repository_to_find)
+                return $this->getFolderItems($repository_to_find, $folder_path);
+        }
+
+        // we couldn't find any matching repositories
+        return array();
     }
 
     public function exists(string $path) : bool
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        //return false;
     }
 
     public function getInfo(string $path) : array
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
+        //return array();
     }
 
     public function read(array $params, callable $callback)
     {
-        // STEP 1: get the contents of a file in a directory
+        // File Read:
         // Request: GET https://api.github.com/repos/:owner/:repo/contents/:path
         // Returns an object containing the base64 content; note: API works with files up to 1MB
         // {
@@ -190,12 +156,144 @@ class GitHub implements \Flexio\Services\IConnection
                  'expires' => 0  ];
     }
 
-    private function getFolderItems($owner, $repository, $folder)
+    private function getRepositories() : array
     {
-        if (!$this->authenticated())
-        return array();
+        // General Request Notes:
+        // Headers:
+        //    Set Oauth Authorization:  'Authorization: Bearer token'
+        //    Use Version 3 API using header:  'Accept: application/vnd.github.v3+json'
+        //    User Agent Required:  'User-Agent: Flex.io'
+        //    Follow redirects
+        //    When sending non-URL parameters, specify content type header: 'Content-Type: application/json'
+        // Pagination: iterate through pages, looking at the "Link" header (items paginated to 30 by default):
+        //    Link: <https://api.github.com/resource?page=2>; rel="next", <https://api.github.com/resource?page=5>; rel="last"
+        //    Possible values for "rel" are:
+        //        next:  the link relation for the immediate next page of results.
+        //        last:  the link relation for the last page of results.
+        //        first: the link relation for the first page of results.
+        //        prev:  the link relation for the immediate previous page of results.
 
-        $url = "https://api.github.com/repos/$owner/$repository/contents/$folder";
+        // Repository Info:
+        // Request: GET https://api.github.com/user/repos
+        // Returns an array of repository objects with "id" and "owner" in the main object:
+        // [
+        //    {
+        //      "id": 1296269,
+        //      "full_name": "octocat/octokit.rb",
+        //      "owner": {
+        //        "login": "octocat",
+        //        "id": 1,
+        //        ...
+        //      }
+        //    }
+        //  ]
+
+        if (!$this->authenticated())
+            return array();
+
+        // note: get the repositories for the user
+        $url = "https://api.github.com/user/repos";
+
+        $repository_items = array();
+
+        $finished = false;
+        while (true)
+        {
+            if ($finished === true)
+                break;
+
+            // TODO: limit rate of requests
+
+            $headers = array();
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
+                                                  'Accept: application/vnd.github.v3+json',
+                                                  'User-Agent: Flex.io']);
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$headers) {
+                $headers[] = $data;
+                return strlen($data);
+            });
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            $result = @json_decode($result, true);
+            if (!is_array($result))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            foreach ($result as $entry)
+            {
+                $repository_items[] = array('id'=> null, // TODO: available?
+                                            'name' => $entry['name'],
+                                            'path' => $entry['full_name'],
+                                            'size' => '',
+                                            'modified' => '',  // TODO: available?
+                                            'is_dir' => true);
+            }
+
+            // find out if there's another page of results, and if so, get the url
+            // for the next request and keep making requests
+            // TODO: implement getNextPageUrl()
+            $next_url = '';
+            $finished = self::getNextPageUrl($headers, $url, $next_url);
+            if ($finished === false)
+                $url = $next_url;
+        }
+
+        return $repository_items;
+    }
+
+    private function getFolderItems(string $repository, string $folder) : array
+    {
+        // General Request Notes:
+        // Headers:
+        //    Set Oauth Authorization:  'Authorization: Bearer token'
+        //    Use Version 3 API using header:  'Accept: application/vnd.github.v3+json'
+        //    User Agent Required:  'User-Agent: Flex.io'
+        //    Follow redirects
+        //    When sending non-URL parameters, specify content type header: 'Content-Type: application/json'
+        // Pagination: iterate through pages, looking at the "Link" header (items paginated to 30 by default):
+        //    Link: <https://api.github.com/resource?page=2>; rel="next", <https://api.github.com/resource?page=5>; rel="last"
+        //    Possible values for "rel" are:
+        //        next:  the link relation for the immediate next page of results.
+        //        last:  the link relation for the last page of results.
+        //        first: the link relation for the first page of results.
+        //        prev:  the link relation for the immediate previous page of results.
+
+        // Folder Info
+        // Request: GET https://api.github.com/repos/:owner/:repo/contents/:path
+        // Use the "full_name" from STEP 1 for the ":owner/:repo":
+        //      https://api.github.com/repos/octocat/octokit.rb/contents/:path
+        // Returns an array of objects containing info about subdirectories and files;
+        // note: API limits results to 1000 items in a directory; tree API supports
+        // additional files; return from this API call looks like:
+        // [
+        //    {
+        //      "type": "file",
+        //      "size": 625,
+        //      "name": "octokit.rb",
+        //      "path": "lib/octokit.rb",
+        //      "sha": "fff6fe3a23bf1c8ea0692b4a883af99bee26fd3b",
+        //      ...
+        //    },
+        //    {
+        //      "type": "dir",
+        //      "size": 0,
+        //      "name": "octokit",
+        //      "path": "lib/octokit",
+        //      "sha": "a84d88e7554fc1fa21bcbc4efae3c782a70d2b9d",
+        //      ...
+        //    }
+        // ]
+
+        if (!$this->authenticated())
+            return array();
+
+        // note: the repository is the full name of the repository, which is :owner/:repository
+        $url = "https://api.github.com/repos/$repository/contents/$folder";
 
         $folder_items = array();
 
@@ -207,19 +305,30 @@ class GitHub implements \Flexio\Services\IConnection
 
             // TODO: limit rate of requests
 
+            $headers = array();
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Token '.$this->access_token));
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Flex.io'); // user agent required for GitHub
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
+                                                  'Accept: application/vnd.github.v3+json',
+                                                  'User-Agent: Flex.io']);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$headers) {
+                $headers[] = $data;
+                return strlen($data);
+            });
             $result = curl_exec($ch);
             curl_close($ch);
 
             $result = @json_decode($result, true);
             if (!is_array($result))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            // check for result for non-existing path; if we can't find the existing path,
+            // we're done
+            if (isset($result['message']) && strtolower($result['message']) === "not found")
+                break;
 
             foreach ($result as $entry)
             {
@@ -231,23 +340,13 @@ class GitHub implements \Flexio\Services\IConnection
                                         'is_dir' => ($entry['type'] == 'dir' ? true : false));
             }
 
-/*
-function HandleHeaderLine( $curl, $header_line ) {
-    echo "<br>YEAH: ".$header_line; // or do whatever
-    return strlen($header_line);
-}
-
-
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "http://www.google.com");
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_HEADERFUNCTION, "HandleHeaderLine");
-$body = curl_exec($ch);
-*/
-
-
-            // TODO: get the link header info and make another request
-            $finished = true;
+            // find out if there's another page of results, and if so, get the url
+            // for the next request and keep making requests
+            // TODO: implement getNextPageUrl()
+            $next_url = '';
+            $finished = self::getNextPageUrl($headers, $url, $next_url);
+            if ($finished === false)
+                $url = $next_url;
         }
 
         return $folder_items;
@@ -330,5 +429,39 @@ $body = curl_exec($ch);
         );
 
         return $service->getAuthorizationUri($additional_params)->getAbsoluteUri();
+    }
+
+    private static function getNextPageUrl(array $headers, string $url, string &$next_url) : bool
+    {
+        // return true if there's another page of results; false otherwise
+        // if there's another page of results, set's the next_url function
+        // parameter to url to request for the next page of results
+
+        // TODO: read through the headers and look for the link header;
+        // if we don't find the link header, return false; if we find the
+        // link header, see if there's a next page, and if there isn't,
+        // return false, but if there is, then set the next_url to this url
+        // and return true; if there isn't a next page, return false
+
+        // example link header:
+        //     Link: <https://api.github.com/resource?page=2>; rel="next", <https://api.github.com/resource?page=5>; rel="last"
+
+        foreach ($headers as $h)
+        {
+            if (!preg_match('/link:/i', $h))
+                continue;
+
+            $matches = array();
+            preg_match('/<(.+)>\s*;\s*rel="next"/i', $h, $matches);
+            if (count($matches) < 1)
+                break;
+
+            // we have another link
+            $next_url = $matches[0];
+            return false;
+        }
+
+        // we're done
+        return true;
     }
 }
