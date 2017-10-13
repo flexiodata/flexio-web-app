@@ -65,24 +65,25 @@ class GitHub implements \Flexio\Services\IConnection
         if (!$this->authenticated())
             return array();
 
+        // note: the base path for a repository is :owner/:repository
         $path = trim($path,'/');
         $path_parts = explode('/', $path);
 
         // if there isn't any path, return the repositories
-        if (count($path_parts) === 0)
+        if (count($path_parts) < 2)
             return $this->getRepositories();
 
         // if a path is specified, look for the matching repository, and
         // if it exists, return the directories
 
-        $repository_to_find = $path_parts[0];
         $folder_path = '';
-        if (count($path_parts) > 1)
-            $folder_path = implode('/', array_splice($path_parts,1));
+        $repository_to_find = implode('/', array_splice($path_parts,0,2));
+        $folder_path = implode('/', $path_parts); // everything left over
 
+        $repositories = $this->getRepositories();
         foreach ($repositories as $r)
         {
-            if ($r['name'] === $repository_to_find)
+            if ($r['path'] === $repository_to_find)
                 return $this->getFolderItems($repository_to_find, $folder_path);
         }
 
@@ -191,7 +192,7 @@ class GitHub implements \Flexio\Services\IConnection
             return array();
 
         // note: get the repositories for the user
-        $url = "https://api.github.com/repos/user/repo";
+        $url = "https://api.github.com/user/repos";
 
         $repository_items = array();
 
@@ -208,7 +209,7 @@ class GitHub implements \Flexio\Services\IConnection
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
                                                   'Accept: application/vnd.github.v3+json',
-                                                  'Agent: Flex.io']);
+                                                  'User-Agent: Flex.io']);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -227,7 +228,7 @@ class GitHub implements \Flexio\Services\IConnection
             {
                 $repository_items[] = array('id'=> null, // TODO: available?
                                             'name' => $entry['name'],
-                                            'path' => $entry['name'],
+                                            'path' => $entry['full_name'],
                                             'size' => '',
                                             'modified' => '',  // TODO: available?
                                             'is_dir' => true);
@@ -309,7 +310,7 @@ class GitHub implements \Flexio\Services\IConnection
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
                                                   'Accept: application/vnd.github.v3+json',
-                                                  'Agent: Flex.io']);
+                                                  'User-Agent: Flex.io']);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -430,7 +431,7 @@ class GitHub implements \Flexio\Services\IConnection
         return $service->getAuthorizationUri($additional_params)->getAbsoluteUri();
     }
 
-    private static function getNextPageUrl(array $headers, string $url, string &$next_url) : boolean
+    private static function getNextPageUrl(array $headers, string $url, string &$next_url) : bool
     {
         // return true if there's another page of results; false otherwise
         // if there's another page of results, set's the next_url function
@@ -455,10 +456,12 @@ class GitHub implements \Flexio\Services\IConnection
             if (count($matches) < 1)
                 break;
 
+            // we have another link
             $next_url = $matches[0];
-            return true;
+            return false;
         }
 
-        return false;
+        // we're done
+        return true;
     }
 }
