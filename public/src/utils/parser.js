@@ -2011,7 +2011,7 @@
   }
 }
 */
-    this.args.request = ['method', 'url', 'params', 'headers', 'userpwd', 'data', 'formdata'];
+    this.args.request = ['method', 'url', 'params', 'headers', 'userpwd', 'data', 'formdata', 'connection'];
     this.hints.request = {
       'method':      [ 'GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD', 'OPTIONS' ]
     }
@@ -2025,6 +2025,11 @@
         };
       
       var params = this.split(str, this.args.request)
+
+      if (params.hasOwnProperty('connection'))
+      {
+        json.params.connection = params['connection'].value;
+      }
 
       if (params.hasOwnProperty('method'))
       {
@@ -2075,6 +2080,11 @@
         return '';
 
       var res = "request";
+
+      if (json.params.hasOwnProperty('connection'))
+      {
+        res = this.append(res, "connection: " + json.params.connection)
+      }
 
       if (json.params.hasOwnProperty('method'))
       {
