@@ -70,12 +70,19 @@ class GitHub implements \Flexio\Services\IConnection
         $path_parts = explode('/', $path);
 
         // if there isn't any path, return the repositories
-        if (count($path_parts) < 2)
+        if (strlen($path) === 0)
             return $this->getRepositories();
+
+        // if we have one path part, it doesn't match any possible base
+        // path, so return an empty array
+        // TODO: we may want to make this return all the repositories
+        // if the path part matches the username so the the first
+        // and second part of the path aren't coupled
+        if (count($path_parts) === 1)
+            return array();
 
         // if a path is specified, look for the matching repository, and
         // if it exists, return the directories
-
         $folder_path = '';
         $repository_to_find = implode('/', array_splice($path_parts,0,2));
         $folder_path = implode('/', $path_parts); // everything left over
@@ -192,7 +199,7 @@ class GitHub implements \Flexio\Services\IConnection
             return array();
 
         // note: get the repositories for the user
-        $url = "https://api.github.com/user/repos";
+        $url = "https://api.github.com/user/repos?per_page=100";
 
         $repository_items = array();
 
@@ -293,7 +300,7 @@ class GitHub implements \Flexio\Services\IConnection
             return array();
 
         // note: the repository is the full name of the repository, which is :owner/:repository
-        $url = "https://api.github.com/repos/$repository/contents/$folder";
+        $url = "https://api.github.com/repos/$repository/contents/$folder?per_page=100";
 
         $folder_items = array();
 
@@ -453,11 +460,11 @@ class GitHub implements \Flexio\Services\IConnection
 
             $matches = array();
             preg_match('/<(.+)>\s*;\s*rel="next"/i', $h, $matches);
-            if (count($matches) < 1)
+            if (count($matches) < 2)
                 break;
 
             // we have another link
-            $next_url = $matches[0];
+            $next_url = $matches[1];
             return false;
         }
 
