@@ -64,7 +64,7 @@ class Request extends \Flexio\Jobs\Base
             $connection_properties = $connection->get();
             $connection_info = $connection_properties['connection_info'] ?? [];
 
-            if (isset($connection_info['url']))
+            if (isset($connection_info['url']) && strpos($url, '://') === false)
             {
                 $base = $connection_info['url'];
                 if (strlen($url) > 0)
