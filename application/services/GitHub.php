@@ -73,19 +73,12 @@ class GitHub implements \Flexio\Services\IConnection
         if (strlen($path) === 0)
             return $this->getRepositories();
 
-        // if we have one path part, it doesn't match any possible base
-        // path, so return an empty array
-        // TODO: we may want to make this return all the repositories
-        // if the path part matches the username so the the first
-        // and second part of the path aren't coupled
-        if (count($path_parts) === 1)
+        // see if we can get the path parts; if we can't, return an empty array
+        $repository_to_find = '';
+        $folder_path = '';
+        if (self::getPathParts($path, $repository_to_find, $folder_path) === false)
             return array();
 
-        // if a path is specified, look for the matching repository, and
-        // if it exists, return the directories
-        $folder_path = '';
-        $repository_to_find = implode('/', array_splice($path_parts,0,2));
-        $folder_path = implode('/', $path_parts); // everything left over
         return $this->getFolderItems($repository_to_find, $folder_path);
     }
 
@@ -105,27 +98,40 @@ class GitHub implements \Flexio\Services\IConnection
 
     public function read(array $params, callable $callback)
     {
-        // File Read:
-        // Request: GET https://api.github.com/repos/:owner/:repo/contents/:path
-        // Returns an object containing the base64 content; note: API works with files up to 1MB
-        // {
-        //    "type": "file",
-        //    "encoding": "base64",
-        //    "size": 5362,
-        //    "name": "README.md",
-        //    "path": "README.md",
-        //    "content": "encoded content ...",
-        //    "sha": "3d21ec53a331a6f037a91c368710b99387d012c1",
-        //    "url": "https://api.github.com/repos/octokit/octokit.rb/contents/README.md",
-        //    "git_url": "https://api.github.com/repos/octokit/octokit.rb/git/blobs/3d21ec53a331a6f037a91c368710b99387d012c1",
-        //    "html_url": "https://github.com/octokit/octokit.rb/blob/master/README.md",
-        //    "download_url": "https://raw.githubusercontent.com/octokit/octokit.rb/master/README.md",
-        //    "_links": {
-        //      "git": "https://api.github.com/repos/octokit/octokit.rb/git/blobs/3d21ec53a331a6f037a91c368710b99387d012c1",
-        //      "self": "https://api.github.com/repos/octokit/octokit.rb/contents/README.md",
-        //      "html": "https://github.com/octokit/octokit.rb/blob/master/README.md"
-        //    }
-        // }
+        $full_path = $params['path'] ?? '';
+        $repository = '';
+        $path = '';
+        $result = self::getPathParts($full_path, $repository, $path);
+        if ($result === false)
+            return;
+
+        $url = "https://api.github.com/repos/$repository/contents/$path";
+
+        $contents = '';
+        $headers = array();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
+                                              'Accept: application/vnd.github.v3+json',
+                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$headers) {
+            $headers[] = $data;
+            return strlen($data);
+        });
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $result = @json_decode($result, true);
+        if (!is_array($result))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        if (!isset($result['content']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $callback($result['content']);
     }
 
     public function write(array $params, callable $callback)
@@ -328,6 +334,11 @@ class GitHub implements \Flexio\Services\IConnection
             if (isset($result['message']) && strtolower($result['message']) === "not found")
                 break;
 
+            // make sure we only have a directory array and not a file (files
+            // return a key/value object; directories are indexed-based arrays)
+            if (\Flexio\Base\Util::isAssociativeArray($result) === true)
+                return array();
+
             foreach ($result as $entry)
             {
                 $folder_items[] = array('id'=> null, // TODO: available?
@@ -427,6 +438,23 @@ class GitHub implements \Flexio\Services\IConnection
         );
 
         return $service->getAuthorizationUri($additional_params)->getAbsoluteUri();
+    }
+
+    private static function getPathParts(string $full_path, &$repository, &$path) : bool
+    {
+        // note: the base path for a repository is :owner/:repository
+        $full_path = trim($full_path,'/');
+        $path_parts = explode('/', $full_path);
+
+        if (count($path_parts) < 2)
+            return false;
+
+        // split the string into it's repository parts
+        $folder_path = '';
+        $repository = implode('/', array_splice($path_parts,0,2));
+        $path = implode('/', $path_parts); // everything left over
+
+        return true;
     }
 
     private static function getNextPageUrl(array $headers, string $url, string &$next_url) : bool
