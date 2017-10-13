@@ -2036,6 +2036,16 @@
         json.params.url = params['url'].value;
       }
 
+      if (params.hasOwnProperty('headers'))
+      {
+        json.params.headers = {}
+        var i, parsed = this.parseList(params['headers'].value)
+        for (i = 0; i < parsed.length; ++i)
+        {
+          json.params.headers[ parsed[i].key ] = parsed[i].value
+        }
+      }
+
       return json
     };
 
@@ -2054,6 +2064,26 @@
       if (json.params.hasOwnProperty('url'))
       {
         res = this.append(res, "url: " + json.params.url)
+      }
+
+      if (json.params.hasOwnProperty('headers'))
+      {
+        var str = '';
+        var first = true;
+        for (var k in json.params.headers)
+        {
+          if (json.params.headers.hasOwnProperty(k))
+          {
+            if (first === false)
+              str += ', ';
+
+            str += (k + " => " + json.params.headers[k]);
+
+            first = false;
+          }
+        }
+
+        res = this.append(res, "headers: " + str);
       }
 
       return res;
