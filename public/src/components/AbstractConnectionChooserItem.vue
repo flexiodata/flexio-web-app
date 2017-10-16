@@ -15,7 +15,7 @@
       <i class="material-icons mid-gray md-18 b mr3" v-if="itemShowCheckmark && is_selected">check</i>
       <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="itemShowCheckmark && !is_selected">check</i>
       <service-icon :type="ctype" class="br1 square-3 mr3"></service-icon>
-      <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
+      <div class="flex-fill mid-gray f5 fw6 cursor-default">{{cname}}</div>
       <div class="ml20 ml3-ns" v-if="itemShowDropdown">
         <a
           ref="dropdownTrigger"

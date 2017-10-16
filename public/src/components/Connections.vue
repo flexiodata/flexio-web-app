@@ -18,15 +18,19 @@
     </div>
 
     <div class="flex flex-row h-100" v-if="connections.length > 0">
-      <connection-chooser-list
+      <abstract-list
         class="br b--black-05 overflow-y-auto"
         layout="list"
-        filter-items="storage"
-        item-cls="ma1 pa2 pr5-l br1 darken-05"
-        :override-item-cls="true"
+        item-component="AbstractConnectionChooserItem"
+        item-cls="pl3 pr1 pv2 darken-05"
+        item-style="margin: 0.125rem"
+        :auto-select-item="true"
         :show-selection="true"
-        :auto-select-first-item="true"
+        :item-show-dropdown="true"
+        :items="connections"
         @item-activate="onConnectionActivate"
+        @item-edit="openEditModal"
+        @item-delete="tryDeleteConnection"
       />
       <connection-raw-edit-panel
         class="flex-fill"
@@ -62,7 +66,7 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import StoragePropsModal from './StoragePropsModal.vue'
-  import ConnectionChooserList from './ConnectionChooserList.vue'
+  import AbstractList from './AbstractList.vue'
   import ConnectionRawEditPanel from './ConnectionRawEditPanel.vue'
   import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
   import EmptyItem from './EmptyItem.vue'
@@ -72,7 +76,7 @@
     components: {
       Spinner,
       StoragePropsModal,
-      ConnectionChooserList,
+      AbstractList,
       ConnectionRawEditPanel,
       ConnectionInfoConfigurePanel,
       EmptyItem,
