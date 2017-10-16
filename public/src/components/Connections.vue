@@ -46,8 +46,9 @@
         @submit="saveConnection"
         v-if="false"
        />
-      <div class="flex-fill pa3 pa4-l pb3-l" style="max-width: 1152px" v-if="connection">
+      <div class="flex-fill" style="max-width: 1024px" v-if="connection">
         <connection-info-configure-panel
+          class="pa3 pa4-l"
           :is-new="is_new"
           :connection="connection"
           @cancel="cancelChanges"

@@ -1,8 +1,8 @@
 <template>
   <div class="dn db-ns" v-if="isStatic">
     <div class="flex flex-column flex-row-ns">
-      <div class="mb2 mr1-ns ph1 fw6 w-third-ns">{{key}}</div>
-      <div class="mb2 mr1-ns ph1 fw6 w-two-thirds-ns">{{val}}</div>
+      <div class="mr3-ns fw6 w-30-ns">{{key}}</div>
+      <div class="mr2-ns fw6 w-70-ns">{{val}}</div>
     <div class="o-0">
       <span class="pointer f3">
         &times;
@@ -10,25 +10,31 @@
     </div>
     </div>
   </div>
-  <div class="flex flex-column flex-row-ns items-center hide-child" v-else>
-    <input
-      type="text"
-      class="mb1 mb0-ns mr1-ns ph2 pv1 w-third-ns f6 lh-copy ba b--light-gray focus-b--transparent focus-outline focus-ow1 focus-o--blue"
+  <div class="flex flex-column flex-row-ns hide-child" v-else>
+    <ui-textbox
+      class="mr3-ns w-30-ns"
+      autocomplete="off"
       :placeholder="keyPlaceholder"
-      @input="onInputChange"
-      v-model="key"
+      help=" "
+      required
       v-deferred-focus
-    >
-    <input
-      type="text"
-      class="mb1 mb0-ns mr1-ns ph2 pv1 w-two-thirds-ns f6 lh-copy ba b--light-gray focus-b--transparent focus-outline focus-ow1 focus-o--blue"
+      v-model="key"
+    />
+    <ui-textbox
+      class="mr2-ns w-70-ns"
+      autocomplete="off"
       :placeholder="valPlaceholder"
-      @input="onInputChange"
+      help=" "
+      required
+      v-deferred-focus
       v-model="val"
+    />
+    <div
+      class="dn db-ns"
+      :class="index == 0 ? 'o-0' : ''"
     >
-    <div class="mb1 mb0-ns">
       <span
-        class="pointer f3 lh-copy b child"
+        class="pointer f3 lh-copy b child o-0"
         @click="onDeleteClick"
       >
         &times;
