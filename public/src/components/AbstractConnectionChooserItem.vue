@@ -7,16 +7,20 @@
     @mouseover="onMouseOver"
     @mouseleave="onMouseLeave"
   >
-    <div class="tc css-valign" v-if="layout == 'grid'">
+    <div class="tc css-valign cursor-default" v-if="layout == 'grid'">
       <service-icon :type="ctype" class="dib v-mid br2 square-5"></service-icon>
-      <div class="mid-gray f6 fw6 mt2 cursor-default">{{cname}}</div>
+      <div class="mid-gray f6 fw6 mt2">{{cname}}</div>
     </div>
-    <div class="flex flex-row items-center" v-else>
+    <div class="flex flex-row items-center cursor-default" v-else>
       <i class="material-icons mid-gray md-18 b mr3" v-if="itemShowCheckmark && is_selected">check</i>
       <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="itemShowCheckmark && !is_selected">check</i>
       <service-icon :type="ctype" class="br1 square-3 mr3"></service-icon>
-      <div class="flex-fill mid-gray f5 fw6 cursor-default">{{cname}}</div>
-      <div class="ml20 ml3-ns" v-if="itemShowDropdown">
+      <div class="flex-fill flex flex-column">
+        <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
+        <div class="light-silver mt1 f8" v-if="url.length > 0">{{url}}</div>
+      </div>
+      <div class="code light-silver f7 ml2 ml3-ns" v-if="identifier.length > 0">{{identifier}}</div>
+      <div class="ml2 ml3-ns" v-if="itemShowDropdown">
         <a
           ref="dropdownTrigger"
           tabindex="0"
@@ -112,6 +116,12 @@
       },
       ctype() {
         return _.get(this.item, 'connection_type', '')
+      },
+      url() {
+        return _.get(this.item, 'connection_info.url', '')
+      },
+      identifier() {
+        return this.eid
       },
       is_selected() {
         return this.eid.length > 0
