@@ -3,16 +3,55 @@
     :class="cls"
     :style="itemStyle"
     @click="onClick"
+    @mouseenter="onMouseEnter"
+    @mouseover="onMouseOver"
+    @mouseleave="onMouseLeave"
   >
-    <div class="flex flex-row items-center" v-if="layout == 'list'">
-      <i class="material-icons mid-gray md-18 b mr3" v-if="itemShowCheckmark && is_selected">check</i>
-      <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="itemShowCheckmark">check</i>
-      <service-icon :type="ctype" class="br1 square-3 mr3"></service-icon>
-      <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
-    </div>
-    <div class="tc css-valign" v-else>
+    <div class="tc css-valign" v-if="layout == 'grid'">
       <service-icon :type="ctype" class="dib v-mid br2 square-5"></service-icon>
       <div class="mid-gray f6 fw6 mt2 cursor-default">{{cname}}</div>
+    </div>
+    <div class="flex flex-row items-center" v-else>
+      <i class="material-icons mid-gray md-18 b mr3" v-if="itemShowCheckmark && is_selected">check</i>
+      <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="itemShowCheckmark && !is_selected">check</i>
+      <service-icon :type="ctype" class="br1 square-3 mr3"></service-icon>
+      <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
+      <div class="ml20 ml3-ns" v-if="itemShowDropdown">
+        <a
+          ref="dropdownTrigger"
+          tabindex="0"
+          class="dib pointer pa1 light-silver hover-black"
+          :class="is_hover || is_dropdown_open ? '' : 'invisible'"
+          @click.stop
+        ><i class="material-icons v-mid">more_vert</i></a>
+
+        <ui-popover
+          trigger="dropdownTrigger"
+          ref="dropdown"
+          dropdown-position="bottom right"
+          @open="is_dropdown_open = true"
+          @close="is_dropdown_open = false"
+          v-if="is_hover || is_dropdown_open"
+        >
+          <ui-menu
+            contain-focus
+            has-icons
+
+            :options="[{
+              id: 'edit',
+              label: 'Edit',
+              icon: 'edit'
+            },{
+              id: 'delete',
+              label: 'Delete',
+              icon: 'delete'
+            }]"
+
+            @select="onDropdownItemClick"
+            @close="$refs.dropdown.close()"
+          ></ui-menu>
+        </ui-popover>
+      </div>
     </div>
   </article>
 </template>
@@ -48,11 +87,21 @@
       },
       'item-show-checkmark': {
         type: Boolean,
+        default: true
+      },
+      'item-show-dropdown': {
+        type: Boolean,
         default: false
       }
     },
     components: {
       ServiceIcon
+    },
+    data() {
+      return {
+        is_hover: false,
+        is_dropdown_open: false
+      }
     },
     computed: {
       eid() {
@@ -82,6 +131,22 @@
       }
     },
     methods: {
+      onMouseEnter() {
+        this.is_hover = true
+      },
+      onMouseLeave() {
+        this.is_hover = false
+      },
+      onMouseOver() {
+        this.is_hover = true
+      },
+      onDropdownItemClick(menu_item) {
+        switch (menu_item.id)
+        {
+          case 'edit':      return this.$emit('edit', this.item)
+          case 'delete':    return this.$emit('delete', this.item)
+        }
+      },
       onClick: _.debounce(function() {
         this.$emit('activate', this.item)
       }, 500, { 'leading': true, 'trailing': false })

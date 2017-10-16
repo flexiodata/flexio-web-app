@@ -7,8 +7,9 @@
       :item="item"
       v-bind="itemProps"
       @activate="onItemActivate"
-    >
-    </component>
+      @edit="onItemEdit"
+      @delete="onItemDelete"
+    />
   </div>
 </template>
 
@@ -46,6 +47,10 @@
         default: 'bg-light-gray'
       },
       'item-show-checkmark': {
+        type: Boolean,
+        default: false
+      },
+      'item-show-dropdown': {
         type: Boolean,
         default: false
       },
@@ -90,6 +95,12 @@
       onItemActivate(item) {
         this.selected_item = item
         this.$emit('item-activate', item)
+      },
+      onItemEdit(item) {
+        this.$emit('item-edit', item)
+      },
+      onItemDelete(item) {
+        this.$emit('item-delete', item)
       }
     }
   }
