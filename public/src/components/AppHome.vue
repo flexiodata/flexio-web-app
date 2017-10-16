@@ -31,12 +31,12 @@
       route: 'storage',
       name: 'Storage',
       icon: 'layers'
-    },
+    },/*
     {
       route: 'storage-old',
       name: 'Storage Old',
       icon: 'layers'
-    },
+    },*/
     {
       route: 'trash',
       name: 'Trash',
