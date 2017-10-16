@@ -22,12 +22,14 @@
         class="br b--black-05 overflow-y-auto"
         layout="list"
         item-component="AbstractConnectionChooserItem"
-        item-cls="pl3 pr1 pv2 darken-05"
-        item-style="margin: 0.125rem"
         :auto-select-item="true"
-        :show-selection="true"
-        :item-show-dropdown="true"
         :items="connections"
+        :item-options="{
+          //'item-cls': 'pl3 pr1 pv2 darken-05',
+          //'item-style': 'margin: 0.125rem',
+          'show-checkmark': false,
+          'show-dropdown': true
+        }"
         @item-activate="onConnectionActivate"
         @item-edit="openEditModal"
         @item-delete="tryDeleteConnection"

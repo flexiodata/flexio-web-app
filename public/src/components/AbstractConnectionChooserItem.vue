@@ -12,15 +12,15 @@
       <div class="mid-gray f6 fw6 mt2">{{cname}}</div>
     </div>
     <div class="flex flex-row items-center cursor-default" v-else>
-      <i class="material-icons mid-gray md-18 b mr3" v-if="itemShowCheckmark && is_selected">check</i>
-      <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="itemShowCheckmark && !is_selected">check</i>
+      <i class="material-icons mid-gray md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
+      <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <service-icon :type="ctype" class="br1 square-3 mr3"></service-icon>
       <div class="flex-fill flex flex-column">
         <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
-        <div class="light-silver mt1 f8" v-if="url.length > 0">{{url}}</div>
+        <div class="light-silver mt1 f8" v-if="showUrl && url.length > 0">{{url}}</div>
       </div>
-      <div class="code light-silver f7 ml2 ml3-ns" v-if="identifier.length > 0">{{identifier}}</div>
-      <div class="ml2 ml3-ns" v-if="itemShowDropdown">
+      <div class="code light-silver f7 ml2 ml3-ns" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
+      <div class="ml2 ml3-ns" v-if="showDropdown">
         <a
           ref="dropdownTrigger"
           tabindex="0"
@@ -81,19 +81,27 @@
         type: String,
         default: ''
       },
-      'item-selected': {
+      'selected-item': {
         type: Object,
         default: () => { return {} }
       },
-      'item-selected-cls': {
+      'selected-cls': {
         type: String,
         default: 'bg-light-gray'
       },
-      'item-show-checkmark': {
+      'show-checkmark': {
         type: Boolean,
         default: true
       },
-      'item-show-dropdown': {
+      'show-identifier': {
+        type: Boolean,
+        default: true
+      },
+      'show-url': {
+        type: Boolean,
+        default: true
+      },
+      'show-dropdown': {
         type: Boolean,
         default: false
       }
@@ -126,17 +134,17 @@
       },
       is_selected() {
         return this.eid.length > 0
-          ? _.get(this.itemSelected, 'eid') === this.eid
-          : _.get(this.itemSelected, 'connection_type') === this.ctype
+          ? _.get(this.selectedItem, 'eid') === this.eid
+          : _.get(this.selectedItem, 'connection_type') === this.ctype
       },
       cls() {
-        var sel_cls = this.is_selected ? this.itemSelectedCls : ''
+        var sel_cls = this.is_selected ? this.selectedCls : ''
 
         if (this.itemCls.length > 0)
           return this.itemCls + ' ' + sel_cls
 
         if (_.get(this, 'layout', '') == 'list')
-          return 'bg-white pa3 bb b--light-gray darken-05 ' + sel_cls
+          return 'pa3 bb b--black-05 darken-05 ' + sel_cls
            else
           return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
       }
