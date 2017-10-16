@@ -25,8 +25,6 @@
         :auto-select-item="true"
         :items="connections"
         :item-options="{
-          //'item-cls': 'pl3 pr1 pv2 darken-05',
-          //'item-style': 'margin: 0.125rem',
           'show-identifier': false,
           'show-url': false,
           'show-checkmark': false,

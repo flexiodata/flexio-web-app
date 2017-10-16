@@ -25,8 +25,6 @@
         :auto-select-item="true"
         :items="connections"
         :item-options="{
-          //'item-cls': 'pl3 pr1 pv2 darken-05',
-          //'item-style': 'margin: 0.125rem',
           'show-checkmark': false,
           'show-dropdown': true
         }"
@@ -64,6 +62,7 @@
 </template>
 
 <script>
+  import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
@@ -97,7 +96,7 @@
         'is_fetched': 'connections_fetched'
       }),
       connections() {
-        return this.getAllConnections()
+        return _.filter(this.getAllConnections(), { connection_type: CONNECTION_TYPE_HTTP })
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
