@@ -23,10 +23,6 @@
         type: String,
         default: 'list' // 'list' or 'grid'
       },
-      'show-selection': {
-        type: Boolean,
-        default: false
-      },
       'items': {
         type: Array,
         default: () => { return [] }
