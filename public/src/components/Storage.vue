@@ -62,8 +62,10 @@
   import FileChooser from './FileChooser.vue'
   import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
+  import ConnectionInfoMixin from './mixins/connection-info'
 
   export default {
+    mixins: [ConnectionInfoMixin],
     components: {
       Spinner,
       StoragePropsModal,
@@ -85,7 +87,7 @@
         'is_fetched': 'connections_fetched'
       }),
       connections() {
-        return this.getAllConnections()
+        return _.filter(this.getAllConnections(), this.isStorageConnection)
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
