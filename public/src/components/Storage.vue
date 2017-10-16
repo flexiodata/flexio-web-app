@@ -24,6 +24,7 @@
         item-component="AbstractConnectionChooserItem"
         item-cls="pa2 pr4-l darken-05"
         item-style="margin: 0.125rem"
+        :auto-select-item="true"
         :show-selection="true"
         :items="connections"
         @item-activate="onConnectionActivate"

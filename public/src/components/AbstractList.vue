@@ -48,6 +48,10 @@
       'item-show-checkmark': {
         type: Boolean,
         default: false
+      },
+      'auto-select-item': {
+        type: [Boolean, Object, Function], // true/false or object/function for use with _.find()
+        default: false
       }
     },
     data() {
@@ -65,7 +69,24 @@
         }, _.omit(this._props, ['items']))
       }
     },
+    mounted() {
+      if (this.autoSelectItem !== false)
+        this.tryAutoSelectItem()
+    },
     methods: {
+      tryAutoSelectItem() {
+        if (this.items.length == 0)
+        {
+          setTimeout(() => { this.tryAutoSelectItem() }, 500)
+        }
+         else
+        {
+          if (this.autoSelectItem === true)
+            this.onItemActivate(_.first(this.items))
+             else
+            this.onItemActivate(_.find(this.items, this.autoSelectItem))
+        }
+      },
       onItemActivate(item) {
         this.selected_item = item
         this.$emit('item-activate', item)
