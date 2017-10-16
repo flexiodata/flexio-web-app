@@ -5,7 +5,8 @@
       :is="itemComponent"
       :key="key"
       :item="item"
-      v-bind="itemProps"
+      :selected-item="selected_item"
+      v-bind="itemOptions"
       @activate="onItemActivate"
       @edit="onItemEdit"
       @delete="onItemDelete"
@@ -22,10 +23,6 @@
         type: String,
         default: 'list' // 'list' or 'grid'
       },
-      'show-selection': {
-        type: Boolean,
-        default: false
-      },
       'items': {
         type: Array,
         default: () => { return [] }
@@ -34,25 +31,9 @@
         type: String,
         required: true
       },
-      'item-cls': {
-        type: String,
-        default: ''
-      },
-      'item-style': {
-        type: String,
-        default: ''
-      },
-      'item-selected-cls': {
-        type: String,
-        default: 'bg-light-gray'
-      },
-      'item-show-checkmark': {
-        type: Boolean,
-        default: false
-      },
-      'item-show-dropdown': {
-        type: Boolean,
-        default: false
+      'item-options': {
+        type: Object,
+        default: () => { return {} }
       },
       'auto-select-item': {
         type: [Boolean, Object, Function], // true/false or object/function for use with _.find()
@@ -66,13 +47,6 @@
     },
     components: {
       AbstractConnectionChooserItem
-    },
-    computed: {
-      itemProps() {
-        return _.assign({
-          'item-selected': this.selected_item
-        }, _.omit(this._props, ['items']))
-      }
     },
     mounted() {
       if (this.autoSelectItem !== false)
