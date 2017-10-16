@@ -142,6 +142,16 @@ class Connection
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // temporary measure to not set masked items; caller should not make calls to 'set' with masked items
+        if (isset($validated_params['connection_info']['access_token']) && $validated_params['connection_info']['access_token'] == '*****')
+            unset($validated_params['connection_info']['access_token']);
+        if (isset($validated_params['connection_info']['refresh_token']) && $validated_params['connection_info']['refresh_token'] == '*****')
+            unset($validated_params['connection_info']['refresh_token']);
+        if (isset($validated_params['connection_info']['password']) && $validated_params['connection_info']['password'] == '*****')
+            unset($validated_params['connection_info']['password']);
+        if (isset($validated_params['connection_info']['expires']) && $validated_params['connection_info']['expires'] == '*****')
+            unset($validated_params['connection_info']['expires']);
+
         // set the properties
         $connection->set($validated_params);
 
