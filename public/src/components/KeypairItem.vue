@@ -17,6 +17,7 @@
       :placeholder="keyPlaceholder"
       @input="onInputChange"
       v-model="key"
+      v-deferred-focus
     >
     <input
       type="text"

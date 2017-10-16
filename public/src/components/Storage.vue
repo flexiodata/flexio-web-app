@@ -25,10 +25,12 @@
         :auto-select-item="true"
         :items="connections"
         :item-options="{
-          'show-identifier': false,
-          'show-url': false,
+          'item-cls': 'pa3 darken-05',
+          'item-style': 'margin: 0.125rem',
           'show-checkmark': false,
-          'show-dropdown': true
+          'show-dropdown': true,
+          'show-identifier': false,
+          'show-url': false
         }"
         @item-activate="onConnectionActivate"
         @item-edit="openEditModal"

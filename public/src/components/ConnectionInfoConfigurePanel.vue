@@ -1,10 +1,10 @@
 <template>
   <div>
-    <connection-info-configure-item
+    <keypair-item
       :item="{ key: 'Key', val: 'Value' }"
       :is-static="true"
     />
-    <connection-info-configure-item
+    <keypair-item
       v-for="(item, index) in headers"
       :key="index"
       :item="item"
@@ -12,18 +12,33 @@
       @change="onItemChange"
       @delete="onItemDelete"
     />
-    <div class="flex flex-row justify-end pt2 mt2 bt b--light-gray">
-      <btn btn-md class="b ttu blue mr2" :disabled="!is_changed" @click="onCancel">Cancel</btn>
-      <btn btn-md btn-primary class="ttu b" :disabled="!is_changed" @click="onSave">Save</btn>
+    <div class="flex flex-row justify-end pt2 mt4 bt b--light-gray">
+      <btn btn-md class="b ttu blue mr2" :disabled="!isNew && !is_changed" @click="onCancel">Cancel</btn>
+      <btn btn-md btn-primary class="ttu b" :disabled="!isNew && !is_changed" @click="onSave">
+        <span v-if="isNew">Create Connection</span>
+        <span v-else>Save Changes</span>
+      </btn>
     </div>
   </div>
 </template>
 
 <script>
   import Btn from './Btn.vue'
-  import ConnectionInfoConfigureItem from './ConnectionInfoConfigureItem.vue'
+  import KeypairItem from './KeypairItem.vue'
 
-  var newItem = () => {
+  const defaultAttrs = () => {
+    return {
+      eid: null,
+      eid_status: OBJECT_STATUS_PENDING,
+      name: '',
+      description: '',
+      connection_type: '',
+      connection_info: {},
+      rights: defaultRights()
+    }
+  }
+
+  const newItem = () => {
     return {
       key: '',
       val: ''
@@ -35,11 +50,15 @@
       'connection': {
         type: Object,
         required: true
+      },
+      'is-new': {
+        type: Boolean,
+        default: false
       }
     },
     components: {
       Btn,
-      ConnectionInfoConfigureItem
+      KeypairItem
     },
     data() {
       var headers = _.get(this.connection, 'connection_info.headers', [])
@@ -62,16 +81,17 @@
           this.headers = [].concat(this.headers).concat(newItem())
       },
       onItemDelete(item, index) {
-        debugger
         _.pullAt(this.headers, [index])
         this.$nextTick(() => { this.headers = [].concat(this.headers) })
       },
       onCancel() {
         this.headers = []
         this.$nextTick(() => { this.headers = [].concat(this.original_headers) })
+
+        this.$emit('cancel', this.connection)
       },
       onSave() {
-
+        this.$emit('submit', this.connection)
       }
     }
   }

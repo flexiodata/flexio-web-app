@@ -12,12 +12,18 @@
           <div class="f2">Connections</div>
         </div>
         <div class="flex-none flex flex-row items-center">
-          <btn btn-md btn-primary class="btn-add ttu b ba" @click="openAddModal">New</btn>
+          <btn
+            btn-md
+            btn-primary
+            class="btn-add ttu b ba"
+            :disabled="is_new"
+            @click="createPendingConnection"
+          >New</btn>
         </div>
       </div>
     </div>
 
-    <div class="flex flex-row h-100" v-if="connections.length > 0">
+    <div class="flex flex-row h-100 overflow-y-auto" v-if="is_new || connections.length > 0">
       <abstract-list
         class="br b--black-05 overflow-y-auto"
         layout="list"
@@ -25,23 +31,28 @@
         :auto-select-item="true"
         :items="connections"
         :item-options="{
+          'item-cls': 'pl3 pr1 pv2 darken-05',
+          'item-style': 'margin: 0.125rem',
           'show-checkmark': false,
           'show-dropdown': true
         }"
         @item-activate="onConnectionActivate"
-        @item-edit="openEditModal"
         @item-delete="tryDeleteConnection"
+        v-if="!is_new && connections.length > 0"
       />
       <connection-raw-edit-panel
         class="flex-fill"
         :connection="connection"
         @submit="saveConnection"
-      />
-      <div class="flex-fill" v-if="false">
-        <div class="pa3 pa4-l pb3-l " style="max-width: 1152px" v-if="connection">
-          <div class="f4 mb3">Headers</div>
-          <connection-info-configure-panel :connection="connection" />
-        </div>
+        v-if="false"
+       />
+      <div class="flex-fill pa3 pa4-l pb3-l" style="max-width: 1152px" v-if="connection">
+        <connection-info-configure-panel
+          :is-new="is_new"
+          :connection="connection"
+          @cancel="cancelChanges"
+          @submit="saveConnection"
+        />
       </div>
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
@@ -50,14 +61,6 @@
         <span slot="text">No connections to show</span>
       </empty-item>
     </div>
-
-    <!-- props modal (used for both add and edit) -->
-    <storage-props-modal
-      ref="modal-connection-props"
-      @submit="tryUpdateConnection"
-      @hide="show_connection_props_modal = false"
-      v-if="show_connection_props_modal"
-    ></storage-props-modal>
   </div>
 </template>
 
@@ -66,7 +69,6 @@
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import StoragePropsModal from './StoragePropsModal.vue'
   import AbstractList from './AbstractList.vue'
   import ConnectionRawEditPanel from './ConnectionRawEditPanel.vue'
   import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
@@ -76,7 +78,6 @@
   export default {
     components: {
       Spinner,
-      StoragePropsModal,
       AbstractList,
       ConnectionRawEditPanel,
       ConnectionInfoConfigurePanel,
@@ -86,7 +87,7 @@
     data() {
       return {
         connection: {},
-        show_connection_props_modal: false
+        is_new: false
       }
     },
     computed: {
@@ -115,14 +116,25 @@
       ...mapGetters([
         'getAllConnections'
       ]),
-      openAddModal() {
-        this.show_connection_props_modal = true
-        this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
-        analytics.track('Clicked New Connection Button')
-      },
-      openEditModal(item) {
-        this.show_connection_props_modal = true
-        this.$nextTick(() => { this.$refs['modal-connection-props'].open(item, 'edit') })
+      createPendingConnection(item) {
+        this.is_new = true
+
+        var attrs = _.assign({
+          name: 'My Connection',
+          connection_type: CONNECTION_TYPE_HTTP,
+          eid_status: OBJECT_STATUS_PENDING
+        })
+
+        this.$store.dispatch('createConnection', { attrs }).then(response => {
+          if (response.ok)
+          {
+            this.connection = _.get(response, 'body', {})
+          }
+           else
+          {
+            // TODO: add error handling
+          }
+        })
       },
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
@@ -140,12 +152,6 @@
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
           if (response.ok)
           {
-            if (modal)
-              modal.close()
-
-            // try to connect to the connection
-            this.$store.dispatch('testConnection', { eid, attrs })
-
             if (is_pending)
             {
               var analytics_payload = _.pick(attrs, ['name', 'ename', 'description'])
@@ -166,10 +172,19 @@
       onConnectionActivate(item) {
         this.connection = _.assign({}, item)
       },
+      cancelChanges(item) {
+        this.is_new = false
+        this.connection = {}
+      },
+      saveConnection(connection) {
+        this.is_new = false
+        this.connection = {}
+        alert('Save clicked')
+      }/*,
       saveConnection(connection, info) {
         var conn = _.set(connection, 'connection_info', info)
         this.tryUpdateConnection(conn)
-      }
+      }*/
     }
   }
 </script>
