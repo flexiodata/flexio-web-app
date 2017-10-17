@@ -19,8 +19,8 @@
         <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
         <div class="light-silver mt1 f8" v-if="showUrl && url.length > 0">{{url}}</div>
       </div>
-      <div class="code light-silver f7 ml2 ml3-ns" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
-      <div class="ml2 ml3-ns" v-if="showDropdown">
+      <div class="code light-silver f7 ml3 ml4-ns dn db-ns" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
+      <div class="ml2" v-if="showDropdown">
         <a
           ref="dropdownTrigger"
           tabindex="0"
@@ -144,7 +144,7 @@
           return this.itemCls + ' ' + sel_cls
 
         if (_.get(this, 'layout', '') == 'list')
-          return 'pa3 bb b--black-05 darken-05 ' + sel_cls
+          return 'min-w5 pa3 bb b--black-05 darken-05 ' + sel_cls
            else
           return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
       }
