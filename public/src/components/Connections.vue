@@ -170,8 +170,10 @@
         this.connection = _.assign({}, item)
       },
       cancelChanges(item) {
+        var tmp = this.connection
         this.is_new = false
-        this.connection = {}
+        this.connection = false
+        this.$nextTick(() => { this.connection = _.assign({}, tmp) })
       },
       saveChanges(item) {
         this.is_new = false

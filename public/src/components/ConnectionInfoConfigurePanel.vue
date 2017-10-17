@@ -203,7 +203,7 @@
         return cid.length > 0 ? cid : _.get(this.connection, 'eid', '')
       },
       is_changed() {
-        return !_.isEqual(this.headers, this.original_headers)
+        return true
       }
     },
     mounted() {
