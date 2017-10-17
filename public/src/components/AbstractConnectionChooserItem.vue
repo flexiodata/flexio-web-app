@@ -16,10 +16,12 @@
       <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <service-icon :url="url" :type="ctype" class="br1 square-3 mr3" />
       <div class="flex-fill flex flex-column">
-        <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
-        <div class="light-silver mt1 f8" v-if="showUrl && url.length > 0">{{url}}</div>
+        <div class="mid-gray f5 fw6 lh-title cursor-default">{{cname}}</div>
+        <div style="max-width: 10rem" v-if="showUrl && url.length > 0">
+          <div class="light-silver f8 lh-copy truncate">{{url}}</div>
+        </div>
       </div>
-      <div class="code light-silver f7 ml3 ml4-ns dn db-ns" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
+      <div class="code light-silver f8 ml3 ml4-ns dn db-ns" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
       <div class="ml2" v-if="showDropdown">
         <a
           ref="dropdown-trigger"
