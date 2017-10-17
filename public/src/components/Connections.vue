@@ -43,7 +43,7 @@
       <div class="flex-fill overflow-y-auto" v-if="connection">
         <connection-info-configure-panel
           class="pa3 pa4-l"
-          style="max-width: 1024px"
+          style="max-width: 60rem"
           :is-new="is_new"
           :connection="connection"
           @cancel="cancelChanges"
