@@ -49,7 +49,7 @@ class Token
         return $token->get();
     }
 
-    public static function delete(\Flexio\Api\Request $request) : bool
+    public static function delete(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -75,7 +75,11 @@ class Token
         if ($token !== false)
             $token->delete();
 
-        return true;
+        $result = array();
+        $result['eid'] = $token->getEid();
+        $result['eid_type'] = $token->getType();
+        $result['eid_status'] = $token->getStatus();
+        return $result;
     }
 
     public static function get(\Flexio\Api\Request $request) : array

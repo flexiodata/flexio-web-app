@@ -85,7 +85,7 @@ class Connection
         return $properties;
     }
 
-    public static function delete(\Flexio\Api\Request $request) : bool
+    public static function delete(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -109,7 +109,12 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection->delete();
-        return true;
+
+        $result = array();
+        $result['eid'] = $connection->getEid();
+        $result['eid_type'] = $connection->getType();
+        $result['eid_status'] = $connection->getStatus();
+        return $result;
     }
 
     public static function set(\Flexio\Api\Request $request) : array

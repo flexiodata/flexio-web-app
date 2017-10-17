@@ -173,7 +173,7 @@ class Right
         return $right->get();
     }
 
-    public static function delete(\Flexio\Api\Request $request) : bool
+    public static function delete(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -208,7 +208,11 @@ class Right
         // sync the followers and the rights
         self::syncFollowersWithRights($object_eid);
 
-        return true;
+        $result = array();
+        $result['eid'] = $right->getEid();
+        $result['eid_type'] = $right->getType();
+        $result['eid_status'] = $right->getStatus();
+        return $result;
     }
 
     public static function get(\Flexio\Api\Request $request) : array

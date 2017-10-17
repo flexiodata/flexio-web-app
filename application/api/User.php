@@ -398,7 +398,7 @@ class User
         return $user->get();
     }
 
-    public static function activate(\Flexio\Api\Request $request) : bool
+    public static function activate(\Flexio\Api\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -427,10 +427,12 @@ class User
         if ($user->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not activate the user at this time'));
 
-        return true;
+        $result = array();
+        $result['email'] = $email;
+        return $result;
     }
 
-    public static function resendverify(\Flexio\Api\Request $request) : bool
+    public static function resendverify(\Flexio\Api\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -460,10 +462,12 @@ class User
         $message = \Flexio\Api\Message::create($message_type, $email_params);
         $message->send();
 
-        return true;
+        $result = array();
+        $result['email'] = $email;
+        return $result;
     }
 
-    public static function requestpasswordreset(\Flexio\Api\Request $request) : bool
+    public static function requestpasswordreset(\Flexio\Api\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -490,10 +494,12 @@ class User
         $message = \Flexio\Api\Message::create($message_type, $email_params);
         $message->send();
 
-        return true;
+        $result = array();
+        $result['email'] = $email;
+        return $result;
     }
 
-    public static function resetpassword(\Flexio\Api\Request $request) : bool
+    public static function resetpassword(\Flexio\Api\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -525,7 +531,9 @@ class User
         if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not update user at this time'));
 
-        return true;
+        $result = array();
+        $result['email'] = $email;
+        return $result;
     }
 
     public static function parseFullname(string $full_name, string &$first_name, string &$last_name)
@@ -549,7 +557,7 @@ class User
         */
     }
 
-    public static function resetConfig(\Flexio\Api\Request $request) : bool
+    public static function resetConfig(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -568,10 +576,10 @@ class User
         $new_request->setPostParams(array('eid' => $requesting_user_eid, 'config' => []));
 
         self::set($new_request);
-        return true;
+        return array();
     }
 
-    public static function createExamples(\Flexio\Api\Request $request) : bool
+    public static function createExamples(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -586,11 +594,11 @@ class User
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $project = self::createExamplePipes($requesting_user_eid);
-        return true;
+        $pipes = self::createExamplePipes($requesting_user_eid);
+        return $pipes;
     }
 
-    private static function createExamplePipes(string $user_eid, array $project_params = null) : bool
+    private static function createExamplePipes(string $user_eid, array $project_params = null) : array
     {
         // create sample pipes; ensure user creation even if sample fails
         try
@@ -620,6 +628,29 @@ class User
             $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
             $pipe1_eid = self::createExamplePipe($user_eid, $demo_dir .'pipe_commit.json', $project_eid);
             $pipe2_eid = self::createExamplePipe($user_eid, $demo_dir .'pipe_contact.json', $project_eid);
+
+            // get the info for the created pipes
+            $pipe1_object = \Flexio\Object\Pipe::load($pipe1_eid);
+            $pipe2_object = \Flexio\Object\Pipe::load($pipe2_eid);
+
+            $result = array();
+            if ($pipe1_object !== false)
+            {
+                $pipe1_info = array();
+                $pipe1_info['eid'] = $pipe1_object->getEid();
+                $pipe1_info['eid_type'] = $pipe1_object->getType();
+                $pipe1_info['eid_status'] = $pipe1_object->getStatus();
+                $result[] = $pipe1_info;
+            }
+            if ($pipe2_object !== false)
+            {
+                $pipe2_info = array();
+                $pipe2_info['eid'] = $pipe2_object->getEid();
+                $pipe2_info['eid_type'] = $pipe2_object->getType();
+                $pipe2_info['eid_status'] = $pipe2_object->getStatus();
+                $result[] = $pipe2_info;
+            }
+            return $result;
         }
         catch (\Exception $e)
         {
@@ -628,7 +659,7 @@ class User
         {
         }
 
-        return true;
+        return array(); // no pipes were created
     }
 
     private static function createExamplePipe(string $user_eid, string $file_name, string $project_eid = null) : string

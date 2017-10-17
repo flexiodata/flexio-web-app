@@ -141,7 +141,7 @@ class Process
         return $process;
     }
 
-    public static function delete(\Flexio\Api\Request $request) : bool
+    public static function delete(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -165,7 +165,12 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $process->delete();
-        return true;
+
+        $result = array();
+        $result['eid'] = $process->getEid();
+        $result['eid_type'] = $process->getType();
+        $result['eid_status'] = $process->getStatus();
+        return $result;
     }
 
     public static function set(\Flexio\Api\Request $request) : array
