@@ -32,14 +32,14 @@
       <div class="ml2 ml3-ns">
         <a
           class="f5 b dib pointer pa1 black-60 ba br2 popover-trigger"
-          ref="dropdownTrigger"
+          ref="dropdown-trigger"
           tabindex="0"
           :class="is_hover && false ? 'b--black-20' : 'b--transparent'"
           @click.stop
         ><i class="material-icons v-mid b">expand_more</i></a>
 
         <ui-popover
-          trigger="dropdownTrigger"
+          trigger="dropdown-trigger"
           ref="dropdown"
           dropdown-position="bottom right"
           @open="is_dropdown_open = true"

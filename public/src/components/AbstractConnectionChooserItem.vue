@@ -22,7 +22,7 @@
       <div class="code light-silver f7 ml3 ml4-ns dn db-ns" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
       <div class="ml2" v-if="showDropdown">
         <a
-          ref="dropdownTrigger"
+          ref="dropdown-trigger"
           tabindex="0"
           class="dib pointer pa1 light-silver hover-black"
           :class="is_hover || is_dropdown_open ? '' : 'invisible'"
@@ -30,7 +30,7 @@
         ><i class="material-icons v-mid">more_vert</i></a>
 
         <ui-popover
-          trigger="dropdownTrigger"
+          trigger="dropdown-trigger"
           ref="dropdown"
           dropdown-position="bottom right"
           @open="is_dropdown_open = true"
