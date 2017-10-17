@@ -101,8 +101,8 @@
         :key="index"
         :item="item"
         :index="index"
-        @change="onItemChange"
-        @delete="onItemDelete"
+        @change="onFormDataItemChange"
+        @delete="onFormDataItemDelete"
       />
     </div>
 
@@ -118,8 +118,8 @@
         :key="index"
         :item="item"
         :index="index"
-        @change="onItemChange"
-        @delete="onItemDelete"
+        @change="onHeaderItemChange"
+        @delete="onHeaderItemDelete"
       />
     </div>
 
@@ -134,14 +134,18 @@
 </template>
 
 <script>
+  import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
   import Btn from './Btn.vue'
   import ValueSelect from './ValueSelect.vue'
   import KeypairItem from './KeypairItem.vue'
 
-  const newItem = () => {
+  const newKeypairItem = (key, val) => {
+    key = _.defaultTo(key, '')
+    val = _.defaultTo(val, '')
+
     return {
-      key: '',
-      val: ''
+      key,
+      val
     }
   }
 
@@ -171,11 +175,10 @@
     data() {
       return {
         auth_options,
-        headers: [newItem()],
-        form_data: [newItem()],
-        name: '',
+        name: 'My Connection',
         ename: '',
         description: '',
+        connection_type: CONNECTION_TYPE_HTTP,
         url: '',
         auth: 'none',
         username: '',
@@ -183,7 +186,9 @@
         token: '',
         access_token: '',
         refresh_token: '',
-        expires: ''
+        expires: '',
+        headers: [],
+        form_data: []
       }
     },
     computed: {
@@ -191,23 +196,79 @@
         return !_.isEqual(this.headers, this.original_headers)
       }
     },
+    mounted() {
+      this.$nextTick(() => { this.reset() })
+    },
     methods: {
-      onItemChange(item, index) {
-        if (index == _.size(this.headers) - 1)
-          this.headers = [].concat(this.headers).concat(newItem())
+      reset() {
+        this.name = _.get(this.connection, 'name', '')
+        this.ename = _.get(this.connection, 'ename', '')
+        this.description = _.get(this.connection, 'description', '')
+
+        _.each(_.get(this.connection, 'connection_info', {}), (val, key) => {
+          if (_.isString(val))
+            this[key] = val
+
+          if (_.isPlainObject(val))
+          {
+            _.each(val, (val2, key2) => {
+              this[key] = [].concat(this[key]).concat(newKeypairItem(key2, val2))
+            })
+          }
+        })
+
+        // add "ghost" items
+        this.form_data = [].concat(this.form_data).concat(newKeypairItem())
+        this.headers = [].concat(this.headers).concat(newKeypairItem())
       },
-      onItemDelete(item, index) {
+      getConnection() {
+        var eid = _.get(this.connection, 'eid', '')
+        var connection = _.pick(this.$data, ['name', 'ename', 'description', 'connection_type'])
+        var connection_info = _.pick(this.$data, ['url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'form_data'])
+
+        var form_data = _.keyBy(this.$data.form_data, 'key')
+        form_data = _.pickBy(form_data, (val, key) => { return key.length > 0 })
+        form_data = _.mapValues(form_data, 'val')
+
+        var headers = _.keyBy(this.$data.headers, 'key')
+        headers = _.pickBy(headers, (val, key) => { return key.length > 0 })
+        headers = _.mapValues(headers, 'val')
+
+        connection_info.form_data = form_data
+        connection_info.headers = headers
+
+        return _.assign({}, connection, { eid, connection_info })
+      },
+      onFormDataItemChange(item, index) {
+        if (index == _.size(this.form_data) - 1)
+          this.form_data = [].concat(this.form_data).concat(newKeypairItem())
+
+        var arr = [].concat(this.form_data)
+        arr[index] = _.assign({}, item)
+        this.form_data = [].concat(arr)
+      },
+      onFormDataItemDelete(item, index) {
+        _.pullAt(this.form_data, [index])
+        this.$nextTick(() => { this.form_data = [].concat(this.form_data) })
+      },
+      onHeaderItemChange(item, index) {
+        if (index == _.size(this.headers) - 1)
+          this.headers = [].concat(this.headers).concat(newKeypairItem())
+
+        var arr = [].concat(this.headers)
+        arr[index] = _.assign({}, item)
+        this.headers = [].concat(arr)
+      },
+      onHeaderItemDelete(item, index) {
         _.pullAt(this.headers, [index])
         this.$nextTick(() => { this.headers = [].concat(this.headers) })
       },
       onCancel() {
-        this.headers = []
-        this.$nextTick(() => { this.headers = [].concat(this.original_headers) })
-
-        this.$emit('cancel', this.connection)
+        this.reset()
+        this.$emit('cancel', this.getConnection(), this.connection)
       },
       onSave() {
-        this.$emit('submit', this.connection)
+        this.$emit('submit', this.getConnection())
       }
     }
   }

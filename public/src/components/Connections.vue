@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <!-- control bar -->
-    <div class="pa3 ph4-l bb b--black-05">
+    <div class="pa3 ph4-l relative bg-white bb b--black-05">
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
           <div class="f2">Connections</div>
@@ -23,12 +23,13 @@
       </div>
     </div>
 
-    <div class="flex flex-row h-100 overflow-y-auto" v-if="is_new || connections.length > 0">
+    <div class="flex flex-row h-100" v-if="is_new || connections.length > 0">
       <abstract-list
         class="br b--black-05 overflow-y-auto"
         layout="list"
         item-component="AbstractConnectionChooserItem"
         :auto-select-item="true"
+        :disabled="is_new"
         :items="connections"
         :item-options="{
           'item-cls': 'pl3 pr1 pv2 darken-05',
@@ -38,21 +39,16 @@
         }"
         @item-activate="onConnectionActivate"
         @item-delete="tryDeleteConnection"
-        v-if="!is_new && connections.length > 0"
+        v-if="connections.length > 0"
       />
-      <connection-raw-edit-panel
-        class="flex-fill"
-        :connection="connection"
-        @submit="saveConnection"
-        v-if="false"
-       />
-      <div class="flex-fill" style="max-width: 1024px" v-if="connection">
+      <div class="flex-fill overflow-y-auto" v-if="connection">
         <connection-info-configure-panel
           class="pa3 pa4-l"
+          style="max-width: 1024px"
           :is-new="is_new"
           :connection="connection"
           @cancel="cancelChanges"
-          @submit="saveConnection"
+          @submit="saveChanges"
         />
       </div>
     </div>
@@ -71,7 +67,6 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import AbstractList from './AbstractList.vue'
-  import ConnectionRawEditPanel from './ConnectionRawEditPanel.vue'
   import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
   import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
@@ -80,7 +75,6 @@
     components: {
       Spinner,
       AbstractList,
-      ConnectionRawEditPanel,
       ConnectionInfoConfigurePanel,
       EmptyItem,
       Btn
@@ -120,16 +114,16 @@
       createPendingConnection(item) {
         this.is_new = true
 
-        var attrs = _.assign({
+        var attrs = {
           name: 'My Connection',
           connection_type: CONNECTION_TYPE_HTTP,
           eid_status: OBJECT_STATUS_PENDING
-        })
+        }
 
         this.$store.dispatch('createConnection', { attrs }).then(response => {
           if (response.ok)
           {
-            this.connection = _.get(response, 'body', {})
+            this.connection = _.assign({}, _.get(response, 'body', {}))
           }
            else
           {
@@ -141,7 +135,7 @@
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
       },
-      tryUpdateConnection(attrs, modal) {
+      tryUpdateConnection(attrs) {
         var eid = attrs.eid
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
@@ -175,17 +169,12 @@
       },
       cancelChanges(item) {
         this.is_new = false
-        this.connection = {}
+        this.connection = _.assign({}, {})
       },
-      saveConnection(connection) {
+      saveChanges(item) {
         this.is_new = false
-        this.connection = {}
-        alert('Save clicked')
-      }/*,
-      saveConnection(connection, info) {
-        var conn = _.set(connection, 'connection_info', info)
-        this.tryUpdateConnection(conn)
-      }*/
+        this.tryUpdateConnection(item)
+      }
     }
   }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="disabled ? 'o-40 no-pointer-events': ''">
     <component
       v-for="(item, key) in items"
       :is="itemComponent"
@@ -37,6 +37,10 @@
       },
       'auto-select-item': {
         type: [Boolean, Object, Function], // true/false or object/function for use with _.find()
+        default: false
+      },
+      'disabled': {
+        type: Boolean,
         default: false
       }
     },

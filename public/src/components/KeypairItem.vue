@@ -19,6 +19,7 @@
       required
       v-deferred-focus
       v-model="key"
+      @input="onInputChange"
     />
     <ui-textbox
       class="mr2-ns w-70-ns"
@@ -28,6 +29,7 @@
       required
       v-deferred-focus
       v-model="val"
+      @input="onInputChange"
     />
     <div
       class="dn db-ns"
