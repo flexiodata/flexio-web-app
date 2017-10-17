@@ -1,11 +1,12 @@
 <template>
   <div>
     <div class="flex flex-row items-center mb4">
-      <div class="f3 fw6">
+      <service-icon :url="url" :type="ctype" class="br1 square-3 mr3" />
+      <div class="f3 fw6 lh-title">
         <span v-if="isNew">New Connection</span>
         <span v-else>{{connection.name}}</span>
       </div>
-      <div class="code light-silver ml2 ml3-ns" v-if="identifier.length > 0">({{identifier}})</div>
+      <div class="code light-silver ml2 ml3-ns" v-if="false && identifier.length > 0">({{identifier}})</div>
     </div>
 
     <div class="mv3 mt4-ns">
@@ -146,6 +147,7 @@
 <script>
   import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
   import Btn from './Btn.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import ValueSelect from './ValueSelect.vue'
   import KeypairItem from './KeypairItem.vue'
 
@@ -179,6 +181,7 @@
     },
     components: {
       Btn,
+      ServiceIcon,
       ValueSelect,
       KeypairItem
     },
@@ -204,6 +207,12 @@
     computed: {
       eid() {
         return _.get(this.connection, 'eid', '')
+      },
+      ctype() {
+        return _.get(this.connection, 'connection_type', '')
+      },
+      url() {
+        return _.get(this.connection, 'connection_info.url', '')
       },
       identifier() {
         var cid = _.get(this.connection, 'ename', '')
