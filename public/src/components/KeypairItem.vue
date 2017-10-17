@@ -33,7 +33,7 @@
     />
     <div
       class="dn db-ns"
-      :class="index == 0 ? 'o-0' : ''"
+      :class="index >= count-1 ? 'o-0' : ''"
     >
       <span
         class="pointer f3 lh-copy b child o-0"
@@ -53,6 +53,10 @@
         required: true
       },
       'index': {
+        type: Number,
+        default: 0
+      },
+      'count': {
         type: Number,
         default: 0
       },

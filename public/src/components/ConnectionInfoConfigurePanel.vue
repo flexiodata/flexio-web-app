@@ -104,6 +104,7 @@
         :key="index"
         :item="item"
         :index="index"
+        :count="form_data.length"
         @change="onFormDataItemChange"
         @delete="onFormDataItemDelete"
       />
@@ -121,6 +122,7 @@
         :key="index"
         :item="item"
         :index="index"
+        :count="headers.length"
         @change="onHeaderItemChange"
         @delete="onHeaderItemDelete"
       />
@@ -258,8 +260,10 @@
         this.form_data = [].concat(arr)
       },
       onFormDataItemDelete(item, index) {
-        _.pullAt(this.form_data, [index])
-        this.$nextTick(() => { this.form_data = [].concat(this.form_data) })
+        var tmp = this.form_data
+        _.pullAt(tmp, [index])
+        this.form_data = []
+        this.$nextTick(() => { this.form_data = [].concat(tmp) })
       },
       onHeaderItemChange(item, index) {
         if (index == _.size(this.headers) - 1)
@@ -270,8 +274,10 @@
         this.headers = [].concat(arr)
       },
       onHeaderItemDelete(item, index) {
-        _.pullAt(this.headers, [index])
-        this.$nextTick(() => { this.headers = [].concat(this.headers) })
+        var tmp = this.headers
+        _.pullAt(tmp, [index])
+        this.headers = []
+        this.$nextTick(() => { this.headers = [].concat(tmp) })
       },
       onCancel() {
         this.reset()
