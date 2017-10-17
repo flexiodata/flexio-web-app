@@ -8,7 +8,6 @@
       <div class="code light-silver ml2 ml3-ns" v-if="identifier.length > 0">({{identifier}})</div>
     </div>
 
-    <div class="f4">General</div>
     <div class="mv3">
       <div class="flex flex-column flex-row-ns">
         <ui-textbox
@@ -36,7 +35,7 @@
       />
     </div>
 
-    <div class="f4">Authorization</div>
+    <div class="f4 mt3 mt4-ns">Authorization</div>
     <div class="mv3 mw6">
       <value-select
         class="cf"
@@ -92,7 +91,7 @@
       />
     </div>
 
-    <div class="mb3 f4">Form Data</div>
+    <div class="f4 mt3 mt4-ns">Form Data</div>
     <div class="mv3">
       <keypair-item
         :item="{ key: 'Key', val: 'Value' }"
@@ -110,7 +109,7 @@
       />
     </div>
 
-    <div class="mb3 f4">Headers</div>
+    <div class="f4 mt3 mt4-ns">Headers</div>
     <div class="mv3">
       <keypair-item
         :item="{ key: 'Key', val: 'Value' }"
@@ -128,7 +127,7 @@
       />
     </div>
 
-    <div class="flex flex-row justify-end pa3 bt b--black-05 bg-near-white">
+    <div class="flex flex-row justify-end mt3 mt4-ns pa3 bt b--black-05 bg-near-white">
       <btn btn-md class="b ttu blue mr2" :disabled="!isNew && !is_changed" @click="onCancel">Cancel</btn>
       <btn btn-md btn-primary class="ttu b" :disabled="!isNew && !is_changed" @click="onSave">
         <span v-if="isNew">Create Connection</span>

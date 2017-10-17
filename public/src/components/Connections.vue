@@ -32,9 +32,8 @@
         :disabled="is_new"
         :items="connections"
         :item-options="{
-          'item-cls': 'pl3 pr1 pv2 darken-05',
-          'item-style': 'margin: 0.125rem',
-          'show-checkmark': false,
+          //'item-cls': 'min-w5 pa3 darken-05',
+          //'item-style': 'margin: 0.125rem',
           'show-dropdown': true
         }"
         @item-activate="onConnectionActivate"

@@ -89,10 +89,6 @@
         type: String,
         default: 'bg-light-gray'
       },
-      'show-checkmark': {
-        type: Boolean,
-        default: true
-      },
       'show-identifier': {
         type: Boolean,
         default: true
@@ -100,6 +96,10 @@
       'show-url': {
         type: Boolean,
         default: true
+      },
+      'show-checkmark': {
+        type: Boolean,
+        default: false
       },
       'show-dropdown': {
         type: Boolean,
