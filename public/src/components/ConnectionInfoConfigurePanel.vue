@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex flex-row items-center mb4">
-      <service-icon :url="curl" :type="ctype" class="br1 square-3 mr3" />
+      <service-icon class="br1 square-3 mr3" :url="curl" :type="ctype" />
       <div class="f3 fw6 lh-title">
         <span v-if="isNew">New Connection</span>
         <span v-else>{{connection.name}}</span>

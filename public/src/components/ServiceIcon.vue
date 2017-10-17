@@ -17,9 +17,9 @@
         type: String,
         required: false
       },
-      'dashed-border': {
-        type: Boolean,
-        default: true
+      'empty-cls': {
+        type: [Boolean, String],
+        default: false
       }
     },
     computed: {
@@ -30,7 +30,12 @@
         return _.result(this, 'cinfo.service_name', '')
       },
       empty_cls() {
-        return this.dashedBorder ? 'ba b--black-20 b--dashed' : ''
+        var sel_cls = this.is_selected ? this.selectedCls : ''
+
+        if (_.isString(this.emptyCls))
+          return this.emptyCls
+
+        return 'ba b--black-20 b--dashed'
       },
       url_src() {
         var base_url = this.url.substring(this.url.indexOf('//') + 2)
