@@ -155,7 +155,7 @@ class Connection extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
         }
     }
 

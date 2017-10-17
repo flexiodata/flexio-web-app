@@ -10,7 +10,7 @@
       :options="processed_options"
       @input="update"
       @change="update"
-    ></ui-select>
+    />
   </div>
 </template>
 

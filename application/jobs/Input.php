@@ -118,7 +118,13 @@ class Input extends \Flexio\Jobs\Base
 
         if ($connection_info)
         {
-            $service = \Flexio\Services\Store::load($connection_info);
+            $connection_type = $connection_info['connection_type'] ?? null;
+            if ($connection_type == \Model::CONNECTION_TYPE_HTTP)
+                $service = \Flexio\Services\Http::create();
+            else if ($connection_type == \Model::CONNECTION_TYPE_RSS)
+                $service = \Flexio\Services\Http::create();
+            else
+                $service = \Flexio\Services\Store::load($connection_info);
         }
          else
         {

@@ -6,7 +6,7 @@
   </div>
   <div v-else>
     <!-- control bar -->
-    <div class="pa3 ph4-l bb b--black-05">
+    <div class="pa3 ph4-l relative bg-white bb b--black-05">
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
           <div class="f2">Storage</div>
@@ -22,11 +22,19 @@
         class="br b--black-05 overflow-y-auto"
         layout="list"
         item-component="AbstractConnectionChooserItem"
-        item-cls="pa2 pr4-l darken-05"
-        item-style="margin: 0.125rem"
-        :show-selection="true"
+        :auto-select-item="true"
         :items="connections"
+        :item-options="{
+          'item-cls': 'pa3 darken-05',
+          'item-style': 'margin: 0.125rem',
+          'show-checkmark': false,
+          'show-dropdown': true,
+          'show-identifier': false,
+          'show-url': false
+        }"
         @item-activate="onConnectionActivate"
+        @item-edit="openEditModal"
+        @item-delete="tryDeleteConnection"
       />
       <div class="flex-fill">
         <file-chooser
@@ -62,8 +70,10 @@
   import FileChooser from './FileChooser.vue'
   import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
+  import ConnectionInfoMixin from './mixins/connection-info'
 
   export default {
+    mixins: [ConnectionInfoMixin],
     components: {
       Spinner,
       StoragePropsModal,
@@ -85,7 +95,7 @@
         'is_fetched': 'connections_fetched'
       }),
       connections() {
-        return this.getAllConnections()
+        return _.filter(this.getAllConnections(), this.isStorageConnection)
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')

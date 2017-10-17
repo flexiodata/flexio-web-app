@@ -1,14 +1,16 @@
 <template>
-  <div>
+  <div :class="disabled ? 'o-40 no-pointer-events': ''">
     <component
       v-for="(item, key) in items"
       :is="itemComponent"
       :key="key"
       :item="item"
-      v-bind="itemProps"
+      :selected-item="selected_item"
+      v-bind="itemOptions"
       @activate="onItemActivate"
-    >
-    </component>
+      @edit="onItemEdit"
+      @delete="onItemDelete"
+    />
   </div>
 </template>
 
@@ -21,10 +23,6 @@
         type: String,
         default: 'list' // 'list' or 'grid'
       },
-      'show-selection': {
-        type: Boolean,
-        default: false
-      },
       'items': {
         type: Array,
         default: () => { return [] }
@@ -33,19 +31,15 @@
         type: String,
         required: true
       },
-      'item-cls': {
-        type: String,
-        default: ''
+      'item-options': {
+        type: Object,
+        default: () => { return {} }
       },
-      'item-style': {
-        type: String,
-        default: ''
+      'auto-select-item': {
+        type: [Boolean, Object, Function], // true/false or object/function for use with _.find()
+        default: false
       },
-      'item-selected-cls': {
-        type: String,
-        default: 'bg-light-gray'
-      },
-      'item-show-checkmark': {
+      'disabled': {
         type: Boolean,
         default: false
       }
@@ -58,17 +52,33 @@
     components: {
       AbstractConnectionChooserItem
     },
-    computed: {
-      itemProps() {
-        return _.assign({
-          'item-selected': this.selected_item
-        }, _.omit(this._props, ['items']))
-      }
+    mounted() {
+      if (this.autoSelectItem !== false)
+        this.tryAutoSelectItem()
     },
     methods: {
+      tryAutoSelectItem() {
+        if (this.items.length == 0)
+        {
+          setTimeout(() => { this.tryAutoSelectItem() }, 500)
+        }
+         else
+        {
+          if (this.autoSelectItem === true)
+            this.onItemActivate(_.first(this.items))
+             else
+            this.onItemActivate(_.find(this.items, this.autoSelectItem))
+        }
+      },
       onItemActivate(item) {
         this.selected_item = item
         this.$emit('item-activate', item)
+      },
+      onItemEdit(item) {
+        this.$emit('item-edit', item)
+      },
+      onItemDelete(item) {
+        this.$emit('item-delete', item)
       }
     }
   }

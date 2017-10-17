@@ -637,6 +637,19 @@ class Execute extends \Flexio\Jobs\Base
         return "Parameter = $message";
     }
 
+    public function func_exit($response_code)
+    {
+        $this->getContext()->setExitCode((int)$response_code);
+    }
+
+    public function func_setenv($key,$value)
+    {
+        $env = $this->getContext()->getEnv();
+        $env[$key] = $value;
+        $this->getContext()->setEnv($env);
+    }
+
+
     public function func_getInputEnv()
     {
         // TODO: need to save input environment variables for this work;

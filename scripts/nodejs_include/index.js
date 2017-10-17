@@ -525,6 +525,15 @@ class Output {
 
 
 
+class Context {
+    exit(response_code) {
+        proxy.invokeSync('exit', [response_code])
+    }
+    setEnv(key, value) {
+        proxy.invokeSync('setenv', [key,value])
+    }
+}
+
 
 
 
@@ -532,6 +541,7 @@ class Output {
 var inited = false
 var input = null
 var output = null
+var context = new Context()
 
 
 function checkModuleInit(callback) {
@@ -555,7 +565,7 @@ function checkModuleInit(callback) {
 
 function run(handler) {
     checkModuleInit(function() {
-        handler(input, output)
+        handler(input, output, context)
     })
 }
 

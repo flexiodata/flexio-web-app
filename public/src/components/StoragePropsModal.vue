@@ -312,17 +312,20 @@
         })
       },
       updateConnection(attrs) {
-        this.connection = _.assign({}, this.connection, attrs)
+        var connection_info = _.get(attrs, 'connection_info', {})
+        connection_info = _.omitBy(connection_info, (val, key) => { return val == '*****' })
+
+        var update_attrs = _.assign({}, attrs, { connection_info })
+        this.connection = _.assign({}, this.connection, update_attrs)
       },
       tryDisconnect(attrs) {
-        var me = this
         var eid = attrs.eid
 
         // disconnect from this connection (oauth only)
         this.$store.dispatch('disconnectConnection', { eid, attrs }).then(response => {
           if (response.ok)
           {
-            me.updateConnection(response.body)
+            this.updateConnection(response.body)
           }
            else
           {
@@ -331,7 +334,6 @@
         })
       },
       tryTest(attrs) {
-        var me = this
         var eid = attrs.eid
         attrs = _.pick(attrs, ['name', 'ename', 'description', 'connection_info'])
 
@@ -340,10 +342,10 @@
           if (response.ok)
           {
             // test the connection
-            me.$store.dispatch('testConnection', { eid, attrs }).then(response => {
+            this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
               if (response.ok)
               {
-                me.updateConnection(_.omit(response.body, ['name', 'ename', 'description', 'connection_info']))
+                this.updateConnection(_.omit(response.body, ['name', 'ename', 'description', 'connection_info']))
               }
                else
               {
@@ -358,7 +360,6 @@
         })
       },
       tryOauthConnect() {
-        var me = this
         var eid = this.eid
 
         this.oauthPopup(this.oauth_url, (params) => {
@@ -368,7 +369,7 @@
           this.$store.dispatch('fetchConnection', { eid }).then(response => {
             if (response.ok)
             {
-              me.updateConnection(_.omit(response.body, ['name', 'ename', 'description']))
+              this.updateConnection(_.omit(response.body, ['name', 'ename', 'description']))
             }
              else
             {
