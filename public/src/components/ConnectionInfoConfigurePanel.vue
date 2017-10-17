@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div class="flex flex-row items-center mb4">
+      <div class="f3 fw6">
+        <span v-if="isNew">New Connection</span>
+        <span v-else>{{connection.name}}</span>
+      </div>
+      <div class="code light-silver ml2 ml3-ns" v-if="identifier.length > 0">({{identifier}})</div>
+    </div>
+
     <div class="f4">General</div>
     <div class="mv3">
       <div class="flex flex-column flex-row-ns">
@@ -11,13 +19,11 @@
           required
           v-model="name"
         />
-
         <ui-textbox
           class="flex-fill"
           autocomplete="off"
           placeholder="Alias"
           help=" "
-          required
           v-model="ename"
         />
       </div>
@@ -26,7 +32,6 @@
         autocomplete="off"
         placeholder="URL"
         help=" "
-        required
         v-model="url"
       />
     </div>
@@ -43,39 +48,38 @@
         autocomplete="off"
         placeholder="Username"
         help=" "
-        required
         v-model="username"
         v-if="auth == 'basic'"
       />
       <ui-textbox
+        type="password"
         autocomplete="off"
         placeholder="Password"
         help=" "
-        required
         v-model="password"
         v-if="auth == 'basic'"
       />
       <ui-textbox
+        type="password"
         autocomplete="off"
         placeholder="Token"
         help=" "
-        required
         v-model="token"
         v-if="auth == 'bearer'"
       />
       <ui-textbox
+        type="password"
         autocomplete="off"
         placeholder="Access Token"
         help=" "
-        required
         v-model="access_token"
         v-if="auth == 'oauth2'"
       />
       <ui-textbox
+        type="password"
         autocomplete="off"
         placeholder="Refresh Token"
         help=" "
-        required
         v-model="refresh_token"
         v-if="auth == 'oauth2'"
       />
@@ -83,7 +87,6 @@
         autocomplete="off"
         placeholder="Expires"
         help=" "
-        required
         v-model="expires"
         v-if="auth == 'oauth2'"
       />
@@ -192,6 +195,13 @@
       }
     },
     computed: {
+      eid() {
+        return _.get(this.connection, 'eid', '')
+      },
+      identifier() {
+        var cid = _.get(this.connection, 'ename', '')
+        return cid.length > 0 ? cid : _.get(this.connection, 'eid', '')
+      },
       is_changed() {
         return !_.isEqual(this.headers, this.original_headers)
       }
@@ -222,7 +232,7 @@
         this.headers = [].concat(this.headers).concat(newKeypairItem())
       },
       getConnection() {
-        var eid = _.get(this.connection, 'eid', '')
+        var eid = this.eid
         var connection = _.pick(this.$data, ['name', 'ename', 'description', 'connection_type'])
         var connection_info = _.pick(this.$data, ['url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'form_data'])
 

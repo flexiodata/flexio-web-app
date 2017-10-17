@@ -147,6 +147,8 @@
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
           if (response.ok)
           {
+            this.connection = _.assign({}, _.get(response, 'body', {}))
+
             if (is_pending)
             {
               var analytics_payload = _.pick(attrs, ['name', 'ename', 'description'])
@@ -169,7 +171,7 @@
       },
       cancelChanges(item) {
         this.is_new = false
-        this.connection = _.assign({}, {})
+        this.connection = {}
       },
       saveChanges(item) {
         this.is_new = false
