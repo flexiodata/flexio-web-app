@@ -32,9 +32,8 @@
         :disabled="is_new"
         :items="connections"
         :item-options="{
-          'item-cls': 'pl3 pr1 pv2 darken-05',
-          'item-style': 'margin: 0.125rem',
-          'show-checkmark': false,
+          //'item-cls': 'min-w5 pa3 darken-05',
+          //'item-style': 'margin: 0.125rem',
           'show-dropdown': true
         }"
         @item-activate="onConnectionActivate"
@@ -44,7 +43,7 @@
       <div class="flex-fill overflow-y-auto" v-if="connection">
         <connection-info-configure-panel
           class="pa3 pa4-l"
-          style="max-width: 1024px"
+          style="max-width: 60rem"
           :is-new="is_new"
           :connection="connection"
           @cancel="cancelChanges"

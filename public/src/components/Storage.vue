@@ -25,11 +25,10 @@
         :auto-select-item="true"
         :items="connections"
         :item-options="{
-          'item-cls': 'pa3 darken-05',
-          'item-style': 'margin: 0.125rem',
-          'show-checkmark': false,
+          //'item-cls': 'min-w5 pa3 darken-05',
+          //'item-style': 'margin: 0.125rem',
           'show-dropdown': true,
-          'show-identifier': false,
+          'show-identifier': true,
           'show-url': false
         }"
         @item-activate="onConnectionActivate"

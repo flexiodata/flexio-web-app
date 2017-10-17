@@ -1,5 +1,5 @@
 <template>
-  <img v-if="url.length > 0" :src="url_src" :alt="name" :title="name" class="ba b--white" style="box-shadow: 0 1px 3px -1px rgba(0,0,0,0.4)">
+  <img v-if="url.length > 0" :src="url_src" :alt="name" :title="name">
   <img v-else-if="icon" :src="icon" :alt="name" :title="name">
   <div v-else :class="empty_cls"></div>
 </template>
@@ -17,9 +17,9 @@
         type: String,
         required: false
       },
-      'dashed-border': {
-        type: Boolean,
-        default: true
+      'empty-cls': {
+        type: [Boolean, String],
+        default: false
       }
     },
     computed: {
@@ -30,7 +30,12 @@
         return _.result(this, 'cinfo.service_name', '')
       },
       empty_cls() {
-        return this.dashedBorder ? 'ba b--black-20 b--dashed' : ''
+        var sel_cls = this.is_selected ? this.selectedCls : ''
+
+        if (_.isString(this.emptyCls))
+          return this.emptyCls
+
+        return 'ba b--black-20 b--dashed'
       },
       url_src() {
         var base_url = this.url.substring(this.url.indexOf('//') + 2)

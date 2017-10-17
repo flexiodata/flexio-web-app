@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="flex flex-row items-center mb4">
-      <div class="f3 fw6">
+      <service-icon class="br1 square-3 mr3" :url="curl" :type="ctype" />
+      <div class="f3 fw6 lh-title">
         <span v-if="isNew">New Connection</span>
         <span v-else>{{connection.name}}</span>
       </div>
-      <div class="code light-silver ml2 ml3-ns" v-if="identifier.length > 0">({{identifier}})</div>
+      <div class="code light-silver ml2 ml3-ns" v-if="false && identifier.length > 0">({{identifier}})</div>
     </div>
 
-    <div class="f4">General</div>
-    <div class="mv3">
+    <div class="mv3 mt4-ns">
       <div class="flex flex-column flex-row-ns">
         <ui-textbox
           class="flex-fill mr4-ns"
@@ -18,6 +18,7 @@
           help=" "
           required
           v-model="name"
+          :autofocus="true"
         />
         <ui-textbox
           class="flex-fill"
@@ -36,99 +37,105 @@
       />
     </div>
 
-    <div class="f4">Authorization</div>
-    <div class="mv3 mw6">
-      <value-select
-        class="cf"
-        placeholder="Authorization Type"
-        :options="auth_options"
-        v-model="auth"
-      />
-      <ui-textbox
-        autocomplete="off"
-        placeholder="Username"
-        help=" "
-        v-model="username"
-        v-if="auth == 'basic'"
-      />
-      <ui-textbox
-        type="password"
-        autocomplete="off"
-        placeholder="Password"
-        help=" "
-        v-model="password"
-        v-if="auth == 'basic'"
-      />
-      <ui-textbox
-        type="password"
-        autocomplete="off"
-        placeholder="Token"
-        help=" "
-        v-model="token"
-        v-if="auth == 'bearer'"
-      />
-      <ui-textbox
-        type="password"
-        autocomplete="off"
-        placeholder="Access Token"
-        help=" "
-        v-model="access_token"
-        v-if="auth == 'oauth2'"
-      />
-      <ui-textbox
-        type="password"
-        autocomplete="off"
-        placeholder="Refresh Token"
-        help=" "
-        v-model="refresh_token"
-        v-if="auth == 'oauth2'"
-      />
-      <ui-textbox
-        autocomplete="off"
-        placeholder="Expires"
-        help=" "
-        v-model="expires"
-        v-if="auth == 'oauth2'"
-      />
+    <div class="mv3 mt4-ns">
+      <div class="f4">Authorization</div>
+      <div class="mv3 mw6">
+        <value-select
+          class="cf"
+          placeholder="Authorization Type"
+          :options="auth_options"
+          v-model="auth"
+        />
+        <ui-textbox
+          autocomplete="off"
+          placeholder="Username"
+          help=" "
+          v-model="username"
+          v-if="auth == 'basic'"
+        />
+        <ui-textbox
+          type="password"
+          autocomplete="off"
+          placeholder="Password"
+          help=" "
+          v-model="password"
+          v-if="auth == 'basic'"
+        />
+        <ui-textbox
+          type="password"
+          autocomplete="off"
+          placeholder="Token"
+          help=" "
+          v-model="token"
+          v-if="auth == 'bearer'"
+        />
+        <ui-textbox
+          type="password"
+          autocomplete="off"
+          placeholder="Access Token"
+          help=" "
+          v-model="access_token"
+          v-if="auth == 'oauth2'"
+        />
+        <ui-textbox
+          type="password"
+          autocomplete="off"
+          placeholder="Refresh Token"
+          help=" "
+          v-model="refresh_token"
+          v-if="auth == 'oauth2'"
+        />
+        <ui-textbox
+          autocomplete="off"
+          placeholder="Expires"
+          help=" "
+          v-model="expires"
+          v-if="auth == 'oauth2'"
+        />
+      </div>
     </div>
 
-    <div class="mb3 f4">Form Data</div>
-    <div class="mv3">
-      <keypair-item
-        :item="{ key: 'Key', val: 'Value' }"
-        :is-static="true"
-        v-if="false"
-      />
-      <keypair-item
-        v-for="(item, index) in form_data"
-        :key="index"
-        :item="item"
-        :index="index"
-        :count="form_data.length"
-        @change="onFormDataItemChange"
-        @delete="onFormDataItemDelete"
-      />
+    <div class="mv3 mt4-ns">
+      <div class="f4">Form Data</div>
+      <div class="mv3">
+        <keypair-item
+          :item="{ key: 'Key', val: 'Value' }"
+          :is-static="true"
+          v-if="false"
+        />
+        <keypair-item
+          v-for="(item, index) in form_data"
+          :key="index"
+          :item="item"
+          :index="index"
+          :count="form_data.length"
+          @change="onFormDataItemChange"
+          @delete="onFormDataItemDelete"
+        />
+      </div>
     </div>
 
-    <div class="mb3 f4">Headers</div>
-    <div class="mv3">
-      <keypair-item
-        :item="{ key: 'Key', val: 'Value' }"
-        :is-static="true"
-        v-if="false"
-      />
-      <keypair-item
-        v-for="(item, index) in headers"
-        :key="index"
-        :item="item"
-        :index="index"
-        :count="headers.length"
-        @change="onHeaderItemChange"
-        @delete="onHeaderItemDelete"
-      />
+    <div class="mv3 mt4-ns">
+      <div class="f4">Headers</div>
+      <div class="mv3">
+        <keypair-item
+          :item="{ key: 'Key', val: 'Value' }"
+          :is-static="true"
+          v-if="false"
+        />
+        <keypair-item
+          v-for="(item, index) in headers"
+          :key="index"
+          :item="item"
+          :index="index"
+          :count="headers.length"
+          @change="onHeaderItemChange"
+          @delete="onHeaderItemDelete"
+        />
+      </div>
     </div>
 
-    <div class="flex flex-row justify-end pa3 bt b--black-05 bg-near-white">
+    <div class="flex flex-row justify-end mt3 mt4-ns pa3 bt b--black-05 bg-near-white">
       <btn btn-md class="b ttu blue mr2" :disabled="!isNew && !is_changed" @click="onCancel">Cancel</btn>
       <btn btn-md btn-primary class="ttu b" :disabled="!isNew && !is_changed" @click="onSave">
         <span v-if="isNew">Create Connection</span>
@@ -141,6 +148,7 @@
 <script>
   import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
   import Btn from './Btn.vue'
+  import ServiceIcon from './ServiceIcon.vue'
   import ValueSelect from './ValueSelect.vue'
   import KeypairItem from './KeypairItem.vue'
 
@@ -174,6 +182,7 @@
     },
     components: {
       Btn,
+      ServiceIcon,
       ValueSelect,
       KeypairItem
     },
@@ -199,6 +208,12 @@
     computed: {
       eid() {
         return _.get(this.connection, 'eid', '')
+      },
+      ctype() {
+        return _.get(this.connection, 'connection_type', '')
+      },
+      curl() {
+        return _.get(this.connection, 'connection_info.url', '')
       },
       identifier() {
         var cid = _.get(this.connection, 'ename', '')

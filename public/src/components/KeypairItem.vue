@@ -16,8 +16,6 @@
       autocomplete="off"
       :placeholder="keyPlaceholder"
       help=" "
-      required
-      v-deferred-focus
       v-model="key"
       @input="onInputChange"
     />
@@ -26,8 +24,6 @@
       autocomplete="off"
       :placeholder="valPlaceholder"
       help=" "
-      required
-      v-deferred-focus
       v-model="val"
       @input="onInputChange"
     />

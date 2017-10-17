@@ -2,7 +2,7 @@
   <div>
     <a
       class="no-underline f5 b dib pointer pv1 ph1 ph2-ns br1 hover-bg-light-gray popover-trigger"
-      ref="userdropdowntrigger"
+      ref="dropdown-trigger"
       tabindex="0"
     >
       <img :src="user_profile_src" class="dib v-mid ba b--black-10 db br-100"/>
@@ -10,7 +10,7 @@
     </a>
 
     <ui-popover
-      trigger="userdropdowntrigger"
+      trigger="dropdown-trigger"
       ref="userdropdown"
       dropdown-position="bottom right"
     >

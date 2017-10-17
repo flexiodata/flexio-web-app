@@ -2,7 +2,7 @@
   <div>
     <a
       class="pointer popover-trigger"
-      ref="dropdownTrigger"
+      ref="dropdown-trigger"
       tabindex="0"
       @click.stop
     ><span class="v-mid">{{rights_label}}</span><i class="material-icons v-mid" v-if="isEditable">expand_more</i></a>
@@ -10,7 +10,7 @@
     <ui-popover
       class="mw5 f6 mid-gray"
       ref="popover"
-      trigger="dropdownTrigger"
+      trigger="dropdown-trigger"
       dropdown-position="bottom right"
     >
       <div
