@@ -330,7 +330,6 @@ class Connection
         $connection_info['password'] = "*****";
         $connection_info['access_token'] = "*****";
         $connection_info['refresh_token'] = "*****";
-        $connection_info['expires'] = "*****";
 
         $properties['connection_info'] = $connection_info;
         return $properties;
