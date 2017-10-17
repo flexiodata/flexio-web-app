@@ -33,7 +33,7 @@
     />
     <div
       class="dn db-ns"
-      :class="index >= count-1 ? 'o-0' : ''"
+      :class="index >= count-1 ? 'o-0 no-pointer-events' : ''"
     >
       <span
         class="pointer f3 lh-copy b child o-0"
