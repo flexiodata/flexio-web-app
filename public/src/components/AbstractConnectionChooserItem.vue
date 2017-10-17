@@ -14,7 +14,7 @@
     <div class="flex flex-row items-center cursor-default" v-else>
       <i class="material-icons mid-gray md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
       <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
-      <service-icon :url="url" :type="ctype" class="br1 square-3 mr3"></service-icon>
+      <service-icon :url="url" :type="ctype" class="br1 square-3 mr3" />
       <div class="flex-fill flex flex-column">
         <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
         <div class="light-silver mt1 f8" v-if="showUrl && url.length > 0">{{url}}</div>
