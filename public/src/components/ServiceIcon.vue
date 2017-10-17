@@ -1,5 +1,5 @@
 <template>
-  <img v-if="url.length > 0" :src="url_src" :alt="name" :title="name">
+  <img v-if="url.length > 0" :src="url_src" :alt="name" :title="name" class="ba b--white" style="box-shadow: 0 1px 3px -1px rgba(0,0,0,0.4)">
   <img v-else-if="icon" :src="icon" :alt="name" :title="name">
   <div v-else :class="empty_cls"></div>
 </template>

@@ -82,6 +82,7 @@
     data() {
       return {
         connection: {},
+        last_selected: {},
         is_new: false
       }
     },
@@ -113,6 +114,7 @@
       ]),
       createPendingConnection(item) {
         this.is_new = true
+        this.connection = false
 
         var attrs = {
           name: 'My Connection',
@@ -123,7 +125,7 @@
         this.$store.dispatch('createConnection', { attrs }).then(response => {
           if (response.ok)
           {
-            this.connection = _.assign({}, _.get(response, 'body', {}))
+            this.connection = _.get(response, 'body', {})
           }
            else
           {
@@ -167,10 +169,14 @@
         this.$store.dispatch('deleteConnection', { attrs })
       },
       onConnectionActivate(item) {
-        this.connection = _.assign({}, item)
+        this.connection = false
+        this.$nextTick(() => {
+          this.connection = _.assign({}, item)
+          this.last_selected = _.assign({}, item)
+        })
       },
       cancelChanges(item) {
-        var tmp = this.connection
+        var tmp = this.last_selected
         this.is_new = false
         this.connection = false
         this.$nextTick(() => { this.connection = _.assign({}, tmp) })
