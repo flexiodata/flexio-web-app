@@ -18,6 +18,7 @@
           help=" "
           required
           v-model="name"
+          :autofocus="true"
         />
         <ui-textbox
           class="flex-fill"
