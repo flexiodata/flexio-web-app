@@ -288,8 +288,13 @@ class User extends \Flexio\Object\Base
 
     public function getVerifyCode() : string
     {
-        $properties = $this->get();
-        return $properties['verify_code'];
+        $user_model = $this->getModel()->user;
+        $verify_code = $user_model->getVerifyCodeFromEid($this->getEid());
+
+        if ($verify_code === false)
+            return '';
+
+        return $verify_code;
     }
 
     public function checkPassword(string $password) : bool

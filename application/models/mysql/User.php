@@ -264,6 +264,19 @@ class User extends ModelBase
                      'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
+    public function getVerifyCodeFromEid(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $db = $this->getDatabase();
+        $verify_code = $db->fetchOne('select verify_code from tbl_user where eid = ?', $eid);
+        if ($verify_code === false)
+            return false;
+
+        return $verify_code;
+    }
+
     public function getUsernameFromEid(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
