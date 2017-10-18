@@ -498,15 +498,6 @@ class User extends \Flexio\Object\Base
             "locale_thousands" : null,
             "locale_dateformat" : null,
             "timezone" : null,
-            "owned_by='.\Model::EDGE_OWNED_BY.'" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_USER.'",
-                "user_name" : null,
-                "full_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
             "config" : null,
             "created" : null,
             "updated" : null
