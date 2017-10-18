@@ -548,6 +548,8 @@ class Context {
     request()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.request.apply(this, arguments)) ]) }
     select()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.select.apply(this, arguments)) ]) }
     sleep()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.sleep.apply(this, arguments)) ]) }
+    request()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.request.apply(this, arguments)) ]) }
+    transform()  { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.transform.apply(this, arguments)) ]) }
 }
 
 
