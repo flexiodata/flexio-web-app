@@ -481,7 +481,6 @@ class User extends \Flexio\Object\Base
             "eid_status" : null,
             "ename" : null,
             "user_name" : null,
-            "description" : null,
             "full_name" : null,
             "first_name" : null,
             "last_name" : null,
