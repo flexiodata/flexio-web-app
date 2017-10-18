@@ -2,6 +2,7 @@
 
 var utf8 = require('utf8')
 var fs = require('fs')
+var Flexio = require('flexio-sdk-js')
 
 class StdinoutProxy {
 
@@ -532,6 +533,21 @@ class Context {
     setEnv(key, value) {
         proxy.invokeSync('setenv', [key,value])
     }
+
+    input()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.input.apply(this, arguments)) ]) }
+    output()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.output.apply(this, arguments)) ]) }
+    convert()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.convert.apply(this, arguments)) ]) }
+    echo()       { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.echo.apply(this, arguments)) ]) }
+    email()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.email.apply(this, arguments)) ]) }
+    execute()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.execute.apply(this, arguments)) ]) }
+    filter()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.filter.apply(this, arguments)) ]) }
+    javascript() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.javascript.apply(this, arguments)) ]) }
+    limit()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.limit.apply(this, arguments)) ]) }
+    list()       { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.list.apply(this, arguments)) ]) }
+    python()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.python.apply(this, arguments)) ]) }
+    request()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.request.apply(this, arguments)) ]) }
+    select()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.select.apply(this, arguments)) ]) }
+    sleep()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.sleep.apply(this, arguments)) ]) }
 }
 
 

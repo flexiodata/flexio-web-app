@@ -149,7 +149,7 @@ class Pipe
         return $new_pipe->get();
     }
 
-    public static function delete(\Flexio\Api\Request $request) : bool
+    public static function delete(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -173,7 +173,12 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $pipe->delete();
-        return true;
+
+        $result = array();
+        $result['eid'] = $pipe->getEid();
+        $result['eid_type'] = $pipe->getType();
+        $result['eid_status'] = $pipe->getStatus();
+        return $result;
     }
 
     public static function set(\Flexio\Api\Request $request) : array
@@ -363,6 +368,14 @@ class Pipe
          // STEP 3: run the process
         $process->run($background);
 
+        if ($process->hasError())
+        {
+            header('Content-Type: application/json', true, 500);
+            $content = json_encode($process->getError());
+            echo $content;
+            exit(0);
+        }
+
         $stream = $process->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
@@ -534,7 +547,7 @@ class Pipe
         return $result;
     }
 
-    public static function deleteTaskStep(\Flexio\Api\Request $request) : bool
+    public static function deleteTaskStep(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -561,7 +574,10 @@ class Pipe
 
         // delete the task
         $pipe->deleteTaskStep($task_identifier);
-        return true;
+
+        $result = array();
+        $result['eid'] = $task_identifier;
+        return $result;
     }
 
     public static function setTaskStep(\Flexio\Api\Request $request) /* : array */ // TODO: set function return type

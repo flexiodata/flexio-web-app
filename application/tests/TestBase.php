@@ -39,7 +39,7 @@ class TestBase
         return (isset($GLOBALS['g_config']->tests_allowed) ? $GLOBALS['g_config']->tests_allowed : false);
     }
 
-    public static function configure(\Flexio\Api\Request $request)
+    public static function configure(\Flexio\Api\Request $request) : array
     {
         if (!TestBase::testsAllowed())
             return array();
@@ -58,19 +58,31 @@ class TestBase
         return $tests;
     }
 
-    public static function run(\Flexio\Api\Request $request)
+    public static function run(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
 
         if (!TestBase::testsAllowed())
-            return false;
+        {
+            $r = array();
+            $r['name'] = "Error: tests aren't allowed";
+            return $r;
+        }
 
         if (!isset($params['id']))
-            return false;
+        {
+            $r = array();
+            $r['name'] = "Error: missing test 'id' parameter";
+            return $r;
+        }
 
         $param_parts = explode('/', $params['id']);
         if (!isset($param_parts[0]) || !isset($param_parts[1]))
-            return false;
+        {
+            $r = array();
+            $r['name'] = "Error: invalid test request";
+            return $r;
+        }
 
         $test_name = $params['id'];
         $test_folder = $param_parts[0];
@@ -82,6 +94,7 @@ class TestBase
         // test file doesn't exist
         if (!@file_exists($test_path))
         {
+            $r = array();
             $r['name'] = "Error: unable to locate the test: " . $test_name;
             return $r;
         }
@@ -93,6 +106,7 @@ class TestBase
 
         if (!$test)
         {
+            $r = array();
             $r['name'] = "Error: unable to load the test: " . $test_name;
             return $r;
         }

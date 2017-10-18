@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Trash
 {
-    public static function add(\Flexio\Api\Request $request) : bool
+    public static function add(\Flexio\Api\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -49,6 +49,7 @@ class Trash
         }
 
         // loop through the objects and try to add them to the trash
+        $result = array();
         foreach ($objects as $eid)
         {
             $obj = \Flexio\Object\Store::load($eid);
@@ -65,12 +66,18 @@ class Trash
                 $obj->setStatus(\Model::STATUS_DELETED);
                  else
                 $obj->setStatus(\Model::STATUS_TRASH);
+
+            $item_trashed = array();
+            $item_trashed['eid'] = $obj->getEid();
+            $item_trashed['eid_type'] = $obj->getType();
+            $item_trashed['eid_status'] = $obj->getStatus();
+            $result[] = $item_trashed;
         }
 
-        return true;
+        return $result;
     }
 
-    public static function restore(\Flexio\Api\Request $request) : bool
+    public static function restore(\Flexio\Api\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -102,6 +109,7 @@ class Trash
         }
 
         // loop through the objects and try to restore them from the trash
+        $result = array();
         foreach ($objects as $eid)
         {
             $obj = \Flexio\Object\Store::load($eid);
@@ -112,12 +120,18 @@ class Trash
                 continue;
 
             $obj->setStatus(\Model::STATUS_AVAILABLE);
+
+            $item_restored = array();
+            $item_restored['eid'] = $obj->getEid();
+            $item_restored['eid_type'] = $obj->getType();
+            $item_restored['eid_status'] = $obj->getStatus();
+            $result[] = $item_restored;
         }
 
-        return true;
+        return $result;
     }
 
-    public static function empty(\Flexio\Api\Request $request) : bool
+    public static function empty(\Flexio\Api\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -148,6 +162,7 @@ class Trash
         }
 
         // loop through the objects and delete them from the trash
+        $result = array();
         foreach ($objects as $eid)
         {
             $obj = \Flexio\Object\Store::load($eid);
@@ -158,9 +173,15 @@ class Trash
                 continue;
 
             $obj->setStatus(\Model::STATUS_DELETED);
+
+            $item_deleted = array();
+            $item_deleted['eid'] = $obj->getEid();
+            $item_deleted['eid_type'] = $obj->getType();
+            $item_deleted['eid_status'] = $obj->getStatus();
+            $result[] = $item_deleted;
         }
 
-        return true;
+        return $result;
     }
 
     public static function listall(\Flexio\Api\Request $request) : array
