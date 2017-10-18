@@ -650,6 +650,33 @@ class Execute extends \Flexio\Jobs\Base
     }
 
 
+    private $runjob_stdin = null;
+
+    public function func_runJob($json)
+    {
+        $task = @json_decode($json,true);
+        if ($task === null)
+            return;
+
+        if ($this->runjob_stdin === null)
+            $this->runjob_stdin = $this->getContext()->getStdin();
+
+
+        $job = \Flexio\Object\Process::createJob($task);
+
+        $context = \Flexio\Object\Context::create();
+        $context->setStdin($this->runjob_stdin);
+        $context->setStdout(\Flexio\Object\Stream::create());
+
+        $job->run($context);
+
+        // stdin of the next invocation of runjob is the stdout of the job that just ran
+        $job_stdout = $context->getStdout();
+        $this->runjob_stdin = $job_stdout;
+
+        $this->getContext()->setStdout($job_stdout);
+    }
+
     public function func_getInputEnv()
     {
         // TODO: need to save input environment variables for this work;

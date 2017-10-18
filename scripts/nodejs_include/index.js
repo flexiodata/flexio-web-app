@@ -2,6 +2,7 @@
 
 var utf8 = require('utf8')
 var fs = require('fs')
+var Flexio = require('flexio-sdk-js')
 
 class StdinoutProxy {
 
@@ -532,6 +533,9 @@ class Context {
     setEnv(key, value) {
         proxy.invokeSync('setenv', [key,value])
     }
+
+    echo()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.echo.apply(this, arguments)) ]) }
+    list()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.list.apply(this, arguments)) ]) }
 }
 
 

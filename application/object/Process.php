@@ -463,12 +463,12 @@ class Process extends \Flexio\Object\Base
         return false;
     }
 
-    private function getError() : array
+    public function getError() : array
     {
         return $this->error;
     }
 
-    private function hasError() : bool
+    public function hasError() : bool
     {
         if (empty($this->error))
             return false;
@@ -728,7 +728,7 @@ class Process extends \Flexio\Object\Base
             // TODO: experimental: pass context parameters through run function parameter
 
             // set the job input, run the job, and get the output
-            $job = self::createJob($this, $task);
+            $job = self::createJob($task);
             $job->run($context);
         }
         catch (\Flexio\Base\Exception $e)
@@ -988,7 +988,7 @@ class Process extends \Flexio\Object\Base
         return $hash;
     }
 
-    private static function createJob(\Flexio\Object\Process $process, array $task) : \Flexio\Jobs\IJob
+    public static function createJob(array $task) : \Flexio\Jobs\IJob
     {
         if (!isset($task['type']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);

@@ -368,6 +368,14 @@ class Pipe
          // STEP 3: run the process
         $process->run($background);
 
+        if ($process->hasError())
+        {
+            header('Content-Type: application/json', true, 500);
+            $content = json_encode($process->getError());
+            echo $content;
+            exit(0);
+        }
+
         $stream = $process->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
