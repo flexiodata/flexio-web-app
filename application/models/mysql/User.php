@@ -56,7 +56,6 @@ class User extends ModelBase
             $process_arr = array(
                 'eid'                    => $eid,
                 'user_name'              => $params['user_name'] ?? '',
-                'description'            => $params['description'] ?? '',
                 'full_name'              => $params['full_name'] ?? '',
                 'first_name'             => $params['first_name'] ?? '',
                 'last_name'              => $params['last_name'] ?? '',
@@ -136,7 +135,6 @@ class User extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'user_name'              => array('type' => 'string',  'required' => false),
-                'description'            => array('type' => 'string',  'required' => false),
                 'full_name'              => array('type' => 'string',  'required' => false),
                 'first_name'             => array('type' => 'string',  'required' => false),
                 'last_name'              => array('type' => 'string',  'required' => false),
@@ -202,7 +200,6 @@ class User extends ModelBase
                                         tob.eid_type as eid_type,
                                         tob.ename as ename,
                                         tus.user_name as user_name,
-                                        tus.description as description,
                                         tus.full_name as full_name,
                                         tus.first_name as first_name,
                                         tus.last_name as last_name,
@@ -240,7 +237,6 @@ class User extends ModelBase
                      'eid_type'               => $row['eid_type'],
                      'ename'                  => $row['ename'],
                      'user_name'              => $row['user_name'],
-                     'description'            => $row['description'],
                      'full_name'              => $row['full_name'],
                      'first_name'             => $row['first_name'],
                      'last_name'              => $row['last_name'],
@@ -262,6 +258,19 @@ class User extends ModelBase
                      'eid_status'             => $row['eid_status'],
                      'created'                => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
+    }
+
+    public function getVerifyCodeFromEid(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $db = $this->getDatabase();
+        $verify_code = $db->fetchOne('select verify_code from tbl_user where eid = ?', $eid);
+        if ($verify_code === false)
+            return false;
+
+        return $verify_code;
     }
 
     public function getUsernameFromEid(string $eid) // TODO: add return type

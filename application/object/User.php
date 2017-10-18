@@ -288,8 +288,13 @@ class User extends \Flexio\Object\Base
 
     public function getVerifyCode() : string
     {
-        $properties = $this->get();
-        return $properties['verify_code'];
+        $user_model = $this->getModel()->user;
+        $verify_code = $user_model->getVerifyCodeFromEid($this->getEid());
+
+        if ($verify_code === false)
+            return '';
+
+        return $verify_code;
     }
 
     public function checkPassword(string $password) : bool
@@ -476,8 +481,6 @@ class User extends \Flexio\Object\Base
             "eid_status" : null,
             "ename" : null,
             "user_name" : null,
-            "description" : null,
-            "full_name" : null,
             "first_name" : null,
             "last_name" : null,
             "email" : null,
@@ -493,16 +496,6 @@ class User extends \Flexio\Object\Base
             "locale_thousands" : null,
             "locale_dateformat" : null,
             "timezone" : null,
-            "owned_by='.\Model::EDGE_OWNED_BY.'" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_USER.'",
-                "user_name" : null,
-                "full_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
-            "verify_code" : null,
             "config" : null,
             "created" : null,
             "updated" : null
