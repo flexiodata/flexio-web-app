@@ -42,17 +42,7 @@
           <ui-menu
             contain-focus
             has-icons
-
-            :options="[{
-              id: 'edit',
-              label: 'Edit',
-              icon: 'edit'
-            },{
-              id: 'delete',
-              label: 'Delete',
-              icon: 'delete'
-            }]"
-
+            :options="dropdown_items"
             @select="onDropdownItemClick"
             @close="$refs.dropdown.close()"
           ></ui-menu>
@@ -106,6 +96,10 @@
       'show-dropdown': {
         type: Boolean,
         default: false
+      },
+      'dropdown-items': {
+        type: Array,
+        default: () => { return ['edit','delete'] }
       }
     },
     components: {
@@ -149,6 +143,21 @@
           return 'min-w5 pa3 bb b--black-05 darken-05 ' + sel_cls
            else
           return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
+      },
+      dropdown_items() {
+        var items = [{
+          id: 'edit',
+          label: 'Edit',
+          icon: 'edit'
+        },{
+          id: 'delete',
+          label: 'Delete',
+          icon: 'delete'
+        }]
+
+        return _.filter(items, (item) => {
+          return _.includes(this.dropdownItems, item.id)
+        })
       }
     },
     methods: {
@@ -162,11 +171,7 @@
         this.is_hover = true
       },
       onDropdownItemClick(menu_item) {
-        switch (menu_item.id)
-        {
-          case 'edit':      return this.$emit('edit', this.item)
-          case 'delete':    return this.$emit('delete', this.item)
-        }
+        this.$emit(menu_item.id, this.item)
       },
       onClick: _.debounce(function() {
         this.$emit('activate', this.item)

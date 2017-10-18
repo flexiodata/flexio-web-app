@@ -34,7 +34,8 @@
         :item-options="{
           //'item-cls': 'min-w5 pa3 darken-05',
           //'item-style': 'margin: 0.125rem',
-          'show-dropdown': true
+          'show-dropdown': true,
+          'dropdown-items': ['delete']
         }"
         @item-activate="onConnectionActivate"
         @item-delete="tryDeleteConnection"
