@@ -507,7 +507,6 @@ class User extends \Flexio\Object\Base
                 "last_name" : null,
                 "email_hash" : null
             },
-            "verify_code" : null,
             "config" : null,
             "created" : null,
             "updated" : null
