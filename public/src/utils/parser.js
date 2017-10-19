@@ -2231,7 +2231,8 @@
     this.args.transform = ['col','case','clean','trim']
     this.hints.transform= {
       "case":      [ "none", "lower", "upper", "proper", "first-letter" ],
-      "trim":      [ "leading", "trailing", "leading-trailing" ]
+      "trim":      [ "leading", "trailing", "leading-trailing" ],
+      "clean":     [ "all", "leading", "trailing", "leading-trailing" ],
     };
     this.keywords.transform = function(str)
     {
