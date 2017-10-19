@@ -44,9 +44,22 @@
         default: false
       }
     },
+    watch: {
+      items(val, old_val) {
+        if (!_.find(val, this.selected_item) && this.selected_idx >= 0)
+        {
+          if (this.selected_idx >= this.items.length)
+            this.selected_idx--
+
+          this.selected_item = _.get(val, '['+this.selected_idx+']', {})
+          this.syncIndex()
+        }
+      }
+    },
     data() {
       return {
-        selected_item: {}
+        selected_item: {},
+        selected_idx: -1
       }
     },
     components: {
@@ -57,6 +70,14 @@
         this.tryAutoSelectItem()
     },
     methods: {
+      getSelectedItem() {
+        return this.selected_item
+      },
+      syncIndex() {
+        this.selected_idx = _.findIndex(this.items, (item) => {
+          return _.isEqual(this.selected_item, item)
+        })
+      },
       tryAutoSelectItem() {
         if (this.items.length == 0)
         {
@@ -72,6 +93,7 @@
       },
       onItemActivate(item) {
         this.selected_item = item
+        this.syncIndex()
         this.$emit('item-activate', item)
       },
       onItemEdit(item) {
