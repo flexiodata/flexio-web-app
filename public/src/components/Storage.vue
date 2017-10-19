@@ -19,6 +19,7 @@
 
     <div class="flex flex-row h-100" v-if="connections.length > 0">
       <abstract-list
+        ref="list"
         class="br b--black-05 overflow-y-auto"
         layout="list"
         item-component="AbstractConnectionChooserItem"
@@ -158,7 +159,10 @@
         })
       },
       tryDeleteConnection(attrs) {
-        this.$store.dispatch('deleteConnection', { attrs })
+        this.$store.dispatch('deleteConnection', { attrs }).then(response => {
+          if (response.ok)
+            this.$nextTick(() => { this.connection = this.$refs['list'].getSelectedItem() })
+        })
       },
       onConnectionActivate(item) {
         this.connection = _.assign({}, item)

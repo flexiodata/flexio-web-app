@@ -25,6 +25,7 @@
 
     <div class="flex flex-row h-100" v-if="is_new || connections.length > 0">
       <abstract-list
+        ref="list"
         class="br b--black-05 overflow-y-auto"
         layout="list"
         item-component="AbstractConnectionChooserItem"
@@ -34,7 +35,8 @@
         :item-options="{
           //'item-cls': 'min-w5 pa3 darken-05',
           //'item-style': 'margin: 0.125rem',
-          'show-dropdown': true
+          'show-dropdown': true,
+          'dropdown-items': ['delete']
         }"
         @item-activate="onConnectionActivate"
         @item-delete="tryDeleteConnection"
@@ -165,7 +167,10 @@
         })
       },
       tryDeleteConnection(attrs) {
-        this.$store.dispatch('deleteConnection', { attrs })
+        this.$store.dispatch('deleteConnection', { attrs }).then(response => {
+          if (response.ok)
+            this.$nextTick(() => { this.connection = this.$refs['list'].getSelectedItem() })
+        })
       },
       onConnectionActivate(item) {
         this.connection = false
