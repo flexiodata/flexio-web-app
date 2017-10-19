@@ -292,6 +292,17 @@ class Stream extends \Flexio\Object\Base
         }
     }
 
+    // copies a streams properties to $dest, overwriting $dest's properties
+    public function copyOver(\Flexio\Object\Stream $dest)
+    {
+        $properties = $this->get();
+        unset($properties['eid']);
+        unset($properties['created']);
+        unset($properties['updated']);
+        $dest->set($properties);
+    }
+
+
     public function copyData(string $where, string $order, \Flexio\Object\Stream $outstream)
     {
         $where = \Flexio\Base\ExprTranslatorPostgres::translate($where, $structure);

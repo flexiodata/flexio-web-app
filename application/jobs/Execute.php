@@ -661,20 +661,20 @@ class Execute extends \Flexio\Jobs\Base
         if ($this->runjob_stdin === null)
             $this->runjob_stdin = $this->getContext()->getStdin();
 
-
         $job = \Flexio\Object\Process::createJob($task);
+
+        $runjob_stdout = \Flexio\Object\Stream::create();
 
         $context = \Flexio\Object\Context::create();
         $context->setStdin($this->runjob_stdin);
-        $context->setStdout(\Flexio\Object\Stream::create());
+        $context->setStdout($runjob_stdout);
 
         $job->run($context);
 
         // stdin of the next invocation of runjob is the stdout of the job that just ran
-        $job_stdout = $context->getStdout();
-        $this->runjob_stdin = $job_stdout;
+        $this->runjob_stdin = $runjob_stdout;
 
-        $this->getContext()->setStdout($job_stdout);
+        $runjob_stdout->copyOver($this->getContext()->getStdout());
     }
 
     public function func_getInputEnv()
@@ -754,16 +754,16 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_getOutputStreamInfo($name)
     {
-        if (isset($this->input_map[$name]))
+        if (isset($this->output_map[$name]))
         {
-            return $this->input_map[$name];
+            return $this->output_map[$name];
         }
 
         $res = $this->__getOutputStreamInfo($name);
         if ($res === null)
             return null;
 
-        $this->input_map[$name] = $res;
+        $this->output_map[$name] = $res;
         return $res;
     }
 
