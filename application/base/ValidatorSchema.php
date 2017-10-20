@@ -41,8 +41,7 @@ class ValidatorSchema
     // definitions
     // default
 
-    const ERROR_NONE               =  'none';
-    const ERROR_UNDEFINED          =  'undefined';
+    const ERROR_UNDEFINED          =  '';
     const ERROR_GENERAL            =  'general';
     const ERROR_INVALID_SYNTAX     =  'invalid-syntax';
     const ERROR_MISSING_PARAMETER  =  'missing-parameter';

@@ -1,5 +1,4 @@
-export const ERROR_NONE                =  'none'
-export const ERROR_UNDEFINED           =  'undefined'
+export const ERROR_UNDEFINED           =  ''
 export const ERROR_GENERAL             =  'general'
 export const ERROR_UNIMPLEMENTED       =  'unimplemented'
 export const ERROR_NO_DATABASE         =  'no-database'
