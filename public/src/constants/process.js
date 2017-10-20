@@ -1,5 +1,6 @@
-export const PROCESS_MODE_BUILD = 'B'
-export const PROCESS_MODE_RUN   = 'R'
+export const PROCESS_MODE_UNDEFINED = ''
+export const PROCESS_MODE_BUILD     = 'B'
+export const PROCESS_MODE_RUN       = 'R'
 
 export const PROCESS_STATUS_UNDEFINED = ''
 export const PROCESS_STATUS_PENDING   = 'S'

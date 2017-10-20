@@ -453,7 +453,7 @@ class Pipe
             if (empty($type))
             {
                 $task_errors[] = array(
-                    'error' => 'missing_parameter',
+                    'error' => 'missing-parameter',
                     'message' => 'Job type parameter is missing'
                 );
             }

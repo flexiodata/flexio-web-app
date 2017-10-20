@@ -708,7 +708,7 @@
       }
        else
       {
-          this.errors.push({ "code":     "missing_parameter",
+          this.errors.push({ "code":     "missing-parameter",
                              "message":  "Missing parameter 'name:'",
                              "offset":   str.length-1,
                              "length":   1 })
@@ -739,7 +739,7 @@
       }
        else
       {
-          this.errors.push({ "code":     "missing_parameter",
+          this.errors.push({ "code":     "missing-parameter",
                              "message":  "Missing parameter 'formula:'",
                              "offset":   str.length-1,
                              "length":   1 })
@@ -785,7 +785,7 @@
 
 
 
-    
+
     this.args.echo = ['msg'];
     this.hints.echo = {
     };
@@ -1004,7 +1004,7 @@
       }
        else
       {
-          this.errors.push({ "code":     "missing_parameter",
+          this.errors.push({ "code":     "missing-parameter",
                              "message":  "Missing parameter 'lang:'",
                              "offset":   str.length-1,
                              "length":   1 })
@@ -1196,7 +1196,7 @@
       }
        else
       {
-          this.errors.push({ "code":     "missing_parameter",
+          this.errors.push({ "code":     "missing-parameter",
                              "message":  "Missing parameter 'path:'",
                              "offset":   str.length-1,
                              "length":   1 })
@@ -1328,7 +1328,7 @@
       }
        else
       {
-          this.errors.push({ "code":     "missing_parameter",
+          this.errors.push({ "code":     "missing-parameter",
                              "message":  "Missing parameter 'value:'",
                              "offset":   str.length-1,
                              "length":   1 })
@@ -1782,7 +1782,7 @@
       }
        else
       {
-          this.errors.push({ "code":     "missing_parameter",
+          this.errors.push({ "code":     "missing-parameter",
                              "message":  "Missing parameter 'col:'",
                              "offset":   str.length-1,
                              "length":   1 })
@@ -1905,7 +1905,7 @@
       {
         if (!params.hasOwnProperty('height'))
         {
-          this.errors.push({ "code":     "missing_parameter",
+          this.errors.push({ "code":     "missing-parameter",
                     "message":  "Missing parameter 'height:'",
                     "offset":   str.length-1,
                     "length":   1 })
@@ -1918,7 +1918,7 @@
       {
         if (!params.hasOwnProperty('width'))
         {
-          this.errors.push({ "code":     "missing_parameter",
+          this.errors.push({ "code":     "missing-parameter",
                     "message":  "Missing parameter 'width:'",
                     "offset":   str.length-1,
                     "length":   1 })
@@ -2023,7 +2023,7 @@
             "params": {
             }
         };
-      
+
       var params = this.split(str, this.args.request)
 
       if (params.hasOwnProperty('connection'))

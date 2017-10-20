@@ -28,8 +28,8 @@ class Test
         // TEST: model constant tests
 
         // BEGIN TEST
-        $actual = \Model::CONNECTION_STATUS_INVALID;
-        $expected = 'I';
+        $actual = \Model::CONNECTION_STATUS_UNDEFINED;
+        $expected = '';
         TestCheck::assertString('A.1', 'Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST

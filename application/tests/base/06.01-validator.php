@@ -39,12 +39,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\Validator::ERROR_MISSING_PARAMETER;
-        $expected = 'missing_parameter';
+        $expected = 'missing-parameter';
         TestCheck::assertString('A.4', '\Flexio\Base\Validator::ERROR_MISSING_PARAMETER; check for existence of constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Validator::ERROR_INVALID_PARAMETER;
-        $expected = 'invalid_parameter';
+        $expected = 'invalid-parameter';
         TestCheck::assertString('A.5', '\Flexio\Base\Validator::ERROR_INVALID_PARAMETER; check for existence of constant',  $actual, $expected, $results);
     }
 }

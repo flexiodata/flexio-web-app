@@ -44,9 +44,9 @@ class ValidatorSchema
     const ERROR_NONE               =  'none';
     const ERROR_UNDEFINED          =  'undefined';
     const ERROR_GENERAL            =  'general';
-    const ERROR_INVALID_SYNTAX     =  'invalid_syntax';
-    const ERROR_MISSING_PARAMETER  =  'missing_parameter';
-    const ERROR_INVALID_PARAMETER  =  'invalid_parameter';
+    const ERROR_INVALID_SYNTAX     =  'invalid-syntax';
+    const ERROR_MISSING_PARAMETER  =  'missing-parameter';
+    const ERROR_INVALID_PARAMETER  =  'invalid-parameter';
 
     private $errors = array();
 

@@ -274,8 +274,8 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = \Model::CONNECTION_STATUS_INVALID;
-        $expected = 'I';
+        $actual = \Model::CONNECTION_STATUS_UNDEFINED;
+        $expected = '';
         TestCheck::assertString('F.1', 'Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -301,14 +301,19 @@ class Test
         // databases
 
         // BEGIN TEST
+        $actual = \Model::CONNECTION_CONFIG_TYPE_UNDEFINED;
+        $expected = '';
+        TestCheck::assertString('G.1', 'Connection configuration constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::CONNECTION_CONFIG_TYPE_DATABASE;
         $expected = 'database';
-        TestCheck::assertString('G.1', 'Connection configuration constant',  $actual, $expected, $results);
+        TestCheck::assertString('G.2', 'Connection configuration constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_CONFIG_TYPE_OAUTH2;
         $expected = 'oauth2';
-        TestCheck::assertString('G.2', 'Connection configuration constant',  $actual, $expected, $results);
+        TestCheck::assertString('G.3', 'Connection configuration constant',  $actual, $expected, $results);
 
 
 
@@ -318,9 +323,14 @@ class Test
         // databases
 
         // BEGIN TEST
+        $actual = \Model::CONNECTION_TYPE_UNDEFINED;
+        $expected = '';
+        TestCheck::assertString('H.1', 'Connection type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_FLEXIO;
         $expected = 'flexio';
-        TestCheck::assertString('H.1', 'Connection type constant',  $actual, $expected, $results);
+        TestCheck::assertString('H.2', 'Connection type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_FTP;
@@ -415,14 +425,19 @@ class Test
         // databases
 
         // BEGIN TEST
+        $actual = \Model::PIPE_STATUS_UNDEFINED;
+        $expected = '';
+        TestCheck::assertString('I.1', 'Pipe status constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::PIPE_STATUS_ACTIVE;
         $expected = 'A';
-        TestCheck::assertString('I.1', 'Pipe status constant',  $actual, $expected, $results);
+        TestCheck::assertString('I.2', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::PIPE_STATUS_INACTIVE;
         $expected = 'I';
-        TestCheck::assertString('I.2', 'Pipe status constant',  $actual, $expected, $results);
+        TestCheck::assertString('I.3', 'Pipe status constant',  $actual, $expected, $results);
 
 
 
@@ -432,14 +447,19 @@ class Test
         // databases
 
         // BEGIN TEST
+        $actual = \Model::PROCESS_MODE_UNDEFINED;
+        $expected = '';
+        TestCheck::assertString('J.1', 'Process mode constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Model::PROCESS_MODE_BUILD;
         $expected = 'B';
-        TestCheck::assertString('J.1', 'Process mode constant',  $actual, $expected, $results);
+        TestCheck::assertString('J.2', 'Process mode constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::PROCESS_MODE_RUN;
         $expected = 'R';
-        TestCheck::assertString('J.2', 'Process mode constant',  $actual, $expected, $results);
+        TestCheck::assertString('J.3', 'Process mode constant',  $actual, $expected, $results);
 
 
 

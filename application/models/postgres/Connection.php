@@ -29,7 +29,6 @@ class Connection extends ModelBase
                 default:
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-                case \Model::CONNECTION_STATUS_INVALID:
                 case \Model::CONNECTION_STATUS_UNAVAILABLE:
                 case \Model::CONNECTION_STATUS_AVAILABLE:
                 case \Model::CONNECTION_STATUS_ERROR:
@@ -126,7 +125,6 @@ class Connection extends ModelBase
                 default:
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-                case \Model::CONNECTION_STATUS_INVALID:
                 case \Model::CONNECTION_STATUS_UNAVAILABLE:
                 case \Model::CONNECTION_STATUS_AVAILABLE:
                 case \Model::CONNECTION_STATUS_ERROR:
