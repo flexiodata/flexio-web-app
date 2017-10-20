@@ -73,7 +73,7 @@ class Model
     const REGISTRY_VALUE_DATETIME  = 'T'; // (YYYY-MM-DD HH:MM:SS)
     const REGISTRY_VALUE_BINARY    = 'X';
 
-    const CONNECTION_STATUS_INVALID     = 'I';
+    const CONNECTION_STATUS_UNDEFINED   = '';
     const CONNECTION_STATUS_AVAILABLE   = 'A';
     const CONNECTION_STATUS_UNAVAILABLE = 'U';
     const CONNECTION_STATUS_ERROR       = 'E';

@@ -274,8 +274,8 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = \Model::CONNECTION_STATUS_INVALID;
-        $expected = 'I';
+        $actual = \Model::CONNECTION_STATUS_UNDEFINED;
+        $expected = '';
         TestCheck::assertString('F.1', 'Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
