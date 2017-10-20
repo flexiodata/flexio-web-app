@@ -24,7 +24,6 @@ class Error
     const UNIMPLEMENTED          =  'unimplemented';
     const INVALID_VERSION        =  'invalid-version';
     const INVALID_REQUEST        =  'invalid-request';
-    const INVALID_METHOD         =  'invalid-method';
     const INVALID_SYNTAX         =  'invalid-syntax';
     const MISSING_PARAMETER      =  'missing-parameter';
     const INVALID_PARAMETER      =  'invalid-parameter';
@@ -69,7 +68,6 @@ class Error
             case self::INSUFFICIENT_RIGHTS:    return 'Insufficient rights';
             case self::RATE_LIMIT_EXCEEDED:    return 'Rate limit exceeded';
             case self::SIZE_LIMIT_EXCEEDED:    return 'Size limit exceeded';
-            case self::INVALID_METHOD:         return 'Invalid method';
             case self::INVALID_VERSION:        return 'Invalid version';
             case self::INVALID_REQUEST:        return 'Invalid request';
         }

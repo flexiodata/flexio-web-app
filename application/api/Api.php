@@ -501,7 +501,6 @@ class Api
             // parameters, or valid requests for objects that can't
             // be found
             case \Flexio\Base\Error::INVALID_VERSION:
-            case \Flexio\Base\Error::INVALID_METHOD:
             case \Flexio\Base\Error::INVALID_REQUEST:
             case \Flexio\Base\Error::MISSING_PARAMETER:
             case \Flexio\Base\Error::INVALID_PARAMETER:
