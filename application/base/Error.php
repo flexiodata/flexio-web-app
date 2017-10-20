@@ -22,24 +22,24 @@ class Error
     const UNDEFINED              =  'undefined';
     const GENERAL                =  'general';
     const UNIMPLEMENTED          =  'unimplemented';
-    const NO_DATABASE            =  'no_database';
-    const NO_MODEL               =  'no_model';
-    const NO_SERVICE             =  'no_service';
-    const MISSING_PARAMETER      =  'missing_parameter';
-    const INVALID_PARAMETER      =  'invalid_parameter';
-    const INVALID_SYNTAX         =  'invalid_syntax';
-    const NO_OBJECT              =  'no_object';
-    const CONNECTION_FAILED      =  'connection_failed';
-    const CREATE_FAILED          =  'create_failed';
-    const DELETE_FAILED          =  'delete_failed';
-    const WRITE_FAILED           =  'write_failed';
-    const READ_FAILED            =  'read_failed';
+    const NO_DATABASE            =  'no-database';
+    const NO_MODEL               =  'no-model';
+    const NO_SERVICE             =  'no-service';
+    const NO_OBJECT              =  'no-object';
+    const MISSING_PARAMETER      =  'missing-parameter';
+    const INVALID_PARAMETER      =  'invalid-parameter';
+    const INVALID_SYNTAX         =  'invalid-syntax';
+    const CONNECTION_FAILED      =  'connection-failed';
+    const CREATE_FAILED          =  'create-failed';
+    const DELETE_FAILED          =  'delete-failed';
+    const WRITE_FAILED           =  'write-failed';
+    const READ_FAILED            =  'read-failed';
     const UNAUTHORIZED           =  'unauthorized';
-    const INSUFFICIENT_RIGHTS    =  'insufficient_rights';
-    const SIZE_LIMIT_EXCEEDED    =  'size_limit_exceeded';
-    const INVALID_METHOD         =  'invalid_method';
-    const INVALID_VERSION        =  'invalid_version';
-    const INVALID_REQUEST        =  'invalid_request';
+    const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
+    const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
+    const INVALID_METHOD         =  'invalid-method';
+    const INVALID_VERSION        =  'invalid-version';
+    const INVALID_REQUEST        =  'invalid-request';
 
     public static function getDefaultMessage($code)
     {
