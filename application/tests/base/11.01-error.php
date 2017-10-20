@@ -24,7 +24,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::UNDEFINED;
-        $expected = 'undefined';
+        $expected = '';
         TestCheck::assertString('A.1', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST

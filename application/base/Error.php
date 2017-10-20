@@ -18,7 +18,7 @@ namespace Flexio\Base;
 
 class Error
 {
-    const UNDEFINED              =  'undefined';
+    const UNDEFINED              =  '';
     const GENERAL                =  'general';
     const UNIMPLEMENTED          =  'unimplemented';
     const INVALID_VERSION        =  'invalid-version';
