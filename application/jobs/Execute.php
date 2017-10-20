@@ -259,6 +259,8 @@ class ExecuteProxy
                 {
                     $content[ $arr[$idx] ] = $arr[$idx+1];
                 }
+
+                $content = (object)$content;
             }
 
             $result[] = $content;
@@ -818,7 +820,9 @@ class Execute extends \Flexio\Jobs\Base
 
         if ($data instanceof BinaryData)
             $writer->write($data->getData());
-             else
+        else if (is_object($data))
+            $writer->write(json_encode($data));
+        else
             $writer->write($data);
     }
 
