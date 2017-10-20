@@ -355,9 +355,7 @@ class Execute extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->input_streams = $context->getStreams();
         $this->setContext($context);
-        $this->getContext()->clearStreams();
 
         // properties
         $job_definition = $this->getProperties();
