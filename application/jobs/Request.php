@@ -110,7 +110,10 @@ class Request extends \Flexio\Jobs\Base
         curl_setopt($ch, CURLOPT_URL, $url);
 
         // configure the method
-        $method = strtolower($method);
+        if ($method === null)
+            $method = 'get';
+             else
+            $method = strtolower($method);
         switch ($method)
         {
             default: // default to get
