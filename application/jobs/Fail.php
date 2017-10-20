@@ -29,7 +29,6 @@ class Fail extends \Flexio\Jobs\Base
             default:
                 throw new \Error;
 
-            case \Flexio\Base\Error::NONE:
             case \Flexio\Base\Error::UNDEFINED:
             case \Flexio\Base\Error::GENERAL:
             case \Flexio\Base\Error::UNIMPLEMENTED:

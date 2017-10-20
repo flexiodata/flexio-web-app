@@ -23,13 +23,8 @@ class Test
         // TEST: Validator error constants
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Validator::ERROR_NONE;
-        $expected = 'none';
-        TestCheck::assertString('A.1', '\Flexio\Base\Validator::ERROR_NONE; check for existence of constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Flexio\Base\Validator::ERROR_UNDEFINED;
-        $expected = 'undefined';
+        $expected = '';
         TestCheck::assertString('A.2', '\Flexio\Base\Validator::ERROR_UNDEFINED; check for existence of constant',  $actual, $expected, $results);
 
         // BEGIN TEST
