@@ -78,9 +78,11 @@ class Model
     const CONNECTION_STATUS_UNAVAILABLE = 'U';
     const CONNECTION_STATUS_ERROR       = 'E';
 
-    const CONNECTION_CONFIG_TYPE_DATABASE = 'database';
-    const CONNECTION_CONFIG_TYPE_OAUTH2   = 'oauth2';
+    const CONNECTION_CONFIG_TYPE_UNDEFINED = '';
+    const CONNECTION_CONFIG_TYPE_DATABASE  = 'database';
+    const CONNECTION_CONFIG_TYPE_OAUTH2    = 'oauth2';
 
+    const CONNECTION_TYPE_UNDEFINED     = '';
     const CONNECTION_TYPE_FLEXIO        = 'flexio';
     const CONNECTION_TYPE_FTP           = 'ftp';
     const CONNECTION_TYPE_SFTP          = 'sftp';
@@ -101,11 +103,13 @@ class Model
     const CONNECTION_TYPE_MAILJET       = 'mailjet';
     const CONNECTION_TYPE_TWILIO        = 'twilio';
 
-    const PIPE_STATUS_ACTIVE   = 'A';
-    const PIPE_STATUS_INACTIVE = 'I';
+    const PIPE_STATUS_UNDEFINED  = '';
+    const PIPE_STATUS_ACTIVE     = 'A';
+    const PIPE_STATUS_INACTIVE   = 'I';
 
-    const PROCESS_MODE_BUILD    = 'B';
-    const PROCESS_MODE_RUN      = 'R';
+    const PROCESS_MODE_UNDEFINED  = '';
+    const PROCESS_MODE_BUILD      = 'B';
+    const PROCESS_MODE_RUN        = 'R';
 
     const PROCESS_STATUS_UNDEFINED = '';
     const PROCESS_STATUS_PENDING   = 'S'; // 'S' for 'Starting'
