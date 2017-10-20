@@ -169,13 +169,16 @@ class Request extends \Flexio\Jobs\Base
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
+
+        $outstream = $context->getStdout();
+
         // make the call and get the result
         $outstream_properties = array(
             'name' => $url,
             'path' => $url,
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_STREAM // default
         );
-        $outstream = \Flexio\Object\Stream::create($outstream_properties);
+        $outstream->set($outstream_properties);
 
         // TODO: get header info?
         //curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$streamwriter) {});
@@ -191,8 +194,6 @@ class Request extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        $context->setStdout($outstream);
-        $context->addStream($outstream);
 
         // TODO: get the mime type from the returned info
 
