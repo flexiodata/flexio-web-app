@@ -118,18 +118,23 @@ class Test
         TestCheck::assertString('A.19', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Flexio\Base\Error::RATE_LIMIT_EXCEEDED;
+        $expected = 'rate-limit-exceeded';
+        TestCheck::assertString('A.20', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Flexio\Base\Error::INVALID_METHOD;
         $expected = 'invalid-method';
-        TestCheck::assertString('A.20', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.21', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INVALID_VERSION;
         $expected = 'invalid-version';
-        TestCheck::assertString('A.21', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.22', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INVALID_REQUEST;
         $expected = 'invalid-request';
-        TestCheck::assertString('A.22', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        TestCheck::assertString('A.23', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
     }
 }

@@ -30,6 +30,7 @@ class Error
     const INVALID_PARAMETER      =  'invalid-parameter';
     const UNAUTHORIZED           =  'unauthorized';
     const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
+    const RATE_LIMIT_EXCEEDED    =  'rate-limit-exceeded';
     const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
     const CONNECTION_FAILED      =  'connection-failed';
     const CREATE_FAILED          =  'create-failed';
@@ -66,6 +67,7 @@ class Error
             case self::READ_FAILED:            return 'Could not read from object';
             case self::UNAUTHORIZED:           return 'Unauthorized';
             case self::INSUFFICIENT_RIGHTS:    return 'Insufficient rights';
+            case self::RATE_LIMIT_EXCEEDED:    return 'Rate limit exceeded';
             case self::SIZE_LIMIT_EXCEEDED:    return 'Size limit exceeded';
             case self::INVALID_METHOD:         return 'Invalid method';
             case self::INVALID_VERSION:        return 'Invalid version';

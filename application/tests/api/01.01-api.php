@@ -106,5 +106,10 @@ class Test
         $actual = \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED;
         $expected = 'size-limit-exceeded';
         TestCheck::assertString('A.17', 'Api error constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\Error::RATE_LIMIT_EXCEEDED;
+        $expected = 'rate-limit-exceeded';
+        TestCheck::assertString('A.18', 'Api error constant',  $actual, $expected, $results);
     }
 }
