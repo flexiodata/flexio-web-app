@@ -33,7 +33,7 @@ class Process
 
         // allow in debug mode or on test site
         if (!IS_DEBUG() && !IS_TESTSITE())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_METHOD);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
         // run the specified job in blocking mode
         $params['background'] = $params['background'] ?? false;

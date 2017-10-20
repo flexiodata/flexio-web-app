@@ -22,24 +22,24 @@ class Error
     const UNDEFINED              =  'undefined';
     const GENERAL                =  'general';
     const UNIMPLEMENTED          =  'unimplemented';
+    const INVALID_VERSION        =  'invalid-version';
+    const INVALID_REQUEST        =  'invalid-request';
+    const INVALID_SYNTAX         =  'invalid-syntax';
+    const MISSING_PARAMETER      =  'missing-parameter';
+    const INVALID_PARAMETER      =  'invalid-parameter';
+    const UNAUTHORIZED           =  'unauthorized';
+    const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
+    const RATE_LIMIT_EXCEEDED    =  'rate-limit-exceeded';
+    const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
+    const CONNECTION_FAILED      =  'connection-failed';
+    const CREATE_FAILED          =  'create-failed';
+    const READ_FAILED            =  'read-failed';
+    const WRITE_FAILED           =  'write-failed';
+    const DELETE_FAILED          =  'delete-failed';
     const NO_DATABASE            =  'no-database';
     const NO_MODEL               =  'no-model';
     const NO_SERVICE             =  'no-service';
     const NO_OBJECT              =  'no-object';
-    const MISSING_PARAMETER      =  'missing-parameter';
-    const INVALID_PARAMETER      =  'invalid-parameter';
-    const INVALID_SYNTAX         =  'invalid-syntax';
-    const CONNECTION_FAILED      =  'connection-failed';
-    const CREATE_FAILED          =  'create-failed';
-    const DELETE_FAILED          =  'delete-failed';
-    const WRITE_FAILED           =  'write-failed';
-    const READ_FAILED            =  'read-failed';
-    const UNAUTHORIZED           =  'unauthorized';
-    const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
-    const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
-    const INVALID_METHOD         =  'invalid-method';
-    const INVALID_VERSION        =  'invalid-version';
-    const INVALID_REQUEST        =  'invalid-request';
 
     public static function getDefaultMessage($code)
     {
@@ -66,8 +66,8 @@ class Error
             case self::READ_FAILED:            return 'Could not read from object';
             case self::UNAUTHORIZED:           return 'Unauthorized';
             case self::INSUFFICIENT_RIGHTS:    return 'Insufficient rights';
+            case self::RATE_LIMIT_EXCEEDED:    return 'Rate limit exceeded';
             case self::SIZE_LIMIT_EXCEEDED:    return 'Size limit exceeded';
-            case self::INVALID_METHOD:         return 'Invalid method';
             case self::INVALID_VERSION:        return 'Invalid version';
             case self::INVALID_REQUEST:        return 'Invalid request';
         }

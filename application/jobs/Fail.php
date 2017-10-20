@@ -47,8 +47,8 @@ class Fail extends \Flexio\Jobs\Base
             case \Flexio\Base\Error::READ_FAILED:
             case \Flexio\Base\Error::UNAUTHORIZED:
             case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:
+            case \Flexio\Base\Error::RATE_LIMIT_EXCEEDED:
             case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
-            case \Flexio\Base\Error::INVALID_METHOD:
             case \Flexio\Base\Error::INVALID_VERSION:
             case \Flexio\Base\Error::INVALID_REQUEST:
                 throw new \Flexio\Base\Exception($code, $message);
