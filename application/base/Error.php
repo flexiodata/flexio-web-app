@@ -18,7 +18,6 @@ namespace Flexio\Base;
 
 class Error
 {
-    const NONE                   =  'none';
     const UNDEFINED              =  'undefined';
     const GENERAL                =  'general';
     const UNIMPLEMENTED          =  'unimplemented';
@@ -48,7 +47,6 @@ class Error
             default:
                 return 'Operation failed';
 
-            case self::NONE:                   return '';
             case self::UNDEFINED:              return 'Operation failed';
             case self::GENERAL:                return 'General error';
             case self::UNIMPLEMENTED:          return 'Unimplemented';
