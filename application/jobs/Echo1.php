@@ -42,7 +42,7 @@ class Echo1 extends \Flexio\Jobs\Base
     {
         "type": "flexio.echo",
         "params": {
-            "path": ""
+            "msg": ""
         }
     }
 EOD;
@@ -58,9 +58,8 @@ EOD;
             },
             "params": {
                 "type": "object",
-                "required": ["value"],
+                "required": ["msg"],
                 "properties": {
-
                 }
             }
         }

@@ -39,7 +39,7 @@ class Exit1 extends \Flexio\Jobs\Base
     {
         "type": "flexio.exit",
         "params": {
-            "path": ""
+            "code": ""
         }
     }
 EOD;
@@ -55,9 +55,8 @@ EOD;
             },
             "params": {
                 "type": "object",
-                "required": ["value"],
+                "required": ["code"],
                 "properties": {
-
                 }
             }
         }
