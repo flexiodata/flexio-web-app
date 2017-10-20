@@ -356,7 +356,7 @@ class Execute extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         $this->setContext($context);
-
+        
         // properties
         $job_definition = $this->getProperties();
 
@@ -451,68 +451,16 @@ class Execute extends \Flexio\Jobs\Base
 
             if (isset($err))
             {
-                                //die("<pre>".$err);
+                //die("<pre>".$err);
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
 
             return true;
         }
-    }
-
-    private function doStream(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream)
-    {
-        // determine what program to load
-        if ($this->lang == 'python')
+        else if ($this->lang == 'html')
         {
-            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-            if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
-
-            $ep = new ExecuteProxy;
-            $ep->initialize($cmd, $this);
-            $ep->run();
-
-            $err = $ep->getStdError();
-
-            if (isset($err))
-            {
-                $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
-                if (strlen($err) == 0)
-                    $err = null;
-            }
-
-            if (isset($err))
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-            }
-
-            return true;
-        }
-         else if ($this->lang == 'javascript')
-        {
-            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-            if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /srv/fx/script.js && timeout 30s nodejs /srv/fx/run.js managed /srv/fx/script.js)'";
-
-            $ep = new ExecuteProxy;
-            $ep->initialize($cmd, $this);
-            $ep->run();
-
-            $err = $ep->getStdError();
-
-            if (isset($err))
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-            }
-
-            return true;
-        }
-         else if ($this->lang == 'html')
-        {
+            $outstream = $this->getContext()->getStdout();
+            
             if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
             {
                 $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -545,8 +493,8 @@ class Execute extends \Flexio\Jobs\Base
             return true;
         }
 
-
     }
+
 
     // checks a script for compile errors;  If script compiles cleanly, returns true,
     // otherwise returns the error as a textual string
