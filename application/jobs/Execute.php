@@ -355,10 +355,8 @@ class Execute extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->input_streams = $context->getStreams();
         $this->setContext($context);
-        $this->getContext()->clearStreams();
-
+        
         // properties
         $job_definition = $this->getProperties();
 
@@ -388,10 +386,7 @@ class Execute extends \Flexio\Jobs\Base
 
         if ($this->lang == 'python')
         {
-            // "UNMANAGED MODE" - script is called once per job (once per all streams)
-
-            // if a flexio_hander is specified, call it, otherwise let the script
-            // handle everything
+            // if a flexio_hander is specified, call it, otherwise let the script handle everything
             if (strpos($this->code, "flexio_handler") !== false)
             {
                 // add code that invokes the main handler -- this is the preferred
@@ -436,13 +431,11 @@ class Execute extends \Flexio\Jobs\Base
         }
         else if ($this->lang == 'javascript')
         {
-            // if a flexio_hander is specified, call it, otherwise let the script
-            // handle everything
+            // if a flexio_hander is specified, call it, otherwise let the script handle everything
             if (strpos($this->code, "flexio_handler") !== false)
             {
                 $this->code_base64 = base64_encode($this->code);
             }
-
 
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
@@ -456,108 +449,18 @@ class Execute extends \Flexio\Jobs\Base
 
             $err = $ep->getStdError();
 
-
             if (isset($err))
             {
-                                //die("<pre>".$err);
+                //die("<pre>".$err);
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
 
             return true;
         }
-    }
-
-    private function getInputReader($idx)
-    {
-        if (count($this->input_readers) != count($this->input_streams))
-            $this->input_readers = array_pad($this->input_readers, count($this->input_streams), null);
-
-        if ($idx < 0 || $idx >= count($this->input_readers))
-            return null;
-
-        $ret = $this->input_readers[$idx];
-        if (is_null($ret))
+        else if ($this->lang == 'html')
         {
-            $ret = \Flexio\Object\StreamReader::create($this->input_streams[$idx]);
-            $this->input_readers[$idx] = $ret;
-        }
-
-        return $ret;
-    }
-
-    private function getOutputWriter($idx)
-    {
-        if (count($this->output_writers) != count($this->output_streams))
-            $this->output_writers = array_pad($this->output_writers, count($this->output_streams), null);
-
-        if ($idx < 0 || $idx >= count($this->output_writers))
-            return null;
-
-        $ret = $this->output_writers[$idx];
-        if (is_null($ret))
-        {
-            $ret = \Flexio\Object\StreamWriter::create($this->output_streams[$idx]);
-            $this->output_writers[$idx] = $ret;
-        }
-
-        return $ret;
-    }
-
-
-    private function doStream(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream)
-    {
-        // determine what program to load
-        if ($this->lang == 'python')
-        {
-            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-            if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
-
-            $ep = new ExecuteProxy;
-            $ep->initialize($cmd, $this);
-            $ep->run();
-
-            $err = $ep->getStdError();
-
-            if (isset($err))
-            {
-                $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
-                if (strlen($err) == 0)
-                    $err = null;
-            }
-
-            if (isset($err))
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-            }
-
-            return true;
-        }
-         else if ($this->lang == 'javascript')
-        {
-            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-            if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /srv/fx/script.js && timeout 30s nodejs /srv/fx/run.js managed /srv/fx/script.js)'";
-
-            $ep = new ExecuteProxy;
-            $ep->initialize($cmd, $this);
-            $ep->run();
-
-            $err = $ep->getStdError();
-
-            if (isset($err))
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-            }
-
-            return true;
-        }
-         else if ($this->lang == 'html')
-        {
+            $outstream = $this->getContext()->getStdout();
+            
             if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
             {
                 $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -590,8 +493,8 @@ class Execute extends \Flexio\Jobs\Base
             return true;
         }
 
-
     }
+
 
     // checks a script for compile errors;  If script compiles cleanly, returns true,
     // otherwise returns the error as a textual string
@@ -629,6 +532,42 @@ class Execute extends \Flexio\Jobs\Base
         }
     }
 
+
+    private function getInputReader($idx)
+    {
+        if (count($this->input_readers) != count($this->input_streams))
+            $this->input_readers = array_pad($this->input_readers, count($this->input_streams), null);
+
+        if ($idx < 0 || $idx >= count($this->input_readers))
+            return null;
+
+        $ret = $this->input_readers[$idx];
+        if (is_null($ret))
+        {
+            $ret = \Flexio\Object\StreamReader::create($this->input_streams[$idx]);
+            $this->input_readers[$idx] = $ret;
+        }
+
+        return $ret;
+    }
+
+    private function getOutputWriter($idx)
+    {
+        if (count($this->output_writers) != count($this->output_streams))
+            $this->output_writers = array_pad($this->output_writers, count($this->output_streams), null);
+
+        if ($idx < 0 || $idx >= count($this->output_writers))
+            return null;
+
+        $ret = $this->output_writers[$idx];
+        if (is_null($ret))
+        {
+            $ret = \Flexio\Object\StreamWriter::create($this->output_streams[$idx]);
+            $this->output_writers[$idx] = $ret;
+        }
+
+        return $ret;
+    }
 
 
 
@@ -702,7 +641,7 @@ class Execute extends \Flexio\Jobs\Base
 
     public $stream_cache = array();
 
-    public function __getInputStreamInfo($name)
+    private function __getInputStreamInfo($name)
     {
         if ($name === '_fxstdin_')
         {
@@ -735,7 +674,7 @@ class Execute extends \Flexio\Jobs\Base
     }
 
 
-    public function __getOutputStreamInfo($name)
+    private function __getOutputStreamInfo($name)
     {
         if ($name === '_fxstdout_')
         {
