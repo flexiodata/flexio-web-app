@@ -367,7 +367,7 @@ class Execute extends \Flexio\Jobs\Base
 
         // if a file is specified, get the contents from the file location;
         // this allows remote storing of code
-        $file = $job_definition['params']['file'] ?? false;
+        $file = $job_definition['params']['path'] ?? false;
         if ($file !== false)
         {
             $this->code = self::getFileContents($file);
@@ -918,7 +918,8 @@ class Execute extends \Flexio\Jobs\Base
         "type": "flexio.execute",
         "params": {
             "lang": "python",
-            "code": "<base64 encoded>"
+            "code": "<base64 encoded>",
+            "path": "" // remote path in place of code
         }
     }
 EOD;
