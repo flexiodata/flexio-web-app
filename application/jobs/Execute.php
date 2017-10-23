@@ -822,8 +822,9 @@ class Execute extends \Flexio\Jobs\Base
             $writer->write($data->getData());
         else if (is_object($data))
             $writer->write(json_encode($data));
-        else
-            $writer->write($data);
+        else {
+            $writer->write((string)$data);
+        }
     }
 
 
