@@ -61,7 +61,6 @@ class Process
                 'parent_eid'   => array('type' => 'identifier', 'required' => false),
                 'process_mode' => array('type' => 'string', 'required' => false, 'default' => \Model::PROCESS_MODE_RUN),
                 'task'         => array('type' => 'object', 'required' => false),
-                'params'       => array('type' => 'object', 'required' => false),
                 'background'   => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'debug'        => array('type' => 'boolean', 'required' => false, 'default' => false),
                 'run'          => array('type' => 'boolean', 'required' => false, 'default' => false)
@@ -93,9 +92,7 @@ class Process
         }
 
         // STEP 1: create a new process job with the default task
-        $process_properties = $validated_params;
-        unset($process_properties['params']);
-        $process = \Flexio\Object\Process::create($process_properties);
+        $process = \Flexio\Object\Process::create($validated_params);
 
         if ($pipe !== false)
         {
@@ -118,19 +115,19 @@ class Process
             $process->setCreatedBy($requesting_user_eid);
         }
 
-        if (isset($validated_params['params']))
-            $process->setParams($validated_params['params']);
-
         // STEP 2: if a parent eid is specified, associate the process with the
         // parent; if a task is specified, override the task of the parent (to
         // allow runtime parameters to be set on the pipe that override the
         // pipe variables); if a task isn't specified, use the parent's task
         if ($pipe !== false)
         {
-            if (!isset($process_properties['task']))
-                 $process_properties['task'] = $pipe->getTask();
+            if (!isset($validated_params['task']))
+            {
+                $parent_properties = array();
+                $parent_properties['task'] = $pipe->getTask();
+                $process->set($parent_properties);
+            }
 
-            $process->set($process_properties);
             $pipe->addProcess($process);
         }
 
@@ -181,8 +178,7 @@ class Process
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
-                'task' => array('type' => 'object', 'required' => false),
-                'params' => array('type' => 'object', 'required' => false)
+                'task' => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -200,12 +196,6 @@ class Process
 
         // TODO: we shouldn't allow the task to be set if the process is anything
         // past the initial pending state
-
-        if (isset($validated_params['params']))
-        {
-            $process->setParams($validated_params['params']);
-            unset($validated_params['params']);
-        }
 
         // set the properties
         $process->set($validated_params);
