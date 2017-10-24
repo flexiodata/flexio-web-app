@@ -192,8 +192,6 @@ class Test
             "eid_status" : null,
             "ename" : null,
             "user_name" : null,
-            "description" : null,
-            "full_name" : null,
             "first_name" : null,
             "last_name" : null,
             "email" : null,
@@ -209,16 +207,6 @@ class Test
             "locale_thousands" : null,
             "locale_dateformat" : null,
             "timezone" : null,
-            "owned_by": {
-                "eid" : null,
-                "eid_type" : null,
-                "user_name" : null,
-                "full_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
-            "verify_code" : null,
             "config" : {
             },
             "created" : null,

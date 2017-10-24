@@ -200,8 +200,6 @@ class Test
             "process_mode": null,
             "task" : [
             ],
-            "params" : {
-            },
             "started_by" : null,
             "started" : null,
             "finished" : null,

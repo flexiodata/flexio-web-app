@@ -180,19 +180,17 @@ class Test
         $handle2 = TestUtil::generateEmail();
         $info = array(
             'user_name' => $handle1,
-            'email' => $handle2,
-            'company_name' => 'Express Kitchen'
+            'email' => $handle2
         );
         $eid = $model->create(\Model::TYPE_USER, $info);
         $info = array(
-            'description' => 'A friend'
+            'company_name' => 'Express Kitchen'
         );
         $result = $model->set($eid, $info);
         $actual = $model->get($eid);
         $expected = array(
             'user_name' => $handle1,
             'email' => $handle2,
-            'description' => 'A friend',
             'company_name' => 'Express Kitchen'
         );
         TestCheck::assertInArray('D.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);

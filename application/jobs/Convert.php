@@ -504,6 +504,7 @@ class Convert extends \Flexio\Jobs\Base
                      else
                     {
                         $chunk = $streamreader->read(16384);
+
                         if ($chunk !== false)
                         {
                             if ($first)
@@ -628,7 +629,7 @@ class Convert extends \Flexio\Jobs\Base
         }
 
         // make sure the buffer is flushed before converting values
-        if ($streamwriter !== false)
+        if (isset($streamwriter))
         {
             if ($is_output_json)
             {
@@ -636,6 +637,7 @@ class Convert extends \Flexio\Jobs\Base
             }
 
             $result = $streamwriter->close();
+
             if ($result === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 

@@ -358,7 +358,7 @@ class Execute extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         $this->setContext($context);
-        
+
         // properties
         $job_definition = $this->getProperties();
 
@@ -462,7 +462,7 @@ class Execute extends \Flexio\Jobs\Base
         else if ($this->lang == 'html')
         {
             $outstream = $this->getContext()->getStdout();
-            
+
             if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
             {
                 $streamreader = \Flexio\Object\StreamReader::create($instream);
@@ -863,7 +863,7 @@ class Execute extends \Flexio\Jobs\Base
         "params": {
             "lang": "python",
             "code": "<base64 encoded>",
-            "path": "" // remote path in place of code
+            "path": ""
         }
     }
 EOD;
