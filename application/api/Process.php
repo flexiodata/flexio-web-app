@@ -422,37 +422,6 @@ class Process
         return $process->addInput($stream)->get();
     }
 
-    public static function getInput(\Flexio\Api\Request $request) // TODO: set function return type
-    {
-        $params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        // return the process input before any tasks; these will only be
-        // streams that are added via addInput(); otherwise, the result
-        // will be empty
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true),
-                'fields' => array('type' => 'string', 'array' => true, 'required' => false),
-                'streams' => array('type' => 'string', 'array' => true, 'required' => false),
-                'format' => array('type' => 'string', 'required' => false),
-                'content-limit' => array('type' => 'string', 'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $process_identifier = $validated_params['eid'];
-
-        // load the object
-        $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        $process_streams = $process->getInput()->getStreams();
-        return self::echoStreamInfo($process_streams, $validated_params);
-    }
-
     public static function getOutput(\Flexio\Api\Request $request) // TODO: set function return type
     {
         $params = $request->getQueryParams();
