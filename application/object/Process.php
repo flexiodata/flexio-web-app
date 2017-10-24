@@ -287,6 +287,12 @@ class Process extends \Flexio\Object\Base
 
     public function setParams(array $params) : \Flexio\Object\Process
     {
+        // TODO: these values used to be stored in a separate field from
+        // the input called input_params; however, now, the input is stored
+        // as a single object, so this should be added to that
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+/*
         // TODO: make sure the params are a set of key/value pairs;
         // we have params coming in from the api that need to be
         // verified so that template variable replacement doesn't
@@ -303,15 +309,22 @@ class Process extends \Flexio\Object\Base
         $this->getModel()->process->set($this->getEid(), array('input_params' => $input_params));
 
         return $this;
+*/
     }
 
     public function getParams() // TODO: add return type
     {
+        // TODO: these values used to be stored in a separate field from
+        // the input called input_params; however, now, the input is stored
+        // as a single object, so this should be added to that
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+/*
         // get whatever is in the input_params of the initial process step
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input_params = $process_properties['input_params'];
         $input = @json_decode($input_params, true);
         return $input;
+*/
     }
 
     public function setDebug(bool $debug)
@@ -835,7 +848,6 @@ class Process extends \Flexio\Object\Base
             },
             "process_mode": null,
             "task" : null,
-            "params=input_params": null,
             "started_by" : null,
             "started" : null,
             "finished" : null,
@@ -859,11 +871,6 @@ class Process extends \Flexio\Object\Base
         $task = @json_decode($properties['task'],true);
         if ($task !== false)
             $properties['task'] = $task;
-
-        // unpack the primary process task input
-        $input_params = @json_decode($properties['params']); // unpack as an object
-        if ($input_params  !== false)
-            $properties['params'] = $input_params;
 
         // unpack the primary process process info json
         $process_info = @json_decode($properties['process_info'],true);

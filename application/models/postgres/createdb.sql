@@ -214,8 +214,6 @@ CREATE TABLE tbl_process (
   task json,
   input json,
   output json,
-  input_params json,
-  output_params json,
   started_by varchar(12) NOT NULL default '',
   started timestamp NULL default NULL,
   finished timestamp NULL default NULL,

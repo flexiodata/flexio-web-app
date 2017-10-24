@@ -231,8 +231,6 @@ CREATE TABLE tbl_process (
   task text default NULL,
   input text default NULL,
   output text default NULL,
-  input_params text default NULL,
-  output_params text default NULL,
   started_by varchar(12) NOT NULL default '',
   started timestamp NULL default NULL,
   finished timestamp NULL default NULL,
