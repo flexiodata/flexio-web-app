@@ -407,6 +407,7 @@ class Api
             case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\Process::getTaskInputInfo';
             case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\Process::getTaskOutputInfo';
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
+            case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\Process::cancel';
 
             // streams
             case 'POS /streams'                        : return '\Flexio\Api\Stream::create';

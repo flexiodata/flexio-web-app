@@ -368,6 +368,28 @@ class Process
         exit(0);
     }
 
+    public static function cancel(array $params, string $requesting_user_eid = null) : array
+    {
+        $validator = \Flexio\Base\Validator::create();
+        if (($params = $validator->check($params, array(
+                'eid' => array('type' => 'identifier', 'required' => true)
+            ))->getParams()) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_identifier = $params['eid'];
+
+        // load the object
+        $process = \Flexio\Object\Process::load($process_identifier);
+        if ($process === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
+        //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        return $process->cancel()->get();
+    }
+
     public static function addInput(\Flexio\Api\Request $request) : array
     {
         $params = $request->getPostParams();
