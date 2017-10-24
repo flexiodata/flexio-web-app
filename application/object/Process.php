@@ -334,6 +334,19 @@ class Process extends \Flexio\Object\Base
         return $properties['task'];
     }
 
+    public function setParams(array $params) : \Flexio\Object\Process
+    {
+        // shorthand for setting just the parameters of the input;
+        // used in the test suite
+
+        // get the existing input
+        $context = $this->getInput();
+        $context->setParams($params);
+        $this->setInput($context);
+
+        return $this;
+    }
+
     public function setInput(\Flexio\Object\Context $context) : \Flexio\Object\Process
     {
         // set the input
