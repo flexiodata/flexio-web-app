@@ -85,5 +85,51 @@ EOD;
 
     public function run(\Flexio\Object\Context &$context)
     {
+        $this->replaceParameterTokens($context);
     }
+
+    public function replaceParameterTokens($context)
+    {
+
+    }
+
+    private function replaceParameterTokensRecurse($context, &$value)
+    {
+        if (is_array($value))
+        {
+            foreach ($value as $k => &$v)
+            {
+                $this->replaceParameterTokensRecurse($context, $v);
+            }
+        }
+         else
+        {
+            if (is_string($value))
+            {
+                $re = '/\$\{.*?}/';
+
+                preg_match_all($re, $value, $matches, PREG_OFFSET_CAPTURE, 0);
+                
+                if (isset($matches[0]))
+                {
+                    $differential = 0; // keep track of the offsets when we replace due to the difference of the token lengths vs value length
+
+                    foreach ($matches[0] as $match)
+                    {
+                        $token = $match[0];
+                        $token_len = strlen($token);
+                        $offset = $match[1];
+
+                        $varname = substr($token, 2, -1);  // turn '${myvar}' into 'myvar'
+                        $replacement = strtoupper($varname);
+
+                        $value = substr_replace($value, $replacement, $offset + $differential, $token_len);
+
+                        $differential += (strlen($replacement) - $token_len);
+                    }
+                }
+            }
+        }
+    }
+
 }
