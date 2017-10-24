@@ -390,67 +390,6 @@ class Process
         return $process->cancel()->get();
     }
 
-    public static function addInput(\Flexio\Api\Request $request) : array
-    {
-        $params = $request->getPostParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        // TODO: handle manual streams that are added so that proces inputs
-        // can come from files that are directly uploaded as well as from
-        // streams that are already uploaded and are then added
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $process_identifier = $validated_params['eid'];
-
-        // load the object
-        $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        // if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
-        //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $stream = \Flexio\Object\Stream::create();
-        \Flexio\Api\Stream::handleStreamUpload($validated_params, $stream);
-        return $process->addInput($stream)->get();
-    }
-
-    public static function getOutput(\Flexio\Api\Request $request) // TODO: set function return type
-    {
-        $params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        // return the process output after the last task; this will be
-        // empty if the process hasn't run
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true),
-                'fields' => array('type' => 'string', 'array' => true, 'required' => false),
-                'streams' => array('type' => 'string', 'array' => true, 'required' => false),
-                'format' => array('type' => 'string', 'required' => false),
-                'content-limit' => array('type' => 'string', 'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $process_identifier = $validated_params['eid'];
-
-        // load the object
-        $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        $process_streams = $process->getOutput()->getStreams();
-        return self::echoStreamInfo($process_streams, $validated_params);
-    }
-
     public static function getTaskInputInfo(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
