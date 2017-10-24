@@ -387,9 +387,6 @@ class Process extends \Flexio\Object\Base
 
     public function getInput() : \Flexio\Object\Context
     {
-        // TODO: implement similarly to self::getOutput(), using getTaskStreams();
-        // need better way of working with subprocesses
-
         // get whatever is in the input of the initial process step
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = $process_properties['input'];
@@ -401,7 +398,7 @@ class Process extends \Flexio\Object\Base
         $task_identifier = null; // last task
         $input_context = \Flexio\Object\Context::create();
         $output_context = \Flexio\Object\Context::create();
-        $this->getTaskStreams($input_context, $output_context, $task_identifier);
+        $this->getTaskInputOutput($input_context, $output_context, $task_identifier);
 
         return $output_context;
     }
@@ -411,11 +408,11 @@ class Process extends \Flexio\Object\Base
         $task_identifier = null; // last task
         $input_context = \Flexio\Object\Context::create();
         $output_context = \Flexio\Object\Context::create();
-        $this->getTaskStreams($input_context, $output_context, $task_identifier);
+        $this->getTaskInputOutput($input_context, $output_context, $task_identifier);
         return $output_context->getStdout();
     }
 
-    public function getTaskStreams(\Flexio\Object\Context &$input_context, \Flexio\Object\Context &$output_context, string $task_eid = null)
+    public function getTaskInputOutput(\Flexio\Object\Context &$input_context, \Flexio\Object\Context &$output_context, string $task_eid = null)
     {
         // returns the context of input streams for the specified task of a
         // process; if no task is specified, the streams from the last subprocess

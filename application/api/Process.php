@@ -412,7 +412,7 @@ class Process
 
         $input_context = \Flexio\Object\Context::create();
         $output_context = \Flexio\Object\Context::create();
-        $process->getTaskStreams($input_context, $output_context, $task_identifier);
+        $process->getTaskInputOutput($input_context, $output_context, $task_identifier);
         $input_streams = $input_context->getStreams();
 
         // get the structures
@@ -449,7 +449,7 @@ class Process
 
         $input_context = \Flexio\Object\Context::create();
         $output_context = \Flexio\Object\Context::create();
-        $process->getTaskStreams($input_context, $output_context, $task_identifier);
+        $process->getTaskInputOutput($input_context, $output_context, $task_identifier);
         $output_streams = $output_context->enum();
 
         // get the structures
