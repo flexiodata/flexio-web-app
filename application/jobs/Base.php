@@ -90,11 +90,13 @@ EOD;
 
     public function replaceParameterTokens($context)
     {
-
+        $this->replaceParameterTokensRecurse($context, $this->properties);
     }
 
     private function replaceParameterTokensRecurse($context, &$value)
     {
+        $variables = $context->getEnv();
+
         if (is_array($value))
         {
             foreach ($value as $k => &$v)
@@ -121,10 +123,14 @@ EOD;
                         $offset = $match[1];
 
                         $varname = substr($token, 2, -1);  // turn '${myvar}' into 'myvar'
-                        $replacement = strtoupper($varname);
+                        $replacement = '';
+
+                        if (isset($variables[$varname]))
+                        {
+                            $replacement = $variables[$varname];
+                        }
 
                         $value = substr_replace($value, $replacement, $offset + $differential, $token_len);
-
                         $differential += (strlen($replacement) - $token_len);
                     }
                 }
