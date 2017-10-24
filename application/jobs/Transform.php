@@ -100,24 +100,20 @@ class Transform extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-        $stdout = $context->getStdout();
+        $context->setStdout($this->processStream($stdin));
 
         // process stream array
         $input = $context->getStreams();
         $context->clearStreams();
-
 
         foreach ($input as $instream)
         {
             $outstream = $this->processStream($instream);
             $context->addStream($outstream);
         }
-
-
-        $this->processStream($stdin, $stdout);
     }
 
-    private function processStream(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream) : \Flexio\Object\Stream
+    private function processStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -128,17 +124,17 @@ class Transform extends \Flexio\Jobs\Base
 
             // table input
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                return $this->getTableOutput($instream, $outstream);
+                return $this->getTableOutput($instream);
 
             // stream/text/csv input
             case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
             case \Flexio\Base\ContentType::MIME_TYPE_TXT:
             case \Flexio\Base\ContentType::MIME_TYPE_CSV:
-                return $this->getFileOutput($instream, $outstream);
+                return $this->getFileOutput($instream);
         }
     }
 
-    private function getTableOutput(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream) : \Flexio\Object\Stream
+    private function getTableOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         $column_expression_map = $this->getTableExpressionMap($instream);
         if ($column_expression_map === false)
@@ -150,9 +146,7 @@ class Transform extends \Flexio\Jobs\Base
             return $instream;
 
         // create the output with the replaced values
-        $instream->copyOver($outstream);
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
-
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $output_columns = $instream->getStructure()->enum();
         foreach ($output_columns as &$column)
         {
@@ -201,7 +195,7 @@ class Transform extends \Flexio\Jobs\Base
         return $outstream;
     }
 
-    private function getFileOutput(\Flexio\Object\Stream $instream, \Flexio\Object\Stream $outstream) : \Flexio\Object\Stream
+    private function getFileOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
     {
         $column_expression_map = $this->getStreamExpressionMap($instream);
         if ($column_expression_map === false)
@@ -213,9 +207,7 @@ class Transform extends \Flexio\Jobs\Base
             return $instream;
 
         // create the output with the replaced values
-        $instream->copyOver($outstream);
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
-
+        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
 
