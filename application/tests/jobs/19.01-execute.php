@@ -59,8 +59,7 @@ EOD;
 
         // TEST: Execute Job
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $result = TestUtil::getProcessResult($process,0,50);
-        $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
+        $actual = $process->getStdout()->content(0,50);
         $expected = 'Hello, world.';
         TestCheck::assertString('A.1', 'Execute Job; check basic functionality',  $actual, $expected, $results);
     }
