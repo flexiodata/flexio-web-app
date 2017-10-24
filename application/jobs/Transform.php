@@ -106,14 +106,14 @@ class Transform extends \Flexio\Jobs\Base
         $input = $context->getStreams();
         $context->clearStreams();
 
-        /*
+
         foreach ($input as $instream)
         {
             $outstream = $this->processStream($instream);
             $context->addStream($outstream);
         }
-        */
-        
+
+
         $this->processStream($stdin, $stdout);
     }
 
