@@ -294,21 +294,6 @@ class Process extends \Flexio\Object\Base
         return $this->properties['process_info'];
     }
 
-    public function getParams() // TODO: add return type
-    {
-        // TODO: these values used to be stored in a separate field from
-        // the input called input_params; however, now, the input is stored
-        // as a single object, so this should be added to that
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-/*
-        // get whatever is in the input_params of the initial process step
-        $process_properties = $this->getModel()->process->get($this->getEid());
-        $input_params = $process_properties['input_params'];
-        $input = @json_decode($input_params, true);
-        return $input;
-*/
-    }
-
     public function setDebug(bool $debug)
     {
         $this->debug = $debug;
@@ -551,7 +536,7 @@ class Process extends \Flexio\Object\Base
 
         // needs to be reworked because context object now stores env and params seperately
         $environment_variables = $this->getEnvironmentParams();
-        $user_variables = $this->getParams();
+        $user_variables = $this->getInput()->getParams();
         $variables = array_merge($user_variables, $environment_variables);
         $context->setEnv($variables);
 
