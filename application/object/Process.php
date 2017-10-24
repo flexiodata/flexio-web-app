@@ -62,6 +62,7 @@ class Process extends \Flexio\Object\Base
         $stream = false;
         $streamwriter = false;
         $form_params = array();
+        $post_streams = array();
 
         // first fetch query string parameters
         foreach ($_GET as $key => $value)
@@ -70,8 +71,7 @@ class Process extends \Flexio\Object\Base
         }
 
         $parser = \Flexio\Base\MultipartParser::create();
-
-        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params) {
+        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params, &$post_streams) {
             if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
             {
                 $stream = \Flexio\Object\Stream::create();
@@ -101,7 +101,7 @@ class Process extends \Flexio\Object\Base
             }
             else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_END)
             {
-                $process->addInput($stream);
+                $post_streams[] = $stream;
                 $streamwriter = false;
                 $stream = false;
             }
@@ -112,7 +112,16 @@ class Process extends \Flexio\Object\Base
         });
         fclose($php_stream_handle);
 
-        $process->setParams($form_params);
+        $input = \Flexio\Object\Context::create();
+        $input->setParams($form_params);
+
+        foreach ($post_streams as $s)
+        {
+            // TODO: add streams to stdin instead?
+            $input->addStream($s);
+        }
+
+        $process->setInput($input);
     }
 
     public function set(array $properties) : \Flexio\Object\Process
@@ -367,17 +376,11 @@ class Process extends \Flexio\Object\Base
         return $properties['task'];
     }
 
-    public function addInput(\Flexio\Object\Stream $stream) : \Flexio\Object\Process
+    public function setInput(\Flexio\Object\Context $context) : \Flexio\Object\Process
     {
-        // get the current input
-        $process_properties = $this->getModel()->process->get($this->getEid());
-        $input = $process_properties['input'];
-        $input_context = \Flexio\Object\Context::fromString($input);
-
-        // add on the new input
-        $input_context->addStream($stream);
-        $input_updated = \Flexio\Object\Context::toString($input_context);
-        $this->getModel()->process->set($this->getEid(), array('input' => $input_updated));
+        // set the input
+        $input = \Flexio\Object\Context::toString($context);
+        $this->getModel()->process->set($this->getEid(), array('input' => $input));
 
         return $this;
     }

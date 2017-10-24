@@ -68,24 +68,26 @@ class Trigger
             $process->setRights($pipe->getRights()); // processes inherit rights from the pipe
 
             // set an environment variable (parameter) with the "from" email address
+            $input = \Flexio\Object\Context::create();
+
             $from_addresses = $parser->getFrom();
             if (count($from_addresses) > 0)
             {
                 $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
                 $params = array('email-from' => $from_addresses[0]['email'],
                                 'email-from-display' => $from_addresses[0]['display']);
-                $process->setParams($params);
+                $input->setParams($params);
             }
 
             // save the email attachments as streams, and if there
             // are any attachments, run the pipe with the attachments
             $streams = self::saveAttachmentsToStreams($parser, $process);
-        /*
             foreach ($streams as $s)
             {
-                $process->addInput($s);
+                $input->addStream($s);
             }
-*/
+
+            $process->setInput($input);
             $process->run(false); // handleEmail should be run in background from email processing script
         }
 
@@ -99,7 +101,7 @@ class Trigger
         return $process->get();
     }
 
-    private static function saveAttachmentsToStreams(\Flexio\Services\Email $email, \Flexio\Object\Process $process) : array
+    private static function saveAttachmentsToStreams(\Flexio\Services\Email $email) : array
     {
         // create a new stream for each attachment; return an array of stream eids
         $streams = array();
@@ -116,9 +118,7 @@ class Trigger
             $outstream = \Flexio\Object\Stream::create($outstream_properties);
             $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
             $streamwriter->write($attachment['content']);
-            //$streams[] = array('eid' => $outstream->getEid());
-
-            $process->addInput($outstream);
+            $streams[] = $outstream;
         }
 
         return $streams;
