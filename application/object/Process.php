@@ -294,33 +294,6 @@ class Process extends \Flexio\Object\Base
         return $this->properties['process_info'];
     }
 
-    public function setParams(array $params) : \Flexio\Object\Process
-    {
-        // TODO: these values used to be stored in a separate field from
-        // the input called input_params; however, now, the input is stored
-        // as a single object, so this should be added to that
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-
-/*
-        // TODO: make sure the params are a set of key/value pairs;
-        // we have params coming in from the api that need to be
-        // verified so that template variable replacement doesn't
-        // choke downstream
-        if (count($params) === 0)
-            return $this;
-
-        // make sure the params are key/value pairs
-        if (\Flexio\Base\Util::isAssociativeArray($params) === false)
-            return $this;
-
-        // add on the new input
-        $input_params = json_encode($params);
-        $this->getModel()->process->set($this->getEid(), array('input_params' => $input_params));
-
-        return $this;
-*/
-    }
-
     public function getParams() // TODO: add return type
     {
         // TODO: these values used to be stored in a separate field from
