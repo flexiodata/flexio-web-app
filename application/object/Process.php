@@ -688,24 +688,6 @@ class Process extends \Flexio\Object\Base
         if ($status !== \Model::PROCESS_STATUS_RUNNING)
             return; // nothing to do, but we're still ok
 
-        // TODO: experimental; set task variables from the process variable list;
-        // replace task info here so that each task has access to updated variables
-        // from the previous step; right now, since the setParams() is on the Task
-        // object (which is an array of individual steps), we have to take the task
-        // step supplied in this step, and wrap it in an array, then unwrap it
-        // after parameterization in order to use the Task object function; perhaps
-        // parameterization should be on the base job object?
-
-        // replace the task variables with the environment values;
-        $variables = $context->getEnv();
-        if (count($variables) > 0)
-        {
-            $task_wrapper = \Flexio\Object\Task::create()->push($task);
-            $updated_task = $task_wrapper->setParams($variables)->get();
-            if ($updated_task !== false && count($updated_task) > 0)
-                $task = $updated_task[0];
-        }
-
         // create the job with the task
         try
         {
