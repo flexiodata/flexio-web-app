@@ -404,9 +404,6 @@ class Api
             case 'GET /processes'                      : return '\Flexio\Api\Process::listall';
             case 'POS /processes/:eid'                 : return '\Flexio\Api\Process::set';
             case 'GET /processes/:eid'                 : return '\Flexio\Api\Process::get';
-            case 'POS /processes/:eid/input'           : return '\Flexio\Api\Process::addInput';
-            case 'GET /processes/:eid/input'           : return '\Flexio\Api\Process::getInput';
-            case 'GET /processes/:eid/output'          : return '\Flexio\Api\Process::getOutput';
             case 'GET /processes/:eid/tasks/:eid/input/info'  : return '\Flexio\Api\Process::getTaskInputInfo';
             case 'GET /processes/:eid/tasks/:eid/output/info' : return '\Flexio\Api\Process::getTaskOutputInfo';
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
