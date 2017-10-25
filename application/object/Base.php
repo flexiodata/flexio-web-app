@@ -265,7 +265,7 @@ class Base implements IObject
         // note: like the status, read the rights fresh everytime to make
         // sure we have the most current information
 
-        // if the user is the owner, allow to do anything;
+        // if the user is the owner, allow them to do anything;
         // TODO: if the user interface ever allows rights to be limited
         // for the owner, this needs to be removed; right now, the UI allows
         // the owner to do everything, so this is an optimization
