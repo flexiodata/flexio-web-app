@@ -148,7 +148,7 @@ class Right
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $this->getParams();
+        $validated_params = $validator->getParams();
         $right_eid = $validated_params['eid'];
         $actions = $validated_params['actions'];
 
@@ -184,7 +184,7 @@ class Right
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $this->getParams();
+        $validated_params = $validator->getParams();
         $right_eid = $validated_params['eid'];
 
         // make sure we're allowed to modify the rights
@@ -226,7 +226,7 @@ class Right
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $this->getParams();
+        $validated_params = $validator->getParams();
         $right_eid = $validated_params['eid'];
 
         // make sure we're allowed to modify the rights
@@ -258,7 +258,7 @@ class Right
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $this->getParams();
+        $validated_params = $validator->getParams();
         $user_eid = $requesting_user_eid;
 
         // build the filter for the rights we want to get
