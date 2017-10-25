@@ -19,7 +19,6 @@ namespace Flexio\Jobs;
 interface IJob
 {
     public static function create(array $properties = null);
-    public function getType() : string;
     public function getProperties() : array;
     public function run(\Flexio\Object\Context &$context);
 }

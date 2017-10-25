@@ -153,9 +153,6 @@ class System
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-var_export($requesting_user_eid);
-die;
-
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user === false)

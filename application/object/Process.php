@@ -391,7 +391,7 @@ class Process extends \Flexio\Object\Base
         $input_context = \Flexio\Object\Context::create();
         $output_context = \Flexio\Object\Context::create();
 
-        // get the suprocesses
+        // get the subprocesses
         $process_info = $this->get();
         $subprocesses = $process_info['subprocesses'];
         $subprocess_count = count($subprocesses);
@@ -547,7 +547,7 @@ class Process extends \Flexio\Object\Base
         $current_input = $current_process_properties['input'];
         $context = \Flexio\Object\Context::fromString($current_input);
 
-        // needs to be reworked because context object now stores env and params seperately
+        // needs to be reworked because context object now stores env and params separately
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getInput()->getParams();
         $variables = array_merge($user_variables, $environment_variables);

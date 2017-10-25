@@ -16,22 +16,22 @@
     id: 'quick-start',
     icon: 'launch',
     label: 'Quick Start',
-    href: 'https://www.flex.io/docs/getting-started'
+    href: '/docs/getting-started'
   },{
     id: 'api-docs',
     icon: 'help',
     label: 'API Docs',
-    href: 'https://www.flex.io/docs/api'
+    href: '/docs/api'
   },{
     id: 'command-bar-docs',
     icon: 'help',
     label: 'Docs',
-    href: 'https://www.flex.io/docs/web-app/#command-bar-operations'
+    href: '/docs/web-app/#command-bar-operations'
   },{
     id: 'templates',
     icon: 'now_widgets',
     label: 'Templates',
-    href: 'https://www.flex.io/templates'
+    href: '/templates'
   },{
     id: 'help',
     icon: 'chat',
