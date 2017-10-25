@@ -108,7 +108,7 @@ class Request
 
 class Api
 {
-    public static function request(\Flexio\System\FrameworkRequest $server_request, array $combined_params, array $query_params, array $post_params, bool $echo = true)
+    public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params, bool $echo = true)
     {
         // get the method
         $method = $server_request->getMethod();
