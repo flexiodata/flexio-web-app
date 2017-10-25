@@ -335,9 +335,17 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // parse the content and set the stream info
-        $php_stream_handle = fopen('php://input', 'rb');
-        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
-         \Flexio\Object\Process::addProcessInputFromStream($php_stream_handle, $post_content_type, $process);
+        //$php_stream_handle = fopen('php://input', 'rb');
+        //$post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+        // \Flexio\Object\Process::addProcessInputFromStream($php_stream_handle, $post_content_type, $process);
+
+
+        // TODO: for now, pass on the params untouched; we'll have to handle different content
+        // types based on the header in the "addProcessInputFromStream" function; for now,
+        // we can get the values directly from the parsed json from the post request params
+        $process->setParams($params);
+
+
 
          // run the process and get the output
         $process->run($background);

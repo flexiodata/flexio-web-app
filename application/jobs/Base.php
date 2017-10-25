@@ -20,62 +20,23 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class Base implements \Flexio\Jobs\IJob
 {
-    // basic job template
-    const MIME_TYPE = 'flexio';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio",
-        "params": {
-        }
-    }
-EOD;
-
-    // job properties
-    private $type;
-
     // properties for derived classes; these the job parameters
     protected $properties;
 
     public function __construct()
     {
+        $properties = array();
     }
 
     public static function create(array $properties = null) : \Flexio\Jobs\Base
     {
         $object = new static();
 
-        // set the type
-        $object->type = static::MIME_TYPE;
-
-        // set the default properties
-        $object->properties = json_decode($object::TEMPLATE,true);
-
         // if properties are specified, set them
         if (isset($properties))
-        {
-            // if the properties are set, make sure the input type matches
-            if (!isset($properties['type']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
-
-            if ($properties['type'] !== $object->getType())
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
-
-            // TODO: temporarily disable
-
-            // make sure the properties are valid
-            //$validator = \Flexio\Base\ValidatorSchema::check($object->properties, $object::SCHEMA);
-            //if ($validator->hasErrors())
-            //    return false;
-
             $object->properties = $properties;
-        }
 
         return $object;
-    }
-
-    public function getType() : string
-    {
-        return $this->type;
     }
 
     public function getProperties() : array
@@ -85,23 +46,23 @@ EOD;
 
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->replaceParameterTokens($context);
-    }
-
-    public function replaceParameterTokens($context)
-    {
-        $this->replaceParameterTokensRecurse($context, $this->properties);
-    }
-
-    private function replaceParameterTokensRecurse($context, &$value)
-    {
         $variables = $context->getEnv();
+        $this->replaceParameterTokens($variables);
+    }
 
+    public function replaceParameterTokens(array $variables) : \Flexio\Jobs\Base
+    {
+        $this->replaceParameterTokensRecurse($variables, $this->properties);
+        return $this;
+    }
+
+    private function replaceParameterTokensRecurse($variables, &$value)
+    {
         if (is_array($value))
         {
             foreach ($value as $k => &$v)
             {
-                $this->replaceParameterTokensRecurse($context, $v);
+                $this->replaceParameterTokensRecurse($variables, $v);
             }
         }
          else
@@ -111,7 +72,7 @@ EOD;
                 $re = '/\$\{.*?}/';
 
                 preg_match_all($re, $value, $matches, PREG_OFFSET_CAPTURE, 0);
-                
+
                 if (isset($matches[0]))
                 {
                     $differential = 0; // keep track of the offsets when we replace due to the difference of the token lengths vs value length
@@ -130,6 +91,16 @@ EOD;
                             $replacement = $variables[$varname];
                         }
 
+                        // use true/false text for boolean value replacements in a string
+                        if ($replacement === true)
+                            $replacement = 'true';
+                        if ($replacement === false)
+                            $replacement = 'false';
+
+                        // TODO: need to handle replacements of non-string variable types
+                        if (!is_string($replacement))
+                            continue;
+
                         $value = substr_replace($value, $replacement, $offset + $differential, $token_len);
                         $differential += (strlen($replacement) - $token_len);
                     }
@@ -137,5 +108,4 @@ EOD;
             }
         }
     }
-
 }
