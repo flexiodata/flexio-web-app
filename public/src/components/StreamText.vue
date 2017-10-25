@@ -117,6 +117,10 @@
           }
            else
           {
+            // force string
+            if (!_.isString(str))
+              str = ''+str
+
             // since we're outputting raw text in a <pre> tag,
             // I don't think we want to escape the text here
             //str = _.escape(str)
