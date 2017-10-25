@@ -46,23 +46,24 @@ class Base implements \Flexio\Jobs\IJob
 
     public function run(\Flexio\Object\Context &$context)
     {
-        $variables = $context->getEnv();
-        $this->replaceParameterTokens($variables);
+        $this->replaceParameterTokens($context);
     }
 
-    public function replaceParameterTokens(array $variables) : \Flexio\Jobs\Base
+    public function replaceParameterTokens($context) : \Flexio\Jobs\Base
     {
-        $this->replaceParameterTokensRecurse($variables, $this->properties);
+        $this->replaceParameterTokensRecurse($context, $this->properties);
         return $this;
     }
 
-    private function replaceParameterTokensRecurse($variables, &$value)
+    private function replaceParameterTokensRecurse($context, &$value)
     {
+        $variables = $context->getEnv();
+
         if (is_array($value))
         {
             foreach ($value as $k => &$v)
             {
-                $this->replaceParameterTokensRecurse($variables, $v);
+                $this->replaceParameterTokensRecurse($context, $v);
             }
         }
          else
