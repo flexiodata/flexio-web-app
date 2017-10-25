@@ -376,8 +376,11 @@ class Process
         exit(0);
     }
 
-    public static function cancel(array $params, string $requesting_user_eid = null) : array
+    public static function cancel(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
