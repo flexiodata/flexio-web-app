@@ -125,7 +125,17 @@ EOD;
                         $varname = substr($token, 2, -1);  // turn '${myvar}' into 'myvar'
                         $replacement = '';
 
-                        if (isset($variables[$varname]))
+                        if ($varname == 'stdin')
+                        {
+                            $replacement = '';
+                            $stream = $context->getStdin();
+                            $streamreader = \Flexio\Object\StreamReader::create($stream);
+                            while (($chunk = $streamreader->read()) !== false)
+                            {
+                                $replacement .= $chunk;
+                            }
+                        }
+                         else if (isset($variables[$varname]))
                         {
                             $replacement = $variables[$varname];
                         }
