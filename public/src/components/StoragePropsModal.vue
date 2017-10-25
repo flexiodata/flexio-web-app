@@ -39,7 +39,7 @@
 
     <div v-if="is_open">
       <service-list v-show="!has_connection"
-        filter-items="services"
+        filter-items="storage"
         @item-activate="createPendingConnection"
       ></service-list>
       <div v-if="has_connection">
