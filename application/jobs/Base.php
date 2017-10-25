@@ -20,62 +20,23 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class Base implements \Flexio\Jobs\IJob
 {
-    // basic job template
-    const MIME_TYPE = 'flexio';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio",
-        "params": {
-        }
-    }
-EOD;
-
-    // job properties
-    private $type;
-
     // properties for derived classes; these the job parameters
     protected $properties;
 
     public function __construct()
     {
+        $properties = array();
     }
 
     public static function create(array $properties = null) : \Flexio\Jobs\Base
     {
         $object = new static();
 
-        // set the type
-        $object->type = static::MIME_TYPE;
-
-        // set the default properties
-        $object->properties = json_decode($object::TEMPLATE,true);
-
         // if properties are specified, set them
         if (isset($properties))
-        {
-            // if the properties are set, make sure the input type matches
-            if (!isset($properties['type']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
-
-            if ($properties['type'] !== $object->getType())
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
-
-            // TODO: temporarily disable
-
-            // make sure the properties are valid
-            //$validator = \Flexio\Base\ValidatorSchema::check($object->properties, $object::SCHEMA);
-            //if ($validator->hasErrors())
-            //    return false;
-
             $object->properties = $properties;
-        }
 
         return $object;
-    }
-
-    public function getType() : string
-    {
-        return $this->type;
     }
 
     public function getProperties() : array
@@ -111,7 +72,7 @@ EOD;
                 $re = '/\$\{.*?}/';
 
                 preg_match_all($re, $value, $matches, PREG_OFFSET_CAPTURE, 0);
-                
+
                 if (isset($matches[0]))
                 {
                     $differential = 0; // keep track of the offsets when we replace due to the difference of the token lengths vs value length
@@ -137,5 +98,4 @@ EOD;
             }
         }
     }
-
 }
