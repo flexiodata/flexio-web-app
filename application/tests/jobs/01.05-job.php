@@ -23,7 +23,7 @@ class Test
         $model = TestUtil::getModel();
 
 
-        // TEST: Task::setParams(); variable serialization with single variable
+        // TEST: \Flexio\Jobs\Base::replaceParameterTokens(); variable serialization with single variable
 
         // BEGIN TEST
         $properties = json_decode('
@@ -366,7 +366,7 @@ class Test
 
 
 
-        // TEST: Task::setParams(); variable serialization with variables of different types
+        // TEST: \Flexio\Jobs\Base::replaceParameterTokens(); variable serialization with variables of different types
 
         // BEGIN TEST
         $properties = json_decode('
@@ -676,7 +676,7 @@ class Test
 
 
 
-        // TEST: Task::setParams(); variable serialization with multiple variables
+        // \Flexio\Jobs\Base::replaceParameterTokens(); variable serialization with multiple variables
 
         // BEGIN TEST
         $properties = json_decode('
@@ -824,7 +824,7 @@ class Test
 
 
 
-        // TEST: Task::setParams(); variable serialization with multiple variables at varying object depths
+        // \Flexio\Jobs\Base::replaceParameterTokens(); variable serialization with multiple variables at varying object depths
 
         // BEGIN TEST
         $properties = json_decode('
