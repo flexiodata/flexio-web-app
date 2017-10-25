@@ -46,23 +46,23 @@ class Base implements \Flexio\Jobs\IJob
 
     public function run(\Flexio\Object\Context &$context)
     {
-        $this->replaceParameterTokens($context);
-    }
-
-    public function replaceParameterTokens($context)
-    {
-        $this->replaceParameterTokensRecurse($context, $this->properties);
-    }
-
-    private function replaceParameterTokensRecurse($context, &$value)
-    {
         $variables = $context->getEnv();
+        $this->replaceParameterTokens($variables);
+    }
 
+    public function replaceParameterTokens(array $variables) : \Flexio\Jobs\Base
+    {
+        $this->replaceParameterTokensRecurse($variables, $this->properties);
+        return $this;
+    }
+
+    private function replaceParameterTokensRecurse($variables, &$value)
+    {
         if (is_array($value))
         {
             foreach ($value as $k => &$v)
             {
-                $this->replaceParameterTokensRecurse($context, $v);
+                $this->replaceParameterTokensRecurse($variables, $v);
             }
         }
          else
@@ -90,6 +90,16 @@ class Base implements \Flexio\Jobs\IJob
                         {
                             $replacement = $variables[$varname];
                         }
+
+                        // use true/false text for boolean value replacements in a string
+                        if ($replacement === true)
+                            $replacement = 'true';
+                        if ($replacement === false)
+                            $replacement = 'false';
+
+                        // TODO: need to handle replacements of non-string variable types
+                        if (!is_string($replacement))
+                            continue;
 
                         $value = substr_replace($value, $replacement, $offset + $differential, $token_len);
                         $differential += (strlen($replacement) - $token_len);
