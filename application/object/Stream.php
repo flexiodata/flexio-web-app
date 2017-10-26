@@ -302,12 +302,6 @@ class Stream extends \Flexio\Object\Base
         $dest->set($properties);
     }
 
-
-    public function copyData(string $where, string $order, \Flexio\Object\Stream $outstream)
-    {
-        $where = \Flexio\Base\ExprTranslatorPostgres::translate($where, $structure);
-    }
-
     public function getService()
     {
         $stream_info = $this->get();
