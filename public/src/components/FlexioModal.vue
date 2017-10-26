@@ -2,18 +2,17 @@
   <transition name="flexio-modal">
     <div class="flexio-modal-mask" @click="maskClick">
       <div class="flexio-modal-wrapper">
-        <div class="flexio-modal-container">
-
-          <div class="flexio-modal-header cf" v-if="showHeader">
+        <div class="flex flex-column flexio-modal-container" :class="containerCls" :style="containerStyle">
+          <div class="flex-none cf flexio-modal-header" v-if="showHeader">
             <div class="pointer f3 lh-solid b child black-30 hover-black-60 fr" @click="cancelClick" v-if="showCloseButton">&times;</div>
             <slot name="header"><div class="f4" v-if="title.length > 0">{{title}}</div></slot>
           </div>
 
-          <div class="flexio-modal-body">
+          <div class="flex-fill flexio-modal-body">
             <slot></slot>
           </div>
 
-          <div class="flexio-modal-footer" v-if="showFooter">
+          <div class="flex-none flexio-modal-footer" v-if="showFooter">
             <slot name="footer">
               <div class="flex flex-row">
                 <div class="flex-fill">&nbsp;</div>
@@ -36,6 +35,14 @@
       'title': {
         type: String,
         default: 'Modal Title'
+      },
+      'container-cls': {
+        type: String,
+        default: ''
+      },
+      'container-style': {
+        type: String,
+        default: ''
       },
       'cancel-cls': {
         type: String,
@@ -118,19 +125,18 @@
   }
 
   .flexio-modal-body {
-    padding: 1.5rem;
-    max-height: 75vh;
+    padding: 1rem 1.5rem;
     overflow-y: auto;
   }
 
   .flexio-modal-header {
-    padding: 1.25rem 1.5rem;
-    padding-bottom: 0;
+    padding: 1.25rem 1.5rem 0;
+    margin-bottom: 1rem;
   }
 
   .flexio-modal-footer {
-    padding: 1rem;
-    padding-top: 0;
+    padding: 0 1rem 1rem;
+    margin-top: 1rem;
   }
 
   /*

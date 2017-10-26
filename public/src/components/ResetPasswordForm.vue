@@ -57,7 +57,7 @@
         >
         <span class="f8 dark-red" v-show="has_confirm_password_error">{{confirm_password_error}}</span>
       </div>
-      <div class="mv3">
+      <div class="mt3">
         <btn btn-lg btn-primary :disabled="is_submitting" @click="tryChangePassword" class="b ttu w-100">
           <span v-if="is_submitting">Submitting...</span>
           <span v-else>Change password</span>

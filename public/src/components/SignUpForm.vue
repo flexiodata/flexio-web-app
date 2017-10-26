@@ -96,14 +96,14 @@
           <span v-if="is_submitting">{{label_submitting}}</span>
           <span v-else>Sign up</span>
         </btn>
-        <span class="f8 fw6">
+        <span class="f8">
           By signing up, you agree to Flex.io's
           <a class="link underline-hover blue" href="/terms" target="_blank" rel="noopener noreferrer">Terms</a> and
           <a class="link underline-hover blue" href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
         </span>
       </div>
     </div>
-    <div class="tc f5 fw6 mt4 mb3">
+    <div class="tc f5 fw6 mt4">
       Already have an account? <router-link :to="signin_link" class="link dib blue underline-hover db">Sign in</router-link>
     </div>
   </form>

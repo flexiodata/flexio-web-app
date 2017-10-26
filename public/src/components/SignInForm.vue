@@ -24,7 +24,7 @@
         </btn>
       </div>
     </div>
-    <div class="tc f5 fw6 mv3">
+    <div class="tc f5 fw6 mt3">
       New to Flex.io?
       <router-link :to="signup_link" class="link dib blue underline-hover db">Sign up</router-link>
     </div>
