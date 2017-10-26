@@ -1,5 +1,5 @@
 <template>
-  <div class="pa4">
+  <div class="pa4 overflow-y-auto">
     <div class="flex flex-row flex-wrap mw8 center">
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Common Modals</div>
       <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openAlertModal">Alert Modal</btn></div>
@@ -20,6 +20,8 @@
       <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeShareModal">Pipe Share Modal</btn></div>
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Other Modals</div>
       <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openTallModal">Tall Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openFlexioModal">Flexio Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openFlexioSignUpModal">Flexio Sign Up Modal</btn></div>
     </div>
 
     <alert-modal
@@ -114,6 +116,18 @@
       </div>
     </ui-modal>
 
+    <flexio-modal
+      @cancel="show_flexio_modal = false"
+      v-if="show_flexio_modal"
+    ></flexio-modal>
+
+    <flexio-modal
+      @cancel="show_flexio_signup_modal = false"
+      v-if="show_flexio_signup_modal"
+    >
+      <sign-up-form />
+    </flexio-modal>
+
   </div>
 </template>
 
@@ -130,6 +144,8 @@
   import PipeShareModal from './PipeShareModal.vue'
   import EmailSupportModal from './EmailSupportModal.vue'
   import MemberAddModal from './MemberAddModal.vue'
+  import FlexioModal from './FlexioModal.vue'
+  import SignUpForm from './SignUpForm.vue'
 
   var exampleProject = () => {
     return {
@@ -165,20 +181,25 @@
       PipeScheduleModal,
       PipeShareModal,
       EmailSupportModal,
-      MemberAddModal
+      MemberAddModal,
+      FlexioModal,
+      SignUpForm
     },
     data() {
       return {
         show_alert_modal: false,
         show_confirm_modal: false,
         show_project_props_modal: false,
+        show_project_delete_modal: false,
         show_connection_props_modal: false,
         show_pipe_props_modal: false,
         show_pipe_schedule_modal: false,
         show_pipe_share_modal: false,
         show_email_support_modal: false,
         show_member_add_modal: false,
-        show_tall_modal: false
+        show_tall_modal: false,
+        show_flexio_modal: false,
+        show_flexio_signup_modal: false
       }
     },
     methods: {
@@ -250,6 +271,14 @@
       openTallModal() {
         this.show_tall_modal = true
         this.$nextTick(() => { this.$refs['modal-tall'].open() })
+      },
+
+      openFlexioModal() {
+        this.show_flexio_modal = true
+      },
+
+      openFlexioSignUpModal() {
+        this.show_flexio_signup_modal = true
       }
     }
   }
