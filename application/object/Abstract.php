@@ -61,4 +61,5 @@ interface IStream
     public function getStructure();
     public function getFileInfo();
     public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */);
+    public function copyOver(\Flexio\Object\IStream $dest);
 }
