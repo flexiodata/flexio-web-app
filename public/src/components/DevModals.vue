@@ -127,12 +127,14 @@
 
     <flexio-modal
       title="Create Your Free Account"
-      container-style="width: 28rem"
+      container-cls="relative"
+      container-style="width: 32rem"
       :show-header="false"
       :show-footer="false"
       @cancel="show_flexio_signup_modal = false"
       v-if="show_flexio_signup_modal"
     >
+      <div class="pointer f3 lh-solid b child black-30 hover-black-60 mt2 mr3 absolute top-0 right-0" @click="show_flexio_signup_modal = false">&times;</div>
       <sign-up-form class="pv3 ph2" />
     </flexio-modal>
 

@@ -2,7 +2,7 @@
   <transition name="flexio-modal">
     <div class="flexio-modal-mask" @click="maskClick">
       <div class="flexio-modal-wrapper">
-        <div class="flex flex-column flexio-modal-container" :class="containerCls" :style="containerStyle">
+        <div class="flex flex-column flexio-modal-container" :class="containerCls" :style="containerStyle"  @click.stop>
           <div class="flex-none cf flexio-modal-header" v-if="showHeader">
             <div class="pointer f3 lh-solid b child black-30 hover-black-60 fr" @click="cancelClick" v-if="showCloseButton">&times;</div>
             <slot name="header"><div class="f4" v-if="title.length > 0">{{title}}</div></slot>
