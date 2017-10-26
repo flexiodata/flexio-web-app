@@ -113,6 +113,11 @@ class User
                 )
             );
 
+            // create a default api key for the user
+            $token_properties = array();
+            $token_properties['user_eid'] = $user->getEid();
+            \Flexio\Object\Token::create($token_properties);
+
             // if appropriate, send an email
             if ($send_email === true)
             {
@@ -419,7 +424,7 @@ class User
         if ($user->getStatus() != \Model::STATUS_PENDING)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('This user is already activated'));
 
-        if ($this->getVerifyCode() != $code)
+        if ($user->getVerifyCode() != $code)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('The activation credentials do not match'));
 
         if ($user->set(array('eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
@@ -451,7 +456,7 @@ class User
         // TODO: if the verify code is a set, but blank, should we regenerate
         // the verification code?
 
-        $verify_code = $this->getVerifyCode();
+        $verify_code = $user->getVerifyCode();
         if (!isset($verify_code))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing verification code'));
 

@@ -324,14 +324,12 @@ class Pipe
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true),
-                'stream' => array('type' => 'string', 'required' => false)
+                'eid' => array('type' => 'identifier', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
         $pipe_identifier = $validated_params['eid'];
-        $stream_to_echo = $validated_params['stream'] ?? false;
         $background = false;
 
         // load the object

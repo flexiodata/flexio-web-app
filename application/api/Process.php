@@ -315,14 +315,12 @@ class Process
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true),
-                'stream' => array('type' => 'string', 'required' => false)
+                'eid' => array('type' => 'identifier', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
         $process_identifier = $validated_params['eid'];
-        $stream_to_echo = $validated_params['stream'] ?? false;
         $background = false;
 
         // load the object
@@ -376,8 +374,11 @@ class Process
         exit(0);
     }
 
-    public static function cancel(array $params, string $requesting_user_eid = null) : array
+    public static function cancel(\Flexio\Api\Request $request) : array
     {
+        $params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
         $validator = \Flexio\Base\Validator::create();
         if (($params = $validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true)
