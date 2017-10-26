@@ -33,10 +33,11 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write("");
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->read();
         $reader->close();
         $expected = "";
@@ -48,10 +49,11 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write("A");
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->read();
         $reader->close();
         $expected = "A";
@@ -63,10 +65,11 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->read();
         $reader->close();
         $expected = "abcdefg";
@@ -86,11 +89,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('[null]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null}',true);
@@ -106,11 +110,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : null}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null}',true);
@@ -126,11 +131,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('[""]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : ""}',true);
@@ -146,11 +152,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : ""}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : ""}',true);
@@ -166,11 +173,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f2" : ""}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null}',true);
@@ -186,11 +194,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('["a"]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a"}',true);
@@ -206,11 +215,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "a"}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a"}',true);
@@ -226,11 +236,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('["a","b","c"]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a"}',true);
@@ -246,11 +257,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('[]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null}',true);
@@ -266,11 +278,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{"f2" : "a"}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null}',true);
@@ -291,11 +304,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('[null,null]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null, "f2": null}',true);
@@ -312,11 +326,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : null, "f2": null}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null, "f2": null}',true);
@@ -333,11 +348,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('["",""]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "", "f2": ""}',true);
@@ -354,11 +370,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "", "f2": ""}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "", "f2": ""}',true);
@@ -375,11 +392,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('[null,"a"]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null, "f2": "a"}',true);
@@ -396,11 +414,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : null, "f2": "a"}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null, "f2": "a"}',true);
@@ -417,11 +436,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('["a",null]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a", "f2": null}',true);
@@ -438,11 +458,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "a", "f2": null}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a", "f2": null}',true);
@@ -459,11 +480,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('["a","b"]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a", "f2": "b"}',true);
@@ -480,11 +502,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "a", "f2": "b"}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a", "f2": "b"}',true);
@@ -501,11 +524,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('["a","b","c"]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a", "f2": "b"}',true);
@@ -522,11 +546,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('["a"]',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a", "f2": null}',true);
@@ -543,11 +568,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "a", "f3": "b"}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a", "f2": null}',true);
@@ -564,11 +590,12 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('{ "f2" : "a", "f3": "b"}',true);
         $writer->write($data);
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null, "f2": "a"}',true);
@@ -588,11 +615,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('[null]',true));
         $writer->write(json_decode('[null]',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = array($reader->readRow(), $reader->readRow());
         $reader->close();
         $expected = json_decode('[{ "f1" : null}, {"f1": null}]',true);
@@ -608,11 +636,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = array($reader->readRow(), $reader->readRow());
         $reader->close();
         $expected = json_decode('[{ "f1" : null}, {"f1": null}]',true);
@@ -628,11 +657,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('[""]',true));
         $writer->write(json_decode('[""]',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = array($reader->readRow(), $reader->readRow());
         $reader->close();
         $expected = json_decode('[{ "f1" : ""}, {"f1": ""}]',true);
@@ -648,11 +678,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : ""}',true));
         $writer->write(json_decode('{ "f1" : ""}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = array($reader->readRow(), $reader->readRow());
         $reader->close();
         $expected = json_decode('[{ "f1" : ""}, {"f1": ""}]',true);
@@ -668,11 +699,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('["a"]',true));
         $writer->write(json_decode('[null]',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = array($reader->readRow(), $reader->readRow());
         $reader->close();
         $expected = json_decode('[{ "f1" : "a"}, {"f1": null}]',true);
@@ -688,11 +720,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "a"}',true));
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = array($reader->readRow(), $reader->readRow());
         $reader->close();
         $expected = json_decode('[{ "f1" : "a"}, {"f1": null}]',true);
@@ -708,11 +741,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('[null]',true));
         $writer->write(json_decode('["a"]',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = array($reader->readRow(), $reader->readRow());
         $reader->close();
         $expected = json_decode('[{ "f1" : null}, {"f1": "a"}]',true);
@@ -728,11 +762,12 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->write(json_decode('{ "f1" : "a"}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = array($reader->readRow(), $reader->readRow());
         $reader->close();
         $expected = json_decode('[{ "f1" : null}, {"f1": "a"}]',true);
@@ -752,10 +787,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null}',true);
@@ -771,10 +807,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : ""}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : ""}',true);
@@ -790,10 +827,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\t"}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "\t"}',true);
@@ -809,10 +847,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\r"}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "\r"}',true);
@@ -828,10 +867,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\n"}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "\n"}',true);
@@ -847,10 +887,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\u0000"}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : ""}',true);
@@ -866,10 +907,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\'"}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "\'"}',true);
@@ -885,10 +927,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\""}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "\""}',true);
@@ -904,10 +947,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "("}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "("}',true);
@@ -923,10 +967,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : ")"}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : ")"}',true);
@@ -942,10 +987,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "/"}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "/"}',true);
@@ -961,10 +1007,11 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\\\\"}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "\\\\"}',true);
@@ -984,10 +1031,11 @@ class Test
             { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null}',true);
@@ -1003,10 +1051,11 @@ class Test
             { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : 0}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "0"}',true);
@@ -1022,10 +1071,11 @@ class Test
             { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : 1}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "1"}',true);
@@ -1041,10 +1091,11 @@ class Test
             { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : -1}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "-1"}',true);
@@ -1064,10 +1115,11 @@ class Test
             { "name": "f1", "type": "boolean"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null}',true);
@@ -1083,10 +1135,11 @@ class Test
             { "name": "f1", "type": "boolean"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : true}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : true}',true);
@@ -1102,10 +1155,11 @@ class Test
             { "name": "f1", "type": "boolean"}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : false}',true));
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : false}',true);

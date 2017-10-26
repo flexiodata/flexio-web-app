@@ -16,6 +16,57 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
+class StreamMemoryReader implements \Flexio\Object\IStreamReader
+{
+    public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryReader
+    {
+        $object = new static;
+        return $object;
+    }
+
+    public function read($length = 1024)
+    {
+    }
+
+    public function readRow()
+    {
+    }
+
+    public function getRows(int $offset, int $limit)
+    {
+    }
+
+    public function getContent(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */)
+    {
+    }
+
+    public function close()
+    {
+    }
+}
+
+class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
+{
+    public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryWriter
+    {
+        $object = new static;
+        return $object;
+    }
+
+    public function write($data)
+    {
+    }
+
+    public function getBytesWritten()
+    {
+    }
+
+    public function close()
+    {
+    }
+}
+
+
 class StreamReader implements \Flexio\Object\IStreamReader
 {
     private $stream_info = false;
@@ -26,7 +77,7 @@ class StreamReader implements \Flexio\Object\IStreamReader
         $this->close();
     }
 
-    public static function create($stream) : \Flexio\Object\StreamReader
+    public static function create(\Flexio\Object\Stream $stream) : \Flexio\Object\StreamReader
     {
         // TODO: StreamReader is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service
@@ -37,19 +88,13 @@ class StreamReader implements \Flexio\Object\IStreamReader
         // and structure for the source
 
         $object = new static;
+        $stream_properties = $stream->get();
 
         $object->stream_info = array();
-        if (($stream instanceof \Flexio\Object\IStream))
-            $object->stream_info = $stream->get();
-
-
-        if (is_array($stream))
-        {
-            $object->stream_info['connection_eid'] = $stream['connection_eid'] ?? false;
-            $object->stream_info['path'] = $stream['path'] ?? false;
-            $object->stream_info['mime_type'] = $stream['mime_type'] ?? false;
-            $object->stream_info['structure'] = $stream['structure'] ?? false;
-        }
+        $object->stream_info['connection_eid'] = $stream_properties['connection_eid'] ?? false;
+        $object->stream_info['path'] = $stream_properties['path'] ?? false;
+        $object->stream_info['mime_type'] = $stream_properties['mime_type'] ?? false;
+        $object->stream_info['structure'] = $stream_properties['structure'] ?? false;
 
         // create an appropriate reader based on the mime type
         $mime_type = $object->stream_info['mime_type'];

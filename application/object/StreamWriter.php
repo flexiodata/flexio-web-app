@@ -26,7 +26,7 @@ class StreamWriter implements \Flexio\Object\IStreamWriter
         $this->close();
     }
 
-    public static function create($stream, $datastore_mode = true) : \Flexio\Object\StreamWriter
+    public static function create(\Flexio\Object\Stream $stream, bool $datastore_mode = true) : \Flexio\Object\StreamWriter
     {
         // TODO: StreamWriter is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service
@@ -37,18 +37,13 @@ class StreamWriter implements \Flexio\Object\IStreamWriter
         // and structure for the source
 
         $object = new static;
+        $stream_properties = $stream->get();
 
         $stream_info = array();
-        if (($stream instanceof \Flexio\Object\IStream))
-            $stream_info = $stream->get();
-
-        if (is_array($stream))
-        {
-            $stream_info['connection_eid'] = $stream['connection_eid'] ?? false;
-            $stream_info['path'] = $stream['path'] ?? false;
-            $stream_info['mime_type'] = $stream['mime_type'] ?? false;
-            $stream_info['structure'] = $stream['structure'] ?? false;
-        }
+        $stream_info['connection_eid'] = $stream_properties['connection_eid'] ?? false;
+        $stream_info['path'] = $stream_properties['path'] ?? false;
+        $stream_info['mime_type'] = $stream_properties['mime_type'] ?? false;
+        $stream_info['structure'] = $stream_properties['structure'] ?? false;
 
         // write out data using datastore conventions by default (included a
         // row identifier and use store_name, a safe fieldname convention, for

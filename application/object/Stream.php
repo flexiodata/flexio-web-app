@@ -216,6 +216,16 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
         $dest->set($properties);
     }
 
+    public function getReader() : \Flexio\Object\IStreamReader
+    {
+        return \Flexio\Object\StreamReader::create($this);
+    }
+
+    public function getWriter() : \Flexio\Object\IStreamWriter
+    {
+        return \Flexio\Object\StreamWriter::create($this, true);
+    }
+
     private function isCached() : bool
     {
         if ($this->properties === false)

@@ -194,5 +194,15 @@ class StreamMemory implements \Flexio\Object\IStream
         unset($properties['updated']);
         $dest->set($properties);
     }
+
+    public function getReader() : \Flexio\Object\IStreamReader
+    {
+        return \Flexio\Object\StreamMemoryReader::create($this);
+    }
+
+    public function getWriter() : \Flexio\Object\IStreamWriter
+    {
+        return \Flexio\Object\StreamMemoryWriter::create($this, true);
+    }
 }
 

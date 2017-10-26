@@ -62,6 +62,8 @@ interface IStream
     public function getFileInfo();
     public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */);
     public function copyOver(\Flexio\Object\IStream $dest);
+    public function getReader() : \Flexio\Object\IStreamReader;
+    public function getWriter() : \Flexio\Object\IStreamWriter;
 }
 
 interface IStreamReader

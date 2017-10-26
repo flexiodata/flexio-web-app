@@ -45,7 +45,8 @@ class Test
             {"name" : "char_1h", "type" : "character", "width" : 254, "scale" : 0}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('
         [
             ["1",  "A", "A", "",  "D",  "D00000", "00000D", "D00000", "00000D"],
@@ -75,7 +76,7 @@ class Test
             $writer->write($row);
         }
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $last_row = false;
         while (true)
         {
@@ -123,7 +124,8 @@ class Test
             {"name" : "num_1h", "type" : "numeric", "width" : 18, "scale" : 12}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('
         [
             [1, 1, 0,    4,  4000000000000,  0.000000000004,  4000000000000,  0.000000000004],
@@ -153,7 +155,7 @@ class Test
             $writer->write($row);
         }
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $last_row = false;
         while (true)
         {
@@ -200,7 +202,8 @@ class Test
             {"name" : "num_2h", "type" : "double", "width" : 8, "scale" : 12}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('
         [
             [1, 1, 0,     4,  4000000000000,  0.000000000004,  4000000000000,  0.000000000004],
@@ -230,7 +233,7 @@ class Test
             $writer->write($row);
         }
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $last_row = false;
         while (true)
         {
@@ -277,7 +280,8 @@ class Test
             {"name" : "num_3h", "type" : "integer", "width" : 4, "scale" : 0}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('
         [
             [1, 1, 0,     4,  400000000,  4,  400000000,  4],
@@ -307,7 +311,7 @@ class Test
             $writer->write($row);
         }
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $last_row = false;
         while (true)
         {
@@ -354,7 +358,8 @@ class Test
             {"name" : "date_1h", "type" : "date", "width" : 4, "scale" : 0}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('
         [
             ["2001-01-01", "2001-01-01", "",           "2001-01-05", "2005-01-01", "2001-01-05", "2005-01-01", "2001-01-05"],
@@ -385,7 +390,7 @@ class Test
             $writer->write($row);
         }
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $last_row = false;
         while (true)
         {
@@ -432,7 +437,8 @@ class Test
             {"name" : "date_2h", "type" : "datetime", "width" : 8, "scale" : 0}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('
         [
             ["2001-01-01 01:01:01", "2001-01-01 01:01:01", "",                    "2001-01-05 01:01:01", "2000-01-02 00:00:00", "2000-01-01 00:01:00", "2000-01-02 00:00:00", "2000-01-01 00:01:00"],
@@ -463,7 +469,7 @@ class Test
             $writer->write($row);
         }
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $last_row = false;
         while (true)
         {
@@ -510,7 +516,8 @@ class Test
             {"name" : "bool_1h", "type" : "boolean", "width" : 1, "scale" : 0}
         ]
         ',true))->get();
-        $writer = \Flexio\Object\StreamWriter::create($stream_info);
+        $stream = \Flexio\Object\Stream::create($stream_info);
+        $writer = $stream->getWriter();
         $data = json_decode('
         [
             [ true, true,  false, true,  true,  false, true,  false ],
@@ -541,7 +548,7 @@ class Test
             $writer->write($row);
         }
         $writer->close();
-        $reader = \Flexio\Object\StreamReader::create($stream_info);
+        $reader = $stream->getReader();
         $last_row = false;
         while (true)
         {
