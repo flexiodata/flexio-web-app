@@ -16,6 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
+require_once dirname(__DIR__) . '/services/Abstract.php';
+
 class StreamMemoryReader implements \Flexio\Object\IStreamReader
 {
     public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryReader
