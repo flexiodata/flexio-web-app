@@ -268,7 +268,7 @@ class Output extends \Flexio\Jobs\Base
     private function runDatabaseExport(\Flexio\Object\IStream $instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
 
         // prefix the name
         $output_info['name'] = str_replace('/','_', $output_info['name']);
@@ -307,7 +307,7 @@ class Output extends \Flexio\Jobs\Base
     private function runElasticSearchExport(\Flexio\Object\IStream $instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
 
         // prefix the name
         $output_info['name'] = str_replace('/','_', $output_info['name']);
@@ -334,7 +334,7 @@ class Output extends \Flexio\Jobs\Base
     private function runRemoteFileExport(\Flexio\Object\IStream $instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
 
         $params = array();
         $params['path'] = $output_info['name'];
@@ -360,7 +360,7 @@ class Output extends \Flexio\Jobs\Base
         $header_row = toBoolean($header_row);
 
         // get ready to read the input
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
         $filename = $output_info['name'];
 
         $spreadsheet = $service->createFile($filename);
@@ -398,7 +398,7 @@ class Output extends \Flexio\Jobs\Base
     private function runMailJetExport(\Flexio\Object\IStream $instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
         $input_structure = $instream->getStructure();
 
         // create the table

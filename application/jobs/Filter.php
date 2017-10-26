@@ -82,8 +82,8 @@ class Filter extends \Flexio\Jobs\Base
             return $outstream;
 
         // write to the output
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamreader = $instream->getReader();
+        $streamwriter = $outstream->getWriter();
 
         while (true)
         {

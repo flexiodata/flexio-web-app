@@ -87,8 +87,8 @@ class CalcField extends \Flexio\Jobs\Base
         $outstream->setStructure($output_structure);
 
         // write to the output
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamreader = $instream->getReader();
+        $streamwriter = $outstream->getWriter();
 
         while (true)
         {

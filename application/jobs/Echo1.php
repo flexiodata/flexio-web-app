@@ -21,7 +21,7 @@ class Echo1 extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
@@ -33,7 +33,7 @@ class Echo1 extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $msg = $job_definition['params']['msg'] ?? '';
 
-        $streamwriter = \Flexio\Object\StreamWriter::create($stdout);
+        $streamwriter = $stdout->getWriter();
         $streamwriter->write($msg);
     }
 

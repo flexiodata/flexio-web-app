@@ -71,10 +71,10 @@ class Merge extends \Flexio\Jobs\Base
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
 
         // write to the output
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
         foreach ($input as $instream)
         {
-            $streamreader = \Flexio\Object\StreamReader::create($instream);
+            $streamreader = $instream->getReader();
             while (true)
             {
                 $data = $streamreader->read();
@@ -107,7 +107,7 @@ class Merge extends \Flexio\Jobs\Base
         $outstream = \Flexio\Object\Stream::create($outstream_properties);
 
         // write to the output
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
 
         $row_template = array();
         foreach ($outstream_structure as $s)
@@ -116,7 +116,7 @@ class Merge extends \Flexio\Jobs\Base
         // insert the rows from each of the streams
         foreach ($input as $instream)
         {
-            $streamreader = \Flexio\Object\StreamReader::create($instream);
+            $streamreader = $instream->getReader();
             while (true)
             {
                 $row = $streamreader->readRow();

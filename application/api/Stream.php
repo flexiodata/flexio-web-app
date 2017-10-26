@@ -197,7 +197,7 @@ class Stream
         // write to the stream
         $filename = '';
         $mime_type = '';
-        $streamwriter = \Flexio\Object\StreamWriter::create($stream);
+        $streamwriter = $stream->getWriter();
         self::handleStreamUpload($validated_params, $streamwriter, $filename, $mime_type);
 
         // set the stream info

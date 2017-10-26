@@ -67,8 +67,8 @@ class Limit extends \Flexio\Jobs\Base
         $rows_to_output = ($rows > 0 ? $rows : 0);
 
         // create the reader/writer
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamreader = $instream->getReader();
+        $streamwriter = $outstream->getWriter();
 
         // read the specified number of input rows and write them out
         for ($rown = 0; $rown < $rows_to_output; ++$rown)

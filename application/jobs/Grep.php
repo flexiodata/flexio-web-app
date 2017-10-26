@@ -52,8 +52,8 @@ class Grep extends \Flexio\Jobs\Base
     {
         // input/output
         $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamreader = $instream->getReader();
+        $streamwriter = $outstream->getWriter();
 
         // get the code from the template
         $job_definition = $this->getProperties();

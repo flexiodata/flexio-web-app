@@ -145,7 +145,7 @@ class EmailSend extends \Flexio\Jobs\Base
         if (!$handle)
             return false;
 
-        $streamreader = \Flexio\Object\StreamReader::create($stream);
+        $streamreader = $stream->getReader();
         while (true)
         {
             $data = $streamreader->read();
@@ -169,7 +169,7 @@ class EmailSend extends \Flexio\Jobs\Base
         $row = $stream->getStructure()->getNames();
         fputcsv($handle, $row);
 
-        $streamreader = \Flexio\Object\StreamReader::create($stream);
+        $streamreader = $stream->getReader();
         while (true)
         {
             $data = $streamreader->readRow();

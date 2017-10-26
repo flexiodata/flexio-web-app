@@ -63,7 +63,7 @@ class Copy extends \Flexio\Jobs\Base
         if ($job_statement === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
         if ($outstream->getService()->exec($job_statement) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 

@@ -34,9 +34,9 @@ class List1 extends \Flexio\Jobs\Base
         }
 
 
-        $streamwriter = \Flexio\Object\StreamWriter::create($stdout);
+        $streamwriter = $stdout->getWriter();
 
-        
+
         $vfs = new \Flexio\Services\Vfs();
 
         $files = $vfs->listObjects($path);
@@ -55,7 +55,7 @@ class List1 extends \Flexio\Jobs\Base
             {
                 $entry['.connection_eid'] = $f['.connection_eid'];
             }
-            
+
             if (isset($f['.connection_type']))
             {
                 $entry['.connection_type'] = $f['.connection_type'];

@@ -55,7 +55,7 @@ class Request extends \Flexio\Jobs\Base
             $connection = \Flexio\Object\Connection::load($connection_identifier);
             if ($connection === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-            
+
             // TODO: rights
             //if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
@@ -186,7 +186,7 @@ class Request extends \Flexio\Jobs\Base
         // TODO: get header info?
         //curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$streamwriter) {});
 
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
         curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$streamwriter) {
             $length = strlen($data);
             $streamwriter->write($data);

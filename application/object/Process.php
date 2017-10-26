@@ -88,8 +88,7 @@ class Process extends \Flexio\Object\Base
                 $stream_info['mime_type'] = $content_type;
 
                 $stream->set($stream_info);
-
-                $streamwriter = \Flexio\Object\StreamWriter::create($stream);
+                $streamwriter = $stream->getWriter();
             }
             else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_DATA)
             {

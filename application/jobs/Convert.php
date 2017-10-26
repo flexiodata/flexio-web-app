@@ -121,8 +121,8 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType($output_mime_type);
 
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
+        $streamwriter = $outstream->getWriter();
 
         if ($output_mime_type == \Flexio\Base\ContentType::MIME_TYPE_JSON)
         {
@@ -242,8 +242,8 @@ class Convert extends \Flexio\Jobs\Base
         ];
 
         $outstream->setStructure($structure);
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamreader = $instream->getReader();
+        $streamwriter = $outstream->getWriter();
 
 
         $rss_payload = '';
@@ -293,11 +293,11 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
 
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
 
         // read the pdf into a buffer
         $buffer = '';
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
         while (true)
         {
             $data = $streamreader->read();
@@ -344,7 +344,7 @@ class Convert extends \Flexio\Jobs\Base
 
         // read the json into a buffer
         $buffer = '';
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
         while (true)
         {
             $data = $streamreader->read();
@@ -363,7 +363,7 @@ class Convert extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $outstream->setStructure($structure);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
 
         foreach($items as $i)
         {
@@ -425,7 +425,7 @@ class Convert extends \Flexio\Jobs\Base
         $use_text_qualifier = (strlen($qualifier) > 0 ? true : false);
 
         // get the input
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
         $outstream = $instream->copy();
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType($is_output_json ? \Flexio\Base\ContentType::MIME_TYPE_JSON : \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
@@ -434,7 +434,7 @@ class Convert extends \Flexio\Jobs\Base
         {
             // for json output, streamwriter is created here; for table output, streamwriter
             // is created below, because header row must be collected in advance
-            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+            $streamwriter = $outstream->getWriter();
             $streamwriter->write("[");
         }
 
@@ -592,7 +592,7 @@ class Convert extends \Flexio\Jobs\Base
                 if (!$streamwriter)
                 {
                     $outstream->setStructure($structure);
-                    $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+                    $streamwriter = $outstream->getWriter();
                     $structure = $outstream->getStructure()->enum();
                 }
 
@@ -681,7 +681,7 @@ class Convert extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // get the input
-        $streamreader = \Flexio\Object\StreamReader::create($instream);
+        $streamreader = $instream->getReader();
         $outstream = $instream->copy();
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE);
@@ -728,7 +728,7 @@ class Convert extends \Flexio\Jobs\Base
         }
 
         $outstream->setStructure($structure);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
 
         $bufsize = 65536;
 

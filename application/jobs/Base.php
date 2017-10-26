@@ -91,7 +91,7 @@ class Base implements \Flexio\Jobs\IJob
                         {
                             $replacement = '';
                             $stream = $context->getStdin();
-                            $streamreader = \Flexio\Object\StreamReader::create($stream);
+                            $streamreader = $stream->getReader();
                             while (($chunk = $streamreader->read()) !== false)
                             {
                                 $replacement .= $chunk;

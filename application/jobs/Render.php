@@ -56,7 +56,7 @@ class Render extends \Flexio\Jobs\Base
                 'mime_type' => $content_type
             );
             $outstream = \Flexio\Object\Stream::create($outstream_properties);
-            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+            $streamwriter = $outstream->getWriter();
 
             $windowsize = '';
             if (isset($width) && isset($height))

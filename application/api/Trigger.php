@@ -116,7 +116,7 @@ class Trigger
             );
 
             $outstream = \Flexio\Object\Stream::create($outstream_properties);
-            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+            $streamwriter = $outstream->getWriter();
             $streamwriter->write($attachment['content']);
             $streams[] = $outstream;
         }

@@ -181,7 +181,7 @@ class StreamMemory implements \Flexio\Object\IStream
 
     public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */) // TODO: add function return type
     {
-        $streamreader = \Flexio\Object\StreamReader::create($this);
+        $streamreader = $this->getReader();
         return $streamreader->getContent($start, $limit, $readsize);
     }
 

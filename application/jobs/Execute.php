@@ -465,7 +465,7 @@ class Execute extends \Flexio\Jobs\Base
 
             if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
             {
-                $streamreader = \Flexio\Object\StreamReader::create($instream);
+                $streamreader = $instream->getReader();
                 $rows = [];
                 while (true)
                 {
@@ -489,7 +489,7 @@ class Execute extends \Flexio\Jobs\Base
 
             $outstream->set($outstream_properties);
 
-            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+            $streamwriter = $outstream->getWriter();
             $streamwriter->write($code);
 
             return true;
@@ -546,7 +546,8 @@ class Execute extends \Flexio\Jobs\Base
         $ret = $this->input_readers[$idx];
         if (is_null($ret))
         {
-            $ret = \Flexio\Object\StreamReader::create($this->input_streams[$idx]);
+            $input_stream = $this->input_streams[$idx];
+            $ret = $input_stream->getReader();
             $this->input_readers[$idx] = $ret;
         }
 
@@ -564,7 +565,8 @@ class Execute extends \Flexio\Jobs\Base
         $ret = $this->output_writers[$idx];
         if (is_null($ret))
         {
-            $ret = \Flexio\Object\StreamWriter::create($this->output_streams[$idx]);
+            $output_stream = $this->output_streams[$idx];
+            $ret = $output_stream->getWriter();
             $this->output_writers[$idx] = $ret;
         }
 

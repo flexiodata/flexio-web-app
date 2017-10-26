@@ -183,7 +183,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
 
         // create the iterator
         $iter = $service->queryAll($path);
@@ -233,7 +233,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = self::createDatastoreStream($stream_properties);
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
 
         // transfer the data
         $params = array();
@@ -292,7 +292,7 @@ class Input extends \Flexio\Jobs\Base
                     $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
                     $outstream = self::createDatastoreStream($stream_properties);
                     $outstream->setStructure($structure);
-                    $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+                    $streamwriter = $outstream->getWriter();
                 }
                  else
                 {
@@ -301,7 +301,7 @@ class Input extends \Flexio\Jobs\Base
 
                     // add an output stream
                     $outstream = self::createDatastoreStream($stream_properties);
-                    $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+                    $streamwriter = $outstream->getWriter();
                 }
             }
 
@@ -319,7 +319,7 @@ class Input extends \Flexio\Jobs\Base
         });
 
         if (!$streamwriter)
-            $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+            $streamwriter = $outstream->getWriter();
         $streamwriter->close();
 
         // set the mime type
