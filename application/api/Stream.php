@@ -194,8 +194,17 @@ class Stream
         if ($stream === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        self::handleStreamUpload($validated_params, $stream);
-        return $stream->get();
+        // write to the stream
+        $filename = '';
+        $mime_type = '';
+        $streamwriter = \Flexio\Object\StreamWriter::create($stream);
+        self::handleStreamUpload($validated_params, $streamwriter, $filename, $mime_type);
+
+        // set the stream info
+        $stream_info = array();
+        $stream_info['name'] = $filename;
+        $stream_info['mime_type'] = $mime_type;
+        return $stream->set($stream_info);
     }
 
     public static function download(\Flexio\Api\Request $request) // TODO: set function return type
@@ -323,10 +332,10 @@ class Stream
         exit(0);
     }
 
-    public static function handleStreamUpload(array $params, \Flexio\Object\Stream $stream) : \Flexio\Object\Stream
+    public static function handleStreamUpload(array $params, \Flexio\Object\StreamWriter $stream, string &$filename, string &$mime_type)
     {
-        // create the output
-        $streamwriter = \Flexio\Object\StreamWriter::create($stream);
+        $filename = '';
+        $mime_type = '';
 
         // get the information the parser needs to parse the content
         $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
@@ -437,11 +446,5 @@ class Stream
                     else
                 $mime_type = $declared_mime_type;
         }
-
-        // set the stream info
-        $stream_info = array();
-        $stream_info['name'] = $filename;
-        $stream_info['mime_type'] = $mime_type;
-        return $stream->set($stream_info);
     }
 }
