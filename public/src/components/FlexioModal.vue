@@ -1,0 +1,160 @@
+<template>
+  <transition name="flexio-modal">
+    <div class="flexio-modal-mask" @click="maskClick">
+      <div class="flexio-modal-wrapper">
+        <div class="flexio-modal-container">
+
+          <div class="flexio-modal-header cf" v-if="showHeader">
+            <div class="pointer f3 lh-solid b child black-30 hover-black-60 fr" @click="cancelClick" v-if="showCloseButton">&times;</div>
+            <slot name="header"><div class="f4" v-if="title.length > 0">{{title}}</div></slot>
+          </div>
+
+          <div class="flexio-modal-body">
+            <slot></slot>
+          </div>
+
+          <div class="flexio-modal-footer" v-if="showFooter">
+            <slot name="footer">
+              <div class="flex flex-row">
+                <div class="flex-fill">&nbsp;</div>
+                <btn btn-md class="flex-none" :class="cancelCls" @click="cancelClick">{{cancelLabel}}</btn>
+                <btn btn-md class="flex-none" :class="submitCls" @click="submitClick">{{submitLabel}}</btn>
+              </div>
+            </slot>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</template>
+
+<script>
+  import Btn from './Btn.vue'
+
+  export default {
+    props: {
+      'title': {
+        type: String,
+        default: 'Modal Title'
+      },
+      'cancel-cls': {
+        type: String,
+        default: 'b ttu blue mr2'
+      },
+      'submit-cls': {
+        type: String,
+        default: 'b ttu blue'
+      },
+      'cancel-label': {
+        type: String,
+        default: 'Cancel'
+      },
+      'submit-label': {
+        type: String,
+        default: 'Ok'
+      },
+      'click-outside-to-close': {
+        type: Boolean,
+        default: true
+      },
+      'show-header': {
+        type: Boolean,
+        default: true
+      },
+      'show-footer': {
+        type: Boolean,
+        default: true
+      },
+      'show-close-button': {
+        type: Boolean,
+        default: true
+      }
+    },
+    components: {
+      Btn
+    },
+    methods: {
+      maskClick() {
+        if (this.clickOutsideToClose === true)
+          this.$emit('cancel', this)
+      },
+      cancelClick() {
+        this.$emit('cancel', this)
+      },
+      submitClick() {
+        this.$emit('submit', this)
+      }
+    }
+  }
+</script>
+
+<style>
+  .flexio-modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .3s ease;
+  }
+
+  .flexio-modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .flexio-modal-container {
+    width: 24rem;
+    margin: 0 auto;
+    max-height: 100vh;
+    max-width: 100vw;
+    background-color: #fff;
+    border-radius: 0.125rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+  }
+
+  .flexio-modal-body {
+    padding: 1.5rem;
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+
+  .flexio-modal-header {
+    padding: 1.25rem 1.5rem;
+    padding-bottom: 0;
+  }
+
+  .flexio-modal-footer {
+    padding: 1rem;
+    padding-top: 0;
+  }
+
+  /*
+   * The following styles are auto-applied to elements with
+   * transition="flexio-modal" when their visibility is toggled
+   * by Vue.js.
+   *
+   * You can easily play with the modal transition by editing
+   * these styles.
+   */
+
+  .flexio-modal-enter {
+    opacity: 0;
+  }
+
+  .flexio-modal-leave-active {
+    opacity: 0;
+  }
+
+  .flexio-modal-enter .flexio-modal-container {
+    transform: scale(0.1);
+  }
+
+  .flexio-modal-leave-active .flexio-modal-container {
+    transform: scale(0.95);
+  }
+</style>
