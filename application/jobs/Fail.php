@@ -32,6 +32,7 @@ class Fail extends \Flexio\Jobs\Base
             case \Flexio\Base\Error::UNDEFINED:
             case \Flexio\Base\Error::GENERAL:
             case \Flexio\Base\Error::UNIMPLEMENTED:
+            case \Flexio\Base\Error::DEPRECATED:
             case \Flexio\Base\Error::NO_DATABASE:
             case \Flexio\Base\Error::NO_MODEL:
             case \Flexio\Base\Error::NO_SERVICE:

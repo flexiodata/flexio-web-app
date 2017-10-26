@@ -21,6 +21,7 @@ class Error
     const UNDEFINED              =  '';
     const GENERAL                =  'general';
     const UNIMPLEMENTED          =  'unimplemented';
+    const DEPRECATED             =  'deprecated';
     const INVALID_VERSION        =  'invalid-version';
     const INVALID_REQUEST        =  'invalid-request';
     const INVALID_SYNTAX         =  'invalid-syntax';
@@ -50,6 +51,7 @@ class Error
             case self::UNDEFINED:              return 'Operation failed';
             case self::GENERAL:                return 'General error';
             case self::UNIMPLEMENTED:          return 'Unimplemented';
+            case self::DEPRECATED:             return 'Deprecated';
             case self::NO_DATABASE:            return 'Database not available';
             case self::NO_MODEL:               return 'Model not available';
             case self::NO_SERVICE:             return 'Service not available';

@@ -498,6 +498,8 @@ class Api
             // "NOT FOUND" type errors; invalid requests, invalid
             // parameters, or valid requests for objects that can't
             // be found
+            case \Flexio\Base\Error::UNIMPLEMENTED:
+            case \Flexio\Base\Error::DEPRECATED:
             case \Flexio\Base\Error::INVALID_VERSION:
             case \Flexio\Base\Error::INVALID_REQUEST:
             case \Flexio\Base\Error::MISSING_PARAMETER:
@@ -522,7 +524,6 @@ class Api
 
             // "INTERNAL SERVER ERROR"; something is wrong internally
             case \Flexio\Base\Error::UNDEFINED:
-            case \Flexio\Base\Error::UNIMPLEMENTED:
             case \Flexio\Base\Error::NO_DATABASE:
             case \Flexio\Base\Error::NO_MODEL:
             case \Flexio\Base\Error::NO_SERVICE:
