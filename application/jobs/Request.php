@@ -89,9 +89,9 @@ class Request extends \Flexio\Jobs\Base
                 $userpwd = $connection_info['username'] . ':' . $connection_info['password'];
             }
 
-            if (isset($connection_info['formdata']) && is_array($connection_info['formdata']) && count($connection_info['formdata']) > 0)
+            if (isset($connection_info['form_data']) && is_array($connection_info['form_data']) && count($connection_info['form_data']) > 0)
             {
-                $newformdata = $connection_info['formdata'];
+                $newformdata = $connection_info['form_data'];
                 if ($form_data !== null)
                     $newformdata = array_merge($newformdata, $form_data);
                 $form_data = $newformdata;

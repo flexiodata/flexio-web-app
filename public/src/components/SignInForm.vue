@@ -4,7 +4,7 @@
       <img src="../assets/logo-flexio-header.png" alt="Flex.io">
     </div>
     <legend class="f3 tc ph0 mh0 mv3 black-80 w-100">Sign in</legend>
-    <div class="mh5-ns">
+    <div>
       <div v-if="error_msg" class="mv3 ph3 pv2a lh-title fw6 br1 white bg-dark-red">
         {{error_msg}}
       </div>
@@ -24,7 +24,7 @@
         </btn>
       </div>
     </div>
-    <div class="tc f5 fw6 mv3">
+    <div class="tc f5 fw6 mt3">
       New to Flex.io?
       <router-link :to="signup_link" class="link dib blue underline-hover db">Sign up</router-link>
     </div>
@@ -65,7 +65,7 @@
         is_submitting: false,
         error_msg: '',
         verify_code: '',
-        input_cls: 'input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue lh-title ph3 pv2a w-100'
+        input_cls: 'input-reset ba b--black-10 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
       }
     },
     computed: {

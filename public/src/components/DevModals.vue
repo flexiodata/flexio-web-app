@@ -119,13 +119,23 @@
     <flexio-modal
       @cancel="show_flexio_modal = false"
       v-if="show_flexio_modal"
-    ></flexio-modal>
+    >
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem iusto veniam, accusantium voluptates eum, aliquid sequi molestiae corporis maxime incidunt dolores reiciendis et laborum quidem exercitationem quos perferendis error necessitatibus.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem iusto veniam, accusantium voluptates eum, aliquid sequi molestiae corporis maxime incidunt dolores reiciendis et laborum quidem exercitationem quos perferendis error necessitatibus.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem iusto veniam, accusantium voluptates eum, aliquid sequi molestiae corporis maxime incidunt dolores reiciendis et laborum quidem exercitationem quos perferendis error necessitatibus.</p>
+    </flexio-modal>
 
     <flexio-modal
+      title="Create Your Free Account"
+      container-cls="relative"
+      container-style="width: 32rem"
+      :show-header="false"
+      :show-footer="false"
       @cancel="show_flexio_signup_modal = false"
       v-if="show_flexio_signup_modal"
     >
-      <sign-up-form />
+      <div class="pointer f3 lh-solid b child black-30 hover-black-60 mt2 mr3 absolute top-0 right-0" @click="show_flexio_signup_modal = false">&times;</div>
+      <sign-up-form class="pv3 ph2" />
     </flexio-modal>
 
   </div>
