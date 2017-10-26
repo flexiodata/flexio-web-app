@@ -4,14 +4,14 @@
       <img src="../assets/logo-flexio-header.png" alt="Flex.io">
     </div>
     <legend class="f3 tc ph0 mh0 mv3 black-80 w-100">Forgot Password</legend>
-    <div v-if="is_sent" class="mh5-ns">
+    <div v-if="is_sent">
       <div class="mv3 lh-copy">
         <p>An email has been sent to <span class="b">{{email}}</span> with further instructions.</p>
         <p>You may need to check your spam folder or unblock no-reply@flex.io.</p>
         <router-link to="/signin" class="link ph4 pv2a b lh-title white bg-blue b--blue darken-10 ttu tc db">Sign in</router-link>
       </div>
     </div>
-    <div v-else class="mh5-ns">
+    <div v-else>
       <div class="mv3 lh-copy">
         <p>Enter the email address you signed up with below. An email will be sent containing a link to reset your password.</p>
         <p>You may need to check your spam folder or unblock no-reply@flex.io.</p>
