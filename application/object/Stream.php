@@ -293,7 +293,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
     }
 
     // copies a streams properties to $dest, overwriting $dest's properties
-    public function copyOver(\Flexio\Object\Stream $dest)
+    public function copyOver(\Flexio\Object\IStream $dest)
     {
         $properties = $this->get();
         unset($properties['eid']);

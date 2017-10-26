@@ -39,7 +39,7 @@ class StreamWriter
         $object = new static;
 
         $stream_info = array();
-        if (($stream instanceof \Flexio\Object\Stream))
+        if (($stream instanceof \Flexio\Object\IStream))
             $stream_info = $stream->get();
 
         if (is_array($stream))

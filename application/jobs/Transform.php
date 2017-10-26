@@ -113,7 +113,7 @@ class Transform extends \Flexio\Jobs\Base
         }
     }
 
-    private function processStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function processStream(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -134,7 +134,7 @@ class Transform extends \Flexio\Jobs\Base
         }
     }
 
-    private function getTableOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function getTableOutput(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
     {
         $column_expression_map = $this->getTableExpressionMap($instream);
         if ($column_expression_map === false)
@@ -195,7 +195,7 @@ class Transform extends \Flexio\Jobs\Base
         return $outstream;
     }
 
-    private function getFileOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function getFileOutput(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
     {
         $column_expression_map = $this->getStreamExpressionMap($instream);
         if ($column_expression_map === false)
@@ -236,7 +236,7 @@ class Transform extends \Flexio\Jobs\Base
         return $outstream;
     }
 
-    private function getTableExpressionMap(\Flexio\Object\Stream $instream)
+    private function getTableExpressionMap(\Flexio\Object\IStream $instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation
@@ -319,7 +319,7 @@ class Transform extends \Flexio\Jobs\Base
         return $column_expression_map;
     }
 
-    private function getStreamExpressionMap(\Flexio\Object\Stream $instream)
+    private function getStreamExpressionMap(\Flexio\Object\IStream $instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation

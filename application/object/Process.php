@@ -370,7 +370,7 @@ class Process extends \Flexio\Object\Base
         return \Flexio\Object\Context::fromString($output);
     }
 
-    public function getStdout() : \Flexio\Object\Stream
+    public function getStdout() : \Flexio\Object\IStream
     {
         return $this->getOutput()->getStdout();
     }

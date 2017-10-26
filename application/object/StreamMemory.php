@@ -26,7 +26,7 @@ class StreamMemory implements \Flexio\Object\IStream
     {
     }
 
-    public static function create(array $properties = null) : \Flexio\Object\Stream
+    public static function create(array $properties = null) : \Flexio\Object\StreamMemory
     {
         // structure is stored as json string; it needs to be validated
         // and encoded
@@ -55,7 +55,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $object;
     }
 
-    public function set(array $properties) : \Flexio\Object\Stream
+    public function set(array $properties) : \Flexio\Object\StreamMemory
     {
         // TODO: add properties check
 
@@ -93,7 +93,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $this->properties;
     }
 
-    public function setName(string $name) : \Flexio\Object\Stream
+    public function setName(string $name) : \Flexio\Object\StreamMemory
     {
         $properties = array();
         $properties['name'] = $name;
@@ -105,7 +105,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $this->properties['name'];
     }
 
-    public function setPath(string $path) : \Flexio\Object\Stream
+    public function setPath(string $path) : \Flexio\Object\StreamMemory
     {
         $properties = array();
         $properties['path'] = $path;
@@ -117,7 +117,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $this->properties['path'];
     }
 
-    public function setSize($size) : \Flexio\Object\Stream // TODO: add input parameter types
+    public function setSize($size) : \Flexio\Object\StreamMemory // TODO: add input parameter types
     {
         $properties = array();
         $properties['size'] = $size;
@@ -135,7 +135,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return 0;
     }
 
-    public function setMimeType(string $mime_type) : \Flexio\Object\Stream
+    public function setMimeType(string $mime_type) : \Flexio\Object\StreamMemory
     {
         $properties = array();
         $properties['mime_type'] = $mime_type;
@@ -147,7 +147,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $this->properties['mime_type'];
     }
 
-    public function setStructure($structure) : \Flexio\Object\Stream // TODO: add input parameter types
+    public function setStructure($structure) : \Flexio\Object\StreamMemory // TODO: add input parameter types
     {
         if (!($structure instanceof \Flexio\Base\Structure))
             $structure = \Flexio\Base\Structure::create($structure);
@@ -192,7 +192,7 @@ class StreamMemory implements \Flexio\Object\IStream
     }
 
     // copies a streams properties to $dest, overwriting $dest's properties
-    public function copyOver(\Flexio\Object\Stream $dest)
+    public function copyOver(\Flexio\Object\IStream $dest)
     {
         $properties = $this->get();
         unset($properties['eid']);

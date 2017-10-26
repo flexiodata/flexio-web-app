@@ -357,7 +357,7 @@ class Input extends \Flexio\Jobs\Base
         $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
-    private function createDatastoreStream(array $properties) :  \Flexio\Object\Stream
+    private function createDatastoreStream(array $properties) : \Flexio\Object\Stream
     {
         // use default datastore connection
         $datastore_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();

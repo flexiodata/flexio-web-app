@@ -55,7 +55,7 @@ class Create extends \Flexio\Jobs\Base
             $context->addStream($outstream);
     }
 
-    private function createFileStream() : \Flexio\Object\Stream
+    private function createFileStream() : \Flexio\Object\IStream
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New File');
@@ -87,7 +87,7 @@ class Create extends \Flexio\Jobs\Base
         return $outstream;
     }
 
-    private function createTableStream() : \Flexio\Object\Stream
+    private function createTableStream() : \Flexio\Object\IStream
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New Table');

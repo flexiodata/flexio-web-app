@@ -422,7 +422,7 @@ class TestUtil
         return $result;
     }
 
-    public static function getContent(\Flexio\Object\Stream $stdout)
+    public static function getContent(\Flexio\Object\IStream $stdout)
     {
         $content = $stdout->content();
         $result = array();

@@ -35,7 +35,7 @@ class Select extends \Flexio\Jobs\Base
         }
     }
 
-    private function processStream(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function processStream(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
     {
         $job_definition = $this->getProperties();
         $mime_type = $instream->getMimeType();
@@ -78,7 +78,7 @@ class Select extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\Object\Stream $instream) : \Flexio\Object\Stream
+    private function getOutput(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
     {
         // input/output
         $outstream = $instream->copy(); // copy everything, including the original path (since we're only selecting fields)
