@@ -357,20 +357,9 @@ class Output extends \Flexio\Jobs\Base
         $header_row = $params['header'] ?? true;
         $header_row = toBoolean($header_row);
 
-
-
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-
-        // create the output
-        $outstream = self::createOutputStream($instream, $output_info);
-        // note: this is an external output, so don't add to list of output files, since these are already passed on
-
-        $service = $outstream->getService();
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        $filename = $outstream->getName();
+        $filename = $output_info['name'];
 
         $spreadsheet = $service->createFile($filename);
         if (!$spreadsheet)
@@ -402,28 +391,18 @@ class Output extends \Flexio\Jobs\Base
         }
 
         $inserter->finishInsert();
-        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_NONE); // external table
     }
 
     private function runMailJetExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
-
-        // create the output
-        $outstream = self::createOutputStream($instream, $output_info);
-        // note: this is an external output, so don't add to list of output files, since these are already passed on
-
-        $service = $outstream->getService();
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
         $input_structure = $instream->getStructure();
 
 // TODO: make the inserter work more like inserting into a database
 
         // create the table
-        $outputpath = $outstream->getPath();
+        $outputpath = $output_info['path'];
 
         // transfer the data
         while (true)
@@ -441,16 +420,6 @@ class Output extends \Flexio\Jobs\Base
     private function runEmailExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    private function createOutputStream(\Flexio\Object\Stream $instream, array $output_info) : \Flexio\Object\Stream
-    {
-        // copy the input properties to the output, overwriting the
-        // connection_eid and path properties with the connection item info
-        $properties = $instream->get();
-        $properties = array_merge($properties, $output_info);
-        $outstream = \Flexio\Object\Stream::create($properties);
-        return $outstream;
     }
 
     // job definition info
