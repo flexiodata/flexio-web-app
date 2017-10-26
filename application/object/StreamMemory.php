@@ -181,14 +181,8 @@ class StreamMemory implements \Flexio\Object\IStream
 
     public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */) // TODO: add function return type
     {
-        if ($start < 0 )
-            $start = 0;
-        if ($limit < 0)
-            $limit = 0;
-        if ($readsize <= 0)
-            $readsize = 1;
-
-        // TODO: implement
+        $streamreader = \Flexio\Object\StreamReader::create($this);
+        return $streamreader->getContent($start, $limit, $readsize);
     }
 
     // copies a streams properties to $dest, overwriting $dest's properties
@@ -199,11 +193,6 @@ class StreamMemory implements \Flexio\Object\IStream
         unset($properties['created']);
         unset($properties['updated']);
         $dest->set($properties);
-    }
-
-    public function getService()
-    {
-        // TODO: implement
     }
 }
 
