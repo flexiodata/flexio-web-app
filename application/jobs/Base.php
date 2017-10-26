@@ -57,7 +57,13 @@ class Base implements \Flexio\Jobs\IJob
 
     private function replaceParameterTokensRecurse($context, &$value)
     {
-        $variables = $context->getEnv();
+        // normally, $context is a \Flexio\Object\Context object; however, for the
+        // convenience of the test suite, a key/value array may be passed instead
+
+        if (is_array($context))
+            $variables = $context;
+             else
+            $variables = $context->getEnv();
 
         if (is_array($value))
         {
