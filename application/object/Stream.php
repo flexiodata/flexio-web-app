@@ -18,7 +18,7 @@ namespace Flexio\Object;
 
 require_once dirname(__DIR__) . '/services/Abstract.php';
 
-class Stream extends \Flexio\Object\Base
+class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
 {
     public function __construct()
     {

@@ -43,3 +43,22 @@ interface IObject
     public function setRights(array $rights);
     public function getRights();
 }
+
+interface IStream
+{
+    public function set(array $properties);
+    public function get();
+    public function setName(string $name);
+    public function getName();
+    public function setPath(string $path);
+    public function getPath();
+    public function setSize($size);
+    public function getSize();
+    public function getRowCount();
+    public function setMimeType(string $mime_type);
+    public function getMimeType();
+    public function setStructure($structure);
+    public function getStructure();
+    public function getFileInfo();
+    public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */);
+}
