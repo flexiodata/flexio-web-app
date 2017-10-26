@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class StreamWriter
+class StreamWriter implements \Flexio\Object\IStreamWriter
 {
     private $writer = false;
     private $bytes_written = 0; // total bytes written

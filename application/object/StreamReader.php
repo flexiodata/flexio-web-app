@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class StreamReader
+class StreamReader implements \Flexio\Object\IStreamReader
 {
     private $stream_info = false;
     private $reader = false;
