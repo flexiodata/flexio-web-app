@@ -216,18 +216,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
         $dest->set($properties);
     }
 
-    public function getService()
-    {
-        $stream_info = $this->get();
-        $connection_eid = $stream_info['connection_eid'];
-
-        $connection = \Flexio\Object\Connection::load($connection_eid);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        return $connection->getService();
-    }
-
     private function isCached() : bool
     {
         if ($this->properties === false)
