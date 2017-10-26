@@ -884,6 +884,9 @@ class Convert extends \Flexio\Jobs\Base
 
     private static function alterStructure(\Flexio\Object\IStream $outstream, array $structure) : bool
     {
+        // TODO: streams no longer expose getService(); can no longer assume table implementation
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+
         $service = $outstream->getService();
 
         $sql = 'ALTER TABLE '. $outstream->getPath() . ' ';

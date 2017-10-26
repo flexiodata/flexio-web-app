@@ -20,6 +20,10 @@ class Search extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        // TODO: implementation dependent on SQL operations on the service;
+        // with memory streams, we can no longer rely on this
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+
         // process stdin
         $stdin = $context->getStdin();
         $context->setStdout($this->processStream($stdin));
