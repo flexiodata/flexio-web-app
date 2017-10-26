@@ -262,9 +262,6 @@ class Output extends \Flexio\Jobs\Base
 
             case \Model::CONNECTION_TYPE_MAILJET:
                 return $this->runMailJetExport($instream, $service, $output_info);
-
-            case \Model::CONNECTION_TYPE_EMAIL:
-                return $this->runEmailExport($instream, $service, $output_info);
         }
     }
 
@@ -418,11 +415,6 @@ class Output extends \Flexio\Jobs\Base
         }
 
         $service->close();
-    }
-
-    private function runEmailExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     // job definition info
