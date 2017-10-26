@@ -96,7 +96,7 @@
           <span v-if="is_submitting">{{label_submitting}}</span>
           <span v-else>Sign up</span>
         </btn>
-        <span class="f8">
+        <span class="f8 fw6">
           By signing up, you agree to Flex.io's
           <a class="link underline-hover blue" href="/terms" target="_blank" rel="noopener noreferrer">Terms</a> and
           <a class="link underline-hover blue" href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
