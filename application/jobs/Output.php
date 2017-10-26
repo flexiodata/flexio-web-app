@@ -243,11 +243,9 @@ class Output extends \Flexio\Jobs\Base
         {
             case \Model::CONNECTION_TYPE_MYSQL:
             case \Model::CONNECTION_TYPE_POSTGRES:
-                $output_info['name'] = str_replace('/','_', $output_info['name']);
                 return $this->runDatabaseExport($instream, $service, $output_info);
 
             case \Model::CONNECTION_TYPE_ELASTICSEARCH:
-                $output_info['name'] = str_replace('/','_', $output_info['name']);
                 return $this->runElasticSearchExport($instream, $service, $output_info);
 
             case \Model::CONNECTION_TYPE_FTP:
@@ -260,11 +258,9 @@ class Output extends \Flexio\Jobs\Base
                 return $this->runRemoteFileExport($instream, $service, $output_info);
 
             case \Model::CONNECTION_TYPE_GOOGLESHEETS:
-                $output_info['name'] = str_replace('/','_', $output_info['name']);
                 return $this->runGoogleSheetsExport($instream, $service, $output_info);
 
             case \Model::CONNECTION_TYPE_MAILJET:
-                $output_info['name'] = str_replace('/','_', $output_info['name']);
                 return $this->runMailJetExport($instream, $service, $output_info);
 
             case \Model::CONNECTION_TYPE_EMAIL:
@@ -276,6 +272,9 @@ class Output extends \Flexio\Jobs\Base
     {
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
+
+        // prefix the name
+        $output_info['name'] = str_replace('/','_', $output_info['name']);
 
         // get field names from structure
         $structure = $instream->getStructure()->enum();
@@ -313,6 +312,9 @@ class Output extends \Flexio\Jobs\Base
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
 
+        // prefix the name
+        $output_info['name'] = str_replace('/','_', $output_info['name']);
+
         $params = array();
         $params['path'] = $output_info['name'];
         $params['content_type'] =  $instream->getMimeType();
@@ -349,6 +351,9 @@ class Output extends \Flexio\Jobs\Base
 
     private function runGoogleSheetsExport(\Flexio\Object\Stream $instream, $service, array $output_info) // TODO: add parameter type
     {
+        // prefix the name
+        $output_info['name'] = str_replace('/','_', $output_info['name']);
+
         // do we want to output a header row with field names?
         $job_definition = $this->getProperties();
         if (!isset($job_definition['params']))
@@ -398,8 +403,6 @@ class Output extends \Flexio\Jobs\Base
         // get ready to read the input
         $streamreader = \Flexio\Object\StreamReader::create($instream);
         $input_structure = $instream->getStructure();
-
-// TODO: make the inserter work more like inserting into a database
 
         // create the table
         $outputpath = $output_info['path'];
