@@ -137,10 +137,6 @@ class Input extends \Flexio\Jobs\Base
             default:
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            // upload
-            case \Model::CONNECTION_TYPE_EMAIL:
-                return $this->runEmail($service, $file_info);
-
             // database data
             case \Model::CONNECTION_TYPE_MYSQL:
             case \Model::CONNECTION_TYPE_POSTGRES:
@@ -169,22 +165,6 @@ class Input extends \Flexio\Jobs\Base
             case \Model::CONNECTION_TYPE_AMAZONS3:
                 return $this->runRemoteFileImport($service, $file_info);
         }
-    }
-
-    private function runUpload($service, array $file_info) // TODO: set paramater type
-    {
-        // the data is already uploaded, so simply pass on the data to
-        // the output
-        $stream_properties = $file_info;
-        $outstream = \Flexio\Object\Stream::create($stream_properties);
-        $this->getContext()->addStream($outstream);
-        $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
-    }
-
-    private function runEmail($service, array $file_info) // TODO: set paramater type
-    {
-        // TODO: right now email is added at the beginning of the pipe, so
-        // the files are already added; instead, they should be inserted here
     }
 
     private function runDatabaseImport($service, array $file_info) // TODO: set paramater type
