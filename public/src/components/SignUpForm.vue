@@ -4,7 +4,7 @@
       <img src="../assets/logo-flexio-header.png" alt="Flex.io">
     </div>
     <legend class="f3 tc ph0 mh0 mv3 black-80 w-100">Sign up for Flex.io</legend>
-    <div class="mh5-ns">
+    <div>
       <div v-if="error_msg" class="mv3 ph3 pv2a lh-title fw6 br1 white bg-dark-red">
         {{error_msg}}
       </div>
@@ -20,36 +20,38 @@
           v-model="email"
         >
       </div>
-      <div class="mv3">
-        <input
-          type="text"
-          placeholder="First name"
-          autocomplete=off
-          spellcheck="false"
-          :class="input_cls"
-          v-model="first_name"
-          v-focus
-          v-validate
-          data-vv-name="first_name"
-          data-vv-as="first name"
-          data-vv-rules="required"
-        >
-        <span class="f8 dark-red" v-show="errors.has('first_name')">{{errors.first('first_name')}}</span>
-      </div>
-      <div class="mv3">
-        <input
-          type="text"
-          placeholder="Last name"
-          autocomplete=off
-          spellcheck="false"
-          :class="input_cls"
-          v-model="last_name"
-          v-validate
-          data-vv-name="last_name"
-          data-vv-as="last name"
-          data-vv-rules="required"
-        >
-        <span class="f8 dark-red" v-show="errors.has('last_name')">{{errors.first('last_name')}}</span>
+      <div class="mv3 flex flex-row">
+        <div class="flex-fill mr3">
+          <input
+            type="text"
+            placeholder="First name"
+            autocomplete=off
+            spellcheck="false"
+            :class="input_cls"
+            v-model="first_name"
+            v-focus
+            v-validate
+            data-vv-name="first_name"
+            data-vv-as="first name"
+            data-vv-rules="required"
+          >
+          <span class="f8 dark-red" v-show="errors.has('first_name')">{{errors.first('first_name')}}</span>
+        </div>
+        <div class="flex-fill">
+          <input
+            type="text"
+            placeholder="Last name"
+            autocomplete=off
+            spellcheck="false"
+            :class="input_cls"
+            v-model="last_name"
+            v-validate
+            data-vv-name="last_name"
+            data-vv-as="last name"
+            data-vv-rules="required"
+          >
+          <span class="f8 dark-red" v-show="errors.has('last_name')">{{errors.first('last_name')}}</span>
+        </div>
       </div>
       <div class="mv3">
         <input
@@ -96,14 +98,14 @@
           <span v-if="is_submitting">{{label_submitting}}</span>
           <span v-else>Sign up</span>
         </btn>
-        <span class="f8 fw6">
+        <span class="f8 fw6 black-60">
           By signing up, you agree to Flex.io's
           <a class="link underline-hover blue" href="/terms" target="_blank" rel="noopener noreferrer">Terms</a> and
           <a class="link underline-hover blue" href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
         </span>
       </div>
     </div>
-    <div class="tc f5 fw6 mt4 mb3">
+    <div class="tc f5 fw6 mt4">
       Already have an account? <router-link :to="signin_link" class="link dib blue underline-hover db">Sign in</router-link>
     </div>
   </form>
@@ -153,7 +155,7 @@
         error_msg: '',
         ss_errors: {},
         verify_code: '',
-        input_cls: 'input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue lh-title ph3 pv2a w-100'
+        input_cls: 'input-reset ba b--black-10 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
       }
     },
     watch: {

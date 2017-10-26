@@ -4,13 +4,13 @@
       <img src="../assets/logo-flexio-header.png" alt="Flex.io">
     </div>
     <legend class="f3 tc ph0 mh0 mv3 black-80 w-100">Reset Password</legend>
-    <div v-if="is_sent" class="mh5-ns">
+    <div v-if="is_sent">
       <div class="mv3 lh-copy">
         <p>Your password has been successfully reset. To continue using Flex.io, you will need to sign in again.</p>
         <router-link to="/signin" class="link ph4 pv2a b lh-title white bg-blue b--blue darken-10 ttu tc db">Sign in</router-link>
       </div>
     </div>
-    <div v-else class="mh5-ns">
+    <div v-else>
       <div class="mv3 lh-copy">
         <p>Please enter a new password for your account.</p>
       </div>
@@ -57,7 +57,7 @@
         >
         <span class="f8 dark-red" v-show="has_confirm_password_error">{{confirm_password_error}}</span>
       </div>
-      <div class="mv3">
+      <div class="mt3">
         <btn btn-lg btn-primary :disabled="is_submitting" @click="tryChangePassword" class="b ttu w-100">
           <span v-if="is_submitting">Submitting...</span>
           <span v-else>Change password</span>
@@ -101,7 +101,7 @@
         is_sent: false,
         error_msg: '',
         ss_errors: {},
-        input_cls: 'input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue lh-title ph3 pv2a w-100'
+        input_cls: 'input-reset ba b--black-10 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
       }
     },
     computed: {
