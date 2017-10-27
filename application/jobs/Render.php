@@ -20,6 +20,8 @@ class Render extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         $input = $context->getStreams();
         $context->clearStreams();
 

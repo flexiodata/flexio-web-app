@@ -25,6 +25,8 @@ class EmailSend extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         $this->sendEmail();
     }
 
