@@ -18,6 +18,7 @@ namespace Flexio\Object;
 
 require_once dirname(__DIR__) . '/object/Abstract.php';
 
+
 class StreamMemoryReader implements \Flexio\Object\IStreamReader
 {
     public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryReader
@@ -28,43 +29,26 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
 
     public function read($length = 1024)
     {
+        return false;
     }
 
     public function readRow()
     {
+        return false;
     }
 
     public function getRows(int $offset, int $limit)
     {
+        return false;
     }
 
     public function getContent(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */)
     {
     }
 
-    public function close()
+    public function close() : bool
     {
-    }
-}
-
-class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
-{
-    public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryWriter
-    {
-        $object = new static;
-        return $object;
-    }
-
-    public function write($data)
-    {
-    }
-
-    public function getBytesWritten()
-    {
-    }
-
-    public function close()
-    {
+        return true;
     }
 }
 

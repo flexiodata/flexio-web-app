@@ -18,6 +18,32 @@ namespace Flexio\Object;
 
 require_once dirname(__DIR__) . '/object/Abstract.php';
 
+
+class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
+{
+    public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryWriter
+    {
+        $object = new static;
+        return $object;
+    }
+
+    public function write($data)
+    {
+        return false;
+    }
+
+    public function getBytesWritten() : int
+    {
+        return 0;
+    }
+
+    public function close() : bool
+    {
+        return true;
+    }
+}
+
+
 class StreamWriter implements \Flexio\Object\IStreamWriter
 {
     private $writer = false;
