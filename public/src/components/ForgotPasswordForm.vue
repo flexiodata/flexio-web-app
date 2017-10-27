@@ -38,7 +38,7 @@
 
 <script>
   import _ from 'lodash'
-  //import api from '../api'
+  import axios from 'axios'
   import Btn from './Btn.vue'
 
   export default {
@@ -62,22 +62,18 @@
         return _.omitBy(attrs, _.isEmpty)
       },
       sendReset() {
-        /*
-          var me = this
-          var attrs = this.getAttrs()
+        var attrs = this.getAttrs()
 
-          this.is_submitting = true
+        this.is_submitting = true
 
-          api.requestPasswordReset({ attrs }).then(response => {
-            // success callback
-            me.is_submitting = false
-            me.is_sent = true
-          }, response => {
-            // error callback
-            me.is_submitting = false
-            this.error_msg = _.get(response, 'data.error.message', '')
-          })
-        */
+        axios.post('/api/v1/users/requestpasswordreset', attrs).then(response => {
+          this.is_submitting = false
+          this.is_sent = true
+          this.$emit('submitted-request', this)
+        }).catch(response => {
+          this.is_submitting = false
+          this.error_msg = _.get(response, 'data.error.message', '')
+        })
       },
       signUpClick() {
         this.$emit('sign-up-click', this)
