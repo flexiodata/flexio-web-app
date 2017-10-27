@@ -105,7 +105,6 @@
 <script>
   import _ from 'lodash'
   import axios from 'axios'
-  //import api from '../api'
   import Btn from './Btn.vue'
 
   export default {

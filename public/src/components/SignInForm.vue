@@ -67,7 +67,7 @@
 
 <script>
   import _ from 'lodash'
-  //import api from '../api'
+  import axios from 'axios'
   import Btn from './Btn.vue'
 
   export default {
@@ -93,25 +93,18 @@
         return _.omitBy(attrs, _.isEmpty)
       },
       trySignIn() {
-        /*
         var attrs = this.getAttrs()
 
         this.is_submitting = true
 
-        this.$store.dispatch('signIn', { attrs }).then(response => {
-          if (response.ok)
-          {
-            this.is_submitting = false
-            this.redirect()
-          }
-           else
-          {
-            this.is_submitting = false
-            this.password = ''
-            this.error_msg = _.get(response, 'data.error.message', '')
-          }
+        axios.post('/api/v1/login', attrs).then(response => {
+          this.is_submitting = false
+          this.$emit('signed-in', this)
+        }).catch(response => {
+          this.is_submitting = false
+          this.password = ''
+          this.error_msg = _.get(response, 'data.error.message', '')
         })
-        */
       },
       signUpClick() {
         this.$emit('sign-up-click', this)
