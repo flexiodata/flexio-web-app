@@ -23,7 +23,8 @@ module.exports = {
     },
 
     output: {
-      main: path.join(__dirname, '..', 'dist')
+      main: path.join(__dirname, '..', 'dist'),
+      signup: path.join(__dirname, '..', 'dist/signup')
     },
 
     resolve(location) {
