@@ -38,8 +38,34 @@ class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
 
     public function write($data)
     {
-        $this->getStream()->buffer .= $data;
-        $this->bytes_written += strlen($data);
+        // data being written should be either a string or an array;
+        // get a representative string of the content so we can find
+        // out the size of the data that was written
+        $content_str = '';
+        if (is_string($data))
+            $content_str = $data;
+        if (is_array($data))
+            $content_str = implode('', $data);
+
+        // increment the total bytes written
+        $this->bytes_written += strlen($content_str);
+
+        // write the data, depending on the type
+        $mime_type = $this->getStream()->getMimeType();
+        switch ($mime_type)
+        {
+            default:
+                if (is_string($this->getStream()->buffer) === false) // initialize buffer
+                    $this->getStream()->buffer = '';
+                $this->getStream()->buffer .= $data;
+                break;
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                if (is_array($this->getStream()->buffer) === false) // initialize buffer
+                    $this->getStream()->buffer = array();
+                $this->getStream()->buffer.array_push($data);
+                break;
+        }
     }
 
     public function getBytesWritten() : int

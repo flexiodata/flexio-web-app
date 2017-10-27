@@ -31,7 +31,7 @@ class StreamMemory implements \Flexio\Object\IStream
 
     public function __construct()
     {
-        $buffer = '';
+        $buffer = false;
     }
 
     public static function create(array $properties = null) : \Flexio\Object\StreamMemory
@@ -189,6 +189,10 @@ class StreamMemory implements \Flexio\Object\IStream
 
     public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */) // TODO: add function return type
     {
+        // TODO: this implementation parallels the implementation of the storage-based stream object,
+        // giving us consistent behavior; however, we could simplify this implementation to work
+        // directly on the buffer, although we don't know how much it would help efficiency since
+
         if ($start < 0 )
             $start = 0;
         if ($limit < 0)
@@ -196,7 +200,7 @@ class StreamMemory implements \Flexio\Object\IStream
         if ($readsize <= 0)
             $readsize = 1;
 
-        $mime_type = $this->stream_info['mime_type'];
+        $mime_type = $this->getMimeType();
         if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             return $this->getReader()->getRows($start,$limit);
@@ -212,9 +216,11 @@ class StreamMemory implements \Flexio\Object\IStream
             $range2 = $start + $limit;
 
             $result = '';
+            $reader = $this->getReader();
+
             while (true)
             {
-                $chunk = $this->read($readsize);
+                $chunk = $reader->read($readsize);
                 if ($chunk === false)
                     break;
 

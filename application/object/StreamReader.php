@@ -36,17 +36,34 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
 
     public function read($length = 1024)
     {
-        return $this->getStream()->buffer;
+        // TODO: implement
     }
 
     public function readRow()
     {
-        return $this->getStream()->buffer;
+        // TODO: implement
     }
 
     public function getRows(int $offset, int $limit)
     {
-        return $this->getStream()->buffer;
+        // only implemented for table type streams
+        $mime_type = $this->getStream()->getMimeType();
+        if ($mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            return null;
+
+        if ($offset < 0)
+            $offset = 0;
+        if ($limit < 0)
+            $limit = 0;
+
+        $buffer = $this->getStream()->buffer();
+        if (!is_array($buffer))
+            return null;
+
+        if ($offset > count($buffer) - 1)
+            return false;
+
+        return array_slice($buffer, $offset, $limit);
     }
 
     public function close() : bool
