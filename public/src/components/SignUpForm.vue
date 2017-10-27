@@ -112,6 +112,7 @@
 </template>
 
 <script>
+  import _ from 'lodash'
   import api from '../api'
   import { ROUTE_SIGNIN } from '../constants/route'
   import Btn from './Btn.vue'
@@ -202,23 +203,19 @@
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
-        return _
-          .chain(this.$data)
-          .pick(['first_name', 'last_name', 'user_name', 'email', 'password', 'verify_code'])
-          .value()
+        return _.pick(this.$data, ['first_name', 'last_name', 'user_name', 'email', 'password', 'verify_code'])
       },
       getSignInAttrs() {
         // massage attributes to match login call's expected params
-        return _
-          .chain(this.getAttrs())
-          .pick(['email', 'password'])
-          .mapKeys(function(val, key) {
-            if (key == 'email')
-              return 'username'
+        var attrs = this.getAttrs()
+        attrs = _.pick(attrs, ['email', 'password'])
 
-            return key
-          })
-          .value()
+        return _.mapKeys(attrs, (val, key) => {
+          if (key == 'email')
+            return 'username'
+
+          return key
+        })
       },
       checkSignup: _.debounce(function(validate_key, callback) {
         var attrs = this.getAttrs()

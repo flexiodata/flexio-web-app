@@ -33,6 +33,7 @@
 </template>
 
 <script>
+  import _ from 'lodash'
   import api from '../api'
   import Btn from './Btn.vue'
 
@@ -52,11 +53,9 @@
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
-        return _
-          .chain(this.$data)
-          .pick(['email'])
-          .omitBy(_.isEmpty)
-          .value()
+        var attrs = _.assign({}, this.$data)
+        attrs = _.pick(attrs, ['email'])
+        return _.omitBy(attrs, _.isEmpty)
       },
       sendReset() {
         var me = this

@@ -68,6 +68,7 @@
 </template>
 
 <script>
+  import _ from 'lodash'
   import api from '../api'
   import Btn from './Btn.vue'
 
@@ -114,10 +115,10 @@
       getAttrs() {
         // assemble non-empty values for submitting to the backend
         return _
-          .chain(this.$data)
-          .pick(['email', 'verify_code', 'password', 'password2'])
-          .omitBy(_.isEmpty)
-          .value()
+        // assemble non-empty values for submitting to the backend
+        var attrs = _.assign({}, this.$data)
+        attrs = _.pick(attrs, ['email', 'verify_code', 'password', 'password2'])
+        return _.omitBy(attrs, _.isEmpty)
       },
       validateForm: _.debounce(function(validate_key, callback) {
         var validate_attrs = [{

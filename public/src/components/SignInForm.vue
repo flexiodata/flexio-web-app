@@ -32,6 +32,7 @@
 </template>
 
 <script>
+  import _ from 'lodash'
   import api from '../api'
   import { ROUTE_SIGNUP } from '../constants/route'
   import Btn from './Btn.vue'
@@ -79,11 +80,9 @@
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
-        return _
-          .chain(this.$data)
-          .pick(['username', 'password', 'verify_code'])
-          .omitBy(_.isEmpty)
-          .value()
+        var attrs = _.assign({}, this.$data)
+        attrs = _.pick(attrs, ['username', 'password', 'verify_code'])
+        return _.omitBy(attrs, _.isEmpty)
       },
       trySignIn() {
         var attrs = this.getAttrs()
