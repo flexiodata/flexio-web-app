@@ -5,14 +5,29 @@
     container-style="width: 32rem"
     :show-header="false"
     :show-footer="false"
-    @cancel="show_modal = false"
-    v-if="show_modal"
+    @cancel="$emit('cancel')"
+    @submit="$emit('submit')"
   >
-    <div class="pointer f3 lh-solid b child black-30 hover-black-60 mt2 mr3 absolute top-0 right-0" @click="show_modal = false">&times;</div>
+    <div class="pointer f3 lh-solid b child black-30 hover-black-60 mt2 mr3 absolute top-0 right-0" @click="$emit('cancel')">&times;</div>
     <div class="pv3 ph2">
-      <sign-up-form v-if="view === 'signup'" />
-      <sign-in-form v-else-if="view === 'signin'" />
-      <forgot-password-form v-else-if="view === 'forgotpassword'" />
+      <sign-up-form
+        @sign-in-click="view = 'signin'"
+        @signed-up="$emit('signed-up')"
+        @signed-in="$emit('signed-up-signed-in')"
+        v-if="view === 'signup'"
+      />
+      <sign-in-form
+        @sign-up-click="view = 'signup'"
+        @forgot-password-click="view = 'forgotpassword'"
+        @signed-in="$emit('signed-in')"
+        v-else-if="view === 'signin'"
+      />
+      <forgot-password-form
+        @sign-up-click="view = 'signup'"
+        @sign-in-click="view = 'signin'"
+        @requested-password="$emit('requested-password')"
+        v-else-if="view === 'forgotpassword'"
+      />
     </div>
   </flexio-modal>
 </template>
@@ -38,16 +53,7 @@
     },
     data() {
       return {
-        show_modal: false,
         view: this.initialView
-      }
-    },
-    methods: {
-      open() {
-        this.show_modal = true
-      },
-      close() {
-        this.show_modal = false
       }
     }
   }

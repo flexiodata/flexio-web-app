@@ -8,7 +8,7 @@
       <div class="mv3 lh-copy">
         <p>An email has been sent to <span class="b">{{email}}</span> with further instructions.</p>
         <p>You may need to check your spam folder or unblock no-reply@flex.io.</p>
-        <router-link to="/signin" class="link ph4 pv2a b lh-title white bg-blue b--blue darken-10 ttu tc db">Sign in</router-link>
+        <button class="link ph4 pv2a b lh-title white bg-blue b--blue darken-10 ttu tc w-100" @click="$emit('sign-in-click')">Sign in</button>
       </div>
     </div>
     <div v-else>
@@ -29,12 +29,16 @@
         </btn>
       </div>
     </div>
+    <div class="tc f5 fw6 mt3">
+      New to Flex.io?
+      <button type="button" class="link dib blue underline-hover db fw6" @click="$emit('sign-up-click')">Sign up</button>
+    </div>
   </form>
 </template>
 
 <script>
   import _ from 'lodash'
-  import api from '../api'
+  import axios from 'axios'
   import Btn from './Btn.vue'
 
   export default {
@@ -58,18 +62,16 @@
         return _.omitBy(attrs, _.isEmpty)
       },
       sendReset() {
-        var me = this
         var attrs = this.getAttrs()
 
         this.is_submitting = true
 
-        api.requestPasswordReset({ attrs }).then(response => {
-          // success callback
-          me.is_submitting = false
-          me.is_sent = true
-        }, response => {
-          // error callback
-          me.is_submitting = false
+        axios.post('/api/v1/users/requestpasswordreset', attrs).then(response => {
+          this.is_submitting = false
+          this.is_sent = true
+          this.$emit('requested-password')
+        }).catch(response => {
+          this.is_submitting = false
           this.error_msg = _.get(response, 'data.error.message', '')
         })
       }

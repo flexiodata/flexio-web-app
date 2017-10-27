@@ -129,6 +129,8 @@
       ref="modal-sign-up"
       container-cls="relative"
       container-style="width: 32rem"
+      @cancel="show_flexio_signup_modal = false"
+      v-if="show_flexio_signup_modal"
     />
 
   </div>
@@ -281,7 +283,7 @@
       },
 
       openFlexioSignUpModal() {
-        this.$refs['modal-sign-up'].open()
+        this.show_flexio_signup_modal = true
       }
     }
   }

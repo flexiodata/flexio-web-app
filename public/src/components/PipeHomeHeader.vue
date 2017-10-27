@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row items-start min-w5">
-    <router-link class="pv1 dark-gray hover-blue css-back-button" to="/home/pipes">
+    <router-link class="pv1 dark-gray hover-blue css-back-button" to="/pipes">
       <div class="hint--bottom-right" aria-label="Back to pipe list">
         <i class="material-icons md-24">chevron_left</i>
       </div>
