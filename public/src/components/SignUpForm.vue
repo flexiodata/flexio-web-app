@@ -104,6 +104,7 @@
 
 <script>
   import _ from 'lodash'
+  import axios from 'axios'
   //import api from '../api'
   import Btn from './Btn.vue'
 
@@ -181,7 +182,6 @@
         })
       },
       checkSignup: _.debounce(function(validate_key, callback) {
-        /*
         var attrs = this.getAttrs()
 
         var validate_attrs = [{
@@ -206,18 +206,14 @@
           })
         }
 
-        api.validate({ attrs: validate_attrs }).then(response => {
-          this.ss_errors = _.keyBy(response.body, 'key')
+        axios.post('/api/v1/validate', validate_attrs).then(response => {
+          this.ss_errors = _.keyBy(response.data, 'key')
 
           if (_.isFunction(callback))
             callback()
-        }, response => {
-          // error callback
         })
-        */
       }, 500),
       trySignUp() {
-        /*
         var attrs = this.getAttrs()
 
         this.is_submitting = true
@@ -230,40 +226,31 @@
             return
           }
 
-          this.$store.dispatch('signUp', { attrs }).then(response => {
-            // success callback
+          axios.post('/api/v1/users', attrs).then(response => {
             this.is_submitting = false
+            this.$emit('signed-up', this)
             this.trySignIn()
-          }, response => {
-            // error callback
+          }).catch(response => {
             this.is_submitting = false
             this.password = ''
             this.error_msg = _.get(response, 'data.error.message', '')
           })
         })
-        */
       },
       trySignIn() {
-        /*
         var attrs = this.getSignInAttrs()
 
         this.label_submitting = 'Signing in...'
         this.is_submitting = true
 
-        this.$store.dispatch('signIn', { attrs }).then(response => {
-          if (response.ok)
-          {
-            this.is_submitting = false
-            this.redirect()
-          }
-           else
-          {
-            this.is_submitting = false
-            this.password = ''
-            this.error_msg = _.get(response, 'data.error.message', '')
-          }
+        axios.post('/api/v1/login', attrs).then(response => {
+          this.is_submitting = false
+          this.$emit('signed-in', this)
+        }).catch(response => {
+          this.is_submitting = false
+          this.password = ''
+          this.error_msg = _.get(response, 'data.error.message', '')
         })
-        */
       },
       signInClick() {
         this.$emit('sign-in-click', this)
