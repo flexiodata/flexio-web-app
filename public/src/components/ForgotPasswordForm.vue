@@ -69,7 +69,7 @@
         axios.post('/api/v1/users/requestpasswordreset', attrs).then(response => {
           this.is_submitting = false
           this.is_sent = true
-          this.$emit('submitted-request', this)
+          this.$emit('requested-password', this)
         }).catch(response => {
           this.is_submitting = false
           this.error_msg = _.get(response, 'data.error.message', '')

@@ -5,23 +5,27 @@
     container-style="width: 32rem"
     :show-header="false"
     :show-footer="false"
-    @cancel="cancelClick"
-    @submit="submitClick"
+    @cancel="$emit('cancel')"
+    @submit="$emit('submit')"
   >
-    <div class="pointer f3 lh-solid b child black-30 hover-black-60 mt2 mr3 absolute top-0 right-0" @click="cancelClick">&times;</div>
+    <div class="pointer f3 lh-solid b child black-30 hover-black-60 mt2 mr3 absolute top-0 right-0" @click="$emit('cancel')">&times;</div>
     <div class="pv3 ph2">
       <sign-up-form
-        @sign-in-click="onSignInClick"
+        @sign-in-click="view = 'signin'"
+        @signed-in="$emit('signed-in')"
         v-if="view === 'signup'"
       />
       <sign-in-form
-        @sign-up-click="onSignUpClick"
-        @forgot-password-click="onForgotPasswordClick"
+        @sign-up-click="view = 'signup'"
+        @forgot-password-click="view = 'forgotpassword'"
+        @signed-up="$emit('signed-up')"
+        @signed-in="$emit('signed-in')"
         v-else-if="view === 'signin'"
       />
       <forgot-password-form
-        @sign-up-click="onSignUpClick"
-        @sign-in-click="onSignInClick"
+        @sign-up-click="view = 'signup'"
+        @sign-in-click="view = 'signin'"
+        @requested-password="$emit('requested-password')"
         v-else-if="view === 'forgotpassword'"
       />
     </div>
@@ -50,23 +54,6 @@
     data() {
       return {
         view: this.initialView
-      }
-    },
-    methods: {
-      cancelClick() {
-        this.$emit('cancel', this)
-      },
-      submitClick() {
-        this.$emit('submit', this)
-      },
-      onSignUpClick() {
-        this.view = 'signup'
-      },
-      onSignInClick() {
-        this.view = 'signin'
-      },
-      onForgotPasswordClick() {
-        this.view = 'forgotpassword'
       }
     }
   }
