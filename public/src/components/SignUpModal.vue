@@ -21,6 +21,7 @@
       />
       <forgot-password-form
         @sign-up-click="onSignUpClick"
+        @sign-in-click="onSignInClick"
         v-else-if="view === 'forgotpassword'"
       />
     </div>

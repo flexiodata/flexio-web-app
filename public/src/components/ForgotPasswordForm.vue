@@ -8,7 +8,7 @@
       <div class="mv3 lh-copy">
         <p>An email has been sent to <span class="b">{{email}}</span> with further instructions.</p>
         <p>You may need to check your spam folder or unblock no-reply@flex.io.</p>
-        <router-link to="/signin" class="link ph4 pv2a b lh-title white bg-blue b--blue darken-10 ttu tc db">Sign in</router-link>
+        <button class="link ph4 pv2a b lh-title white bg-blue b--blue darken-10 ttu tc w-100" @click="signInClick">Sign in</button>
       </div>
     </div>
     <div v-else>
@@ -78,6 +78,9 @@
       signUpClick() {
         this.$emit('sign-up-click', this)
       },
+      signInClick() {
+        this.$emit('sign-in-click', this)
+      }
     }
   }
 </script>

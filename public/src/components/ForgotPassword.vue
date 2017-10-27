@@ -4,13 +4,14 @@
       <forgot-password-form
         class="mh5-ns"
         @sign-up-click="onSignUpClick"
+        @sign-in-click="onSignInClick"
       />
     </div>
   </main>
 </template>
 
 <script>
-  import { ROUTE_SIGNUP } from '../constants/route'
+  import { ROUTE_SIGNIN, ROUTE_SIGNUP } from '../constants/route'
   import ForgotPasswordForm from './ForgotPasswordForm.vue'
 
   export default {
@@ -23,6 +24,11 @@
           name: ROUTE_SIGNUP,
           query: this.$route.query
         }
+      },
+      signin_route() {
+        return {
+          name: ROUTE_SIGNIN
+        }
       }
     },
     mounted() {
@@ -31,6 +37,9 @@
     methods: {
       onSignUpClick() {
         this.$router.push(this.signup_route)
+      },
+      onSignInClick() {
+        this.$router.push(this.signin_route)
       }
     }
   }
