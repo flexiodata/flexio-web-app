@@ -51,15 +51,13 @@ class StreamMemory implements \Flexio\Object\IStream
     {
         $object = new static();
 
-        // structure is stored as json string; it needs to be validated
-        // and encoded
+        // structure must be valid
         if (isset($properties) && isset($properties['structure']))
         {
             // if the structure is set, make sure it's valid
             $structure = $properties['structure'];
             $structure_object = \Flexio\Base\Structure::create($structure);
-            $structure = $structure_object->enum();
-            $object->properties['structure'] = json_encode($structure);
+            $object->properties['structure'] = $structure_object->enum();
         }
 
         // add a default path, but only if a connection eid, isn't specified; TODO:
@@ -101,8 +99,7 @@ class StreamMemory implements \Flexio\Object\IStream
             // if the structure is set, make sure it's valid
             $structure = $properties['structure'];
             $structure_object = \Flexio\Base\Structure::create($structure);
-            $structure = $structure_object->enum();
-            $this->properties['structure'] = json_encode($structure);
+            $this->properties['structure'] = $structure_object->enum();
         }
 
         if (isset($properties['name']))
@@ -188,7 +185,7 @@ class StreamMemory implements \Flexio\Object\IStream
             $structure = \Flexio\Base\Structure::create($structure);
 
         $properties = array();
-        $properties['structure'] = $structure->enum();
+        $properties['structure'] = $structure;
         return $this->set($properties);
     }
 

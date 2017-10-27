@@ -68,40 +68,32 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
                 return false; // TODO: implement for text
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                if ($this->offset >= count($this->getStream()->buffer))
-                {
+                $rows = $this->readArrayRows($this->offset, 1);
+                if ($rows === false)
                     return false;
-                }
-                 else
-                {
-                    $row = $this->getStream()->buffer[$this->offset];
-                    $this->offset++;
-                    return $row;
-                }
-                break;
+
+                $this->offset++;
+                return $rows[0];
         }
     }
 
     public function getRows(int $offset, int $limit)
     {
-        // only implemented for table type streams
-        $mime_type = $this->getStream()->getMimeType();
-        if ($mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            return null;
-
         if ($offset < 0)
             $offset = 0;
         if ($limit < 0)
             $limit = 0;
 
-        $buffer = $this->getStream()->buffer();
-        if (!is_array($buffer))
-            return null;
-
-        if ($offset > count($buffer) - 1)
+        // only implemented for table type streams
+        $mime_type = $this->getStream()->getMimeType();
+        if ($mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
             return false;
 
-        return array_slice($buffer, $offset, $limit);
+        $result = $this->readArrayRows($offset, $limit);
+        if ($result === false)
+            return false;
+
+        return $result;
     }
 
     public function close() : bool
@@ -112,6 +104,51 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
     private function getStream() : \Flexio\Object\StreamMemory
     {
         return $this->stream;
+    }
+
+    private function readArrayRows(int $start, int $limit)
+    {
+        $buffer = $this->getStream()->buffer;
+        if (!is_array($buffer))
+            return false;
+
+        if ($start > count($buffer) - 1)
+            return false;
+
+        $rows = array_slice($buffer, $start, $limit);
+
+        // data may be stored either with keys or as simple values; combine these
+        // with the structure when returning the result
+
+        $columns = $this->getStream()->getStructure()->enum();
+        $result = array();
+        foreach ($rows as $r)
+        {
+            $row_is_associative = \Flexio\Base\Util::isAssociativeArray($r);
+
+            $idx = 0;
+            $mapped_row = array();
+            foreach ($columns as $c)
+            {
+                $column_name = $c['name'];
+                if ($row_is_associative)
+                {
+                    if (array_key_exists($column_name, $r))
+                        $mapped_row[$column_name] = $r[$column_name];
+                         else
+                        $mapped_row[$column_name] = null;
+                }
+                 else
+                {
+                    $mapped_row[$column_name] = $r[$idx] ?? null;
+                }
+                $idx++;
+            }
+
+            $result[] = $mapped_row;
+        }
+
+        return $result;
     }
 }
 
@@ -327,7 +364,7 @@ class StreamFileReader
         // TODO: possibly implement this here
         // this is not presently called as non-table streams
         // are handled manually by Stream.php content() see line ~216 there
-        return null;
+        return false;
     }
 
     private static function getRowFromBuffer(&$buffer) // TODO: add input parameter types

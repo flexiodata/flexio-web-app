@@ -38,34 +38,22 @@ class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
 
     public function write($data)
     {
-        // data being written should be either a string or an array;
-        // get a representative string of the content so we can find
-        // out the size of the data that was written
-        $content_str = '';
-        if (is_string($data))
-            $content_str = $data;
-        if (is_array($data))
-            $content_str = implode('', $data);
-
-        // increment the total bytes written
-        $this->bytes_written += strlen($content_str);
-
         // write the data, depending on the type
+        $bytes_written = 0;
         $mime_type = $this->getStream()->getMimeType();
         switch ($mime_type)
         {
             default:
-                if (is_string($this->getStream()->buffer) === false) // initialize buffer
-                    $this->getStream()->buffer = '';
-                $this->getStream()->buffer .= $data;
+                $this->writeString($data, $bytes_written);
                 break;
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                if (is_array($this->getStream()->buffer) === false) // initialize buffer
-                    $this->getStream()->buffer = array();
-                array_push($this->getStream()->buffer, $data);
+                $this->writeArray($data, $bytes_written);
                 break;
         }
+
+        // increment the total bytes written
+        $this->bytes_written += $bytes_written;
     }
 
     public function getBytesWritten() : int
@@ -81,6 +69,31 @@ class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
     private function getStream() : \Flexio\Object\StreamMemory
     {
         return $this->stream;
+    }
+
+    private function writeString(string $data, int &$bytes_written)
+    {
+        $bytes_written = 0;
+        if (is_string($this->getStream()->buffer) === false) // initialize buffer
+            $this->getStream()->buffer = '';
+
+        $this->getStream()->buffer .= $data;
+        $bytes_written = strlen($data);
+        return true;
+    }
+
+    private function writeArray(array $data, int &$bytes_written)
+    {
+        $bytes_written = 0;
+        if (is_array($this->getStream()->buffer) === false) // initialize buffer
+            $this->getStream()->buffer = array();
+
+        array_push($this->getStream()->buffer, $data);
+
+        // set the bytes written
+        $content_str = implode('', $data);
+        $bytes_written = strlen($content_str);
+        return true;
     }
 }
 
