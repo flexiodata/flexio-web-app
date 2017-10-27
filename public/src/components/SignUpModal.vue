@@ -5,10 +5,10 @@
     container-style="width: 32rem"
     :show-header="false"
     :show-footer="false"
-    @cancel="show_modal = false"
-    v-if="show_modal"
+    @cancel="cancelClick"
+    @submit="submitClick"
   >
-    <div class="pointer f3 lh-solid b child black-30 hover-black-60 mt2 mr3 absolute top-0 right-0" @click="show_modal = false">&times;</div>
+    <div class="pointer f3 lh-solid b child black-30 hover-black-60 mt2 mr3 absolute top-0 right-0" @click="cancelClick">&times;</div>
     <div class="pv3 ph2">
       <sign-up-form
         @sign-in-click="onSignInClick"
@@ -48,16 +48,15 @@
     },
     data() {
       return {
-        show_modal: false,
         view: this.initialView
       }
     },
     methods: {
-      open() {
-        this.show_modal = true
+      cancelClick() {
+        this.$emit('cancel', this)
       },
-      close() {
-        this.show_modal = false
+      submitClick() {
+        this.$emit('submit', this)
       },
       onSignUpClick() {
         this.view = 'signup'
