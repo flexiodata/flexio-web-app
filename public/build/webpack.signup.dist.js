@@ -11,7 +11,7 @@ const base = {
   entry: options.paths.resolve('src/signup.js'),
 
   output: {
-    filename: options.isProduction ? 'flexio-modal.min.js' : 'flexio-modal.js',
+    filename: options.isProduction ? 'flexio-signup.min.js' : 'flexio-signup.js',
     path: options.paths.output.signup,
     library: 'FlexioModal',
     libraryExport: 'default',
