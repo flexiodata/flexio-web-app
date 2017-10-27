@@ -13,7 +13,7 @@
       <sign-up-form
         @sign-in-click="view = 'signin'"
         @signed-up="$emit('signed-up')"
-        @signed-in="$emit('signed-up-signed-in')"
+        @signed-in="onSignedUp"
         v-if="view === 'signup'"
       />
       <sign-in-form
@@ -28,6 +28,7 @@
         @requested-password="$emit('requested-password')"
         v-else-if="view === 'forgotpassword'"
       />
+      <sign-up-modal-success v-else-if="view === 'sign-up-success'" />
     </div>
   </flexio-modal>
 </template>
@@ -37,6 +38,7 @@
   import SignUpForm from './SignUpForm.vue'
   import SignInForm from './SignInForm.vue'
   import ForgotPasswordForm from './ForgotPasswordForm.vue'
+  import SignUpModalSuccess from './SignUpModalSuccess.vue'
 
   export default {
     props: {
@@ -49,11 +51,18 @@
       FlexioModal,
       SignUpForm,
       SignInForm,
-      ForgotPasswordForm
+      ForgotPasswordForm,
+      SignUpModalSuccess
     },
     data() {
       return {
         view: this.initialView
+      }
+    },
+    methods: {
+      onSignedUp() {
+        this.$emit('signed-up-signed-in')
+        this.view = 'sign-up-success'
       }
     }
   }
