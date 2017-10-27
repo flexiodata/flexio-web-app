@@ -5,6 +5,7 @@
         class="mh5-ns"
         @sign-up-click="onSignUpClick"
         @forgot-password-click="onForgotPasswordClick"
+        @signed-in="onSignedIn"
       />
     </div>
   </main>
@@ -42,6 +43,9 @@
       },
       onForgotPasswordClick() {
         this.$router.push(this.forgotpassword_route)
+      },
+      onSignedIn() {
+        this.redirect()
       }
     }
   }

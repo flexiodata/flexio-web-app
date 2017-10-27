@@ -4,6 +4,7 @@
       <sign-up-form
         class="mh5-ns"
         @sign-in-click="onSignInClick"
+        @signed-in="onSignedIn"
       />
     </div>
   </main>
@@ -33,6 +34,9 @@
     methods: {
       onSignInClick() {
         this.$router.push(this.signin_route)
+      },
+      onSignedIn() {
+        this.redirect()
       }
     }
   }
