@@ -25,6 +25,7 @@ class Render extends \Flexio\Jobs\Base
 
         $job_definition = $this->getProperties();
         $items = $job_definition['params']['items'] ?? null;
+        $file = $job_definition['params']['file'] ?? null;
         $format = $job_definition['params']['format'] ?? 'pdf';
         $width = $job_definition['params']['width'] ?? null;
         $height = $job_definition['params']['height'] ?? null;
@@ -36,13 +37,56 @@ class Render extends \Flexio\Jobs\Base
         else if ($format == 'png')
             $content_type = 'image/png';
         else
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid 'format' parameter. Value must be either 'pdf' or 'png'");
+        
         // get docker binary
         $dockerbin = \Flexio\System\System::getBinaryPath('docker');
         if (is_null($dockerbin))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        if ($file === null && isset($items[0]['path']))
+            $file = $items[0]['path'];
+
+        if ($file === null)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $outstream = $context->getStdout();
+        $outstream_properties = array(
+            'mime_type' => $content_type
+        );
+        $outstream->set($outstream_properties);
+
+        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+
+        $windowsize = '';
+        if (isset($width) && isset($height))
+            $windowsize = '--window-size="'.$width.'x'.$height.'"';
+
+        $hide_scrollbars = '';
+        if (!$scrollbars)
+            $hide_scrollbars = '--hide-scrollbars';
+
+        $url = $file;
+
+        if ($format == 'pdf')
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $hide_scrollbars $url && cat output.pdf'";
+        else if ($format == 'png')
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $hide_scrollbars $url && cat screenshot.png'";
+
+        $fp = popen($cmd, "r");
+
+        $totlen = 0;
+
+        while (!feof($fp))
+        {
+            $buf = fread($fp, 1024);
+            $streamwriter->write($buf);
+
+            $totlen += strlen($buf);
+        }
+
+        fclose($fp);
+/*
         $counter = 0;
         foreach ($input as $item)
         {
@@ -84,6 +128,7 @@ class Render extends \Flexio\Jobs\Base
 
             $context->addStream($outstream);
         }
+*/
     }
 
     // job definition info
