@@ -16,6 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
+require_once dirname(__DIR__) . '/object/Abstract.php';
+
+
 class Context
 {
     private $stdin;
@@ -135,7 +138,7 @@ class Context
         return $this;
     }
 
-    public function setStdin(\Flexio\Object\Base $stream = null) : \Flexio\Object\Context
+    public function setStdin(\Flexio\Object\IStream $stream = null) : \Flexio\Object\Context
     {
         $this->stdin = $stream;
         return $this;
@@ -146,7 +149,7 @@ class Context
         return $this->stdin;
     }
 
-    public function setStdout(\Flexio\Object\Base $stream = null) : \Flexio\Object\Context
+    public function setStdout(\Flexio\Object\IStream $stream = null) : \Flexio\Object\Context
     {
         $this->stdout = $stream;
         return $this;
@@ -189,8 +192,8 @@ class Context
     {
         return $this->exit_code;
     }
-    
-    public function addStream(\Flexio\Object\Base $stream) : \Flexio\Object\Context
+
+    public function addStream(\Flexio\Object\IStream $stream) : \Flexio\Object\Context
     {
         $this->streams[] = $stream;
         return $this;
