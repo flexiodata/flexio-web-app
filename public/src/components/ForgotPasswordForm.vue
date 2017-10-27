@@ -29,6 +29,10 @@
         </btn>
       </div>
     </div>
+    <div class="tc f5 fw6 mt3">
+      New to Flex.io?
+      <button type="button" class="link dib blue underline-hover db fw6" @click="signUpClick">Sign up</button>
+    </div>
   </form>
 </template>
 
@@ -74,7 +78,10 @@
             this.error_msg = _.get(response, 'data.error.message', '')
           })
         */
-      }
+      },
+      signUpClick() {
+        this.$emit('sign-up-click', this)
+      },
     }
   }
 </script>
