@@ -210,7 +210,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
         if ($readsize <= 0)
             $readsize = 1;
 
-        $mime_type = $this->stream_info['mime_type'];
+        $mime_type = $this->getMimeType();
         if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             return $this->getReader()->getRows($start,$limit);
@@ -226,9 +226,11 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
             $range2 = $start + $limit;
 
             $result = '';
+            $reader = $this->getReader();
+
             while (true)
             {
-                $chunk = $this->read($readsize);
+                $chunk = $reader->read($readsize);
                 if ($chunk === false)
                     break;
 
