@@ -9,13 +9,47 @@
         {{error_msg}}
       </div>
       <div class="mv3">
-        <input type="text" v-model="username" :class="input_cls" class="bg-black-10" placeholder="Email or username" disabled v-if="username_provided">
-        <input type="text" v-model="username" :class="input_cls" placeholder="Email or username" v-else v-focus>
+        <input
+          type="text"
+          placeholder="Email or username"
+          disabled
+          class="bg-black-10"
+          :class="input_cls"
+          v-model="username"
+          v-if="username_provided"
+        >
+        <input
+          type="text"
+          placeholder="Email or username"
+          :class="input_cls"
+          v-model="username"
+          v-focus
+          v-else
+        >
       </div>
       <div class="mv3">
-        <input v-model="password" @keyup.enter="trySignIn" :class="input_cls" placeholder="Password" type="password" autocomplete=off spellcheck="false" v-if="username_provided" v-focus>
-        <input v-model="password" @keyup.enter="trySignIn" :class="input_cls" placeholder="Password" type="password" autocomplete=off spellcheck="false" v-else>
-        <router-link to="/forgotpassword" class="f8 fw6 black-60 link underline-hover dib">Forgot your password?</router-link>
+        <input
+          type="password"
+          placeholder="Password"
+          autocomplete=off
+          spellcheck="false"
+          :class="input_cls"
+          @keyup.enter="trySignIn"
+          v-model="password"
+          v-focus
+          v-if="username_provided"
+        >
+        <input
+          type="password"
+          placeholder="Password"
+          autocomplete=off
+          spellcheck="false"
+          :class="input_cls"
+          @keyup.enter="trySignIn"
+          v-model="password"
+          v-else
+        >
+        <button type="button" class="f8 fw6 black-60 link underline-hover dib" @click="forgotPasswordClick">Forgot your password?</button>
       </div>
       <div class="mv3">
         <btn btn-lg btn-primary :disabled="is_submitting" @click="trySignIn" class="b ttu w-100">
@@ -26,37 +60,19 @@
     </div>
     <div class="tc f5 fw6 mt3">
       New to Flex.io?
-      <router-link :to="signup_link" class="link dib blue underline-hover db">Sign up</router-link>
+      <button type="button" class="link dib blue underline-hover db fw6" @click="signUpClick">Sign up</button>
     </div>
   </form>
 </template>
 
 <script>
   import _ from 'lodash'
-  import api from '../api'
-  import { ROUTE_SIGNUP } from '../constants/route'
+  //import api from '../api'
   import Btn from './Btn.vue'
-  import Redirect from './mixins/redirect'
 
   export default {
-    mixins: [Redirect],
     components: {
       Btn
-    },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        // access to component instance via `vm`
-        vm.verify_code = _.get(to, 'query.verify_code', '')
-        vm.username = _.get(to, 'query.email', '')
-
-        // if an email address has been provided to us, this indicates
-        // the user has been invited to Flex.io; disable the email input
-        // and show it at the top of the form -- all the user needs
-        // to do is to enter their first/last name, username and
-        // a password to create their account
-        if (vm.username.length > 0)
-          vm.username_provided = true
-      })
     },
     data() {
       return {
@@ -69,14 +85,6 @@
         input_cls: 'input-reset ba b--black-10 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
       }
     },
-    computed: {
-      signup_link() {
-        return {
-          name: ROUTE_SIGNUP,
-          query: this.$route.query
-        }
-      }
-    },
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
@@ -85,6 +93,7 @@
         return _.omitBy(attrs, _.isEmpty)
       },
       trySignIn() {
+        /*
         var attrs = this.getAttrs()
 
         this.is_submitting = true
@@ -102,6 +111,13 @@
             this.error_msg = _.get(response, 'data.error.message', '')
           }
         })
+        */
+      },
+      signUpClick() {
+        this.$emit('sign-up-click', this)
+      },
+      forgotPasswordClick() {
+        this.$emit('forgot-password-click', this)
       }
     }
   }

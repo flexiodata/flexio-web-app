@@ -1,7 +1,10 @@
 <template>
   <main class="pa3 ph3-m pa5-ns black-60 overflow-auto">
     <div class="measure-wide center">
-      <sign-up-form class="mh5-ns" @sign-in-click="onSignInClick" />
+      <sign-up-form
+        class="mh5-ns"
+        @sign-in-click="onSignInClick"
+      />
     </div>
   </main>
 </template>

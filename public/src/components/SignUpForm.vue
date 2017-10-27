@@ -96,7 +96,8 @@
       </div>
     </div>
     <div class="tc f5 fw6 mt4">
-      Already have an account? <button type="button" class="link dib blue underline-hover db fw6" @click="signInClick">Sign in</button>
+      Already have an account?
+      <button type="button" class="link dib blue underline-hover db fw6" @click="signInClick">Sign in</button>
     </div>
   </form>
 </template>
@@ -180,6 +181,7 @@
         })
       },
       checkSignup: _.debounce(function(validate_key, callback) {
+        /*
         var attrs = this.getAttrs()
 
         var validate_attrs = [{
@@ -204,7 +206,6 @@
           })
         }
 
-        /*
         api.validate({ attrs: validate_attrs }).then(response => {
           this.ss_errors = _.keyBy(response.body, 'key')
 
@@ -216,11 +217,11 @@
         */
       }, 500),
       trySignUp() {
+        /*
         var attrs = this.getAttrs()
 
         this.is_submitting = true
 
-        /*
         // check server-side errors
         this.checkSignup(null, () => {
           if (this.has_errors)
@@ -243,12 +244,12 @@
         */
       },
       trySignIn() {
+        /*
         var attrs = this.getSignInAttrs()
 
         this.label_submitting = 'Signing in...'
         this.is_submitting = true
 
-        /*
         this.$store.dispatch('signIn', { attrs }).then(response => {
           if (response.ok)
           {
