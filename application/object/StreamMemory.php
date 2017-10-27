@@ -23,10 +23,15 @@ require_once dirname(__DIR__) . '/object/StreamWriter.php';
 
 class StreamMemory implements \Flexio\Object\IStream
 {
+    // data buffer; use reader/writer to access
+    public $buffer;
+
+    // properties
     private $properties;
 
     public function __construct()
     {
+        $buffer = '';
     }
 
     public static function create(array $properties = null) : \Flexio\Object\StreamMemory

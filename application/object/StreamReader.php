@@ -21,34 +21,54 @@ require_once dirname(__DIR__) . '/object/Abstract.php';
 
 class StreamMemoryReader implements \Flexio\Object\IStreamReader
 {
+    private $stream;
+
+    public function __construct()
+    {
+    }
+
     public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryReader
     {
         $object = new static;
+        $object->stream = $stream;
         return $object;
     }
 
     public function read($length = 1024)
     {
-        return false;
+        return $this->getStream()->buffer;
     }
 
     public function readRow()
     {
-        return false;
+        return $this->getStream()->buffer;
     }
 
     public function getRows(int $offset, int $limit)
     {
-        return false;
+        return $this->getStream()->buffer;
     }
 
     public function getContent(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */)
     {
+        if ($start < 0 )
+            $start = 0;
+        if ($limit < 0)
+            $limit = 0;
+        if ($readsize <= 0)
+            $readsize = 1;
+
+        return $this->getStream()->buffer;
     }
 
     public function close() : bool
     {
         return true;
+    }
+
+    private function getStream() : \Flexio\Object\StreamMemory
+    {
+        return $this->stream;
     }
 }
 

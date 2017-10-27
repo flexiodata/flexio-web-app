@@ -21,25 +21,40 @@ require_once dirname(__DIR__) . '/object/Abstract.php';
 
 class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
 {
+    private $stream;
+    private $bytes_written;
+
+    public function __construct()
+    {
+        $bytes_written = 0;
+    }
+
     public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryWriter
     {
         $object = new static;
+        $object->stream = $stream;
         return $object;
     }
 
     public function write($data)
     {
-        return false;
+        $this->getStream()->buffer .= $data;
+        $this->bytes_written += strlen($data);
     }
 
     public function getBytesWritten() : int
     {
-        return 0;
+        return $this->bytes_written;
     }
 
     public function close() : bool
     {
         return true;
+    }
+
+    private function getStream() : \Flexio\Object\StreamMemory
+    {
+        return $this->stream;
     }
 }
 
