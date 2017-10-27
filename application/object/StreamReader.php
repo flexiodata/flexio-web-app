@@ -42,20 +42,14 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
         switch ($mime_type)
         {
             default:
-                if ($this->offset >= strlen($this->getStream()->buffer))
-                {
+                $str = $this->readString($this->offset, $length);
+                if ($str === false)
                     return false;
-                }
-                 else
-                {
-                    $b = substr($this->getStream()->buffer, $this->offset, $length);
-                    $this->offset += $length;
-                    return $b;
-                }
-                break;
+                $this->offset += strlen($str);
+                return $str;
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                return false; // TODO: implement for table
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         }
     }
 
@@ -65,7 +59,7 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
         switch ($mime_type)
         {
             default:
-                return false; // TODO: implement for text
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                 $rows = $this->readArrayRows($this->offset, 1);
@@ -87,7 +81,7 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
         // only implemented for table type streams
         $mime_type = $this->getStream()->getMimeType();
         if ($mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
 
         $result = $this->readArrayRows($offset, $limit);
         if ($result === false)
@@ -104,6 +98,14 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
     private function getStream() : \Flexio\Object\StreamMemory
     {
         return $this->stream;
+    }
+
+    private function readString(int $offset, int $limit)
+    {
+        if ($offset >= strlen($this->getStream()->buffer))
+            return false;
+
+        return substr($this->getStream()->buffer, $this->offset, $limit);
     }
 
     private function readArrayRows(int $start, int $limit)
@@ -361,10 +363,7 @@ class StreamFileReader
 
     public function getRows(int $offset, int $limit)
     {
-        // TODO: possibly implement this here
-        // this is not presently called as non-table streams
-        // are handled manually by Stream.php content() see line ~216 there
-        return false;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     private static function getRowFromBuffer(&$buffer) // TODO: add input parameter types
