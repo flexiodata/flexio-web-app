@@ -49,7 +49,7 @@
           v-model="password"
           v-else
         >
-        <button type="button" class="f8 fw6 black-60 link underline-hover dib" @click="forgotPasswordClick">Forgot your password?</button>
+        <button type="button" class="f8 fw6 black-60 link underline-hover dib" @click="$emit('forgot-password-click')">Forgot your password?</button>
       </div>
       <div class="mv3">
         <btn btn-lg btn-primary :disabled="is_submitting" @click="trySignIn" class="b ttu w-100">
@@ -60,7 +60,7 @@
     </div>
     <div class="tc f5 fw6 mt3">
       New to Flex.io?
-      <button type="button" class="link dib blue underline-hover db fw6" @click="signUpClick">Sign up</button>
+      <button type="button" class="link dib blue underline-hover db fw6" @click="$emit('sign-up-click')">Sign up</button>
     </div>
   </form>
 </template>
@@ -99,18 +99,12 @@
 
         axios.post('/api/v1/login', attrs).then(response => {
           this.is_submitting = false
-          this.$emit('signed-in', this)
+          this.$emit('signed-in')
         }).catch(response => {
           this.is_submitting = false
           this.password = ''
           this.error_msg = _.get(response, 'data.error.message', '')
         })
-      },
-      signUpClick() {
-        this.$emit('sign-up-click', this)
-      },
-      forgotPasswordClick() {
-        this.$emit('forgot-password-click', this)
       }
     }
   }

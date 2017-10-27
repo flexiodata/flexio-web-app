@@ -97,7 +97,7 @@
     </div>
     <div class="tc f5 fw6 mt4">
       Already have an account?
-      <button type="button" class="link dib blue underline-hover db fw6" @click="signInClick">Sign in</button>
+      <button type="button" class="link dib blue underline-hover db fw6" @click="$emit('sign-in-click')">Sign in</button>
     </div>
   </form>
 </template>
@@ -227,7 +227,7 @@
 
           axios.post('/api/v1/users', attrs).then(response => {
             this.is_submitting = false
-            this.$emit('signed-up', this)
+            this.$emit('signed-up')
             this.trySignIn()
           }).catch(response => {
             this.is_submitting = false
@@ -244,15 +244,12 @@
 
         axios.post('/api/v1/login', attrs).then(response => {
           this.is_submitting = false
-          this.$emit('signed-in', this)
+          this.$emit('signed-in')
         }).catch(response => {
           this.is_submitting = false
           this.password = ''
           this.error_msg = _.get(response, 'data.error.message', '')
         })
-      },
-      signInClick() {
-        this.$emit('sign-in-click', this)
       }
     }
   }
