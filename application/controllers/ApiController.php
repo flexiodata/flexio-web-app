@@ -90,8 +90,12 @@ class ApiController extends \Flexio\System\FxControllerAction
             header('Access-Control-Allow-Origin: http://localhost:8080');
         }
 */
-        // allow JSON to be sent directly to the server
-        if ($method != 'GET')
+
+        // allow JSON to be sent as POST body; the check for enable_post_data_reading
+        // is for calls that 'want' the json payload as their body, such as /pipe/:eid/run and
+        // /process/:eid/run
+
+        if ($method != 'GET' && ini_get('enable_post_data_reading') == '1')
         {
             $all_headers = getallheaders();
 

@@ -70,6 +70,48 @@ class Process extends \Flexio\Object\Base
             $form_params["query.$key"] = $value;
         }
 
+        // \Flexio\Base\MultipartParser can handle application/x-www-form-urlencoded and /multipart/form-data
+        // for all other types, we will take the post body and make it into the stdin
+
+        $mime_type = $post_content_type;
+        $semicolon_pos = strpos($mime_type, ';');
+        if ($semicolon_pos !== false)
+            $mime_type = substr($mime_type, 0, $semicolon_pos);
+        if ($mime_type != 'application/x-www-form-urlencoded' && $mime_type != 'multipart/form-data')
+        {
+            // post body is a data stream, post it as our pipe's stdin
+            $first = true;
+            $done = false;
+            $streamwriter = null;
+            while (!$done)
+            {
+                $data = fread($php_stream_handle, 32768);
+
+                if ($data === false || strlen($data) != 32768)
+                    $done = true;
+                if ($first && $data !== false && strlen($data) > 0)
+                {
+                    $stream = \Flexio\Object\Stream::create();
+
+                    $stream_info = array();
+                    $stream_info['mime_type'] = $mime_type;
+                    $stream->set($stream_info);
+
+                    $context = $process->getInput();
+                    $context->setStdin($stream);
+                    $process->setInput($context);
+
+                    $streamwriter = \Flexio\Object\StreamWriter::create($stream);
+                }
+                
+                if ($streamwriter)
+                    $streamwriter->write($data);
+            }
+
+            return;
+        }
+
+
         $parser = \Flexio\Base\MultipartParser::create();
         $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params, &$post_streams) {
             if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
