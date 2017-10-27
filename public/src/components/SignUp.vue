@@ -12,6 +12,9 @@
   export default {
     components: {
       SignUpForm
+    },
+    mounted() {
+      analytics.track('Visited Sign Up Page')
     }
   }
 </script>

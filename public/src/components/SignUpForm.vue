@@ -199,9 +199,6 @@
         return this.has_client_errors || this.has_server_errors
       }
     },
-    mounted() {
-      analytics.track('Visited Sign Up Page')
-    },
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend

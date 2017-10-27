@@ -110,9 +110,6 @@
       has_password_error() { return this.password_error.length > 0 },
       has_confirm_password_error() { return this.confirm_password_error.length > 0 }
     },
-    mounted() {
-      analytics.track('Visited Reset Password Page')
-    },
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend

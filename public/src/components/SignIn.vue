@@ -12,6 +12,9 @@
   export default {
     components: {
       SignInForm
+    },
+    mounted() {
+      analytics.track('Visited Sign In Page')
     }
   }
 </script>

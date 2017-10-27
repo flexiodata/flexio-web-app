@@ -12,6 +12,9 @@
   export default {
     components: {
       ForgotPasswordForm
+    },
+    mounted() {
+      analytics.track('Visited Forgot Password Page')
     }
   }
 </script>

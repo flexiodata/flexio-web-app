@@ -49,9 +49,6 @@
         input_cls: 'input-reset ba b--black-10 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
       }
     },
-    mounted() {
-      analytics.track('Visited Forgot Password Page')
-    },
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
