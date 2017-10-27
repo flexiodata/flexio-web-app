@@ -34,7 +34,7 @@
 
 <script>
   import _ from 'lodash'
-  import api from '../api'
+  //import api from '../api'
   import Btn from './Btn.vue'
 
   export default {
@@ -58,20 +58,22 @@
         return _.omitBy(attrs, _.isEmpty)
       },
       sendReset() {
-        var me = this
-        var attrs = this.getAttrs()
+        /*
+          var me = this
+          var attrs = this.getAttrs()
 
-        this.is_submitting = true
+          this.is_submitting = true
 
-        api.requestPasswordReset({ attrs }).then(response => {
-          // success callback
-          me.is_submitting = false
-          me.is_sent = true
-        }, response => {
-          // error callback
-          me.is_submitting = false
-          this.error_msg = _.get(response, 'data.error.message', '')
-        })
+          api.requestPasswordReset({ attrs }).then(response => {
+            // success callback
+            me.is_submitting = false
+            me.is_sent = true
+          }, response => {
+            // error callback
+            me.is_submitting = false
+            this.error_msg = _.get(response, 'data.error.message', '')
+          })
+        */
       }
     }
   }
