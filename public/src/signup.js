@@ -1,10 +1,10 @@
-import FlexioModal from './components/FlexioModal.vue'
+import FlexioSignUpModal from './components/SignUpModal.vue'
 
 // expose component to global scope
 if (typeof window !== 'undefined' && window.Vue) {
-  Vue.component('flexio-modal', FlexioModal)
+  Vue.component('flexio-sign-up-modal', FlexioSignUpModal)
 }
 
-export { FlexioModal }
+export { FlexioSignUpModal }
 
-export default FlexioModal
+export default FlexioSignUpModal

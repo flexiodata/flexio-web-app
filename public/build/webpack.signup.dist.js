@@ -1,5 +1,7 @@
 'use strict'
 
+const version = require('../package.json').version
+
 const merge = require('deep-assign')
 const webpack = require('webpack')
 
@@ -45,7 +47,7 @@ const base = {
 
 const banner =
   '/*!\n' +
-  ' * Flex.io Web Sign In v' + options.version + ' (https://github.com/flexiodata/flexio)\n' +
+  ' * Flex.io Web Sign In v' + version + ' (https://github.com/flexiodata/flexio)\n' +
   ' * (c) ' + new Date().getFullYear() + ' Gold Prairie LLC\n' +
   ' */'
 
