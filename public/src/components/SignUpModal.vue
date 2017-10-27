@@ -19,7 +19,7 @@
         @sign-up-click="view = 'signup'"
         @forgot-password-click="view = 'forgotpassword'"
         @signed-up="$emit('signed-up')"
-        @signed-in="$emit('signed-in')"
+        @signed-in="$emit('signed-up-signed-in')"
         v-else-if="view === 'signin'"
       />
       <forgot-password-form
