@@ -1868,6 +1868,9 @@
 
       if (params.hasOwnProperty('file'))
       {
+        json.params.file = params['file'].value;
+
+        /*
         var arr = this.parseList(params['file'].value);
 
         json.params.items = [];
@@ -1898,6 +1901,7 @@
             json.params.items.push({"path": arr[i]});
           }
         }
+*/
       }
 
 
@@ -1948,11 +1952,19 @@
 
       var res = "render";
 
-      var i, items = [];
-      if (json.params.hasOwnProperty('items') && Array.isArray(json.params.items))
+      if (json.params.hasOwnProperty('file'))
       {
+        res = this.append(res, "file: " + json.params['file']);
+      }
+       else if (json.params.hasOwnProperty('items') && Array.isArray(json.params.items) && json.params.items.length > 0 && json.params.items[0].hasOwnProperty('path'))
+      {
+        res = this.append(res, "file: " + json.params.items[0].path);
+    
+        /*
 
         var str = '';
+        var i, items = [];
+
         for (i = 0; i < json.params.items.length; ++i)
         {
           if (str.length > 0)
@@ -1972,6 +1984,9 @@
         }
 
         res = this.append(res, "file: " + str);
+        */
+
+
       }
 
 
