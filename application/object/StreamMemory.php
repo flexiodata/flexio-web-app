@@ -304,5 +304,39 @@ class StreamMemory implements \Flexio\Object\IStream
     {
         return \Flexio\Object\StreamMemoryWriter::create($this, true);
     }
+
+    public function bufferToString()
+    {
+        if ($this->buffer === false)
+            return false;
+
+        // returns the buffer as a string that's safe for storing
+        if ($this->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        {
+            $buffer = json_encode($this->buffer);
+            return base64_encode($buffer);
+        }
+         else
+        {
+            return base64_encode($this->buffer);
+        }
+    }
+
+    public function bufferFromString(string $str)
+    {
+        // restores the buffer from a string
+        if ($this->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        {
+            $buffer = base64_decode($str);
+            $temp = json_decode($buffer, true);
+            if ($temp === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            $this->buffer = $temp;
+        }
+         else
+        {
+            $this->buffer = base64_decode($str);
+        }
+    }
 }
 

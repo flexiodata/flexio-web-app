@@ -40,17 +40,17 @@ class Context
         $result['stdin'] = null;
         if (isset($this->stdin))
         {
-            $result['stdin'] = array('eid' => $this->stdin->getEid(),
-                                     'eid_type' => $this->stdin->getType(),
-                                     'mime_type' => $this->stdin->getMimeType());
+            $result['stdin'] = $this->stdin->get();
+            if ($this->stdin instanceof \Flexio\Object\StreamMemory)
+                $result['stdin']['buffer'] = $this->stdin->bufferToString();
         }
 
         $result['stdout'] = null;
         if (isset($this->stdout))
         {
-            $result['stdout'] = array('eid' => $this->stdout->getEid(),
-                                      'eid_type' => $this->stdout->getType(),
-                                      'mime_type' => $this->stdout->getMimeType());
+            $result['stdout'] = $this->stdout->get();
+            if ($this->stdout instanceof \Flexio\Object\StreamMemory)
+                $result['stdout']['buffer'] = $this->stdout->bufferToString();
         }
 
         $result['params'] = $this->params;
@@ -59,9 +59,12 @@ class Context
 
         foreach ($this->streams as $s)
         {
-            $result['streams'][] = array('eid' => $s->getEid(),
-                                         'eid_type' => $s->getType(),
-                                         'mime_type' => $s->getMimeType());
+            $properties = $s->get();
+
+            if ($s instanceof \Flexio\Object\StreamMemory)
+                $properties['buffer'] = $s->bufferToString();
+
+            $result['streams'][] = $properties;
         }
 
         return json_encode($result);
@@ -77,18 +80,50 @@ class Context
         if ($arr === false)
             return $context;
 
-        if (isset($arr['stdin']) && isset($arr['stdin']['eid']))
+        if (isset($arr['stdin']))
         {
-            $stream = \Flexio\Object\Stream::load($arr['stdin']['eid']);
-            if ($stream !== false)
-                $context->setStdin($stream);
+            if (isset($arr['stdin']['eid']))
+            {
+                // if we have an eid, we have a stream object so, load the info from the eid
+                $stream = \Flexio\Object\Stream::load($arr['stdin']['eid']);
+                if ($stream !== false)
+                    $context->setStdin($stream);
+            }
+             else
+            {
+                // if we don't have an eid, we have a memory stream; load the info from what's saved
+                $stream = \Flexio\Object\StreamMemory::create($arr['stdin']);
+                $buffer = $arr['stdin']['buffer'];
+                if ($stream !== false)
+                {
+                    if ($buffer !== false)
+                        $stream->bufferFromString($buffer);
+                    $context->setStdin($stream);
+                }
+            }
         }
 
-        if (isset($arr['stdout']) && isset($arr['stdout']['eid']))
+        if (isset($arr['stdout']))
         {
-            $stream = \Flexio\Object\Stream::load($arr['stdout']['eid']);
-            if ($stream !== false)
-                $context->setStdout($stream);
+            if (isset($arr['stdout']['eid']))
+            {
+                // if we have an eid, we have a stream object so, load the info from the eid
+                $stream = \Flexio\Object\Stream::load($arr['stdout']['eid']);
+                if ($stream !== false)
+                    $context->setStdout($stream);
+            }
+             else
+            {
+                // if we don't have an eid, we have a memory stream; load the info from what's saved
+                $stream = \Flexio\Object\StreamMemory::create($arr['stdout']);
+                $buffer = $arr['stdout']['buffer'];
+                if ($stream !== false)
+                {
+                    if ($buffer !== false)
+                        $stream->bufferFromString($buffer);
+                    $context->setStdout($stream);
+                }
+            }
         }
 
         if (isset($arr['params']) && is_array($arr['params']))
@@ -101,9 +136,25 @@ class Context
         {
             foreach ($arr['streams'] as $info)
             {
-                $stream = \Flexio\Object\Stream::load($info['eid']);
-                if ($stream !== false)
-                    $context->addStream($stream);
+                if (isset($info['eid']))
+                {
+                    // if we have an eid, we have a stream object so, load the info from the eid
+                    $stream = \Flexio\Object\Stream::load($info['eid']);
+                    if ($stream !== false)
+                        $context->addStream($stream);
+                }
+                 else
+                {
+                    // if we don't have an eid, we have a memory stream, so load the info from what's saved
+                    $stream = \Flexio\Object\StreamMemory::create($info);
+                    $buffer = $info['buffer'];
+                    if ($stream !== false)
+                    {
+                        if ($buffer !== false)
+                            $stream->bufferFromString($buffer);
+                        $context->addStream($stream);
+                    }
+                }
             }
         }
 
