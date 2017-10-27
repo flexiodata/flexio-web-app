@@ -31,7 +31,7 @@ class StreamMemory implements \Flexio\Object\IStream
 
     public function __construct()
     {
-        $buffer = false;
+        $this->buffer = false;
     }
 
     public static function create(array $properties = null) : \Flexio\Object\StreamMemory

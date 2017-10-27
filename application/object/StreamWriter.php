@@ -26,7 +26,7 @@ class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
 
     public function __construct()
     {
-        $bytes_written = 0;
+        $this->bytes_written = 0;
     }
 
     public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryWriter
@@ -63,7 +63,7 @@ class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                 if (is_array($this->getStream()->buffer) === false) // initialize buffer
                     $this->getStream()->buffer = array();
-                $this->getStream()->buffer.array_push($data);
+                array_push($this->getStream()->buffer, $data);
                 break;
         }
     }

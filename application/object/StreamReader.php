@@ -22,9 +22,11 @@ require_once dirname(__DIR__) . '/object/Abstract.php';
 class StreamMemoryReader implements \Flexio\Object\IStreamReader
 {
     private $stream;
+    private $offset;
 
     public function __construct()
     {
+        $this->offset = 0;
     }
 
     public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryReader
@@ -36,12 +38,48 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
 
     public function read($length = 1024)
     {
-        // TODO: implement
+        $mime_type = $this->getStream()->getMimeType();
+        switch ($mime_type)
+        {
+            default:
+                if ($this->offset >= strlen($this->getStream()->buffer))
+                {
+                    return false;
+                }
+                 else
+                {
+                    $b = substr($this->getStream()->buffer, $this->offset, $length);
+                    $this->offset += $length;
+                    return $b;
+                }
+                break;
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                return false; // TODO: implement for table
+        }
     }
 
     public function readRow()
     {
-        // TODO: implement
+        $mime_type = $this->getStream()->getMimeType();
+        switch ($mime_type)
+        {
+            default:
+                return false; // TODO: implement for text
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                if ($this->offset >= count($this->getStream()->buffer))
+                {
+                    return false;
+                }
+                 else
+                {
+                    $row = $this->getStream()->buffer[$this->offset];
+                    $this->offset++;
+                    return $row;
+                }
+                break;
+        }
     }
 
     public function getRows(int $offset, int $limit)
