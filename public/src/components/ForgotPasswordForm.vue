@@ -70,9 +70,9 @@
           this.is_submitting = false
           this.is_sent = true
           this.$emit('requested-password')
-        }).catch(response => {
+        }).catch(error => {
           this.is_submitting = false
-          this.error_msg = _.get(response, 'data.error.message', '')
+          this.error_msg = _.get(error, 'response.data.error.message', '')
         })
       }
     }

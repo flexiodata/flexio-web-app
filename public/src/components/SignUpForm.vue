@@ -229,10 +229,10 @@
             this.is_submitting = false
             this.$emit('signed-up')
             this.trySignIn()
-          }).catch(response => {
+          }).catch(error => {
             this.is_submitting = false
             this.password = ''
-            this.error_msg = _.get(response, 'data.error.message', '')
+            this.error_msg = _.get(error, 'response.data.error.message', '')
           })
         })
       },
@@ -245,10 +245,10 @@
         axios.post('/api/v1/login', attrs).then(response => {
           this.is_submitting = false
           this.$emit('signed-in')
-        }).catch(response => {
+        }).catch(error => {
           this.is_submitting = false
           this.password = ''
-          this.error_msg = _.get(response, 'data.error.message', '')
+          this.error_msg = _.get(error, 'response.data.error.message', '')
         })
       }
     }

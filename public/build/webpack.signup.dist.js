@@ -13,7 +13,7 @@ const base = {
   output: {
     filename: options.isProduction ? 'flexio-signup.min.js' : 'flexio-signup.js',
     path: options.paths.output.signup,
-    library: 'FlexioModal',
+    library: 'FlexioSignUpModal',
     libraryExport: 'default',
     libraryTarget: 'umd'
   },
