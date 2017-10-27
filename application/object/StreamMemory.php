@@ -32,10 +32,25 @@ class StreamMemory implements \Flexio\Object\IStream
     public function __construct()
     {
         $this->buffer = false;
+
+        $this->properites = array();
+        $this->properties['name'] = null;
+        $this->properties['path'] = null;
+        $this->properties['size'] = null;
+        $this->properties['hash'] = null;
+        $this->properties['mime_type'] = null;
+        $this->properties['structure'] = array();
+        $this->properties['file_created'] = null;
+        $this->properties['file_modified'] = null;
+        $this->properties['connection_eid'] = null;
+        $this->properties['created'] = '';
+        $this->properties['updated'] = '';
     }
 
     public static function create(array $properties = null) : \Flexio\Object\StreamMemory
     {
+        $object = new static();
+
         // structure is stored as json string; it needs to be validated
         // and encoded
         if (isset($properties) && isset($properties['structure']))
@@ -44,22 +59,34 @@ class StreamMemory implements \Flexio\Object\IStream
             $structure = $properties['structure'];
             $structure_object = \Flexio\Base\Structure::create($structure);
             $structure = $structure_object->enum();
-            $properties['structure'] = json_encode($structure);
+            $object->properties['structure'] = json_encode($structure);
         }
 
-        // if a connection isn't specified, add a default connection to
-        // the datastore
+        // add a default path, but only if a connection eid, isn't specified; TODO:
+        // this behavior is for consistency with the regular stream object; should
+        // uncouple the default path creation from the connection eid
         if (!isset($properties['connection_eid']))
         {
             // default path
             if (!isset($properties['path']))
-                $properties['path'] = \Flexio\Base\Util::generateHandle();
-
-            $properties['connection_eid'] = false;
+                $object->properties['path'] = \Flexio\Base\Util::generateHandle();
         }
 
-        $object = new static();
-        $object->properties = $properties;
+        if (isset($properties['name']))
+            $object->properties['name'] = $properties['name'];
+        if (isset($properties['path']))
+            $object->properties['path'] = $properties['path'];
+        if (isset($properties['size']))
+            $object->properties['size'] = $properties['size'];
+        if (isset($properties['hash']))
+            $object->properties['hash'] = $properties['hash'];
+        if (isset($properties['mime_type']))
+            $object->properties['mime_type'] = $properties['mime_type'];
+        if (isset($properties['file_created']))
+            $object->properties['file_created'] = $properties['file_created'];
+        if (isset($properties['file_modified']))
+            $object->properties['file_modified'] = $properties['file_modified'];
+
         return $object;
     }
 

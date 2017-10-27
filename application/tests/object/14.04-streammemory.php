@@ -70,7 +70,10 @@ class Test
             "structure" : {
             },
             "file_created" : null,
-            "file_modified" : null
+            "file_modified" : null,
+            "connection_eid" :  null,
+            "created" : null,
+            "updated" : null
         }
         ',true);
         TestCheck::assertArrayKeys('E.2', 'StreamMemory::get(); return the properties as an array',  $actual, $expected, $results);
