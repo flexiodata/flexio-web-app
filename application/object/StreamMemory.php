@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-require_once dirname(__DIR__) . '/services/Abstract.php';
+require_once dirname(__DIR__) . '/object/Abstract.php';
 
 class StreamMemory implements \Flexio\Object\IStream
 {
