@@ -29,7 +29,6 @@ class MultipartParser
     const TYPE_FILE_END = 3;
     const TYPE_KEY_VALUE = 4;
 
-	
     // callback should be a function like this
     // function callback($type, $name, $data, $filename, $content_type)
     // when type equals TYPE_FILE_BEGIN - file starting
