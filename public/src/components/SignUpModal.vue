@@ -11,8 +11,6 @@
     <div class="pointer f3 lh-solid b child black-30 hover-black-60 mt2 mr3 absolute top-0 right-0" @click="show_modal = false">&times;</div>
     <div class="pv3 ph2">
       <sign-up-form v-if="view === 'signup'" />
-      <sign-in-form v-else-if="view === 'signin'" />
-      <forgot-password-form v-else-if="view === 'forgotpassword'" />
     </div>
   </flexio-modal>
 </template>
@@ -20,8 +18,6 @@
 <script>
   import FlexioModal from './FlexioModal.vue'
   import SignUpForm from './SignUpForm.vue'
-  import SignInForm from './SignInForm.vue'
-  import ForgotPasswordForm from './ForgotPasswordForm.vue'
 
   export default {
     props: {
@@ -32,9 +28,7 @@
     },
     components: {
       FlexioModal,
-      SignUpForm,
-      SignInForm,
-      ForgotPasswordForm
+      SignUpForm
     },
     data() {
       return {

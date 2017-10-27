@@ -30,12 +30,7 @@
             :class="input_cls"
             v-model="first_name"
             v-focus
-            v-validate
-            data-vv-name="first_name"
-            data-vv-as="first name"
-            data-vv-rules="required"
           >
-          <span class="f8 dark-red" v-show="errors.has('first_name')">{{errors.first('first_name')}}</span>
         </div>
         <div class="flex-fill">
           <input
@@ -45,12 +40,7 @@
             spellcheck="false"
             :class="input_cls"
             v-model="last_name"
-            v-validate
-            data-vv-name="last_name"
-            data-vv-as="last name"
-            data-vv-rules="required"
           >
-          <span class="f8 dark-red" v-show="errors.has('last_name')">{{errors.first('last_name')}}</span>
         </div>
       </div>
       <div class="mv3">
@@ -106,7 +96,7 @@
       </div>
     </div>
     <div class="tc f5 fw6 mt4">
-      Already have an account? <router-link :to="signin_link" class="link dib blue underline-hover db">Sign in</router-link>
+      Already have an account? <button type="button" class="link dib blue underline-hover db fw6" @click="signInClick">Sign in</button>
     </div>
   </form>
 </template>
@@ -122,25 +112,6 @@
     mixins: [Redirect],
     components: {
       Btn
-    },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        // access to component instance via `vm`
-        vm.verify_code = _.get(to, 'query.verify_code', '')
-        vm.email = _.get(to, 'query.email', '')
-
-        // if an email address has been provided to us, this indicates
-        // the user has been invited to Flex.io; disable the email input
-        // and show it at the top of the form -- all the user needs
-        // to do is to enter their first/last name, username and
-        // a password to create their account
-        if (vm.email.length > 0)
-          vm.email_provided = true
-
-        // TODO: remove? is this really necessary?
-        // now that we have them, we can remove the query params from the url
-        //vm.$router.replace(to.path)
-      })
     },
     data() {
       return {
@@ -165,12 +136,6 @@
       password: function(val, old_val) { this.checkSignup('password') }
     },
     computed: {
-      signin_link() {
-        return {
-          name: ROUTE_SIGNIN,
-          query: this.$route.query
-        }
-      },
       email_error() {
         return _.get(this.ss_errors, 'email.message', '')
       },
@@ -242,6 +207,7 @@
           })
         }
 
+        /*
         api.validate({ attrs: validate_attrs }).then(response => {
           this.ss_errors = _.keyBy(response.body, 'key')
 
@@ -250,12 +216,14 @@
         }, response => {
           // error callback
         })
+        */
       }, 500),
       trySignUp() {
         var attrs = this.getAttrs()
 
         this.is_submitting = true
 
+        /*
         // check server-side errors
         this.checkSignup(null, () => {
           if (this.has_errors)
@@ -275,6 +243,7 @@
             this.error_msg = _.get(response, 'data.error.message', '')
           })
         })
+        */
       },
       trySignIn() {
         var attrs = this.getSignInAttrs()
@@ -282,6 +251,7 @@
         this.label_submitting = 'Signing in...'
         this.is_submitting = true
 
+        /*
         this.$store.dispatch('signIn', { attrs }).then(response => {
           if (response.ok)
           {
@@ -295,6 +265,10 @@
             this.error_msg = _.get(response, 'data.error.message', '')
           }
         })
+        */
+      },
+      signInClick() {
+        this.$emit('sign-in-click', this)
       }
     }
   }
