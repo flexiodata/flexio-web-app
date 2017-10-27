@@ -12,14 +12,14 @@
     <div class="pv3 ph2">
       <sign-up-form
         @sign-in-click="view = 'signin'"
-        @signed-in="$emit('signed-in')"
+        @signed-up="$emit('signed-up')"
+        @signed-in="$emit('signed-up-signed-in')"
         v-if="view === 'signup'"
       />
       <sign-in-form
         @sign-up-click="view = 'signup'"
         @forgot-password-click="view = 'forgotpassword'"
-        @signed-up="$emit('signed-up')"
-        @signed-in="$emit('signed-up-signed-in')"
+        @signed-in="$emit('signed-in')"
         v-else-if="view === 'signin'"
       />
       <forgot-password-form
