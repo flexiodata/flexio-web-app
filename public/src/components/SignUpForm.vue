@@ -103,13 +103,10 @@
 
 <script>
   import _ from 'lodash'
-  import api from '../api'
-  import { ROUTE_SIGNIN } from '../constants/route'
+  //import api from '../api'
   import Btn from './Btn.vue'
-  import Redirect from './mixins/redirect'
 
   export default {
-    mixins: [Redirect],
     components: {
       Btn
     },
