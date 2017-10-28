@@ -58,62 +58,10 @@ class Test
 
 
         // SETUP
-		$task = json_decode('
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                    "name": "table",
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f1","type":"character","width":"10","scale":"0"}
-                	],
-                	"content": [
-                        ["a"],
-                        [null],
-                        ["A"],
-                        ["a B C"]
-                    ]
-                }
-            },
-            {
-                "type": "flexio.transform",
-                "params": {
-                    "columns": [
-                        "{input.fieldname}"
-                    ],
-                    "type": "${output.type}",
-                    "width": "${output.width}",
-                    "scale": "${output.scale}"
-                }
-            }
-        ]
-        ',true);
 
 
 
         // TEST: Transform Job; conversion to character type from character type (identity)
-/*
-		// BEGIN TEST
-
-        $params = [
-            "input.fieldname" => "f1",
-            "output.type" => "character",
-            "output.width" => null,
-            "output.scale" => null
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process);
-		$expected = '
-        {
-        	"columns": [{"name":"f1","type":"character","width":10,"scale":0}],
-        	"content": [["a"],[null],["A"],["a B C"]]
-        }
-        ';
-		TestCheck::assertArray('A.1', 'Transform Job; conversion from character to character (identity)',  $actual, $expected, $results);
-*/
-
-
 
         // BEGIN TEST
 		$task = json_decode('
