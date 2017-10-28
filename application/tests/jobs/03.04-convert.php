@@ -21,28 +21,6 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $task = json_decode('
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
-                    "content": "${data}"
-                }
-            },
-            {
-                "type": "flexio.convert",
-                "params": {
-                    "input": {
-                        "format": "${format}",
-                        "delimiter": "${delimiter}",
-                        "header_row": "${header}",
-                        "text_qualifier": "${qualifier}"
-                    }
-                }
-            }
-        ]
-        ',true);
 
 
 
@@ -54,14 +32,28 @@ class Test
 "a1", "b1"
 "a2", "b2"
 EOD;
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => null,
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = json_decode('
+        [
+            {
+                "type": "flexio.create",
+                "params": {
+                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
+                    "content": "'. base64_encode(trim($data)) .'"
+                }
+            },
+            {
+                "type": "flexio.convert",
+                "params": {
+                    "input": {
+                        "delimiter": "{comma}",
+                        "header_row": "true",
+                        "text_qualifier": "{double_quote}"
+                    }
+                }
+            }
+        ]
+        ',true);
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getContent($process->getStdout());
 
         // note: this line uses excel's rules

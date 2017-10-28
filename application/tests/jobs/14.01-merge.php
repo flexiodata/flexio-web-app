@@ -68,9 +68,7 @@ class Test
         // TEST: Merge Job
 
         // BEGIN TEST
-        $params = [
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputRowResult($process);
         $expected = [["a","b",null],["b","B",null],["c","b",null],["d",null,"e"]];
         TestCheck::assertArray('A.1', 'Merge Job; check basic functionality',  $actual, $expected, $results);

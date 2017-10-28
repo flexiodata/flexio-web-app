@@ -57,9 +57,7 @@ class Test
         // TEST: Rename Job
 
         // BEGIN TEST
-        $params = [
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '
         [

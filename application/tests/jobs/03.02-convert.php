@@ -18,32 +18,38 @@ namespace Flexio\Tests;
 
 class Test
 {
+    private static function buildCreateTask(string $data) : array
+    {
+        $task = json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "csv",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
+                "content": "'. base64_encode(trim($data)) .'"
+            }
+        }',true);
+        return $task;
+    }
+
+    private static function buildConvertTask() : array
+    {
+        $task = json_decode('{
+            "type": "flexio.convert",
+            "params": {
+                "input": {
+                    "format": "delimited_text",
+                    "delimiter": "{comma}",
+                    "header_row": true,
+                    "text_qualifier": "{double_quote}"
+                }
+            }
+        }',true);
+        return $task;
+    }
+
     public function run(&$results)
     {
         // SETUP
-        $task = json_decode('
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                    "name": "csv",
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
-                    "content": "${data}"
-                }
-            },
-            {
-                "type": "flexio.convert",
-                "params": {
-                    "input": {
-                        "format": "${format}",
-                        "delimiter": "${delimiter}",
-                        "header_row": "${header}",
-                        "text_qualifier": "${qualifier}"
-                    }
-                }
-            }
-        ]
-        ',true);
 
 
 
@@ -55,14 +61,8 @@ class Test
             "a2"
             "a3"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field1"]';
         TestCheck::assertArray('A.1', 'Convert Job; valid fieldname first row should create correctly',  $actual, $expected, $results);
@@ -73,14 +73,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["f1"]';
         TestCheck::assertArray('A.2', 'Convert Job; valid fieldname first row should create correctly',  $actual, $expected, $results);
@@ -91,14 +85,8 @@ class Test
             a1
             a2
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["f1"]';
         TestCheck::assertArray('A.3', 'Convert Job; valid fieldname first row should create correctly',  $actual, $expected, $results);
@@ -113,14 +101,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field1"]';
         TestCheck::assertArray('B.1', 'Convert Job; leading spaces in a fieldname should be trimmed',  $actual, $expected, $results);
@@ -131,14 +113,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field1"]';
         TestCheck::assertArray('B.2', 'Convert Job; trailing spaces in a fieldname should be trimmed',  $actual, $expected, $results);
@@ -149,14 +125,8 @@ class Test
             a1
             a2
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field1"]';
         TestCheck::assertArray('B.3', 'Convert Job; leading and trailing spaces in a fieldname should be trimmed',  $actual, $expected, $results);
@@ -171,14 +141,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field 1"]';
         TestCheck::assertArray('C.1', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
@@ -189,14 +153,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field  1"]';
         TestCheck::assertArray('C.2', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
@@ -207,14 +165,8 @@ class Test
             a1
             a2
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field  1"]';
         TestCheck::assertArray('C.3', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
@@ -225,14 +177,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field one   and  the   same"]';
         TestCheck::assertArray('C.4', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
@@ -247,14 +193,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field1"]';
         TestCheck::assertArray('D.1', 'Convert Job; uppercase characters should be converted to lowercase',  $actual, $expected, $results);
@@ -265,14 +205,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field1"]';
         TestCheck::assertArray('D.2', 'Convert Job; uppercase characters should be converted to lowercase',  $actual, $expected, $results);
@@ -283,14 +217,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["httpresponsecode"]';
         TestCheck::assertArray('D.3', 'Convert Job; camelcase should be converted to lowercase',  $actual, $expected, $results);
@@ -301,14 +229,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["http_response_code"]';
         TestCheck::assertArray('D.4', 'Convert Job; camelcase should be converted to lowercase',  $actual, $expected, $results);
@@ -323,14 +245,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field_#"]';
         TestCheck::assertArray('E.1', 'Convert Job; # should be converted to alphanumeric abbreviation',  $actual, $expected, $results);
@@ -341,14 +257,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["% total"]';
         TestCheck::assertArray('E.2', 'Convert Job; % should be converted to alphanumeric abbreviation',  $actual, $expected, $results);
@@ -359,14 +269,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["% (of total amount)"]';
         TestCheck::assertArray('E.3', 'Convert Job; paranthesis, braces, and brackets should be removed',  $actual, $expected, $results);
@@ -377,14 +281,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["amount (total)"]';
         TestCheck::assertArray('E.4', 'Convert Job; paranthesis, braces, and brackets should be removed',  $actual, $expected, $results);
@@ -395,14 +293,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field.name"]';
         TestCheck::assertArray('E.5', 'Convert Job; special characters in field name',  $actual, $expected, $results);
@@ -413,14 +305,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["123"]';
         TestCheck::assertArray('E.6', 'Convert Job; special characters in field name',  $actual, $expected, $results);
@@ -435,14 +321,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["select"]';
         TestCheck::assertArray('F.1', 'Convert Job; check keyword',  $actual, $expected, $results);
@@ -453,14 +333,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["update"]';
         TestCheck::assertArray('F.2', 'Convert Job; check keyword',  $actual, $expected, $results);
@@ -471,14 +345,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["delete"]';
         TestCheck::assertArray('F.3', 'Convert Job; check keyword',  $actual, $expected, $results);
@@ -489,14 +357,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["where"]';
         TestCheck::assertArray('F.4', 'Convert Job; check keyword',  $actual, $expected, $results);
@@ -507,14 +369,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["true"]';
         TestCheck::assertArray('F.5', 'Convert Job; check keyword',  $actual, $expected, $results);
@@ -525,14 +381,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["false"]';
         TestCheck::assertArray('F.6', 'Convert Job; check keyword',  $actual, $expected, $results);
@@ -543,14 +393,8 @@ class Test
             "a1"
             "a2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["null"]';
         TestCheck::assertArray('F.7', 'Convert Job; check keyword',  $actual, $expected, $results);
@@ -565,14 +409,8 @@ class Test
             "a1","b1"
             "a2","b2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["field1","field2"]';
         TestCheck::assertArray('G.1', 'Convert Job; multiple fieldnames',  $actual, $expected, $results);
@@ -583,14 +421,8 @@ class Test
             "a1","b1"
             "a2","b2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["order #","order (total)"]';
         TestCheck::assertArray('G.2', 'Convert Job; multiple fieldnames',  $actual, $expected, $results);
@@ -605,14 +437,8 @@ class Test
             "a1","b1"
             "a2","b2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["id","id_1"]';
         TestCheck::assertArray('H.1', 'Convert Job; duplicate fieldnames should be enumerated to avoid duplication',  $actual, $expected, $results);
@@ -623,14 +449,8 @@ class Test
             "a1","b1"
             "a2","b2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["order #","order #_1"]';
         TestCheck::assertArray('H.2', 'Convert Job; duplicate fieldnames should be enumerated to avoid duplication',  $actual, $expected, $results);
@@ -641,14 +461,8 @@ class Test
             "a1","b1"
             "a2","b2"
         ';
-        $params = [
-            "data" => base64_encode(trim($data)),
-            "format" => "delimited_text",
-            "delimiter" => "{comma}",
-            "header" => "true",
-            "qualifier" => "{double_quote}"
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array(self::buildCreateTask($data), self::buildConvertTask());
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnNameResult($process);
         $expected = '["count","count_1"]';
         TestCheck::assertArray('H.3', 'Convert Job; duplicate fieldnames should be enumerated to avoid duplication',  $actual, $expected, $results);

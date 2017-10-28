@@ -191,15 +191,16 @@ class Test
         TestCheck::assertArray('F.1', 'Group Job; grouping on single boolean column',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "group" => ["bool_1d"],
-            "columns" => [
-                ["name" => "bool_1d", "function" => "", "expression" => "bool_1d"]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array($create, json_decode('{
+            "type": "flexio.group",
+            "params": {
+                "group": ["bool_1d"],
+                "columns": [{"name": "bool_1d", "function": "", "expression": "bool_1d"}]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getContent($process->getStdout());
-        $expected = '[[true]]';
+        $expected = '[[false],[true],[null]]';
         TestCheck::assertArray('F.2', 'Group Job; grouping on single boolean column',  $actual, $expected, $results);
     }
 }

@@ -40,9 +40,7 @@ class Test
         // TEST: Request Job
 
         // BEGIN TEST
-        $params = [
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getStdout()->content(0,34);
         $expected = 'def flexio_handler(input, output):';
         TestCheck::assertString('A.1', 'Request; check basic functionality',  $actual, $expected, $results);
