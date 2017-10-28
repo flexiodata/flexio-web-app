@@ -200,7 +200,7 @@ class Test
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getContent($process->getStdout());
-        $expected = '[[true]]';
+        $expected = '[[false],[true],[null]]';
         TestCheck::assertArray('F.2', 'Group Job; grouping on single boolean column',  $actual, $expected, $results);
     }
 }
