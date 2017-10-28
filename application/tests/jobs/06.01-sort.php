@@ -21,62 +21,49 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $task = json_decode('
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
-                    "columns": [
-                        { "name": "field1", "type": "character", "width": 3, "scale": 0 }
-                    ],
-                    "content": [
-                        ["a"],
-                        ["b"],
-                        ["c"]
-                    ]
-                }
-            },
-            {
-                "type": "flexio.sort",
-                "params": {
-                    "order": "${order}"
-                }
+        $create = json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "field1", "type": "character", "width": 3, "scale": 0 }
+                ],
+                "content": [
+                    ["a"],
+                    ["b"],
+                    ["c"]
+                ]
             }
-        ]
-        ',true);
-
-
-
+        }',true);
 
 
 
         // TEST: Sort Job; basic functional test
 
         // BEGIN TEST
-        $params = [
-            "order" => [
-                [
-                    "expression" => "field1",
-                    "direction" => "asc"
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {"expression": "field1", "direction": "asc"}
                 ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["a"],["b"],["c"]];
         TestCheck::assertString('C.1', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "order" => [
-                [
-                    "expression" => "field1",
-                    "direction" => "desc"
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {"expression": "field1", "direction": "desc"}
                 ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["c"],["b"],["a"]];
         TestCheck::assertString('C.2', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);
@@ -86,10 +73,13 @@ class Test
         // TEST: Sort Job; missing parameters
 
         // BEGIN TEST
-        $params = [
-            "order" => null
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": "a"
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('A.1', 'Sort Job; fail when a job definition is invalid',  $actual, $expected, $results);
@@ -99,77 +89,83 @@ class Test
         // TEST: Sort Job; missing column parameters
 
         // BEGIN TEST
-        $params = [
-            "order" => null
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": null
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.1', 'Sort Job; fail when there are no order columns',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "order" => [
-                [
-                    "expression" => null
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {"expression": null}
                 ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.2', 'Sort Job; fail when there\'s an invalid expression',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "order" => [
-                [
-                    "expression" => ""
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {"expression": ""}
                 ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.3', 'Sort Job; fail when there\'s an invalid expression',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "order" => [
-                [
-                    "expression" => "c"
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {"expression": "c"}
                 ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.4', 'Sort Job; fail when there\'s an invalid expression',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "order" => [
-                [
-                    "expression" => "field1",
-                    "direction" => null
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {"expression": "field1", "direction": null}
                 ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.5', 'Sort Job; fail when there\'s an invalid direction',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "order" => [
-                [
-                    "expression" => "field1",
-                    "direction" => "d"
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {"expression": "field1", "direction": "d"}
                 ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.6', 'Sort Job; fail when there\'s an invalid direction',  $actual, $expected, $results);
@@ -179,29 +175,29 @@ class Test
         // TEST: Sort Job; basic functional test
 
         // BEGIN TEST
-        $params = [
-            "order" => [
-                [
-                    "expression" => "field1",
-                    "direction" => "asc"
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {"expression": "field1", "direction": "asc"}
                 ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["a"],["b"],["c"]];
         TestCheck::assertString('C.1', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "order" => [
-                [
-                    "expression" => "field1",
-                    "direction" => "desc"
+        $task = array($create, json_decode('{
+            "type": "flexio.sort",
+            "params": {
+                "order": [
+                    {"expression": "field1", "direction": "desc"}
                 ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["c"],["b"],["a"]];
         TestCheck::assertString('C.2', 'Sort Job; make sure data is ordered correctly',  $actual, $expected, $results);

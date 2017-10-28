@@ -30,20 +30,6 @@ class Test
 
 
         // SETUP
-        $template_task = json_decode('
-        [
-            {
-                "type": "flexio.create",
-                "params": {
-                    "name": "table",
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
-                    "columns": [
-                        { "name": "${name}", "type": "${type}", "width": "${width}", "scale": "${scale}" }
-                    ]
-                }
-            }
-        ]
-        ',true);
 
 
 
@@ -64,7 +50,6 @@ class Test
             }
         ]
         ',true);
-
         $process = \Flexio\Object\Process::create()->setTask($local_task)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
@@ -75,13 +60,17 @@ class Test
         // TEST: Create; text column creation
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "text",
-            "width" => null, // unset the key in the task
-            "scale" => null  // unset the key in the task
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "text" }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '[{ "name": "f1", "type": "text" }]';
         TestCheck::assertInArray('B.1', 'Create Job; text column creation, no scale',  $actual, $expected, $results);
@@ -91,37 +80,49 @@ class Test
         // TEST: Create; character column creation
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "character",
-            "width" => 10,
-            "scale" => null  // unset the key in the task
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "character", "width": null }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
-        $expected = '[{ "name": "f1", "type": "character", "width": 10 }]';
+        $expected = '[{ "name": "f1", "type": "character", "width": null }]';
         TestCheck::assertInArray('C.1', 'Create Job; character column creation, no scale',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "character",
-            "width" => 10,
-            "scale" => null  // unset the key in the task
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "character", "width": null, "scale": null }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
-        $expected = '[{ "name": "f1", "type": "character", "width": 10 }]';
-        TestCheck::assertInArray('C.2', 'Create Job; character column creation',  $actual, $expected, $results);
+        $expected = '[{ "name": "f1", "type": "character", "width": null, "scale": null }]';
+        TestCheck::assertInArray('C.2', 'Create Job; character column creation, no scale',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "character",
-            "width" => 10,
-            "scale" => 2
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "character", "width": 10, "scale": 2 }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '[{ "name": "f1", "type": "character", "width": 10 }]';
         TestCheck::assertInArray('C.3', 'Create Job; character column creation',  $actual, $expected, $results);
@@ -131,13 +132,17 @@ class Test
         // TEST: Create; numeric column creation
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "numeric",
-            "width" => 14,
-            "scale" => 4
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "numeric", "width": 14, "scale": 4 }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '[{ "name": "f1", "type": "numeric", "width": 14, "scale": 4 }]';
         TestCheck::assertInArray('D.1', 'Create Job; numeric column creation',  $actual, $expected, $results);
@@ -147,13 +152,17 @@ class Test
         // TEST: Create; double column creation
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "double",
-            "width" => 14,
-            "scale" => 6
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "double", "width": 14, "scale": 6 }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '[{ "name": "f1", "type": "double" }]';
         TestCheck::assertInArray('E.1', 'Create Job; double column creation',  $actual, $expected, $results);
@@ -163,13 +172,17 @@ class Test
         // TEST: Create; integer field creation
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "integer",
-            "width" => 5,
-            "scale" => 2
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "integer", "width": 5, "scale": 2 }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '[{ "name": "f1", "type": "integer" }]';
         TestCheck::assertInArray('F.1', 'Create Job; integer column creation',  $actual, $expected, $results);
@@ -179,13 +192,17 @@ class Test
         // TEST: Create; date field creation
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "date",
-            "width" => 5,
-            "scale" => 2
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "date", "width": 5, "scale": 2 }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '[{ "name": "f1", "type": "date" }]';
         TestCheck::assertInArray('G.1', 'Create Job; date column creation',  $actual, $expected, $results);
@@ -195,13 +212,17 @@ class Test
         // TEST: Create; datetime field creation
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "datetime",
-            "width" => 5,
-            "scale" => 2
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "datetime", "width": 5, "scale": 2 }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '[{ "name": "f1", "type": "datetime" }]';
         TestCheck::assertInArray('H.1', 'Create Job; datetime column creation', $actual, $expected, $results);
@@ -211,13 +232,17 @@ class Test
         // TEST: Create; boolean field creation
 
         // BEGIN TEST
-        $params = [
-            "name" => "f1",
-            "type" => "boolean",
-            "width" => 5,
-            "scale" => 2
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($template_task)->setParams($params)->run(false);
+        $task = array(json_decode('{
+            "type": "flexio.create",
+            "params": {
+                "name": "table",
+                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "boolean", "width": 5, "scale": 2 }
+                ]
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getProcessSingleOutputColumnResult($process);
         $expected = '[{ "name": "f1", "type": "boolean" }]';
         TestCheck::assertInArray('H.1', 'Create Job; datetime column creation',  $actual, $expected, $results);
