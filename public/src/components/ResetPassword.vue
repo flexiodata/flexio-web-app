@@ -12,6 +12,9 @@
   export default {
     components: {
       ResetPasswordForm
+    },
+    mounted() {
+      analytics.track('Visited Reset Password Page')
     }
   }
 </script>

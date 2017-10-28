@@ -20,6 +20,8 @@ class Request extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
 
