@@ -55,9 +55,7 @@ class Test
         // TEST: Select Job
 
         // BEGIN TEST
-        $params = [
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["c","b"],["c","B"],["c","b"]];
         TestCheck::assertString('A.1', 'Select Job; check basic functionality',  $actual, $expected, $results);
