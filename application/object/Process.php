@@ -103,7 +103,7 @@ class Process extends \Flexio\Object\Base
 
                     $streamwriter = \Flexio\Object\StreamWriter::create($stream);
                 }
-                
+
                 if ($streamwriter)
                     $streamwriter->write($data);
             }
@@ -194,7 +194,7 @@ class Process extends \Flexio\Object\Base
         return $this->properties;
     }
 
-    public function run(bool $background = true, bool $debug = false) : \Flexio\Object\Process
+    public function run(bool $background = true) : \Flexio\Object\Process
     {
         // STEP 1: check the status; don't run the job in certain circumstances
         $this->clearCache();
@@ -229,12 +229,7 @@ class Process extends \Flexio\Object\Base
         // STEP 3: run the job
         if ($background !== true)
         {
-            if ($debug === true)
-                $this->setDebug(true);
-
-            //$this->prepare();
             $this->execute();
-
             return $this;
         }
 
