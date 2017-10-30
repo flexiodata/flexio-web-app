@@ -182,7 +182,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
-        $outstream = self::createDatastoreStream($stream_properties);
+        $outstream = self::createMemoryStream($stream_properties);
         $streamwriter = $outstream->getWriter();
 
         // create the iterator
@@ -232,7 +232,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
-        $outstream = self::createDatastoreStream($stream_properties);
+        $outstream = self::createMemoryStream($stream_properties);
         $streamwriter = $outstream->getWriter();
 
         // transfer the data
@@ -290,7 +290,7 @@ class Input extends \Flexio\Jobs\Base
 
                     // add an output stream
                     $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-                    $outstream = self::createDatastoreStream($stream_properties);
+                    $outstream = self::createMemoryStream($stream_properties);
                     $outstream->setStructure($structure);
                     $streamwriter = $outstream->getWriter();
                 }
@@ -300,7 +300,7 @@ class Input extends \Flexio\Jobs\Base
                     $is_table = false;
 
                     // add an output stream
-                    $outstream = self::createDatastoreStream($stream_properties);
+                    $outstream = self::createMemoryStream($stream_properties);
                     $streamwriter = $outstream->getWriter();
                 }
             }
@@ -357,6 +357,12 @@ class Input extends \Flexio\Jobs\Base
         $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
+    private function createMemoryStream(array $properties) : \Flexio\Object\StreamMemory
+    {
+        $properties['path'] = \Flexio\Base\Util::generateHandle();
+        return \Flexio\Object\StreamMemory::create($properties);
+    }
+
     private function createDatastoreStream(array $properties) : \Flexio\Object\Stream
     {
         // use default datastore connection
@@ -367,7 +373,7 @@ class Input extends \Flexio\Jobs\Base
         // use random string for the store table
         $properties['connection_eid'] = $datastore_connection_eid;
         $properties['path'] = \Flexio\Base\Util::generateHandle();
-        return \Flexio\Object\StreamMemory::create($properties);
+        return \Flexio\Object\Stream::create($properties);
     }
 
     private function getConnectionInfoFromItem(array $params, array $item)
