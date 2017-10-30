@@ -54,9 +54,7 @@ class Test
         // TEST: Merge Job
 
         // BEGIN TEST
-        $params = [
-        ];
-        $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $result = TestUtil::getProcessResult($process,0,50);
         $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
         $expected = "a\nbc\nde";
