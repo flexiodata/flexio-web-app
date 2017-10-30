@@ -77,7 +77,7 @@ class Create extends \Flexio\Jobs\Base
             'name' => $name,
             'mime_type' => $mime_type
         );
-        $outstream = \Flexio\Object\Stream::create($outstream_properties);
+        $outstream = \Flexio\Object\StreamMemory::create($outstream_properties);
         $streamwriter = $outstream->getWriter();
 
         // write the content
@@ -99,7 +99,7 @@ class Create extends \Flexio\Jobs\Base
             'structure' => $structure
         );
 
-        $outstream = \Flexio\Object\Stream::create($outstream_properties);
+        $outstream = \Flexio\Object\StreamMemory::create($outstream_properties);
         $streamwriter = $outstream->getWriter();
 
         if (isset($job_definition['params']['content']))
