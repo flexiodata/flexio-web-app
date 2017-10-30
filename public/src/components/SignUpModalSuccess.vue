@@ -27,7 +27,7 @@
       </div>
       <div class="mt4">
         <p class="lh-copy">Open your dashboard if you need to get your API key again or need help getting started.</p>
-        <a href="/app/dashboard" class="border-box no-select b ttu mt3 f6 ph3 pv2a br1 white bg-blue b--blue darken-10 no-underline db tc" target="_blank" rel="noopener noreferrer">Open my dashboard</a>
+        <a href="/app/dashboard" class="border-box no-select b ttu w-100 mt3 ph4 pv2a br1 white bg-blue b--blue darken-10 no-underline db tc" target="_blank" rel="noopener noreferrer">Open my dashboard</a>
       </div>
     </div>
   </div>
