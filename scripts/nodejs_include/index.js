@@ -328,6 +328,7 @@ class Input {
             callback(row)
         }
     }
+    
     readAll() {
         if (this._isTable) {
             var rows = [], row

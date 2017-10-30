@@ -214,7 +214,7 @@ class Input(object):
             self._content_type = info['content_type']
             self._is_table = True if self._content_type == 'application/vnd.flexio.table' else False
             self._size = info['size']
-            self._idx = info['idx']
+            self._handle = info['handle']
             self._structure = None
             self._dict = False
             self._fetch_style = self.Dictionary
@@ -225,7 +225,7 @@ class Input(object):
             self._content_type = 'application/octet-stream'
             self._is_table = False
             self._size = 0
-            self._idx = -1
+            self._handle = -1
             self._structure = None
             self._dict = False
             self._fetch_style = self.Dictionary
@@ -253,7 +253,7 @@ class Input(object):
         if not self.is_table:
             return None
         if not self._structure:
-            self._structure = proxy.invoke('getInputStreamStructure', [self._idx])
+            self._structure = proxy.invoke('getInputStreamStructure', [self._handle])
         return self._structure
     
     @property
@@ -287,21 +287,21 @@ class Input(object):
             return self.readall()
         if self._is_table:
             return None
-        data = proxy.invoke('read', [self._idx, length])
+        data = proxy.invoke('read', [self._handle, length])
         if data is False:
             return None
         return data
 
     def readline(self):
         if self._fetch_style == self.Tuple:
-            row = proxy.invoke('readline', [self._idx, False])
+            row = proxy.invoke('readline', [self._handle, False])
             if row is False:
                 return None
             if self._casting:
                 self.type_casts(row)
             return tuple(row)
         else:
-            row = proxy.invoke('readline', [self._idx, True])
+            row = proxy.invoke('readline', [self._handle, True])
             if row is False:
                 return None
             if self._casting:
@@ -368,12 +368,12 @@ class Output(object):
             self._name = info['name']
             self._content_type = info['content_type']
             self._size = info['size']
-            self._idx = info['idx']
+            self._handle = info['handle']
         else:
             self._name = ''
             self._content_type = 'application/octet-stream'
             self._size = 0
-            self._idx = -1
+            self._handle = -1
     
     @property
     def name(self):
@@ -382,7 +382,7 @@ class Output(object):
     @name.setter
     def name(self, value):
         self._name = value
-        proxy.invoke('setOutputStreamInfo', [self._idx, {'name':value}])
+        proxy.invoke('setOutputStreamInfo', [self._handle, {'name':value}])
 
     @property
     def content_type(self):
@@ -391,7 +391,7 @@ class Output(object):
     @content_type.setter
     def content_type(self, value):
         self._content_type = value
-        proxy.invoke('setOutputStreamInfo', [self._idx, {'content_type':value}])
+        proxy.invoke('setOutputStreamInfo', [self._handle, {'content_type':value}])
 
     @property
     def env(self):
@@ -403,83 +403,29 @@ class Output(object):
             properties['name'] = name
         if structure:
             properties['structure'] = structure
-        if proxy.invoke('managedCreate', [self._idx, properties]) is False:
+        if proxy.invoke('managedCreate', [self._handle, properties]) is False:
             return False
         else:
             return self
 
     def write(self, data):
-        proxy.invoke('write', [self._idx, data])
+        proxy.invoke('write', [self._handle, data])
 
     def insert_row(self, row):
-        proxy.invoke('insertRow', [self._idx, row])
+        proxy.invoke('insertRow', [self._handle, row])
     
     def insert_rows(self, rows):
-        proxy.invoke('insertRows', [self._idx, rows])
+        proxy.invoke('insertRows', [self._handle, rows])
+
+
+
+def run(handler):
+
+    stdin_stream_info  = proxy.invoke('getInputStreamInfo', ['_fxstdin_'])
+    stdout_stream_info = proxy.invoke('getOutputStreamInfo', ['_fxstdout_'])
+
+    input = Input(stdin_stream_info)
+    output = Output(stdout_stream_info)
     
-class Inputs(object):
-    def __init__(self):
-        self.inited = False
-        self.inputs = []
-
-    def initialize(self):
-        stream_infos = proxy.invoke('getInputStreamInfo', [])
-        for info in stream_infos:
-            self.inputs.append(Input(info))
-            self.inited = True
-    
-    def __getitem__(self, idx):
-        if not self.inited:
-            self.initialize()
-        return self.inputs[idx]
-
-    @property
-    def env(self):
-        return input_env
-
-class Outputs(object):
-    def __init__(self):
-        self.inited = False
-        self.outputs = []
-
-    def initialize(self):
-        stream_infos = proxy.invoke('getOutputStreamInfo', [])
-        for info in stream_infos:
-            self.outputs.append(Output(info))
-            self.inited = True
-
-    @property
-    def env(self):
-        return output_env
-
-    def __getitem__(self, idx):
-        if not self.inited:
-            self.initialize()
-        return self.outputs[idx]
-
-    def create(self, name=None, content_type='text/plain', structure=None):
-        properties = { 'content_type': content_type }
-        if name:
-            properties['name'] = name
-        if structure:
-            properties['structure'] = structure
-        info = proxy.invoke('createOutputStream', [properties])
-        output = Output(info)
-        self.outputs.append(output)
-        return output
-
-inputs = Inputs()
-outputs = Outputs()
-
-def run_stream(func):
-    stream_idx = proxy.invoke('getManagedStreamIndex', [])
-    input = inputs[stream_idx]
-    output = outputs[stream_idx]
-    func(input, output)
-
-
-def run(func):
-    input = Inputs()
-    output = Outputs()
-    func(input, output)
+    handler(input, output)
 
