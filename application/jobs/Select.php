@@ -22,7 +22,8 @@ class Select extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-        $context->setStdout($this->processStream($stdin));
+        $stdout = $context->getStdout();
+        $this->processStream($stdin, $stdout);
 
         // process stream array
         $input = $context->getStreams();
@@ -30,12 +31,13 @@ class Select extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = $this->processStream($instream);
+            $outstream = \Flexio\Object\StreamMemory::create();
+            $this->processStream($instream, $outstream);
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         $job_definition = $this->getProperties();
         $mime_type = $instream->getMimeType();
@@ -61,7 +63,10 @@ class Select extends \Flexio\Jobs\Base
 
             // file doesn't match any of the paths; we're done
             if ($filematches === false)
-                return $instream;
+            {
+                $outstream = $instream;
+                return;
+            }
         }
 
         $mime_type = $instream->getMimeType();
@@ -70,18 +75,21 @@ class Select extends \Flexio\Jobs\Base
             // if we don't have a table, we only care about selecting the file,
             // so we're done
             default:
-                return $instream;
+                $outstream = $instream;
+                return;
 
             // if we have a table input, perform additional column selection
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                return $this->getOutput($instream);
+                $this->getOutput($instream, $outstream);
+                return;
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         // input/output
-        $outstream = $instream->copy(); // copy everything, including the original path (since we're only selecting fields)
+        $outstream->set($instream->get());
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
 
         // get the selected columns
         $job_definition = $this->getProperties();
@@ -91,7 +99,22 @@ class Select extends \Flexio\Jobs\Base
 
         $output_structure = $instream->getStructure()->enum($params['columns']);
         $outstream->setStructure($output_structure);
-        return $outstream;
+
+        // copy the data with the new structure
+        $streamreader = $instream->getReader();
+        $streamwriter = $outstream->getWriter();
+
+        while (true)
+        {
+            $row = $streamreader->readRow();
+            if ($row === false)
+                break;
+
+            $streamwriter->write($row);
+        }
+
+        $streamwriter->close();
+        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
 

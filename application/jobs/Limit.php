@@ -21,10 +21,11 @@ class Limit extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
-        $context->setStdout($this->processStream($stdin));
+        $stdout = $context->getStdout();
+        $this->processStream($stdin, $stdout);
 
         // process stream array
         $input = $context->getStreams();
@@ -32,36 +33,41 @@ class Limit extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = $this->processStream($instream);
+            $outstream = \Flexio\Object\StreamMemory::create();
+            $this->processStream($instream, $outstream);
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
         {
             // unhandled input
             default:
-                return $instream;
+                $outstream = $instream;
+                return;
 
             // table input
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                return $this->getOutput($instream);
+                $this->getOutput($instream, $outstream);
+                return;
 
             // stream/text/csv input
             case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
             case \Flexio\Base\ContentType::MIME_TYPE_TXT:
             case \Flexio\Base\ContentType::MIME_TYPE_CSV:
-                return $this->getOutput($instream);
+                $this->getOutput($instream, $outstream);
+                return;
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        $outstream->set($instream->get());
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
 
         // get the number of rows to return
         $job_definition = $this->getProperties();
@@ -86,7 +92,6 @@ class Limit extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        return $outstream;
     }
 
 

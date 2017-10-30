@@ -21,7 +21,7 @@ class Render extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         $input = $context->getStreams();
         $context->clearStreams();
 
@@ -40,7 +40,7 @@ class Render extends \Flexio\Jobs\Base
             $content_type = 'image/png';
         else
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid 'format' parameter. Value must be either 'pdf' or 'png'");
-        
+
         // get docker binary
         $dockerbin = \Flexio\System\System::getBinaryPath('docker');
         if (is_null($dockerbin))
@@ -101,7 +101,7 @@ class Render extends \Flexio\Jobs\Base
                 'name' => $output_name,
                 'mime_type' => $content_type
             );
-            $outstream = \Flexio\Object\Stream::create($outstream_properties);
+            $outstream = \Flexio\Object\StreamMemory::create($outstream_properties);
             $streamwriter = $outstream->getWriter();
 
             $windowsize = '';

@@ -22,7 +22,8 @@ class Rename extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-        $context->setStdout($this->processStream($stdin, $context->getEnv()));
+        $stdout = $context->getStdout();
+        $this->processStream($stdin, $stdout, $context->getEnv());
 
         // process stream array
         $input = $context->getStreams();
@@ -30,23 +31,25 @@ class Rename extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = $this->processStream($instream, $context->getEnv());
+            $outstream = \Flexio\Object\StreamMemory::create();
+            $this->processStream($instream, $outstream, $context->getEnv());
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream, $env) : \Flexio\Object\IStream
+    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream, array $env)
     {
-        // copy everything, including the original path; any renames will be
-        // handled by the file/column rename handler; if there aren't any
-        // operations, the stream will simply be copied to the output
-        $outstream = $instream->copy();
+        // any renames will be handled by the file/column rename handler; if there
+        // aren't any operations, the stream will simply be copied to the output
+        $outstream->set($instream->get());
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
+
         $job_definition = $this->getProperties();
         $mime_type = $outstream->getMimeType();
 
         // rename the output stream if appropriate
         if (isset($job_definition['params']['files']))
-            $outstream = $this->renameStream($outstream, $env);
+            $this->renameStream($outstream, $env);
 
         // if we have a table, rename any columns if specified; note: this may
         // works in conjunction with renaming the file, so a file that's renamed
@@ -54,13 +57,11 @@ class Rename extends \Flexio\Jobs\Base
         if (isset($job_definition['params']['columns']))
         {
             if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-                $outstream = $this->renameColumns($outstream);
+                $this->renameColumns($outstream);
         }
-
-        return $outstream;
     }
 
-    private function renameStream(\Flexio\Object\IStream $outstream, array $env) : \Flexio\Object\IStream
+    private function renameStream(\Flexio\Object\IStream $outstream, array $env)
     {
         // get the files to rename
         $job_definition = $this->getProperties();
@@ -99,11 +100,9 @@ class Rename extends \Flexio\Jobs\Base
             $outstream->setName($new_name);
             break; // rename based on the first valid match
         }
-
-        return $outstream;
     }
 
-    private function renameColumns(\Flexio\Object\IStream $outstream) : \Flexio\Object\IStream
+    private function renameColumns(\Flexio\Object\IStream $outstream)
     {
         // get the columns to rename
         $job_definition = $this->getProperties();
@@ -136,7 +135,6 @@ class Rename extends \Flexio\Jobs\Base
 
         // update the structure
         $outstream->setStructure($renamed_columns);
-        return $outstream;
     }
 
     private function evaluateExpr(string $expr, array $variables, &$retval) : bool

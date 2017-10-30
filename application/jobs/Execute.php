@@ -606,7 +606,7 @@ class Execute extends \Flexio\Jobs\Base
 
         $job = \Flexio\Object\Process::createJob($task);
 
-        $runjob_stdout = \Flexio\Object\Stream::create();
+        $runjob_stdout = \Flexio\Object\StreamMemory::create();
 
         $context = \Flexio\Object\Context::create();
         $context->setStdin($this->runjob_stdin);
@@ -746,7 +746,7 @@ class Execute extends \Flexio\Jobs\Base
             $properties['structure'] = $structure;
         }
 
-        $stream = \Flexio\Object\Stream::create($properties);
+        $stream = \Flexio\Object\StreamMemory::create($properties);
         $this->getContext()->addStream($stream);
         $this->output_streams[] = $stream;
 

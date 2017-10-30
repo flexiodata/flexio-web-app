@@ -367,7 +367,7 @@ class Input extends \Flexio\Jobs\Base
         // use random string for the store table
         $properties['connection_eid'] = $datastore_connection_eid;
         $properties['path'] = \Flexio\Base\Util::generateHandle();
-        return \Flexio\Object\Stream::create($properties);
+        return \Flexio\Object\StreamMemory::create($properties);
     }
 
     private function getConnectionInfoFromItem(array $params, array $item)

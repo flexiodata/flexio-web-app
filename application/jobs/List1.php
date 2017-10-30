@@ -22,23 +22,17 @@ class List1 extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-        $stdout = $stdin->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        $context->setStdout($stdout);
+        $stdout = $context->getStdout();
 
         $job_definition = $this->getProperties();
         $path = $job_definition['params']['path'] ?? null;
 
         if (is_null($path))
-        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
-        }
-
 
         $streamwriter = $stdout->getWriter();
 
-
         $vfs = new \Flexio\Services\Vfs();
-
         $files = $vfs->listObjects($path);
 
         $results = [];
@@ -52,14 +46,10 @@ class List1 extends \Flexio\Jobs\Base
             );
 
             if (isset($f['.connection_eid']))
-            {
                 $entry['.connection_eid'] = $f['.connection_eid'];
-            }
 
             if (isset($f['.connection_type']))
-            {
                 $entry['.connection_type'] = $f['.connection_type'];
-            }
 
             $results[] = $entry;
         }

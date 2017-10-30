@@ -25,10 +25,9 @@ class Echo1 extends \Flexio\Jobs\Base
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
-
         $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
-        //$stdout = $stdin->copy()->setPath(\Flexio\Base\Util::generateHandle());
-        //$context->setStdout($stdout);
+        $stdout->set($stdin->get());
+        $stdout->setPath(\Flexio\Base\Util::generateHandle());
 
         $job_definition = $this->getProperties();
         $msg = $job_definition['params']['msg'] ?? '';

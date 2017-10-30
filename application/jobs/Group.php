@@ -26,7 +26,8 @@ class Group extends \Flexio\Jobs\Base
 
         // process stdin
         $stdin = $context->getStdin();
-        $context->setStdout($this->processStream($stdin));
+        $stdout = $context->getStdout();
+        $this->processStream($stdin, $stdout);
 
         // process stream array
         $input = $context->getStreams();
@@ -34,28 +35,32 @@ class Group extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = $this->processStream($instream);
-            $context->addStream($outstream);
+            $outstream = \Flexio\Object\StreamMemory::create();
+            $this->processStream($outstream);
+            $context->addStream($outstream, $outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
         {
             default:
-                return $instream;
+                $outstream = $instream;
+                return;
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                return $this->getOutput($instream);
+                $this->getOutput($instream, $outstream);
+                return;
         }
     }
 
-    public function getOutput(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    public function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        $outstream->set($instream->get());
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
 
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
@@ -74,10 +79,9 @@ class Group extends \Flexio\Jobs\Base
         $output_columns = $outstream->getStructure()->enum();
         $output_columns = self::mergeColumnInfo($output_columns, $store_columns);
         $outstream->setStructure($output_columns);
-        return $outstream;
     }
 
-    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream &$outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         // properties
         if (!isset($job_definition['params']['columns']))

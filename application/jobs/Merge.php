@@ -68,7 +68,7 @@ class Merge extends \Flexio\Jobs\Base
             'name' => 'merged',
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_TXT
         );
-        $outstream = \Flexio\Object\Stream::create($outstream_properties);
+        $outstream = \Flexio\Object\StreamMemory::create($outstream_properties);
 
         // write to the output
         $streamwriter = $outstream->getWriter();
@@ -104,7 +104,7 @@ class Merge extends \Flexio\Jobs\Base
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
             'structure' => $outstream_structure
         );
-        $outstream = \Flexio\Object\Stream::create($outstream_properties);
+        $outstream = \Flexio\Object\StreamMemory::create($outstream_properties);
 
         // write to the output
         $streamwriter = $outstream->getWriter();

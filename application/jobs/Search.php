@@ -26,7 +26,8 @@ class Search extends \Flexio\Jobs\Base
 
         // process stdin
         $stdin = $context->getStdin();
-        $context->setStdout($this->processStream($stdin));
+        $stdout = $context->getStdout();
+        $this->processStream($stdin, $stdout);
 
         // process stream array
         $input = $context->getStreams();
@@ -34,12 +35,13 @@ class Search extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = $this->processStream($instream);
+            $outstream = \Flexio\Object\StreamMemory::create();
+            $this->processStream($instream, $outstream);
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function processStream(\Flexio\Object\IStream $instream, Flexio\Object\IStream $outstream)
     {
         // TODO: right now, search works like a filter, so only run it on tables
         // and pass everything through; however search should be stream search
@@ -51,17 +53,20 @@ class Search extends \Flexio\Jobs\Base
         switch ($mime_type)
         {
             default:
-                return $instream;
+                $outstream = $instream;
+                return;
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                return $this->getOutput($instream);
+                $this->getOutput($instream, $outstream);
+                return;
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        $outstream->set($instream->get());
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
 
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
@@ -71,11 +76,9 @@ class Search extends \Flexio\Jobs\Base
         $streamwriter = $outstream->getWriter();
         if ($outstream->getService()->exec($job_statement) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-        return $outstream;
     }
 
-    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream &$outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         // note: \Flexio\Jobs\Search used to be implement the functionality using
         // \Flexio\Jobs\Filter, the old implementation of which is now below until
@@ -131,7 +134,7 @@ class Search extends \Flexio\Jobs\Base
         return self::createFilterStatement($filter_job_definition, $instream, $outstream);
     }
 
-    private static function createFilterStatement(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream &$outstream)
+    private static function createFilterStatement(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         // if the condition operator exists, it will be either "and" or "or"
         if (!isset($job_definition['params']['condition']['items']) || !is_array($job_definition['params']['condition']['items']) || count($job_definition['params']['condition']['items']) == 0)

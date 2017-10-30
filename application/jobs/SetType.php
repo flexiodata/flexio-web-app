@@ -22,7 +22,8 @@ class SetType extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-        $context->setStdout($this->processStream($stdin));
+        $stdout = $context->getStdin();
+        $this->processStream($stdin, $stdout);
 
         // process stream array
         $input = $context->getStreams();
@@ -30,25 +31,28 @@ class SetType extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = $this->processStream($instream);
+            $outstream = \Flexio\Object\StreamMemory::create();
+            $this->processStream($instream, $outstream);
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
         {
             default:
-                return $instream;
+                $outstream = $instream;
+                return;
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                return $this->getOutput($instream);
+                $this->getOutput($instream, $outstream);
+                return;
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         // get the job properties
         $job_definition = $this->getProperties();
@@ -65,7 +69,8 @@ class SetType extends \Flexio\Jobs\Base
             $scale = (int)$scale;
 
         // create the new output structure
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        $outstream->set($instream->get());
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $columns = $instream->getStructure()->getNames($columns); // get columns satisfying wildcards
         $column_keys = array_flip($columns);
         $output_structure = \Flexio\Base\Structure::create();
@@ -106,7 +111,6 @@ class SetType extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        return $outstream;
     }
 
     private static function convertRowValues(array $row, array $changed_columns) : array

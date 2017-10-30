@@ -26,7 +26,8 @@ class Duplicate extends \Flexio\Jobs\Base
 
         // process stdin
         $stdin = $context->getStdin();
-        $context->setStdout($this->processStream($stdin));
+        $stdout = $context->getStdout();
+        $this->processStream($stdin, $stdout);
 
         // process stream array
         $input = $context->getStreams();
@@ -34,28 +35,32 @@ class Duplicate extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = $this->processStream($instream);
+            $output = \Flexio\Object\StreamMemory::create();
+            $this->processStream($instream, $outstream);
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
         {
             default:
-                return $instream;
+                $outstream = $instream;
+                return;
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                return $this->getOutput($instream);
+                $this->getOutput($instream, $outstream);
+                return;
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream $instream) : \Flexio\Object\IStream
+    private function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         // input/output
-        $outstream = $instream->copy()->setPath(\Flexio\Base\Util::generateHandle());
+        $outstream->set($instream->get());
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
 
         // create the output
         $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
@@ -65,11 +70,9 @@ class Duplicate extends \Flexio\Jobs\Base
         $streamwriter = $outstream->getWriter();
         if ($outstream->getService()->exec($job_statement) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-        return $outstream;
     }
 
-    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream &$outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
     {
         $input_path = $instream->getPath();
         $output_path = $outstream->getPath();
