@@ -88,6 +88,14 @@ class StreamMemory implements \Flexio\Object\IStream
         return $object;
     }
 
+    public function copy() : \Flexio\Object\StreamMemory
+    {
+        $object = new static();
+        $object->properties = $this->properties;
+        $object->buffer = $this->buffer;
+        return $object;
+    }
+
     public function set(array $properties) : \Flexio\Object\StreamMemory
     {
         // TODO: add properties check

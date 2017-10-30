@@ -102,6 +102,10 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
 
     private function readString(int $offset, int $limit)
     {
+        $buffer = $this->getStream()->buffer;
+        if (!is_string($buffer))
+            return false;
+
         if ($offset >= strlen($this->getStream()->buffer))
             return false;
 

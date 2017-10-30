@@ -46,6 +46,8 @@ interface IObject
 
 interface IStream
 {
+    public function copy();
+    public function copyOver(\Flexio\Object\IStream $dest);
     public function set(array $properties);
     public function get();
     public function setName(string $name);
@@ -61,7 +63,6 @@ interface IStream
     public function getStructure();
     public function getFileInfo();
     public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */);
-    public function copyOver(\Flexio\Object\IStream $dest);
     public function getReader() : \Flexio\Object\IStreamReader;
     public function getWriter() : \Flexio\Object\IStreamWriter;
 }
