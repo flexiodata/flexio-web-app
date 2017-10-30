@@ -716,6 +716,9 @@ class Execute extends \Flexio\Jobs\Base
         if ($idx < 0 || $idx >= count($this->output_streams))
             return false;
 
+        if (!is_array($properties))
+            $properties = (array)$properties;
+
         if (isset($properties['content_type']))
             $properties['mime_type'] = $properties['content_type'];
 
