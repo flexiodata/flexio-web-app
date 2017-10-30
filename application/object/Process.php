@@ -618,7 +618,7 @@ class Process extends \Flexio\Object\Base
         }
 
         $environment_variables = $this->getEnvironmentParams();
-        $user_variables = $this->getInput()->getParams();
+        $user_variables = $context->getParams();
         $variables = array_merge($user_variables, $environment_variables);
         $context->setEnv($variables);
 
