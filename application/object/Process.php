@@ -19,49 +19,6 @@ namespace Flexio\Object;
 require_once dirname(__DIR__) . '/services/Abstract.php';
 
 
-/*
-
-    private static function manifest() : array
-    {
-        $manifest = array(
-            \Flexio\Jobs\CalcField::MIME_TYPE => '\Flexio\Jobs\CalcField',
-            \Flexio\Jobs\Comment::MIME_TYPE   => '\Flexio\Jobs\Comment',
-            \Flexio\Jobs\Convert::MIME_TYPE   => '\Flexio\Jobs\Convert',
-            \Flexio\Jobs\Create::MIME_TYPE    => '\Flexio\Jobs\Create',
-            \Flexio\Jobs\Distinct::MIME_TYPE  => '\Flexio\Jobs\Distinct',
-            \Flexio\Jobs\Duplicate::MIME_TYPE => '\Flexio\Jobs\Duplicate',
-            \Flexio\Jobs\Echo1::MIME_TYPE     => '\Flexio\Jobs\Echo1',
-            \Flexio\Jobs\EmailSend::MIME_TYPE => '\Flexio\Jobs\EmailSend',
-            \Flexio\Jobs\Request::MIME_TYPE   => '\Flexio\Jobs\Request',
-            \Flexio\Jobs\Output::MIME_TYPE    => '\Flexio\Jobs\Output',
-            \Flexio\Jobs\Filter::MIME_TYPE    => '\Flexio\Jobs\Filter',
-            \Flexio\Jobs\Replace::MIME_TYPE   => '\Flexio\Jobs\Replace',
-            \Flexio\Jobs\Grep::MIME_TYPE      => '\Flexio\Jobs\Grep',
-            \Flexio\Jobs\Group::MIME_TYPE     => '\Flexio\Jobs\Group',
-            \Flexio\Jobs\Input::MIME_TYPE     => '\Flexio\Jobs\Input',
-            \Flexio\Jobs\Limit::MIME_TYPE     => '\Flexio\Jobs\Limit',
-            \Flexio\Jobs\Merge::MIME_TYPE     => '\Flexio\Jobs\Merge',
-            \Flexio\Jobs\Nop::MIME_TYPE       => '\Flexio\Jobs\Nop',
-            \Flexio\Jobs\Fail::MIME_TYPE      => '\Flexio\Jobs\Fail',
-            \Flexio\Jobs\Prompt::MIME_TYPE    => '\Flexio\Jobs\Prompt',
-            \Flexio\Jobs\Execute::MIME_TYPE   => '\Flexio\Jobs\Execute',
-            \Flexio\Jobs\Exit1::MIME_TYPE     => '\Flexio\Jobs\Exit1',
-            \Flexio\Jobs\Rename::MIME_TYPE    => '\Flexio\Jobs\Rename',
-            \Flexio\Jobs\Render::MIME_TYPE    => '\Flexio\Jobs\Render',
-            \Flexio\Jobs\Search::MIME_TYPE    => '\Flexio\Jobs\Search',
-            \Flexio\Jobs\Select::MIME_TYPE    => '\Flexio\Jobs\Select',
-            \Flexio\Jobs\SetType::MIME_TYPE   => '\Flexio\Jobs\SetType',
-            \Flexio\Jobs\Sleep::MIME_TYPE     => '\Flexio\Jobs\Sleep',
-            \Flexio\Jobs\Sort::MIME_TYPE      => '\Flexio\Jobs\Sort',
-            \Flexio\Jobs\Transform::MIME_TYPE => '\Flexio\Jobs\Transform',
-            \Flexio\Jobs\List1::MIME_TYPE     => '\Flexio\Jobs\List1'
-        );
-
-        return $manifest;
-    }
-*/
-
-
 class Process extends \Flexio\Object\Base
 {
     // variables and errors
