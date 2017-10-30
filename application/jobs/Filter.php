@@ -39,7 +39,7 @@ class Filter extends \Flexio\Jobs\Base
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
+    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -54,7 +54,7 @@ class Filter extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
+    private function getOutput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
     {
         // get the job properties
         $job_definition = $this->getProperties();

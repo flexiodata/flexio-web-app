@@ -41,7 +41,7 @@ class Group extends \Flexio\Jobs\Base
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
+    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -56,7 +56,7 @@ class Group extends \Flexio\Jobs\Base
         }
     }
 
-    public function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
+    public function getOutput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
     {
         // input/output
         $outstream->set($instream->get());
@@ -81,7 +81,7 @@ class Group extends \Flexio\Jobs\Base
         $outstream->setStructure($output_columns);
     }
 
-    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream &$outstream)
     {
         // properties
         if (!isset($job_definition['params']['columns']))

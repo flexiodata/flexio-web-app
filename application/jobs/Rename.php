@@ -37,7 +37,7 @@ class Rename extends \Flexio\Jobs\Base
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream, array $env)
+    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream, array $env)
     {
         // any renames will be handled by the file/column rename handler; if there
         // aren't any operations, the stream will simply be copied to the output

@@ -37,7 +37,7 @@ class Replace extends \Flexio\Jobs\Base
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
+    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -52,7 +52,7 @@ class Replace extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
+    private function getOutput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
     {
         $column_expression_map = $this->getColumnExpressionMap($instream);
         if ($column_expression_map === false)
@@ -103,7 +103,7 @@ class Replace extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getColumnExpressionMap(\Flexio\Object\IStream $instream)
+    private function getColumnExpressionMap(\Flexio\Object\IStream &$instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the replace

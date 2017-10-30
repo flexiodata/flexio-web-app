@@ -37,7 +37,7 @@ class Grep extends \Flexio\Jobs\Base
         }
     }
 
-    private function processStream(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
+    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -52,7 +52,7 @@ class Grep extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream $instream, \Flexio\Object\IStream $outstream)
+    private function getOutput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
     {
         // input/output
         $outstream->set($instream->get());
