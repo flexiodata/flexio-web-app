@@ -33,7 +33,7 @@ class StreamMemory implements \Flexio\Object\IStream
     {
         $this->buffer = false;
 
-        $this->properites = array();
+        $this->properties = array();
         $this->properties['name'] = null;
         $this->properties['path'] = null;
         $this->properties['size'] = null;
