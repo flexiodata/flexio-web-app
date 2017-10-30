@@ -193,7 +193,7 @@ class StreamMemory implements \Flexio\Object\IStream
             $structure = \Flexio\Base\Structure::create($structure);
 
         $properties = array();
-        $properties['structure'] = $structure;
+        $properties['structure'] = $structure->enum();
         return $this->set($properties);
     }
 
