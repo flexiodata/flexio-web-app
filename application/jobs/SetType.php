@@ -22,7 +22,7 @@ class SetType extends \Flexio\Jobs\Base
     {
         // process stdin
         $stdin = $context->getStdin();
-        $stdout = $context->getStdin();
+        $stdout = $context->getStdout();
         $this->processStream($stdin, $stdout);
 
         // process stream array
