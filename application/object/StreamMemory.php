@@ -33,18 +33,19 @@ class StreamMemory implements \Flexio\Object\IStream
     {
         $this->buffer = false;
 
+        // note: default values match model defaults
         $this->properties = array();
-        $this->properties['name'] = null;
-        $this->properties['path'] = null;
+        $this->properties['name'] = '';
+        $this->properties['path'] = '';
         $this->properties['size'] = null;
-        $this->properties['hash'] = null;
-        $this->properties['mime_type'] = null;
+        $this->properties['hash'] = '';
+        $this->properties['mime_type'] = '';
         $this->properties['structure'] = array();
         $this->properties['file_created'] = null;
         $this->properties['file_modified'] = null;
-        $this->properties['connection_eid'] = null;
-        $this->properties['created'] = '';
-        $this->properties['updated'] = '';
+        $this->properties['connection_eid'] = '';
+        $this->properties['created'] = null;
+        $this->properties['updated'] = null;
     }
 
     public static function create(array $properties = null) : \Flexio\Object\StreamMemory
