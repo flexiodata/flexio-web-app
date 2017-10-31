@@ -63,7 +63,7 @@ class Base implements \Flexio\Jobs\IJob
         if (is_array($context))
             $variables = $context;
              else
-            $variables = $context->getEnv();
+            $variables = $context->getParams();
 
         if (is_array($value))
         {

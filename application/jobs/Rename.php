@@ -24,7 +24,7 @@ class Rename extends \Flexio\Jobs\Base
         
         // process stdin
         $stdin = $context->getStdin();
-        $context->setStdout($this->processStream($stdin, $context->getEnv()));
+        $context->setStdout($this->processStream($stdin, $context->getParams()));
 
         // process stream array
         $input = $context->getStreams();
@@ -32,7 +32,7 @@ class Rename extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = $this->processStream($instream, $context->getEnv());
+            $outstream = $this->processStream($instream, $context->getParams());
             $context->addStream($outstream);
         }
     }

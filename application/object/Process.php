@@ -108,6 +108,11 @@ class Process extends \Flexio\Object\Base
                     $streamwriter->write($data);
             }
 
+
+            $input = \Flexio\Object\Context::create();
+            $input->setParams($form_params);
+            $process->setInput($input);
+
             return;
         }
 
@@ -593,7 +598,7 @@ class Process extends \Flexio\Object\Base
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getInput()->getParams();
         $variables = array_merge($user_variables, $environment_variables);
-        $context->setEnv($variables);
+        $context->setParams($variables);
 
         // STEP 3: if stdin/stdout aren't initialized with a stream object, initialize them
         $stdin = $context->getStdin();
