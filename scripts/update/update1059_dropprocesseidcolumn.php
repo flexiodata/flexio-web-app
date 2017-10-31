@@ -48,13 +48,17 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: drop the old process eid columns; this was used to store
-    // the primary process eid so the subprocess records could be grouped
-    // with the main process; however, subprocesses are no longer stored
-    // in the process table
+    // STEP 1: drop the old process_eid, task_type, and task version columns;
+    // the process_eid column was used to store the primary process eid so the
+    // subprocess records could be grouped with the main process; however,
+    // subprocesses are no longer stored in the process table; the task_type
+    // and task_version columns used to store specific information for the
+    // individual tasks for each subprocess
     $sql = <<<EOT
         alter table tbl_process
-            drop column process_eid
+            drop column process_eid,
+            drop column task_type,
+            drop column task_version;
 EOT;
     $db->exec($sql);
 }
