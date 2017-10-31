@@ -269,8 +269,8 @@ CREATE TABLE tbl_processlog (
   PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_process_process_eid ON tbl_processlog (process_eid);
-CREATE INDEX idx_process_parent_eid ON tbl_processlog (parent_eid);
+CREATE INDEX idx_processlog_process_eid ON tbl_processlog (process_eid);
+CREATE INDEX idx_processlog_parent_eid ON tbl_processlog (parent_eid);
 
 
 

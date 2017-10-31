@@ -55,7 +55,7 @@ EOT;
     $db->exec($sql);
 
 
-    // STEP 2: add the authentication table
+    // STEP 2: add the process log table
     $sql = <<<EOT
 CREATE TABLE tbl_processlog (
     id serial,
@@ -80,8 +80,8 @@ EOT;
 
     // STEP 3: add the indexes
     $sql = <<<EOT
-        CREATE INDEX idx_process_process_eid ON tbl_processlog (process_eid);
-        CREATE INDEX idx_process_parent_eid ON tbl_processlog (parent_eid);
+        CREATE INDEX idx_processlog_process_eid ON tbl_processlog (process_eid);
+        CREATE INDEX idx_processlog_parent_eid ON tbl_processlog (parent_eid);
 EOT;
     $db->exec($sql);
 }
