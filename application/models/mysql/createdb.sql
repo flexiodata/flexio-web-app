@@ -225,8 +225,6 @@ CREATE TABLE tbl_process (
   process_mode varchar(1) NOT NULL default '',
   process_hash varchar(40) NOT NULL default '',
   impl_revision varchar(40) NOT NULL default '',
-  task_type text default '',
-  task_version int NOT NULL default 0,
   task text default NULL,
   input text default NULL,
   output text default NULL,
@@ -245,7 +243,6 @@ CREATE TABLE tbl_process (
 CREATE INDEX idx_process_eid ON tbl_process (eid);
 CREATE INDEX idx_process_parent_eid ON tbl_process (parent_eid);
 CREATE INDEX idx_process_process_hash ON tbl_process (process_hash);
-CREATE INDEX idx_process_task_type ON tbl_process (task_type);
 
 
 
