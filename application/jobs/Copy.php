@@ -24,6 +24,8 @@ class Copy extends \Flexio\Jobs\Base
         // with memory streams, we can no longer rely on this
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
 
+        parent::run($context);
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();

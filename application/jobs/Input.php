@@ -34,6 +34,8 @@ class Input extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         // store a reference to the context
         $this->setContext($context);
 

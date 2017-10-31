@@ -20,6 +20,8 @@ class Exit1 extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         // process stdin
         $stdin = $context->getStdin();
         $context->setStdout($stdin);
