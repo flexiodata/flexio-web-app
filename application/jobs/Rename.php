@@ -21,11 +21,11 @@ class Rename extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
-        $this->processStream($stdin, $stdout, $context->getEnv());
+        $this->processStream($stdin, $stdout, $context->getParams());
 
         // process stream array
         $input = $context->getStreams();
@@ -34,7 +34,7 @@ class Rename extends \Flexio\Jobs\Base
         foreach ($input as $instream)
         {
             $outstream = \Flexio\Object\StreamMemory::create();
-            $this->processStream($instream, $outstream, $context->getEnv());
+            $this->processStream($instream, $outstream, $context->getParams());
             $context->addStream($outstream);
         }
     }

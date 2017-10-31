@@ -24,7 +24,6 @@ class Context
     private $stdin;
     private $stdout;
     private $params;
-    private $env;
     private $streams;
     private $exit_code = null;
 
@@ -54,7 +53,6 @@ class Context
         }
 
         $result['params'] = $this->params;
-        $result['env'] = $this->env;
         $result['streams'] = array();
 
         foreach ($this->streams as $s)
@@ -129,9 +127,6 @@ class Context
         if (isset($arr['params']) && is_array($arr['params']))
             $context->setParams($arr['params']);
 
-        if (isset($arr['env']) && is_array($arr['env']))
-            $context->setEnv($arr['env']);
-
         if (isset($arr['streams']) && is_array($arr['streams']))
         {
             foreach ($arr['streams'] as $info)
@@ -177,7 +172,6 @@ class Context
         $object->stdin = $context->getStdin();
         $object->stdout = $context->getStdout();
         $object->params = $context->getParams();
-        $object->env = $context->getEnv();
         $object->streams = $context->getStreams();
         return $object;
     }
@@ -185,7 +179,7 @@ class Context
     public function set(\Flexio\Object\Context $context) : \Flexio\Object\Context
     {
         $this->streams = $context->getStreams();
-        $this->environment = $context->getEnv();
+        $this->params = $context->getParams();
         return $this;
     }
 
@@ -221,18 +215,6 @@ class Context
     {
         return $this->params;
     }
-
-    public function setEnv(array $arr) : \Flexio\Object\Context
-    {
-        $this->environment = $arr;
-        return $this;
-    }
-
-    public function getEnv() : array
-    {
-        return $this->environment;
-    }
-
 
     public function setExitCode(int $code)
     {
@@ -273,7 +255,6 @@ class Context
         $this->stdin = null;
         $this->stdout = null;
         $this->params = array();
-        $this->environment = array();
         $this->streams = array();
         $this->exit_code = null;
     }

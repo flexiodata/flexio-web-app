@@ -176,6 +176,11 @@ class Process extends \Flexio\Object\Base
                     $streamwriter->write($data);
             }
 
+
+            $input = \Flexio\Object\Context::create();
+            $input->setParams($form_params);
+            $process->setInput($input);
+
             return;
         }
 
@@ -624,7 +629,7 @@ class Process extends \Flexio\Object\Base
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $context->getParams();
         $variables = array_merge($user_variables, $environment_variables);
-        $context->setEnv($variables);
+        $context->setParams($variables);
 
         // STEP 4: iterate through the tasks and run each one
         $first_task = true;

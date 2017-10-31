@@ -589,9 +589,9 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_setenv($key,$value)
     {
-        $env = $this->getContext()->getEnv();
+        $env = $this->getContext()->getParams();
         $env[$key] = $value;
-        $this->getContext()->setEnv($env);
+        $this->getContext()->setParams($env);
     }
 
 
@@ -626,20 +626,20 @@ class Execute extends \Flexio\Jobs\Base
     {
         // TODO: need to save input environment variables for this work;
         // however, can't these just be saved in the script before changing them?
-        //return $this->getContext()->getEnv();
+        //return $this->getContext()->getParams();
     }
 
     public function func_getOutputEnv()
     {
         // TODO: // rename this function? to func_getEnv() ?
-        return $this->getContext()->getEnv();
+        return $this->getContext()->getParams();
     }
 
     public function func_setOutputEnvValue($key, $value)
     {
-        $env = $this->getContext()->getEnv();
+        $env = $this->getContext()->getParams();
         $env[(string)$key] = (string)$value;
-        $this->getContext()->setEnv($env);
+        $this->getContext()->setParams($env);
         return true;
     }
 
