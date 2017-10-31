@@ -20,6 +20,8 @@ class Sleep extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         // get the duration
         $job_definition = $this->getProperties();
         $milliseconds_to_wait = $job_definition['params']['value'];

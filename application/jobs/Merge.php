@@ -20,6 +20,8 @@ class Merge extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         // process stdin; since stdin is a single stream, the merged output is the same as the input
         $stdin = $context->getStdin();
         $context->setStdout($stdin);

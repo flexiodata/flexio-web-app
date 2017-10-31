@@ -24,6 +24,8 @@ class Output extends \Flexio\Jobs\Base
 
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         // make sure we have a params node
         $job_definition = $this->getProperties();
         if (!isset($job_definition['params']))

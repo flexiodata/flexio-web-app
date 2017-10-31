@@ -20,6 +20,8 @@ class Create extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         // create job adds new streams; don't clear existing streams
         $job_definition = $this->getProperties();
 

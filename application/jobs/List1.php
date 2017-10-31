@@ -20,6 +20,8 @@ class List1 extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $stdin->copy()->setPath(\Flexio\Base\Util::generateHandle());

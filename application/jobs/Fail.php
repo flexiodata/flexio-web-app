@@ -20,6 +20,8 @@ class Fail extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
+        parent::run($context);
+        
         $job_definition = $this->getProperties();
         $code = $job_definition['params']['code'] ?? '';
         $message = $job_definition['params']['message'] ?? '';
