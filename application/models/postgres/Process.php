@@ -17,34 +17,17 @@ declare(strict_types=1);
 
 class Process extends ModelBase
 {
-    public function create(array $params = null, bool $primary_process = true) : string
+    public function create(array $params = null) : string
     {
         $db = $this->getDatabase();
         $db->beginTransaction(); // needed to make sure eid generation is safe
         try
         {
-            // if it's a primary process, create the object base; otherwise, create
-            // a table-specific eid to track the subprocess
-            $eid = false;
-            if ($primary_process === true)
-            {
-                $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROCESS, $params);
-                $params['process_eid'] = $eid;
-            }
-             else
-            {
-                $eid = $this->generateChildProcessEid();
-            }
-
-            // make sure the process eid doesn't exist as a child process eid
-            if ($this->processExists($eid) === true)
-                throw new \Exception();
-
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROCESS, $params);
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
                 'parent_eid'     => $params['parent_eid'] ?? '',
-                'process_eid'    => $params['process_eid'] ?? '',
                 'process_mode'   => $params['process_mode'] ?? '',
                 'process_hash'   => $params['process_hash'] ?? '',
                 'impl_revision'  => $params['impl_revision'] ?? '',
@@ -102,7 +85,6 @@ class Process extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'parent_eid'     => array('type' => 'string',  'required' => false),
-                'process_eid'    => array('type' => 'string',  'required' => false),
                 'process_mode'   => array('type' => 'string',  'required' => false),
                 'process_hash'   => array('type' => 'string',  'required' => false),
                 'impl_revision'  => array('type' => 'string',  'required' => false),
@@ -127,11 +109,16 @@ class Process extends ModelBase
         $db->beginTransaction();
         try
         {
-            // try to set the status; unlike other types of set operations, a valid
-            // subprocess eid may exist even if an object eid doesn't exist, so don't
-            // return before giving the subprocess properties a chance to be set if
-            // the initial setting of properties returns false
+            // set the base object properties
             $result = $this->getModel()->setObjectBase($eid, $params);
+            if ($result === false)
+            {
+                // object doesn't exist
+                $db->commit();
+                return false;
+            }
+
+            // set the properties
             $db->update('tbl_process', $process_arr, 'eid = ' . $db->quote($eid));
             $db->commit();
             return true;
@@ -152,12 +139,8 @@ class Process extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            // note: some sub process records don't have an eid in the main
-            // table object; left join so we can get the main process records
-            // as well as subprocess records
             $row = $db->fetchRow("select tpr.eid as eid,
                                          tpr.parent_eid as parent_eid,
-                                         tpr.process_eid as process_eid,
                                          tpr.process_mode as process_mode,
                                          tpr.impl_revision as impl_revision,
                                          tpr.task as task,
@@ -173,7 +156,7 @@ class Process extends ModelBase
                                          tpr.created as created,
                                          tpr.updated as updated
                                   from tbl_process tpr
-                                  left outer join tbl_object tob on tpr.eid = tob.eid
+                                  inner join tbl_object tob on tpr.eid = tob.eid
                                   where tpr.eid = ?
                                  ", $eid);
          }
@@ -188,7 +171,6 @@ class Process extends ModelBase
         return array('eid'              => $row['eid'],
                      'eid_status'       => $row['eid_status'] ?? \Model::STATUS_UNDEFINED,
                      'parent_eid'       => $row['parent_eid'],
-                     'process_eid'      => $row['process_eid'],
                      'process_mode'     => $row['process_mode'],
                      'impl_revision'    => $row['impl_revision'],
                      'task'             => $row['task'],
@@ -205,90 +187,11 @@ class Process extends ModelBase
                      'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function getProcessTree(string $eid) // TODO: add return type
-    {
-        // this function is almost identical to get(), except that it
-        // returns both the parent process as well as all the subprocesses
-        // using the process_eid as an additional node on the primary
-        // process object
-
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        $db = $this->getDatabase();
-        $rows = array();
-        try
-        {
-            // note: some sub process records don't have an eid in the main
-            // table object; left join so we can get the main process records
-            // as well as subprocess records
-            $rows = $db->fetchAll("select tpr.eid as eid,
-                                          tpr.parent_eid as parent_eid,
-                                          tpr.process_eid as process_eid,
-                                          tpr.process_mode as process_mode,
-                                          tpr.impl_revision as impl_revision,
-                                          tpr.task_type as task_type,
-                                          tpr.task_version as task_version,
-                                          tpr.task as task,
-                                          tpr.input as input,
-                                          tpr.output as output,
-                                          tpr.started_by as started_by,
-                                          tpr.started as started,
-                                          tpr.finished as finished,
-                                          tpr.process_info as process_info,
-                                          tpr.process_status as process_status,
-                                          tpr.cache_used as cache_used,
-                                          tob.eid_status as eid_status,
-                                          tpr.created as created,
-                                          tpr.updated as updated
-                                   from tbl_process tpr
-                                   left outer join tbl_object tob on tpr.eid = tob.eid
-                                   where tpr.process_eid = ?
-                                   order by tpr.id
-                                  ", $eid);
-         }
-         catch (\Exception $e)
-         {
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-         }
-
-        if (!$rows)
-            return array();
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $output[] = array('eid'              => $row['eid'],
-                              'eid_status'       => $row['eid_status'] ?? \Model::STATUS_UNDEFINED,
-                              'parent_eid'       => $row['parent_eid'],
-                              'process_eid'      => $row['process_eid'],
-                              'process_mode'     => $row['process_mode'],
-                              'impl_revision'    => $row['impl_revision'],
-                              'task_type'        => $row['task_type'],
-                              'task_version'     => $row['task_version'],
-                              'task'             => $row['task'],
-                              'input'            => $row['input'],
-                              'output'           => $row['output'],
-                              'started_by'       => $row['started_by'],
-                              'started'          => $row['started'],
-                              'finished'         => $row['finished'],
-                              'duration'         => \Flexio\Base\Util::formatDateDiff($row['started'], $row['finished']),
-                              'process_info'     => $row['process_info'],
-                              'process_status'   => $row['process_status'],
-                              'cache_used'       => $row['cache_used'],
-                              'created'          => \Flexio\Base\Util::formatDate($row['created']),
-                              'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
-        }
-
-        return $output;
-    }
-
     public function getProcessUserStats() : array
     {
         $db = $this->getDatabase();
         try
         {
-            // note: get the process statistics by looking at all the subprocesses
             $rows = $db->fetchAll("select tas.target_eid as target_eid,
                                           tpr.parent_eid as parent_eid,
                                           tpr.created::DATE as created,
@@ -296,8 +199,8 @@ class Process extends ModelBase
                                           sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
                                           count(*) as total_count
                                    from tbl_process tpr
-                                   inner join tbl_association tas on tpr.process_eid = tas.source_eid
-                                   where tpr.process_eid = tpr.eid and tpr.parent_eid != '' and tas.association_type = 'CRB'
+                                   inner join tbl_association tas on tpr.eid = tas.source_eid
+                                   where tpr.parent_eid != '' and tas.association_type = 'CRB'
                                    group by tas.target_eid, tpr.parent_eid, tpr.created::DATE
                                    order by created, parent_eid
                                  ");
@@ -326,7 +229,6 @@ class Process extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            // note: get the process statistics by looking at all the subprocesses
             $rows = $db->fetchAll("select tas.target_eid as target_eid,
                                           tpr.created::DATE as created,
                                           avg(extract(epoch from (tpr.finished - tpr.started))) as average_time,
@@ -359,10 +261,12 @@ class Process extends ModelBase
 
     public function getProcessTaskStats() : array
     {
+
+        // DEPRECATED: process table no longer stores individual subprocesses
+/*
         $db = $this->getDatabase();
         try
         {
-            // note: get the process statistics by looking at all the subprocesses
             $rows = $db->fetchAll("select tpr.task_type as task_type,
                                          count(case when tpr.process_status = ''  then 1 end) as undefined,
                                          count(case when tpr.process_status = 'S' then 1 end) as pending,
@@ -404,6 +308,7 @@ class Process extends ModelBase
         }
 
         return $output;
+*/
     }
 
     public function setProcessStatus(string $eid, string $status) : bool
@@ -454,43 +359,5 @@ class Process extends ModelBase
          {
              return false;
          }
-    }
-
-    private function processExists(string $eid) : bool
-    {
-        try
-        {
-            $db = $this->getDatabase();
-            $result = $db->fetchOne("select eid from tbl_process where eid= ?", $eid);
-            if ($result !== false)
-                return true;
-
-            return false;
-        }
-        catch (\Exception $e)
-        {
-            return false;
-        }
-    }
-
-    private function generateChildProcessEid() : string
-    {
-        // note: this function generates a unique child process eid; this
-        // function is nearly identical to \Model::generateUniqueEid() except
-        // that this function checks the tbl_process table for the eid instead
-        // of the tbl_object table; a child process eid can coexist with the
-        // object eids since child processes are only used as children of a parent
-        // process and are not used in any other table; the only danger is
-        // that after a child process eid is created that a normal object eid
-        // for a process is created, so this is checked in the process object
-        // creation
-
-        $eid = \Flexio\Base\Eid::generate();
-        $result = $this->getDatabase()->fetchOne("select eid from tbl_process where eid= ?", $eid);
-
-        if ($result === false)
-            return $eid;
-
-        return $this->generateSubProcessEid();
     }
 }

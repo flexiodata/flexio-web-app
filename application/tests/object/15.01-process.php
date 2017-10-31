@@ -208,8 +208,6 @@ class Test
             },
             "process_status" : null,
             "cache_used" : null,
-            "subprocesses" : [
-            ],
             "created" : null,
             "updated" : null
         }

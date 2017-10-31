@@ -481,6 +481,9 @@ class Process extends \Flexio\Object\Base
 
     public function getTaskInputOutput(\Flexio\Object\Context &$input_context, \Flexio\Object\Context &$output_context, string $task_eid = null)
     {
+        // TODO: need to get the output from the log info
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+/*
         // returns the context of input streams for the specified task of a
         // process; if no task is specified, the streams from the last subprocess
         // are used
@@ -519,6 +522,7 @@ class Process extends \Flexio\Object\Base
 
         $input_context = \Flexio\Object\Context::fromString(json_encode($specified_subprocess['input']));  // TODO: cumbersome; the context uses stream objects, but we only have eid info, so we need to repack and unpack
         $output_context = \Flexio\Object\Context::fromString(json_encode($specified_subprocess['output']));  // TODO: cumbersome; the context uses stream objects, but we only have eid info, so we need to repack and unpack
+*/
     }
 
     public function isBuildMode() : bool
@@ -797,7 +801,6 @@ class Process extends \Flexio\Object\Base
             "process_info" : null,
             "process_status" : null,
             "cache_used" : null,
-            "subprocesses" : null,
             "created" : null,
             "updated" : null
         }
@@ -819,59 +822,6 @@ class Process extends \Flexio\Object\Base
         if ($process_info !== false)
             $properties['process_info'] = $process_info;
 
-        // get the subprocesses
-        $process_model = $this->getModel()->process;
-        $process_tree = $process_model->getProcessTree($this->getEid());
-        if ($process_tree === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        // unpack the process tree into the properties
-        $primary_process = array();
-        $subprocesses = array();
-        foreach ($process_tree as $p)
-        {
-            // only get the subprocesses
-            if ($p['eid'] === $p['process_eid'])
-                continue;
-
-            unset($p['eid_status']);
-            unset($p['process_eid']);
-            unset($p['parent_eid']);
-            unset($p['process_mode']);
-
-            // unpack the task
-            $task = $p['task'];
-            $task = @json_decode($task, true);
-            if (!is_array($task))
-                $task = array();
-            $p['task'] = $task;
-
-            // unpack the input
-            $input = $p['input'];
-            $input = @json_decode($input, true);
-            if (!is_array($input))
-                $input = array();
-            $p['input'] = $input;
-
-            // unpack the output
-            $output = $p['output'];
-            $output = @json_decode($output, true);
-            if (!is_array($output))
-                $output = array();
-            $p['output'] = $output;
-
-            // unpack the process info
-            $info = $p['process_info'];
-            $info = @json_decode($info, true);
-            if (!is_array($info))
-                $info = array();
-            $p['process_info'] = $info;
-
-            // save the info
-            $subprocesses[] = $p;
-        }
-
-        $properties['subprocesses'] = $subprocesses;
         return $properties;
     }
 
