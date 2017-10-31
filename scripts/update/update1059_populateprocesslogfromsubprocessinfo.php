@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2017-10-24
+ * Created:  2017-10-31
  *
  * @package flexio
  * @subpackage Database_Update
@@ -48,17 +48,30 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: drop the old process_eid, task_type, and task version columns;
-    // the process_eid column was used to store the primary process eid so the
-    // subprocess records could be grouped with the main process; however,
-    // subprocesses are no longer stored in the process table; the task_type
-    // and task_version columns used to store specific information for the
-    // individual tasks for each subprocess
+    // STEP 1: copy log subprocess info from process table to process log table;
+    // these correspond to the information in the records where the process_eid is
+    // not equal to the eid (which is the main process eid)
     $sql = <<<EOT
-        alter table tbl_process
-            drop column process_eid,
-            drop column task_type,
-            drop column task_version;
+        insert into tbl_processlog
+            (process_eid, parent_eid, task_type, task_version, task, input, output,
+             started, finished, log_type, created, updated)
+        select
+            process_eid as process_eid,
+            parent_eid as parent_eid,
+            task_type as task_type,
+            task_version as task_version,
+            task as task,
+            input as input,
+            output as output,
+            started as started,
+            finished as finished,
+            'P' as log_type,
+            created as created,
+            updated as updated
+        from
+            tbl_process
+        where
+            process_eid != eid;
 EOT;
     $db->exec($sql);
 }
