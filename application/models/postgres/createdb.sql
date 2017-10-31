@@ -208,8 +208,6 @@ CREATE TABLE tbl_process (
   process_mode varchar(1) NOT NULL default '',
   process_hash varchar(40) NOT NULL default '',
   impl_revision varchar(40) NOT NULL default '',
-  task_type text default '',
-  task_version int NOT NULL default 0,
   task json,
   input json,
   output json,
