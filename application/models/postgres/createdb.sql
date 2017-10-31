@@ -230,6 +230,34 @@ CREATE INDEX idx_process_process_hash ON tbl_process (process_hash);
 
 
 --
+-- Table structure for table tbl_processlog
+--
+
+DROP TABLE IF EXISTS tbl_processlog;
+CREATE TABLE tbl_processlog (
+  id serial,
+  process_eid varchar(12) NOT NULL default '',
+  parent_eid varchar(12) NOT NULL default '',
+  task_type text default '',
+  task_version int NOT NULL default 0,
+  task json,
+  input json,
+  output json,
+  started timestamp NULL default NULL,
+  finished timestamp NULL default NULL,
+  log_type varchar(1) NOT NULL default '',
+  message text default '',
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE INDEX idx_process_process_eid ON tbl_processlog (process_eid);
+CREATE INDEX idx_process_parent_eid ON tbl_processlog (parent_eid);
+
+
+
+--
 -- Table structure for table tbl_stream
 --
 
