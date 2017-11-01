@@ -1851,7 +1851,7 @@
 
 
 
-    this.args.render = ['file','format','width','height','scrollbars'];
+    this.args.render = ['url','format','width','height','scrollbars'];
     this.hints.render = {
       "format":      [ "pdf", "png" ]
     };
@@ -1866,12 +1866,12 @@
 
       var params = this.split(str, this.args.render);
 
-      if (params.hasOwnProperty('file'))
+      if (params.hasOwnProperty('url'))
       {
-        json.params.file = params['file'].value;
+        json.params.url = params['url'].value;
 
         /*
-        var arr = this.parseList(params['file'].value);
+        var arr = this.parseList(params['url'].value);
 
         json.params.items = [];
 
@@ -1952,13 +1952,14 @@
 
       var res = "render";
 
-      if (json.params.hasOwnProperty('file'))
+      if (json.params.hasOwnProperty('url'))
       {
-        res = this.append(res, "file: " + json.params['file']);
+        res = this.append(res, "url: " + json.params['url']);
       }
        else if (json.params.hasOwnProperty('items') && Array.isArray(json.params.items) && json.params.items.length > 0 && json.params.items[0].hasOwnProperty('path'))
       {
-        res = this.append(res, "file: " + json.params.items[0].path);
+        // backward compatibility
+        res = this.append(res, "url: " + json.params.items[0].path);
     
         /*
 
