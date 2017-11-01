@@ -104,11 +104,11 @@
           v-if="false"
         />
         <keypair-item
-          v-for="(item, index) in form_data"
+          v-for="(item, index) in data"
           :key="index"
           :item="item"
           :index="index"
-          :count="form_data.length"
+          :count="data.length"
           @change="onFormDataItemChange"
           @delete="onFormDataItemDelete"
         />
@@ -202,7 +202,7 @@
         refresh_token: '',
         expires: '',
         headers: [],
-        form_data: []
+        data: []
       }
     },
     computed: {
@@ -245,40 +245,40 @@
         })
 
         // add "ghost" items
-        this.form_data = [].concat(this.form_data).concat(newKeypairItem())
+        this.data = [].concat(this.data).concat(newKeypairItem())
         this.headers = [].concat(this.headers).concat(newKeypairItem())
       },
       getConnection() {
         var eid = this.eid
         var connection = _.pick(this.$data, ['name', 'ename', 'description', 'connection_type'])
-        var connection_info = _.pick(this.$data, ['url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'form_data'])
+        var connection_info = _.pick(this.$data, ['url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'data'])
 
-        var form_data = _.keyBy(this.$data.form_data, 'key')
-        form_data = _.pickBy(form_data, (val, key) => { return key.length > 0 })
-        form_data = _.mapValues(form_data, 'val')
+        var data = _.keyBy(this.$data.data, 'key')
+        data = _.pickBy(data, (val, key) => { return key.length > 0 })
+        data = _.mapValues(data, 'val')
 
         var headers = _.keyBy(this.$data.headers, 'key')
         headers = _.pickBy(headers, (val, key) => { return key.length > 0 })
         headers = _.mapValues(headers, 'val')
 
-        connection_info.form_data = form_data
+        connection_info.data = data
         connection_info.headers = headers
 
         return _.assign({}, connection, { eid, connection_info })
       },
       onFormDataItemChange(item, index) {
-        if (index == _.size(this.form_data) - 1)
-          this.form_data = [].concat(this.form_data).concat(newKeypairItem())
+        if (index == _.size(this.data) - 1)
+          this.data = [].concat(this.data).concat(newKeypairItem())
 
-        var arr = [].concat(this.form_data)
+        var arr = [].concat(this.data)
         arr[index] = _.assign({}, item)
-        this.form_data = [].concat(arr)
+        this.data = [].concat(arr)
       },
       onFormDataItemDelete(item, index) {
-        var tmp = this.form_data
+        var tmp = this.data
         _.pullAt(tmp, [index])
-        this.form_data = []
-        this.$nextTick(() => { this.form_data = [].concat(tmp) })
+        this.data = []
+        this.$nextTick(() => { this.data = [].concat(tmp) })
       },
       onHeaderItemChange(item, index) {
         if (index == _.size(this.headers) - 1)
