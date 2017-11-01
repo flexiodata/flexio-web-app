@@ -96,11 +96,11 @@ class Request extends \Flexio\Jobs\Base
                 $password = $connection_info['password'];
             }
 
-            if (isset($connection_info['form_data']) && is_array($connection_info['form_data']) && count($connection_info['form_data']) > 0)
+            if (isset($connection_info['data']) && is_array($connection_info['data']) && count($connection_info['data']) > 0)
             {
                 if (is_array($post_data))
                 {
-                    $newpostdata = $connection_info['form_data'];
+                    $newpostdata = $connection_info['data'];
                     if ($post_data !== null)
                         $newpostdata = array_merge($newpostdata, $post_data);
                     $post_data = $newpostdata;
