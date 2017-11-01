@@ -1851,7 +1851,7 @@
 
 
 
-    this.args.render = ['file','format','width','height','scrollbars'];
+    this.args.render = ['url','format','width','height','scrollbars'];
     this.hints.render = {
       "format":      [ "pdf", "png" ]
     };
@@ -1866,12 +1866,12 @@
 
       var params = this.split(str, this.args.render);
 
-      if (params.hasOwnProperty('file'))
+      if (params.hasOwnProperty('url'))
       {
-        json.params.file = params['file'].value;
+        json.params.url = params['url'].value;
 
         /*
-        var arr = this.parseList(params['file'].value);
+        var arr = this.parseList(params['url'].value);
 
         json.params.items = [];
 
@@ -1952,13 +1952,14 @@
 
       var res = "render";
 
-      if (json.params.hasOwnProperty('file'))
+      if (json.params.hasOwnProperty('url'))
       {
-        res = this.append(res, "file: " + json.params['file']);
+        res = this.append(res, "url: " + json.params['url']);
       }
        else if (json.params.hasOwnProperty('items') && Array.isArray(json.params.items) && json.params.items.length > 0 && json.params.items[0].hasOwnProperty('path'))
       {
-        res = this.append(res, "file: " + json.params.items[0].path);
+        // backward compatibility
+        res = this.append(res, "url: " + json.params.items[0].path);
     
         /*
 
@@ -2026,7 +2027,7 @@
   }
 }
 */
-    this.args.request = ['method', 'url', 'params', 'headers', 'userpwd', 'data', 'formdata', 'connection'];
+    this.args.request = ['method', 'url', 'params', 'headers', 'username', 'password', 'data', 'connection'];
     this.hints.request = {
       'method':      [ 'GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD', 'OPTIONS' ]
     }
@@ -2056,9 +2057,14 @@
         json.params.url = params['url'].value;
       }
 
-      if (params.hasOwnProperty('userpwd'))
+      if (params.hasOwnProperty('username'))
       {
-        json.params.userpwd = params['userpwd'].value;
+        json.params.username = params['username'].value;
+      }
+
+      if (params.hasOwnProperty('password'))
+      {
+        json.params.password = params['password'].value;
       }
 
       if (params.hasOwnProperty('headers'))
@@ -2073,17 +2079,31 @@
 
       if (params.hasOwnProperty('data'))
       {
-        json.params.data = params['data'].value;
+        var data = ''+params['data'].value
+
+        if (data.indexOf('=>') != -1)
+        {
+          json.params.data = {}
+          var i, parsed = this.parseList(data)
+          for (i = 0; i < parsed.length; ++i)
+          {
+            json.params.data[ parsed[i].key ] = parsed[i].value
+          }
+        }
+         else
+        {
+          json.params.data = data;
+        }
       }
 
-      if (params.hasOwnProperty('formdata'))
+      if (params.hasOwnProperty('params'))
       {
-        json.params.formdata = {}
-        var i, parsed = this.parseList(params['formdata'].value)
-        for (i = 0; i < parsed.length; ++i)
-        {
-          json.params.formdata[ parsed[i].key ] = parsed[i].value
-        }
+          json.params.params = {}
+          var i, parsed = this.parseList(params['params'].value)
+          for (i = 0; i < parsed.length; ++i)
+          {
+            json.params.params[ parsed[i].key ] = parsed[i].value
+          }
       }
 
       return json
@@ -2111,14 +2131,14 @@
         res = this.append(res, "url: " + json.params.url)
       }
 
-      if (json.params.hasOwnProperty('userpwd'))
+      if (json.params.hasOwnProperty('username'))
       {
-        res = this.append(res, "userpwd: " + json.params.userpwd)
+        res = this.append(res, "username: " + json.params.username)
       }
 
-      if (json.params.hasOwnProperty('data'))
+      if (json.params.hasOwnProperty('password'))
       {
-        res = this.append(res, "data: " + json.params.data)
+        res = this.append(res, "password: " + json.params.password)
       }
 
       if (json.params.hasOwnProperty('headers'))
@@ -2141,24 +2161,48 @@
         res = this.append(res, "headers: " + str);
       }
 
-      if (json.params.hasOwnProperty('formdata'))
+      if (json.params.hasOwnProperty('data'))
+      {
+        if (json.params.data instanceof Object)
+        {
+          var str = '';
+          var first = true;
+          for (var k in json.params.data)
+          {
+            if (json.params.data.hasOwnProperty(k))
+            {
+              if (first === false)
+                str += ', ';
+              str += (k + " => " + json.params.data[k]);
+              first = false;
+            }
+          }
+
+          res = this.append(res, "data: " + str);
+        }
+         else
+        {
+          res = this.append(res, "data: " + json.params.data);
+        }
+      }
+
+      if (json.params.hasOwnProperty('params'))
       {
         var str = '';
         var first = true;
-        for (var k in json.params.formdata)
+        for (var k in json.params.params)
         {
-          if (json.params.formdata.hasOwnProperty(k))
+          if (json.params.params.hasOwnProperty(k))
           {
             if (first === false)
               str += ', ';
-            str += (k + " => " + json.params.formdata[k]);
+            str += (k + " => " + json.params.params[k]);
             first = false;
           }
         }
 
-        res = this.append(res, "formdata: " + str);
+        res = this.append(res, "params: " + str);
       }
-
 
       return res;
     }

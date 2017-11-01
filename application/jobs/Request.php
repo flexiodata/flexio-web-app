@@ -36,8 +36,8 @@ class Request extends \Flexio\Jobs\Base
         $headers = $params['headers'] ?? array();
         $get_params = $params['params'] ?? array();
         $post_data = $params['data'] ?? '';
-        $form_data = $params['formdata'] ?? null;
-        $userpwd = $params['userpwd'] ?? null;
+        $username = $params['username'] ?? '';
+        $password = $params['password'] ?? '';
 
 /*
         $updated_url = $url;
@@ -86,17 +86,25 @@ class Request extends \Flexio\Jobs\Base
                 $method = $connection_info['method'];
             }
 
-            if ($userpwd === null && isset($connection_info['auth']) && $connection_info['auth'] == 'basic' && isset($connection_info['username']))
+            if (isset($connection_info['auth']) && $connection_info['auth'] == 'basic' && isset($connection_info['username']))
             {
-                $userpwd = $connection_info['username'] . ':' . $connection_info['password'];
+                $username = $connection_info['username'];
+            }
+
+            if (isset($connection_info['auth']) && $connection_info['auth'] == 'basic' && isset($connection_info['password']))
+            {
+                $password = $connection_info['password'];
             }
 
             if (isset($connection_info['form_data']) && is_array($connection_info['form_data']) && count($connection_info['form_data']) > 0)
             {
-                $newformdata = $connection_info['form_data'];
-                if ($form_data !== null)
-                    $newformdata = array_merge($newformdata, $form_data);
-                $form_data = $newformdata;
+                if (is_array($post_data))
+                {
+                    $newpostdata = $connection_info['form_data'];
+                    if ($post_data !== null)
+                        $newpostdata = array_merge($newpostdata, $post_data);
+                    $post_data = $newpostdata;
+                }
             }
 
             $connection_headers = $connection_info['headers'] ?? false;
@@ -107,6 +115,21 @@ class Request extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter: 'url'");
 
         $ch = curl_init();
+
+        if (is_array($get_params) && count($get_params) > 0)
+        {
+            if (parse_url($url, PHP_URL_QUERY))
+            {
+                $url .= '&';
+            }
+             else
+            {
+                $url .= '?';
+            }
+            
+            $url .= http_build_query($get_params);
+        }
+
 
         // configure the URL
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -128,8 +151,9 @@ class Request extends \Flexio\Jobs\Base
             //case 'options': curl_setopt($ch, CURLOPT_HTTPOPTIONS, true); break;
         }
 
-        if (isset($userpwd))
+        if (strlen($username) > 0 || strlen($password) > 0)
         {
+            $userpwd = "$username:$password";
             curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
         }
 
@@ -139,15 +163,7 @@ class Request extends \Flexio\Jobs\Base
             //$urlencoded_post_data = http_build_query($post_data);
             //curl_setopt($ch, CURLOPT_POSTFIELDS, $urlencoded_post_data);
 
-            if (isset($form_data))
-            {
-                // form data is a php array; php will do the encoding
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $form_data);
-            }
-             else
-            {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-            }
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         }
 
         if (count($headers) > 0)
@@ -179,8 +195,8 @@ class Request extends \Flexio\Jobs\Base
 
         // make the call and get the result
         $outstream_properties = array(
-            'name' => $url,
-            'path' => $url,
+           // 'name' => $url,
+           // 'path' => $url,
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_STREAM // default
         );
         $outstream->set($outstream_properties);
@@ -196,9 +212,13 @@ class Request extends \Flexio\Jobs\Base
         });
 
         $result = curl_exec($ch);
+        $content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
+        $outstream->set(array(
+            'size' => $streamwriter->getBytesWritten(),
+            'mime_type' => $content_type
+        ));
 
         // TODO: get the mime type from the returned info
 
