@@ -110,6 +110,21 @@ class Request extends \Flexio\Jobs\Base
 
         $ch = curl_init();
 
+        if (is_array($get_params) && count($get_params) > 0)
+        {
+            if (parse_url($url, PHP_URL_QUERY))
+            {
+                $query .= '&';
+            }
+             else
+            {
+                $query .= '?';
+            }
+            
+            $query .= http_build_query($get_params);
+        }
+
+
         // configure the URL
         curl_setopt($ch, CURLOPT_URL, $url);
 
@@ -173,8 +188,8 @@ class Request extends \Flexio\Jobs\Base
 
         // make the call and get the result
         $outstream_properties = array(
-            'name' => $url,
-            'path' => $url,
+           // 'name' => $url,
+           // 'path' => $url,
             'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_STREAM // default
         );
         $outstream->set($outstream_properties);

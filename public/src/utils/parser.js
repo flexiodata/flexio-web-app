@@ -2091,6 +2091,16 @@
         }
       }
 
+      if (params.hasOwnProperty('params'))
+      {
+          json.params.params = {}
+          var i, parsed = this.parseList(params['params'].value)
+          for (i = 0; i < parsed.length; ++i)
+          {
+            json.params.params[ parsed[i].key ] = parsed[i].value
+          }
+      }
+
       return json
     };
 
@@ -2157,15 +2167,32 @@
               first = false;
             }
           }
+
+          res = this.append(res, "data: " + str);
+        }
+         else
+        {
+          res = this.append(res, "data: " + json.params.data);
+        }
+      }
+
+      if (json.params.hasOwnProperty('params'))
+      {
+        var str = '';
+        var first = true;
+        for (var k in json.params.params)
+        {
+          if (json.params.params.hasOwnProperty(k))
+          {
+            if (first === false)
+              str += ', ';
+            str += (k + " => " + json.params.params[k]);
+            first = false;
+          }
         }
 
-        res = this.append(res, "data: " + str);
+        res = this.append(res, "params: " + str);
       }
-       else
-      {
-        res = this.append(res, "data: " + json.params.data);
-      }
-
 
       return res;
     }
