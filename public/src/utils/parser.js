@@ -2027,7 +2027,7 @@
   }
 }
 */
-    this.args.request = ['method', 'url', 'params', 'headers', 'userpwd', 'data', 'formdata', 'connection'];
+    this.args.request = ['method', 'url', 'params', 'headers', 'userpwd', 'data', 'connection'];
     this.hints.request = {
       'method':      [ 'GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD', 'OPTIONS' ]
     }
@@ -2074,16 +2074,20 @@
 
       if (params.hasOwnProperty('data'))
       {
-        json.params.data = params['data'].value;
-      }
+        var data = ''+params['data'].value
 
-      if (params.hasOwnProperty('formdata'))
-      {
-        json.params.formdata = {}
-        var i, parsed = this.parseList(params['formdata'].value)
-        for (i = 0; i < parsed.length; ++i)
+        if (data.indexOf('=>') != -1)
         {
-          json.params.formdata[ parsed[i].key ] = parsed[i].value
+          json.params.data = {}
+          var i, parsed = this.parseList(data)
+          for (i = 0; i < parsed.length; ++i)
+          {
+            json.params.data[ parsed[i].key ] = parsed[i].value
+          }
+        }
+         else
+        {
+          json.params.data = data;
         }
       }
 
@@ -2117,11 +2121,6 @@
         res = this.append(res, "userpwd: " + json.params.userpwd)
       }
 
-      if (json.params.hasOwnProperty('data'))
-      {
-        res = this.append(res, "data: " + json.params.data)
-      }
-
       if (json.params.hasOwnProperty('headers'))
       {
         var str = '';
@@ -2142,22 +2141,29 @@
         res = this.append(res, "headers: " + str);
       }
 
-      if (json.params.hasOwnProperty('formdata'))
+      if (json.params.hasOwnProperty('data'))
       {
-        var str = '';
-        var first = true;
-        for (var k in json.params.formdata)
+        if (json.params.data instanceof Object)
         {
-          if (json.params.formdata.hasOwnProperty(k))
+          var str = '';
+          var first = true;
+          for (var k in json.params.data)
           {
-            if (first === false)
-              str += ', ';
-            str += (k + " => " + json.params.formdata[k]);
-            first = false;
+            if (json.params.data.hasOwnProperty(k))
+            {
+              if (first === false)
+                str += ', ';
+              str += (k + " => " + json.params.data[k]);
+              first = false;
+            }
           }
         }
 
-        res = this.append(res, "formdata: " + str);
+        res = this.append(res, "data: " + str);
+      }
+       else
+      {
+        res = this.append(res, "data: " + json.params.data);
       }
 
 
