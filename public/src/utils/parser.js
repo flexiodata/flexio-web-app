@@ -2027,7 +2027,7 @@
   }
 }
 */
-    this.args.request = ['method', 'url', 'params', 'headers', 'userpwd', 'data', 'connection'];
+    this.args.request = ['method', 'url', 'params', 'headers', 'username', 'password', 'data', 'connection'];
     this.hints.request = {
       'method':      [ 'GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD', 'OPTIONS' ]
     }
@@ -2057,9 +2057,14 @@
         json.params.url = params['url'].value;
       }
 
-      if (params.hasOwnProperty('userpwd'))
+      if (params.hasOwnProperty('username'))
       {
-        json.params.userpwd = params['userpwd'].value;
+        json.params.username = params['username'].value;
+      }
+
+      if (params.hasOwnProperty('password'))
+      {
+        json.params.password = params['password'].value;
       }
 
       if (params.hasOwnProperty('headers'))
@@ -2126,9 +2131,14 @@
         res = this.append(res, "url: " + json.params.url)
       }
 
-      if (json.params.hasOwnProperty('userpwd'))
+      if (json.params.hasOwnProperty('username'))
       {
-        res = this.append(res, "userpwd: " + json.params.userpwd)
+        res = this.append(res, "username: " + json.params.username)
+      }
+
+      if (json.params.hasOwnProperty('password'))
+      {
+        res = this.append(res, "password: " + json.params.password)
       }
 
       if (json.params.hasOwnProperty('headers'))

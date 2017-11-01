@@ -36,7 +36,8 @@ class Request extends \Flexio\Jobs\Base
         $headers = $params['headers'] ?? array();
         $get_params = $params['params'] ?? array();
         $post_data = $params['data'] ?? '';
-        $userpwd = $params['userpwd'] ?? null;
+        $username = $params['username'] ?? '';
+        $password = $params['password'] ?? '';
 
 /*
         $updated_url = $url;
@@ -85,9 +86,14 @@ class Request extends \Flexio\Jobs\Base
                 $method = $connection_info['method'];
             }
 
-            if ($userpwd === null && isset($connection_info['auth']) && $connection_info['auth'] == 'basic' && isset($connection_info['username']))
+            if (isset($connection_info['auth']) && $connection_info['auth'] == 'basic' && isset($connection_info['username']))
             {
-                $userpwd = $connection_info['username'] . ':' . $connection_info['password'];
+                $username = $connection_info['username'];
+            }
+
+            if (isset($connection_info['auth']) && $connection_info['auth'] == 'basic' && isset($connection_info['password']))
+            {
+                $password = $connection_info['password'];
             }
 
             if (isset($connection_info['form_data']) && is_array($connection_info['form_data']) && count($connection_info['form_data']) > 0)
@@ -145,8 +151,9 @@ class Request extends \Flexio\Jobs\Base
             //case 'options': curl_setopt($ch, CURLOPT_HTTPOPTIONS, true); break;
         }
 
-        if (isset($userpwd))
+        if (strlen($username) > 0 || strlen($password) > 0)
         {
+            $userpwd = "$username:$password";
             curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
         }
 
