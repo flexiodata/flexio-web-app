@@ -205,9 +205,13 @@ class Request extends \Flexio\Jobs\Base
         });
 
         $result = curl_exec($ch);
+        $content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
+        $outstream->set(array(
+            'size' => $streamwriter->getBytesWritten(),
+            'mime_type' => $content_type
+        ));
 
         // TODO: get the mime type from the returned info
 
