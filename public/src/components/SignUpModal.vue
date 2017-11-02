@@ -28,7 +28,10 @@
         @requested-password="$emit('requested-password')"
         v-else-if="view === 'forgotpassword'"
       />
-      <sign-up-modal-success v-else-if="view === 'sign-up-success'" />
+      <sign-up-modal-success
+        @close-click="$emit('cancel')"
+        v-else-if="view === 'sign-up-success'"
+      />
     </div>
   </flexio-modal>
 </template>
