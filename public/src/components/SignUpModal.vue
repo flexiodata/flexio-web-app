@@ -29,6 +29,7 @@
         v-else-if="view === 'forgotpassword'"
       />
       <sign-up-modal-success
+        :eid="user_eid"
         @close-click="$emit('cancel')"
         v-else-if="view === 'sign-up-success'"
       />
@@ -59,12 +60,14 @@
     },
     data() {
       return {
-        view: this.initialView
+        view: this.initialView,
+        user_eid: ''
       }
     },
     methods: {
-      onSignedUp() {
+      onSignedUp(user_info) {
         this.$emit('signed-up-signed-in')
+        this.user_eid = _.get(user_info, 'eid', '')
         this.view = 'sign-up-success'
       }
     }
