@@ -53,12 +53,11 @@ try
     // not equal to the eid (which is the main process eid)
     $sql = <<<EOT
         insert into tbl_processlog
-            (eid, process_eid, parent_eid, task_type, task_version, task,
+            (eid, process_eid, task_type, task_version, task,
              input, output, started, finished, log_type, created, updated)
         select
             eid as eid,
             process_eid as process_eid,
-            parent_eid as parent_eid,
             task_type as task_type,
             task_version as task_version,
             task as task,

@@ -255,7 +255,6 @@ CREATE TABLE tbl_processlog (
   id int UNSIGNED NOT NULL auto_increment,
   eid varchar(12) NOT NULL default '',
   process_eid varchar(12) NOT NULL default '',
-  parent_eid varchar(12) NOT NULL default '',
   task_type text default '',
   task_version int NOT NULL default 0,
   task text default NULL,
@@ -273,7 +272,6 @@ CREATE TABLE tbl_processlog (
 
 CREATE INDEX idx_processlog_eid ON tbl_processlog (eid);
 CREATE INDEX idx_processlog_process_eid ON tbl_processlog (process_eid);
-CREATE INDEX idx_processlog_parent_eid ON tbl_processlog (parent_eid);
 
 
 

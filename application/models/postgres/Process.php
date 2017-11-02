@@ -205,7 +205,6 @@ class Process extends ModelBase
                 $process_arr = array(
                     'eid'          => $eid,
                     'process_eid'  => $process_eid,
-                    'parent_eid'   => $params['parent_eid'] ?? '',
                     'task_type'    => $params['task_type'] ?? '',
                     'task_version' => $params['task_version'] ?? 0,
                     'task'         => $params['task'] ?? '{}',
@@ -213,7 +212,7 @@ class Process extends ModelBase
                     'output'       => $params['output'] ?? '{}',
                     'started'      => $params['started'] ?? null,
                     'finished'     => $params['finished'] ?? null,
-                    'log_type'     => $params['log_type'] ?? Model::PROCESS_LOG_TYPE_UNDEFINED,
+                    'log_type'     => $params['log_type'] ?? \Model::PROCESS_LOG_TYPE_UNDEFINED,
                     'message'      => $params['message'] ?? '',
                     'created'      => $timestamp,
                     'updated'      => $timestamp
@@ -237,7 +236,6 @@ class Process extends ModelBase
             $validator = \Flexio\Base\Validator::create();
             if (($validator->check($params, array(
                     'process_eid'  => array('type' => 'string',  'required' => false),
-                    'parent_eid'   => array('type' => 'string',  'required' => false),
                     'task_type'    => array('type' => 'string',  'required' => false),
                     'task_version' => array('type' => 'integer', 'required' => false),
                     'task'         => array('type' => 'string',  'required' => false),

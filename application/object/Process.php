@@ -600,7 +600,9 @@ class Process extends \Flexio\Object\Base
             }
 
             // execute the step
+            $log_eid = $this->startLog($task, $context);  // TODO: only log if in debug mode?
             $this->executeStep($task, $context);
+            $this->finishLog($log_eid, $task, $context); // TODO: only log if in debug mode?
             $first_task = false;
 
             // if the implementation has changed during the task, the result is
@@ -800,6 +802,34 @@ class Process extends \Flexio\Object\Base
         $context->clear();
         $context->set($process_output_context);
         return true;
+    }
+
+    private function startLog(array $task, \Flexio\Object\Context $context) : string
+    {
+        // create a log record
+        $params = array();
+        $params['task_type'] = $task['type'] ?? '';
+        $params['task'] = json_encode($task);
+        $params['started'] = self::getProcessTimestamp();
+        $params['input'] = \Flexio\Object\Context::toString($context);
+        $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
+        $params['message'] = '';
+
+        $log_eid = $this->getModel()->log(null, $this->getEid(), $params);
+    }
+
+    private function finishLog(string $log_eid, array $task, \Flexio\Object\Context $context)
+    {
+        // update the log record
+        $params = array();
+        $params['task_type'] = $task['type'] ?? '';
+        $params['task'] = json_encode($task);
+        $params['finished'] = self::getProcessTimestamp();
+        $params['output'] = \Flexio\Object\Context::toString($context);
+        $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
+        $params['message'] = '';
+
+        $this->getModel()->log($log_eid, $this->getEid(), $params);
     }
 
     private static function generateTaskHash(string $implementation_version, array $task, \Flexio\Object\Context $context) : string
