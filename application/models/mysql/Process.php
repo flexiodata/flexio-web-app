@@ -183,14 +183,14 @@ class Process extends ModelBase
                      'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function log(string $eid = null, string $process_eid, array $params) : bool
+    public function log(string $eid = null, string $process_eid, array $params) : string
     {
         // TODO: we may want to split this out into it's own model with create, get, set, etc,
         // like other model implementations; however use is isolated right now, so this is
         // convenient
 
         // make sure we have a process
-        if ($this->processExists($process_eid) !== Model::TYPE_PROCESS)
+        if ($this->processExists($process_eid) === false)
             return false;
 
         if (!isset($eid))
@@ -254,7 +254,8 @@ class Process extends ModelBase
             {
                 $process_arr = $validator->getParams();
                 $process_arr['updated'] = \Flexio\System\System::getTimestamp();
-                $db->update('tbl_process', $process_arr, 'eid = ' . $db->quote($eid));
+                $db->update('tbl_processlog', $process_arr, 'eid = ' . $db->quote($eid));
+                $db->commit();
                 return $eid;
             }
             catch (\Exception $e)

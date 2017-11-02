@@ -815,7 +815,8 @@ class Process extends \Flexio\Object\Base
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
-        $log_eid = $this->getModel()->log(null, $this->getEid(), $params);
+        $log_eid = $this->getModel()->process->log(null, $this->getEid(), $params);
+        return $log_eid;
     }
 
     private function finishLog(string $log_eid, array $task, \Flexio\Object\Context $context)
@@ -829,7 +830,7 @@ class Process extends \Flexio\Object\Base
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
-        $this->getModel()->log($log_eid, $this->getEid(), $params);
+        $this->getModel()->process->log($log_eid, $this->getEid(), $params);
     }
 
     private static function generateTaskHash(string $implementation_version, array $task, \Flexio\Object\Context $context) : string
