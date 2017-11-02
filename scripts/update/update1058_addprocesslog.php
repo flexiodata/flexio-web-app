@@ -59,6 +59,7 @@ EOT;
     $sql = <<<EOT
 CREATE TABLE tbl_processlog (
     id serial,
+    eid varchar(12) NOT NULL default '',
     process_eid varchar(12) NOT NULL default '',
     parent_eid varchar(12) NOT NULL default '',
     task_type text default '',
@@ -72,7 +73,8 @@ CREATE TABLE tbl_processlog (
     message text default '',
     created timestamp NULL default NULL,
     updated timestamp NULL default NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (eid)
 );
 EOT;
     $db->exec($sql);
@@ -80,6 +82,7 @@ EOT;
 
     // STEP 3: add the indexes
     $sql = <<<EOT
+        CREATE INDEX idx_processlog_eid ON tbl_processlog (eid);
         CREATE INDEX idx_processlog_process_eid ON tbl_processlog (process_eid);
         CREATE INDEX idx_processlog_parent_eid ON tbl_processlog (parent_eid);
 EOT;

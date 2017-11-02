@@ -253,6 +253,7 @@ CREATE INDEX idx_process_process_hash ON tbl_process (process_hash);
 DROP TABLE IF EXISTS tbl_processlog;
 CREATE TABLE tbl_processlog (
   id int UNSIGNED NOT NULL auto_increment,
+  eid varchar(12) NOT NULL default '',
   process_eid varchar(12) NOT NULL default '',
   parent_eid varchar(12) NOT NULL default '',
   task_type text default '',
@@ -266,9 +267,11 @@ CREATE TABLE tbl_processlog (
   message text default '',
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE (eid)
 );
 
+CREATE INDEX idx_processlog_eid ON tbl_processlog (eid);
 CREATE INDEX idx_processlog_process_eid ON tbl_processlog (process_eid);
 CREATE INDEX idx_processlog_parent_eid ON tbl_processlog (parent_eid);
 
