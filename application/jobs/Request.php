@@ -39,18 +39,7 @@ class Request extends \Flexio\Jobs\Base
         $username = $params['username'] ?? '';
         $password = $params['password'] ?? '';
 
-/*
-        $updated_url = $url;
-        $updated_headers = $headers;
-        $connection_info_merged = self::mergeInfoIfConnectionUrl($updated_url, $updated_headers);
 
-        if ($connection_info_merged)
-        {
-            // adjust the header and the headers with the info supplied in the connection
-            $url = $updated_url;
-            $headers = $updated_headers;
-        }
-*/
 
         if ($connection_identifier !== false)
         {
@@ -108,6 +97,65 @@ class Request extends \Flexio\Jobs\Base
             }
 
             $connection_headers = $connection_info['headers'] ?? false;
+
+            if (is_array($connection_headers) && count($connection_headers) > 0)
+            {
+                if (count($headers) == 0)
+                {
+                    $headers = $connection_headers;
+                }
+                else
+                {
+                    if (!\Flexio\Base\Util::isAssociativeArray($connection_headers) ||
+                        !\Flexio\Base\Util::isAssociativeArray($headers))
+                    {
+                        $new_headers = [];
+
+                        if (\Flexio\Base\Util::isAssociativeArray($connection_headers))
+                        {
+                            foreach ($connection_headers as $k => $v)
+                                $new_headers[] = "$k: $v";
+                        }
+                         else
+                        {
+                            $new_headers = $connection_headers;
+                        }
+
+                        if (\Flexio\Base\Util::isAssociativeArray($headers))
+                        {
+                            foreach ($headers as $k => $v)
+                                $new_headers[] = "$k: $v";
+                        }
+                         else
+                        {
+                            array_push($new_headers, $headers);
+                        }
+
+                        $headers = $new_headers;
+                    }
+                     else
+                    {
+                        $lowercase_key_lookup = array();
+                        foreach ($new_headers as $k => $v)
+                        {
+                            $new_headers[strtolower($k)] = $k;
+                        }
+                        
+                        foreach ($headers as $k => $v)
+                        {
+                            $lowercase_key = strtolower($k);
+                            if (isset($lowercase_key_lookup[$lowercase_key]))
+                            {
+                                unset($new_headers[ $lowercase_key_lookup[$lowercase_key] ]);
+                            }
+
+                            $new_headers[$k] = $v;
+                        }
+
+                        $headers = $new_headers;
+                    }
+                }
+            }
         }
 
 
@@ -162,6 +210,20 @@ class Request extends \Flexio\Jobs\Base
             // use `application/x-www-form-urlencoded` instead of `multipart/form-data`
             //$urlencoded_post_data = http_build_query($post_data);
             //curl_setopt($ch, CURLOPT_POSTFIELDS, $urlencoded_post_data);
+
+            $content_type = '';
+            foreach ($headers as $k => $v)
+            {
+                if (strtolower($k) == 'content-type')
+                {
+                    $content_type = $v;
+                    break;
+                }
+            }
+            if ($content_type == 'application/json' && is_array($post_data))
+            {
+                $post_data = json_encode($post_data);
+            }
 
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         }
@@ -238,53 +300,6 @@ class Request extends \Flexio\Jobs\Base
         }
     }
 
-    private static function mergeInfoIfConnectionUrl(&$url, &$headers) : bool
-    {
-        // returns true if url contains a connection; false otherwise
-
-        // if the first part of the URL contains a connection eid, get the
-        // base URL and header info from the connection; then add on the
-        // rest of the supplied info; otherwise, use the info as-is
-        $url_parts = parse_url($url);
-        if (is_array($url_parts) === false)
-            return false;
-
-        if (array_key_exists('scheme', $url_parts) === true)
-            return false;
-
-        if (array_key_exists('path', $url_parts) === false)
-            return false;
-
-        $url_path = $url_parts['path'];
-        $url_path_parts = explode('/', trim($url_path, '/'));
-        $potential_connection_eid = $url_path_parts[0] ?? '';
-
-        $connection = \Flexio\Object\Connection::load($potential_connection_eid);
-        if ($connection === false)
-            return false;
-
-        // we have a connection; get the connection info and adjust the url
-        $connection_properties = $connection->get();
-        $connection_info = $connection_properties['connection_info'];
-
-        $connection_url = $connection_info['url'] ?? false;
-        $connection_headers = $connection_info['headers'] ?? false;
-
-        if (is_string($connection_url))
-        {
-            $path = implode('/',array_splice($url_path_parts,1)); // recombine everything else besides the connection
-            $query = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
-            $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
-            $url_str_to_append = "$path$query$fragment";
-            $new_url = \Flexio\Base\Util::appendUrlPath($connection_url, $url_str_to_append);
-            $url = $new_url;
-        }
-
-        if (is_array($connection_headers))
-            $headers = array_merge($connection_headers, $headers);
-
-        return true;
-    }
 
 
     // job definition info
