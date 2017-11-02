@@ -508,6 +508,21 @@ class Test
         $expected = 'C';
         TestCheck::assertString('K.8', 'Task status constant',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $actual = \Model::PROCESS_LOG_TYPE_UNDEFINED;
+        $expected = '';
+        TestCheck::assertString('K.9', 'Log type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::PROCESS_LOG_TYPE_SYSTEM;
+        $expected = 'P';
+        TestCheck::assertString('K.10', 'Log type constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::PROCESS_LOG_TYPE_USER;
+        $expected = 'U';
+        TestCheck::assertString('K.11', 'Log type constant',  $actual, $expected, $results);
+
 
 
         // TEST: Model access code type constants; the database stores raw values

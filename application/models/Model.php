@@ -120,6 +120,10 @@ class Model
     const PROCESS_STATUS_FAILED    = 'F';
     const PROCESS_STATUS_COMPLETED = 'C';
 
+    const PROCESS_LOG_TYPE_UNDEFINED = '';
+    const PROCESS_LOG_TYPE_SYSTEM    = 'P'; // 'P' for process
+    const PROCESS_LOG_TYPE_USER      = 'U'; // 'U' for user
+
     private $objs = array();
     private $database = null;
     private $dbtype = '';
