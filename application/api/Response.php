@@ -18,11 +18,8 @@ namespace Flexio\Api;
 
 class Response
 {
-    public static function sendContent($content, bool $echo)
+    public static function sendContent(array $content)
     {
-        if ($echo === false)
-            return $content;
-
         // set the default headers; note: never cache api calls
         header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
         header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -37,12 +34,10 @@ class Response
         echo $response;
     }
 
-    public static function sendError(array $error, bool $echo)
+    public static function sendError(array $error)
     {
         $response = array();
         $response['error'] = $error;
-        if ($echo === false)
-            return $response;
 
         // set the default headers; note: never cache api calls
         header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');

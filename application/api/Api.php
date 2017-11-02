@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Api
 {
-    public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params, bool $echo = true)
+    public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params)
     {
         // get the method
         $method = $server_request->getMethod();
@@ -51,7 +51,7 @@ class Api
         try
         {
             $content = self::processRequest($api_request);
-            \Flexio\Api\Response::sendContent($content, $echo);
+            \Flexio\Api\Response::sendContent($content);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -71,7 +71,7 @@ class Api
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api\Response::sendError($error, $echo);
+            \Flexio\Api\Response::sendError($error);
         }
         catch (\Exception $e)
         {
@@ -88,7 +88,7 @@ class Api
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api\Response::sendError($error, $echo);
+            \Flexio\Api\Response::sendError($error);
         }
         catch (\Error $e)
         {
@@ -105,7 +105,7 @@ class Api
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api\Response::sendError($error, $echo);
+            \Flexio\Api\Response::sendError($error);
         }
     }
 
