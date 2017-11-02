@@ -16,96 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Api;
 
 
-class Request
-{
-    private $method;
-    private $url_params;
-    private $query_params;
-    private $post_params;
-    private $requesting_user;
-
-    public function __construct()
-    {
-        $this->initialize();
-    }
-
-    public static function create() : \Flexio\Api\Request
-    {
-        return (new static);
-    }
-
-    public function copy() : \Flexio\Api\Request
-    {
-        // create a new object and set the properties
-        $new_request = static::create();
-        $new_request->setMethod($this->getMethod());
-        $new_request->setUrlParams($this->getUrlParams());
-        $new_request->setQueryParams($this->getQueryParams());
-        $new_request->setPostParams($this->getPostParams());
-        $new_request->setRequestingUser($this->getRequestingUser());
-        return $new_request;
-    }
-
-    public function setMethod(string $method)
-    {
-        $this->method = $method;
-    }
-
-    public function getMethod() : string
-    {
-        return $this->method;
-    }
-
-    public function setUrlParams(array $params)
-    {
-        $this->url_params = $params;
-    }
-
-    public function getUrlParams() : array
-    {
-        return $this->url_params;
-    }
-
-    public function setQueryParams(array $params)
-    {
-        $this->query_params = $params;
-    }
-
-    public function getQueryParams() : array
-    {
-        return $this->query_params;
-    }
-
-    public function setPostParams(array $params)
-    {
-        $this->post_params = $params;
-    }
-
-    public function getPostParams() : array
-    {
-        return $this->post_params;
-    }
-
-    public function setRequestingUser(string $param)
-    {
-        $this->requesting_user = $param;
-    }
-
-    public function getRequestingUser() : string
-    {
-        return $this->requesting_user;
-    }
-
-    private function initialize()
-    {
-        $this->method = '';
-        $this->url_params = array();
-        $this->query_params = array();
-        $this->post_params = array();
-        $this->requesting_user = '';
-    }
-}
-
 class Api
 {
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params, bool $echo = true)
@@ -141,7 +51,7 @@ class Api
         try
         {
             $content = self::processRequest($api_request);
-            self::sendContentResponse($content, $echo);
+            \Flexio\Api\Response::sendContent($content, $echo);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -161,7 +71,7 @@ class Api
                 $error['trace'] = $e->getTrace();
             }
 
-            self::sendErrorResponse($error, $echo);
+            \Flexio\Api\Response::sendError($error, $echo);
         }
         catch (\Exception $e)
         {
@@ -178,7 +88,7 @@ class Api
                 $error['trace'] = $e->getTrace();
             }
 
-            self::sendErrorResponse($error, $echo);
+            \Flexio\Api\Response::sendError($error, $echo);
         }
         catch (\Error $e)
         {
@@ -195,7 +105,7 @@ class Api
                 $error['trace'] = $e->getTrace();
             }
 
-            self::sendErrorResponse($error, $echo);
+            \Flexio\Api\Response::sendError($error, $echo);
         }
     }
 
@@ -426,122 +336,5 @@ class Api
             case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
             case 'GET /debug/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
         }
-    }
-
-    private static function sendContentResponse($content, bool $echo)
-    {
-        if ($echo === false)
-            return $content;
-
-        // set the default headers; note: never cache api calls
-        header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
-        header('Cache-Control: no-store, no-cache, must-revalidate');
-        header('Pragma: no-cache');
-
-        // set the HTTP header content type to json; note: IE's behaves badly if
-        // content-type json is returned in response to multi-part uploads
-        if (count($_FILES) == 0)
-            header('Content-Type: application/json');
-
-        $response = @json_encode($content, JSON_PRETTY_PRINT);
-        echo $response;
-    }
-
-    private static function sendErrorResponse(array $error, bool $echo)
-    {
-        $response = array();
-        $response['error'] = $error;
-        if ($echo === false)
-            return $response;
-
-        // set the default headers; note: never cache api calls
-        header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
-        header('Cache-Control: no-store, no-cache, must-revalidate');
-        header('Pragma: no-cache');
-
-        // set the HTTP header content type to json; note: IE's behaves badly if
-        // content-type json is returned in response to multi-part uploads
-        if (count($_FILES) == 0)
-            header('Content-Type: application/json');
-
-        $error = $response['error'];
-        $error_code = $error['code'] ?? '';
-        $error_message = $error['message'] ?? '';
-
-        // change the error code to be more specific in case of unauthorized access
-        if ($error_code === \Flexio\Base\Error::INSUFFICIENT_RIGHTS && self::sessionAuthExpired() === true)
-            $error_code = \Flexio\Base\Error::UNAUTHORIZED;
-
-        // set the specific error header
-        switch ($error_code)
-        {
-            // TODO: for now, map the default and ERROR_GENERAL to 400, which
-            // is what we've been using for all error codes up 'till now; however,
-            // we may want to switch to 500, in which case we'll need to properly
-            // assign ERROR_GENERAL to other categories when appropriate
-            default:
-            case \Flexio\Base\Error::GENERAL:
-                \Flexio\Base\Util::header_error(400);
-                break;
-
-            // "UNAUTHORIZED" type errors; the user might have access to the object
-            // if they were logged in, but the session is invalid
-            case \Flexio\Base\Error::UNAUTHORIZED:
-                \Flexio\Base\Util::header_error(401);
-                break;
-
-            // "FORBIDDEN" type errors; access not allowed
-            case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:
-                \Flexio\Base\Util::header_error(403);
-                break;
-
-            // "NOT FOUND" type errors; invalid requests, invalid
-            // parameters, or valid requests for objects that can't
-            // be found
-            case \Flexio\Base\Error::UNIMPLEMENTED:
-            case \Flexio\Base\Error::DEPRECATED:
-            case \Flexio\Base\Error::INVALID_VERSION:
-            case \Flexio\Base\Error::INVALID_REQUEST:
-            case \Flexio\Base\Error::MISSING_PARAMETER:
-            case \Flexio\Base\Error::INVALID_PARAMETER:
-            case \Flexio\Base\Error::NO_DATABASE:
-            case \Flexio\Base\Error::NO_MODEL:
-            case \Flexio\Base\Error::NO_SERVICE:
-            case \Flexio\Base\Error::NO_OBJECT:
-                \Flexio\Base\Util::header_error(404);
-                break;
-
-            // "UNPROCESSABLE ENTITY"; request can't be processed
-            // for some reason
-            case \Flexio\Base\Error::CREATE_FAILED:
-            case \Flexio\Base\Error::DELETE_FAILED:
-            case \Flexio\Base\Error::WRITE_FAILED:
-            case \Flexio\Base\Error::READ_FAILED:
-            case \Flexio\Base\Error::RATE_LIMIT_EXCEEDED:
-            case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
-                \Flexio\Base\Util::header_error(422);
-                break;
-
-            // "INTERNAL SERVER ERROR"; something is wrong internally
-            case \Flexio\Base\Error::UNDEFINED:
-            case \Flexio\Base\Error::NO_DATABASE:
-            case \Flexio\Base\Error::NO_MODEL:
-            case \Flexio\Base\Error::NO_SERVICE:
-                \Flexio\Base\Util::header_error(500);
-                break;
-        }
-
-        // if a message isn't specified, supply a default message
-        if (strlen($error_message ) == 0)
-            $error['message'] = \Flexio\Base\Error::getDefaultMessage($error_code);
-
-        $response['error'] = $error;
-        $response = @json_encode($response, JSON_PRETTY_PRINT);
-        echo $response;
-    }
-
-    private static function sessionAuthExpired() : bool
-    {
-        return (isset($_COOKIE['FXSESSID']) && strlen($_COOKIE['FXSESSID']) > 0 && $GLOBALS['g_store']->user_eid == '') ? true:false;
     }
 }
