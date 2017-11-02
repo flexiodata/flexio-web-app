@@ -266,6 +266,67 @@ class Process extends ModelBase
         }
     }
 
+
+    public function getProcessLogEntries(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false; // don't flag an error, but acknowledge that object doesn't exist
+
+        $db = $this->getDatabase();
+        $rows = array();
+        try
+        {
+            // note: some sub process records don't have an eid in the main
+            // table object; left join so we can get the main process records
+            // as well as subprocess records
+            $rows = $db->fetchAll("select tpl.eid as eid,
+                                          tpl.process_eid as process_eid,
+                                          tpl.task_type as task_type,
+                                          tpl.task_version as task_version,
+                                          tpl.task as task,
+                                          tpl.input as input,
+                                          tpl.output as output,
+                                          tpl.started as started,
+                                          tpl.finished as finished,
+                                          tpl.log_type as log_type,
+                                          tpl.message as message,
+                                          tpl.created as created,
+                                          tpl.updated as updated
+                                   from tbl_processlog tpl
+                                   where tpl.process_eid = ?
+                                   order by tpl.id
+                                  ", $eid);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'              => $row['eid'],
+                              'process_eid'      => $row['process_eid'],
+                              'task_type'        => $row['task_type'],
+                              'task_version'     => $row['task_version'],
+                              'task'             => $row['task'],
+                              'input'            => $row['input'],
+                              'output'           => $row['output'],
+                              'started'          => $row['started'],
+                              'finished'         => $row['finished'],
+                              'duration'         => \Flexio\Base\Util::formatDateDiff($row['started'], $row['finished']),
+                              'log_type'         => $row['log_type'],
+                              'message'          => $row['message'],
+                              'created'          => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
     public function getProcessUserStats() : array
     {
         // TODO: implement
