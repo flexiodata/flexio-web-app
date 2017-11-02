@@ -29,19 +29,27 @@
         />
       </div>
 
-      <ui-textbox
-        autocomplete="off"
-        placeholder="URL"
-        help=" "
-        v-model="url"
-      />
+      <div class="flex flex-column flex-row-ns">
+        <value-select
+          class="w-25-ns min-w4-ns"
+          placeholder="Method"
+          :options="method_options"
+          v-model="method"
+        />
+        <ui-textbox
+          class="flex-fill ml4-ns"
+          autocomplete="off"
+          placeholder="URL"
+          help=" "
+          v-model="url"
+        />
+      </div>
     </div>
 
     <div class="mv3 mt4-ns">
       <div class="f4">Authorization</div>
       <div class="mv3 mw6">
         <value-select
-          class="cf"
           placeholder="Authorization Type"
           :options="auth_options"
           v-model="auth"
@@ -162,6 +170,17 @@
     }
   }
 
+  const method_options = [
+    { val: '',        label: 'Default (none)' },
+    { val: 'GET',     label: 'GET'            },
+    { val: 'POST',    label: 'POST'           },
+    { val: 'PUT',     label: 'PUT'            },
+    { val: 'PATCH',   label: 'PATCH'          },
+    { val: 'DELETE',  label: 'DELETE'         },
+    { val: 'HEAD',    label: 'HEAD'           },
+    { val: 'OPTIONS', label: 'OPTIONS'        }
+  ]
+
   const auth_options = [
     { val: 'none',   label: 'No Auth'      },
     { val: 'basic',  label: 'Basic Auth'   },
@@ -188,11 +207,13 @@
     },
     data() {
       return {
+        method_options,
         auth_options,
         name: 'My Connection',
         ename: '',
         description: '',
         connection_type: CONNECTION_TYPE_HTTP,
+        method: '',
         url: '',
         auth: 'none',
         username: '',
@@ -251,7 +272,7 @@
       getConnection() {
         var eid = this.eid
         var connection = _.pick(this.$data, ['name', 'ename', 'description', 'connection_type'])
-        var connection_info = _.pick(this.$data, ['url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'data'])
+        var connection_info = _.pick(this.$data, ['method', 'url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'data'])
 
         var data = _.keyBy(this.$data.data, 'key')
         data = _.pickBy(data, (val, key) => { return key.length > 0 })
