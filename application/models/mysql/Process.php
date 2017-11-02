@@ -183,45 +183,87 @@ class Process extends ModelBase
                      'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function log(string $eid, array $params) : bool
+    public function log(string $eid = null, string $process_eid, array $params) : bool
     {
+        // TODO: we may want to split this out into it's own model with create, get, set, etc,
+        // like other model implementations; however use is isolated right now, so this is
+        // convenient
+
         // make sure we have a process
-        if ($this->getModel()->getType($eid) !== Model::TYPE_PROCESS)
+        if ($this->processExists($process_eid) !== Model::TYPE_PROCESS)
             return false;
 
-        // set the log values
-        $db = $this->getDatabase();
-        $db->beginTransaction(); // needed to make sure eid generation is safe
-        try
+        if (!isset($eid))
         {
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROCESS, $params);
-            $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'process_eid'  => $eid,
-                'parent_eid'   => $params['parent_eid'] ?? '',
-                'task_type'    => $params['task_type'] ?? '',
-                'task_version' => $params['task_version'] ?? '',
-                'task'         => $params['task'] ?? '{}',
-                'input'        => $params['input'] ?? '{}',
-                'output'       => $params['output'] ?? '{}',
-                'started'      => $params['started'] ?? null,
-                'finished'     => $params['finished'] ?? null,
-                'log_type'     => $params['log_type'] ?? Model::PROCESS_LOG_TYPE_UNDEFINED,
-                'message'      => $params['message'] ?? '',
-                'created'      => $timestamp,
-                'updated'      => $timestamp
-            );
+            // if an eid isn't specified, generate one and create a new record
+            $db = $this->getDatabase();
+            $db->beginTransaction();
+            try
+            {
+                $eid = $this->generateProcessLogEid();
+                $timestamp = \Flexio\System\System::getTimestamp();
+                $process_arr = array(
+                    'eid'          => $eid,
+                    'process_eid'  => $process_eid,
+                    'parent_eid'   => $params['parent_eid'] ?? '',
+                    'task_type'    => $params['task_type'] ?? '',
+                    'task_version' => $params['task_version'] ?? 0,
+                    'task'         => $params['task'] ?? '{}',
+                    'input'        => $params['input'] ?? '{}',
+                    'output'       => $params['output'] ?? '{}',
+                    'started'      => $params['started'] ?? null,
+                    'finished'     => $params['finished'] ?? null,
+                    'log_type'     => $params['log_type'] ?? Model::PROCESS_LOG_TYPE_UNDEFINED,
+                    'message'      => $params['message'] ?? '',
+                    'created'      => $timestamp,
+                    'updated'      => $timestamp
+                );
 
-            if ($db->insert('tbl_processlog', $process_arr) === false)
-                throw new \Exception();
+                if ($db->insert('tbl_processlog', $process_arr) === false)
+                    throw new \Exception();
 
-            $db->commit();
-            return $eid;
+                $db->commit();
+                return $eid;
+            }
+            catch (\Exception $e)
+            {
+                $db->rollback();
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            }
         }
-        catch (\Exception $e)
+        else
         {
-            $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            // if an eid is specified, update the existing record
+            $validator = \Flexio\Base\Validator::create();
+            if (($validator->check($params, array(
+                    'process_eid'  => array('type' => 'string',  'required' => false),
+                    'parent_eid'   => array('type' => 'string',  'required' => false),
+                    'task_type'    => array('type' => 'string',  'required' => false),
+                    'task_version' => array('type' => 'integer', 'required' => false),
+                    'task'         => array('type' => 'string',  'required' => false),
+                    'input'        => array('type' => 'string',  'required' => false),
+                    'output'       => array('type' => 'string',  'required' => false),
+                    'started'      => array('type' => 'string',  'required' => false),
+                    'finished'     => array('type' => 'string',  'required' => false),
+                    'log_type'     => array('type' => 'string',  'required' => false),
+                    'message'      => array('type' => 'string',  'required' => false)
+                ))->hasErrors()) === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $db = $this->getDatabase();
+            $db->beginTransaction();
+            try
+            {
+                $process_arr = $validator->getParams();
+                $process_arr['updated'] = \Flexio\System\System::getTimestamp();
+                $db->update('tbl_process', $process_arr, 'eid = ' . $db->quote($eid));
+                return $eid;
+            }
+            catch (\Exception $e)
+            {
+                $db->rollback();
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            }
         }
     }
 
@@ -291,5 +333,43 @@ class Process extends ModelBase
          {
              return false;
          }
+    }
+
+
+    private function processExists(string $eid) : bool
+    {
+        try
+        {
+            $db = $this->getDatabase();
+            $result = $db->fetchOne("select eid from tbl_process where eid= ?", $eid);
+            if ($result !== false)
+                return true;
+
+            return false;
+        }
+        catch (\Exception $e)
+        {
+            return false;
+        }
+    }
+
+    private function generateProcessLogEid() : string
+    {
+        // note: this function generates a unique log process eid; this
+        // function is nearly identical to \Model::generateUniqueEid() except
+        // that this function checks the tbl_processlog table for the eid instead
+        // of the tbl_object table; a log process eid can coexist with the
+        // object eids since log processes are only used in the log table as
+        // a handle for getting/setting log entries and are not used in any
+        // other table
+
+        $eid = \Flexio\Base\Eid::generate();
+        $result1 = $this->getDatabase()->fetchOne("select eid from tbl_processlog where eid = ?", $eid);
+        $result2 = $this->getDatabase()->fetchOne("select eid from tbl_object where eid = ?", $eid);
+
+        if ($result1 === false && $result2 === false)
+            return $eid;
+
+        return $this->generateProcessLogEid();
     }
 }
