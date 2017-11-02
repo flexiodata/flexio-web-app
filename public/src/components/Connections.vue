@@ -33,8 +33,8 @@
         :disabled="is_new"
         :items="connections"
         :item-options="{
-          //'item-cls': 'min-w5 pa3 darken-05',
-          //'item-style': 'margin: 0.125rem',
+          'item-cls': 'min-w5 pa3 pr2 darken-05',
+          'item-style': 'margin: 0.125rem',
           'show-dropdown': true,
           'dropdown-items': ['delete']
         }"

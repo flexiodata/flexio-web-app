@@ -99,7 +99,7 @@
 
         axios.post('/api/v1/login', attrs).then(response => {
           this.is_submitting = false
-          this.$emit('signed-in')
+          this.$emit('signed-in', _.get(response, 'data', {}))
         }).catch(error => {
           this.is_submitting = false
           this.password = ''
