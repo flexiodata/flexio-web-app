@@ -6,17 +6,10 @@
     <legend class="f3 tc ph0 mh0 mv3 black-80 w-100">Thanks for signing up!</legend>
     <div class="mt4">
       <p class="lh-copy">Here are your account credentials which we use to verify your API requests.</p>
-      <div class="flex flex-row mv4">
-        <div class="flex-fill pv2 ph3 f4 tc b b--black-10 bt bb bl br1 br--left gray">{{api_key}}</div>
-        <btn
-          btn-primary
-          btn-square
-          class="pv2 ph3 hint--top br1 br--right clipboardjs"
-          aria-label="Copy to Clipboard"
-          :data-clipboard-text="api_key"
-        ><span class="ttu b">Copy</span></btn>
+      <div class="flex flex-row mv3">
+        <div class="flex-fill pv2 ph3 f3 tc b black">{{api_key}}</div>
       </div>
-      <div class="mt4">
+      <div class="mt3">
         <p class="lh-copy">We're thrilled to have you on board and can't wait to see what you build with Flex.io!</p>
         <p class="lh-copy">Would you like to open your dashboard for some quick tips and help getting started?</p>
         <div class="flex flex-row items-center mt4">
