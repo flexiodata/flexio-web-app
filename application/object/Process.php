@@ -484,52 +484,6 @@ class Process extends \Flexio\Object\Base
         return $this->getOutput()->getStdout();
     }
 
-    public function getTaskInputOutput(\Flexio\Object\Context &$input_context, \Flexio\Object\Context &$output_context, string $task_eid = null)
-    {
-        // TODO: need to get the output from the log info
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
-/*
-        // returns the context of input streams for the specified task of a
-        // process; if no task is specified, the streams from the last subprocess
-        // are used
-        $input_context = \Flexio\Object\Context::create();
-        $output_context = \Flexio\Object\Context::create();
-
-        // get the subprocesses
-        $process_info = $this->get();
-        $subprocesses = $process_info['subprocesses'];
-        $subprocess_count = count($subprocesses);
-        if ($subprocess_count < 1) // if there isn't any subprocess, there's no items
-            return;
-
-        // find the subprocess with the relevant items
-        $specified_subprocess = false;
-        if (!isset($task_eid))
-        {
-            // if no task is specified, use the last subprocess as the default
-            $specified_subprocess = $subprocesses[$subprocess_count-1];
-        }
-         else
-        {
-            foreach ($subprocesses as $sp)
-            {
-                $task = $sp['task'];
-                if (isset($task['eid']) && $task['eid'] === $task_eid)
-                {
-                    $specified_subprocess = $sp;
-                    break;
-                }
-            }
-
-            if ($specified_subprocess === false)
-                return;
-        }
-
-        $input_context = \Flexio\Object\Context::fromString(json_encode($specified_subprocess['input']));  // TODO: cumbersome; the context uses stream objects, but we only have eid info, so we need to repack and unpack
-        $output_context = \Flexio\Object\Context::fromString(json_encode($specified_subprocess['output']));  // TODO: cumbersome; the context uses stream objects, but we only have eid info, so we need to repack and unpack
-*/
-    }
-
     public function isBuildMode() : bool
     {
         if ($this->isCached() === false)
