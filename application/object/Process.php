@@ -702,6 +702,16 @@ class Process extends \Flexio\Object\Base
         return $this->response_code;
     }
 
+    public function getLog() : array
+    {
+        $result = array();
+        $process_model = $this->getModel()->process;
+        $items = $process_model->getProcessLogEntries($this->getEid());
+        if ($items !== false)
+            $result = $items;
+        return $result;
+    }
+
     private function isCached() : bool
     {
         // a process may be run in the background and update values

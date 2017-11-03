@@ -311,6 +311,34 @@ class Process
         return $result;
     }
 
+    public static function log(\Flexio\Api\Request $request) : array
+    {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid' => array('type' => 'identifier', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_params = $validator->getParams();
+        $process_identifier = $validated_params['eid'];
+        $background = false;
+
+        // load the object
+        $process = \Flexio\Object\Process::load($process_identifier);
+        if ($process === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $log = $process->getLog();
+        return $log;
+    }
+
     public static function run(\Flexio\Api\Request $request) : array
     {
         $params = $request->getPostParams();
