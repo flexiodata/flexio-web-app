@@ -21,28 +21,37 @@ class EmailSend extends \Flexio\Jobs\Base
     const DATA_MODE_NONE       = 'none';
     const DATA_MODE_BODY       = 'body';
     const DATA_MODE_ATTACHMENT = 'attachment';
+    const EMAIL_WAIT_FREQUENCY = 1; // wait time between emails that are sent
+    const EMAIL_TO_ADDRESS_MAX_SIZE = 25; // maximum number of users that an email can be sent to at once
 
 
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         $this->sendEmail();
     }
 
     private function sendEmail(\Flexio\Object\Context &$context)
     {
-        // get the attachments
-        $instream_list = $context->getStreams();
-        $attachments = self::getAttachmentsFromInput($instream_list);
-
-        // build the email
+        // get the parameters
         $job_definition = $this->getProperties();
-        $to = $job_definition['params']['to'];
-        $to = implode(',', $to);
+        $to_param = $job_definition['params']['to'];
+        $to = implode(',', $to_param);
         $subject = isset($job_definition['params']['subject']) ? $job_definition['params']['subject'] : '';
         $body_text = isset($job_definition['params']['body_text']) ? $job_definition['params']['body_text'] : '';
         $body_html = isset($job_definition['params']['body_html']) ? $job_definition['params']['body_html'] : '';
+
+        // enforce basic rate limits to prevent spam; only allow a max of 25 people to get
+        // an email at once; also, only allow one email notice a second; of course multiple
+        // jobs could be fired, but this at least helps throttle emails used within a loop
+        if (count($to_param) > self::EMAIL_TO_ADDRESS_MAX_SIZE)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::SIZE_LIMIT_EXCEEDED);
+        sleep(self::EMAIL_WAIT_FREQUENCY);
+
+        // build the email
+        $instream_list = $context->getStreams();
+        $attachments = self::getAttachmentsFromInput($instream_list);
 
         $email_params = array(
             'from' => "Flex.io <no-reply@flex.io>",
