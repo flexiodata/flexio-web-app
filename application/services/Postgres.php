@@ -38,7 +38,7 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
                 'database' => array('type' => 'string', 'required' => true),
                 'path' => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
         $host = $validated_params['host'];
