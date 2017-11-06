@@ -20,19 +20,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class Twilio implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
     private $key = '';
     private $access_token = '';
     private $pagesize = 200; // rows to request per request; 200 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; pipeline deals allows up to 5 requests per second
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
 
     public static function create(array $params = null) : \Flexio\Services\Twilio
     {
