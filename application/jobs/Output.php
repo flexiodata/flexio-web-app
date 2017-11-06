@@ -415,8 +415,6 @@ class Output extends \Flexio\Jobs\Base
 
             $result = $service->insertRow($outputpath, $row);
         }
-
-        $service->close();
     }
 
     // job definition info

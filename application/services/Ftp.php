@@ -72,15 +72,6 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        if ($this->connection !== false)
-            ftp_close($this->connection);
-
-        $this->connection = false;
-        $this->is_ok = false;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -182,11 +173,15 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 
     private function initialize(string $host, string $username, string $password) : bool
     {
-        $this->close();
-
         $this->config = array('host' => $host,
                               'username' => $username,
                               'password' => $password);
+
+        if ($this->connection !== false)
+            ftp_close($this->connection);
+
+        $this->connection = false;
+        $this->is_ok = false;
 
         $ftp = ftp_connect($host);
         if ($ftp === false)

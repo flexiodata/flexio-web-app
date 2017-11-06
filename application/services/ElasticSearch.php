@@ -76,15 +76,6 @@ class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IF
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->host = '';
-        $this->port = '';
-        $this->user = '';
-        $this->password = '';
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -399,12 +390,11 @@ class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IF
 
     private function initialize(string $host, int $port, string $username, string $password) : bool
     {
-        $this->close();
-
         $this->host = $host;
         $this->port = $port;
         $this->username = $username;
         $this->password = $password;
+        $this->is_ok = false;
 
         if ($this->testConnection() === false)
             return false;

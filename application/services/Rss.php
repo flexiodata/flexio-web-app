@@ -59,10 +59,6 @@ class Rss implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         return true;
     }
 
-    public function close()
-    {
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////

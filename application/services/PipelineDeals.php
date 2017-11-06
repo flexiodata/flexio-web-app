@@ -61,12 +61,6 @@ class PipelineDeals implements \Flexio\Services\IConnection, \Flexio\Services\IF
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->access_token = '';
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -266,7 +260,6 @@ class PipelineDeals implements \Flexio\Services\IConnection, \Flexio\Services\IF
     {
         // TODO: test api key
 
-        $this->close();
         $this->access_token = $access_token;
         $this->is_ok = true;
         return true;

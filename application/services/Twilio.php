@@ -70,13 +70,6 @@ class Twilio implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->key = '';
-        $this->access_token = '';
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -275,7 +268,6 @@ class Twilio implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
     {
         // TODO: test api key
 
-        $this->close();
         $this->key = $key;
         $this->access_token = $access_token;
         $this->is_ok = true;

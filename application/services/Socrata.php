@@ -68,12 +68,6 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->base_url = null;
-        $this->is_ok = false;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -377,8 +371,6 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
 
     private function initialize(string $host, int $port) : bool
     {
-        $this->close();
-
         $this->config = array('host' => $host,
                               'port' => $port);
 

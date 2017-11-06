@@ -89,15 +89,6 @@ class Sftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        if ($this->connection !== false)
-            $this->connection->disconnect();
-
-        $this->connection = false;
-        $this->is_ok = false;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -202,11 +193,15 @@ class Sftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 
     private function initialize(string $host, string $username, string $password) : bool
     {
-        $this->close();
-
         $this->config = array('host' => $host,
                               'username' => $username,
                               'password' => $password);
+
+        if ($this->connection !== false)
+            $this->connection->disconnect();
+
+        $this->connection = false;
+        $this->is_ok = false;
 
         $sftp = new \phpseclib\Net\SFTP($host);
         if (!$sftp->login($username, $password))

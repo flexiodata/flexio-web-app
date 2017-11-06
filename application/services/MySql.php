@@ -76,10 +76,10 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
         $host = $this->host;
         $port = $this->port;
         $database = $this->database;
-        $user = $this->user;
+        $username = $this->username;
         $password = $this->password;
 
-        if ($this->initialize($host, $port, $databsae, $username, $password) === false)
+        if ($this->initialize($host, $port, $database, $username, $password) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $this;
@@ -88,20 +88,6 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
     public function isOk() : bool
     {
         return $this->is_ok;
-    }
-
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->host = '';
-        $this->port = '';
-        $this->database = '';
-        $this->user = '';
-        $this->password = '';
-        $this->db = null;
-        $this->dbresult = null;
-        $this->dbtablestructure = null;
-        $this->rowbuffersize = 100;
     }
 
     ////////////////////////////////////////////////////////////
@@ -163,13 +149,18 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
 
     private function initialize(string $host, int $port, string $database, string $username, string $password) : bool
     {
-        $this->close();
-
         $this->host = $host;
         $this->port = $port;
         $this->database = $database;
         $this->username = $username;
         $this->password = $password;
+
+        $this->db = null;
+        $this->dbresult = null;
+        $this->dbtablestructure = null;
+        $this->rowbuffersize = 100;
+        $this->is_ok = false;
+
 
         $this->db = $this->newConnection();
 

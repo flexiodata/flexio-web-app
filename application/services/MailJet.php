@@ -66,13 +66,6 @@ class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->username = '';
-        $this->password = '';
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -297,7 +290,6 @@ class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
     {
         // TODO: test api key
 
-        $this->close();
         $this->username = $username;
         $this->password = $password;
         $this->is_ok = true;

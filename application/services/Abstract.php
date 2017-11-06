@@ -21,7 +21,6 @@ interface IConnection
     public static function create(array $params = null);
     public function connect();
     public function isOk() : bool;
-    public function close();
 }
 
 interface IFileSystem

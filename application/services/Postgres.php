@@ -81,17 +81,6 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->db = null;
-        $this->host = null;
-        $this->port = null;
-        $this->database = null;
-        $this->username = null;
-        $this->password = null;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////

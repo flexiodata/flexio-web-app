@@ -50,12 +50,6 @@ class Dropbox implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->access_token = '';
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////

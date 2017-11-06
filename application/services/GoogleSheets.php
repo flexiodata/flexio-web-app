@@ -53,14 +53,6 @@ class GoogleSheets implements \Flexio\Services\IConnection, \Flexio\Services\IFi
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->access_token = '';
-        $this->refresh_token = '';
-        $this->expires = 0;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////

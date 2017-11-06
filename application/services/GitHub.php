@@ -50,12 +50,6 @@ class GitHub implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->access_token = '';
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////

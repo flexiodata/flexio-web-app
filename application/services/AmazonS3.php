@@ -79,16 +79,6 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         return $this->is_ok;
     }
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->region = '';
-        $this->bucket = '';
-        $this->accesskey = '';
-        $this->secretkey = '';
-        $this->s3 = null;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -331,7 +321,7 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         $this->bucket = $bucket;
         $this->accesskey = $accesskey;
         $this->secretkey = $secretkey;
-        $this->is_ok = true;
+        $this->s3 = null;
 
         if (strlen($this->region) == 0)
             $this->region = 'us-east-1';
@@ -350,6 +340,7 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         if (!$this->s3)
             return false;
 
+        $this->is_ok = true;
         return true;
    }
 }
