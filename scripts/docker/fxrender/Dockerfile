@@ -1,13 +1,21 @@
 FROM ubuntu:16.04
 MAINTAINER ben@flex.io
+
 RUN apt-get -y update
 RUN apt-get -y upgrade
-RUN apt-get -y install wget
 RUN apt-get -y install sudo
+RUN apt-get -y install wget
+RUN apt-get -y install curl
 
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
-RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-RUN apt-get -y update 
-RUN apt-get -y install google-chrome-stable 
+# following line is for dependencies only
+RUN apt-get -y install chromium-browser libgconf2-4
 
-#USER nobody
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+RUN apt-get -y install nodejs
+RUN mkdir /render
+RUN echo {} > /render/package.json
+RUN cd /render && npm install puppeteer
+RUN cd /render && npm install command-line-args
+COPY run.js /render/run.js
+
+
