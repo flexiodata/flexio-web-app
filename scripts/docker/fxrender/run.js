@@ -20,7 +20,14 @@ const options = commandLineArgs([
 
   const browser = await puppeteer.launch({args:['--no-sandbox']});
   const page = await browser.newPage();
-  await page.goto(options.url);
+  await page.goto(options.url,{waitUntil:"networkidle","networkIdleTimeout" : 3000});
+  //await page.goto(options.url);
+
+ // await page.waitForNavigation({timeout:3000})
+
+  //page.evaluate(_ => {
+  //  window.scrollBy(0, window.innerHeight);
+  //});
 
   var params = {
     path: output_filename,
@@ -37,11 +44,15 @@ const options = commandLineArgs([
     params.landscape = options.landscape
   }
 
+  const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
+  await snooze(10000)
+
   if (options.format == 'pdf') {
     await page.pdf(params)
   } else {
     await page.screenshot(params);
   }
+
 
   await browser.close();
 
