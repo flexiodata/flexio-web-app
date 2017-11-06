@@ -58,7 +58,7 @@ class Render extends \Flexio\Jobs\Base
         );
         $outstream->set($outstream_properties);
 
-        $streamwriter = \Flexio\Object\StreamWriter::create($outstream);
+        $streamwriter = $outstream->getWriter();
 
         $windowsize = '';
         if (isset($width) && isset($height))

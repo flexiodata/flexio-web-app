@@ -169,7 +169,7 @@ class Process extends \Flexio\Object\Base
                     $context->setStdin($stream);
                     $process->setInput($context);
 
-                    $streamwriter = \Flexio\Object\StreamWriter::create($stream);
+                    $streamwriter = $stream->getWriter();
                 }
 
                 if ($streamwriter)
