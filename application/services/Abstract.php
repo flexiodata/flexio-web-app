@@ -19,7 +19,7 @@ namespace Flexio\Services;
 interface IConnection
 {
     public static function create(array $params = null);
-    public function connect(array $params) : bool;
+    public function connect();
     public function isOk() : bool;
     public function close();
 }

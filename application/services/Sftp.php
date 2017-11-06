@@ -52,29 +52,36 @@ class Sftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 
     public static function create(array $params = null) : \Flexio\Services\Sftp
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
-        $this->close();
-
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $this->initialize($validated_params['host'], $validated_params['username'], $validated_params['password']);
-        return $this->isOk();
+        $host = $validated_params['host'];
+        $username = $validated_params['username'];
+        $password = $validated_params['password'];
+
+        $service = new self;
+        if ($service->initialize($host, $username, $password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
+    }
+
+    public function connect() : \Flexio\Services\Sftp
+    {
+        $host = $this->config['host'];
+        $username = $this->config['username'];
+        $password = $this->config['password'];
+
+        if ($this->initialize($host, $username, $password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $this;
     }
 
     public function isOk() : bool
@@ -193,7 +200,7 @@ class Sftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function initialize(string $host, string $username, string $password)
+    private function initialize(string $host, string $username, string $password) : bool
     {
         $this->close();
 
@@ -203,9 +210,10 @@ class Sftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 
         $sftp = new \phpseclib\Net\SFTP($host);
         if (!$sftp->login($username, $password))
-            return;
+            return false;
 
         $this->connection = $sftp;
         $this->is_ok = true;
+        return true;
     }
 }

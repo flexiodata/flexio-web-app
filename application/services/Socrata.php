@@ -34,26 +34,33 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
 
     public static function create(array $params = null) : \Flexio\Services\Socrata
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            return true;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $this->initialize($validated_params['host'], intval($validated_params['port']));
-        return $this->isOk();
+        $host = $validated_params['host'];
+        $port = intval($validated_params['port']);
+
+        $service = new self;
+        if ($service->initialize($host, $port) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
+    }
+
+    public function connect() : \Flexio\Services\Socrata
+    {
+        $host = $this->config['host'];
+        $port = $this->config['port'];
+
+        if ($this->initialize($host, $port) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $this;
     }
 
     public function isOk() : bool
@@ -368,12 +375,12 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return $res;
     }
 
-    private function initialize(string $host, int $port)
+    private function initialize(string $host, int $port) : bool
     {
         $this->close();
 
         $this->config = array('host' => $host,
-                              'username' => $port);
+                              'port' => $port);
 
         $url = $host;
         if (false === strpos($url, "://"))
@@ -389,5 +396,6 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
 
         $this->base_url = $url;
         $this->is_ok = true;
+        return true;
     }
 }

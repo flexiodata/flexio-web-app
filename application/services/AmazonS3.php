@@ -39,18 +39,6 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
 
     public static function create(array $params = null) : \Flexio\Services\AmazonS3
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
-        $this->close();
-
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'region' => array('type' => 'string', 'required' => true),
@@ -58,15 +46,32 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
                 'accesskey' => array('type' => 'string', 'required' => true),
                 'secretkey' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
         $region = $validated_params['region'];
         $bucket = $validated_params['bucket'];
         $accesskey = $validated_params['accesskey'];
         $secretkey = $validated_params['secretkey'];
-        $this->initialize($region, $bucket, $accesskey, $secretkey);
-        return $this->isOk();
+
+        $service = new self;
+        if ($service->initialize($region, $bucket, $accesskey, $secretkey) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
+    }
+
+    public function connect() : \Flexio\Services\AmazonS3
+    {
+        $region = $this->region;
+        $bucket = $this->bucket;
+        $accesskey = $this->accesskey;
+        $secretkey = $this->secretkey;
+
+        if ($this->initialize($region, $bucket, $accesskey, $secretkey) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $this;
     }
 
     public function isOk() : bool
@@ -319,7 +324,7 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function initialize(string $region, string $bucket, string $accesskey, string $secretkey)
+    private function initialize(string $region, string $bucket, string $accesskey, string $secretkey) : bool
     {
         $this->close();
         $this->region = $region;
@@ -342,9 +347,9 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
             'credentials' => $credentials
         ]);
 
-        if ($this->s3)
-        {
-            $this->is_ok = true;
-        }
+        if (!$this->s3)
+            return false;
+
+        return true;
    }
 }

@@ -42,9 +42,9 @@ class GoogleDrive implements \Flexio\Services\IConnection, \Flexio\Services\IFil
         return self::initialize($params);
     }
 
-    public function connect(array $params) : bool
+    public function connect() : \Flexio\Services\GoogleDrive
     {
-        return true;
+        return $this;
     }
 
     public function isOk() : bool

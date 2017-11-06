@@ -34,19 +34,12 @@ class Firebase implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
     public static function create(array $params = null) : \Flexio\Services\Firebase
     {
         $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
         return $service;
     }
 
-    public function connect(array $params) : bool
+    public function connect() : \Flexio\Services\Firebase
     {
-        $this->close();
-
-
-        return $this->isOk();
+        return $this;
     }
 
     public function isOk() : bool

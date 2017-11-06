@@ -46,16 +46,12 @@ class Rss implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     public static function create(array $params = null) : \Flexio\Services\Rss
     {
         $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
         return $service;
     }
 
-    public function connect(array $params) : bool
+    public function connect() : \Flexio\Services\Rss
     {
-        return true;
+        return $this;
     }
 
     public function isOk() : bool

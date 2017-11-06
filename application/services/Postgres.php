@@ -34,21 +34,9 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
 
     public static function create(array $params = null) : \Flexio\Services\Postgres
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
-        $this->close();
-
         if (isset($params['port']))
-            $params['port'] = (string)$params['port'];
-/*
+        $params['port'] = (string)$params['port'];
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
@@ -59,11 +47,33 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
                 'path' => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
             return false;
-        $validated_params = $validator->getParams();
-*/
-        $this->initialize($params['host'], intval($params['port']), $params['database'], $params['username'], $params['password']);
 
-        return $this->isOk();
+        $validated_params = $validator->getParams();
+        $host = $validated_params['host'];
+        $port = intval($validated_params['port']);
+        $database = $validated_params['database'];
+        $username = $validated_params['username'];
+        $password = $validated_params['password'];
+
+        $service = new self;
+        if ($service->initialize($host, $port, $database, $username, $password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
+    }
+
+    public function connect() : \Flexio\Services\Postgres
+    {
+        $host = $this->host;
+        $port = $this->port;
+        $database = $this->database;
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($this->initialize($host, $port, $database, $username, $password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $this;
     }
 
     public function isOk() : bool

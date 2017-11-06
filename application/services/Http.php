@@ -33,16 +33,12 @@ class Http implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     public static function create(array $params = null) : \Flexio\Services\Http
     {
         $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
         return $service;
     }
 
-    public function connect(array $params) : bool
+    public function connect() : \Flexio\Services\Http
     {
-        return true;
+        return $this;
     }
 
     public function isOk() : bool

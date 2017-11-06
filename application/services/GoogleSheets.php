@@ -43,9 +43,9 @@ class GoogleSheets implements \Flexio\Services\IConnection, \Flexio\Services\IFi
         return self::initialize($params);
     }
 
-    public function connect(array $params) : bool
+    public function connect() : \Flexio\Services\GoogleSheets
     {
-        return true;
+        return $this;
     }
 
     public function isOk() : bool

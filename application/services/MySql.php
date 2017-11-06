@@ -41,18 +41,6 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
 
     public static function create(array $params = null) : \Flexio\Services\MySql
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
-        $this->close();
-
         if (isset($params['port']))
             $params['port'] = (string)$params['port'];
 
@@ -65,13 +53,36 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
                 'database' => array('type' => 'string', 'required' => true),
                 'path' => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $this->initialize($validated_params['host'], intval($validated_params['port']), $validated_params['database'], $validated_params['username'], $validated_params['password']);
-        $this->dbtable = $validated_params['path'];
+        $host = $validated_params['host'];
+        $port = intval($validated_params['port']);
+        $database = $validated_params['database'];
+        $username = $validated_params['username'];
+        $password = $validated_params['password'];
 
-        return $this->isOk();
+        $service = new self;
+        $service->dbtable = $validated_params['path'];
+
+        if ($service->initialize($host, $port, $database, $username, $password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
+    }
+
+    public function connect() : \Flexio\Services\MySql
+    {
+        $host = $this->host;
+        $port = $this->port;
+        $database = $this->database;
+        $user = $this->user;
+        $password = $this->password;
+
+        if ($this->initialize($host, $port, $databsae, $username, $password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $this;
     }
 
     public function isOk() : bool
@@ -150,7 +161,7 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function initialize(string $host, int $port, string $database, string $username, string $password)
+    private function initialize(string $host, int $port, string $database, string $username, string $password) : bool
     {
         $this->close();
 
