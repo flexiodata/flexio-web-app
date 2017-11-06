@@ -61,7 +61,7 @@ class Vfs
                 $name = $info['ename'];
                 if (strlen($name) == 0)
                     $name = $info['eid'];
-                
+
                 $entry = array(
                     'name' => $name,
                     'path' => '/'.$name,
@@ -83,7 +83,7 @@ class Vfs
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
-        
+
 
         if ($connection_identifier == 'local')
         {
@@ -103,7 +103,7 @@ class Vfs
 
         $connection_info = $connection->get();
 
-        $service = \Flexio\Services\Store::load($connection_info);
+        $service = \Flexio\Services\Factory::create($connection_info);
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
@@ -113,7 +113,7 @@ class Vfs
             foreach ($results as &$v)
             {
                 $v['type'] = ($v['is_dir'] ? 'DIR' : 'FILE');
-                $v['path'] = '/' . $connection_identifier . $v['path'];    
+                $v['path'] = '/' . $connection_identifier . $v['path'];
             }
             unset($v);
         }
@@ -124,7 +124,7 @@ class Vfs
     public function listLocal() : array
     {
         $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-        
+
         // load the object
         $user = \Flexio\Object\User::load($current_user_eid);
         if ($user === false)
@@ -159,7 +159,7 @@ class Vfs
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
-        
+
         // load the connection
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
@@ -170,7 +170,7 @@ class Vfs
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection_info = $connection->get();
-        $service = \Flexio\Services\Store::load($connection_info);
+        $service = \Flexio\Services\Factory::create($connection_info);
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
@@ -190,7 +190,7 @@ class Vfs
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
-        
+
         // load the connection
         $connection = \Flexio\Object\Connection::load($connection_identifier);
         if ($connection === false)
@@ -201,7 +201,7 @@ class Vfs
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection_info = $connection->get();
-        $service = \Flexio\Services\Store::load($connection_info);
+        $service = \Flexio\Services\Factory::create($connection_info);
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 

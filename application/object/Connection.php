@@ -219,7 +219,7 @@ class Connection extends \Flexio\Object\Base
         $connection_properties = $this->get();
 
         // load the services from the services store
-        $service = \Flexio\Services\Store::load($connection_properties);
+        $service = \Flexio\Services\Factory::create($connection_properties);
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 

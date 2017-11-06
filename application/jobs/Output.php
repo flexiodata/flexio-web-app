@@ -25,7 +25,7 @@ class Output extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // make sure we have a params node
         $job_definition = $this->getProperties();
         if (!isset($job_definition['params']))
@@ -214,7 +214,7 @@ class Output extends \Flexio\Jobs\Base
 
         // load the service
         $connection_type = $connection_info['connection_type'] ?? false;
-        $service = \Flexio\Services\Store::load($connection_info);
+        $service = \Flexio\Services\Factory::create($connection_info);
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
