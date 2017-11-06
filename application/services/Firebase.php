@@ -20,16 +20,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class Firebase implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
-
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
 
     public static function create(array $params = null) : \Flexio\Services\Firebase
     {

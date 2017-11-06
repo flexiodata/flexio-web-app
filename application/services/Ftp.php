@@ -20,19 +20,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $host;
     private $username;
     private $password;
     private $connection = false;
     private $is_ok = false;
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
 
     public static function create(array $params = null) : \Flexio\Services\Ftp
     {

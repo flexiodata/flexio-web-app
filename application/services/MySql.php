@@ -20,10 +20,6 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
     private $host = '';
     private $port = '';
@@ -34,10 +30,6 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
     private $dbresult = null;
     private $dbtablestructure = null;
     private $rowbuffersize = 100;
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
 
     public static function create(array $params = null) : \Flexio\Services\MySql
     {

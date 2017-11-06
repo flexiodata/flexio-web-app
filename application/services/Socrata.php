@@ -20,18 +20,10 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $host;
     private $port;
     private $base_url = null;
     private $is_ok = false;
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
 
     public static function create(array $params = null) : \Flexio\Services\Socrata
     {

@@ -20,10 +20,6 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
     private $bucket = '';
     private $accesskey = '';
@@ -32,10 +28,6 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
 
     private $aws = null;
     private $s3 = null;
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
 
     public static function create(array $params = null) : \Flexio\Services\AmazonS3
     {

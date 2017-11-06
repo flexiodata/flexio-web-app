@@ -26,10 +26,6 @@ class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IF
     private $user = '';
     private $password = '';
 
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\ElasticSearch
     {
 

@@ -18,7 +18,6 @@ namespace Flexio\Services;
 
 interface IConnection
 {
-    public static function create(array $params = null);
 }
 
 interface IFileSystem

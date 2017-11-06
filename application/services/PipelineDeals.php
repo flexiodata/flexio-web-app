@@ -25,10 +25,6 @@ class PipelineDeals implements \Flexio\Services\IConnection, \Flexio\Services\IF
     private $pagesize = 200; // rows to request per request; 200 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; pipeline deals allows up to 5 requests per second
 
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\PipelineDeals
     {
         $validator = \Flexio\Base\Validator::create();

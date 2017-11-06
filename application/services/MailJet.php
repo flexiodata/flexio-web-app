@@ -26,10 +26,6 @@ class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
     private $pagesize = 1; // rows to request per request; 1000 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; mailjet may limit the requests per minute, so set this to something reasonable
 
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\MailJet
     {
         $validator = \Flexio\Base\Validator::create();

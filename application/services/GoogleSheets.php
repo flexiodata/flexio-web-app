@@ -21,19 +21,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class GoogleSheets implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
     private $access_token = '';
     private $refresh_token = '';
     private $updated = '';
     private $expires = 0;
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
 
     public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
     {
