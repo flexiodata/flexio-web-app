@@ -29,8 +29,18 @@ class Render extends \Flexio\Jobs\Base
         $items = $job_definition['params']['items'] ?? null;
         $url = $job_definition['params']['url'] ?? null;
         $format = $job_definition['params']['format'] ?? 'pdf';
+        $paper = $job_definition['params']['paper'] ?? 'letter';
         $width = $job_definition['params']['width'] ?? null;
         $height = $job_definition['params']['height'] ?? null;
+
+        $full = $job_definition['params']['full'] ?? false;
+        $full = toBoolean($full) ? 'true':'false';
+
+        $paper = ucfirst(strtolower($paper));
+
+        $landscape = $job_definition['params']['landscape'] ?? true;
+        $landscape = toBoolean($landscape);
+
         $scrollbars = $job_definition['params']['scrollbars'] ?? true;
         $scrollbars = toBoolean($scrollbars);
 
@@ -38,8 +48,13 @@ class Render extends \Flexio\Jobs\Base
             $content_type = 'application/pdf';
         else if ($format == 'png')
             $content_type = 'image/png';
+        else if ($format == 'jpeg' || $format == 'jpg')
+        {
+            $content_type = 'image/jpeg';
+            $format = 'jpeg';
+        }
         else
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid 'format' parameter. Value must be either 'pdf' or 'png'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid 'format' parameter. Value must be 'pdf', 'jpeg', or 'pdf'");
 
         // get docker binary
         $dockerbin = \Flexio\System\System::getBinaryPath('docker');
@@ -49,7 +64,7 @@ class Render extends \Flexio\Jobs\Base
         if ($url === null && isset($items[0]['path']))
             $url = $items[0]['path'];
 
-        if ($url === null)
+        if ($url === null || strlen($url) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $outstream = $context->getStdout();
@@ -68,10 +83,13 @@ class Render extends \Flexio\Jobs\Base
         if (!$scrollbars)
             $hide_scrollbars = '--hide-scrollbars';
 
-        if ($format == 'pdf')
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $hide_scrollbars $url && cat output.pdf'";
-        else if ($format == 'png')
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $hide_scrollbars $url && cat screenshot.png'";
+        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxrender sh -c 'timeout 30s nodejs /render/run.js ".
+               "--url $url ".
+               "--format $format ".
+               "--paper $paper ".
+               ($landscape?"--landscape ":"").
+               ($full?"--fullPage ":"").
+               "'";
 
         $fp = popen($cmd, "r");
 
@@ -111,9 +129,9 @@ class Render extends \Flexio\Jobs\Base
                 $hide_scrollbars = '--hide-scrollbars';
 
             if ($format == 'pdf')
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $hide_scrollbars $url && cat output.pdf'";
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxrender sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $hide_scrollbars $url && cat output.pdf'";
             else if ($format == 'png')
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxchrome sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $hide_scrollbars $url && cat screenshot.png'";
+                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxrender sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $hide_scrollbars $url && cat screenshot.png'";
             else
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

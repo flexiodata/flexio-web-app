@@ -1851,9 +1851,10 @@
 
 
 
-    this.args.render = ['url','format','width','height','scrollbars'];
+    this.args.render = ['url','format','width','height','scrollbars','full','paper','landscape'];
     this.hints.render = {
-      "format":      [ "pdf", "png" ]
+      "landscape":   [ "true","false" ],
+      "format":      [ "pdf", "jpeg", "png" ]
     };
     this.keywords.render = function(str)
     {
@@ -1941,6 +1942,21 @@
         json.params.format = params['format'].value
       }
 
+      if (params.hasOwnProperty('full'))
+      {
+        json.params.full = this.toBoolean(params['full'].value);
+      }
+
+      if (params.hasOwnProperty('landscape'))
+      {
+        json.params.landscape = this.toBoolean(params['landscape'].value);
+      }
+
+      if (params.hasOwnProperty('paper'))
+      {
+        json.params.paper = params['paper'].value;
+      }
+
       return json;
     };
 
@@ -2009,6 +2025,21 @@
       if (json.params.hasOwnProperty('scrollbars'))
       {
         res = this.append(res, "scrollbars: " + (json.params['scrollbars'] ? 'true' : 'false'));
+      }
+
+      if (json.params.hasOwnProperty('full'))
+      {
+        res = this.append(res, "full: " + (json.params['full'] ? 'true' : 'false'));
+      }
+
+      if (json.params.hasOwnProperty('landscape'))
+      {
+        res = this.append(res, "landscape: " + (json.params['landscape'] ? 'true' : 'false'));
+      }
+
+      if (json.params.hasOwnProperty('paper'))
+      {
+        res = this.append(res, "paper: " + json.params['paper']);
       }
 
       return res;
