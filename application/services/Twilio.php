@@ -54,22 +54,6 @@ class Twilio implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
         return $service;
     }
 
-    public function connect() : \Flexio\Services\Twilio
-    {
-        $key = $this->key;
-        $access_token = $this->access_token;
-
-        if ($this->initialize($key, $access_token) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -264,6 +248,17 @@ class Twilio implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
         return $currentpath;
     }
 
+    private function connect() : bool
+    {
+        $key = $this->key;
+        $access_token = $this->access_token;
+
+        if ($this->initialize($key, $access_token) === false)
+            return false;
+
+        return false;
+    }
+
     private function initialize(string $key, string $access_token) : bool
     {
         // TODO: test api key
@@ -272,6 +267,11 @@ class Twilio implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
         $this->access_token = $access_token;
         $this->is_ok = true;
         return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private function lookupDefinition(string $path)

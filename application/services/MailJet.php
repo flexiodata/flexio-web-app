@@ -50,22 +50,6 @@ class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return $service;
     }
 
-    public function connect() : \Flexio\Services\MailJet
-    {
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($service->initialize($username, $password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -286,6 +270,17 @@ class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return $result;
     }
 
+    private function connect() : bool
+    {
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($service->initialize($username, $password) === false)
+            return false;
+
+        return true;
+    }
+
     private function initialize(string $username, string $password) : bool
     {
         // TODO: test api key
@@ -294,6 +289,11 @@ class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         $this->password = $password;
         $this->is_ok = true;
         return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private function lookupDefinition(string $path)

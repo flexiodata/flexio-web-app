@@ -40,16 +40,6 @@ class Dropbox implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return self::initialize($params);
     }
 
-    public function connect() : \Flexio\Services\Dropbox
-    {
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -255,6 +245,16 @@ class Dropbox implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
             return true;
 
         return false;
+    }
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private static function initialize(array $params)

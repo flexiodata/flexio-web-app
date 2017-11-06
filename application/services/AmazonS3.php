@@ -61,24 +61,6 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         return $service;
     }
 
-    public function connect() : \Flexio\Services\AmazonS3
-    {
-        $region = $this->region;
-        $bucket = $this->bucket;
-        $accesskey = $this->accesskey;
-        $secretkey = $this->secretkey;
-
-        if ($this->initialize($region, $bucket, $accesskey, $secretkey) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -314,6 +296,19 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
     // additional functions
     ////////////////////////////////////////////////////////////
 
+    private function connect() : bool
+    {
+        $region = $this->region;
+        $bucket = $this->bucket;
+        $accesskey = $this->accesskey;
+        $secretkey = $this->secretkey;
+
+        if ($this->initialize($region, $bucket, $accesskey, $secretkey) === false)
+            return false;
+
+        return true;
+    }
+
     private function initialize(string $region, string $bucket, string $accesskey, string $secretkey) : bool
     {
         $this->close();
@@ -342,5 +337,10 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
 
         $this->is_ok = true;
         return true;
+   }
+
+   private function isOk() : bool
+   {
+       return $this->is_ok;
    }
 }

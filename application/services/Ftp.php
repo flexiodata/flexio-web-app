@@ -56,23 +56,6 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         return $service;
     }
 
-    public function connect() : \Flexio\Services\Ftp
-    {
-        $host = $this->host;
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($this->initialize($host, $username, $password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -172,6 +155,18 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
+    private function connect() : bool
+    {
+        $host = $this->host;
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($this->initialize($host, $username, $password) === false)
+            return false;
+
+        return true;
+    }
+
     private function initialize(string $host, string $username, string $password) : bool
     {
         $this->host = $host;
@@ -193,5 +188,10 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         $this->connection = $ftp;
         $this->is_ok = true;
         return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 }

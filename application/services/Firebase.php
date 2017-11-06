@@ -37,16 +37,6 @@ class Firebase implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         return $service;
     }
 
-    public function connect() : \Flexio\Services\Firebase
-    {
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -98,5 +88,19 @@ class Firebase implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    ////////////////////////////////////////////////////////////
+    // additional functions
+    ////////////////////////////////////////////////////////////
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 }

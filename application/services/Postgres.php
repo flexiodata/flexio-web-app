@@ -62,25 +62,6 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         return $service;
     }
 
-    public function connect() : \Flexio\Services\Postgres
-    {
-        $host = $this->host;
-        $port = $this->port;
-        $database = $this->database;
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($this->initialize($host, $port, $database, $username, $password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -207,6 +188,20 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         return null;
     }
 
+    private function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+        $database = $this->database;
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($this->initialize($host, $port, $database, $username, $password) === false)
+            return false;
+
+        return true;
+    }
+
     private function initialize(string $host, int $port, string $database, string $username, string $password) : bool
     {
         $this->host = $host;
@@ -218,6 +213,11 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         $this->db = $this->newConnection();
         $this->is_ok = is_null($this->db) ? false : true;
 
+        return $this->is_ok;
+    }
+
+    private function isOk() : bool
+    {
         return $this->is_ok;
     }
 

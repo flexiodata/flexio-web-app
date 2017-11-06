@@ -43,16 +43,6 @@ class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         return self::initialize($params);
     }
 
-    public function connect() : \Flexio\Services\Box
-    {
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -358,6 +348,16 @@ class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 
 
         return array('id' => $current_id, 'content_type' => $current_content_type);
+    }
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private static function initialize(array $params)

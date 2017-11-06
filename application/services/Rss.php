@@ -49,16 +49,6 @@ class Rss implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         return $service;
     }
 
-    public function connect() : \Flexio\Services\Rss
-    {
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return true;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -139,4 +129,15 @@ class Rss implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 
         return $structure;
     }
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return true;
+    }
+
 }

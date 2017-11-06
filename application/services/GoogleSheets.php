@@ -43,16 +43,6 @@ class GoogleSheets implements \Flexio\Services\IConnection, \Flexio\Services\IFi
         return self::initialize($params);
     }
 
-    public function connect() : \Flexio\Services\GoogleSheets
-    {
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -398,6 +388,16 @@ class GoogleSheets implements \Flexio\Services\IConnection, \Flexio\Services\IFi
             return true;
 
         return false;
+    }
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private static function initialize(array $params)

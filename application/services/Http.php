@@ -36,16 +36,6 @@ class Http implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         return $service;
     }
 
-    public function connect() : \Flexio\Services\Http
-    {
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return true;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -118,4 +108,13 @@ class Http implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return true;
+    }
 }

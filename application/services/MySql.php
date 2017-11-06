@@ -71,25 +71,6 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
         return $service;
     }
 
-    public function connect() : \Flexio\Services\MySql
-    {
-        $host = $this->host;
-        $port = $this->port;
-        $database = $this->database;
-        $username = $this->username;
-        $password = $this->password;
-
-        if ($this->initialize($host, $port, $database, $username, $password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -147,6 +128,20 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
     // additional functions
     ////////////////////////////////////////////////////////////
 
+    private function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+        $database = $this->database;
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($this->initialize($host, $port, $database, $username, $password) === false)
+            return false;
+
+        return $this;
+    }
+
     private function initialize(string $host, int $port, string $database, string $username, string $password) : bool
     {
         $this->host = $host;
@@ -167,6 +162,11 @@ class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
         if (!is_null($this->db))
             $this->is_ok = true;
 
+        return $this->is_ok;
+    }
+
+    private function isOk() : bool
+    {
         return $this->is_ok;
     }
 

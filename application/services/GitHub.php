@@ -40,16 +40,6 @@ class GitHub implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
         return self::initialize($params);
     }
 
-    public function connect() : \Flexio\Services\GitHub
-    {
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -356,6 +346,16 @@ class GitHub implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
             return true;
 
         return false;
+    }
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private static function initialize(array $params)

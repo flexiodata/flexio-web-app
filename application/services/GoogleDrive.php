@@ -42,16 +42,6 @@ class GoogleDrive implements \Flexio\Services\IConnection, \Flexio\Services\IFil
         return self::initialize($params);
     }
 
-    public function connect() : \Flexio\Services\GoogleDrive
-    {
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -336,6 +326,16 @@ class GoogleDrive implements \Flexio\Services\IConnection, \Flexio\Services\IFil
         curl_close($ch);
 
         return array('id' => $current_id, 'content_type' => $current_content_type);
+    }
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private static function initialize(array $params)

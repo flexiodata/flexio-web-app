@@ -53,22 +53,6 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return $service;
     }
 
-    public function connect() : \Flexio\Services\Socrata
-    {
-        $host = $this->host;
-        $port = $this->port;
-
-        if ($this->initialize($host, $port) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        return $this;
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -370,6 +354,17 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return $res;
     }
 
+    private function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+
+        if ($this->initialize($host, $port) === false)
+            return false;
+
+        return true;
+    }
+
     private function initialize(string $host, int $port) : bool
     {
         $this->host = $host;
@@ -390,5 +385,10 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         $this->base_url = $url;
         $this->is_ok = true;
         return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 }
