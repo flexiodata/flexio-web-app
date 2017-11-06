@@ -24,10 +24,11 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     // member variables
     ////////////////////////////////////////////////////////////
 
-    private $config = array();
+    private $host;
+    private $username;
+    private $password;
     private $connection = false;
     private $is_ok = false;
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -57,9 +58,9 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 
     public function connect() : \Flexio\Services\Ftp
     {
-        $host = $this->config['host'];
-        $username = $this->config['username'];
-        $password = $this->config['password'];
+        $host = $this->host;
+        $username = $this->username;
+        $password = $this->password;
 
         if ($this->initialize($host, $username, $password) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
@@ -84,7 +85,7 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         if (!$this->isOk())
         {
             // try to reconnect
-            $this->connect($this->config);
+            $this->connect();
             if (!$this->isOk())
                 return array();
         }
@@ -141,7 +142,7 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         if (!$this->isOk())
         {
             // try to reconnect
-            $this->connect($this->config);
+            $this->connect();
             if (!$this->isOk())
                 return;
         }
@@ -158,7 +159,7 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         if (!$this->isOk())
         {
             // try to reconnect
-            $this->connect($this->config);
+            $this->connect();
             if (!$this->isOk())
                 return;
         }
@@ -173,9 +174,9 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 
     private function initialize(string $host, string $username, string $password) : bool
     {
-        $this->config = array('host' => $host,
-                              'username' => $username,
-                              'password' => $password);
+        $this->host = $host;
+        $this->username = $username;
+        $this->password = $password;
 
         if ($this->connection !== false)
             ftp_close($this->connection);

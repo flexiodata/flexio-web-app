@@ -24,7 +24,8 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
     // member variables
     ////////////////////////////////////////////////////////////
 
-    private $config = array();
+    private $host;
+    private $port;
     private $base_url = null;
     private $is_ok = false;
 
@@ -54,8 +55,8 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
 
     public function connect() : \Flexio\Services\Socrata
     {
-        $host = $this->config['host'];
-        $port = $this->config['port'];
+        $host = $this->host;
+        $port = $this->port;
 
         if ($this->initialize($host, $port) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
@@ -79,7 +80,7 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         if (!$this->isOk())
         {
             // try to reconnect
-            $this->connect($this->config);
+            $this->connect();
             if (!$this->isOk())
                 return array();
         }
@@ -292,7 +293,7 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         if (!$this->isOk())
         {
             // try to reconnect
-            $this->connect($this->config);
+            $this->connect();
             if (!$this->isOk())
                 return array();
         }
@@ -371,8 +372,8 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
 
     private function initialize(string $host, int $port) : bool
     {
-        $this->config = array('host' => $host,
-                              'port' => $port);
+        $this->host = $host;
+        $this->port = $port;
 
         $url = $host;
         if (false === strpos($url, "://"))
