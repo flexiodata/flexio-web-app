@@ -94,13 +94,6 @@ class Firebase implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
-    }
-
     public function read(array $params, callable $callback)
     {
         // TODO: implement

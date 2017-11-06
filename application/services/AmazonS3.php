@@ -204,13 +204,6 @@ class AmazonS3 implements \Flexio\Services\IConnection
         return true;
     }
 
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
-    }
-
     public function read(array $params, callable $callback)
     {
         // TODO: let exceptions through on failure?

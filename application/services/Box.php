@@ -82,7 +82,7 @@ class Box implements \Flexio\Services\IConnection
         $result = @json_decode($result, true);
         if (!isset($result['entries']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        
+
         return $result['entries'];
     }
 
@@ -127,22 +127,15 @@ class Box implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
-    }
-
     public function read(array $params, callable $callback)
     {
         if (!$this->authenticated())
             return false;
-        
+
         $path = $params['path'] ?? '';
         if (strlen($path) == 0)
             return false;
-        
+
         $fileid = $this->getFileId($path);
 
         // download the file
@@ -169,7 +162,7 @@ class Box implements \Flexio\Services\IConnection
     {
         if (!$this->authenticated())
             return false;
-        
+
         // Box unfortunately requires a content size
         $size = $params['size'] ?? null;
         if (!isset($size))
@@ -206,7 +199,7 @@ class Box implements \Flexio\Services\IConnection
             $box_args = json_encode(['name' => $filename, 'parent' => ['id' => $folderid]]);
             $url = "https://upload.box.com/api/2.0/files/content";
         }
-        
+
 
         // upload/write the file
         $ch = curl_init();
@@ -218,7 +211,7 @@ class Box implements \Flexio\Services\IConnection
 
         $header = fopen('php://memory', 'rw+');
         $buf = '';
-        
+
         if (isset($box_args))
         {
             $buf .= "--$boundary\r\n".
@@ -266,7 +259,7 @@ class Box implements \Flexio\Services\IConnection
                 $chunk = $callback($length);
                 if ($chunk === false)
                 {
-                    $content_finished = true; 
+                    $content_finished = true;
                 }
                 else
                 {
@@ -366,7 +359,7 @@ class Box implements \Flexio\Services\IConnection
                     break;
                 }
             }
-            
+
             if (!$found)
                 return false;
         }
@@ -438,7 +431,7 @@ class Box implements \Flexio\Services\IConnection
 
                 $token = new \OAuth\OAuth2\Token\StdOAuth2Token($access_token, $refresh_token);
                 $token->setEndOfLife($expires);
-                
+
                 try
                 {
                     $token = $oauth->refreshAccessToken($token);
@@ -448,7 +441,7 @@ class Box implements \Flexio\Services\IConnection
                 catch (\OAuth\Common\Http\Exception\TokenResponseException $e)
                 {
                     // this happens when offline
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");                    
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Could not refresh access token");
                 }
 
                 $object = new self;

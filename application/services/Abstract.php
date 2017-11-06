@@ -25,7 +25,6 @@ interface IConnection
 
     public function listObjects(string $path = '') : array;
     public function exists(string $path) : bool;
-    public function getInfo(string $path) : array;
 
     public function read(array $params, callable $callback);
     public function write(array $params, callable $callback);
