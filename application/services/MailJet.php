@@ -18,14 +18,13 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class MailJet implements \Flexio\Services\IConnection
+class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     private $is_ok = false;
     private $username = '';
     private $password = '';
     private $pagesize = 1; // rows to request per request; 1000 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; mailjet may limit the requests per minute, so set this to something reasonable
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -68,6 +67,10 @@ class MailJet implements \Flexio\Services\IConnection
         $this->username = '';
         $this->password = '';
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -136,7 +139,6 @@ class MailJet implements \Flexio\Services\IConnection
 
         // TODO: implement
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

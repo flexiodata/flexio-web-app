@@ -18,14 +18,13 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class ElasticSearch implements \Flexio\Services\IConnection
+class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     private $is_ok = false;
     private $host = '';
     private $port = '';
     private $user = '';
     private $password = '';
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -75,6 +74,10 @@ class ElasticSearch implements \Flexio\Services\IConnection
         $this->user = '';
         $this->password = '';
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -181,7 +184,6 @@ class ElasticSearch implements \Flexio\Services\IConnection
         $rows_to_write = array();
         return true;
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

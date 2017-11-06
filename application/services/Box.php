@@ -19,7 +19,7 @@ namespace Flexio\Services;
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Box implements \Flexio\Services\IConnection
+class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -61,31 +61,9 @@ class Box implements \Flexio\Services\IConnection
         $this->expires = 0;
     }
 
-
-    private function getFolderItems($folder_id, $fields = null)// : array
-    {
-        if (!$this->authenticated())
-            return array();
-
-        $url = "https://api.box.com/2.0/folders/$folder_id/items?usemarker=true&limit=1000";
-        if (isset($fields))
-            $url .= '&fields='.$fields;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token));
-        curl_setopt($ch, CURLOPT_HTTPGET, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        $result = @json_decode($result, true);
-        if (!isset($result['entries']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        return $result['entries'];
-    }
-
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -292,7 +270,6 @@ class Box implements \Flexio\Services\IConnection
         return true;
     }
 
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
@@ -312,6 +289,29 @@ class Box implements \Flexio\Services\IConnection
         return false;
     }
 
+    private function getFolderItems($folder_id, $fields = null)// : array
+    {
+        if (!$this->authenticated())
+            return array();
+
+        $url = "https://api.box.com/2.0/folders/$folder_id/items?usemarker=true&limit=1000";
+        if (isset($fields))
+            $url .= '&fields='.$fields;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token));
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $result = @json_decode($result, true);
+        if (!isset($result['entries']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        return $result['entries'];
+    }
 
     private function getFileId(string $path)  // TODO: set function return type   (: ?string)
     {

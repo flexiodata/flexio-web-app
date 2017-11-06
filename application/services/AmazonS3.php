@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class AmazonS3 implements \Flexio\Services\IConnection
+class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -82,7 +82,11 @@ class AmazonS3 implements \Flexio\Services\IConnection
         $this->accesskey = '';
         $this->secretkey = '';
         $this->s3 = null;
-   }
+    }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -310,7 +314,6 @@ class AmazonS3 implements \Flexio\Services\IConnection
 
         return true;
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

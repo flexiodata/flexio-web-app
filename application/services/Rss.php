@@ -31,7 +31,7 @@ require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECT
 
 
 
-class Rss implements \Flexio\Services\IConnection
+class Rss implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -66,6 +66,10 @@ class Rss implements \Flexio\Services\IConnection
     public function close()
     {
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -124,7 +128,6 @@ class Rss implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

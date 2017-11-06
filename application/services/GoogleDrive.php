@@ -19,7 +19,7 @@ namespace Flexio\Services;
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class GoogleDrive implements \Flexio\Services\IConnection
+class GoogleDrive implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -29,7 +29,6 @@ class GoogleDrive implements \Flexio\Services\IConnection
     private $access_token = '';
     private $refresh_token = '';
     private $expires = 0;
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -60,6 +59,10 @@ class GoogleDrive implements \Flexio\Services\IConnection
         $this->refresh_token = '';
         $this->expires = 0;
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -272,7 +275,6 @@ class GoogleDrive implements \Flexio\Services\IConnection
 
         return ($file_size == $total_written ? true : false);
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

@@ -19,7 +19,7 @@ namespace Flexio\Services;
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class GoogleSheets implements \Flexio\Services\IConnection
+class GoogleSheets implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -30,7 +30,6 @@ class GoogleSheets implements \Flexio\Services\IConnection
     private $refresh_token = '';
     private $updated = '';
     private $expires = 0;
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -61,6 +60,10 @@ class GoogleSheets implements \Flexio\Services\IConnection
         $this->refresh_token = '';
         $this->expires = 0;
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -182,14 +185,11 @@ class GoogleSheets implements \Flexio\Services\IConnection
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-
     ////////////////////////////////////////////////////////////
     // Google Sheets API abstraction
     ////////////////////////////////////////////////////////////
 
     private $spreadsheets = [];
-
-
 
     public function getSpreadsheets() // TODO: set return type
     {

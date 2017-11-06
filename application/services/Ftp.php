@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Ftp implements \Flexio\Services\IConnection
+class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -73,6 +73,10 @@ class Ftp implements \Flexio\Services\IConnection
         $this->connection = false;
         $this->is_ok = false;
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -164,7 +168,6 @@ class Ftp implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

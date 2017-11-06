@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class MySql implements \Flexio\Services\IConnection
+class MySql implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -34,7 +34,6 @@ class MySql implements \Flexio\Services\IConnection
     private $dbresult = null;
     private $dbtablestructure = null;
     private $rowbuffersize = 100;
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -94,6 +93,10 @@ class MySql implements \Flexio\Services\IConnection
         $this->rowbuffersize = 100;
     }
 
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
+
     public function listObjects(string $path = '') : array
     {
         if (!$this->isOk())
@@ -142,7 +145,6 @@ class MySql implements \Flexio\Services\IConnection
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

@@ -35,7 +35,7 @@ spl_autoload_register(function ($class) {
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Sftp implements \Flexio\Services\IConnection
+class Sftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -90,6 +90,10 @@ class Sftp implements \Flexio\Services\IConnection
         $this->connection = false;
         $this->is_ok = false;
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -184,7 +188,6 @@ class Sftp implements \Flexio\Services\IConnection
             return $res;
         }, \phpseclib\Net\SFTP::SOURCE_CALLBACK);
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

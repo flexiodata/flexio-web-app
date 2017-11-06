@@ -22,7 +22,10 @@ interface IConnection
     public function connect(array $params) : bool;
     public function isOk() : bool;
     public function close();
+}
 
+interface IFileSystem
+{
     public function listObjects(string $path = '') : array;
     public function exists(string $path) : bool;
 

@@ -16,8 +16,12 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Vfs
+class Vfs implements \Flexio\Services\IFileSystem
 {
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
+
     public function listObjects(string $path = '') : array
     {
         $results = [];
@@ -120,6 +124,12 @@ class Vfs
         return $results;
     }
 
+    public function exists(string $path) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return false;
+    }
 
     public function listLocal() : array
     {

@@ -19,7 +19,7 @@ namespace Flexio\Services;
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class GitHub implements \Flexio\Services\IConnection
+class GitHub implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -27,7 +27,6 @@ class GitHub implements \Flexio\Services\IConnection
 
     private $is_ok = false;
     private $access_token = '';
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -56,6 +55,10 @@ class GitHub implements \Flexio\Services\IConnection
         $this->is_ok = false;
         $this->access_token = '';
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -140,7 +143,6 @@ class GitHub implements \Flexio\Services\IConnection
         // File Update:
         // PUT https://api.github.com/repos/:owner/:repo/contents/:path
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

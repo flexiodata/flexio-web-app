@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Socrata implements \Flexio\Services\IConnection
+class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -27,7 +27,6 @@ class Socrata implements \Flexio\Services\IConnection
     private $config = array();
     private $base_url = null;
     private $is_ok = false;
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -67,6 +66,10 @@ class Socrata implements \Flexio\Services\IConnection
         $this->base_url = null;
         $this->is_ok = false;
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {

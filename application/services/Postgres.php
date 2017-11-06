@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Postgres implements \Flexio\Services\IConnection
+class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -27,7 +27,6 @@ class Postgres implements \Flexio\Services\IConnection
     private $is_ok = false;
     private $db = null;
     private $host, $port, $database, $username, $password;
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -82,6 +81,10 @@ class Postgres implements \Flexio\Services\IConnection
         $this->username = null;
         $this->password = null;
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -165,7 +168,6 @@ class Postgres implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

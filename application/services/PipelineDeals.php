@@ -18,13 +18,12 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class PipelineDeals implements \Flexio\Services\IConnection
+class PipelineDeals implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     private $is_ok = false;
     private $apikey = '';
     private $pagesize = 200; // rows to request per request; 200 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; pipeline deals allows up to 5 requests per second
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -62,6 +61,10 @@ class PipelineDeals implements \Flexio\Services\IConnection
         $this->is_ok = false;
         $this->apikey = '';
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -130,7 +133,6 @@ class PipelineDeals implements \Flexio\Services\IConnection
 
         // TODO: implement
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions

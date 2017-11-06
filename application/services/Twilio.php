@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Twilio implements \Flexio\Services\IConnection
+class Twilio implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // member variables
@@ -29,7 +29,6 @@ class Twilio implements \Flexio\Services\IConnection
     private $apitoken = '';
     private $pagesize = 200; // rows to request per request; 200 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; pipeline deals allows up to 5 requests per second
-
 
     ////////////////////////////////////////////////////////////
     // IConnection interface
@@ -74,6 +73,10 @@ class Twilio implements \Flexio\Services\IConnection
         $this->apikey = '';
         $this->apitoken = '';
     }
+
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
     public function listObjects(string $path = '') : array
     {
@@ -142,7 +145,6 @@ class Twilio implements \Flexio\Services\IConnection
 
         // TODO: implement
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions
