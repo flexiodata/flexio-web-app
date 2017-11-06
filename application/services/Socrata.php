@@ -71,7 +71,7 @@ class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         // TODO: filter based on a specified path
 

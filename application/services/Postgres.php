@@ -86,7 +86,7 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         $db = $this->newConnection();
 

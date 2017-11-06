@@ -79,7 +79,7 @@ class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IF
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         // note: right now, the list is flat; path isn't used
 

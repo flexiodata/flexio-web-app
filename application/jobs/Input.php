@@ -458,7 +458,7 @@ class Input extends \Flexio\Jobs\Base
         {
             $vfs = new \Flexio\Services\Vfs();
 
-            $files_in_directory = $vfs->listObjects($directory);
+            $files_in_directory = $vfs->list($directory);
         }
          else
         {
@@ -471,7 +471,7 @@ class Input extends \Flexio\Jobs\Base
             if ($service === false)
                 return array();
 
-            $files_in_directory = $service->listObjects($directory);
+            $files_in_directory = $service->list($directory);
         }
 
 

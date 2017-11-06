@@ -64,7 +64,7 @@ class GoogleDrive implements \Flexio\Services\IConnection, \Flexio\Services\IFil
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         if (!$this->authenticated())
             return array();

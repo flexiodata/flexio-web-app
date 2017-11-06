@@ -26,7 +26,7 @@ interface IConnection
 
 interface IFileSystem
 {
-    public function listObjects(string $path = '') : array;
+    public function list(string $path = '') : array;
     public function exists(string $path) : bool;
 
     public function read(array $params, callable $callback);

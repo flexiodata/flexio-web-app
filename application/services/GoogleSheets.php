@@ -65,7 +65,7 @@ class GoogleSheets implements \Flexio\Services\IConnection, \Flexio\Services\IFi
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         $spreadsheets = $this->getSpreadsheets();
 
@@ -280,7 +280,7 @@ class GoogleSheets implements \Flexio\Services\IConnection, \Flexio\Services\IFi
         if (count($parts) < 1)
             return false;
 
-        $objs = $this->listObjects('/'.$parts[0]);
+        $objs = $this->list('/'.$parts[0]);
         if (count($objs) < 1)
             return false;
 

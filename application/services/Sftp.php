@@ -95,7 +95,7 @@ class Sftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         if (!$this->isOk())
         {

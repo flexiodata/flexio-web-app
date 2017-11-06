@@ -22,7 +22,7 @@ class Vfs implements \Flexio\Services\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         $results = [];
 
@@ -111,7 +111,7 @@ class Vfs implements \Flexio\Services\IFileSystem
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        $results = $service->listObjects($rpath);
+        $results = $service->list($rpath);
         if (is_array($results))
         {
             foreach ($results as &$v)

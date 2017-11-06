@@ -261,7 +261,7 @@ class Connection
         if (!$service->isOk())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        $result = $service->listObjects($path);
+        $result = $service->list($path);
         if (!is_array($result))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 

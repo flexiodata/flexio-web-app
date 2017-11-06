@@ -71,7 +71,7 @@ class Rss implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         // TODO: show the RSS links for a given URL?
         return array();

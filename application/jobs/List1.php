@@ -21,7 +21,7 @@ class List1 extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
@@ -35,7 +35,7 @@ class List1 extends \Flexio\Jobs\Base
         $streamwriter = $stdout->getWriter();
 
         $vfs = new \Flexio\Services\Vfs();
-        $files = $vfs->listObjects($path);
+        $files = $vfs->list($path);
 
         $results = [];
         foreach ($files as $f)

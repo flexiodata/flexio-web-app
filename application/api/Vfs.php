@@ -33,14 +33,13 @@ class Vfs
         $path = $validated_params['q'] ?? '';
 
         $vfs = new \Flexio\Services\Vfs();
-        $result = $vfs->listObjects($path);
+        $result = $vfs->list($path);
 
         if (!is_array($result))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         return $result;
     }
-
 
     public static function get(\Flexio\Api\Request $request) : array
     {

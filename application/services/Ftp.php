@@ -78,7 +78,7 @@ class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);

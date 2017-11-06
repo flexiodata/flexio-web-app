@@ -66,7 +66,7 @@ class PipelineDeals implements \Flexio\Services\IConnection, \Flexio\Services\IF
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         if (!$this->isOk())
             return array();

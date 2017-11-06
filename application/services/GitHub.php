@@ -60,7 +60,7 @@ class GitHub implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         // returns the directory tree for all repositories the user
         // has access to, starting with the repository as the root
