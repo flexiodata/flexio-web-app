@@ -643,6 +643,16 @@ class Process extends \Flexio\Object\Base
         if ($status !== \Model::PROCESS_STATUS_RUNNING)
             return; // nothing to do, but we're still ok
 
+
+        if (!IS_PROCESSTRYCATCH())
+        {
+            // during debugging, sometimes try/catch needs to be turned
+            // of completely; this switch is implemented here and in Api.php
+            $job = self::createJob($task);
+            $job->run($context);
+            return;
+        }
+
         // create the job with the task
         try
         {

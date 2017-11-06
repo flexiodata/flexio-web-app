@@ -47,6 +47,15 @@ class Api
              else
             $api_request->setRequestingUser(\Flexio\Object\User::MEMBER_PUBLIC);
 
+        if (!IS_PROCESSTRYCATCH())
+        {
+            // during debugging, sometimes try/catch needs to be turned
+            // of completely; this switch is implemented here and in \Flexio\Object\Process
+            $content = self::processRequest($api_request);
+            \Flexio\Api\Response::sendContent($content);
+            return;
+        }
+
         // process the request
         try
         {

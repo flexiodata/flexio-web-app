@@ -69,6 +69,13 @@ function IS_TESTING()
     return isset($GLOBALS['g_config']->tests_allowed) ? $GLOBALS['g_config']->tests_allowed : false;
 }
 
+function IS_PROCESSTRYCATCH()
+{
+    if (!IS_DEBUG())
+        return true; // release-mode always trys/catches
+    return true;
+}
+
 function IS_LOCALHOST()
 {
     return (GET_HTTP_HOST() == 'localhost');
