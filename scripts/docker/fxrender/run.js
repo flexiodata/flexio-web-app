@@ -4,11 +4,11 @@ const commandLineArgs = require('command-line-args')
 const options = commandLineArgs([
    { name: 'url' },
    { name: 'format', defaultValue: "png" },
-   { name: 'paper', defaultValue: "Letter" },
-   { name: 'landscape', defaultValue: false, type: Boolean },
-   { name: 'fullPage', defaultValue: false, type: Boolean },
-   { name: 'width' },
-   { name: 'height' },
+   { name: 'paper' },
+   { name: 'landscape', type: Boolean },
+   { name: 'fullPage', type: Boolean },
+   { name: 'viewport.width', type: Number },
+   { name: 'viewport.height', type: Number },
    { name: 'scrollbars' },
    { name: 'sleep' }
 ]);
@@ -18,16 +18,36 @@ const options = commandLineArgs([
   var output_filename = '/tmp/output.' + options.format;
   
 
+  //console.log(options);
+  //process.exit()
+
   const browser = await puppeteer.launch({args:['--no-sandbox']});
   const page = await browser.newPage();
-  await page.goto(options.url,{waitUntil:"networkidle","networkIdleTimeout" : 3000});
+ // await page.goto(options.url,{waitUntil:"networkidle","networkIdleTimeout" : 3000});
+
+
+ //const loaded = await page.waitForNavigation({
+ // waitUntil: 'load'
+ //});
+ //await loaded
+
+ await page.goto(options.url,{waitUntil:"load"})
+
+ // await page.injectFile(`${__dirname}/kits.js`);
+ //await page.addScriptTag({path:`${__dirname}/kits.js`})
+ //await page.waitForFunction(() => { if (window.page2image.scrollToBottom()) {return window.page2image.checkIfImageBeenLoaded() } return false; })
+ 
   //await page.goto(options.url);
 
  // await page.waitForNavigation({timeout:3000})
 
-  //page.evaluate(_ => {
-  //  window.scrollBy(0, window.innerHeight);
-  //});
+ // await page.evaluate(_ => {
+ //   window.scrollBy(0, window.innerHeight);
+ // });
+
+ // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
+ // await snooze(10000)
+
 
   var params = {
     path: output_filename,
@@ -44,8 +64,10 @@ const options = commandLineArgs([
     params.landscape = options.landscape
   }
 
-  const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
-  await snooze(10000)
+  if (options.hasOwnProperty('viewport.width') && options.hasOwnProperty('viewport.height')) {
+    page.setViewport({width: options['viewport.width'], height: options['viewport.height']})
+  }
+
 
   if (options.format == 'pdf') {
     await page.pdf(params)

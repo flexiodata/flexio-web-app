@@ -34,11 +34,11 @@ class Render extends \Flexio\Jobs\Base
         $height = $job_definition['params']['height'] ?? null;
 
         $full = $job_definition['params']['full'] ?? false;
-        $full = toBoolean($full) ? 'true':'false';
+        $full = toBoolean($full);
 
         $paper = ucfirst(strtolower($paper));
 
-        $landscape = $job_definition['params']['landscape'] ?? true;
+        $landscape = $job_definition['params']['landscape'] ?? false;
         $landscape = toBoolean($landscape);
 
         $scrollbars = $job_definition['params']['scrollbars'] ?? true;
@@ -75,9 +75,6 @@ class Render extends \Flexio\Jobs\Base
 
         $streamwriter = $outstream->getWriter();
 
-        $windowsize = '';
-        if (isset($width) && isset($height))
-            $windowsize = '--window-size="'.$width.'x'.$height.'"';
 
         $hide_scrollbars = '';
         if (!$scrollbars)
@@ -87,8 +84,9 @@ class Render extends \Flexio\Jobs\Base
                "--url $url ".
                "--format $format ".
                "--paper $paper ".
-               ($landscape?"--landscape ":"").
-               ($full?"--fullPage ":"").
+               ($landscape ? "--landscape ":"").
+               ($full ? "--fullPage ":"").
+               (isset($width) && isset($height) ? "--viewport.width $width --viewport.height $height ":"").
                "'";
 
         $fp = popen($cmd, "r");

@@ -17,5 +17,5 @@ RUN echo {} > /render/package.json
 RUN cd /render && npm install puppeteer
 RUN cd /render && npm install command-line-args
 COPY run.js /render/run.js
-
+COPY kits.js /render/kits.js
 
