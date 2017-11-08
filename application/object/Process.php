@@ -147,6 +147,9 @@ class Process extends \Flexio\Object\Base
             $mime_type = substr($mime_type, 0, $semicolon_pos);
         if ($mime_type != 'application/x-www-form-urlencoded' && $mime_type != 'multipart/form-data')
         {
+            $context = \Flexio\Object\Context::create();
+            $context->setParams($form_params);
+
             // post body is a data stream, post it as our pipe's stdin
             $first = true;
             $done = false;
@@ -157,18 +160,19 @@ class Process extends \Flexio\Object\Base
 
                 if ($data === false || strlen($data) != 32768)
                     $done = true;
+
                 if ($first && $data !== false && strlen($data) > 0)
                 {
-                    $stream = \Flexio\Object\Stream::create();
+                    $stream = \Flexio\Object\StreamMemory::create();
 
                     $stream_info = array();
                     $stream_info['mime_type'] = $mime_type;
                     $stream->set($stream_info);
 
-                    $context = $process->getInput();
+                    //$context = $process->getInput();
+                    //$context->setStdin($stream);
+                    //$process->setInput($context);
                     $context->setStdin($stream);
-                    $process->setInput($context);
-
                     $streamwriter = $stream->getWriter();
                 }
 
@@ -176,11 +180,8 @@ class Process extends \Flexio\Object\Base
                     $streamwriter->write($data);
             }
 
-
-            $input = \Flexio\Object\Context::create();
-            $input->setParams($form_params);
-            $process->setInput($input);
-
+            $process->setInput($context);
+            
             return;
         }
 
