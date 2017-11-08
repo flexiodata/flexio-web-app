@@ -84,5 +84,7 @@ const options = commandLineArgs([
   var rs = require('fs').createReadStream(output_filename);
   rs.pipe(process.stdout);
   
+  //const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
+  //await snooze(3000)
 })();
 
