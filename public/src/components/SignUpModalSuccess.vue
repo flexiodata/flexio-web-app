@@ -7,7 +7,7 @@
     <div class="mt4">
       <p class="lh-copy">Here are your account credentials which we use to verify your API requests.</p>
       <div class="flex flex-row mv3">
-        <div class="flex-fill pv2 ph3 f3 tc b black">{{api_key}}</div>
+        <div class="flex-fill pv2 ph3 f3 tc b black code">{{api_key}}</div>
       </div>
       <div class="mt3">
         <p class="lh-copy">We're thrilled to have you on board and can't wait to see what you build with Flex.io!</p>
