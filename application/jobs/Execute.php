@@ -374,8 +374,6 @@ class Execute extends \Flexio\Jobs\Base
         {
             $this->code = self::getFileContents($file);
             $this->code_base64 = base64_encode($this->code);
-
-            // TODO: perform sha256 security check on contents if 'integrity' parameter is specified
         }
          else
         {
