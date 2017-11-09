@@ -27,7 +27,7 @@ class Factory
         \Flexio\Jobs\Duplicate::MIME_TYPE => '\Flexio\Jobs\Duplicate',
         \Flexio\Jobs\Each::MIME_TYPE      => '\Flexio\Jobs\Each',
         \Flexio\Jobs\Echo1::MIME_TYPE     => '\Flexio\Jobs\Echo1',
-        \Flexio\Jobs\EmailSend::MIME_TYPE => '\Flexio\Jobs\EmailSend',
+        \Flexio\Jobs\Email::MIME_TYPE     => '\Flexio\Jobs\Email',
         \Flexio\Jobs\Request::MIME_TYPE   => '\Flexio\Jobs\Request',
         \Flexio\Jobs\Output::MIME_TYPE    => '\Flexio\Jobs\Output',
         \Flexio\Jobs\Filter::MIME_TYPE    => '\Flexio\Jobs\Filter',

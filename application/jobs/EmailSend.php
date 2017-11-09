@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class EmailSend extends \Flexio\Jobs\Base
+class Email extends \Flexio\Jobs\Base
 {
     const DATA_MODE_NONE       = 'none';
     const DATA_MODE_BODY       = 'body';
