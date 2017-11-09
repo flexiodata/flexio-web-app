@@ -28,18 +28,11 @@ class Factory
 
         // if we have a cached connection, use it
         if ($connection_hash !== false && isset($g_store->connections[$connection_hash]))
-        {
-            $service = $g_store->connections[$connection_hash];
-            if ($service->isOk())
-                return $service;
-        }
+            return $g_store->connections[$connection_hash];
 
         // get the connection type and the corresponding service
         $connection_type = $connection_properties['connection_type'] ?? '';
-        $connection_info = $connection_properties['connection_info'] ?? false;
-
-        if ($connection_info === false)
-            return false;
+        $connection_info = $connection_properties['connection_info'] ?? array();
 
         switch ($connection_type)
         {
