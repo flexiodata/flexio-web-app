@@ -534,7 +534,7 @@ class Process extends \Flexio\Object\Base
 
             // execute the step
             $log_eid = $this->startLog($task, $context);  // TODO: only log if in debug mode?
-            $this->executeStep($task, $context);
+            $this->executeTask($task, $context);
             $this->finishLog($log_eid, $task, $context); // TODO: only log if in debug mode?
             $first_task = false;
 
@@ -569,7 +569,7 @@ class Process extends \Flexio\Object\Base
         $this->clearCache();
     }
 
-    private function executeStep(array $task, \Flexio\Object\Context &$context)
+    private function executeTask(array $task, \Flexio\Object\Context &$context)
     {
         // if the process is something besides running, we're done
         $status = $this->getModel()->process->getProcessStatus($this->getEid());
