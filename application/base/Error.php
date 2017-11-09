@@ -31,6 +31,7 @@ class Error
     const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
     const RATE_LIMIT_EXCEEDED    =  'rate-limit-exceeded';
     const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
+    const INTEGRITY_FAILED       =  'integrity-failed';
     const CONNECTION_FAILED      =  'connection-failed';
     const CREATE_FAILED          =  'create-failed';
     const READ_FAILED            =  'read-failed';
@@ -56,6 +57,7 @@ class Error
             case self::NO_MODEL:               return 'Model not available';
             case self::NO_SERVICE:             return 'Service not available';
             case self::NO_OBJECT:              return 'Object not available';
+            case self::INTEGRITY_FAILED:       return 'Integrity check failed';
             case self::CONNECTION_FAILED:      return 'Could not connect';
             case self::INVALID_SYNTAX:         return 'Invalid syntax';
             case self::MISSING_PARAMETER:      return 'Missing parameter';

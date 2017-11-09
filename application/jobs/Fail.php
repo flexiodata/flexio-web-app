@@ -21,7 +21,7 @@ class Fail extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         $job_definition = $this->getProperties();
         $code = $job_definition['params']['code'] ?? '';
         $message = $job_definition['params']['message'] ?? '';
@@ -42,6 +42,7 @@ class Fail extends \Flexio\Jobs\Base
             case \Flexio\Base\Error::INVALID_PARAMETER:
             case \Flexio\Base\Error::INVALID_SYNTAX:
             case \Flexio\Base\Error::NO_OBJECT:
+            case \Flexio\Base\Error::INTEGRITY_FAILED;
             case \Flexio\Base\Error::CONNECTION_FAILED:
             case \Flexio\Base\Error::CREATE_FAILED:
             case \Flexio\Base\Error::DELETE_FAILED:
