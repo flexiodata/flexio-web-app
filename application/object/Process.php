@@ -255,7 +255,6 @@ class Process extends \Flexio\Object\Base
         $object = self::load($eid);
 
         // run the job
-        //$object->prepare();
         $object->execute();
         return true;
     }
