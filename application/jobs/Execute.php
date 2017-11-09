@@ -426,7 +426,7 @@ class Execute extends \Flexio\Jobs\Base
             }
 
             if ($code_hashvalue !== $integrity_hashvalue)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INTEGRITY_FAILED);
         }
 
         if ($this->lang == 'python')
