@@ -25,6 +25,7 @@ class Factory
         \Flexio\Jobs\Create::MIME_TYPE    => '\Flexio\Jobs\Create',
         \Flexio\Jobs\Distinct::MIME_TYPE  => '\Flexio\Jobs\Distinct',
         \Flexio\Jobs\Duplicate::MIME_TYPE => '\Flexio\Jobs\Duplicate',
+        \Flexio\Jobs\Each::MIME_TYPE      => '\Flexio\Jobs\Each',
         \Flexio\Jobs\Echo1::MIME_TYPE     => '\Flexio\Jobs\Echo1',
         \Flexio\Jobs\EmailSend::MIME_TYPE => '\Flexio\Jobs\EmailSend',
         \Flexio\Jobs\Request::MIME_TYPE   => '\Flexio\Jobs\Request',
