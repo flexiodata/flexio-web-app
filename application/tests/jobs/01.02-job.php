@@ -137,12 +137,6 @@ class Test
         TestCheck::assertBoolean('A.19', '\Flexio\Jobs\Execute schema format',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $schema = \Flexio\Jobs\Prompt::SCHEMA;
-        $actual = \Flexio\Base\ValidatorSchema::checkSchema($schema)->hasErrors();
-        $expected = false;
-        TestCheck::assertBoolean('A.20', '\Flexio\Jobs\Prompt schema format',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $schema = \Flexio\Jobs\Rename::SCHEMA;
         $actual = \Flexio\Base\ValidatorSchema::checkSchema($schema)->hasErrors();
         $expected = false;

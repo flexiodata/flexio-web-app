@@ -156,13 +156,6 @@ class Test
         TestCheck::assertBoolean('A.19', '\Flexio\Jobs\Execute definition type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $definition = json_decode(\Flexio\Jobs\Prompt::TEMPLATE,true);
-        $mime_type = $definition['type'];
-        $actual = $mime_type == \Flexio\Jobs\Prompt::MIME_TYPE && $mime_type == 'flexio.prompt';
-        $expected = true;
-        TestCheck::assertBoolean('A.20', '\Flexio\Jobs\Prompt definition type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $definition = json_decode(\Flexio\Jobs\Rename::TEMPLATE,true);
         $mime_type = $definition['type'];
         $actual = $mime_type == \Flexio\Jobs\Rename::MIME_TYPE && $mime_type == 'flexio.rename';

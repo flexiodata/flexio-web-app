@@ -39,7 +39,6 @@ class Factory
         \Flexio\Jobs\Merge::MIME_TYPE     => '\Flexio\Jobs\Merge',
         \Flexio\Jobs\Nop::MIME_TYPE       => '\Flexio\Jobs\Nop',
         \Flexio\Jobs\Fail::MIME_TYPE      => '\Flexio\Jobs\Fail',
-        \Flexio\Jobs\Prompt::MIME_TYPE    => '\Flexio\Jobs\Prompt',
         \Flexio\Jobs\Execute::MIME_TYPE   => '\Flexio\Jobs\Execute',
         \Flexio\Jobs\Exit1::MIME_TYPE     => '\Flexio\Jobs\Exit1',
         \Flexio\Jobs\Rename::MIME_TYPE    => '\Flexio\Jobs\Rename',
