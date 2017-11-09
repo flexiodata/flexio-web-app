@@ -358,7 +358,7 @@ class Execute extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         $this->setContext($context);
 
         // properties
@@ -606,7 +606,7 @@ class Execute extends \Flexio\Jobs\Base
         if ($this->runjob_stdin === null)
             $this->runjob_stdin = $this->getContext()->getStdin();
 
-        $job = \Flexio\Object\Process::createJob($task);
+        $job = \Flexio\Jobs\Factory::create($task);
 
         $runjob_stdout = \Flexio\Object\StreamMemory::create();
 
