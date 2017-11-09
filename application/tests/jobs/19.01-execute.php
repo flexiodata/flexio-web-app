@@ -22,24 +22,6 @@ class Test
     {
         // TODO: placeholder job to test basic functionality; fill out tests
 
-        // SETUP
-        $create = json_decode('{
-            "type": "flexio.create",
-            "params": {
-                "name": "table",
-                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
-                "columns": [
-                    { "name": "c1", "type": "character", "width": 3 }
-                ],
-                "content": [
-                    {"c1" : "a"},
-                    {"c1" : "b"}
-                ]
-            }
-        }',true);
-
-
-
         // TEST: Base Execute Job Tests
 
         // BEGIN TEST
@@ -48,7 +30,7 @@ def flexio_handler(input,output):
     output.content_type = "text/plain"
     output.write("Hello, World!")
 EOD;
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "python",
@@ -67,7 +49,7 @@ exports.flexio_handler = function(input, output) {
     output.write('Hello, World!')
 }
 EOD;
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "javascript",
@@ -85,7 +67,7 @@ EOD;
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "javascript",
@@ -100,7 +82,7 @@ EOD;
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "javascript",
@@ -115,7 +97,7 @@ EOD;
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,You!');}";
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "javascript",
@@ -130,7 +112,7 @@ EOD;
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "python",
@@ -145,7 +127,7 @@ EOD;
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "python",
@@ -164,7 +146,7 @@ EOD;
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "javascript",
@@ -179,7 +161,7 @@ EOD;
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,You!');}";
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "javascript",
@@ -198,7 +180,7 @@ EOD;
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "javascript",
@@ -213,7 +195,7 @@ EOD;
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,You!');}";
-        $task = array($create, json_decode('{
+        $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
                 "lang": "javascript",
@@ -225,5 +207,36 @@ EOD;
         $actual = $process->getProcessStatus();
         $expected = \Model::PROCESS_STATUS_FAILED;
         TestCheck::assertString('D.2', 'Execute Job; check code integrity; sha512 integrity failure',  $actual, $expected, $results);
+
+
+
+        // TEST: Base Execute Job Code SHA512 Integrity Check
+
+        // BEGIN TEST
+        $task = array(json_decode('{
+            "type": "flexio.execute",
+            "params": {
+                "lang": "python",
+                "path": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = $process->getStdout()->content(0,50);
+        $expected = 'Hello, World!';
+        TestCheck::assertString('E.1', 'Execute Job; remote execution',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = array(json_decode('{
+            "type": "flexio.execute",
+            "params": {
+                "lang": "python",
+                "path": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py",
+                "integrity": "sha256-57cd37cd9e5dd6e108fb8f5834aa6479723d1c0f938ee211d55aaa18c71b48d4"
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = $process->getStdout()->content(0,50);
+        $expected = 'Hello, World!';
+        TestCheck::assertString('E.2', 'Execute Job; remote execution with sha256 check',  $actual, $expected, $results);
     }
 }
