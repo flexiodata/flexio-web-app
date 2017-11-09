@@ -18,52 +18,36 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class PipelineDeals implements \Flexio\Services\IConnection
+class PipelineDeals implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     private $is_ok = false;
-    private $apikey = '';
+    private $access_token = '';
     private $pagesize = 200; // rows to request per request; 200 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; pipeline deals allows up to 5 requests per second
 
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\PipelineDeals
     {
-        $service = new self;
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'access_token' => array('type' => 'string', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        if (isset($params))
-            $service->connect($params);
+        $validated_params = $validator->getParams();
+        $access_token = $validated_params['access_token'];
+
+        $service = new self;
+        if ($service->initialize($access_token) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
     }
 
-    public function connect(array $params) : bool
-    {
-        $this->close();
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-        if (!isset($params['access_token']))
-            return false;
-
-        $apikey = $params['access_token'];
-        $this->initialize($apikey);
-        return $this->isOk();
-    }
-
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->apikey = '';
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         if (!$this->isOk())
             return array();
@@ -91,13 +75,6 @@ class PipelineDeals implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
-    }
-
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -138,7 +115,6 @@ class PipelineDeals implements \Flexio\Services\IConnection
         // TODO: implement
     }
 
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
@@ -173,8 +149,8 @@ class PipelineDeals implements \Flexio\Services\IConnection
         $location = $definition['location'];
         $content_root = $definition['content_root'];
 
-        $apikey = $this->apikey;
-        $request = str_replace('{key}', $apikey, $location);
+        $access_token = $this->access_token;
+        $request = str_replace('{key}', $access_token, $location);
         $request .= "&page=$page";
         $request .= "&per_page=$this->pagesize";
 
@@ -262,13 +238,27 @@ class PipelineDeals implements \Flexio\Services\IConnection
         return $currentpath;
     }
 
-    private function initialize(string $apikey)
+    private function connect() : bool
+    {
+        $access_token = $this->access_token;
+        if ($this->initialize($access_token) === false)
+            return false;
+
+        return true;
+    }
+
+    private function initialize(string $access_token) : bool
     {
         // TODO: test api key
 
-        $this->close();
-        $this->apikey = $apikey;
+        $this->access_token = $access_token;
         $this->is_ok = true;
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private function lookupDefinition(string $path)

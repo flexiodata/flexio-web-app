@@ -18,64 +18,45 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Socrata implements \Flexio\Services\IConnection
+class Socrata implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
-    private $config = array();
+    private $host;
+    private $port;
     private $base_url = null;
     private $is_ok = false;
 
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\Socrata
-    {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            return true;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $this->initialize($validated_params['host'], intval($validated_params['port']));
-        return $this->isOk();
+        $host = $validated_params['host'];
+        $port = intval($validated_params['port']);
+
+        $service = new self;
+        if ($service->initialize($host, $port) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
     }
 
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function close()
-    {
-        $this->base_url = null;
-        $this->is_ok = false;
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         // TODO: filter based on a specified path
 
         if (!$this->isOk())
         {
             // try to reconnect
-            $this->connect($this->config);
+            $this->connect();
             if (!$this->isOk())
                 return array();
         }
@@ -179,13 +160,6 @@ class Socrata implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
-    }
-
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -295,7 +269,7 @@ class Socrata implements \Flexio\Services\IConnection
         if (!$this->isOk())
         {
             // try to reconnect
-            $this->connect($this->config);
+            $this->connect();
             if (!$this->isOk())
                 return array();
         }
@@ -372,12 +346,21 @@ class Socrata implements \Flexio\Services\IConnection
         return $res;
     }
 
-    private function initialize(string $host, int $port)
+    private function connect() : bool
     {
-        $this->close();
+        $host = $this->host;
+        $port = $this->port;
 
-        $this->config = array('host' => $host,
-                              'username' => $port);
+        if ($this->initialize($host, $port) === false)
+            return false;
+
+        return true;
+    }
+
+    private function initialize(string $host, int $port) : bool
+    {
+        $this->host = $host;
+        $this->port = $port;
 
         $url = $host;
         if (false === strpos($url, "://"))
@@ -393,5 +376,11 @@ class Socrata implements \Flexio\Services\IConnection
 
         $this->base_url = $url;
         $this->is_ok = true;
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 }

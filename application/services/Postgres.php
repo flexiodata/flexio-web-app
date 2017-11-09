@@ -18,38 +18,17 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Postgres implements \Flexio\Services\IConnection
+class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
     private $db = null;
     private $host, $port, $database, $username, $password;
 
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\Postgres
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
-        $this->close();
-
         if (isset($params['port']))
-            $params['port'] = (string)$params['port'];
-/*
+        $params['port'] = (string)$params['port'];
+
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
@@ -59,31 +38,27 @@ class Postgres implements \Flexio\Services\IConnection
                 'database' => array('type' => 'string', 'required' => true),
                 'path' => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         $validated_params = $validator->getParams();
-*/
-        $this->initialize($params['host'], intval($params['port']), $params['database'], $params['username'], $params['password']);
+        $host = $validated_params['host'];
+        $port = intval($validated_params['port']);
+        $database = $validated_params['database'];
+        $username = $validated_params['username'];
+        $password = $validated_params['password'];
 
-        return $this->isOk();
+        $service = new self;
+        if ($service->initialize($host, $port, $database, $username, $password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
     }
 
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->db = null;
-        $this->host = null;
-        $this->port = null;
-        $this->database = null;
-        $this->username = null;
-        $this->password = null;
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         $db = $this->newConnection();
 
@@ -114,13 +89,6 @@ class Postgres implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
-    }
-
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -173,7 +141,6 @@ class Postgres implements \Flexio\Services\IConnection
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
@@ -213,6 +180,20 @@ class Postgres implements \Flexio\Services\IConnection
         return null;
     }
 
+    private function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+        $database = $this->database;
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($this->initialize($host, $port, $database, $username, $password) === false)
+            return false;
+
+        return true;
+    }
+
     private function initialize(string $host, int $port, string $database, string $username, string $password) : bool
     {
         $this->host = $host;
@@ -224,6 +205,11 @@ class Postgres implements \Flexio\Services\IConnection
         $this->db = $this->newConnection();
         $this->is_ok = is_null($this->db) ? false : true;
 
+        return $this->is_ok;
+    }
+
+    private function isOk() : bool
+    {
         return $this->is_ok;
     }
 

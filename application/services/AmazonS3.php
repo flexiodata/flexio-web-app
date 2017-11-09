@@ -18,12 +18,8 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class AmazonS3 implements \Flexio\Services\IConnection
+class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
     private $bucket = '';
     private $accesskey = '';
@@ -33,24 +29,8 @@ class AmazonS3 implements \Flexio\Services\IConnection
     private $aws = null;
     private $s3 = null;
 
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\AmazonS3
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
-        $this->close();
-
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'region' => array('type' => 'string', 'required' => true),
@@ -58,33 +38,26 @@ class AmazonS3 implements \Flexio\Services\IConnection
                 'accesskey' => array('type' => 'string', 'required' => true),
                 'secretkey' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
         $region = $validated_params['region'];
         $bucket = $validated_params['bucket'];
         $accesskey = $validated_params['accesskey'];
         $secretkey = $validated_params['secretkey'];
-        $this->initialize($region, $bucket, $accesskey, $secretkey);
-        return $this->isOk();
+
+        $service = new self;
+        if ($service->initialize($region, $bucket, $accesskey, $secretkey) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
     }
 
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->region = '';
-        $this->bucket = '';
-        $this->accesskey = '';
-        $this->secretkey = '';
-        $this->s3 = null;
-   }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         if (!$this->isOk())
             return array();
@@ -204,13 +177,6 @@ class AmazonS3 implements \Flexio\Services\IConnection
         return true;
     }
 
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
-    }
-
     public function read(array $params, callable $callback)
     {
         // TODO: let exceptions through on failure?
@@ -318,19 +284,31 @@ class AmazonS3 implements \Flexio\Services\IConnection
         return true;
     }
 
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function initialize(string $region, string $bucket, string $accesskey, string $secretkey)
+    private function connect() : bool
+    {
+        $region = $this->region;
+        $bucket = $this->bucket;
+        $accesskey = $this->accesskey;
+        $secretkey = $this->secretkey;
+
+        if ($this->initialize($region, $bucket, $accesskey, $secretkey) === false)
+            return false;
+
+        return true;
+    }
+
+    private function initialize(string $region, string $bucket, string $accesskey, string $secretkey) : bool
     {
         $this->close();
         $this->region = $region;
         $this->bucket = $bucket;
         $this->accesskey = $accesskey;
         $this->secretkey = $secretkey;
-        $this->is_ok = true;
+        $this->s3 = null;
 
         if (strlen($this->region) == 0)
             $this->region = 'us-east-1';
@@ -346,9 +324,15 @@ class AmazonS3 implements \Flexio\Services\IConnection
             'credentials' => $credentials
         ]);
 
-        if ($this->s3)
-        {
-            $this->is_ok = true;
-        }
+        if (!$this->s3)
+            return false;
+
+        $this->is_ok = true;
+        return true;
+   }
+
+   private function isOk() : bool
+   {
+       return $this->is_ok;
    }
 }

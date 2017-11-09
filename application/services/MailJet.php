@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class MailJet implements \Flexio\Services\IConnection
+class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     private $is_ok = false;
     private $username = '';
@@ -26,50 +26,31 @@ class MailJet implements \Flexio\Services\IConnection
     private $pagesize = 1; // rows to request per request; 1000 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; mailjet may limit the requests per minute, so set this to something reasonable
 
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\MailJet
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
-        $this->close();
-
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $this->initialize($validated_params);
-        return $this->isOk();
+        $username = $validated_params['username'];
+        $password = $validated_params['password'];
+
+        $service = new self;
+        if ($service->initialize($uername, $password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
     }
 
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->username = '';
-        $this->password = '';
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         if (!$this->isOk())
             return array();
@@ -97,13 +78,6 @@ class MailJet implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
-    }
-
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -143,7 +117,6 @@ class MailJet implements \Flexio\Services\IConnection
 
         // TODO: implement
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions
@@ -293,14 +266,30 @@ class MailJet implements \Flexio\Services\IConnection
         return $result;
     }
 
-    private function initialize(array $params)
+    private function connect() : bool
+    {
+        $username = $this->username;
+        $password = $this->password;
+
+        if ($service->initialize($username, $password) === false)
+            return false;
+
+        return true;
+    }
+
+    private function initialize(string $username, string $password) : bool
     {
         // TODO: test api key
 
-        $this->close();
-        $this->username = $params['username'] ?? '';
-        $this->password = $params['password'] ?? '';
+        $this->username = $username;
+        $this->password = $password;
         $this->is_ok = true;
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private function lookupDefinition(string $path)

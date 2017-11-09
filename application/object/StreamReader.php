@@ -279,9 +279,6 @@ class StreamFileReader
 
     public function close()
     {
-        //if ($this->service !== false)
-        //    $this->service->close();
-
         $this->service = false;
         $this->iterator = false;
         $this->read_buffer = '';
@@ -446,9 +443,6 @@ class StreamTableReader
 
     public function close()
     {
-        //if ($this->service !== false)
-        //    $this->service->close();
-
         $this->service = false;
         $this->iterator = false;
         $this->read_buffer = '';

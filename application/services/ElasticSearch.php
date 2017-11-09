@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class ElasticSearch implements \Flexio\Services\IConnection
+class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
     private $is_ok = false;
     private $host = '';
@@ -26,27 +26,11 @@ class ElasticSearch implements \Flexio\Services\IConnection
     private $user = '';
     private $password = '';
 
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\ElasticSearch
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
-        $this->close();
 
         if (isset($params['port']))
-            $params['port'] = (string)$params['port'];
+        $params['port'] = (string)$params['port'];
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
@@ -55,28 +39,26 @@ class ElasticSearch implements \Flexio\Services\IConnection
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $this->initialize($validated_params['host'], intval($validated_params['port']), $validated_params['username'], $validated_params['password']);
-        return $this->isOk();
+        $host = $validated_params['host'];
+        $port = intval($validated_params['port']);
+        $username = $validated_params['username'];
+        $password = $validated_params['password'];
+
+        $service = new self;
+        if ($service->initialize($host, $port, $username, $password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
     }
 
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->host = '';
-        $this->port = '';
-        $this->user = '';
-        $this->password = '';
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         // note: right now, the list is flat; path isn't used
 
@@ -126,13 +108,6 @@ class ElasticSearch implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
-    }
-
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -188,7 +163,6 @@ class ElasticSearch implements \Flexio\Services\IConnection
         $rows_to_write = array();
         return true;
     }
-
 
     ////////////////////////////////////////////////////////////
     // additional functions
@@ -392,19 +366,36 @@ class ElasticSearch implements \Flexio\Services\IConnection
         }
     }
 
+    private function connect() : bool
+    {
+        $host = $this->host;
+        $port = $this->port;
+        $user = $this->user;
+        $password = $this->password;
+
+        if ($this->initialize($host, $port, $username, $password) === false)
+            return false;
+
+        return true;
+    }
+
     private function initialize(string $host, int $port, string $username, string $password) : bool
     {
-        $this->close();
-
         $this->host = $host;
         $this->port = $port;
         $this->username = $username;
         $this->password = $password;
+        $this->is_ok = false;
 
         if ($this->testConnection() === false)
             return false;
 
         $this->is_ok = true;
+        return $this->is_ok;
+    }
+
+    private function isOk() : bool
+    {
         return $this->is_ok;
     }
 

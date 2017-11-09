@@ -35,7 +35,7 @@ class Input extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // store a reference to the context
         $this->setContext($context);
 
@@ -126,7 +126,7 @@ class Input extends \Flexio\Jobs\Base
             else if ($connection_type == \Model::CONNECTION_TYPE_RSS)
                 $service = \Flexio\Services\Http::create();
             else
-                $service = \Flexio\Services\Store::load($connection_info);
+                $service = \Flexio\Services\Factory::create($connection_info);
         }
          else
         {
@@ -458,7 +458,7 @@ class Input extends \Flexio\Jobs\Base
         {
             $vfs = new \Flexio\Services\Vfs();
 
-            $files_in_directory = $vfs->listObjects($directory);
+            $files_in_directory = $vfs->list($directory);
         }
          else
         {
@@ -467,11 +467,11 @@ class Input extends \Flexio\Jobs\Base
             // to allow directory searches
 
             // get the service; TODO: error if we can't do it? similar to not getting the path?
-            $service = \Flexio\Services\Store::load($connection_info);
+            $service = \Flexio\Services\Factory::create($connection_info);
             if ($service === false)
                 return array();
 
-            $files_in_directory = $service->listObjects($directory);
+            $files_in_directory = $service->list($directory);
         }
 
 

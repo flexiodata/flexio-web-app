@@ -19,22 +19,13 @@ namespace Flexio\Services;
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class GoogleSheets implements \Flexio\Services\IConnection
+class GoogleSheets implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
     private $access_token = '';
     private $refresh_token = '';
     private $updated = '';
     private $expires = 0;
-
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
 
     public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
     {
@@ -44,25 +35,11 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return self::initialize($params);
     }
 
-    public function connect(array $params) : bool
-    {
-        return true;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->access_token = '';
-        $this->refresh_token = '';
-        $this->expires = 0;
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         $spreadsheets = $this->getSpreadsheets();
 
@@ -133,13 +110,6 @@ class GoogleSheets implements \Flexio\Services\IConnection
         return false;
     }
 
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
-    }
-
     public function read(array $params, callable $callback)
     {
         $spreadsheet_id = null;
@@ -189,14 +159,11 @@ class GoogleSheets implements \Flexio\Services\IConnection
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-
     ////////////////////////////////////////////////////////////
     // Google Sheets API abstraction
     ////////////////////////////////////////////////////////////
 
     private $spreadsheets = [];
-
-
 
     public function getSpreadsheets() // TODO: set return type
     {
@@ -287,7 +254,7 @@ class GoogleSheets implements \Flexio\Services\IConnection
         if (count($parts) < 1)
             return false;
 
-        $objs = $this->listObjects('/'.$parts[0]);
+        $objs = $this->list('/'.$parts[0]);
         if (count($objs) < 1)
             return false;
 
@@ -413,6 +380,16 @@ class GoogleSheets implements \Flexio\Services\IConnection
             return true;
 
         return false;
+    }
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private static function initialize(array $params)

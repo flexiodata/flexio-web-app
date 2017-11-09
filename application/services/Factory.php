@@ -16,9 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Store
+class Factory
 {
-    public static function load(array $connection_properties)
+    public static function create(array $connection_properties)
     {
         global $g_store;
 

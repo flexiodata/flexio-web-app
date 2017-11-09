@@ -18,43 +18,19 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Http implements \Flexio\Services\IConnection
+class Http implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
-
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\Http
     {
         $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
         return $service;
     }
 
-    public function connect(array $params) : bool
-    {
-        return true;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function isOk() : bool
-    {
-        return true;
-    }
-
-    public function close()
-    {
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
@@ -66,13 +42,6 @@ class Http implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
-    }
-
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -129,5 +98,13 @@ class Http implements \Flexio\Services\IConnection
     // additional functions
     ////////////////////////////////////////////////////////////
 
+    private function connect() : bool
+    {
+        return true;
+    }
 
+    private function isOk() : bool
+    {
+        return true;
+    }
 }

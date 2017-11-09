@@ -25,49 +25,25 @@ if (!isset($GLOBALS['simplepie_included']))
 */
 
 require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'autoloader.php';
-
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 //require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'idn' . DIRECTORY_SEPARATOR . 'idna_convert.class.php';
 
 
 
-class Rss implements \Flexio\Services\IConnection
+class Rss implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
-
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\Rss
     {
         $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
         return $service;
     }
 
-    public function connect(array $params) : bool
-    {
-        return true;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function isOk() : bool
-    {
-        return true;
-    }
-
-    public function close()
-    {
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         // TODO: show the RSS links for a given URL?
         return array();
@@ -78,13 +54,6 @@ class Rss implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
-    }
-
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -132,7 +101,6 @@ class Rss implements \Flexio\Services\IConnection
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
@@ -151,4 +119,15 @@ class Rss implements \Flexio\Services\IConnection
 
         return $structure;
     }
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return true;
+    }
+
 }

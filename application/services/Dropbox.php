@@ -19,19 +19,10 @@ namespace Flexio\Services;
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Dropbox implements \Flexio\Services\IConnection
+class Dropbox implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
     private $access_token = '';
-
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
 
     public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
     {
@@ -41,23 +32,11 @@ class Dropbox implements \Flexio\Services\IConnection
         return self::initialize($params);
     }
 
-    public function connect(array $params) : bool
-    {
-        return true;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
-
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->access_token = '';
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         if (!$this->authenticated())
             return array();
@@ -114,13 +93,6 @@ class Dropbox implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
-    }
-
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -248,7 +220,6 @@ class Dropbox implements \Flexio\Services\IConnection
 
     }
 
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
@@ -266,6 +237,16 @@ class Dropbox implements \Flexio\Services\IConnection
             return true;
 
         return false;
+    }
+
+    private function connect() : bool
+    {
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private static function initialize(array $params)

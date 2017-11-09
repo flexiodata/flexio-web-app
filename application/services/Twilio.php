@@ -18,64 +18,39 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Twilio implements \Flexio\Services\IConnection
+class Twilio implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 {
-    ////////////////////////////////////////////////////////////
-    // member variables
-    ////////////////////////////////////////////////////////////
-
     private $is_ok = false;
-    private $apikey = '';
-    private $apitoken = '';
+    private $key = '';
+    private $access_token = '';
     private $pagesize = 200; // rows to request per request; 200 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; pipeline deals allows up to 5 requests per second
 
-
-    ////////////////////////////////////////////////////////////
-    // IConnection interface
-    ////////////////////////////////////////////////////////////
-
     public static function create(array $params = null) : \Flexio\Services\Twilio
     {
-        $service = new self;
-
-        if (isset($params))
-            $service->connect($params);
-
-        return $service;
-    }
-
-    public function connect(array $params) : bool
-    {
-        $this->close();
-
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'key'   => array('type' => 'string', 'required' => true),
                 'access_token' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $apikey = $validated_params['key'];
-        $apitoken = $validated_params['access_token'];
-        $this->initialize($apikey, $apitoken);
-        return $this->isOk();
+        $key = $validated_params['key'];
+        $access_token = $validated_params['access_token'];
+
+        $service = new self;
+        if ($service->initialize($key, $access_token) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
     }
 
-    public function isOk() : bool
-    {
-        return $this->is_ok;
-    }
+    ////////////////////////////////////////////////////////////
+    // IFileSystem interface
+    ////////////////////////////////////////////////////////////
 
-    public function close()
-    {
-        $this->is_ok = false;
-        $this->apikey = '';
-        $this->apitoken = '';
-    }
-
-    public function listObjects(string $path = '') : array
+    public function list(string $path = '') : array
     {
         if (!$this->isOk())
             return array();
@@ -103,13 +78,6 @@ class Twilio implements \Flexio\Services\IConnection
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
-    }
-
-    public function getInfo(string $path) : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return array();
     }
 
     public function read(array $params, callable $callback)
@@ -150,7 +118,6 @@ class Twilio implements \Flexio\Services\IConnection
         // TODO: implement
     }
 
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
@@ -185,10 +152,10 @@ class Twilio implements \Flexio\Services\IConnection
         $location = $definition['location'];
         $content_root = $definition['content_root'];
 
-        $apikey = $this->apikey;
-        $apitoken = $this->apitoken;
-        $apiauth = "$apikey:$apitoken";
-        $request = str_replace('{key}', $apikey, $location);
+        $key = $this->key;
+        $access_token = $this->access_token;
+        $apiauth = "$key:$access_token";
+        $request = str_replace('{key}', $key, $location);
         $request .= "&Page=$page";
         $request .= "?PageSize=$this->pagesize";
 
@@ -273,14 +240,30 @@ class Twilio implements \Flexio\Services\IConnection
         return $currentpath;
     }
 
-    private function initialize(string $apikey, string $apitoken)
+    private function connect() : bool
+    {
+        $key = $this->key;
+        $access_token = $this->access_token;
+
+        if ($this->initialize($key, $access_token) === false)
+            return false;
+
+        return false;
+    }
+
+    private function initialize(string $key, string $access_token) : bool
     {
         // TODO: test api key
 
-        $this->close();
-        $this->apikey = $apikey;
-        $this->apitoken = $apitoken;
+        $this->key = $key;
+        $this->access_token = $access_token;
         $this->is_ok = true;
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        return $this->is_ok;
     }
 
     private function lookupDefinition(string $path)
