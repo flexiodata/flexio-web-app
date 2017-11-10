@@ -571,8 +571,10 @@ function checkModuleInit(callback) {
         inited = true
         proxy.invokeAsync('getInputStreamInfo', ['_fxstdin_'], function(err, stdin_stream_info) {
             input = new Input(stdin_stream_info)
+            context.input = input
             proxy.invokeAsync('getOutputStreamInfo', ['_fxstdout_'], function(err, stdout_stream_info) {
                 output = new Output(stdout_stream_info)
+                context.output = output
                 callback()
             })
         })
@@ -584,7 +586,7 @@ function checkModuleInit(callback) {
 
 function run(handler) {
     checkModuleInit(function() {
-        handler(input, output, context)
+        handler(context)
     })
 }
 
