@@ -29,7 +29,7 @@ class Email extends \Flexio\Jobs\Base
     {
         parent::run($context);
 
-        $this->sendEmail();
+        $this->sendEmail($context);
     }
 
     private function sendEmail(\Flexio\Object\Context &$context)
