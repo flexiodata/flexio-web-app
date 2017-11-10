@@ -418,6 +418,12 @@ class Output(object):
         proxy.invoke('insertRows', [self._handle, rows])
 
 
+class Context(object):
+    def __init__(self, input, output):
+        self.input = input
+        self.output = output
+
+
 
 def run(handler):
 
@@ -427,5 +433,8 @@ def run(handler):
     input = Input(stdin_stream_info)
     output = Output(stdout_stream_info)
     
-    handler(input, output)
+    context = Context(input, output)
+
+    handler(context)
+
 
