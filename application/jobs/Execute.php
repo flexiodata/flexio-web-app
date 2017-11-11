@@ -15,7 +15,18 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
-
+/*
+// EXAMPLE:
+{
+    "type": "flexio.execute",
+    "params": {
+        "lang": "python",
+        "code": "<base64 encoded>",
+        "path": "",
+        "integrity": ""
+    }
+}
+*/
 
 class BinaryData
 {
@@ -902,17 +913,6 @@ class Execute extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.execute",
-        "params": {
-            "lang": "python",
-            "code": "<base64 encoded>",
-            "path": "",
-            "integrity": ""
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

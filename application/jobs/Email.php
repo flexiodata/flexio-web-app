@@ -15,6 +15,24 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+EXAMPLE:
+// 'data' can be one of the following: "none" / "body" / "attachment"
+// if 'body' the file will be appended to your body_text
+// if 'none' the data file will be ignored and you'll just be sending an email
+// if 'attachment' the data file will be attached to the email
+// if 'link' the data file
+{
+    "type": "flexio.email",
+    "params": {
+        "to": "",
+        "subject": "",
+        "body_text": "",
+        "body_html": "",
+        "data": ""
+    }
+}
+*/
 
 class Email extends \Flexio\Jobs\Base
 {
@@ -196,23 +214,6 @@ class Email extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.email",
-        "params": {
-            "to": "",
-            "subject": "",
-            "body_text": "",
-            "body_html": "",
-            "data": ""
-        }
-    }
-EOD;
-    // 'data' can be one of the following: "none" / "body" / "attachment"
-    // if 'body' the file will be appended to your body_text
-    // if 'none' the data file will be ignored and you'll just be sending an email
-    // if 'attachment' the data file will be attached to the email
-    // if 'link' the data file
     const SCHEMA = <<<EOD
     {
         "type": "object",

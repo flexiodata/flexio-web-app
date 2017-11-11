@@ -15,6 +15,18 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.select",
+    "params": {
+        "files" : [
+        ],
+        "columns": [
+        ]
+    }
+}
+*/
 
 class Select extends \Flexio\Jobs\Base
 {
@@ -121,17 +133,6 @@ class Select extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.select",
-        "params": {
-            "files" : [
-            ],
-            "columns": [
-            ]
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

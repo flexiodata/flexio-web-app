@@ -15,6 +15,16 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+EXAMPLE:
+{
+    "type": "flexio.merge",
+    "params": {
+        "matching_filenames": true,
+        "matching_columnames": true
+    }
+}
+*/
 
 class Merge extends \Flexio\Jobs\Base
 {
@@ -148,16 +158,6 @@ class Merge extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.merge",
-        "params": {
-            "matching_filenames": true,
-            "matching_columnames": true
-        }
-    }
-EOD;
-    // direction is "asc" or "desc"
     const SCHEMA = <<<EOD
     {
         "type": "object",

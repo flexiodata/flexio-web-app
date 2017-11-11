@@ -15,6 +15,16 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.distinct",
+    "params": {
+        "distinct": [ "email_field"],
+        "columns": [ "*" ]
+    }
+}
+*/
 
 class Distinct extends \Flexio\Jobs\Base
 {
@@ -126,15 +136,6 @@ class Distinct extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.distinct",
-        "params": {
-            "distinct": [ "email_field"],
-            "columns": [ "*" ]
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

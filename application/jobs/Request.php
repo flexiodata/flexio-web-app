@@ -15,6 +15,17 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.request",
+    "params": {
+        "method": "head|get|put|post|patch|delete|options",
+        "url": "https://www.flex.io",
+        "headers": []
+    }
+}
+*/
 
 class Request extends \Flexio\Jobs\Base
 {
@@ -303,16 +314,6 @@ class Request extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.request",
-        "params": {
-            "method": "head|get|put|post|patch|delete|options",
-            "url": "https://www.flex.io",
-            "headers": []
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

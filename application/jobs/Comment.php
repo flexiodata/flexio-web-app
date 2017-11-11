@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.comment",
+    "params": {
+    }
+}
+*/
 
 class Comment extends \Flexio\Jobs\Base
 {
@@ -24,14 +32,6 @@ class Comment extends \Flexio\Jobs\Base
     }
 
 
-    // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.comment",
-        "params": {
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

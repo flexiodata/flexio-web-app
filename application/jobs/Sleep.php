@@ -15,6 +15,15 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.sleep",
+    "params": {
+        "value": 1
+    }
+}
+*/
 
 class Sleep extends \Flexio\Jobs\Base
 {
@@ -48,14 +57,6 @@ class Sleep extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.sleep",
-        "params": {
-            "value": 1
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

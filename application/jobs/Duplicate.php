@@ -15,6 +15,15 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+    {
+        "type": "flexio.duplicate",
+        "params": {
+            "columns": [ "*" ]
+        }
+    }
+*/
 
 class Duplicate extends \Flexio\Jobs\Base
 {
@@ -123,14 +132,6 @@ class Duplicate extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.duplicate",
-        "params": {
-            "columns": [ "*" ]
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

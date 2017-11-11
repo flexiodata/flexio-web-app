@@ -15,6 +15,19 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.replace",
+    "params": {
+        "columns": [],
+        "find": "",
+        "replace": "",
+        "location": "any",
+        "match_case": false
+    }
+}
+*/
 
 class Replace extends \Flexio\Jobs\Base
 {
@@ -162,18 +175,6 @@ class Replace extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.replace",
-        "params": {
-            "columns": [],
-            "find": "",
-            "replace": "",
-            "location": "any",
-            "match_case": false
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

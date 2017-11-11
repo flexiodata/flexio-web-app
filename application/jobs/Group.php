@@ -15,6 +15,36 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.group",
+    "params": {
+        "group": [
+            "vend_no"
+        ],
+        "columns": [{
+            "name": "vend_no",
+            "function": "",
+            "expression": "vend_no"
+        },
+        {
+            "name": "row_count",
+            "function": "count",
+            "expression": ""
+        },
+        {
+            "name": "sum_gross_amt",
+            "function": "sum",
+            "expression": "gross_amt"
+        }],
+        "where" : "",
+        "having" : "",
+        "unique" : false,
+        "detail" : false
+    }
+}
+*/
 
 class Group extends \Flexio\Jobs\Base
 {
@@ -292,35 +322,6 @@ class Group extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.group",
-        "params": {
-            "group": [
-                "vend_no"
-            ],
-            "columns": [{
-                "name": "vend_no",
-                "function": "",
-                "expression": "vend_no"
-            },
-            {
-                "name": "row_count",
-                "function": "count",
-                "expression": ""
-            },
-            {
-                "name": "sum_gross_amt",
-                "function": "sum",
-                "expression": "gross_amt"
-            }],
-            "where" : "",
-            "having" : "",
-            "unique" : false,
-            "detail" : false
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

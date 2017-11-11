@@ -15,6 +15,16 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.input",
+    "params": {
+        "connection": "",
+        "items": []
+    }
+}
+*/
 
 class Input extends \Flexio\Jobs\Base
 {
@@ -511,15 +521,6 @@ class Input extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.input",
-        "params": {
-            "connection": "",
-            "items": []
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

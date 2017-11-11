@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.each",
+    "params": [
+    ]
+}
+*/
 
 class Each extends \Flexio\Jobs\Base
 {
@@ -125,13 +133,6 @@ class Each extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.each",
-        "params": [
-        ]
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

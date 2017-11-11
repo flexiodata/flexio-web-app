@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.grep",
+    "params": {
+    }
+}
+*/
 
 class Grep extends \Flexio\Jobs\Base
 {
@@ -199,18 +207,6 @@ class Grep extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.grep",
-        "params": {
-            "order": [{
-                "expression": "",
-                "direction": ""
-            }]
-        }
-    }
-EOD;
-    // direction is "asc" or "desc"
     const SCHEMA = <<<EOD
     {
         "type": "object",

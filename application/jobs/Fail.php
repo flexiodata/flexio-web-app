@@ -15,6 +15,16 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.fail",
+    "params": {
+        "code": "string",
+        "message": "string"
+    }
+}
+*/
 
 class Fail extends \Flexio\Jobs\Base
 {
@@ -60,15 +70,6 @@ class Fail extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.fail",
-        "params": {
-            "code": "string",
-            "message": "string"
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

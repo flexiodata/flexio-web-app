@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.filter",
+    "params": {
+    }
+}
+*/
 
 class Filter extends \Flexio\Jobs\Base
 {
@@ -111,13 +119,6 @@ class Filter extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.filter",
-        "params": {
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

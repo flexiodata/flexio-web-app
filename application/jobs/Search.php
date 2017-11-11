@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.search",
+    "params": {
+    }
+}
+*/
 
 class Search extends \Flexio\Jobs\Base
 {
@@ -376,13 +384,6 @@ class Search extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.search",
-        "params": {
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

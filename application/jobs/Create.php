@@ -15,6 +15,17 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+    {
+        "type": "flexio.create",
+        "params": {
+            "name": "test",
+            "mime_type": "text/csv",
+            "content": ""
+        }
+    }
+*/
 
 class Create extends \Flexio\Jobs\Base
 {
@@ -144,16 +155,6 @@ class Create extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.create",
-        "params": {
-            "name": "test",
-            "mime_type": "text/csv",
-            "content": ""
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",
