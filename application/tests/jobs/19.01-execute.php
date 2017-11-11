@@ -26,9 +26,9 @@ class Test
 
         // BEGIN TEST
         $script = <<<EOD
-def flexio_handler(input,output):
-    output.content_type = "text/plain"
-    output.write("Hello, World!")
+def flexio_handler(context):
+    context.output.content_type = "text/plain"
+    context.output.write("Hello, World!")
 EOD;
         $task = array(json_decode('{
             "type": "flexio.execute",
@@ -44,9 +44,9 @@ EOD;
 
         // BEGIN TEST
         $script = <<<EOD
-exports.flexio_handler = function(input, output) {
-    output.content_type = "text/plain"
-    output.write('Hello, World!')
+exports.flexio_handler = function(context) {
+    context.output.content_type = "text/plain"
+    context.output.write('Hello, World!')
 }
 EOD;
         $task = array(json_decode('{
@@ -66,7 +66,7 @@ EOD;
         // TEST: Base Execute Job Code SHA256 Integrity Check
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
@@ -81,7 +81,7 @@ EOD;
         TestCheck::assertString('B.1', 'Execute Job; sha256 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
@@ -96,7 +96,7 @@ EOD;
         TestCheck::assertString('B.2', 'Execute Job; sha256 integrity check with uppercase sha256 code',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,You!');}";
+        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
         $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
@@ -111,7 +111,7 @@ EOD;
         TestCheck::assertString('B.3', 'Execute Job; check code integrity; sha256 integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
@@ -126,7 +126,7 @@ EOD;
         TestCheck::assertString('B.4', 'Execute Job; check code integrity; sha256 format (sha512 indicated) integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
@@ -145,7 +145,7 @@ EOD;
         // TEST: Base Execute Job Code SHA384 Integrity Check
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context.){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
@@ -160,7 +160,7 @@ EOD;
         TestCheck::assertString('C.1', 'Execute Job; sha384 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,You!');}";
+        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
         $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
@@ -179,7 +179,7 @@ EOD;
         // TEST: Base Execute Job Code SHA512 Integrity Check
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {
@@ -194,7 +194,7 @@ EOD;
         TestCheck::assertString('D.1', 'Execute Job; sha512 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(input,output){output.content_type='text/plain';output.write('Hello,You!');}";
+        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
         $task = array(json_decode('{
             "type": "flexio.execute",
             "params": {

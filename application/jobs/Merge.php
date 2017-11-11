@@ -15,13 +15,23 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+EXAMPLE:
+{
+    "type": "flexio.merge",
+    "params": {
+        "matching_filenames": true,
+        "matching_columnames": true
+    }
+}
+*/
 
 class Merge extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin; since stdin is a single stream, the merged output is the same as the input
         $stdin = $context->getStdin();
         $context->setStdout($stdin);
@@ -148,17 +158,6 @@ class Merge extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.merge';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.merge",
-        "params": {
-            "matching_filenames": true,
-            "matching_columnames": true
-        }
-    }
-EOD;
-    // direction is "asc" or "desc"
     const SCHEMA = <<<EOD
     {
         "type": "object",

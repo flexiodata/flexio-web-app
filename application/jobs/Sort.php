@@ -15,6 +15,19 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+// direction is 'asc' or 'desc'
+{
+    "type": "flexio.sort",
+    "params": {
+        "order": [{
+            "expression": "",
+            "direction": ""
+        }]
+    }
+}
+*/
 
 class Sort extends \Flexio\Jobs\Base
 {
@@ -131,19 +144,6 @@ class Sort extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const MIME_TYPE = 'flexio.sort';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.sort",
-        "params": {
-            "order": [{
-                "expression": "",
-                "direction": ""
-            }]
-        }
-    }
-EOD;
-    // direction is "asc" or "desc"
     const SCHEMA = <<<EOD
     {
         "type": "object",

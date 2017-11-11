@@ -15,6 +15,23 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.convert",
+    "params": {
+        "input": {
+            "format": "delimited_text",
+            "delimiter": "{comma}",
+            "header": true,
+            "qualifier": "{none}"
+        },
+        "output": {
+            "format": ""
+        }
+    }
+}
+*/
 
 class Convert extends \Flexio\Jobs\Base
 {
@@ -42,7 +59,7 @@ class Convert extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
@@ -1242,24 +1259,8 @@ class Convert extends \Flexio\Jobs\Base
            0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  /* Fx */
         ];
 
+
     // job definition info
-    const MIME_TYPE = 'flexio.convert';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.convert",
-        "params": {
-            "input": {
-                "format": "delimited_text",
-                "delimiter": "{comma}",
-                "header": true,
-                "qualifier": "{none}"
-            },
-            "output": {
-                "format": ""
-            }
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

@@ -15,13 +15,24 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+    {
+        "type": "flexio.create",
+        "params": {
+            "name": "test",
+            "mime_type": "text/csv",
+            "content": ""
+        }
+    }
+*/
 
 class Create extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // create job adds new streams; don't clear existing streams
         $job_definition = $this->getProperties();
 
@@ -144,17 +155,6 @@ class Create extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.create';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.create",
-        "params": {
-            "name": "test",
-            "mime_type": "text/csv",
-            "content": ""
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

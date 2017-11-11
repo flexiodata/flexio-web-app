@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.nop",
+    "params": {
+    }
+}
+*/
 
 class Nop extends \Flexio\Jobs\Base
 {
@@ -24,16 +32,6 @@ class Nop extends \Flexio\Jobs\Base
 
     }
 
-
-    // job definition info
-    const MIME_TYPE = 'flexio.nop';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.nop",
-        "params": {
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

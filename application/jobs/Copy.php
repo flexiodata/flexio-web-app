@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.copy",
+    "params": {
+    }
+}
+*/
 
 class Copy extends \Flexio\Jobs\Base
 {
@@ -372,15 +380,6 @@ class Copy extends \Flexio\Jobs\Base
         return $output_columns;
     }
 
-    // job definition info
-    const MIME_TYPE = 'flexio.copy';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.copy",
-        "params": {
-        }
-    }
-EOD;
     const SCHEMA = <<<EOD
     {
         "type": "object",

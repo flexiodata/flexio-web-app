@@ -3,15 +3,14 @@ import json
 import requests
 from bs4 import BeautifulSoup
 
-def flexio_handler(inputs,outputs):
+def flexio_handler(context):
 
-    input = inputs[0]
-    output = outputs.create('links.json', content_type='application/json')
+    context.output = outputs.create('links.json', content_type='application/json')
 
     url = 'https://www.flex.io'
     response = requests.get(url)
     result = parse_content(response.text)
-    output.write(json.dumps(result))
+    context.output.write(json.dumps(result))
 
 def parse_content(content):
 

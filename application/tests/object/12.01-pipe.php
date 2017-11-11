@@ -267,7 +267,7 @@ class Test
         TestCheck::assertNumber('G.1', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(['type'=>\Flexio\Jobs\Create::MIME_TYPE, 'params' => []]);
+        $task = \Flexio\Object\Task::create()->push(['type'=>'flexio.create', 'params' => []]);
         $object = \Flexio\Object\Pipe::create()->setTask($task->get());
         $actual = count($object->getTask());
         $expected = 1;
@@ -287,7 +287,7 @@ class Test
         $task_step2 = \Flexio\Jobs\Convert::create()->getProperties();
         $task = \Flexio\Object\Task::create()->push($task_step1)->push($task_step2);
         $object = \Flexio\Object\Pipe::create()->setTask($task->get());
-        $actual = ($object->getTask()[0]['type'] === \Flexio\Jobs\Create::MIME_TYPE) && ($object->getTask()[1]['type'] === \Flexio\Jobs\Convert::MIME_TYPE);
+        $actual = ($object->getTask()[0]['type'] === 'flexio.create') && ($object->getTask()[1]['type'] === 'flexio.convert');
         $expected = true;
         TestCheck::assertBoolean('G.4', 'Pipe::setTask(); make sure tasks are set correctly',  $actual, $expected, $results);
     }
