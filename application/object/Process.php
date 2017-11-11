@@ -532,11 +532,18 @@ class Process extends \Flexio\Object\Base
                 $context->setStdout($stdout);
             }
 
-            // execute the step
-            $log_eid = $this->startLog($task, $context);  // TODO: only log if in debug mode?
+
+            // if we're in buld mode, log the task
+            if ($this->isBuildMode() === true)
+                $log_eid = $this->startLog($task, $context);
+
+                // execute the step
             $this->executeTask($task, $context);
-            $this->finishLog($log_eid, $task, $context); // TODO: only log if in debug mode?
             $first_task = false;
+
+            if ($this->isBuildMode() === true)
+                $this->finishLog($log_eid, $task, $context);
+
 
             // if the implementation has changed during the task, the result is
             // unreliable; set an error so that the process fails
