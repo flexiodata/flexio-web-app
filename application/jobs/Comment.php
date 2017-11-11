@@ -25,7 +25,6 @@ class Comment extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.comment';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.comment",

@@ -196,7 +196,6 @@ class Email extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.email';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.email",

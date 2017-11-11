@@ -418,7 +418,6 @@ class Output extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const MIME_TYPE = 'flexio.output';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.output",

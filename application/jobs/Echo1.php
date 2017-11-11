@@ -38,7 +38,6 @@ class Echo1 extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.echo';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.echo",

@@ -21,7 +21,7 @@ class CalcField extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
@@ -115,7 +115,6 @@ class CalcField extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.calc';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.calc",

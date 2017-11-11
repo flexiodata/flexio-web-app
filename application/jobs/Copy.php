@@ -373,7 +373,6 @@ class Copy extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const MIME_TYPE = 'flexio.copy';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.copy",

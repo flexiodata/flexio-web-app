@@ -125,7 +125,6 @@ class Each extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.each';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.each",

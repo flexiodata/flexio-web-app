@@ -21,7 +21,7 @@ class Exit1 extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $context->setStdout($stdin);
@@ -36,7 +36,6 @@ class Exit1 extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.exit';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.exit",

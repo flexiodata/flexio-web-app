@@ -123,7 +123,6 @@ class Duplicate extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const MIME_TYPE = 'flexio.duplicate';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.duplicate",

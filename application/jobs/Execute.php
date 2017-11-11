@@ -902,7 +902,6 @@ class Execute extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.execute';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.execute",

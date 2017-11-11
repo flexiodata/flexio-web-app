@@ -26,7 +26,6 @@ class Nop extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.nop';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.nop",

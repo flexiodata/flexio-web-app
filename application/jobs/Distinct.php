@@ -126,7 +126,6 @@ class Distinct extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const MIME_TYPE = 'flexio.distinct';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.distinct",
