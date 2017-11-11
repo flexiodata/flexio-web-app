@@ -767,31 +767,4 @@ class Transform extends \Flexio\Jobs\Base
 
         return $expr;
     }
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.transform"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["columns"],
-                "properties": {
-                    "group": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "fx.fieldname"
-                        }
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

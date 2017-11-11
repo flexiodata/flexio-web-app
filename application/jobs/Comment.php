@@ -30,21 +30,4 @@ class Comment extends \Flexio\Jobs\Base
     {
         parent::run($context);
     }
-
-
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.comment"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

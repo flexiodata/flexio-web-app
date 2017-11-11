@@ -130,21 +130,4 @@ class Duplicate extends \Flexio\Jobs\Base
 
         return $sql;
     }
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.duplicate"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

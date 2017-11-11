@@ -381,22 +381,4 @@ class Search extends \Flexio\Jobs\Base
 
         return $part;
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.search"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

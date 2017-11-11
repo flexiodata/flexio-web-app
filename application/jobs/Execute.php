@@ -909,23 +909,4 @@ class Execute extends \Flexio\Jobs\Base
             return false;
         return $associative ? $res : array_values($res);
     }
-
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.execute"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

@@ -44,25 +44,4 @@ class Echo1 extends \Flexio\Jobs\Base
         $streamwriter = $stdout->getWriter();
         $streamwriter->write($msg);
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.echo"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["msg"],
-                "properties": {
-                }
-            }
-        }
-    }
-EOD;
 }

@@ -68,26 +68,4 @@ class List1 extends \Flexio\Jobs\Base
         $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);
         $streamwriter->write(json_encode($results));
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.list"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["value"],
-                "properties": {
-
-                }
-            }
-        }
-    }
-EOD;
 }

@@ -54,22 +54,4 @@ class Sleep extends \Flexio\Jobs\Base
             usleep($milliseconds_to_update_status*1000);
         }
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.sleep"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

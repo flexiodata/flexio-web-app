@@ -67,21 +67,4 @@ class Fail extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception($code, $message);
         }
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.fail"]
-            },
-            "params": {
-            }
-        }
-    }
-EOD;
 }

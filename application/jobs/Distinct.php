@@ -134,21 +134,4 @@ class Distinct extends \Flexio\Jobs\Base
         $sql = "INSERT INTO $output_path ($selected_columns_str) SELECT DISTINCT $distinct_columns_str $selected_columns_str FROM $input_path";
         return $sql;
     }
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.distinct"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

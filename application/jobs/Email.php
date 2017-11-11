@@ -211,41 +211,4 @@ class Email extends \Flexio\Jobs\Base
         fclose($handle);
         return true;
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.email"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["to"],
-                "properties": {
-                    "to" : {
-                        "type": "array"
-                    },
-                    "subject" : {
-                        "type": "string"
-                    },
-                    "body_text" : {
-                        "type": "string"
-                    },
-                    "body_html" : {
-                        "type": "string"
-                    },
-                    "data" : {
-                        "type": "string",
-                        "enum": ["none","body","attachment"]
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

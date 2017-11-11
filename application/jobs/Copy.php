@@ -379,20 +379,4 @@ class Copy extends \Flexio\Jobs\Base
 
         return $output_columns;
     }
-
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.copy"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

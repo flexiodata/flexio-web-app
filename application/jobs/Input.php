@@ -518,22 +518,4 @@ class Input extends \Flexio\Jobs\Base
              else
             return $ch;
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.input"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

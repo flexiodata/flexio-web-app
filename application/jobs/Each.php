@@ -130,22 +130,4 @@ class Each extends \Flexio\Jobs\Base
         $job = \Flexio\Jobs\Factory::create($task);
         $job->run($context);
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.each"]
-            },
-            "params": {
-                "type": "array"
-            }
-        }
-    }
-EOD;
 }

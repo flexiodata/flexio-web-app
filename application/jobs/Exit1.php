@@ -42,25 +42,4 @@ class Exit1 extends \Flexio\Jobs\Base
         // and return the http response code in $code
         $context->setExitCode((int)$code);
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.exit"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["code"],
-                "properties": {
-                }
-            }
-        }
-    }
-EOD;
 }
