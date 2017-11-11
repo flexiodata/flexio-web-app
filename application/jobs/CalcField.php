@@ -124,22 +124,4 @@ class CalcField extends \Flexio\Jobs\Base
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.calc"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

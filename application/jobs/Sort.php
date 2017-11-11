@@ -142,42 +142,4 @@ class Sort extends \Flexio\Jobs\Base
 
         return $sql;
     }
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.sort"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["order"],
-                "properties": {
-                    "order": {
-                        "type": "array",
-                        "minItems": 1,
-                        "items": {
-                            "type": "object",
-                            "required": ["expression"],
-                            "properties": {
-                                "expression": {
-                                    "type": "string",
-                                    "minLength": 1
-                                },
-                                "direction": {
-                                    "type": "string",
-                                    "enum": ["asc","desc"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

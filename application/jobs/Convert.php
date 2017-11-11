@@ -1258,23 +1258,5 @@ class Convert extends \Flexio\Jobs\Base
            0,  0,115,116,117,118,119,120,121,122,  0,  0,  0,  0,  0,  0,  /* Ex */
            0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  /* Fx */
         ];
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.convert"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }
 

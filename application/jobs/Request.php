@@ -310,23 +310,4 @@ class Request extends \Flexio\Jobs\Base
             curl_close($ch);
         }
     }
-
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.request"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

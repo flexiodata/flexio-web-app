@@ -159,22 +159,4 @@ class Rename extends \Flexio\Jobs\Base
 
         return \Flexio\Base\ExprEvaluate::evaluate($expr, $variables, $structure, $retval);
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.rename"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

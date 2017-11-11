@@ -197,22 +197,4 @@ class SetType extends \Flexio\Jobs\Base
                     return false;
         }
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.settype"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

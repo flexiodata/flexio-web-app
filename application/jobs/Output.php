@@ -426,30 +426,4 @@ class Output extends \Flexio\Jobs\Base
             $result = $service->insertRow($outputpath, $row);
         }
     }
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.output"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["connection", "path"],
-                "properties": {
-                    "connection": {
-                        "type": "object"
-                    },
-                    "path": {
-                        "type": "string"
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

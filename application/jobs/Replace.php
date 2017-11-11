@@ -173,24 +173,4 @@ class Replace extends \Flexio\Jobs\Base
 
         return $column_expression_map;
     }
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.replace"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["columns"],
-                "properties": {
-                }
-            }
-        }
-    }
-EOD;
 }

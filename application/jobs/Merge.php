@@ -155,22 +155,4 @@ class Merge extends \Flexio\Jobs\Base
         $merged_structure = \Flexio\Base\Structure::union($structures);
         return $merged_structure->enum();
     }
-
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.merge"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

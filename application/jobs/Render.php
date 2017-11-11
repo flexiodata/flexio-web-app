@@ -154,21 +154,4 @@ class Render extends \Flexio\Jobs\Base
         }
 */
     }
-
-    // job definition info
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.render"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

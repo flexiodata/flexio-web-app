@@ -31,20 +31,4 @@ class Nop extends \Flexio\Jobs\Base
         parent::run($context);
 
     }
-
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.nop"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }
