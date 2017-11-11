@@ -20,6 +20,11 @@ class Test
 {
     public function run(&$results)
     {
+// TODO:
+// search tests are deprecated with new memory stream until search can be reimplemented with the new
+return;
+
+
         // SETUP
         $create = json_decode('{
             "type": "flexio.create",
