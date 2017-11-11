@@ -422,8 +422,13 @@ class Context(object):
     def __init__(self, input, output):
         self.input = input
         self.output = output
+        self._query = None
 
-
+    @property
+    def query(self):
+        if self._query is None:
+            self._query = proxy.invoke('getQueryParameters', [])
+        return self._query
 
 def run(handler):
 

@@ -197,6 +197,18 @@ class ExecuteProxy
                 $val = $payload;
             }
         }
+        else if (is_object($val))
+        {
+            // assoc array passed as object
+            $type = 'o';
+            $payload = '';
+            foreach ((array)$val as $k => $v)
+            {
+                $payload .= self::encodepart($k);
+                $payload .= self::encodepart($v);
+            }
+            $val = $payload;
+        }
         else
         {
             $type = 's';
@@ -644,6 +656,11 @@ class Execute extends \Flexio\Jobs\Base
         $this->getContext()->setParams($env);
     }
 
+
+    public function func_getQueryParameters()
+    {
+        return (object)$_GET;
+    }
 
     private $runjob_stdin = null;
 
