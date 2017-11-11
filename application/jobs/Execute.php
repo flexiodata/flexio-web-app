@@ -657,6 +657,11 @@ class Execute extends \Flexio\Jobs\Base
     }
 
 
+    public function func_getQueryParameters()
+    {
+        return (object)$_GET;
+    }
+
     private $runjob_stdin = null;
 
     public function func_runJob($json)
