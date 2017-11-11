@@ -48,6 +48,8 @@ class StreamMemory implements \Flexio\Object\IStream
         $this->properties['updated'] = null;
     }
 
+    public function getImpl() { return $this; }
+
     public static function create(array $properties = null) : \Flexio\Object\StreamMemory
     {
         $object = new static();
@@ -297,11 +299,18 @@ class StreamMemory implements \Flexio\Object\IStream
     // copies a streams properties to $dest, overwriting $dest's properties
     public function copyOver(\Flexio\Object\IStream $dest)
     {
+        $destimpl = $dest->getImpl();
+
+        if (!($destimpl instanceof \Flexio\Object\StreamMemory))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copyOver may only be used on stream objects of the same type");
+
         $properties = $this->get();
         unset($properties['eid']);
         unset($properties['created']);
         unset($properties['updated']);
         $dest->set($properties);
+
+        $destimpl->buffer = $this->buffer;
     }
 
     public function getReader() : \Flexio\Object\IStreamReader

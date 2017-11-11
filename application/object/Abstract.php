@@ -46,6 +46,7 @@ interface IObject
 
 interface IStream
 {
+    public function getImpl();   // returns the object implementing interface; (internal helper)
     public function copy();
     public function copyOver(\Flexio\Object\IStream $dest);
     public function set(array $properties);
