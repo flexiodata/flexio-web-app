@@ -25,7 +25,7 @@ class Base implements \Flexio\Jobs\IJob
 
     public function __construct()
     {
-        $properties = array();
+        $this->properties = array();
     }
 
     public static function create(array $properties = null) : \Flexio\Jobs\Base
