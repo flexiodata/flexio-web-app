@@ -4,14 +4,14 @@ from PIL import Image
 from io import BytesIO
 import mimetypes
 
-def flexio_handler(inputs,outputs):
-    input = inputs[0]
-    imagedata = input.read()
+def flexio_handler(context):
+
+    imagedata = context.input.read()
 
     for size in range(50,250,50):
-        extension = mimetypes.guess_extension(input.content_type)
+        extension = mimetypes.guess_extension(context.input.content_type)
         extension = '.jpg'
-        output = outputs.create(name='thumbnail'+str(size)+extension, content_type=input.content_type)
+        context.output = outputs.create(name='thumbnail'+str(size)+extension, content_type=context.input.content_type)
 
         file_imagedata = BytesIO(imagedata)
         img = Image.open(file_imagedata)
@@ -28,5 +28,5 @@ def flexio_handler(inputs,outputs):
         contents = file_output.getvalue()
         file_output.close()
 
-        output.write(contents)
+        context.output.write(contents)
 
