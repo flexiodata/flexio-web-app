@@ -21,7 +21,7 @@ class Select extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
@@ -121,7 +121,6 @@ class Select extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.select';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.select",

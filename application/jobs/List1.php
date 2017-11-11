@@ -62,7 +62,6 @@ class List1 extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.list';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.list",

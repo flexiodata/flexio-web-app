@@ -148,7 +148,6 @@ class Render extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const MIME_TYPE = 'flexio.render';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.render",

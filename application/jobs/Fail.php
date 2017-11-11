@@ -60,7 +60,6 @@ class Fail extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.fail';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.fail",

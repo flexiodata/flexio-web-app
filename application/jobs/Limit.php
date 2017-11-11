@@ -96,7 +96,6 @@ class Limit extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.limit';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.limit",

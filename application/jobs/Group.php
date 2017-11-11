@@ -292,7 +292,6 @@ class Group extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const MIME_TYPE = 'flexio.group';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.group",

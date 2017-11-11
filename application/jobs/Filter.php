@@ -111,7 +111,6 @@ class Filter extends \Flexio\Jobs\Base
     }
 
     // job definition info
-    const MIME_TYPE = 'flexio.filter';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.filter",

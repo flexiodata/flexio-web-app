@@ -21,7 +21,7 @@ class Request extends \Flexio\Jobs\Base
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
 
@@ -140,7 +140,7 @@ class Request extends \Flexio\Jobs\Base
                         {
                             $new_headers[strtolower($k)] = $k;
                         }
-                        
+
                         foreach ($headers as $k => $v)
                         {
                             $lowercase_key = strtolower($k);
@@ -174,7 +174,7 @@ class Request extends \Flexio\Jobs\Base
             {
                 $url .= '?';
             }
-            
+
             $url .= http_build_query($get_params);
         }
 
@@ -303,7 +303,6 @@ class Request extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.request';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.request",

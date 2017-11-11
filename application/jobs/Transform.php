@@ -770,7 +770,6 @@ class Transform extends \Flexio\Jobs\Base
     }
 */
     // job definition info
-    const MIME_TYPE = 'flexio.transform';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.transform",

@@ -511,7 +511,6 @@ class Input extends \Flexio\Jobs\Base
 
 
     // job definition info
-    const MIME_TYPE = 'flexio.input';
     const TEMPLATE = <<<EOD
     {
         "type": "flexio.input",
