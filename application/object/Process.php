@@ -654,11 +654,32 @@ class Process extends \Flexio\Object\Base
 
     public function getLog() : array
     {
-        $result = array();
         $process_model = $this->getModel()->process;
-        $items = $process_model->getProcessLogEntries($this->getEid());
-        if ($items !== false)
-            $result = $items;
+        $log_entries = $process_model->getProcessLogEntries($this->getEid());
+        if ($log_entries == false)
+            return array();
+
+        $result = array();
+        foreach ($log_entries as $entry)
+        {
+            // unpack the task
+            $task = @json_decode($entry['task'],true);
+            if ($task !== false)
+                $entry['task'] = $task;
+
+            // unpack the input
+            $input = @json_decode($entry['input'],true);
+            if ($input !== false)
+                $entry['input'] = $input;
+
+            // unpack the output
+            $output = @json_decode($entry['output'],true);
+            if ($output !== false)
+                $entry['output'] = $output;
+
+            $result[] = $entry;
+        }
+
         return $result;
     }
 
@@ -766,12 +787,16 @@ class Process extends \Flexio\Object\Base
 
     private function startLog(array $task, \Flexio\Object\Context $context) : string
     {
+        // convert memory streams to stored streams so we can access them with a stream eid
+        $storable_context = self::createStoredStreamContext($context);
+
         // create a log record
         $params = array();
         $params['task_type'] = $task['type'] ?? '';
         $params['task'] = json_encode($task);
         $params['started'] = self::getProcessTimestamp();
-        $params['input'] = \Flexio\Object\Context::toString($context);
+        // $params['input'] = \Flexio\Object\Context::toString($context); // straight serialization is allowed, but without a stream eid
+        $params['input'] = $storable_context;
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
@@ -781,16 +806,25 @@ class Process extends \Flexio\Object\Base
 
     private function finishLog(string $log_eid, array $task, \Flexio\Object\Context $context)
     {
+        // convert memory streams to stored streams so we can access them with a stream eid
+        $storable_context = self::createStoredStreamContext($context);
+
         // update the log record
         $params = array();
         $params['task_type'] = $task['type'] ?? '';
         $params['task'] = json_encode($task);
         $params['finished'] = self::getProcessTimestamp();
-        $params['output'] = \Flexio\Object\Context::toString($context);
+        // $params['output'] = \Flexio\Object\Context::toString($context); // straight serialization is allowed, but without a stream eid
+        $params['output'] = $storable_context;
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
         $this->getModel()->process->log($log_eid, $this->getEid(), $params);
+    }
+
+    private static function createStoredStreamContext(\Flexio\Object\Context $context) : \Flexio\Object\Context
+    {
+        return $context;
     }
 
     private static function generateTaskHash(string $implementation_version, array $task, \Flexio\Object\Context $context) : string
