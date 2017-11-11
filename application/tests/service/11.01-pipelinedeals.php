@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \Flexio\Services\PipelineDeals::create(null);
+        $service = new \Flexio\Services\PipelineDeals;
         $actual = get_class($service);
         $expected = 'Flexio\Services\PipelineDeals';
-        TestCheck::assertString('A.1', '\Flexio\Services\PipelineDeals::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'new \Flexio\Services\PipelineDeals; basic file syntax check',  $actual, $expected, $results);
     }
 }
