@@ -197,6 +197,18 @@ class ExecuteProxy
                 $val = $payload;
             }
         }
+        else if (is_object($val))
+        {
+            // assoc array passed as object
+            $type = 'o';
+            $payload = '';
+            foreach ((array)$val as $k => $v)
+            {
+                $payload .= self::encodepart($k);
+                $payload .= self::encodepart($v);
+            }
+            $val = $payload;
+        }
         else
         {
             $type = 's';
