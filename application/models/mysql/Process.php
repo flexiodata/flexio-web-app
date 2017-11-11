@@ -266,7 +266,6 @@ class Process extends ModelBase
         }
     }
 
-
     public function getProcessLogEntries(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))

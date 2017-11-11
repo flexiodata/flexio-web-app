@@ -397,27 +397,15 @@ class Process extends ModelBase
 
     public function getProcessTaskStats() : array
     {
-
-        // DEPRECATED: process table no longer stores individual subprocesses
-/*
         $db = $this->getDatabase();
         try
         {
-            $rows = $db->fetchAll("select tpr.task_type as task_type,
-                                         count(case when tpr.process_status = ''  then 1 end) as undefined,
-                                         count(case when tpr.process_status = 'S' then 1 end) as pending,
-                                         count(case when tpr.process_status = 'W' then 1 end) as waiting,
-                                         count(case when tpr.process_status = 'R' then 1 end) as running,
-                                         count(case when tpr.process_status = 'X' then 1 end) as cancelled,
-                                         count(case when tpr.process_status = 'P' then 1 end) as paused,
-                                         count(case when tpr.process_status = 'F' then 1 end) as failed,
-                                         count(case when tpr.process_status = 'C' then 1 end) as completed,
-                                         avg(extract(epoch from (tpr.finished - tpr.started))) as average_time,
-                                         sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
-                                         count(*) as total_count
-                                   from tbl_process tpr
-                                   where tpr.process_eid != tpr.eid
-                                   group by task_type
+            $rows = $db->fetchAll("select tpl.task_type as task_type,
+                                         count(*) as total_count,
+                                         avg(extract(epoch from (tpl.finished - tpl.started))) as average_time,
+                                         sum(extract(epoch from (tpl.finished - tpl.started))) as total_time
+                                   from tbl_processlog tpl
+                                   group by tpl.task_type
                                    order by total_count desc, task_type
                                  ");
          }
@@ -430,21 +418,12 @@ class Process extends ModelBase
         foreach ($rows as $row)
         {
             $output[] = array('task_type'    => $row['task_type'],
-                              'undefined'    => $row['undefined'],
-                              'pending'      => $row['pending'],
-                              'waiting'      => $row['waiting'],
-                              'running'      => $row['running'],
-                              'cancelled'    => $row['cancelled'],
-                              'paused'       => $row['paused'],
-                              'failed'       => $row['failed'],
-                              'completed'    => $row['completed'],
                               'total_count'  => $row['total_count'],
                               'total_time'   => $row['total_time'],
                               'average_time' => $row['average_time']);
         }
 
         return $output;
-*/
     }
 
     public function setProcessStatus(string $eid, string $status) : bool
