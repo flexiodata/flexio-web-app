@@ -73,7 +73,7 @@ function IS_PROCESSTRYCATCH()
 {
     if (!IS_DEBUG())
         return true; // release-mode always trys/catches
-    return true;
+    return ($GLOBALS['g_config']->process_trycatch ?? true);
 }
 
 function IS_LOCALHOST()
