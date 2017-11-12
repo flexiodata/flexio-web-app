@@ -68,6 +68,10 @@
         return true
       },
       config_show_onboarding() {
+        // don't ever show the onboarding modal (at least for now
+        // until we can figure out if we want it or not)
+        return false
+
         // we have to do 'config_show_onboarding' as a computed value since
         // we need to wait to check if we have an active user or not
         if (this.active_user_eid.length == 0)
