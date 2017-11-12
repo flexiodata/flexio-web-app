@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.render",
+    "params": {
+    }
+}
+*/
 
 class Render extends \Flexio\Jobs\Base
 {
@@ -146,29 +154,4 @@ class Render extends \Flexio\Jobs\Base
         }
 */
     }
-
-    // job definition info
-    const MIME_TYPE = 'flexio.render';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.render",
-        "params": {
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.render"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

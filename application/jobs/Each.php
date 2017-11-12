@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.each",
+    "params": [
+    ]
+}
+*/
 
 class Each extends \Flexio\Jobs\Base
 {
@@ -122,30 +130,4 @@ class Each extends \Flexio\Jobs\Base
         $job = \Flexio\Jobs\Factory::create($task);
         $job->run($context);
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.each';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.each",
-        "params": [
-        ]
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.each"]
-            },
-            "params": {
-                "type": "array"
-            }
-        }
-    }
-EOD;
 }

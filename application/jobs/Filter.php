@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.filter",
+    "params": {
+    }
+}
+*/
 
 class Filter extends \Flexio\Jobs\Base
 {
@@ -109,29 +117,4 @@ class Filter extends \Flexio\Jobs\Base
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
     }
-
-    // job definition info
-    const MIME_TYPE = 'flexio.filter';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.filter",
-        "params": {
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.filter"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

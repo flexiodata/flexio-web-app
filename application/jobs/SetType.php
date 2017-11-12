@@ -15,13 +15,25 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.settype",
+    "params": {
+        "name": "",
+        "type": "",
+        "decimals": "",
+        "expression": ""
+    }
+}
+*/
 
 class SetType extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
@@ -185,34 +197,4 @@ class SetType extends \Flexio\Jobs\Base
                     return false;
         }
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.settype';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.settype",
-        "params": {
-            "name": "",
-            "type": "",
-            "decimals": "",
-            "expression": ""
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.settype"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

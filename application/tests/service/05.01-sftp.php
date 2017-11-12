@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = \Flexio\Services\Sftp::create(null);
+        $service = new \Flexio\Services\Sftp;
         $actual = get_class($service);
         $expected = 'Flexio\Services\Sftp';
-        TestCheck::assertString('A.1', '\Flexio\Services\Sftp::create(); create an instance of the class',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'new \Flexio\Services\Sftp::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

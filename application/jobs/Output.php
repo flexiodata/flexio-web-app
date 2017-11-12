@@ -15,6 +15,16 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.output",
+    "params": {
+        "connection": "",
+        "items": []
+    }
+}
+*/
 
 class Output extends \Flexio\Jobs\Base
 {
@@ -416,40 +426,4 @@ class Output extends \Flexio\Jobs\Base
             $result = $service->insertRow($outputpath, $row);
         }
     }
-
-    // job definition info
-    const MIME_TYPE = 'flexio.output';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.output",
-        "params": {
-            "connection": "",
-            "items": []
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.output"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["connection", "path"],
-                "properties": {
-                    "connection": {
-                        "type": "object"
-                    },
-                    "path": {
-                        "type": "string"
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

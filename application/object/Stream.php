@@ -26,6 +26,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
         $this->setType(\Model::TYPE_STREAM);
     }
 
+    public function getImpl() { return $this; }
+    
     public static function create(array $properties = null) : \Flexio\Object\Stream
     {
         // structure is stored as json string; it needs to be validated
@@ -274,6 +276,11 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
     // copies a streams properties to $dest, overwriting $dest's properties
     public function copyOver(\Flexio\Object\IStream $dest)
     {
+        $destimpl = $dest->getImpl();
+        
+        if (!($destimpl instanceof \Flexio\Object\Stream))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copyOver may only be used on stream objects of the same type");
+
         $properties = $this->get();
         unset($properties['eid']);
         unset($properties['created']);

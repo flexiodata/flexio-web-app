@@ -258,9 +258,6 @@ class Connection
         if (!$service)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        if (!$service->isOk())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
         $result = $service->list($path);
         if (!is_array($result))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);

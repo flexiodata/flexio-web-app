@@ -15,7 +15,18 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
-
+/*
+// EXAMPLE:
+{
+    "type": "flexio.execute",
+    "params": {
+        "lang": "python",
+        "code": "<base64 encoded>",
+        "path": "",
+        "integrity": ""
+    }
+}
+*/
 
 class BinaryData
 {
@@ -185,6 +196,18 @@ class ExecuteProxy
                 }
                 $val = $payload;
             }
+        }
+        else if (is_object($val))
+        {
+            // assoc array passed as object
+            $type = 'o';
+            $payload = '';
+            foreach ((array)$val as $k => $v)
+            {
+                $payload .= self::encodepart($k);
+                $payload .= self::encodepart($v);
+            }
+            $val = $payload;
         }
         else
         {
@@ -374,8 +397,6 @@ class Execute extends \Flexio\Jobs\Base
         {
             $this->code = self::getFileContents($file);
             $this->code_base64 = base64_encode($this->code);
-
-            // TODO: perform sha256 security check on contents if 'integrity' parameter is specified
         }
          else
         {
@@ -386,6 +407,47 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
             $this->code = base64_decode($this->code_base64);
+        }
+
+        $integrity = $job_definition['params']['integrity'] ?? false;
+        if ($integrity !== false)
+        {
+            // an integrity parameter is specified; use a subresource integrity check
+            // (https://www.w3.org/TR/SRI/) to verify the code (e.g. "sha384-<base64-encoded-hash-value>");
+            // if a hash of the code using the provided algorithm doesn't match the value in
+            // the integrity check, throw an exception
+            if (!is_string($integrity))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $parts = explode('-', $integrity);
+            if (count($parts) !== 2)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $integrity_hashformat = strtolower($parts[0]);
+            $integrity_hashvalue = strtolower($parts[1]);
+
+            $code_hashvalue = false;
+            switch ($integrity_hashformat)
+            {
+                // make sure the integrity is a supported format; currently, the required formats
+                // in the standard are sha256, sha384, and sha512, and weak formats, such as md5
+                // and sha1 should be refused
+                default:
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+                case 'sha256':
+                    $code_hashvalue = hash('sha256', $this->code, false); // false = use lowercase base64 encoded output
+                    break;
+                case 'sha384':
+                    $code_hashvalue = hash('sha384', $this->code, false); // false = use lowercase base64 encoded output
+                    break;
+                case 'sha512':
+                    $code_hashvalue = hash('sha512', $this->code, false); // false = use lowercase base64 encoded output
+                    break;
+            }
+
+            if ($code_hashvalue !== $integrity_hashvalue)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INTEGRITY_FAILED);
         }
 
         if ($this->lang == 'python')
@@ -595,6 +657,11 @@ class Execute extends \Flexio\Jobs\Base
     }
 
 
+    public function func_getQueryParameters()
+    {
+        return (object)$_GET;
+    }
+
     private $runjob_stdin = null;
 
     public function func_runJob($json)
@@ -607,6 +674,7 @@ class Execute extends \Flexio\Jobs\Base
             $this->runjob_stdin = $this->getContext()->getStdin();
 
         $job = \Flexio\Jobs\Factory::create($task);
+
 
         $runjob_stdout = \Flexio\Object\StreamMemory::create();
 
@@ -859,34 +927,4 @@ class Execute extends \Flexio\Jobs\Base
             return false;
         return $associative ? $res : array_values($res);
     }
-
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.execute';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.execute",
-        "params": {
-            "lang": "python",
-            "code": "<base64 encoded>",
-            "path": ""
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.execute"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

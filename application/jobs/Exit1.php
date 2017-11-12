@@ -15,13 +15,22 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.exit",
+    "params": {
+        "code": ""
+    }
+}
+*/
 
 class Exit1 extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $context->setStdout($stdin);
@@ -33,35 +42,4 @@ class Exit1 extends \Flexio\Jobs\Base
         // and return the http response code in $code
         $context->setExitCode((int)$code);
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.exit';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.exit",
-        "params": {
-            "code": ""
-        }
-    }
-EOD;
-    // direction is "asc" or "desc"
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.exit"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["code"],
-                "properties": {
-                }
-            }
-        }
-    }
-EOD;
 }

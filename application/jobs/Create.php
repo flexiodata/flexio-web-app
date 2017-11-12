@@ -15,19 +15,26 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+    {
+        "type": "flexio.create",
+        "params": {
+            "name": "test",
+            "mime_type": "text/csv",
+            "content": ""
+        }
+    }
+*/
 
 class Create extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // create job adds new streams; don't clear existing streams
         $job_definition = $this->getProperties();
-
-        $validator = \Flexio\Base\ValidatorSchema::check($job_definition, \Flexio\Jobs\Create::SCHEMA);
-        if ($validator->hasErrors() === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $outstream = null;
         $mime_type = $job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
@@ -141,73 +148,4 @@ class Create extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
         return $outstream;
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.create';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.create",
-        "params": {
-            "name": "test",
-            "mime_type": "text/csv",
-            "content": ""
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.create"]
-            },
-            "params": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "minLength": 1
-                    },
-                    "mime_type": {
-                        "type": "string"
-                    },
-                    "structure": {
-                        "type": "array",
-                        "minItems": 1,
-                        "items": {
-                            "type": "object",
-                            "required": ["name"],
-                            "properties": {
-                                "name": {
-                                    "type": "string",
-                                    "format": "fx.fieldname"
-                                },
-                                "type": {
-                                    "type": "string",
-                                    "enum": ["text","character","widecharacter","numeric","double","integer","date","datetime","boolean"]
-                                },
-                                "width": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 10000
-                                },
-                                "scale": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 12
-                                }
-                            }
-                        }
-                    },
-                    "content": {
-                        "type": ["string", "array"]
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

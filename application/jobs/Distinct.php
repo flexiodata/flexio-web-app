@@ -15,6 +15,16 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.distinct",
+    "params": {
+        "distinct": [ "email_field"],
+        "columns": [ "*" ]
+    }
+}
+*/
 
 class Distinct extends \Flexio\Jobs\Base
 {
@@ -124,31 +134,4 @@ class Distinct extends \Flexio\Jobs\Base
         $sql = "INSERT INTO $output_path ($selected_columns_str) SELECT DISTINCT $distinct_columns_str $selected_columns_str FROM $input_path";
         return $sql;
     }
-
-    // job definition info
-    const MIME_TYPE = 'flexio.distinct';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.distinct",
-        "params": {
-            "distinct": [ "email_field"],
-            "columns": [ "*" ]
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.distinct"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

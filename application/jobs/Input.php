@@ -15,6 +15,16 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.input",
+    "params": {
+        "connection": "",
+        "items": []
+    }
+}
+*/
 
 class Input extends \Flexio\Jobs\Base
 {
@@ -508,32 +518,4 @@ class Input extends \Flexio\Jobs\Base
              else
             return $ch;
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.input';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.input",
-        "params": {
-            "connection": "",
-            "items": []
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.input"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

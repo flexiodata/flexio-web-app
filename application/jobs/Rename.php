@@ -15,6 +15,16 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.rename",
+    "params": {
+        "columns": [],
+        "files": []
+    }
+}
+*/
 
 class Rename extends \Flexio\Jobs\Base
 {
@@ -149,32 +159,4 @@ class Rename extends \Flexio\Jobs\Base
 
         return \Flexio\Base\ExprEvaluate::evaluate($expr, $variables, $structure, $retval);
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.rename';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.rename",
-        "params": {
-            "columns": [],
-            "files": []
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.rename"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

@@ -15,6 +15,23 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.transform",
+    "params": {
+        "columns": [],
+        "operations": [
+            { "operation":"pad", "value":"0", "length":7,"location":"left" },
+            { "operation":"trim", "location":"leading" },
+            { "operation":"type": "character" },
+            { "operation":"remove", "location":"any","character_class":"alpha" },
+            { "operation":"substring", "length":7, "location":"left" },
+            { "operation":"case", "case":"lower" }
+        ]
+    }
+}
+*/
 
 class Transform extends \Flexio\Jobs\Base
 {
@@ -750,60 +767,4 @@ class Transform extends \Flexio\Jobs\Base
 
         return $expr;
     }
-
-
-    // example transform operation
-/*
-    {
-        "type": "flexio.transform",
-        "params": {
-            "columns": [],
-            "operations": [
-                { "operation":"pad", "value":"0", "length":7,"location":"left" },
-                { "operation":"trim", "location":"leading" },
-                { "operation":"type": "character" },
-                { "operation":"remove", "location":"any","character_class":"alpha" },
-                { "operation":"substring", "length":7, "location":"left" },
-                { "operation":"case", "case":"lower" }
-            ]
-        }
-    }
-*/
-    // job definition info
-    const MIME_TYPE = 'flexio.transform';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.transform",
-        "params": {
-            "columns": [],
-            "operations": [
-            ]
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.transform"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["columns"],
-                "properties": {
-                    "group": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "fx.fieldname"
-                        }
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

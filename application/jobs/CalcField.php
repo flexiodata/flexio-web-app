@@ -15,13 +15,25 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.calc",
+    "params": {
+        "name": "",
+        "type": "",
+        "decimals": "",
+        "expression": ""
+    }
+}
+*/
 
 class CalcField extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
@@ -112,34 +124,4 @@ class CalcField extends \Flexio\Jobs\Base
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.calc';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.calc",
-        "params": {
-            "name": "",
-            "type": "",
-            "decimals": "",
-            "expression": ""
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.calc"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

@@ -98,6 +98,8 @@ class Response
 
             // "UNPROCESSABLE ENTITY"; request can't be processed
             // for some reason
+            case \Flexio\Base\Error::INTEGRITY_FAILED:
+            case \Flexio\Base\Error::CONNECTION_FAILED:
             case \Flexio\Base\Error::CREATE_FAILED:
             case \Flexio\Base\Error::DELETE_FAILED:
             case \Flexio\Base\Error::WRITE_FAILED:

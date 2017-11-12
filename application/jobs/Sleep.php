@@ -15,13 +15,22 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.sleep",
+    "params": {
+        "value": 1
+    }
+}
+*/
 
 class Sleep extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // get the duration
         $job_definition = $this->getProperties();
         $milliseconds_to_wait = $job_definition['params']['value'];
@@ -45,31 +54,4 @@ class Sleep extends \Flexio\Jobs\Base
             usleep($milliseconds_to_update_status*1000);
         }
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.sleep';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.sleep",
-        "params": {
-            "value": 1
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.sleep"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

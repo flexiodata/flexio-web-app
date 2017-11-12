@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.comment",
+    "params": {
+    }
+}
+*/
 
 class Comment extends \Flexio\Jobs\Base
 {
@@ -22,30 +30,4 @@ class Comment extends \Flexio\Jobs\Base
     {
         parent::run($context);
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.comment';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.comment",
-        "params": {
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.comment"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

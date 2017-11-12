@@ -528,12 +528,19 @@ class Output {
 
 
 class Context {
-    exit(response_code) {
-        proxy.invokeSync('exit', [response_code])
+
+    constructor() {
+        this._query = null
     }
-    setEnv(key, value) {
-        proxy.invokeSync('setenv', [key,value])
+
+    get query() {
+        if (this._query === null) {
+            this._query = proxy.invokeSync('getQueryParameters', [])
+        }
+        return this._query
     }
+
+
 
     input()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.input.apply(this, arguments)) ]) }
     output()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.output.apply(this, arguments)) ]) }
@@ -541,6 +548,7 @@ class Context {
     echo()       { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.echo.apply(this, arguments)) ]) }
     email()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.email.apply(this, arguments)) ]) }
     execute()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.execute.apply(this, arguments)) ]) }
+    exit()       { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.exit.apply(this, arguments)) ]) }
     filter()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.filter.apply(this, arguments)) ]) }
     javascript() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.javascript.apply(this, arguments)) ]) }
     limit()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.limit.apply(this, arguments)) ]) }
@@ -571,8 +579,10 @@ function checkModuleInit(callback) {
         inited = true
         proxy.invokeAsync('getInputStreamInfo', ['_fxstdin_'], function(err, stdin_stream_info) {
             input = new Input(stdin_stream_info)
+            context.input = input
             proxy.invokeAsync('getOutputStreamInfo', ['_fxstdout_'], function(err, stdout_stream_info) {
                 output = new Output(stdout_stream_info)
+                context.output = output
                 callback()
             })
         })
@@ -584,7 +594,7 @@ function checkModuleInit(callback) {
 
 function run(handler) {
     checkModuleInit(function() {
-        handler(input, output, context)
+        handler(context)
     })
 }
 

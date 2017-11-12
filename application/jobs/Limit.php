@@ -15,6 +15,15 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.limit",
+    "params": {
+        "rows": 10
+    }
+}
+*/
 
 class Limit extends \Flexio\Jobs\Base
 {
@@ -93,39 +102,4 @@ class Limit extends \Flexio\Jobs\Base
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.limit';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.limit",
-        "params": {
-            "rows": 10
-        }
-    }
-EOD;
-    // direction is "asc" or "desc"
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.limit"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["value"],
-                "properties": {
-                    "rows": {
-                        "type": "integer",
-                        "minimum": 1
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

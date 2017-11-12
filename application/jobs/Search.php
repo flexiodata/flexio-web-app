@@ -15,6 +15,14 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.search",
+    "params": {
+    }
+}
+*/
 
 class Search extends \Flexio\Jobs\Base
 {
@@ -373,30 +381,4 @@ class Search extends \Flexio\Jobs\Base
 
         return $part;
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.search';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.search",
-        "params": {
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.search"]
-            },
-            "params": {
-                "type": "object"
-            }
-        }
-    }
-EOD;
 }

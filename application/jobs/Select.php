@@ -15,13 +15,25 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.select",
+    "params": {
+        "files" : [
+        ],
+        "columns": [
+        ]
+    }
+}
+*/
 
 class Select extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Object\Context &$context)
     {
         parent::run($context);
-        
+
         // process stdin
         $stdin = $context->getStdin();
         $stdout = $context->getStdout();
@@ -118,48 +130,4 @@ class Select extends \Flexio\Jobs\Base
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.select';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.select",
-        "params": {
-            "files" : [
-            ],
-            "columns": [
-            ]
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.select"]
-            },
-            "params": {
-                "type": "object",
-                "properties": {
-                    "files": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "columns": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

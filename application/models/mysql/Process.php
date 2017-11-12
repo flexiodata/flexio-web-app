@@ -266,7 +266,6 @@ class Process extends ModelBase
         }
     }
 
-
     public function getProcessLogEntries(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -276,9 +275,6 @@ class Process extends ModelBase
         $rows = array();
         try
         {
-            // note: some sub process records don't have an eid in the main
-            // table object; left join so we can get the main process records
-            // as well as subprocess records
             $rows = $db->fetchAll("select tpl.eid as eid,
                                           tpl.process_eid as process_eid,
                                           tpl.task_type as task_type,

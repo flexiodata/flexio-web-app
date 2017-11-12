@@ -15,6 +15,15 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.list",
+    "params": {
+        "path": ""
+    }
+}
+*/
 
 class List1 extends \Flexio\Jobs\Base
 {
@@ -59,36 +68,4 @@ class List1 extends \Flexio\Jobs\Base
         $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);
         $streamwriter->write(json_encode($results));
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.list';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.list",
-        "params": {
-            "path": ""
-        }
-    }
-EOD;
-    // direction is "asc" or "desc"
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.list"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["value"],
-                "properties": {
-
-                }
-            }
-        }
-    }
-EOD;
 }

@@ -15,6 +15,15 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.echo",
+    "params": {
+        "msg": ""
+    }
+}
+*/
 
 class Echo1 extends \Flexio\Jobs\Base
 {
@@ -35,35 +44,4 @@ class Echo1 extends \Flexio\Jobs\Base
         $streamwriter = $stdout->getWriter();
         $streamwriter->write($msg);
     }
-
-
-    // job definition info
-    const MIME_TYPE = 'flexio.echo';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.echo",
-        "params": {
-            "msg": ""
-        }
-    }
-EOD;
-    // direction is "asc" or "desc"
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.echo"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["msg"],
-                "properties": {
-                }
-            }
-        }
-    }
-EOD;
 }

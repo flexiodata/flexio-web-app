@@ -16,7 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Vfs implements \Flexio\Services\IFileSystem
+// TODO: require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
+
+class Vfs // TODO: implements \Flexio\Services\IFileSystem
 {
     ////////////////////////////////////////////////////////////
     // IFileSystem interface

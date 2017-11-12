@@ -1,5 +1,5 @@
-exports.flexio_handler = function (input, output) {
+exports.flexio_handler = function (context) {
     //var data = input.read(); // get data from stdin
     var data = "Hello, world.";
-    output.write(data.toUpperCase());
+    context.output.write(data.toUpperCase());
   }

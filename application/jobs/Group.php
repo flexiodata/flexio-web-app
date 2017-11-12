@@ -15,6 +15,36 @@
 declare(strict_types=1);
 namespace Flexio\Jobs;
 
+/*
+// EXAMPLE:
+{
+    "type": "flexio.group",
+    "params": {
+        "group": [
+            "vend_no"
+        ],
+        "columns": [{
+            "name": "vend_no",
+            "function": "",
+            "expression": "vend_no"
+        },
+        {
+            "name": "row_count",
+            "function": "count",
+            "expression": ""
+        },
+        {
+            "name": "sum_gross_amt",
+            "function": "sum",
+            "expression": "gross_amt"
+        }],
+        "where" : "",
+        "having" : "",
+        "unique" : false,
+        "detail" : false
+    }
+}
+*/
 
 class Group extends \Flexio\Jobs\Base
 {
@@ -290,94 +320,4 @@ class Group extends \Flexio\Jobs\Base
 
         return $output_columns;
     }
-
-    // job definition info
-    const MIME_TYPE = 'flexio.group';
-    const TEMPLATE = <<<EOD
-    {
-        "type": "flexio.group",
-        "params": {
-            "group": [
-                "vend_no"
-            ],
-            "columns": [{
-                "name": "vend_no",
-                "function": "",
-                "expression": "vend_no"
-            },
-            {
-                "name": "row_count",
-                "function": "count",
-                "expression": ""
-            },
-            {
-                "name": "sum_gross_amt",
-                "function": "sum",
-                "expression": "gross_amt"
-            }],
-            "where" : "",
-            "having" : "",
-            "unique" : false,
-            "detail" : false
-        }
-    }
-EOD;
-    const SCHEMA = <<<EOD
-    {
-        "type": "object",
-        "required": ["type","params"],
-        "properties": {
-            "type": {
-                "type": "string",
-                "enum": ["flexio.group"]
-            },
-            "params": {
-                "type": "object",
-                "required": ["columns"],
-                "properties": {
-                    "group": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "fx.fieldname"
-                        }
-                    },
-                    "columns": {
-                        "type": "array",
-                        "minItems": 1,
-                        "items": {
-                            "type": "object",
-                            "required": ["name", "function", "expression"],
-                            "properties": {
-                                "name": {
-                                    "type": "string",
-                                    "format": "fx.fieldname"
-                                },
-                                "function": {
-                                    "type": "string",
-                                    "enum": ["","group_by","first","min","max","sum","avg","row_count","count","group_id","groupid","group_concat"]
-                                },
-                                "expression": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "where": {
-                        "type": "string"
-                    },
-                    "having": {
-                        "type": "string"
-                    },
-                    "unique": {
-                        "type": "boolean"
-                    },
-                    "detail": {
-                        "type": "boolean"
-                    }
-                }
-            }
-        }
-    }
-EOD;
 }

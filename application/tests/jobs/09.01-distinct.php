@@ -20,6 +20,11 @@ class Test
 {
     public function run(&$results)
     {
+// TODO:
+// distinct tests are deprecated with new memory stream until distinct can be reimplemented with the new
+return;
+
+
         // TODO: placeholder job to test basic functionality; fill out tests
 
         // SETUP
