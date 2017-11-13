@@ -239,13 +239,13 @@ class Api
             case 'GET /users/me/statistics'            : return '\Flexio\Api\User::statistics';
 
             case 'POS /users'                          : return '\Flexio\Api\User::create';
-            case 'POS /users/resendverify'             : return '\Flexio\Api\User::resendverify';
-            case 'POS /users/activate'                 : return '\Flexio\Api\User::activate';
             case 'POS /users/:eid'                     : return '\Flexio\Api\User::set';
             case 'GET /users/:eid'                     : return '\Flexio\Api\User::get';
             case 'POS /users/:eid/changepassword'      : return '\Flexio\Api\User::changepassword';
             case 'POS /users/resetpassword'            : return '\Flexio\Api\User::resetpassword';
             case 'POS /users/requestpasswordreset'     : return '\Flexio\Api\User::requestpasswordreset';
+            case 'POS /users/resendverify'             : return '\Flexio\Api\User::resendverify';
+            case 'POS /users/activate'                 : return '\Flexio\Api\User::activate';
 
             // sharing
             case 'GET /rights'                         : return '\Flexio\Api\Right::listall';
