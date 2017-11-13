@@ -323,13 +323,13 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function getProcessUserStats() : array
+    public function getUserProcessStats() : array
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function getProcessCreationStats() : array
+    public function getPipeProcessStats() : array
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);

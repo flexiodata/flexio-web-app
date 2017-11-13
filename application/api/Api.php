@@ -315,11 +315,15 @@ class Api
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
             case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\Process::cancel';
 
+            // statistics
+            case 'GET /statistics/processes'           : return '\Flexio\Api\Statistics::getUserProcessStats';
+
             // ADMIN (internal):
-            case 'GET /system/statistics/users'        : return '\Flexio\Api\Admin::getProcessUserStats';
-            case 'GET /system/statistics/processes'    : return '\Flexio\Api\Admin::getProcessCreationStats';
-            case 'GET /system/statistics/tasks'        : return '\Flexio\Api\Admin::getProcessTaskStats';
-            case 'GET /system/configuration'           : return '\Flexio\Api\Admin::getConfiguration';
+            // formerly /system/*
+            case 'GET /admin/statistics/users'         : return '\Flexio\Api\Admin::getUserProcessStats';
+            case 'GET /admin/statistics/pipes'         : return '\Flexio\Api\Admin::getPipeProcessStats';
+            case 'GET /admin/statistics/tasks'         : return '\Flexio\Api\Admin::getProcessTaskStats';
+            case 'GET /admin/configuration'            : return '\Flexio\Api\Admin::getConfiguration';
 
             // TEST (internal):
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
