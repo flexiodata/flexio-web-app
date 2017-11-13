@@ -44,8 +44,8 @@ export const PipeResource = Vue.resource(API_ROOT+'/pipes{/eid}'+SUFFIX)
 // process
 export const ProcessResource = Vue.resource(API_ROOT+'/processes{/eid}'+SUFFIX)
 
-// statistic
-export const StatisticsResource = Vue.resource(API_ROOT+'/system/statistics{/type}')
+// admin
+export const AdminResource = Vue.resource(API_ROOT+'/admin/statistics{/type}')
 
 // stream
 export const StreamResource = Vue.resource(API_ROOT+'/streams{/eid}')
