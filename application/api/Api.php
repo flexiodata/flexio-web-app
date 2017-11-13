@@ -298,6 +298,14 @@ class Api
             case 'POS /storage/:eid/connect'           : return '\Flexio\Api\Connection::connect';
             case 'POS /storage/:eid/disconnect'        : return '\Flexio\Api\Connection::disconnect';
 
+            // streams
+            case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
+            case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
+            case 'POS /streams/:eid'                   : return '\Flexio\Api\Stream::set';
+            case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
+            case 'GET /streams/:eid/download'          : return '\Flexio\Api\Stream::download';
+            case 'POS /streams/:eid/upload'            : return '\Flexio\Api\Stream::upload';
+
             // processes
             case 'POS /processes'                      : return '\Flexio\Api\Process::create';
             case 'GET /processes'                      : return '\Flexio\Api\Process::listall';
@@ -306,14 +314,6 @@ class Api
             case 'GET /processes/:eid/log'             : return '\Flexio\Api\Process::log';
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
             case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\Process::cancel';
-
-            // streams
-            case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
-            case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
-            case 'POS /streams/:eid'                   : return '\Flexio\Api\Stream::set';
-            case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
-            case 'GET /streams/:eid/download'          : return '\Flexio\Api\Stream::download';
-            case 'POS /streams/:eid/upload'            : return '\Flexio\Api\Stream::upload';
 
             // ADMIN (internal):
             case 'GET /system/statistics/users'        : return '\Flexio\Api\System::getProcessUserStats';
