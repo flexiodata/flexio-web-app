@@ -575,6 +575,18 @@ class System
         return $version;
     }
 
+    public static function getPackageInfo() : array
+    {
+        $package = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'package.json';
+        $package_info = @file_get_contents($package);
+        if ($package_info === false)
+            return array();
+        $package_info = @json_decode($package_info, true);
+        if ($package_info === false)
+            return array();
+        return $package_info;
+    }
+
     public static function getGitRevision() : string
     {
         $path = dirname(dirname(__DIR__)) . '/.git/refs/heads/master';

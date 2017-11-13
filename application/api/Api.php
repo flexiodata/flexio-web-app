@@ -224,6 +224,7 @@ class Api
                 return '';
 
             // system (public)
+            case 'GET /about'                          : return '\Flexio\Api\System::about';
             case 'POS /validate'                       : return '\Flexio\Api\System::validate';
             case 'POS /login'                          : return '\Flexio\Api\System::login';
             case 'POS /logout'                         : return '\Flexio\Api\System::logout';

@@ -18,6 +18,20 @@ namespace Flexio\Api;
 
 class System
 {
+    public static function about(\Flexio\Api\Request $request) : array
+    {
+        // return basic information
+
+        $package_info = \Flexio\System\System::getPackageInfo();
+        $git_version = \Flexio\System\System::getGitRevision();
+
+        $result = array();
+        $result['name'] = $package_info['name'] ?? '';
+        $result['version'] = $package_info['version'] ?? '';
+        $result['sha'] = $git_version;
+        return $result;
+    }
+
     public static function login(\Flexio\Api\Request $request) : array
     {
         // note: should return the same as User::about();
