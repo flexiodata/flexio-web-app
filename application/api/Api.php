@@ -229,12 +229,6 @@ class Api
             case 'POS /login'                          : return '\Flexio\Api\System::login';
             case 'POS /logout'                         : return '\Flexio\Api\System::logout';
 
-            // system (adminstrator)
-            case 'GET /system/statistics/users'        : return '\Flexio\Api\System::getProcessUserStats';
-            case 'GET /system/statistics/processes'    : return '\Flexio\Api\System::getProcessCreationStats';
-            case 'GET /system/statistics/tasks'        : return '\Flexio\Api\System::getProcessTaskStats';
-            case 'GET /system/configuration'           : return '\Flexio\Api\System::getConfiguration'; // displays config info
-
             // search
             case 'GET /search'                         : return '\Flexio\Api\Search::exec';
 
@@ -262,18 +256,10 @@ class Api
             case 'POS /rights/:eid'                    : return '\Flexio\Api\Right::set';
             case 'GET /rights/:eid'                    : return '\Flexio\Api\Right::get';
             case 'DEL /rights/:eid'                    : return '\Flexio\Api\Right::delete';
-            // DEPRECATED (users/:eid/tokens; merge with rights?):
             case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::listall';
             case 'POS /users/:eid/tokens'              : return '\Flexio\Api\Token::create';
             case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
             case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
-
-            // projects
-            case 'POS /projects'                       : return '\Flexio\Api\Project::create';
-            case 'GET /projects'                       : return '\Flexio\Api\Project::listall';
-            case 'POS /projects/:eid'                  : return '\Flexio\Api\Project::set';
-            case 'GET /projects/:eid'                  : return '\Flexio\Api\Project::get';
-            case 'DEL /projects/:eid'                  : return '\Flexio\Api\Project::delete';
 
             // trash
             case 'POS /trash'                          : return '\Flexio\Api\Trash::add';
@@ -336,7 +322,13 @@ class Api
             case 'GET /streams/:eid/download'          : return '\Flexio\Api\Stream::download';
             case 'POS /streams/:eid/upload'            : return '\Flexio\Api\Stream::upload';
 
-            // test suite
+            // ADMIN:
+            case 'GET /system/statistics/users'        : return '\Flexio\Api\System::getProcessUserStats';
+            case 'GET /system/statistics/processes'    : return '\Flexio\Api\System::getProcessCreationStats';
+            case 'GET /system/statistics/tasks'        : return '\Flexio\Api\System::getProcessTaskStats';
+            case 'GET /system/configuration'           : return '\Flexio\Api\System::getConfiguration'; // displays config info
+
+            // TEST:
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
             case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
 
@@ -344,6 +336,15 @@ class Api
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug'; // display process info
             case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
             case 'GET /debug/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
+
+            // DEPRECATED:
+
+            // projects
+            case 'POS /projects'                       : return '\Flexio\Api\Project::create';
+            case 'GET /projects'                       : return '\Flexio\Api\Project::listall';
+            case 'POS /projects/:eid'                  : return '\Flexio\Api\Project::set';
+            case 'GET /projects/:eid'                  : return '\Flexio\Api\Project::get';
+            case 'DEL /projects/:eid'                  : return '\Flexio\Api\Project::delete';
         }
     }
 }
