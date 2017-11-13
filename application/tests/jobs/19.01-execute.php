@@ -72,7 +72,7 @@ EOD;
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
-                "integrity": "sha256-91898ffd8d03ac47e045cbcd60d1c2133df7b6b9c845d87094ec69196cf39119"
+                "integrity": "sha256:91898ffd8d03ac47e045cbcd60d1c2133df7b6b9c845d87094ec69196cf39119"
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
@@ -87,7 +87,7 @@ EOD;
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
-                "integrity": "sha256-91898FFD8D03AC47E045CBCD60D1C2133DF7B6B9C845D87094EC69196CF39119"
+                "integrity": "sha256:91898FFD8D03AC47E045CBCD60D1C2133DF7B6B9C845D87094EC69196CF39119"
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
@@ -102,7 +102,7 @@ EOD;
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
-                "integrity": "sha256-9beee4ffd5906d126ac456b262c5f6fac718062bab269886149f73773a31d9b7"
+                "integrity": "sha256:9beee4ffd5906d126ac456b262c5f6fac718062bab269886149f73773a31d9b7"
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
@@ -117,7 +117,7 @@ EOD;
             "params": {
                 "lang": "python",
                 "code": "'.base64_encode($script).'",
-                "integrity": "sha512-9beee4ffd5906d126ac456b262c5f6fac718062bab269886149f73773a31d9b7"
+                "integrity": "sha512:9beee4ffd5906d126ac456b262c5f6fac718062bab269886149f73773a31d9b7"
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
@@ -151,7 +151,7 @@ EOD;
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
-                "integrity": "sha384-c72e2df773b8c4117b19e3ced4c7e30582a5a75f93837632287b5fb65e0c9c393435c4d816f6d24054148f099b43be23"
+                "integrity": "sha384:c72e2df773b8c4117b19e3ced4c7e30582a5a75f93837632287b5fb65e0c9c393435c4d816f6d24054148f099b43be23"
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
@@ -166,7 +166,7 @@ EOD;
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
-                "integrity": "sha384-c72e2df773b8c4117b19e3ced4c7e30582a5a75f93837632287b5fb65e0c9c393435c4d816f6d24054148f099b43be23"
+                "integrity": "sha384:c72e2df773b8c4117b19e3ced4c7e30582a5a75f93837632287b5fb65e0c9c393435c4d816f6d24054148f099b43be23"
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
@@ -185,7 +185,7 @@ EOD;
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
-                "integrity": "sha512-c43a28e60208e274d88bfd4a25d219854e921a78c68395c2d1b7ee5a65da2d057f82cd266b5ae5fde7740b3e9e175e0802633b0844b34366bb3b0eef9d165a1d"
+                "integrity": "sha512:c43a28e60208e274d88bfd4a25d219854e921a78c68395c2d1b7ee5a65da2d057f82cd266b5ae5fde7740b3e9e175e0802633b0844b34366bb3b0eef9d165a1d"
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
@@ -200,7 +200,7 @@ EOD;
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
-                "integrity": "sha512-c43a28e60208e274d88bfd4a25d219854e921a78c68395c2d1b7ee5a65da2d057f82cd266b5ae5fde7740b3e9e175e0802633b0844b34366bb3b0eef9d165a1d"
+                "integrity": "sha512:c43a28e60208e274d88bfd4a25d219854e921a78c68395c2d1b7ee5a65da2d057f82cd266b5ae5fde7740b3e9e175e0802633b0844b34366bb3b0eef9d165a1d"
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
@@ -231,7 +231,7 @@ EOD;
             "params": {
                 "lang": "python",
                 "path": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py",
-                "integrity": "sha256-891568494dfb8fce562955b1509aee5a1ce0ce05ae210da6556517dd3986de36"
+                "integrity": "sha256:891568494dfb8fce562955b1509aee5a1ce0ce05ae210da6556517dd3986de36"
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);

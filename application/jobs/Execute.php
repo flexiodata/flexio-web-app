@@ -413,13 +413,14 @@ class Execute extends \Flexio\Jobs\Base
         if ($integrity !== false)
         {
             // an integrity parameter is specified; use a subresource integrity check
-            // (https://www.w3.org/TR/SRI/) to verify the code (e.g. "sha384-<base64-encoded-hash-value>");
+            // (https://www.w3.org/TR/SRI/) to verify the code (e.g. "sha384:<base64-encoded-hash-value>");
             // if a hash of the code using the provided algorithm doesn't match the value in
             // the integrity check, throw an exception
             if (!is_string($integrity))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            $parts = explode('-', $integrity);
+            // use ":" as format/code separator
+            $parts = explode(':', $integrity);
             if (count($parts) !== 2)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
