@@ -317,24 +317,22 @@ class Api
             case 'GET /streams/:eid/download'          : return '\Flexio\Api\Stream::download';
             case 'POS /streams/:eid/upload'            : return '\Flexio\Api\Stream::upload';
 
-            // ADMIN:
+            // ADMIN (internal):
             case 'GET /system/statistics/users'        : return '\Flexio\Api\System::getProcessUserStats';
             case 'GET /system/statistics/processes'    : return '\Flexio\Api\System::getProcessCreationStats';
             case 'GET /system/statistics/tasks'        : return '\Flexio\Api\System::getProcessTaskStats';
             case 'GET /system/configuration'           : return '\Flexio\Api\System::getConfiguration'; // displays config info
 
-            // TEST:
+            // TEST (internal):
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
             case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
 
-            // DEBUG: endpoints for easy debugging using a URL in a browser
+            // DEBUG (internal):
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug'; // display process info
             case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
             case 'GET /debug/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
 
-            // DEPRECATED:
-
-            // projects
+            // DEPRECATED (internal):
             case 'POS /projects'                       : return '\Flexio\Api\Project::create';
             case 'GET /projects'                       : return '\Flexio\Api\Project::listall';
             case 'POS /projects/:eid'                  : return '\Flexio\Api\Project::set';
