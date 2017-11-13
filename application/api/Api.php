@@ -274,8 +274,6 @@ class Api
             case 'GET /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::getTaskStep';
             case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\Process::create';
             case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\Pipe::processes';
-
-            // experimental API endpoint for running a pipe with form parameters
             case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
             case 'GET /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
             case 'GET /pipes/:eid/validate'            : return '\Flexio\Api\Pipe::validate';
