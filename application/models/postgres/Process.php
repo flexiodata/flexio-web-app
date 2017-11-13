@@ -323,34 +323,51 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function getProcessUserStats() : array
+    public function getUserProcessStats(string $user_eid = null) : array
     {
+        // returns the number of times a process was created per user and per pipe for
+        // each day, along with the average and total times for those processes
+
         $db = $this->getDatabase();
         try
         {
-            $rows = $db->fetchAll("select tas.target_eid as target_eid,
-                                          tpr.parent_eid as parent_eid,
-                                          tpr.created::DATE as created,
-                                          avg(extract(epoch from (tpr.finished - tpr.started))) as average_time,
-                                          sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
-                                          count(*) as total_count
-                                   from tbl_process tpr
-                                   inner join tbl_association tas on tpr.eid = tas.source_eid
-                                   where tpr.parent_eid != '' and tas.association_type = 'CRB'
-                                   group by tas.target_eid, tpr.parent_eid, tpr.created::DATE
-                                   order by created, parent_eid
-                                 ");
+            // get processes created by a user; if the user is specified, look just for those users
+            $filter_condition = "tas.association_type = 'CRB'";
+            if (isset($user_eid))
+            {
+                $quser_eid = $db->quote($user_eid);
+                $filter_condition .= " and tas.target_eid = $quser_eid";
+            }
+
+            $sql = "select tas.target_eid as target_eid, ".
+            "           tpr.parent_eid as parent_eid, ".
+            "           tpr.created::DATE as created, ".
+            "           avg(extract(epoch from (tpr.finished - tpr.started))) as average_time, ".
+            "           sum(extract(epoch from (tpr.finished - tpr.started))) as total_time, ".
+            "           count(*) as total_count ".
+            "       from tbl_process tpr ".
+            "       inner join tbl_association tas on tpr.eid = tas.source_eid ".
+            "       where $filter_condition ".
+            "       group by tas.target_eid, tpr.parent_eid, tpr.created::DATE ".
+            "       order by created, parent_eid ";
+            $rows = $db->fetchAll($sql);
          }
          catch (\Exception $e)
          {
+
+
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
          }
 
         $output = array();
         foreach ($rows as $row)
         {
+            $parent_eid = 'anonymous';
+            if (\Flexio\Base\Eid::isValid($row['parent_eid']))
+                $parent_eid = $row['parent_eid'];
+
             $output[] = array('user_eid'     => $row['target_eid'], // target for the 'created by' association
-                              'pipe_eid'     => $row['parent_eid'],
+                              'pipe_eid'     => $parent_eid,        // pipe eid if it exists; if anonymous process, then 'anonymous'
                               'created'      => $row['created'],
                               'total_count'  => $row['total_count'],
                               'total_time'   => $row['total_time'],
@@ -360,8 +377,11 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function getProcessCreationStats() : array
+    public function getPipeProcessStats() : array
     {
+        // returns the number of times a process was created from each pipe for each day
+        // along with the average and total times across those processes for that day
+
         $db = $this->getDatabase();
         try
         {
