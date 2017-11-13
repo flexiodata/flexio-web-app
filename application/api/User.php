@@ -291,49 +291,6 @@ class User
         return $user->get();
     }
 
-    public static function statistics(\Flexio\Api\Request $request) : array
-    {
-        $params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // load the object
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $filter = array('eid_type' => array(\Model::TYPE_PROJECT), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $project_count = $user->getObjectCount($filter);
-
-        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $pipe_count = $user->getObjectCount($filter);
-
-        $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $connection_count = $user->getObjectCount($filter);
-
-        // TODO: find out why following doesn't work
-        //$filter = array('eid_type' => array(\Model::TYPE_TOKEN), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        //$token_count = $user->getObjectCount($filter);
-        $token_count = count($user->getTokens());
-
-        $properties = array();
-        $properties['eid'] = $requesting_user_eid;
-        $properties['eid_type'] = \Model::TYPE_USER;
-        $properties['project_count'] = $project_count;
-        $properties['pipe_count'] = $pipe_count;
-        $properties['connection_count'] = $connection_count;
-        $properties['token_count'] = $token_count;
-        return $properties;
-    }
-
     public static function about(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
