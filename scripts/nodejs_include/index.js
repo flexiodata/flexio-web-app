@@ -531,6 +531,26 @@ class Context {
 
     constructor() {
         this._query = null
+
+        this.pipe = {
+            input:      function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.input.apply(this, arguments)) ]) },
+            output:     function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.output.apply(this, arguments)) ]) },
+            convert:    function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.convert.apply(this, arguments)) ]) },
+            echo:       function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.echo.apply(this, arguments)) ]) },
+            email:      function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.email.apply(this, arguments)) ]) },
+            execute:    function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.execute.apply(this, arguments)) ]) },
+            exit:       function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.exit.apply(this, arguments)) ]) },
+            filter:     function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.filter.apply(this, arguments)) ]) },
+            javascript: function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.javascript.apply(this, arguments)) ]) },
+            limit:      function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.limit.apply(this, arguments)) ]) },
+            list:       function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.list.apply(this, arguments)) ]) },
+            python:     function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.python.apply(this, arguments)) ]) },
+            request:    function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.request.apply(this, arguments)) ]) },
+            select:     function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.select.apply(this, arguments)) ]) },
+            sleep:      function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.sleep.apply(this, arguments)) ]) },
+            request:    function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.request.apply(this, arguments)) ]) },
+            transform:  function() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.transform.apply(this, arguments)) ]) }
+        }
     }
 
     get query() {
@@ -540,25 +560,6 @@ class Context {
         return this._query
     }
 
-
-
-    input()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.input.apply(this, arguments)) ]) }
-    output()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.output.apply(this, arguments)) ]) }
-    convert()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.convert.apply(this, arguments)) ]) }
-    echo()       { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.echo.apply(this, arguments)) ]) }
-    email()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.email.apply(this, arguments)) ]) }
-    execute()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.execute.apply(this, arguments)) ]) }
-    exit()       { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.exit.apply(this, arguments)) ]) }
-    filter()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.filter.apply(this, arguments)) ]) }
-    javascript() { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.javascript.apply(this, arguments)) ]) }
-    limit()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.limit.apply(this, arguments)) ]) }
-    list()       { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.list.apply(this, arguments)) ]) }
-    python()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.python.apply(this, arguments)) ]) }
-    request()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.request.apply(this, arguments)) ]) }
-    select()     { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.select.apply(this, arguments)) ]) }
-    sleep()      { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.sleep.apply(this, arguments)) ]) }
-    request()    { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.request.apply(this, arguments)) ]) }
-    transform()  { proxy.invokeSync('runJob', [ JSON.stringify(Flexio.task.transform.apply(this, arguments)) ]) }
 }
 
 

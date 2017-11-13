@@ -418,17 +418,34 @@ class Output(object):
         proxy.invoke('insertRows', [self._handle, rows])
 
 
+class PipeFunctions(object):
+    def __init__(self):
+        pass
+
+    def echo(self, msg):
+        definition = {
+            "type": "flexio.echo",
+            "params": {
+                "msg": msg
+            }
+        }
+        proxy.invoke('runJob', [json.dumps(definition)])
+
+
+
 class Context(object):
     def __init__(self, input, output):
         self.input = input
         self.output = output
         self._query = None
+        self.pipe = PipeFunctions()
 
     @property
     def query(self):
         if self._query is None:
             self._query = proxy.invoke('getQueryParameters', [])
         return self._query
+
 
 def run(handler):
 
