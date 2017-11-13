@@ -38,6 +38,7 @@
 </template>
 
 <script>
+  import _ from 'lodash'
   import FlexioModal from './FlexioModal.vue'
   import SignUpForm from './SignUpForm.vue'
   import SignInForm from './SignInForm.vue'

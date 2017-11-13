@@ -5,16 +5,17 @@
     </div>
     <legend class="f3 tc ph0 mh0 mv3 black-80 w-100">Thanks for signing up!</legend>
     <div class="mt4">
-      <p class="lh-copy">Here are your account credentials which we use to verify your API requests.</p>
+      <p class="lh-copy">Here is your API key. You can create new keys at any time from the <a href="/app/dashboard" class="blue">dashboard in the web app</a>.</p>
       <div class="flex flex-row mv3">
-        <div class="flex-fill pv2 ph3 f3 tc b black code">{{api_key}}</div>
+        <div class="flex-fill pv2 ph3 f3 tc b black code ba b--black-10 mv2">{{api_key}}</div>
       </div>
       <div class="mt3">
+        <p class="lh-copy">You can use this key with any of the code snippets on the Flex.io website. Check out the <a href="/docs/quick-start" class="blue">quick start guide</a> to jump right in.</p>
         <p class="lh-copy">We're thrilled to have you on board and can't wait to see what you build with Flex.io!</p>
-        <p class="lh-copy">Would you like to open your dashboard for some quick tips and help getting started?</p>
         <div class="flex flex-row items-center mt4">
-          <button type="button" class="flex-none blue underline-hover mr3 pv2 ph3" @click="$emit('close-click')">No, thanks!</button>
-          <a href="/app/dashboard" class="border-box no-select b ttu w-100 ph4 pv2a br1 white bg-blue b--blue darken-10 no-underline db tc" target="_blank" rel="noopener noreferrer">Open my dashboard</a>
+          <div class="flex-fill"></div>
+          <button type="button" class="border-box no-select ttu ph3 pv2a br1 silver bg-white ba b--black-10 darken-10 no-underline db tc mr2" @click="$emit('close-click')">Close</button>
+          <a href="/app/dashboard" class="border-box no-select b ttu ph4 pv2a br1 white bg-blue ba b--blue darken-10 no-underline db tc" target="_blank" rel="noopener noreferrer">Open my dashboard</a>
         </div>
       </div>
     </div>
