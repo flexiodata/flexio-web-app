@@ -75,6 +75,12 @@ class User
 
         // configuration fields we don't want to pass on
         $send_email = $validated_params['send_email'];
+
+        // TODO: for now, never send an email
+        $send_email = false;
+
+
+
         $create_examples = $validated_params['create_examples'];
         $require_verification = $validated_params['require_verification'];
         unset($validated_params['send_email']);
