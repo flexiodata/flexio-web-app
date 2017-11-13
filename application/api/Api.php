@@ -229,9 +229,6 @@ class Api
             case 'POS /login'                          : return '\Flexio\Api\System::login';
             case 'POS /logout'                         : return '\Flexio\Api\System::logout';
 
-            // search
-            case 'GET /search'                         : return '\Flexio\Api\Search::exec';
-
             // users
 
             // TODO: convert user password api to something like:
