@@ -235,9 +235,8 @@ class Api
             // 'POS /users/me/credentials' // changing password
             // 'DEL /users/me/credentials' // resetting password
 
-            case 'GET /users/me'                       : return '\Flexio\Api\User::about';
-
             case 'POS /users'                          : return '\Flexio\Api\User::create';
+            case 'GET /users/me'                       : return '\Flexio\Api\User::about';
             case 'POS /users/:eid'                     : return '\Flexio\Api\User::set';
             case 'GET /users/:eid'                     : return '\Flexio\Api\User::get';
             case 'POS /users/:eid/changepassword'      : return '\Flexio\Api\User::changepassword';
