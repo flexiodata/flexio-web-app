@@ -41,8 +41,8 @@ RUN git clone git@github.com:flexiodata/flexio.git /srv/www/flexio/src
 RUN cd /srv/www/flexio/src && git checkout tags/${VERSION}
 
 
-RUN rm /root/.ssh/id_rsa_github
-RUN rm /root/.ssh/id_rsa_github.pub
+#RUN rm /root/.ssh/id_rsa_github
+#RUN rm /root/.ssh/id_rsa_github.pub
 
 COPY config.json /srv/www/flexio/src/config/config.json
 
