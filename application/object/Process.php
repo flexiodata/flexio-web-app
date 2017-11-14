@@ -788,7 +788,7 @@ class Process extends \Flexio\Object\Base
     private function startLog(array $task, \Flexio\Object\Context $context) : string
     {
         // convert memory streams to stored streams so we can access them with a stream eid
-        $storable_context = self::createStoredStreamContext($context);
+        $storable_input_info = self::getStorableStreamInfo($context);
 
         // create a log record
         $params = array();
@@ -796,7 +796,7 @@ class Process extends \Flexio\Object\Base
         $params['task'] = json_encode($task);
         $params['started'] = self::getProcessTimestamp();
         // $params['input'] = \Flexio\Object\Context::toString($context); // straight serialization is allowed, but without a stream eid
-        $params['input'] = $storable_context;
+        $params['input'] = json_encode($storable_input_info);
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
@@ -807,7 +807,7 @@ class Process extends \Flexio\Object\Base
     private function finishLog(string $log_eid, array $task, \Flexio\Object\Context $context)
     {
         // convert memory streams to stored streams so we can access them with a stream eid
-        $storable_context = self::createStoredStreamContext($context);
+        $storable_output_info = self::getStorableStreamInfo($context);
 
         // update the log record
         $params = array();
@@ -815,16 +815,69 @@ class Process extends \Flexio\Object\Base
         $params['task'] = json_encode($task);
         $params['finished'] = self::getProcessTimestamp();
         // $params['output'] = \Flexio\Object\Context::toString($context); // straight serialization is allowed, but without a stream eid
-        $params['output'] = $storable_context;
+        $params['output'] = json_encode($storable_output_info);
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
         $this->getModel()->process->log($log_eid, $this->getEid(), $params);
     }
 
-    private static function createStoredStreamContext(\Flexio\Object\Context $context) : \Flexio\Object\Context
+    private static function getStorableStreamInfo(\Flexio\Object\Context $context) : array
     {
-        return $context;
+        $stdin = $context->getStdin();
+        $stdout = $context->getStdout();
+
+        $stdin_info_to_copy = $stdin->get();
+        $stdout_info_to_copy = $stdin->get();
+
+        // whatever the input/output stream types, make a fixed stream from them
+        $storable_stdin = self::createStorableStream($stdin_info_to_copy);
+        $storable_stdout = self::createStorableStream($stdout_info_to_copy);
+
+        // copy the stdin data
+        $streamreader = $stdin->getReader();
+        $streamwriter = $storable_stdin->getWriter();
+
+        while (true)
+        {
+            $row = $streamreader->read();
+            if ($row === false)
+                break;
+
+            $streamwriter->write($row);
+        }
+
+        // copy the stdout data
+        $streamreader = $stdout->getReader();
+        $streamwriter = $storable_stdout->getWriter();
+
+        while (true)
+        {
+            $row = $streamreader->read();
+            if ($row === false)
+                break;
+
+            $streamwriter->write($row);
+        }
+
+        // return the eid of the stored stream
+        $info = array();
+        $info['stdin'] = array('eid' => $storable_stdin->getEid());
+        $info['stdout'] = array('eid' => $storable_stdout->getEid());
+        return $info;
+    }
+
+    private static function createStorableStream(array $properties) : \Flexio\Object\Stream
+    {
+        // use default datastore connection
+        $datastore_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();
+        if (!\Flexio\Base\Eid::isValid($datastore_connection_eid))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        // use random string for the store table
+        $properties['connection_eid'] = $datastore_connection_eid;
+        $properties['path'] = \Flexio\Base\Util::generateHandle();
+        return \Flexio\Object\Stream::create($properties);
     }
 
     private static function generateTaskHash(string $implementation_version, array $task, \Flexio\Object\Context $context) : string
