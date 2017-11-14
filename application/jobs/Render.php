@@ -36,7 +36,7 @@ class Render extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $items = $job_definition['params']['items'] ?? null;
         $url = $job_definition['params']['url'] ?? null;
-        $format = $job_definition['params']['format'] ?? 'pdf';
+        $format = $job_definition['params']['format'] ?? 'png';
         $paper = $job_definition['params']['paper'] ?? 'letter';
         $width = $job_definition['params']['width'] ?? null;
         $height = $job_definition['params']['height'] ?? null;
