@@ -61,6 +61,10 @@
             type: 'months'
           }
         }
+      },
+      'is-admin': {
+        type: Boolean,
+        default: false
       }
     },
     components: {
@@ -69,10 +73,14 @@
     },
     computed: {
       is_fetching() {
-        return _.get(this.$store, 'state.statistics_fetching.processes', false)
+        var lookup = 'state.statistics_fetching.'
+        lookup += this.isAdmin ? 'admin-processes': 'processes'
+        return _.get(this.$store, lookup, false)
       },
       is_fetched() {
-        return _.get(this.$store, 'state.statistics_fetched.processes', false)
+        var lookup = 'state.statistics_fetched.'
+        lookup += this.isAdmin ? 'admin-processes': 'processes'
+        return _.get(this.$store, lookup, false)
       },
       end_date() {
         var end = _.isString(this.endDate) ? moment(this.endDate).utc() : moment().utc()
@@ -104,7 +112,9 @@
         })
       },
       store_stats() {
-        return _.get(this.$store, 'state.statistics.processes', [])
+        var lookup = 'state.statistics.'
+        lookup += this.isAdmin ? 'admin-processes': 'processes'
+        return _.get(this.$store, lookup, [])
       },
       stats_with_created() {
         // add a moment date to each stat
@@ -140,8 +150,11 @@
     },
     methods: {
       tryFetchStats() {
-        if (!this.is_fetched)
+        if (!this.is_fetched && this.isAdmin)
           this.$store.dispatch('fetchAdminStatistics', { type: 'processes' })
+
+        if (!this.is_fetched && !this.isAdmin)
+          this.$store.dispatch('fetchStatistics', { type: 'processes' })
       },
       getDatasetData(stats, range) {
         // remove out-of-bounds values

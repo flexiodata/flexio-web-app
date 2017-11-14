@@ -11,6 +11,7 @@ import {
   ProcessResource,
   RightsResource,
   AdminResource,
+  StatisticsResource,
   StreamResource,
   TestResource,
   TrashResource,
@@ -134,8 +135,11 @@ export default {
   fetchProcessTaskInputInfo:      function({ eid, task_eid })           { return ProcessResource[GET] ({ eid, p1:'tasks', p2: task_eid, p3: 'input', p4: 'info' })        },
   fetchProcessTaskOutputInfo:     function({ eid, task_eid })           { return ProcessResource[GET] ({ eid, p1:'tasks', p2: task_eid, p3: 'output', p4: 'info' })       },
 
-  // statistics
+  // admin statistics
   fetchAdminStatistics:           function({ type })                    { return AdminResource[GET] ({ type })                                                            },
+
+  // statistics
+  fetchStatistics:                function({ type })                    { return StatisticsResource[GET] ({ type })                                                       },
 
   // stream
   fetchStream:                    function({ eid })                     { return StreamResource[GET] ({ eid })                                                            },

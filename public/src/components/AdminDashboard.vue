@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
     <div class="ma4 bg-white css-dashboard-box">
-      <stats-pipes-run title="Pipes Run (Last 30 days)"></stats-pipes-run>
+      <stats-pipes-run title="Pipes Run (Last 30 days)" :is-admin="true"></stats-pipes-run>
     </div>
     <div class="ma4 mt0 bg-white css-dashboard-box">
       <stats-top-pipes></stats-top-pipes>
