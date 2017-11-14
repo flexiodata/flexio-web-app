@@ -33,7 +33,7 @@ const options = commandLineArgs([
 
  //await page.goto(options.url,{waitUntil:"load"})
 // await page.goto(options.url,{waitUntil:"networkidle2"})
- await page.goto(options.url,{waitUntil:"networkidle","networkIdleTimeout" : 1000});
+ await page.goto(options.url);
 
  // await page.injectFile(`${__dirname}/kits.js`);
  //await page.addScriptTag({path:`${__dirname}/kits.js`})
