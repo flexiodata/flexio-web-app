@@ -390,23 +390,23 @@ class Execute extends \Flexio\Jobs\Base
         // get the language
         $this->lang = $job_definition['params']['lang'];
 
-        // if a file is specified, get the contents from the file location;
-        // this allows remote storing of code
-        $file = $job_definition['params']['path'] ?? false;
-        if ($file !== false)
+        // if code is specified, get the contents from the supplied code
+        $code = $job_definition['params']['code'] ?? false;
+        if ($code !== false)
         {
-            $this->code = self::getFileContents($file);
-            $this->code_base64 = base64_encode($this->code);
+            $this->code_base64 = $job_definition['params']['code'];
+            $this->code = base64_decode($this->code_base64);
         }
          else
         {
-            // if code isn't specified in a file location, see if it's specified as a param
-            // 'code' contains the base64-encoded program source
-            $this->code_base64 = $job_definition['params']['code'] ?? '';
-            if (strlen($this->code_base64) == 0)
+            // if the code isn't specified in a file location, see if it's specified
+            // in a remote location
+            $file = $job_definition['params']['path'] ?? false;
+            if ($file === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
-            $this->code = base64_decode($this->code_base64);
+            $this->code = self::getFileContents($file);
+            $this->code_base64 = base64_encode($this->code);
         }
 
         $integrity = $job_definition['params']['integrity'] ?? false;

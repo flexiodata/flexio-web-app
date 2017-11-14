@@ -238,5 +238,28 @@ EOD;
         $actual = $process->getStdout()->content(0,50);
         $expected = 'Hello, World!';
         TestCheck::assertString('E.2', 'Execute Job; remote execution with sha256 check',  $actual, $expected, $results);
+
+
+
+        // TEST: Base Execute Job Code with local code override
+
+        // BEGIN TEST
+        $script = <<<EOD
+def flexio_handler(context):
+    context.output.content_type = "text/plain"
+    context.output.write("This is local.")
+EOD;
+        $task = array(json_decode('{
+            "type": "flexio.execute",
+            "params": {
+                "lang": "python",
+                "code": "'.base64_encode($script).'",
+                "path": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
+            }
+        }',true));
+        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $actual = $process->getStdout()->content(0,50);
+        $expected = 'This is local.';
+        TestCheck::assertString('F.1', 'Execute Job; local code override',  $actual, $expected, $results);
     }
 }
