@@ -18,19 +18,6 @@ namespace Flexio\Object;
 
 class Action
 {
-    public static function create(string $action, string $user_eid, string $subject_eid, string $object_eid = null, array $params = null) : bool
-    {
-        $action_params = array(
-            'action' => $action,
-            'user_eid' => $user_eid,
-            'subject_eid' => $subject_eid,
-            'object_eid' => $object_eid,
-            'params' => json_encode($params)
-        );
-        $result = \Flexio\System\System::getModel()->action->record($action_params);
-        return $result;
-    }
-
     public static function identifyTest(array $params)
     {
         // note: for testing use; does not contain production check
