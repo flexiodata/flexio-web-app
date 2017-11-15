@@ -33,13 +33,15 @@ class Action
 
     public static function track(array $params)
     {
-        // TODO: for actual use; contains production "check"
+        if (!IS_PRODSITE())
+            return;
+
         self::track_internal($params);
     }
 
     public static function trackTest(array $params)
     {
-        // TODO: for testing use; does not contain production check
+        // note: for testing use; does not contain production check
         self::track_internal($params);
     }
 

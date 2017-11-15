@@ -328,8 +328,8 @@ class Api
             case 'GET /admin/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
 
             // DEBUG (internal):
-            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';       // display process info
-            case 'GET /admin/debug/track'              : return '\Flexio\Api\Action::track';        // triggers tracking function for testing
+            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';    // display process info
+            case 'GET /admin/debug/track'              : return '\Flexio\Api\Action::trackTest'; // triggers tracking function for testing
 
             // TEST (internal):
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
