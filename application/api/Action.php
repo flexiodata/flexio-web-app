@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Api;
 
 
-class Activity
+class Action
 {
     public static function track(\Flexio\Api\Request $request)
     {
