@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Action
 {
-    public static function track(\Flexio\Api\Request $request)
+    public static function trackTest(\Flexio\Api\Request $request)
     {
 /*
         $params = $request->getPostParams();
