@@ -324,16 +324,16 @@ class Api
             case 'GET /admin/statistics/pipes'         : return '\Flexio\Api\Admin::getPipeProcessStats';
             case 'GET /admin/statistics/tasks'         : return '\Flexio\Api\Admin::getProcessTaskStats';
             case 'GET /admin/configuration'            : return '\Flexio\Api\Admin::getConfiguration';
+            case 'GET /admin/resetconfig'              : return '\Flexio\Api\User::resetConfig';    // resets the user configuration
+            case 'GET /admin/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
+
+            // DEBUG (internal):
+            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';       // display process info
+            case 'GET /admin/debug/track'              : return '\Flexio\Api\Action::track';        // triggers tracking function for testing
 
             // TEST (internal):
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
             case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
-
-            // DEBUG (internal):
-            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug'; // display process info
-            case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
-            case 'GET /debug/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
-            case 'GET /admin/debug/track'              : return '\Flexio\Api\Action::track'; // triggers tracking function for testing
 
             // DEPRECATED (internal):
             case 'POS /projects'                       : return '\Flexio\Api\Project::create';
