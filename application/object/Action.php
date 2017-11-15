@@ -31,12 +31,10 @@ class Action
         return $result;
     }
 
-    public static function track(array $params)
+    public static function identifyTest(array $params)
     {
-        if (!IS_PRODSITE())
-            return;
-
-        self::track_internal($params);
+        // note: for testing use; does not contain production check
+        self::identify_internal($params);
     }
 
     public static function trackTest(array $params)
@@ -45,8 +43,59 @@ class Action
         self::track_internal($params);
     }
 
+    public static function identify(array $params)
+    {
+        if (!IS_PRODSITE())
+            return;
+
+        self::identify_internal($params);
+    }
+
+    public static function track(array $params)
+    {
+        if (!IS_PRODSITE())
+            return;
+
+        self::track_internal($params);
+    }
+
+    private static function identify_internal(array $params)
+    {
+        /*
+        POST https://api.segment.io/v1/identify
+
+        {
+        "userId": "019mr8mf4r",
+        "traits": {
+            "email": "pgibbons@initech.com",
+            "name": "Peter Gibbons",
+            "industry": "Technology"
+        },
+        "context": {
+            "ip": "24.5.68.47"
+        },
+        "timestamp": "2012-12-02T00:30:08.276Z"
+        }
+        */
+    }
+
     private static function track_internal(array $params)
     {
-        // TODO: implement
+        /*
+        POST https://api.segment.io/v1/track
+
+        {
+        "userId": "019mr8mf4r",
+        "event": "Item Purchased",
+        "properties": {
+            "name": "Leap to Conclusions Mat",
+            "revenue": 14.99
+        },
+        "context": {
+            "ip": "24.5.68.47"
+        },
+        "timestamp": "2012-12-02T00:30:12.984Z"
+        }
+        */
     }
 }
