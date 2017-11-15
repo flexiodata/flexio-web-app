@@ -755,14 +755,20 @@ class Process extends \Flexio\Object\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the primary process task json
-        $task = @json_decode($properties['task'],true);
-        if ($task !== false)
-            $properties['task'] = $task;
+        if (isset($properties['task']))
+        {
+            $task = @json_decode($properties['task'],true);
+            if ($task !== false)
+                $properties['task'] = $task;
+        }
 
         // unpack the primary process process info json
-        $process_info = @json_decode($properties['process_info'],true);
-        if ($process_info !== false)
-            $properties['process_info'] = $process_info;
+        if (isset($properties['process_info']))
+        {
+            $process_info = @json_decode($properties['process_info'],true);
+            if ($process_info !== false)
+                $properties['process_info'] = $process_info;
+        }
 
         return $properties;
     }
