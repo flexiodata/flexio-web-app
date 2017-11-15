@@ -676,7 +676,7 @@ class Pipe
         {
             $cnt = count($items);
             if ($tail > $cnt )
-                $tail = $cnt ;
+                $tail = $cnt + 1 ;
             return array_slice($items, $cnt - $tail - 1, $limit);
         }
 
