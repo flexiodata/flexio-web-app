@@ -319,7 +319,7 @@ class Api
             case 'GET /statistics/processes'           : return '\Flexio\Api\Statistics::getUserProcessStats';
 
             // ADMIN (internal):
-            // formerly /system/*
+            case 'GET /admin/list/users'               : return '\Flexio\Api\Admin::getUserList';
             case 'GET /admin/statistics/users'         : return '\Flexio\Api\Admin::getUserProcessStats';
             case 'GET /admin/statistics/pipes'         : return '\Flexio\Api\Admin::getPipeProcessStats';
             case 'GET /admin/statistics/tasks'         : return '\Flexio\Api\Admin::getProcessTaskStats';

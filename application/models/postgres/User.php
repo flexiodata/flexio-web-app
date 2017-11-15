@@ -260,6 +260,43 @@ class User extends ModelBase
                      'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
+    public function getUserList()
+    {
+        $db = $this->getDatabase();
+        $rows = array();
+        try
+        {
+            $rows = $db->fetchAll("select tus.eid as eid,
+                                    tus.user_name,
+                                    tus.email,
+                                    tus.first_name,
+                                    tus.last_name,
+                                    tus.created
+                                  from tbl_user tus
+                                  order by tus.id");
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'        => $row['eid'],
+                              'user_name'  => $row['user_name'],
+                              'email'      => $row['email'],
+                              'first_name' => $row['first_name'],
+                              'last_name'  => $row['last_name'],
+                              'created'    => \Flexio\Base\Util::formatDate($row['created']));
+        }
+
+        return $output;
+    }
+
     public function getVerifyCodeFromEid(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))

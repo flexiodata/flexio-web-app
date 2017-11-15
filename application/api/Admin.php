@@ -18,6 +18,38 @@ namespace Flexio\Api;
 
 class Admin
 {
+    public static function getUserList(\Flexio\Api\Request $request) : array
+    {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // only allow users from flex.io to get this info
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        if ($user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $user_list = \Flexio\System\System::getModel()->user->getUserList();
+
+        $result = array();
+        foreach ($user_list as $u)
+        {
+            $user_info = array();
+            $user_info['eid'] = $u['eid'] ?? '';
+            $user_info['user_name'] = $u['user_name'] ?? '';
+            $user_info['email'] = $u['email'] ?? '';
+            $user_info['first_name'] = $u['first_name'] ?? '';
+            $user_info['last_name'] = $u['last_name'] ?? '';
+            $user_info['created'] = $u['created'] ?? '';
+
+            $result[] = $user_info;
+        }
+
+        return $result;
+    }
+
     public static function getUserProcessStats(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
