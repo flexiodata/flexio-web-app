@@ -16,7 +16,7 @@
     id: 'quick-start',
     icon: 'launch',
     label: 'Quick Start',
-    href: '/docs/getting-started'
+    href: '/docs/quick-start'
   },{
     id: 'api-docs',
     icon: 'help',

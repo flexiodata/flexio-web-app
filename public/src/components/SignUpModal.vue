@@ -12,8 +12,8 @@
     <div class="pv3 ph2">
       <sign-up-form
         @sign-in-click="view = 'signin'"
-        @signed-up="$emit('signed-up')"
-        @signed-in="onSignedUp"
+        @signed-up="onSignedUp"
+        @signed-in="onSignedUpAndIn"
         v-if="view === 'signup'"
       />
       <sign-in-form
@@ -67,6 +67,12 @@
     },
     methods: {
       onSignedUp(user_info) {
+        this.$emit('signed-up')
+
+        if (window.analytics)
+          window.analytics.track('Signed Up', _.omit(user_info, ['password']))
+      },
+      onSignedUpAndIn(user_info) {
         this.$emit('signed-up-signed-in')
         this.user_eid = _.get(user_info, 'eid', '')
         this.view = 'sign-up-success'

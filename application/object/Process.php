@@ -534,14 +534,14 @@ class Process extends \Flexio\Object\Base
 
 
             // if we're in buld mode, log the task
-            if ($this->isBuildMode() === true)
+            //if ($this->isBuildMode() === true)
                 $log_eid = $this->startLog($task, $context);
 
                 // execute the step
             $this->executeTask($task, $context);
             $first_task = false;
 
-            if ($this->isBuildMode() === true)
+            //if ($this->isBuildMode() === true)
                 $this->finishLog($log_eid, $task, $context);
 
 
