@@ -33,6 +33,18 @@ class Action
 
     public static function track(array $params)
     {
-        // TODO: only allow on production to avoid hits from testing
+        // TODO: for actual use; contains production "check"
+        self::track_internal($params);
+    }
+
+    public static function trackTest(array $params)
+    {
+        // TODO: for testing use; does not contain production check
+        self::track_internal($params);
+    }
+
+    private static function track_internal(array $params)
+    {
+        // TODO: implement
     }
 }

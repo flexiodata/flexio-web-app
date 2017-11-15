@@ -333,7 +333,7 @@ class Api
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug'; // display process info
             case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
             case 'GET /debug/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
-            case 'GET /debug/track'                    : return '\Flexio\Api\Action::track'; // triggers tracking function for testing
+            case 'GET /admin/debug/track'              : return '\Flexio\Api\Action::track'; // triggers tracking function for testing
 
             // DEPRECATED (internal):
             case 'POS /projects'                       : return '\Flexio\Api\Project::create';

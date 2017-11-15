@@ -29,7 +29,8 @@ class Action
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
-
-        \Flexio\Object\Action::track($params);
+        $params = array();
+        \Flexio\Object\Action::trackTest($params);
+        return array();
     }
 }
