@@ -279,16 +279,16 @@ class Pipe
         if (($validator->check($params, array(
                 'eid' => array('type' => 'identifier', 'required' => true),
                 'start'    => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'order'    => array('type' => 'string', 'required' => false)
+                'tail'     => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
         $pipe_identifier = $validated_params['eid'];
         $start = isset($validated_params['start']) ? (int)$validated_params['start'] : null;
+        $tail = isset($validated_params['tail']) ? (int)$validated_params['tail'] : null;
         $limit = isset($validated_params['limit']) ? (int)$validated_params['limit'] : null;
-        $order = isset($validated_params['order']) ? (string)$validated_params['order'] : null;
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -299,7 +299,7 @@ class Pipe
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // get the processes
+        // get the processes that are accessible
         $processes_accessible = array();
         $processes = $pipe->getProcesses();
         foreach ($processes as $p)
@@ -309,11 +309,20 @@ class Pipe
             if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
-            $processes_accessible[] = $p->get();
+            $processes_accessible[] = $p;
         }
 
-        // filter/order the result items
-        $result = self::filter($processes_accessible, $start, $limit, $order);
+        // get the subset of the processes for any start/tail/limit
+        if (isset($start) || isset($tail) || isset($limit))
+            $processes_accessible = self::filter($processes_accessible, $start, $tail, $limit);
+
+        // get the content for the selected processes
+        $result = array();
+        foreach ( $processes_accessible as $p)
+        {
+            $result[] = $p->get();
+        }
+
         return $result;
     }
 
@@ -646,55 +655,32 @@ class Pipe
         return $pipe->getTaskStep($task_identifier);
     }
 
-    private static function filter(array $processes_accessible, int $start = null, int $limit = null, string $order = null) : array
+    private static function filter(array $items, int $start = null, int $tail = null, int $limit = null) : array
     {
-        // TODO: generalize this function so it can be used for other API endpoints
-        // that involve lists
+        // if limit isn't defined, set it to the largest integer size
+        if (!isset($limit))
+            $limit = PHP_INT_MAX;
 
-
-        // if no parameters are defined, return the input
-        if (!isset($start) && !isset($limit) && !isset($order))
-            return $processes_accessible;
-
-        if (isset($order))
-        {
-            $desc = false;
-            if (substr($order,0,1) === '-' && strlen($order) > 1)
-            {
-                // if the field starts with a -, sort in descending order
-                $desc = true;
-                $order = substr($order, 1);
-            }
-
-            if ($desc === true)
-                \Flexio\Base\Util::sortByFieldDesc($processes_accessible, $order);
-                 else
-                \Flexio\Base\Util::sortByFieldAsc($processes_accessible, $order);
-        }
-
-        $start = $start ?? 0;
-        $limit = $limit ?? PHP_INT_MAX;
-
-        if ($start < 0)
-            $start = 0;
         if ($limit < 0)
             $limit = 0;
 
-        $row = 0;
-        $result = array();
-        foreach ($processes_accessible as $p)
+        // if start is specified, supercede any tail
+        if (isset($start))
         {
-            $row++;
-
-            if ($row < $start + 1)
-                continue;
-
-            if ($row > $start + $limit)
-                break;
-
-            $result[] = $p;
+            if ($start < 0)
+                $start = 0;
+            return array_slice($items, $start, $limit);
         }
 
-        return $result;
+        if (isset($tail))
+        {
+            $cnt = count($items);
+            if ($tail > $cnt )
+                $tail = $cnt ;
+            return array_slice($items, $cnt - $tail - 1, $limit);
+        }
+
+        // no start or tail; start at zero and return the limit
+        return array_slice($items, 0, $limit);
     }
 }
