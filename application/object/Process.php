@@ -534,14 +534,14 @@ class Process extends \Flexio\Object\Base
 
 
             // if we're in buld mode, log the task
-            //if ($this->isBuildMode() === true)
+            if ($this->isBuildMode() === true)
                 $log_eid = $this->startLog($task, $context);
 
                 // execute the step
             $this->executeTask($task, $context);
             $first_task = false;
 
-            //if ($this->isBuildMode() === true)
+            if ($this->isBuildMode() === true)
                 $this->finishLog($log_eid, $task, $context);
 
 
@@ -834,7 +834,7 @@ class Process extends \Flexio\Object\Base
         $stdout = $context->getStdout();
 
         $stdin_info_to_copy = $stdin->get();
-        $stdout_info_to_copy = $stdin->get();
+        $stdout_info_to_copy = $stdout->get();
 
         // whatever the input/output stream types, make a fixed stream from them
         $storable_stdin = self::createStorableStream($stdin_info_to_copy);
@@ -844,9 +844,15 @@ class Process extends \Flexio\Object\Base
         $streamreader = $stdin->getReader();
         $streamwriter = $storable_stdin->getWriter();
 
+
         while (true)
         {
-            $row = $streamreader->read();
+            $row = false;
+            if ($stdin_info_to_copy['mime_type'] === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+                $row = $streamreader->readRow();
+                 else
+                $row = $streamreader->read();
+
             if ($row === false)
                 break;
 
@@ -859,7 +865,12 @@ class Process extends \Flexio\Object\Base
 
         while (true)
         {
-            $row = $streamreader->read();
+            $row = false;
+            if ($stdout_info_to_copy['mime_type'] === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+                $row = $streamreader->readRow();
+                 else
+                $row = $streamreader->read();
+
             if ($row === false)
                 break;
 
