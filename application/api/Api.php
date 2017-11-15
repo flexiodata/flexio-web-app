@@ -329,7 +329,6 @@ class Api
 
             // DEBUG (internal):
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';    // display process info
-            case 'GET /admin/debug/identify'           : return '\Flexio\Api\Action::identifyTest'; // triggers identify function for testing
             case 'GET /admin/debug/track'              : return '\Flexio\Api\Action::trackTest'; // triggers tracking function for testing
 
             // TEST (internal):

@@ -18,35 +18,12 @@ namespace Flexio\Api;
 
 class Action
 {
-    public static function identifyTest(\Flexio\Api\Request $request)
-    {
-/*
-        $params = $request->getPostParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-*/
-        $params = array();
-        \Flexio\Object\Action::identifyTest($params);
-        return array();
-    }
-
     public static function trackTest(\Flexio\Api\Request $request)
     {
-/*
-        $params = $request->getPostParams();
+        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-*/
-        $params = array();
-        \Flexio\Object\Action::trackTest($params);
+        \Flexio\Object\Action::trackTest($requesting_user_eid, $params);
         return array();
     }
 }

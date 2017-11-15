@@ -18,35 +18,22 @@ namespace Flexio\Object;
 
 class Action
 {
-    public static function identifyTest(array $params)
+    public static function trackTest(string $user_eid, array $params)
     {
         // note: for testing use; does not contain production check
-        self::identify_internal($params);
+        self::track_internal($user_eid, $params);
     }
 
-    public static function trackTest(array $params)
+    public static function track(string $user_eid, array $params)
     {
-        // note: for testing use; does not contain production check
-        self::track_internal($params);
-    }
-
-    public static function identify(array $params)
-    {
+        // note: for actual use in Api functions; contains production check
         if (!IS_PRODSITE())
             return;
 
-        self::identify_internal($params);
+        self::track_internal($user_eid, $params);
     }
 
-    public static function track(array $params)
-    {
-        if (!IS_PRODSITE())
-            return;
-
-        self::track_internal($params);
-    }
-
-    private static function identify_internal(array $params)
+    private static function track_internal(string $user_eid, array $params)
     {
         /*
         POST https://api.segment.io/v1/identify
@@ -64,10 +51,7 @@ class Action
         "timestamp": "2012-12-02T00:30:08.276Z"
         }
         */
-    }
 
-    private static function track_internal(array $params)
-    {
         /*
         POST https://api.segment.io/v1/track
 
