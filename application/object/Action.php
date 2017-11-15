@@ -30,4 +30,9 @@ class Action
         $result = \Flexio\System\System::getModel()->action->record($action_params);
         return $result;
     }
+
+    public static function track(array $params)
+    {
+        // TODO: only allow on production to avoid hits from testing
+    }
 }
