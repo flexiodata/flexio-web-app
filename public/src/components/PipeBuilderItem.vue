@@ -523,7 +523,7 @@
       active_subprocess() {
         return _
           .chain(this.activeProcess)
-          .get('subprocesses')
+          .get('log')
           .find((s) => { return _.get(s, 'task.eid') == this.eid })
           .value()
       },

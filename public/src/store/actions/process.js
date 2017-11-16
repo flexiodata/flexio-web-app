@@ -80,6 +80,24 @@ export const fetchProcess = ({ commit, dispatch }, { eid, poll }) => {
 
 // ----------------------------------------------------------------------- //
 
+export const fetchProcessLog = ({ commit, dispatch }, { eid }) => {
+  commit(types.FETCHING_PROCESS_LOG, { eid, fetching: true })
+
+  return api.fetchProcessLog({ eid }).then(response => {
+    // success callback
+    commit(types.FETCHED_PROCESS_LOG, { eid, log: response.body })
+    commit(types.FETCHING_PROCESS_LOG, { eid, fetching: false })
+
+    return response
+  }, response => {
+    // error callback
+    commit(types.FETCHING_PROCESS_LOG, { eid, fetching: false })
+    return response
+  })
+}
+
+// ----------------------------------------------------------------------- //
+
 export const cancelProcess = ({ commit, dispatch }, { eid }) => {
   commit(types.CANCELING_PROCESS, { eid })
 

@@ -85,6 +85,11 @@
         pipeEid: this.eid
       }
     },
+    watch: {
+      active_process(val, old_val) {
+        this.tryFetchProcessLog()
+      }
+    },
     data() {
       return {
         eid: this.$route.params.eid,
@@ -400,6 +405,15 @@
           var attrs = { tail: 0 }
           this.$store.dispatch('fetchProcesses', { pipe_eid, attrs })
         }
+      },
+
+      tryFetchProcessLog() {
+        var is_fetching = _.get(this.active_process, 'is_fetching', false)
+        var eid = _.get(this.active_process, 'eid', '')
+        var log = _.get(this.active_process, 'log', null)
+
+        if (eid.length > 0 && _.isNil(log) && !is_fetching)
+          this.$store.dispatch('fetchProcessLog', { eid })
       },
 
       tryFetchConnections() {
