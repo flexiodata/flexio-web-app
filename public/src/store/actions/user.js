@@ -97,9 +97,7 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
     commit(types.SIGNED_IN, user)
     commit(types.SIGNING_IN, false)
 
-    analytics.track('Signed In', _.omit(attrs, ['password']))
     dispatch('fetchCurrentUserStatistics')
-
     return response
   }, response => {
     // error callback
@@ -116,8 +114,6 @@ export const signOut = ({ commit }) => {
     commit(types.SIGNED_OUT)
     commit(types.SIGNING_OUT, false)
 
-    analytics.track('Signed Out')
-
     return response
   }, response => {
     // error callback
@@ -133,8 +129,6 @@ export const signUp = ({ commit, dispatch }, { attrs }) => {
     // success callback
     commit(types.SIGNED_UP)
     commit(types.SIGNING_UP, false)
-
-    analytics.track('Signed Up', _.omit(attrs, ['password']))
 
     return response
   }, response => {

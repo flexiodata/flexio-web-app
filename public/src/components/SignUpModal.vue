@@ -68,9 +68,6 @@
     methods: {
       onSignedUp(user_info) {
         this.$emit('signed-up')
-
-        if (window.analytics)
-          window.analytics.track('Signed Up', _.omit(user_info, ['password']))
       },
       onSignedUpAndIn(user_info) {
         this.$emit('signed-up-signed-in')
