@@ -23,6 +23,13 @@ class Action
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
+        // maek sure we have an 'action' query parameter
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'action'        => array('type' => 'string', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         \Flexio\Object\Action::trackTest($requesting_user_eid, $params);
         return array();
     }

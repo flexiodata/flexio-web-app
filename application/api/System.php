@@ -69,6 +69,10 @@ class System
             return $properties;
         }
 
+        // track the user login
+        \Flexio\Object\Action::track(\Flexio\Object\Action::TYPE_SIGNED_IN, $user->getEid(), $user->get());
+
+        // return the user info
         return $user->get();
     }
 
@@ -86,6 +90,11 @@ class System
         \Flexio\System\System::clearLoginIdentity();
         @session_destroy();
         @setcookie('FXSESSID', '', time()-86400, '/');
+
+        // track the user signout
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user !== false)
+            \Flexio\Object\Action::track(\Flexio\Object\Action::TYPE_SIGNED_IN, $user->getEid(), $user->get());
 
         // return empty "about" info
         $properties = array();
