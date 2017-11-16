@@ -35,6 +35,14 @@
   import Spinner from 'vue-simple-spinner'
   import StreamText from './StreamText.vue'
 
+  var containsSubstrings = function(arr, str) {
+    var bools = _.map(arr, (a) => {
+      return str.indexOf(a) != -1
+    })
+
+    return _.some(bools, Boolean)
+  }
+
   export default {
     props: ['stream-eid', 'task-json'],
     components: {
@@ -55,7 +63,7 @@
       },
 
       stream_query_params() {
-        return _.includes([
+        return containsSubstrings([
           mt.MIMETYPE_TEXT_PLAIN,
           mt.MIMETYPE_TEXT_CSV
         ], this.mime_type) ? { encode: 'UTF-8' } : {}
@@ -70,11 +78,11 @@
       },
 
       mime_type() {
-        return _.get(this.stream, 'mime_type')
+        return _.get(this.stream, 'mime_type', '')
       },
 
       is_image() {
-        return _.includes([
+        return containsSubstrings([
           mt.MIMETYPE_IMAGE_JPG,
           mt.MIMETYPE_IMAGE_PNG,
           mt.MIMETYPE_IMAGE_BMP,
@@ -84,23 +92,23 @@
       },
 
       is_flexio_html() {
-        return this.mime_type == mt.MIMETYPE_APPLICATION_VND_HTML
+        return this.mime_type.indexOf(mt.MIMETYPE_APPLICATION_VND_HTML) != -1
       },
 
       is_pdf() {
-        return this.mime_type == mt.MIMETYPE_APPLICATION_PDF
+        return this.mime_type.indexOf(mt.MIMETYPE_APPLICATION_PDF) != -1
       },
 
       is_html() {
-        return this.mime_type == mt.MIMETYPE_TEXT_HTML
+        return this.mime_type.indexOf(mt.MIMETYPE_TEXT_HTML) != -1
       },
 
       is_json() {
-        return this.mime_type == mt.MIMETYPE_APPLICATION_JSON
+        return this.mime_type.indexOf(mt.MIMETYPE_APPLICATION_JSON) != -1
       },
 
       is_text() {
-        return _.includes([
+        return containsSubstrings([
           mt.MIMETYPE_APPLICATION_XML,
           mt.MIMETYPE_APPLICATION_OCTET_STREAM,
           mt.MIMETYPE_TEXT_PLAIN,
@@ -109,7 +117,7 @@
       },
 
       is_table() {
-        return this.mime_type == mt.MIMETYPE_APPLICATION_VND_FLEXIO_TABLE
+        return this.mime_type.indexOf(mt.MIMETYPE_APPLICATION_VND_FLEXIO_TABLE) != -1
       }
     },
     mounted() {

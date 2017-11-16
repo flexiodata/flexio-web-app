@@ -18,7 +18,7 @@ export default [
       'type': TASK_TYPE_REQUEST,
       'params': {
         'method': 'GET',
-        'url': 'https://static.pexels.com/photos/51387/mount-everest-himalayas-nuptse-lhotse-51387.jpeg'
+        'url': 'https://raw.githubusercontent.com/flexiodata/data/master/mockaroo/names-and-ip-addresses.csv'
       }
     }
   },{
