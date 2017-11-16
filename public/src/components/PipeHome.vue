@@ -397,7 +397,7 @@
         if (!this.processes_fetched)
         {
           var pipe_eid = this.eid
-          var attrs = { start: 0, limit: 1, order: '-created' }
+          var attrs = { tail: 0 }
           this.$store.dispatch('fetchProcesses', { pipe_eid, attrs })
         }
       },

@@ -111,10 +111,8 @@ export default {
 
   // pipe (other)
   fetchPipeProcesses: function({ eid, attrs }) {
-    var start = attrs.start
-    var limit = attrs.limit
-    var order = attrs.order
-    return PipeResource[GET] ({ eid, p1: 'processes', start, limit, order } )
+    var params = _.assign({ eid, p1: 'processes' }, attrs)
+    return PipeResource[GET] (params)
   },
 
   // trash
