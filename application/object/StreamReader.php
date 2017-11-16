@@ -231,6 +231,11 @@ class StreamReader implements \Flexio\Object\IStreamReader
         return $this->reader->getRows($offset, $limit);
     }
 
+    public function getRowCount() : int
+    {
+        return $this->reader->getRowCount();
+    }
+
     public function close() : bool
     {
         if ($this->isOk() === false)
@@ -363,6 +368,11 @@ class StreamFileReader
     }
 
     public function getRows(int $offset, int $limit)
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function getRowCount() : int
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
@@ -535,6 +545,21 @@ class StreamTableReader
         }
 
         return $mapped_rows;
+    }
+
+    public function getRowCount() : int
+    {
+        if (!isset($this->stream_info['path']))
+            return 0;
+
+        $path = $this->stream_info['path'];
+        $service = $this->getService();
+
+        $iter = $service->query(array('table' => $path));
+        if (!$iter)
+            return 0;
+
+        return $iter->row_count;
     }
 
     public function readRow()
