@@ -866,7 +866,7 @@
 
 
 
-    this.args.email = ['to','from','subject','body','html','reply-to','data'];
+    this.args.email = ['to'/*,'from'*/,'subject','body','html'/*,'reply-to'*/,'data'];
     this.hints.email = {
       "data":       [ 'none','body','attachment' ]
     };
@@ -1556,7 +1556,7 @@
 
 
 
-    this.args.select = ['col','file'];
+    this.args.select = ['col'/*,'file'*/];
     this.keywords.select = function(str)
     {
       var json =
@@ -2440,7 +2440,7 @@
 
 
 
-    this.args.filter = ['where','exclude'];
+    this.args.filter = ['where'/*,'exclude'*/];
     this.keywords.filter = function(str)
     {
       var json =
