@@ -26,7 +26,7 @@
     id: 'command-bar-docs',
     icon: 'help',
     label: 'Docs',
-    href: '/docs/web-app/#command-bar-operations'
+    href: '/docs/api/#tasks'
   },{
     id: 'templates',
     icon: 'now_widgets',
