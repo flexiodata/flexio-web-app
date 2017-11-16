@@ -87,7 +87,12 @@
     },
     watch: {
       active_process(val, old_val) {
-        this.tryFetchProcessLog()
+        if (_.get(val, 'eid', '') != _.get(old_val, 'eid', ''))
+          this.tryFetchProcessLog()
+      },
+      is_process_running(val, old_val) {
+        if (val === false && old_val === true)
+          this.tryFetchProcessLog()
       }
     },
     data() {
@@ -408,11 +413,8 @@
       },
 
       tryFetchProcessLog() {
-        var is_fetching = _.get(this.active_process, 'is_fetching', false)
         var eid = _.get(this.active_process, 'eid', '')
-        var log = _.get(this.active_process, 'log', null)
-
-        if (eid.length > 0 && _.isNil(log) && !is_fetching)
+        if (eid.length > 0)
           this.$store.dispatch('fetchProcessLog', { eid })
       },
 
