@@ -55,21 +55,10 @@ export default {
   // ----------------------------------------------------------------------- //
 
   [types.FETCHING_PROCESS_LOG] (state, { eid, fetching }) {
-    // if we're trying to fetch a process that's not
-    // in our store, add a very basic process object to the store
-    if (fetching === true && !_.has(state.objects, eid))
-    {
-      addProcess(state, eid, { is_fetching: fetching })
-    }
-     else
-    {
-      // otherwise, just set the pipe's fetching flag
-      updateProcess(state, eid, { is_fetching: fetching })
-    }
   },
 
   [types.FETCHED_PROCESS_LOG] (state, process) {
-    addProcess(state, process, { is_fetched: true })
+    addProcess(state, process, {})
   },
 
   // ----------------------------------------------------------------------- //
