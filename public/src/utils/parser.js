@@ -1976,7 +1976,7 @@
       {
         // backward compatibility
         res = this.append(res, "url: " + json.params.items[0].path);
-    
+
         /*
 
         var str = '';
@@ -2493,24 +2493,26 @@
 
     this.getHintableCommands = function() {
       return [
-        'input',
-        'output',
-        'calc',
-        'comment',
+        //'input',
+        //'output',
+        //'calc',
+        //'comment',
         'convert',
         'echo',
         'email',
-        'exit',
         'execute',
+        'exit',
         'filter',
-        'limit',
-        'list',
-        'merge',
-        'rename',
-        'select',
-        'settype',
-        'sort',
-        'transform'
+        //'limit',
+        //'list',
+        //'merge',
+        //'rename',
+        'render',
+        'request',
+        'select'
+        //'settype',
+        //'sort',
+        //'transform'
       ]
     },
 
