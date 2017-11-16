@@ -70,12 +70,10 @@ class Action
                 self::track_internal($action, $user_eid, $params);
                 break;
 
-/*
             case self::TYPE_SIGNED_UP:
                 self::identify_internal($user_eid, $params);
                 self::track_internal($action, $user_eid, $params);
                 break;
-*/
         }
     }
 
@@ -120,19 +118,10 @@ class Action
         $post_data = array(
             "userId" => $user_eid,
             "event" => $action_description,
-            "properties" => array(),
-            "context" => array(),
-            "timestamp" => \Flexio\System\System::getTimestamp()
-        );
-/*
-        $post_data = array(
-            "userId" => $user_eid,
-            "event" => $action_description,
             "properties" => $params,
             "context" => array(),
             "timestamp" => \Flexio\System\System::getTimestamp()
         );
-*/
         $post_data = json_encode($post_data, JSON_FORCE_OBJECT);
 
         $headers = array();
