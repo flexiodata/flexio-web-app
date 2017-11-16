@@ -81,7 +81,7 @@ class Action
 
     private static function identify_internal(string $user_eid, array $params)
     {
-        $segment_key = $GLOBALS['g_config']->googledrive_client_id ?? false;
+        $segment_key = $GLOBALS['g_config']->segment_key?? false;
         if ($segment_key === false)
             return;
 
@@ -91,14 +91,11 @@ class Action
             "context" => array(),
             "timestamp" => \Flexio\System\System::getTimestamp()
         );
-        $post_data = json_encode($post_data);
-
-        $basic_auth = 'Basic ' . base64_encode($segment_key . ':');
-        $content_type = 'application/json';
+        $post_data = json_encode($post_data, JSON_FORCE_OBJECT);
 
         $headers = array();
-        $headers['Authorization'] = $basic_auth;
-        $headers['Content-Type'] = $content_type;
+        $headers[] = 'Authorization: Basic ' . base64_encode($segment_key . ':');
+        $headers[] = 'Content-Type: application/json';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.segment.io/v1/identify');
@@ -115,11 +112,19 @@ class Action
 
     private static function track_internal(string $action, string $user_eid, array $params)
     {
-        $segment_key = $GLOBALS['g_config']->googledrive_client_id ?? false;
+        $segment_key = $GLOBALS['g_config']->segment_key?? false;
         if ($segment_key === false)
             return;
 
-        $action_description = self::geActionDescription($action);
+        $action_description = self::getActionDescription($action);
+        $post_data = array(
+            "userId" => $user_eid,
+            "event" => $action_description,
+            "properties" => array(),
+            "context" => array(),
+            "timestamp" => \Flexio\System\System::getTimestamp()
+        );
+/*
         $post_data = array(
             "userId" => $user_eid,
             "event" => $action_description,
@@ -127,14 +132,12 @@ class Action
             "context" => array(),
             "timestamp" => \Flexio\System\System::getTimestamp()
         );
-        $post_data = json_encode($post_data);
-
-        $basic_auth = 'Basic ' . base64_encode($segment_key . ':');
-        $content_type = 'application/json';
+*/
+        $post_data = json_encode($post_data, JSON_FORCE_OBJECT);
 
         $headers = array();
-        $headers['Authorization'] = $basic_auth;
-        $headers['Content-Type'] = $content_type;
+        $headers[] = 'Authorization: Basic ' . base64_encode($segment_key . ':');
+        $headers[] = 'Content-Type: application/json';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.segment.io/v1/track');
@@ -142,7 +145,7 @@ class Action
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
         $result = curl_exec($ch);
@@ -172,7 +175,7 @@ class Action
         }
     }
 
-    private static function geActionDescription(string $action) : string
+    private static function getActionDescription(string $action) : string
     {
         switch ($action)
         {
