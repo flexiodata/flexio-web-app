@@ -63,7 +63,7 @@
   import { VARIABLE_REGEX } from '../constants/common'
   import { TASK_TYPE_COMMENT } from '../constants/task-type'
   import { TASK_INFO_COMMENT } from '../constants/task-info'
-  import { PROCESS_STATUS_RUNNING, PROCESS_MODE_RUN } from '../constants/process'
+  import { PROCESS_STATUS_RUNNING, PROCESS_MODE_BUILD } from '../constants/process'
   import {
     PIPEHOME_VIEW_BUILDER,
     PIPEHOME_STATUS_CONFIGURE
@@ -148,9 +148,6 @@
       },
       is_process_running() {
         return _.get(this.active_process, 'process_status', '') == PROCESS_STATUS_RUNNING
-      },
-      is_process_run_mode() {
-        return _.get(this.active_process, 'process_mode', '') == PROCESS_MODE_RUN
       },
       is_builder_view()  {
         return this.pipe_view == PIPEHOME_VIEW_BUILDER
@@ -333,7 +330,7 @@
         {
           var attrs = _.assign({
             parent_eid: this.eid,
-            process_mode: PROCESS_MODE_RUN,
+            process_mode: PROCESS_MODE_BUILD,
             run: true // this will automatically run the process and start polling the process
           }, attrs)
 
