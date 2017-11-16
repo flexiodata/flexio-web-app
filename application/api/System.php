@@ -94,7 +94,7 @@ class System
         // track the user signout
         $user = \Flexio\Object\User::load($requesting_user_eid);
         if ($user !== false)
-            \Flexio\Object\Action::track(\Flexio\Object\Action::TYPE_SIGNED_IN, $user->getEid(), $user->get());
+            \Flexio\Object\Action::track(\Flexio\Object\Action::TYPE_SIGNED_OUT, $user->getEid(), $user->get());
 
         // return empty "about" info
         $properties = array();
