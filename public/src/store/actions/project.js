@@ -34,7 +34,7 @@ export const createProject = ({ commit, dispatch }, { attrs }) => {
     })
 
     analytics.track('Created Project', analytics_payload)
-    dispatch('fetchCurrentUserStatistics')
+    //dispatch('fetchCurrentUserStatistics')
 
     commit(types.CREATED_PROJECT, { attrs, project })
 

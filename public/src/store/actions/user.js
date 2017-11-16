@@ -13,7 +13,7 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
     commit(types.FETCHED_USER, user)
     commit(types.FETCHING_USER, false)
 
-    dispatch('fetchCurrentUserStatistics')
+    //dispatch('fetchCurrentUserStatistics')
 
     return response
   }, response => {
@@ -97,7 +97,7 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
     commit(types.SIGNED_IN, user)
     commit(types.SIGNING_IN, false)
 
-    dispatch('fetchCurrentUserStatistics')
+    //dispatch('fetchCurrentUserStatistics')
     return response
   }, response => {
     // error callback
