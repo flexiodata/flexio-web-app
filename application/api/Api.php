@@ -319,20 +319,21 @@ class Api
             case 'GET /statistics/processes'           : return '\Flexio\Api\Statistics::getUserProcessStats';
 
             // ADMIN (internal):
-            // formerly /system/*
+            case 'GET /admin/list/users'               : return '\Flexio\Api\Admin::getUserList';
             case 'GET /admin/statistics/users'         : return '\Flexio\Api\Admin::getUserProcessStats';
             case 'GET /admin/statistics/pipes'         : return '\Flexio\Api\Admin::getPipeProcessStats';
             case 'GET /admin/statistics/tasks'         : return '\Flexio\Api\Admin::getProcessTaskStats';
             case 'GET /admin/configuration'            : return '\Flexio\Api\Admin::getConfiguration';
+            case 'GET /admin/resetconfig'              : return '\Flexio\Api\User::resetConfig';    // resets the user configuration
+            case 'GET /admin/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
+
+            // DEBUG (internal):
+            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';    // display process info
+            case 'GET /admin/debug/track'              : return '\Flexio\Api\Action::trackTest'; // triggers tracking function for testing
 
             // TEST (internal):
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
             case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
-
-            // DEBUG (internal):
-            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug'; // display process info
-            case 'GET /debug/resetconfig'              : return '\Flexio\Api\User::resetConfig'; // resets the user configuration
-            case 'GET /debug/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
 
             // DEPRECATED (internal):
             case 'POS /projects'                       : return '\Flexio\Api\Project::create';

@@ -34,6 +34,8 @@
 
     "analytics": false,
 
+    "segment_key": "",
+
     "ses_access_key": "",
     "ses_secret_key": "",
 

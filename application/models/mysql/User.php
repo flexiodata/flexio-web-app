@@ -260,6 +260,12 @@ class User extends ModelBase
                      'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
+    public function getUserList()
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function getVerifyCodeFromEid(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
