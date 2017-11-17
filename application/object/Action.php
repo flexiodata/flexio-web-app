@@ -86,7 +86,7 @@ class Action
                     "email" => $params['email'] ?? '',
                     "username" => $params['user_name'] ?? '',
                     "createdAt" => $params['created'] ?? ''
-                )
+                );
 
                 self::identify_internal($user_eid, $traits);
                 self::track_internal($action, $user_eid, $traits);
