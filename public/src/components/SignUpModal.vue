@@ -73,12 +73,7 @@
         this.user_info = _.assign({}, this.user_info, user_info)
 
         this.fireIdentify()
-
-        setTimeout(() => {
-          if (window.analytics)
-            window.analytics.track('Signed In', _.omit(this.user_info, ['password']))
-            setTimeout(function() { window.location = '/app' }, 300)
-        }, 50)
+        this.fireSignIn()
       },
       onSignedUp(user_info) {
         this.$emit('signed-up')
@@ -86,32 +81,44 @@
         this.user_info = _.assign({}, this.user_info, user_info)
 
         this.fireIdentify()
-
-        setTimeout(() => {
-          if (window.analytics)
-            window.analytics.track('Signed Up', _.omit(this.user_info, ['password']))
-        }, 50)
+        this.fireSignUp()
       },
       onSignedUpAndIn(user_info) {
         this.$emit('signed-up-signed-in')
         this.view = 'sign-up-success'
       },
+      getUserInfo() {
+        var info = this.user_info
+        var user_info = _.pick(info, ['first_name', 'last_name', 'email'])
+
+        // add Segment-friendly keys
+        _.assign(user_info, {
+          firstName: _.get(info, 'first_name'),
+          lastName: _.get(info, 'last_name'),
+          username: _.get(info, 'user_name'),
+          createdAt: _.get(info, 'created')
+        })
+
+        return user_info
+      },
       fireIdentify() {
         if (window.analytics)
-        {
-          var info = this.user_info
-          var user_traits = _.pick(info, ['first_name', 'last_name', 'email'])
-
-          // add Segment-friendly keys
-          _.assign(user_traits, {
-            firstName: _.get(info, 'first_name'),
-            lastName: _.get(info, 'last_name'),
-            username: _.get(info, 'user_name'),
-            createdAt: _.get(info, 'created')
-          })
-
-          window.analytics.identify(this.user_eid, user_traits)
-        }
+          window.analytics.identify(this.user_eid, this.getUserInfo())
+      },
+      fireSignIn() {
+        setTimeout(() => {
+          if (window.analytics)
+          {
+            window.analytics.track('Signed In', this.getUserInfo())
+            setTimeout(function() { window.location = '/app' }, 300)
+          }
+        }, 50)
+      },
+      fireSignUp() {
+        setTimeout(() => {
+          if (window.analytics)
+            window.analytics.track('Signed Up', this.getUserInfo())
+        }, 50)
       }
     }
   }
