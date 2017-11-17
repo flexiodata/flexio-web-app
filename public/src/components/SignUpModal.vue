@@ -74,7 +74,7 @@
 
         this.fireIdentify()
 
-        setTimeout(function() {
+        setTimeout(() => {
           if (window.analytics)
             window.analytics.track('Signed In', _.omit(this.user_info, ['password']))
             setTimeout(function() { window.location = '/app' }, 300)
@@ -87,7 +87,7 @@
 
         this.fireIdentify()
 
-        setTimeout(function() {
+        setTimeout(() => {
           if (window.analytics)
             window.analytics.track('Signed Up', _.omit(this.user_info, ['password']))
         }, 50)
