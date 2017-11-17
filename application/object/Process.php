@@ -544,7 +544,6 @@ class Process extends \Flexio\Object\Base
             if ($this->isBuildMode() === true)
                 $this->finishLog($log_eid, $task, $context);
 
-
             // if the implementation has changed during the task, the result is
             // unreliable; set an error so that the process fails
             //$implementation_revision_update = \Flexio\System\System::getGitRevision();

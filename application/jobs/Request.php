@@ -287,6 +287,15 @@ class Request extends \Flexio\Jobs\Base
         $result = curl_exec($ch);
         $content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 
+        // note: sometimes the content type isn't returned by the request; in this
+        // case, look at the content type and get it that way
+        if (!isset($content_type) || $content_type === false)
+        {
+            $outputstream_reader = $outstream->getReader();
+            $buffer = $outputstream_reader->read();
+            \Flexio\Base\ContentType::getMimeAndContentType($buffer, $content_type, $temp);
+        }
+
         $streamwriter->close();
         $outstream->set(array(
             'size' => $streamwriter->getBytesWritten(),

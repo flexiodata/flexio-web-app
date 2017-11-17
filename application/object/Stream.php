@@ -27,7 +27,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
     }
 
     public function getImpl() { return $this; }
-    
+
     public static function create(array $properties = null) : \Flexio\Object\Stream
     {
         // structure is stored as json string; it needs to be validated
@@ -138,16 +138,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
 
     public function getRowCount() : int
     {
-        // TODO: store the row count
-
-        $path = $this->getPath();
-        $service = $this->getService();
-
-        $iter = $service->query(array('table' => $path));
-        if (!$iter)
-            return 0;
-
-        return $iter->row_count;
+        $reader = $this->getReader();
+        return $reader->getRowCount();
     }
 
     public function setMimeType(string $mime_type) : \Flexio\Object\Stream
@@ -277,7 +269,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
     public function copyOver(\Flexio\Object\IStream $dest)
     {
         $destimpl = $dest->getImpl();
-        
+
         if (!($destimpl instanceof \Flexio\Object\Stream))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copyOver may only be used on stream objects of the same type");
 

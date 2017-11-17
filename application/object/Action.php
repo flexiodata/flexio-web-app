@@ -70,12 +70,10 @@ class Action
                 self::track_internal($action, $user_eid, $params);
                 break;
 
-/*
             case self::TYPE_SIGNED_UP:
                 self::identify_internal($user_eid, $params);
                 self::track_internal($action, $user_eid, $params);
                 break;
-*/
         }
     }
 
@@ -103,7 +101,7 @@ class Action
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
         $result = curl_exec($ch);
@@ -120,19 +118,10 @@ class Action
         $post_data = array(
             "userId" => $user_eid,
             "event" => $action_description,
-            "properties" => array(),
-            "context" => array(),
-            "timestamp" => \Flexio\System\System::getTimestamp()
-        );
-/*
-        $post_data = array(
-            "userId" => $user_eid,
-            "event" => $action_description,
             "properties" => $params,
             "context" => array(),
             "timestamp" => \Flexio\System\System::getTimestamp()
         );
-*/
         $post_data = json_encode($post_data, JSON_FORCE_OBJECT);
 
         $headers = array();

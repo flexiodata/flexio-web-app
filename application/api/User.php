@@ -137,6 +137,9 @@ class User
             if ($create_examples === true)
                 self::createExamplePipes($user_eid);
 
+            // track the new user signup
+            \Flexio\Object\Action::track(\Flexio\Object\Action::TYPE_SIGNED_UP, $user->getEid(), $user->get());
+
             // return the user info
             return $user->get();
         }
