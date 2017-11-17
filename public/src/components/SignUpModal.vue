@@ -19,7 +19,7 @@
       <sign-in-form
         @sign-up-click="view = 'signup'"
         @forgot-password-click="view = 'forgotpassword'"
-        @signed-in="$emit('signed-in')"
+        @signed-in="onSignedIn"
         v-else-if="view === 'signin'"
       />
       <forgot-password-form
@@ -67,34 +67,49 @@
       }
     },
     methods: {
+      onSignedIn(user_info) {
+        this.$emit('signed-in')
+        this.user_eid = _.get(user_info, 'eid', '')
+        this.user_info = _.assign({}, this.user_info, user_info)
+
+        this.fireIdentify()
+
+        setTimeout(function() {
+          if (window.analytics)
+            window.analytics.track('Signed In', _.omit(this.user_info, ['password']))
+        }, 50)
+      },
       onSignedUp(user_info) {
         this.$emit('signed-up')
+        this.user_eid = _.get(user_info, 'eid', '')
         this.user_info = _.assign({}, this.user_info, user_info)
+
+        this.fireIdentify()
+
+        setTimeout(function() {
+          if (window.analytics)
+            window.analytics.track('Signed Up', _.omit(this.user_info, ['password']))
+        }, 50)
       },
       onSignedUpAndIn(user_info) {
         this.$emit('signed-up-signed-in')
-        this.user_eid = _.get(user_info, 'eid', '')
         this.view = 'sign-up-success'
-
-        this.user_info = _.assign({}, this.user_info, user_info)
-
+      },
+      fireIdentify() {
         if (window.analytics)
         {
-          var traits = _.pick(user_info, ['first_name', 'last_name', 'email'])
+          var info = this.user_info
+          var user_traits = _.pick(info, ['first_name', 'last_name', 'email'])
 
           // add Segment-friendly keys
-          _.assign(traits, {
-            firstName: _.get(user_info, 'first_name'),
-            lastName: _.get(user_info, 'last_name'),
-            username: _.get(user_info, 'user_name'),
-            createdAt: _.get(user_info, 'created')
+          _.assign(user_traits, {
+            firstName: _.get(info, 'first_name'),
+            lastName: _.get(info, 'last_name'),
+            username: _.get(info, 'user_name'),
+            createdAt: _.get(info, 'created')
           })
 
-          window.analytics.identify(this.user_eid, traits)
-
-          setTimeout(function() {
-            window.analytics.track('Signed Up', _.omit(user_info, ['password']))
-          }, 50)
+          window.analytics.identify(this.user_eid, user_traits)
         }
       }
     }
