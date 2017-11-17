@@ -60,6 +60,10 @@ class Action
 
     public static function track_request(string $action, string $user_eid, array $params)
     {
+        // TODO: once we add back server-side analytics, we'll remove
+        //       this and begin bringing things back online
+        return;
+
         // only track valid actions
         if (self::isValidAction($action) === false)
             return false;
@@ -67,18 +71,35 @@ class Action
         switch ($action)
         {
             default:
-                self::track_internal($action, $user_eid, $params);
+                self::track_internal($action, $user_eid, []);
+                break;
+
+            case self::TYPE_SIGNED_IN:
+                self::identify_internal($user_eid, []);
+                self::track_internal($action, $user_eid, []);
                 break;
 
             case self::TYPE_SIGNED_UP:
-                self::identify_internal($user_eid, $params);
-                self::track_internal($action, $user_eid, $params);
+                $traits = array(
+                    "firstName" => $params['first_name'] ?? '',
+                    "lastName" => $params['last_name'] ?? '',
+                    "email" => $params['email'] ?? '',
+                    "username" => $params['user_name'] ?? '',
+                    "createdAt" => $params['created'] ?? ''
+                )
+
+                self::identify_internal($user_eid, $traits);
+                self::track_internal($action, $user_eid, $traits);
                 break;
         }
     }
 
     private static function identify_internal(string $user_eid, array $params)
     {
+        // TODO: once we add back server-side analytics, we'll remove
+        //       this and begin bringing things back online
+        return;
+
         $segment_key = $GLOBALS['g_config']->segment_key?? false;
         if ($segment_key === false)
             return;
