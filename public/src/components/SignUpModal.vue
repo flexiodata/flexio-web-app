@@ -62,17 +62,40 @@
     data() {
       return {
         view: this.initialView,
+        user_info: {},
         user_eid: ''
       }
     },
     methods: {
       onSignedUp(user_info) {
         this.$emit('signed-up')
+        this.user_info = _.assign({}, this.user_info, user_info)
       },
       onSignedUpAndIn(user_info) {
         this.$emit('signed-up-signed-in')
         this.user_eid = _.get(user_info, 'eid', '')
         this.view = 'sign-up-success'
+
+        this.user_info = _.assign({}, this.user_info, user_info)
+
+        if (window.analytics)
+        {
+          var traits = _.pick(user_info, ['first_name', 'last_name', 'email'])
+
+          // add Segment-friendly keys
+          _.assign(traits, {
+            firstName: _.get(user_info, 'first_name'),
+            lastName: _.get(user_info, 'last_name'),
+            username: _.get(user_info, 'user_name'),
+            createdAt: _.get(user_info, 'created')
+          })
+
+          window.analytics.identify(this.user_eid, traits)
+
+          setTimeout(function() {
+            window.analytics.track('Signed Up', _.omit(user_info, ['password']))
+          }, 50)
+        }
       }
     }
   }
