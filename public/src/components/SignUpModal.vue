@@ -77,6 +77,7 @@
         setTimeout(function() {
           if (window.analytics)
             window.analytics.track('Signed In', _.omit(this.user_info, ['password']))
+            setTimeout(function() { window.location = '/app' }, 300)
         }, 50)
       },
       onSignedUp(user_info) {
