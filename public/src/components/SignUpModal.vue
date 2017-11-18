@@ -64,7 +64,7 @@
         if (val == 'signup')
         {
           if (window.analytics)
-            analytics.track('Visited Sign Up Page')
+            window.analytics.track('Visited Sign Up Page')
         }
       }
     },
@@ -79,7 +79,7 @@
       if (this.view == 'signup')
       {
         if (window.analytics)
-          analytics.track('Visited Sign Up Page')
+          window.analytics.track('Visited Sign Up Page')
       }
     },
     methods: {
