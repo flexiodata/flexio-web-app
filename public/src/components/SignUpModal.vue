@@ -59,11 +59,27 @@
       ForgotPasswordForm,
       SignUpModalSuccess
     },
+    watch: {
+      view: function(val, old_val) {
+        if (val == 'signup')
+        {
+          if (window.analytics)
+            analytics.track('Visited Sign Up Page')
+        }
+      }
+    },
     data() {
       return {
         view: this.initialView,
         user_info: {},
         user_eid: ''
+      }
+    },
+    mounted() {
+      if (this.view == 'signup')
+      {
+        if (window.analytics)
+          analytics.track('Visited Sign Up Page')
       }
     },
     methods: {
