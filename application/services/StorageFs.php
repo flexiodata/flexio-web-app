@@ -16,14 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class XferFsLocal
+class StorageFs
 {
-    public static function isReady() : bool
-    {
-        // filesystem is always ready
-        return true;
-    }
-
     public static function createDirectory(string $path) : bool
     {
         $full = self::makePath($path);
@@ -80,13 +74,40 @@ class XferFsLocal
         return $arr;
     }
 
-    public static function getDirectoryListing(string $path, string $initial_marker = null) : array
+    public static function list($path)
     {
-        die("TODO: implement");
-        return array();
+        $full = self::makePath($path);
+
+        $arr = array();
+        if ($handle = opendir($full))
+        {
+            while (false !== ($file = readdir($handle)))
+            {
+                $combined = $path;
+                if (substr($combined, -1) != '/')
+                    $combined .= '/';
+                $combined .= $file;
+
+                $isdir = is_dir($full . DIRECTORY_SEPARATOR . $file);
+
+                $f = array(
+                    'name' => $file,
+                    'path' => $combined,
+                    'type' => ($isdir ? 'DIR' : 'FILE'),
+                    'size' => null,
+                    'modified' => null,
+                    'is_dir' => $isdir
+                );
+    
+                $arr[] = $file;
+            }
+            closedir($handle);
+        }
+
+        return $arr;
     }
 
-    public static function fileExists(string $path) : bool
+    public static function exists(string $path) : bool
     {
         $full = self::makePath($path);
 
