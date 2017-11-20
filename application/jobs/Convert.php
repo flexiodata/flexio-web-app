@@ -71,13 +71,13 @@ class Convert extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = \Flexio\Object\StreamMemory::create();
+            $outstream = \Flexio\Base\StreamMemory::create();
             $this->processStream($instream, $outstream);
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
+    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         // if a job format is specified, get the mime type from the job definition
         $job_definition = $this->getProperties();
@@ -140,7 +140,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTableInput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromTableInput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream, string $output_mime_type)
     {
         $job_definition = $this->getProperties();
 
@@ -250,7 +250,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromRssAtom(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromRssAtom(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream, string $output_mime_type)
     {
         $outstream->set($instream->get());
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
@@ -284,7 +284,7 @@ class Convert extends \Flexio\Jobs\Base
         });
     }
 
-    private function createOutputFromPdfInput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromPdfInput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream, string $output_mime_type)
     {
         if (!isset($GLOBALS['pdfparser_included']))
         {
@@ -357,7 +357,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createOutputFromJsonInput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromJsonInput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream, string $output_mime_type)
     {
         // input/output
         $outstream->set($instream->get());
@@ -396,7 +396,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createOutputFromCsvInput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromCsvInput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream, string $output_mime_type)
     {
         // parameters
         $job_definition = $this->getProperties();
@@ -686,7 +686,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromFixedLengthInput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream) : \Flexio\Object\IStream
+    private function createOutputFromFixedLengthInput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         // parameters
         $job_definition = $this->getProperties();
@@ -900,7 +900,7 @@ class Convert extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function alterStructure(\Flexio\Object\IStream $outstream, array $structure) : bool
+    private static function alterStructure(\Flexio\Base\IStream $outstream, array $structure) : bool
     {
         // TODO: streams no longer expose getService(); can no longer assume table implementation
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);

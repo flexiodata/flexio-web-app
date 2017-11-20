@@ -41,13 +41,13 @@ class Each extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = \Flexio\Object\StreamMemory::create();
+            $outstream = \Flexio\Base\StreamMemory::create();
             $this->processStream($instream, $outstream);
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
+    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -62,7 +62,7 @@ class Each extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
+    private function getOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         $job_definition = $this->getProperties();
         $job_tasks = $job_definition['params'];
@@ -79,7 +79,7 @@ class Each extends \Flexio\Jobs\Base
 
             // create a new context; pass on the params, but set the stdin
             // to the content for the row
-            $rowinstream = \Flexio\Object\StreamMemory::create();
+            $rowinstream = \Flexio\Base\StreamMemory::create();
             $rowinstream->write($row);
 
             $context = \Flexio\Object\Context::create();
@@ -114,7 +114,7 @@ class Each extends \Flexio\Jobs\Base
                 // set the stdin for the next job step to be the output from the stdout
                 // of the step just executed and create a new stdout
                 $context->setStdin($context->getStdout());
-                $stdout = \Flexio\Object\StreamMemory::create();
+                $stdout = \Flexio\Base\StreamMemory::create();
                 $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
                 $context->setStdout($stdout);
             }

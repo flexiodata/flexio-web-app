@@ -45,13 +45,13 @@ class Select extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = \Flexio\Object\StreamMemory::create();
+            $outstream = \Flexio\Base\StreamMemory::create();
             $this->processStream($instream, $outstream);
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
+    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         $job_definition = $this->getProperties();
         $mime_type = $instream->getMimeType();
@@ -99,7 +99,7 @@ class Select extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
+    private function getOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         // input/output
         $outstream->set($instream->get());

@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-require_once dirname(__DIR__) . '/object/Abstract.php';
+require_once dirname(__DIR__) . '/base/StreamMemory.php';
 
 
 class Context
@@ -40,7 +40,7 @@ class Context
         if (isset($this->stdin))
         {
             $result['stdin'] = $this->stdin->get();
-            if ($this->stdin instanceof \Flexio\Object\StreamMemory)
+            if ($this->stdin instanceof \Flexio\Base\StreamMemory)
                 $result['stdin']['buffer'] = $this->stdin->bufferToString();
         }
 
@@ -48,7 +48,7 @@ class Context
         if (isset($this->stdout))
         {
             $result['stdout'] = $this->stdout->get();
-            if ($this->stdout instanceof \Flexio\Object\StreamMemory)
+            if ($this->stdout instanceof \Flexio\Base\StreamMemory)
                 $result['stdout']['buffer'] = $this->stdout->bufferToString();
         }
 
@@ -59,7 +59,7 @@ class Context
         {
             $properties = $s->get();
 
-            if ($s instanceof \Flexio\Object\StreamMemory)
+            if ($s instanceof \Flexio\Base\StreamMemory)
                 $properties['buffer'] = $s->bufferToString();
 
             $result['streams'][] = $properties;
@@ -90,7 +90,7 @@ class Context
              else
             {
                 // if we don't have an eid, we have a memory stream; load the info from what's saved
-                $stream = \Flexio\Object\StreamMemory::create($arr['stdin']);
+                $stream = \Flexio\Base\StreamMemory::create($arr['stdin']);
                 $buffer = $arr['stdin']['buffer'];
                 if ($stream !== false)
                 {
@@ -113,7 +113,7 @@ class Context
              else
             {
                 // if we don't have an eid, we have a memory stream; load the info from what's saved
-                $stream = \Flexio\Object\StreamMemory::create($arr['stdout']);
+                $stream = \Flexio\Base\StreamMemory::create($arr['stdout']);
                 $buffer = $arr['stdout']['buffer'];
                 if ($stream !== false)
                 {
@@ -141,7 +141,7 @@ class Context
                  else
                 {
                     // if we don't have an eid, we have a memory stream, so load the info from what's saved
-                    $stream = \Flexio\Object\StreamMemory::create($info);
+                    $stream = \Flexio\Base\StreamMemory::create($info);
                     $buffer = $info['buffer'];
                     if ($stream !== false)
                     {
@@ -183,7 +183,7 @@ class Context
         return $this;
     }
 
-    public function setStdin(\Flexio\Object\IStream $stream = null) : \Flexio\Object\Context
+    public function setStdin(\Flexio\Base\IStream $stream = null) : \Flexio\Object\Context
     {
         $this->stdin = $stream;
         return $this;
@@ -194,7 +194,7 @@ class Context
         return $this->stdin;
     }
 
-    public function setStdout(\Flexio\Object\IStream $stream = null) : \Flexio\Object\Context
+    public function setStdout(\Flexio\Base\IStream $stream = null) : \Flexio\Object\Context
     {
         $this->stdout = $stream;
         return $this;
@@ -226,7 +226,7 @@ class Context
         return $this->exit_code;
     }
 
-    public function addStream(\Flexio\Object\IStream $stream) : \Flexio\Object\Context
+    public function addStream(\Flexio\Base\IStream $stream) : \Flexio\Object\Context
     {
         $this->streams[] = $stream;
         return $this;

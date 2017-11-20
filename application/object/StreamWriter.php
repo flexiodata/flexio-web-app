@@ -16,89 +16,10 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-require_once dirname(__DIR__) . '/object/Abstract.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Stream.php';
 
 
-class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
-{
-    private $stream;
-    private $bytes_written;
-
-    public function __construct()
-    {
-        $this->bytes_written = 0;
-    }
-
-    public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryWriter
-    {
-        $object = new static();
-        $object->stream = $stream;
-        return $object;
-    }
-
-    public function write($data)
-    {
-        // write the data, depending on the type
-        $bytes_written = 0;
-        $mime_type = $this->getStream()->getMimeType();
-        switch ($mime_type)
-        {
-            default:
-                $this->writeString($data, $bytes_written);
-                break;
-
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                $this->writeArray($data, $bytes_written);
-                break;
-        }
-
-        // increment the total bytes written
-        $this->bytes_written += $bytes_written;
-    }
-
-    public function getBytesWritten() : int
-    {
-        return $this->bytes_written;
-    }
-
-    public function close() : bool
-    {
-        return true;
-    }
-
-    private function getStream() : \Flexio\Object\StreamMemory
-    {
-        return $this->stream;
-    }
-
-    private function writeString(string $data, int &$bytes_written)
-    {
-        $bytes_written = 0;
-        if (is_string($this->getStream()->buffer) === false) // initialize buffer
-            $this->getStream()->buffer = '';
-
-        $this->getStream()->buffer .= $data;
-        $bytes_written = strlen($data);
-        return true;
-    }
-
-    private function writeArray(array $data, int &$bytes_written)
-    {
-        $bytes_written = 0;
-        if (is_array($this->getStream()->buffer) === false) // initialize buffer
-            $this->getStream()->buffer = array();
-
-        array_push($this->getStream()->buffer, $data);
-
-        // set the bytes written
-        $content_str = implode('', $data);
-        $bytes_written = strlen($content_str);
-        return true;
-    }
-}
-
-
-class StreamWriter implements \Flexio\Object\IStreamWriter
+class StreamWriter implements \Flexio\Base\IStreamWriter
 {
     private $writer = false;
     private $bytes_written = 0; // total bytes written
@@ -108,7 +29,7 @@ class StreamWriter implements \Flexio\Object\IStreamWriter
         $this->close();
     }
 
-    public static function create(\Flexio\Object\IStream $stream, bool $datastore_mode = true) : \Flexio\Object\StreamWriter
+    public static function create(\Flexio\Base\IStream $stream, bool $datastore_mode = true) : \Flexio\Object\StreamWriter
     {
         // TODO: StreamWriter is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service

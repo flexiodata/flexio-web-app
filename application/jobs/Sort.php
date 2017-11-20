@@ -50,13 +50,13 @@ class Sort extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = \Flexio\Object\StreamMemory::create();
+            $outstream = \Flexio\Base\StreamMemory::create();
             $this->processStream($instream, $outstream);
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
+    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -71,7 +71,7 @@ class Sort extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
+    private function getOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         // input/output
         $outstream->set($instream->get());
@@ -87,7 +87,7 @@ class Sort extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }
 
-    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream &$outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Base\IStream $instream, \Flexio\Base\IStream &$outstream)
     {
         if (!isset($job_definition['params']['order']) || !is_array($job_definition['params']['order']))
             return false;

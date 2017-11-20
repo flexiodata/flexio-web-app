@@ -168,7 +168,7 @@ class Email extends \Flexio\Jobs\Base
         return $attachments;
     }
 
-    private function saveDataToFile(\Flexio\Object\IStream $stream, string $filename)
+    private function saveDataToFile(\Flexio\Base\IStream $stream, string $filename)
     {
         $handle = fopen($filename, "wt");
         if (!$handle)
@@ -188,7 +188,7 @@ class Email extends \Flexio\Jobs\Base
         return true;
     }
 
-    private function saveDataToCsv(\Flexio\Object\IStream $stream, string $filename, int $maxrows = -1, int $maxbytes = -1)
+    private function saveDataToCsv(\Flexio\Base\IStream $stream, string $filename, int $maxrows = -1, int $maxbytes = -1)
     {
         $handle = fopen($filename, "wt");
         if (!$handle)
