@@ -712,7 +712,7 @@ class User
         {
             $project = \Flexio\Object\Project::load($project_eid);
             if ($project !== false)
-                $project->addMember($pipe);
+                $project->addPipe($pipe);
         }
 
         return $pipe->getEid();

@@ -69,7 +69,7 @@ class Connection
 
         // if a parent project is specified, add the object as a member of the project
         if ($project !== false)
-            $project->addMember($connection);
+            $project->addConnection($connection);
 
         // get the connection properties
         $properties = self::maskProperties($connection->get());

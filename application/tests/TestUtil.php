@@ -295,7 +295,7 @@ class TestUtil
         // if a parent project is specified, add the object as a member of the project
         $project = \Flexio\Object\Project::load($project_eid);
         if ($project !== false)
-            $project->addMember($pipe);
+            $project->addPipe($pipe);
 
         return $pipe->getEid();
     }
