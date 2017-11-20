@@ -20,21 +20,21 @@ class StorageFs
 {
     public static function createDirectory(string $path) : bool
     {
-        $full = self::makePath($path);
+        $fspath = self::getFsPath($path);
 
-        return @mkdir($full, 0750, true) ? true : false;
+        return @mkdir($fspath, 0750, true) ? true : false;
     }
 
     public static function createFile(string $path, string $import_file) : bool
     {
-        $full = self::makePath($path);
+        $fspath = self::getFsPath($path);
 
-        return copy($import_file, $full);
+        return copy($import_file, $fspath);
     }
 
     public static function deleteFile(string $path) : bool
     {
-        $full = self::makePath($path);
+        $fspath = self::getFsPath($path);
 
         // TODO: implement
         return false;
@@ -42,13 +42,13 @@ class StorageFs
 
     public static function getDirectories(string $path) : array
     {
-        $full = self::makePath($path);
+        $fspath = self::getFsPath($path);
 
         $arr = array();
-        if ($handle = opendir($full))
+        if ($handle = opendir($fspath))
         {
             while (false !== ($file = readdir($handle))) {
-                if (substr($file, 0, 1) != '.' && is_dir($full . DIRECTORY_SEPARATOR . $file))
+                if (substr($file, 0, 1) != '.' && is_dir($fspath . DIRECTORY_SEPARATOR . $file))
                     $arr[] = $file;
             }
             closedir($handle);
@@ -59,13 +59,13 @@ class StorageFs
 
     public static function getObjects(string $path) : array
     {
-        $full = self::makePath($path);
+        $fspath = self::getFsPath($path);
 
         $arr = array();
-        if ($handle = opendir($full))
+        if ($handle = opendir($fspath))
         {
             while (false !== ($file = readdir($handle))) {
-                if (substr($file, 0, 1) != '.' && !is_dir($full . DIRECTORY_SEPARATOR . $file))
+                if (substr($file, 0, 1) != '.' && !is_dir($fspath . DIRECTORY_SEPARATOR . $file))
                     $arr[] = $file;
             }
             closedir($handle);
@@ -76,10 +76,10 @@ class StorageFs
 
     public static function list($path)
     {
-        $full = self::makePath($path);
+        $fspath = self::getFsPath($path);
 
         $arr = array();
-        if ($handle = opendir($full))
+        if ($handle = opendir($fspath))
         {
             while (false !== ($file = readdir($handle)))
             {
@@ -88,7 +88,7 @@ class StorageFs
                     $combined .= '/';
                 $combined .= $file;
 
-                $isdir = is_dir($full . DIRECTORY_SEPARATOR . $file);
+                $isdir = is_dir($fspath . DIRECTORY_SEPARATOR . $file);
 
                 $f = array(
                     'name' => $file,
@@ -109,22 +109,20 @@ class StorageFs
 
     public static function exists(string $path) : bool
     {
-        $full = self::makePath($path);
+        $fspath = self::getFsPath($path);
 
-        if (@file_exists($full))
+        if (@file_exists($fspath))
             return true;
-        if (@is_dir($full))
+        if (@is_dir($fspath))
             return true;
         return false;
     }
 
-    public static function exportFile(string $path, string $local_path) : bool
-    {
-        $full = self::makePath($path);
-        return @copy($full, $local_path);
-    }
 
-    private static function makePath(string $path) : string
+
+
+    
+    private static function getFsPath(string $path) : string
     {
         global $g_config;
 
