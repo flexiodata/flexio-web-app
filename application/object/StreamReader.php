@@ -31,7 +31,7 @@ class StreamMemoryReader implements \Flexio\Object\IStreamReader
 
     public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryReader
     {
-        $object = new static;
+        $object = new static();
         $object->stream = $stream;
         return $object;
     }
@@ -179,7 +179,7 @@ class StreamReader implements \Flexio\Object\IStreamReader
         // the key information we need from the stream are the path, mime_type,
         // and structure for the source
 
-        $object = new static;
+        $object = new static();
         $stream_properties = $stream->get();
 
         $object->stream_info = array();
@@ -272,7 +272,7 @@ class StreamFileReader
 
     public static function create(array $stream_info)
     {
-        $object = new static;
+        $object = new static();
         $object->stream_info = $stream_info;
 
         $service = $object->getService();
@@ -441,7 +441,7 @@ class StreamTableReader
 
     public static function create(array $stream_info)
     {
-        $object = new static;
+        $object = new static();
         $object->stream_info = $stream_info;
 
         $service = $object->getService();
