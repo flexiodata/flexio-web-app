@@ -169,7 +169,7 @@ class StreamReader implements \Flexio\Object\IStreamReader
         $this->close();
     }
 
-    public static function create(\Flexio\Object\Stream $stream) : \Flexio\Object\StreamReader
+    public static function create(\Flexio\Object\IStream $stream) : \Flexio\Object\StreamReader
     {
         // TODO: StreamReader is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service

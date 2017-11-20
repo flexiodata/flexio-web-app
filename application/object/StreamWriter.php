@@ -108,7 +108,7 @@ class StreamWriter implements \Flexio\Object\IStreamWriter
         $this->close();
     }
 
-    public static function create(\Flexio\Object\Stream $stream, bool $datastore_mode = true) : \Flexio\Object\StreamWriter
+    public static function create(\Flexio\Object\IStream $stream, bool $datastore_mode = true) : \Flexio\Object\StreamWriter
     {
         // TODO: StreamWriter is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service
