@@ -115,7 +115,7 @@ class Process
         $stdin = $context->getStdin();
         if (!isset($stdin))
         {
-            $stdin = \Flexio\Object\StreamMemory::create();
+            $stdin = \Flexio\Base\StreamMemory::create();
             $stdin->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
             $context->setStdin($stdin);
         }
@@ -123,7 +123,7 @@ class Process
         $stdout = $context->getStdout();
         if (!isset($stdout))
         {
-            $stdout = \Flexio\Object\StreamMemory::create();
+            $stdout = \Flexio\Base\StreamMemory::create();
             $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
             $context->setStdout($stdout);
         }
@@ -142,7 +142,7 @@ class Process
                 // set the stdin for the next job step to be the output from the stdout
                 // of the step just executed and create a new stdout
                 $context->setStdin($context->getStdout());
-                $stdout = \Flexio\Object\StreamMemory::create();
+                $stdout = \Flexio\Base\StreamMemory::create();
                 $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
                 $context->setStdout($stdout);
             }

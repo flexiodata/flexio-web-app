@@ -43,13 +43,13 @@ class Rename extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = \Flexio\Object\StreamMemory::create();
+            $outstream = \Flexio\Base\StreamMemory::create();
             $this->processStream($instream, $outstream, $context->getParams());
             $context->addStream($outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream, array $env)
+    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream, array $env)
     {
         // any renames will be handled by the file/column rename handler; if there
         // aren't any operations, the stream will simply be copied to the output
@@ -73,7 +73,7 @@ class Rename extends \Flexio\Jobs\Base
         }
     }
 
-    private function renameStream(\Flexio\Object\IStream $outstream, array $env)
+    private function renameStream(\Flexio\Base\IStream $outstream, array $env)
     {
         // get the files to rename
         $job_definition = $this->getProperties();
@@ -114,7 +114,7 @@ class Rename extends \Flexio\Jobs\Base
         }
     }
 
-    private function renameColumns(\Flexio\Object\IStream $outstream)
+    private function renameColumns(\Flexio\Base\IStream $outstream)
     {
         // get the columns to rename
         $job_definition = $this->getProperties();

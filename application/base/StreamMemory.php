@@ -8,20 +8,59 @@
  * Created:  2016-04-20
  *
  * @package flexio
- * @subpackage Object
+ * @subpackage Base
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Object;
+namespace Flexio\Base;
 
 
-require_once dirname(__DIR__) . '/object/Abstract.php';
-require_once dirname(__DIR__) . '/object/StreamReader.php';
-require_once dirname(__DIR__) . '/object/StreamWriter.php';
+require_once dirname(__DIR__) . '/base/StreamReader.php';
+require_once dirname(__DIR__) . '/base/StreamWriter.php';
 
 
-class StreamMemory implements \Flexio\Object\IStream
+interface IStream
+{
+    public function getImpl();   // returns the object implementing interface; (internal helper)
+    public function copy();
+    public function copyOver(\Flexio\Base\IStream $dest);
+    public function set(array $properties);
+    public function get();
+    public function setName(string $name);
+    public function getName();
+    public function setPath(string $path);
+    public function getPath();
+    public function setSize($size);
+    public function getSize();
+    public function getRowCount();
+    public function setMimeType(string $mime_type);
+    public function getMimeType();
+    public function setStructure($structure);
+    public function getStructure();
+    public function getFileInfo();
+    public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */);
+    public function getReader() : \Flexio\Base\IStreamReader;
+    public function getWriter() : \Flexio\Base\IStreamWriter;
+}
+
+interface IStreamReader
+{
+    public function read($length = 1024);
+    public function readRow();
+    public function getRows(int $offset, int $limit);
+    public function close();
+}
+
+interface IStreamWriter
+{
+    public function write($data);
+    public function getBytesWritten();
+    public function close();
+}
+
+
+class StreamMemory implements \Flexio\Base\IStream
 {
     // data buffer; use reader/writer to access
     public $buffer;
@@ -50,7 +89,7 @@ class StreamMemory implements \Flexio\Object\IStream
 
     public function getImpl() { return $this; }
 
-    public static function create(array $properties = null) : \Flexio\Object\StreamMemory
+    public static function create(array $properties = null) : \Flexio\Base\StreamMemory
     {
         $object = new static();
 
@@ -91,7 +130,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $object;
     }
 
-    public function copy() : \Flexio\Object\StreamMemory
+    public function copy() : \Flexio\Base\StreamMemory
     {
         $object = new static();
         $object->properties = $this->properties;
@@ -99,7 +138,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $object;
     }
 
-    public function set(array $properties) : \Flexio\Object\StreamMemory
+    public function set(array $properties) : \Flexio\Base\StreamMemory
     {
         // TODO: add properties check
 
@@ -136,7 +175,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $this->properties;
     }
 
-    public function setName(string $name) : \Flexio\Object\StreamMemory
+    public function setName(string $name) : \Flexio\Base\StreamMemory
     {
         $properties = array();
         $properties['name'] = $name;
@@ -148,7 +187,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $this->properties['name'];
     }
 
-    public function setPath(string $path) : \Flexio\Object\StreamMemory
+    public function setPath(string $path) : \Flexio\Base\StreamMemory
     {
         $properties = array();
         $properties['path'] = $path;
@@ -160,7 +199,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $this->properties['path'];
     }
 
-    public function setSize($size) : \Flexio\Object\StreamMemory // TODO: add input parameter types
+    public function setSize($size) : \Flexio\Base\StreamMemory // TODO: add input parameter types
     {
         $properties = array();
         $properties['size'] = $size;
@@ -178,7 +217,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return 0;
     }
 
-    public function setMimeType(string $mime_type) : \Flexio\Object\StreamMemory
+    public function setMimeType(string $mime_type) : \Flexio\Base\StreamMemory
     {
         $properties = array();
         $properties['mime_type'] = $mime_type;
@@ -190,7 +229,7 @@ class StreamMemory implements \Flexio\Object\IStream
         return $this->properties['mime_type'];
     }
 
-    public function setStructure($structure) : \Flexio\Object\StreamMemory // TODO: add input parameter types
+    public function setStructure($structure) : \Flexio\Base\StreamMemory // TODO: add input parameter types
     {
         if (!($structure instanceof \Flexio\Base\Structure))
             $structure = \Flexio\Base\Structure::create($structure);
@@ -297,11 +336,11 @@ class StreamMemory implements \Flexio\Object\IStream
     }
 
     // copies a streams properties to $dest, overwriting $dest's properties
-    public function copyOver(\Flexio\Object\IStream $dest)
+    public function copyOver(\Flexio\Base\IStream $dest)
     {
         $destimpl = $dest->getImpl();
 
-        if (!($destimpl instanceof \Flexio\Object\StreamMemory))
+        if (!($destimpl instanceof \Flexio\Base\StreamMemory))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copyOver may only be used on stream objects of the same type");
 
         $properties = $this->get();
@@ -313,14 +352,14 @@ class StreamMemory implements \Flexio\Object\IStream
         $destimpl->buffer = $this->buffer;
     }
 
-    public function getReader() : \Flexio\Object\IStreamReader
+    public function getReader() : \Flexio\Base\IStreamReader
     {
-        return \Flexio\Object\StreamMemoryReader::create($this);
+        return \Flexio\Base\StreamMemoryReader::create($this);
     }
 
-    public function getWriter() : \Flexio\Object\IStreamWriter
+    public function getWriter() : \Flexio\Base\IStreamWriter
     {
-        return \Flexio\Object\StreamMemoryWriter::create($this, true);
+        return \Flexio\Base\StreamMemoryWriter::create($this, true);
     }
 
     public function bufferToString()

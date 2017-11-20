@@ -16,10 +16,10 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-require_once dirname(__DIR__) . '/object/Abstract.php';
+require_once dirname(__DIR__) . '/base/StreamMemory.php';
 
 
-class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
+class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
 {
     public function __construct()
     {
@@ -265,7 +265,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
     }
 
     // copies a streams properties to $dest, overwriting $dest's properties
-    public function copyOver(\Flexio\Object\IStream $dest)
+    public function copyOver(\Flexio\Base\IStream $dest)
     {
         $destimpl = $dest->getImpl();
 
@@ -279,12 +279,12 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Object\IStream
         $dest->set($properties);
     }
 
-    public function getReader() : \Flexio\Object\IStreamReader
+    public function getReader() : \Flexio\Base\IStreamReader
     {
         return \Flexio\Object\StreamReader::create($this);
     }
 
-    public function getWriter() : \Flexio\Object\IStreamWriter
+    public function getWriter() : \Flexio\Base\IStreamWriter
     {
         return \Flexio\Object\StreamWriter::create($this, true);
     }

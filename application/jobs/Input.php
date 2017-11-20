@@ -369,10 +369,10 @@ class Input extends \Flexio\Jobs\Base
         $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
-    private function createMemoryStream(array $properties) : \Flexio\Object\StreamMemory
+    private function createMemoryStream(array $properties) : \Flexio\Base\StreamMemory
     {
         $properties['path'] = \Flexio\Base\Util::generateHandle();
-        return \Flexio\Object\StreamMemory::create($properties);
+        return \Flexio\Base\StreamMemory::create($properties);
     }
 
     private function getConnectionInfoFromItem(array $params, array $item)

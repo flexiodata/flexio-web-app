@@ -64,7 +64,7 @@ class Create extends \Flexio\Jobs\Base
             $context->addStream($outstream);
     }
 
-    private function createFileStream() : \Flexio\Object\IStream
+    private function createFileStream() : \Flexio\Base\IStream
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New File');
@@ -86,7 +86,7 @@ class Create extends \Flexio\Jobs\Base
             'name' => $name,
             'mime_type' => $mime_type
         );
-        $outstream = \Flexio\Object\StreamMemory::create($outstream_properties);
+        $outstream = \Flexio\Base\StreamMemory::create($outstream_properties);
         $streamwriter = $outstream->getWriter();
 
         // write the content
@@ -96,7 +96,7 @@ class Create extends \Flexio\Jobs\Base
         return $outstream;
     }
 
-    private function createTableStream() : \Flexio\Object\IStream
+    private function createTableStream() : \Flexio\Base\IStream
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New Table');
@@ -108,7 +108,7 @@ class Create extends \Flexio\Jobs\Base
             'structure' => $structure
         );
 
-        $outstream = \Flexio\Object\StreamMemory::create($outstream_properties);
+        $outstream = \Flexio\Base\StreamMemory::create($outstream_properties);
         $streamwriter = $outstream->getWriter();
 
         if (isset($job_definition['params']['content']))

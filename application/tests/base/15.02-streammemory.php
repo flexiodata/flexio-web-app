@@ -33,7 +33,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write("");
         $writer->close();
@@ -49,7 +49,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write("A");
         $writer->close();
@@ -65,7 +65,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -89,7 +89,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('[null]',true);
         $writer->write($data);
@@ -110,7 +110,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : null}',true);
         $writer->write($data);
@@ -131,7 +131,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('[""]',true);
         $writer->write($data);
@@ -152,7 +152,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : ""}',true);
         $writer->write($data);
@@ -173,7 +173,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f2" : ""}',true);
         $writer->write($data);
@@ -194,7 +194,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('["a"]',true);
         $writer->write($data);
@@ -215,7 +215,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "a"}',true);
         $writer->write($data);
@@ -236,7 +236,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('["a","b","c"]',true);
         $writer->write($data);
@@ -257,7 +257,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('[]',true);
         $writer->write($data);
@@ -278,7 +278,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{"f2" : "a"}',true);
         $writer->write($data);
@@ -304,7 +304,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('[null,null]',true);
         $writer->write($data);
@@ -326,7 +326,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : null, "f2": null}',true);
         $writer->write($data);
@@ -348,7 +348,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('["",""]',true);
         $writer->write($data);
@@ -370,7 +370,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "", "f2": ""}',true);
         $writer->write($data);
@@ -392,7 +392,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('[null,"a"]',true);
         $writer->write($data);
@@ -414,7 +414,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : null, "f2": "a"}',true);
         $writer->write($data);
@@ -436,7 +436,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('["a",null]',true);
         $writer->write($data);
@@ -458,7 +458,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "a", "f2": null}',true);
         $writer->write($data);
@@ -480,7 +480,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('["a","b"]',true);
         $writer->write($data);
@@ -502,7 +502,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "a", "f2": "b"}',true);
         $writer->write($data);
@@ -524,7 +524,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('["a","b","c"]',true);
         $writer->write($data);
@@ -546,7 +546,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('["a"]',true);
         $writer->write($data);
@@ -568,7 +568,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f1" : "a", "f3": "b"}',true);
         $writer->write($data);
@@ -590,7 +590,7 @@ class Test
             { "name": "f2", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('{ "f2" : "a", "f3": "b"}',true);
         $writer->write($data);
@@ -615,7 +615,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('[null]',true));
         $writer->write(json_decode('[null]',true));
@@ -636,7 +636,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->write(json_decode('{ "f1" : null}',true));
@@ -657,7 +657,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('[""]',true));
         $writer->write(json_decode('[""]',true));
@@ -678,7 +678,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : ""}',true));
         $writer->write(json_decode('{ "f1" : ""}',true));
@@ -699,7 +699,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('["a"]',true));
         $writer->write(json_decode('[null]',true));
@@ -720,7 +720,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "a"}',true));
         $writer->write(json_decode('{ "f1" : null}',true));
@@ -741,7 +741,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('[null]',true));
         $writer->write(json_decode('["a"]',true));
@@ -762,7 +762,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->write(json_decode('{ "f1" : "a"}',true));
@@ -787,7 +787,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->close();
@@ -807,7 +807,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : ""}',true));
         $writer->close();
@@ -827,7 +827,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\t"}',true));
         $writer->close();
@@ -847,7 +847,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\r"}',true));
         $writer->close();
@@ -867,7 +867,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\n"}',true));
         $writer->close();
@@ -887,7 +887,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\u0000"}',true));
         $writer->close();
@@ -907,7 +907,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\'"}',true));
         $writer->close();
@@ -927,7 +927,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\""}',true));
         $writer->close();
@@ -947,7 +947,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "("}',true));
         $writer->close();
@@ -967,7 +967,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : ")"}',true));
         $writer->close();
@@ -987,7 +987,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "/"}',true));
         $writer->close();
@@ -1007,7 +1007,7 @@ class Test
             { "name": "f1", "type": "text"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : "\\\\"}',true));
         $writer->close();
@@ -1031,7 +1031,7 @@ class Test
             { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->close();
@@ -1051,7 +1051,7 @@ class Test
             { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : 0}',true));
         $writer->close();
@@ -1071,7 +1071,7 @@ class Test
             { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : 1}',true));
         $writer->close();
@@ -1091,7 +1091,7 @@ class Test
             { "name": "f1", "type": "numeric", "width": 10, "scale": 0}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : -1}',true));
         $writer->close();
@@ -1115,7 +1115,7 @@ class Test
             { "name": "f1", "type": "boolean"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : null}',true));
         $writer->close();
@@ -1135,7 +1135,7 @@ class Test
             { "name": "f1", "type": "boolean"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : true}',true));
         $writer->close();
@@ -1155,7 +1155,7 @@ class Test
             { "name": "f1", "type": "boolean"}
         ]
         ',true))->get();
-        $stream = \Flexio\Object\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\StreamMemory::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write(json_decode('{ "f1" : false}',true));
         $writer->close();

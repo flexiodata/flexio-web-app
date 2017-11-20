@@ -123,7 +123,7 @@ class Render extends \Flexio\Jobs\Base
                 'name' => $output_name,
                 'mime_type' => $content_type
             );
-            $outstream = \Flexio\Object\StreamMemory::create($outstream_properties);
+            $outstream = \Flexio\Base\StreamMemory::create($outstream_properties);
             $streamwriter = $outstream->getWriter();
 
             $windowsize = '';

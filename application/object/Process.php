@@ -95,7 +95,7 @@ class Process extends \Flexio\Object\Base
 
                 if ($first && $data !== false && strlen($data) > 0)
                 {
-                    $stream = \Flexio\Object\StreamMemory::create();
+                    $stream = \Flexio\Base\StreamMemory::create();
 
                     $stream_info = array();
                     $stream_info['mime_type'] = $mime_type;
@@ -411,7 +411,7 @@ class Process extends \Flexio\Object\Base
         return \Flexio\Object\Context::fromString($output);
     }
 
-    public function getStdout() : \Flexio\Object\IStream
+    public function getStdout() : \Flexio\Base\IStream
     {
         return $this->getOutput()->getStdout();
     }
@@ -499,7 +499,7 @@ class Process extends \Flexio\Object\Base
         $stdin = $context->getStdin();
         if (!isset($stdin))
         {
-            $stdin = \Flexio\Object\StreamMemory::create();
+            $stdin = \Flexio\Base\StreamMemory::create();
             $stdin->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
             $context->setStdin($stdin);
         }
@@ -507,7 +507,7 @@ class Process extends \Flexio\Object\Base
         $stdout = $context->getStdout();
         if (!isset($stdout))
         {
-            $stdout = \Flexio\Object\StreamMemory::create();
+            $stdout = \Flexio\Base\StreamMemory::create();
             $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
             $context->setStdout($stdout);
         }
@@ -526,7 +526,7 @@ class Process extends \Flexio\Object\Base
                 // set the stdin for the next job step to be the output from the stdout
                 // of the step just executed and create a new stdout
                 $context->setStdin($context->getStdout());
-                $stdout = \Flexio\Object\StreamMemory::create();
+                $stdout = \Flexio\Base\StreamMemory::create();
                 $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
                 $context->setStdout($stdout);
             }

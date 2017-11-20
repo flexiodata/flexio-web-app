@@ -67,13 +67,13 @@ class Group extends \Flexio\Jobs\Base
 
         foreach ($input as $instream)
         {
-            $outstream = \Flexio\Object\StreamMemory::create();
+            $outstream = \Flexio\Base\StreamMemory::create();
             $this->processStream($outstream);
             $context->addStream($outstream, $outstream);
         }
     }
 
-    private function processStream(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
+    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -88,7 +88,7 @@ class Group extends \Flexio\Jobs\Base
         }
     }
 
-    public function getOutput(\Flexio\Object\IStream &$instream, \Flexio\Object\IStream &$outstream)
+    public function getOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
         // input/output
         $outstream->set($instream->get());
@@ -113,7 +113,7 @@ class Group extends \Flexio\Jobs\Base
         $outstream->setStructure($output_columns);
     }
 
-    private static function prepareOutput(array $job_definition, \Flexio\Object\IStream $instream, \Flexio\Object\IStream &$outstream)
+    private static function prepareOutput(array $job_definition, \Flexio\Base\IStream $instream, \Flexio\Base\IStream &$outstream)
     {
         // properties
         if (!isset($job_definition['params']['columns']))
