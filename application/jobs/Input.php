@@ -375,19 +375,6 @@ class Input extends \Flexio\Jobs\Base
         return \Flexio\Object\StreamMemory::create($properties);
     }
 
-    private function createDatastoreStream(array $properties) : \Flexio\Object\Stream
-    {
-        // use default datastore connection
-        $datastore_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();
-        if (!\Flexio\Base\Eid::isValid($datastore_connection_eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // use random string for the store table
-        $properties['connection_eid'] = $datastore_connection_eid;
-        $properties['path'] = \Flexio\Base\Util::generateHandle();
-        return \Flexio\Object\Stream::create($properties);
-    }
-
     private function getConnectionInfoFromItem(array $params, array $item)
     {
         if (!isset($item['path']))
