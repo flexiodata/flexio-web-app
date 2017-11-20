@@ -18,42 +18,6 @@ namespace Flexio\Object;
 
 class Store
 {
-    public static function create(string $eid_type, array $properties = null) : \Flexio\Object\Base
-    {
-        switch ($eid_type)
-        {
-            default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-            case \Model::TYPE_OBJECT:
-                return \Flexio\Object\Object::create($properties);
-
-            case \Model::TYPE_COMMENT:
-                return \Flexio\Object\Comment::create($properties);
-
-            case \Model::TYPE_CONNECTION:
-                return \Flexio\Object\Connection::create($properties);
-
-            case \Model::TYPE_PIPE:
-                return \Flexio\Object\Pipe::create($properties);
-
-            case \Model::TYPE_PROCESS:
-                return \Flexio\Object\Process::create($properties);
-
-            case \Model::TYPE_PROJECT:
-                return \Flexio\Object\Project::create($properties);
-
-            case \Model::TYPE_STREAM:
-                return \Flexio\Object\Stream::create($properties);
-
-            case \Model::TYPE_USER:
-                return \Flexio\Object\User::create($properties);
-
-            case \Model::TYPE_TOKEN:
-                return \Flexio\Object\Token::create($properties);
-        }
-    }
-
     public static function load(string $identifier, string $eid_type = null)
     {
         if (!isset($eid_type))
