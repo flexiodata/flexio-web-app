@@ -171,7 +171,7 @@ class Pipe extends \Flexio\Object\Base
         foreach ($res as $item)
         {
             $object_eid = $item['eid'];
-            $object = \Flexio\Object\Store::load($object_eid);
+            $object = \Flexio\Object\Process::load($object_eid);
             if ($object === false)
                 continue;
 

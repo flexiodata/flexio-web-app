@@ -210,17 +210,17 @@ class Base implements IObject
     public function getFollowers() : array
     {
         // get the objects owned/followed by the user
-        $objects_followed = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_FOLLOWED_BY);
+        $users_folllowing = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_FOLLOWED_BY);
 
         $res = array();
-        foreach ($objects_followed as $object_info)
+        foreach ($users_folllowing as $user_info)
         {
-            $object_eid = $object_info['eid'];
-            $object = \Flexio\Object\Store::load($object_eid);
-            if ($object === false)
+            $user_eid = $user_info['eid'];
+            $user = \Flexio\Object\User::load($user_eid);
+            if ($user === false)
                 continue;
 
-            $res[] = $object;
+            $res[] = $user;
         }
 
         return $res;

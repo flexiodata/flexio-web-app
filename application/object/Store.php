@@ -20,8 +20,9 @@ class Store
 {
     public static function load(string $identifier, string $eid_type = null)
     {
+        $model = \Flexio\System\System::getModel();
         if (!isset($eid_type))
-            $eid_type = self::getModel()->getTypeByIdentifier($identifier);
+            $eid_type = $model->getTypeByIdentifier($identifier);
 
         switch ($eid_type)
         {
