@@ -31,7 +31,7 @@ class StreamMemoryWriter implements \Flexio\Object\IStreamWriter
 
     public static function create(\Flexio\Object\StreamMemory $stream) : \Flexio\Object\StreamMemoryWriter
     {
-        $object = new static;
+        $object = new static();
         $object->stream = $stream;
         return $object;
     }
@@ -118,7 +118,7 @@ class StreamWriter implements \Flexio\Object\IStreamWriter
         // the key information we need from the stream are the path, mime_type,
         // and structure for the source
 
-        $object = new static;
+        $object = new static();
         $stream_properties = $stream->get();
 
         $stream_info = array();
@@ -207,7 +207,7 @@ class StreamFileWriter
 
     public static function create($stream_info)
     {
-        $object = new static;
+        $object = new static();
         $object->stream_info = $stream_info;
 
         if (!isset($object->stream_info['path']))
@@ -293,7 +293,7 @@ class StreamTableWriter
 
     public static function create($stream_info)
     {
-        $object = new static;
+        $object = new static();
         $object->stream_info = $stream_info;
 
         if (!isset($object->stream_info['path']))

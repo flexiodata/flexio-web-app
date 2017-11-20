@@ -58,7 +58,7 @@ class Process
 
     public static function create() : \Flexio\Jobs\Process
     {
-        $object = new static;
+        $object = new static();
         return $object;
     }
 
