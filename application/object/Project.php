@@ -80,25 +80,6 @@ class Project extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getMembers() : array
-    {
-        $result = array();
-
-        $res = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_HAS_MEMBER);
-
-        foreach ($res as $item)
-        {
-            $object_eid = $item['eid'];
-            $object = \Flexio\Object\Store::load($object_eid);
-            if ($object === false)
-                continue;
-
-            $result[] = $object;
-        }
-
-        return $result;
-    }
-
     private function isCached() : bool
     {
         if ($this->properties === false)
@@ -133,8 +114,6 @@ class Project extends \Flexio\Object\Base
             "ename" : null,
             "name" : null,
             "description" : null,
-            "follower_count" : null,
-            "pipe_count" : null,
             "owned_by='.\Model::EDGE_OWNED_BY.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_USER.'",
@@ -153,29 +132,6 @@ class Project extends \Flexio\Object\Base
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
         if (!$properties)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        // populate the follower count
-        $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
-        $follower_count = $this->getModel()->assoc_count($this->getEid(),
-                                                         \Model::EDGE_FOLLOWED_BY,
-                                                         $assoc_filter) + 1; // plus 1 to include owner
-        $properties['follower_count'] = $follower_count;
-
-        // populate the pipe count
-        $pipe_count = 0;
-        $objects = $this->getMembers();
-        foreach ($objects as $o)
-        {
-            $object_status = $o->getStatus();
-            $object_type = $o->getType();
-
-            if ($object_status !== \Model::STATUS_AVAILABLE)
-                continue;
-
-            if ($object_type === \Model::TYPE_PIPE)
-                $pipe_count++;
-        }
-        $properties['pipe_count'] = $pipe_count;
 
         // return the properties
         return $properties;

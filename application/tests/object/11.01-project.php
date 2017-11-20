@@ -184,8 +184,6 @@ class Test
             "ename" : null,
             "name" : null,
             "description" : null,
-            "follower_count" : null,
-            "pipe_count" : null,
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null,
