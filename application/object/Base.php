@@ -45,10 +45,9 @@ class Base implements IObject
     public static function create(array $properties = null) : \Flexio\Object\Base
     {
         $object = new static();
-        $model = \Flexio\Object\Store::getModel();
+        $model = $object->getModel();
         $local_eid = $model->create($object->getType(), $properties);
 
-        $object->setModel($model);
         $object->setEid($local_eid);
         $object->clearCache();
 
@@ -60,7 +59,7 @@ class Base implements IObject
     public static function load(string $identifier)
     {
         $object = new static();
-        $model = \Flexio\Object\Store::getModel();
+        $model = $object->getModel();
 
         // assume the identifier is an eid, and try to find out the type
         $eid = $identifier;
@@ -85,7 +84,6 @@ class Base implements IObject
         if ($model->getStatus($eid) === \Model::STATUS_DELETED)
             return false;
 
-        $object->setModel($model);
         $object->setEid($eid);
         $object->clearCache();
         return $object;
@@ -460,15 +458,9 @@ class Base implements IObject
         return $this;
     }
 
-    protected function setModel($model) : \Flexio\Object\Base // TODO: set parameter type
-    {
-        $this->model = $model;
-        return $this;
-    }
-
     protected function getModel() : \Model
     {
-        return $this->model;
+        return \Flexio\System\System::getModel();
     }
 
     private function isCached() : bool

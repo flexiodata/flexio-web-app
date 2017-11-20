@@ -43,10 +43,9 @@ class Pipe extends \Flexio\Object\Base
         }
 
         $object = new static();
-        $model = \Flexio\Object\Store::getModel();
+        $model = $object->getModel();
         $local_eid = $model->create($object->getType(), $properties);
 
-        $object->setModel($model);
         $object->setEid($local_eid);
         $object->clearCache();
 

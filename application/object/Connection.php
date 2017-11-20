@@ -28,7 +28,7 @@ class Connection extends \Flexio\Object\Base
 
     public static function getDatastoreConnectionEid() : string
     {
-        $registry_model = \Flexio\Object\Store::getModel()->registry;
+        $registry_model = \Flexio\System\System::getModel()->registry;
         $connection_eid = $registry_model->getString('', self::PROCESS_DATASTORE_1);
 
         if ($connection_eid !== false)
@@ -48,10 +48,9 @@ class Connection extends \Flexio\Object\Base
             $properties['connection_info'] = json_encode($properties['connection_info']);
 
         $object = new static();
-        $model = \Flexio\Object\Store::getModel();
+        $model = $object->getModel();
         $local_eid = $model->create($object->getType(), $properties);
 
-        $object->setModel($model);
         $object->setEid($local_eid);
         $object->clearCache();
 
@@ -395,7 +394,7 @@ class Connection extends \Flexio\Object\Base
                         'connection_info' => $connection_info_str
                         );
 
-        $connection_eid = \Flexio\Object\Store::getModel()->create(\Model::TYPE_CONNECTION, $params);
+        $connection_eid = \Flexio\System\System::getModel()->create(\Model::TYPE_CONNECTION, $params);
         return $connection_eid;
     }
 

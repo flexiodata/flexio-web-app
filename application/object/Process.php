@@ -48,10 +48,9 @@ class Process extends \Flexio\Object\Base
             $properties['process_mode'] = \Model::PROCESS_MODE_RUN;
 
         $object = new static();
-        $model = \Flexio\Object\Store::getModel();
+        $model = $object->getModel();
         $local_eid = $model->create($object->getType(), $properties);
 
-        $object->setModel($model);
         $object->setEid($local_eid);
         $object->clearCache();
 

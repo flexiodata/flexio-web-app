@@ -66,10 +66,9 @@ class User extends \Flexio\Object\Base
         }
 
         $object = new static();
-        $model = \Flexio\Object\Store::getModel();
+        $model = $object->getModel();
         $local_eid = $model->create($object->getType(), $properties);
 
-        $object->setModel($model);
         $object->setEid($local_eid);
         $object->clearCache();
 
@@ -84,7 +83,7 @@ class User extends \Flexio\Object\Base
         // for a user
 
         $object = new static();
-        $model = \Flexio\Object\Store::getModel();
+        $model = $object->getModel();
 
         // assume the identifier is an eid, and try to find out the type
         $eid = $identifier;
@@ -109,7 +108,6 @@ class User extends \Flexio\Object\Base
         if ($model->getStatus($eid) === \Model::STATUS_DELETED)
             return false;
 
-        $object->setModel($model);
         $object->setEid($eid);
         $object->clearCache();
         return $object;

@@ -73,9 +73,9 @@ class Query
         // conditions and return the specified fields; if the eid_type is
         // specified, save time by specifying the model
         if (isset($query->eid_type) && !is_null($query->eid_type))
-           $object = \Flexio\Object\Store::getModel()->get($eid, $query->eid_type);
+           $object = self::getModel()->get($eid, $query->eid_type);
             else
-           $object = \Flexio\Object\Store::getModel()->get($eid);
+           $object = self::getModel()->get($eid);
 
         foreach($query as $property_name => $property_value)
         {
@@ -146,7 +146,7 @@ class Query
                     // STEP 3b: the input name doesn't exist as a property on the object;
                     // treat the input name as an edge and try to find the object via
                     // the edge; only take the first member
-                    $edges = \Flexio\Object\Store::getModel()->assoc_range($eid, $property_input_name);
+                    $edges = self::getModel()->assoc_range($eid, $property_input_name);
                     foreach($edges as $item)
                     {
                         // build the results for the child; append any object
@@ -175,7 +175,7 @@ class Query
                     continue;
 
                 $property_value = $property_value[0];
-                $edges = \Flexio\Object\Store::getModel()->assoc_range($eid, $property_input_name);
+                $edges = self::getModel()->assoc_range($eid, $property_input_name);
                 foreach($edges as $item)
                 {
                     // build the results for the child; append any object
@@ -190,5 +190,10 @@ class Query
         }
 
         return $result;
+    }
+
+    private static function getModel() : \Model
+    {
+        return \Flexio\System\System::getModel();
     }
 }

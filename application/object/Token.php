@@ -38,10 +38,9 @@ class Token extends \Flexio\Object\Base
         $properties['access_code'] = \Flexio\Base\Util::generateHandle();
 
         $object = new static();
-        $model = \Flexio\Object\Store::getModel();
+        $model = $object->getModel();
         $local_eid = $model->create($object->getType(), $properties);
 
-        $object->setModel($model);
         $object->setEid($local_eid);
         $object->clearCache();
         return $object;

@@ -20,6 +20,6 @@ class Search
 {
     public static function exec(string $query)
     {
-        return Store::getModel()->search($query);
+        return \Flexio\System\System::getModel()->search($query);
     }
 }

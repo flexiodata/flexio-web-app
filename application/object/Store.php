@@ -56,9 +56,4 @@ class Store
                 return \Flexio\Object\Token::load($identifier);
         }
     }
-
-    public static function getModel() : \Model
-    {
-        return \Flexio\System\System::getModel();
-    }
 }
