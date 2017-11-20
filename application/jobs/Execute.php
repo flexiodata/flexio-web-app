@@ -908,7 +908,7 @@ class Execute extends \Flexio\Jobs\Base
     {
         $reader = $this->getInputReader($stream_idx);
         if (is_null($reader))
-            return null;
+            return false;
 
         $res = $reader->read($length);
 
@@ -921,7 +921,7 @@ class Execute extends \Flexio\Jobs\Base
     {
         $reader = $this->getInputReader($stream_idx);
         if (is_null($reader))
-            return null;
+            return false;
 
         $res = $reader->readRow();
         if ($res === false)
