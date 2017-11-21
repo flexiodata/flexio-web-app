@@ -67,9 +67,6 @@ class Process implements \Flexio\Jobs\IProcess
     private $response_code;
     private $error;
 
-    // set internally
-    private $current_task; // current task that's getting processed
-
     public function __construct()
     {
         $this->tasks = array();
