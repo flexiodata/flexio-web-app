@@ -41,21 +41,21 @@ class StorageFs
         return true;
     }
 
-    public static function createDirectory(string $path) : bool
+    public function createDirectory(string $path) : bool
     {
         $fspath = self::getFsPath($path);
 
         return @mkdir($fspath, 0750, true) ? true : false;
     }
 
-    public static function createFile(string $path, string $import_file) : bool
+    public function createFile(string $path, string $import_file) : bool
     {
         $fspath = self::getFsPath($path);
 
         return copy($import_file, $fspath);
     }
 
-    public static function deleteFile(string $path) : bool
+    public function deleteFile(string $path) : bool
     {
         $fspath = self::getFsPath($path);
 
@@ -63,7 +63,7 @@ class StorageFs
         return false;
     }
 
-    public static function list($path)
+    public function list($path)
     {
         $fspath = self::getFsPath($path);
 
@@ -96,7 +96,7 @@ class StorageFs
         return $arr;
     }
 
-    public static function exists(string $path) : bool
+    public function exists(string $path) : bool
     {
         $fspath = self::getFsPath($path);
 
@@ -110,7 +110,7 @@ class StorageFs
 
 
 
-    private static function getFsPath(string $path) : string
+    private function getFsPath(string $path) : string
     {
         $str = $this->base_path . DIRECTORY_SEPARATOR . $path;
 
