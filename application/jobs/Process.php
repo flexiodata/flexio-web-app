@@ -25,10 +25,6 @@ class Process implements \Flexio\Jobs\IJob
     const EVENT_PROCESS_FINISHED       = 'process.finished';
     const EVENT_PROCESS_FINISHED_TASK  = 'process.finished.task';
 
-    const PROCESS_MODE_UNDEFINED  = '';
-    const PROCESS_MODE_BUILD      = 'B';
-    const PROCESS_MODE_RUN        = 'R';
-
     const PROCESS_RESPONSE_NONE = 0;
     const PROCESS_RESPONSE_NORMAL = 200;
 
@@ -66,7 +62,6 @@ class Process implements \Flexio\Jobs\IJob
         'flexio.list'      => '\Flexio\Jobs\List1'
     );
 
-    private $mode;
     private $tasks;  // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
     private $stdin;  // initial stdin for the process; used to initialize the buffer
     private $stdout; // final stdout for the process; set at the end of the process
@@ -79,7 +74,6 @@ class Process implements \Flexio\Jobs\IJob
 
     public function __construct()
     {
-        $this->mode = self::PROCESS_MODE_RUN;
         $this->tasks = array();
 
         $this->stdin = \Flexio\Base\StreamMemory::create();
@@ -96,19 +90,6 @@ class Process implements \Flexio\Jobs\IJob
     {
         $object = new static();
         return $object;
-    }
-
-    public function setMode(string $mode)
-    {
-        if (self::isValidMode($mode) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $this->mode = $mode;
-    }
-
-    public function getMode() : string
-    {
-        return $this->mode;
     }
 
     public function addTasks(array $tasks)
@@ -294,19 +275,6 @@ class Process implements \Flexio\Jobs\IJob
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $job;
-    }
-
-    private static function isValidMode(string $mode) : bool
-    {
-        switch ($mode)
-        {
-            default:
-                return false;
-
-            case self::PROCESS_MODE_BUILD:
-            case self::PROCESS_MODE_RUN:
-                return true;
-        }
     }
 
     private function signal(string $event, callable $func = null)

@@ -18,8 +18,6 @@ namespace Flexio\Jobs;
 
 interface IProcess
 {
-    public function setMode(string $mode);
-    public function getMode();
     public function addTasks(array $tasks);
     public function getTasks();
     public function setStdin(\Flexio\Base\IStream $stdin);
