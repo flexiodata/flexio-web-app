@@ -16,6 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
+
 class Process implements \Flexio\Jobs\IProcess
 {
     // events are passed in a callback function along with info
@@ -177,13 +179,13 @@ class Process implements \Flexio\Jobs\IProcess
                 break;
 
             // signal the start of the task
-            $this->signal(self::EVENT_PROCESS_TASK_STARTING, $func);
+            $this->signal(self::EVENT_PROCESS_STARTING_TASK, $func);
 
             // execute the task
             $this->executeTask($current_task);
 
             // signal the end of the task
-            $this->signal(self::EVENT_PROCESS_TASK_FINISHED, $func);
+            $this->signal(self::EVENT_PROCESS_FINISHED_TASK, $func);
 
             // if there's an error, stop the process
             if ($this->hasError())

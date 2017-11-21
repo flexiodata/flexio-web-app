@@ -492,29 +492,50 @@ class Process extends \Flexio\Object\Base
         // and initialize the context variables
         $process_input = $current_process_properties['input'];
         $context = \Flexio\Object\Context::fromString($process_input);
-
-        $stdin = $context->getStdin();
-        if (!isset($stdin))
-        {
-            $stdin = \Flexio\Base\StreamMemory::create();
-            $stdin->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
-            $context->setStdin($stdin);
-        }
-
-        $stdout = $context->getStdout();
-        if (!isset($stdout))
-        {
-            $stdout = \Flexio\Base\StreamMemory::create();
-            $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
-            $context->setStdout($stdout);
-        }
-
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $context->getParams();
         $variables = array_merge($user_variables, $environment_variables);
-        $context->setParams($variables);
 
-        // STEP 4: iterate through the tasks and run each one
+        // STEP 4: create the process engine and configure it
+        $process_engine = \Flexio\Jobs\Process::create();
+        $process_engine->addTasks($process_tasks);
+        $process_engine->setParams($variables);
+
+        $stdin = $context->getStdin();
+        if (isset($stdin))
+            $process_engine->setBuffer($context->getStdin());
+
+        $input_streams = $context->getStreams();
+        foreach ($input_streams as $s)
+        {
+            $process_engine->addStream($s);
+        }
+
+        // STEP 5: execute the process; TODO: add the logging callbacks
+        $process_engine->execute();
+
+        // STEP 6: save the process output
+        $context->clearStreams();
+        $context->setStdout($process_engine->getBuffer());
+        $output_streams = $process_engine->getStreams();
+        foreach ($output_streams as $s)
+        {
+            $context->addStream($s);
+        }
+
+        // STEP 7: save final job output and status
+        $process_params = array();
+        $process_params['output'] = \Flexio\Object\Context::toString($context);
+        $process_params['finished'] = self::getProcessTimestamp();
+        $process_params['process_status'] = $process_engine->hasError() ? \Model::PROCESS_STATUS_FAILED : \Model::PROCESS_STATUS_COMPLETED;
+        $process_params['cache_used'] = 'N';
+        $this->getModel()->process->set($this->getEid(), $process_params);
+
+        // clear the process object cache
+        $this->clearCache();
+
+/*
+        // iterate through the tasks and run each one
         $first_task = true;
         foreach ($process_tasks as $task)
         {
@@ -569,77 +590,7 @@ class Process extends \Flexio\Object\Base
 
         // clear the process object cache
         $this->clearCache();
-    }
-
-    private function executeTask(array $task, \Flexio\Object\Context &$context)
-    {
-        // if the process is something besides running, we're done
-        $status = $this->getModel()->process->getProcessStatus($this->getEid());
-        if ($status !== \Model::PROCESS_STATUS_RUNNING)
-            return; // nothing to do, but we're still ok
-
-
-        if (!IS_PROCESSTRYCATCH())
-        {
-            // during debugging, sometimes try/catch needs to be turned
-            // of completely; this switch is implemented here and in Api.php
-            $job = \Flexio\Jobs\Factory::create($task);
-            $job->run($context);
-            return;
-        }
-
-        // create the job with the task
-        try
-        {
-            // TODO: experimental: pass context parameters through run function parameter
-
-            // set the job input, run the job, and get the output
-            $job = \Flexio\Jobs\Factory::create($task);
-            $job->run($context);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            self::logExceptionIfConfigured($e, $task);
-
-            $info = $e->getMessage(); // exception info is packaged up in message
-            $info = json_decode($info,true);
-            $file = $e->getFile();
-            $line = $e->getLine();
-            $trace = $e->getTrace();
-            $code = $info['code'];
-            $message = $info['message'];
-            $type = 'flexio exception';
-            $this->fail($code, $message, $file, $line, $type, $trace);
-
-            //if ($this->getDebug() === true)
-            //    die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
-        }
-        catch (\Exception $e)
-        {
-            self::logExceptionIfConfigured($e, $task);
-
-            $file = $e->getFile();
-            $line = $e->getLine();
-            $trace = $e->getTrace();
-            $type = 'php exception';
-            $this->fail(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
-
-            if ($this->getDebug() === true)
-                die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
-        }
-        catch (\Error $e)
-        {
-            self::logExceptionIfConfigured($e, $task);
-
-            $file = $e->getFile();
-            $line = $e->getLine();
-            $trace = $e->getTrace();
-            $type = 'php error';
-            $this->fail(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
-
-            if ($this->getDebug() === true)
-                die("<pre> Exception in $file line $line\n" . $e->getTraceAsString());
-        }
+*/
     }
 
     public function getResponseCode() : int

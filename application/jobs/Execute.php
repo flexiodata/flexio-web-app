@@ -682,7 +682,7 @@ class Execute extends \Flexio\Jobs\Base
 
         $process = \Flexio\Jobs\Process::create();
         $task_list = array($task);
-        $process->setTasks($task_list);
+        $process->addTasks($task_list);
         $process->setBuffer($this->runjob_stdin);
         $process->execute();
 
