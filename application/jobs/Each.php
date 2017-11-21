@@ -26,24 +26,25 @@ namespace Flexio\Jobs;
 
 class Each extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
-        // process stdin
-        $stdin = $context->getStdin();
-        $stdout = $context->getStdout();
-        $this->processStream($stdin, $stdout);
+        // process buffer
+        $instream = $process->getBuffer();
+        $outstream = \Flexio\Base\StreamMemory::create();
+        $this->processStream($instream, $outstream);
+        $process->setBuffer($outstream);
 
         // process stream array
-        $input = $context->getStreams();
-        $context->clearStreams();
+        $input = $process->getStreams();
+        $process->clearStreams();
 
         foreach ($input as $instream)
         {
             $outstream = \Flexio\Base\StreamMemory::create();
             $this->processStream($instream, $outstream);
-            $context->addStream($outstream);
+            $process->addStream($outstream);
         }
     }
 
@@ -77,19 +78,18 @@ class Each extends \Flexio\Jobs\Base
             if ($row === false)
                 break;
 
-            // create a new context; pass on the params, but set the stdin
-            // to the content for the row
+            // create a new process; pass on the params, but set the stdin
+            // to the content for the row; TODO: need to pass on the params from
+            // the process
             $rowinstream = \Flexio\Base\StreamMemory::create();
             $rowinstream->write($row);
 
-            $context = \Flexio\Object\Context::create();
-            $context->setParams($instream->getParams());
-            $context->setStdin($rowinstream);
+            $process = \Flexio\Jobs\Process::create();
+            $process->addTasks($job_tasks);
+            $process->setBuffer($rowinstream);
+            $process->execute();
+            $rowoutstream = $process->getBuffer();
 
-            $this->execute($job_tasks, $context);
-
-            // write the result to the output stream
-            $rowoutstream = $context->getStdout();
             while (true)
             {
                 $outrow = $rowoutstream->read();
@@ -102,32 +102,5 @@ class Each extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-    }
-
-    private function execute(array $jobs_tasks, \Flexio\Object\Context &$context)
-    {
-        $first_task = true;
-        foreach ($job_tasks as $task)
-        {
-            if ($first_task === false)
-            {
-                // set the stdin for the next job step to be the output from the stdout
-                // of the step just executed and create a new stdout
-                $context->setStdin($context->getStdout());
-                $stdout = \Flexio\Base\StreamMemory::create();
-                $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
-                $context->setStdout($stdout);
-            }
-
-            // execute the task
-            $this->executeTask($task, $context);
-            $first_task = false;
-        }
-    }
-
-    private function executeTask(array $task, \Flexio\Object\Context &$context)
-    {
-        $job = \Flexio\Jobs\Factory::create($task);
-        $job->run($context);
     }
 }

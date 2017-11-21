@@ -26,9 +26,8 @@ namespace Flexio\Jobs;
 
 class Nop extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
-
+        parent::run($process);
     }
 }

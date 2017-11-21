@@ -26,12 +26,12 @@ namespace Flexio\Jobs;
 
 class Render extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
-        $input = $context->getStreams();
-        $context->clearStreams();
+        $input = $process->getStreams();
+        $process->clearStreams();
 
         $job_definition = $this->getProperties();
         $items = $job_definition['params']['items'] ?? null;
@@ -75,7 +75,9 @@ class Render extends \Flexio\Jobs\Base
         if ($url === null || strlen($url) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $outstream = $context->getStdout();
+        $outstream = \Flexio\Base\StreamMemory::create();
+        $process->setBuffer($outstream);
+
         $outstream_properties = array(
             'mime_type' => $content_type
         );
@@ -150,7 +152,7 @@ class Render extends \Flexio\Jobs\Base
             }
             fclose($fp);
 
-            $context->addStream($outstream);
+            $process->addStream($outstream);
         }
 */
     }

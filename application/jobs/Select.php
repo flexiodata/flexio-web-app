@@ -30,24 +30,25 @@ namespace Flexio\Jobs;
 
 class Select extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
-        // process stdin
-        $stdin = $context->getStdin();
-        $stdout = $context->getStdout();
-        $this->processStream($stdin, $stdout);
+        // process buffer
+        $instream = $process->getBuffer();
+        $outstream = \Flexio\Base\StreamMemory::create();
+        $this->processStream($instream, $outstream);
+        $process->setBuffer($outstream);
 
         // process stream array
-        $input = $context->getStreams();
-        $context->clearStreams();
+        $input = $process->getStreams();
+        $process->clearStreams();
 
         foreach ($input as $instream)
         {
             $outstream = \Flexio\Base\StreamMemory::create();
             $this->processStream($instream, $outstream);
-            $context->addStream($outstream);
+            $process->addStream($outstream);
         }
     }
 

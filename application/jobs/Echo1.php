@@ -27,21 +27,22 @@ namespace Flexio\Jobs;
 
 class Echo1 extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
-        // process stdin
-        $stdin = $context->getStdin();
-        $stdout = $context->getStdout();
-        $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
-        $stdout->set($stdin->get());
-        $stdout->setPath(\Flexio\Base\Util::generateHandle());
+        $instream = $process->getBuffer();
+        $outstream = \Flexio\Base\StreamMemory::create();
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
+        $outstream->set($instream->get());
+        $outstream->setPath(\Flexio\Base\Util::generateHandle());
 
         $job_definition = $this->getProperties();
         $msg = $job_definition['params']['msg'] ?? '';
 
-        $streamwriter = $stdout->getWriter();
+        $streamwriter = $outstream->getWriter();
         $streamwriter->write($msg);
+
+        $process->setBuffer($outstream);
     }
 }

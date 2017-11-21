@@ -27,9 +27,9 @@ namespace Flexio\Jobs;
 
 class Sleep extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
         // get the duration
         $job_definition = $this->getProperties();

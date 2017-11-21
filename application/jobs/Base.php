@@ -44,32 +44,32 @@ class Base implements \Flexio\Jobs\IJob
         return $this->properties;
     }
 
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        $this->replaceParameterTokens($context);
+        $this->replaceParameterTokens($process);
     }
 
-    public function replaceParameterTokens($context) : \Flexio\Jobs\Base
+    public function replaceParameterTokens($process) : \Flexio\Jobs\Base
     {
-        $this->replaceParameterTokensRecurse($context, $this->properties);
+        $this->replaceParameterTokensRecurse($process, $this->properties);
         return $this;
     }
 
-    private function replaceParameterTokensRecurse($context, &$value)
+    private function replaceParameterTokensRecurse($process, &$value)
     {
-        // normally, $context is a \Flexio\Object\Context object; however, for the
+        // normally, $process is an object that exposes the \Flexio\Jobs\IProcess interface; however, for the
         // convenience of the test suite, a key/value array may be passed instead
 
-        if (is_array($context))
-            $variables = $context;
+        if (is_array($process))
+            $variables = $process;
              else
-            $variables = $context->getParams();
+            $variables = $process->getParams();
 
         if (is_array($value))
         {
             foreach ($value as $k => &$v)
             {
-                $this->replaceParameterTokensRecurse($context, $v);
+                $this->replaceParameterTokensRecurse($process, $v);
             }
         }
          else
@@ -96,7 +96,7 @@ class Base implements \Flexio\Jobs\IJob
                         if ($varname == 'stdin')
                         {
                             $replacement = '';
-                            $stream = $context->getStdin();
+                            $stream = $process->getBuffer();
                             $streamreader = $stream->getReader();
                             while (($chunk = $streamreader->read()) !== false)
                             {

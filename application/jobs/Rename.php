@@ -28,24 +28,25 @@ namespace Flexio\Jobs;
 
 class Rename extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
-        // process stdin
-        $stdin = $context->getStdin();
-        $stdout = $context->getStdout();
-        $this->processStream($stdin, $stdout, $context->getParams());
+        // process buffer
+        $instream = $process->getBuffer();
+        $outstream = \Flexio\Base\StreamMemory::create();
+        $this->processStream($instream, $outstream, $process->getParams());
+        $process->setBuffer($outstream);
 
         // process stream array
-        $input = $context->getStreams();
-        $context->clearStreams();
+        $input = $process->getStreams();
+        $process->clearStreams();
 
         foreach ($input as $instream)
         {
             $outstream = \Flexio\Base\StreamMemory::create();
-            $this->processStream($instream, $outstream, $context->getParams());
-            $context->addStream($outstream);
+            $this->processStream($instream, $outstream, $process->getParams());
+            $process->addStream($outstream);
         }
     }
 

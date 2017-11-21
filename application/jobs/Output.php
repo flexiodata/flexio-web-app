@@ -32,9 +32,9 @@ class Output extends \Flexio\Jobs\Base
     private $cached_connection_properties = null;
     private $streams = [];
 
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
         // make sure we have a params node
         $job_definition = $this->getProperties();
@@ -49,9 +49,9 @@ class Output extends \Flexio\Jobs\Base
         }
 
 
-        // get an array of stream objects; don't clear the context streams: we simply want to
+        // get an array of stream objects; don't clear the process streams: we simply want to
         // output each one to some external store and pass on the list as we received it
-        $this->streams = $context->getStreams();
+        $this->streams = $process->getStreams();
 
         // resolve the output items, determining the appropriate connection type/eid for each item
         // in addition, a member will be populated called stream_idx, which will reference the

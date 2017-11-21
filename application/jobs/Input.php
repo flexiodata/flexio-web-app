@@ -30,24 +30,24 @@ class Input extends \Flexio\Jobs\Base
 {
     // job-global connection properties
     private $cached_connection_properties = null;
-    private $context = null;
+    private $process = null;
 
-    private function getContext()
+    private function getProcess()
     {
-        return $this->context;
+        return $this->process;
     }
 
-    private function setContext(\Flexio\Object\Context $context)
+    private function setProcess(\Flexio\Jobs\IProcess $process)
     {
-        $this->context = $context;
+        $this->process = $process;
     }
 
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
-        // store a reference to the context
-        $this->setContext($context);
+        // store a reference to the process
+        $this->setProcess($process);
 
         // make sure we have a params node
         $job_definition = $this->getProperties();
@@ -217,8 +217,8 @@ class Input extends \Flexio\Jobs\Base
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
 
-        $this->getContext()->addStream($outstream);
-        $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
+        $this->getProcess()->addStream($outstream);
+        $this->getProcess()->setBuffer($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function runElasticSearchImport($service, array $file_info) // TODO: set paramater type
@@ -257,8 +257,8 @@ class Input extends \Flexio\Jobs\Base
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
 
-        $this->getContext()->addStream($outstream);
-        $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
+        $this->getProcess()->addStream($outstream);
+        $this->getProcess()->setBuffer($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function runRemoteFileImport($service, array $file_info) // TODO: set paramater type
@@ -365,8 +365,8 @@ class Input extends \Flexio\Jobs\Base
                                   'mime_type' => $mime_type));
         }
 
-        $this->getContext()->addStream($outstream);
-        $this->getContext()->setStdout($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
+        $this->getProcess()->addStream($outstream);
+        $this->getProcess()->setBuffer($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function createMemoryStream(array $properties) : \Flexio\Base\StreamMemory

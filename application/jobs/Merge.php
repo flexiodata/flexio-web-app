@@ -28,13 +28,12 @@ EXAMPLE:
 
 class Merge extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
-        // process stdin; since stdin is a single stream, the merged output is the same as the input
-        $stdin = $context->getStdin();
-        $context->setStdout($stdin);
+        // note: no need to process the stdin buffer, since it's a single stream and the merged
+        // result is the same as the original
 
         // process stream array
 
@@ -46,7 +45,7 @@ class Merge extends \Flexio\Jobs\Base
         // them as text
 
         $table_merge_mode = true;
-        $input = $context->getStreams();
+        $input = $process->getStreams();
 
         $merge_mode = 'table';
         foreach ($input as $instream)
@@ -62,17 +61,17 @@ class Merge extends \Flexio\Jobs\Base
         {
             default:
             case 'stream':
-                return $this->mergeStreams($context);
+                return $this->mergeStreams($process);
 
             case 'table':
-                return $this->mergeTables($context);
+                return $this->mergeTables($process);
         }
     }
 
-    private function mergeStreams(\Flexio\Object\Context &$context)
+    private function mergeStreams(\Flexio\Jobs\IProcess $process)
     {
-        $input = $context->getStreams();
-        $context->clearStreams();
+        $input = $process->getStreams();
+        $process->clearStreams();
 
         // set the default output mime type; for now, use text, but should be
         // based on content
@@ -99,13 +98,13 @@ class Merge extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        $context->addStream($outstream);
+        $process->addStream($outstream);
     }
 
-    private function mergeTables(\Flexio\Object\Context &$context)
+    private function mergeTables(\Flexio\Jobs\IProcess $process)
     {
-        $input = $context->getStreams();
-        $context->clearStreams();
+        $input = $process->getStreams();
+        $process->clearStreams();
 
         // create a merged structure and a row template for insertion
         // (the bulk insert, which the row inserter uses, requires the fields
@@ -141,7 +140,7 @@ class Merge extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        $context->addStream($outstream);
+        $process->addStream($outstream);
     }
 
     private function determineStructure(array $streams) : array

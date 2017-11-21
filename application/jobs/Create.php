@@ -29,9 +29,9 @@ namespace Flexio\Jobs;
 
 class Create extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
         // create job adds new streams; don't clear existing streams
         $job_definition = $this->getProperties();
@@ -59,9 +59,9 @@ class Create extends \Flexio\Jobs\Base
         // if no name is specified in the create job, send the content to stdout;
         // otherwise, add it onto the list of files
         if (!isset($job_definition['params']['name']))
-            $context->setStdout($outstream);
+            $process->setBuffer($outstream);
              else
-            $context->addStream($outstream);
+            $process->addStream($outstream);
     }
 
     private function createFileStream() : \Flexio\Base\IStream

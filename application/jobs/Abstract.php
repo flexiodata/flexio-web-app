@@ -39,5 +39,5 @@ interface IJob
 {
     public static function create(array $properties = null);
     public function getProperties() : array;
-    public function run(\Flexio\Object\Context &$context);
+    public function run(\Flexio\Jobs\IProcess $process);
 }

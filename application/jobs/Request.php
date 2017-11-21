@@ -29,9 +29,9 @@ namespace Flexio\Jobs;
 
 class Request extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
         $job_definition = $this->getProperties();
         $params = $job_definition['params'];
@@ -263,8 +263,8 @@ class Request extends \Flexio\Jobs\Base
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-
-        $outstream = $context->getStdout();
+        $outstream = \Flexio\Base\StreamMemory::create();
+        $process->setBuffer($outstream);
 
         // make the call and get the result
         $outstream_properties = array(

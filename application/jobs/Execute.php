@@ -353,9 +353,9 @@ class Execute extends \Flexio\Jobs\Base
         return $this->context;
     }
 
-    private function setContext(\Flexio\Object\Context $context)
+    private function setContext(\Flexio\Jobs\IProcess $process)
     {
-        $this->context = $context;
+        $this->context = $process;
     }
 
     private static function getFileContents(string $url) : string
@@ -378,11 +378,11 @@ class Execute extends \Flexio\Jobs\Base
         return $contents;
     }
 
-    public function run(\Flexio\Object\Context &$context)
+    public function run(\Flexio\Jobs\IProcess $process)
     {
-        parent::run($context);
+        parent::run($process);
 
-        $this->setContext($context);
+        $this->setContext($process);
 
         // properties
         $job_definition = $this->getProperties();
@@ -526,7 +526,8 @@ class Execute extends \Flexio\Jobs\Base
         }
         else if ($this->lang == 'html')
         {
-            $outstream = $this->getContext()->getStdout();
+            $outstream = \Flexio\Base\StreamMemory::create();
+            $this->getContext()->setBuffer($outstream);
 
             if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
             {
@@ -672,23 +673,25 @@ class Execute extends \Flexio\Jobs\Base
             return;
 
         if ($this->runjob_stdin === null)
-            $this->runjob_stdin = $this->getContext()->getStdin();
+            $this->runjob_stdin = $this->getContext()->getBuffer();
 
         $job = \Flexio\Jobs\Factory::create($task);
 
 
         $runjob_stdout = \Flexio\Base\StreamMemory::create();
 
-        $context = \Flexio\Object\Context::create();
-        $context->setStdin($this->runjob_stdin);
-        $context->setStdout($runjob_stdout);
+        $process = \Flexio\Jobs\Process::create();
+        $task_list = array($task);
+        $process->setTasks($task_list);
+        $process->setBuffer($this->runjob_stdin);
+        $process->execute();
 
-        $job->run($context);
+        // TODO: stdin/stdout are no longer separate; processes (context here) has a single buffer,
+        // so the following copyOver may not be necessary
 
         // stdin of the next invocation of runjob is the stdout of the job that just ran
-        $this->runjob_stdin = $runjob_stdout;
-
-        $runjob_stdout->copyOver($this->getContext()->getStdout());
+        $this->runjob_stdin = $process->getBuffer();
+        $runjob_stdout->copyOver($this->getContext()->getBuffer());
     }
 
     public function func_getInputEnv()
@@ -720,7 +723,11 @@ class Execute extends \Flexio\Jobs\Base
     {
         if ($name === '_fxstdin_')
         {
-            $stdin = $this->context->getStdin();
+            // the buffer can get overwritten; make sure to make a copy of the stream
+            $stdin = \Flexio\Base\StreamMemory::create();
+            $buffer = $this->context->getBuffer();
+            $stdin->copyOver($buffer);
+
             $this->input_streams[] = $stdin;
             return array('handle' => count($this->input_streams)-1,
                          'name' => '',
@@ -748,12 +755,11 @@ class Execute extends \Flexio\Jobs\Base
         return $res;
     }
 
-
     private function __getOutputStreamInfo($name)
     {
         if ($name === '_fxstdout_')
         {
-            $stdout = $this->context->getStdout();
+            $stdout = $this->context->getBuffer();
             $this->output_streams[] = $stdout;
             return array('handle' => count($this->output_streams)-1,
                          'name' => '',
