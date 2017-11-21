@@ -16,6 +16,24 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
+interface IProcess
+{
+    public function setMode(string $mode);
+    public function getMode();
+    public function addTasks(array $tasks);
+    public function getTasks();
+    public function setStdin(\Flexio\Base\IStream $stdin);
+    public function getStdout();
+    public function setResponseCode(int $code);
+    public function getResponseCode();
+    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);
+    public function getError();
+    public function hasError();
+    public function setBuffer(\Flexio\Base\IStream $buffer);
+    public function getBuffer();
+    public function execute(callable $func = null);
+}
+
 interface IJob
 {
     public static function create(array $properties = null);

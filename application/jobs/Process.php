@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class Process
+class Process implements \Flexio\Jobs\IJob
 {
     // events are passed in a callback function along with info
     // to track info about the process
@@ -141,6 +141,14 @@ class Process
         return $this->response_code;
     }
 
+    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
+    {
+        if (!isset($message))
+        $message = \Flexio\Base\Error::getDefaultMessage($code);
+
+        $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
+    }
+
     public function getError() : array
     {
         return $this->error;
@@ -152,18 +160,6 @@ class Process
             return false;
 
         return true;
-    }
-
-    private function fail(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
-    {
-        // only save the first error we come to
-        if ($this->hasError())
-            return;
-
-        if (!isset($message))
-            $message = \Flexio\Base\Error::getDefaultMessage($code);
-
-        $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
     }
 
     public function setBuffer(\Flexio\Base\IStream $buffer)
@@ -247,7 +243,7 @@ class Process
             $code = $info['code'];
             $message = $info['message'];
             $type = 'flexio exception';
-            $this->fail($code, $message, $file, $line, $type, $trace);
+            $this->setError($code, $message, $file, $line, $type, $trace);
         }
         catch (\Exception $e)
         {
@@ -255,7 +251,7 @@ class Process
             $line = $e->getLine();
             $trace = $e->getTrace();
             $type = 'php exception';
-            $this->fail(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
+            $this->setError(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
         }
         catch (\Error $e)
         {
@@ -263,7 +259,7 @@ class Process
             $line = $e->getLine();
             $trace = $e->getTrace();
             $type = 'php error';
-            $this->fail(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
+            $this->setError(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
         }
     }
 
