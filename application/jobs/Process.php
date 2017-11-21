@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-class Process implements \Flexio\Jobs\IJob
+class Process implements \Flexio\Jobs\IProcess
 {
     // events are passed in a callback function along with info
     // to track info about the process
