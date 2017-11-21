@@ -18,6 +18,20 @@ namespace Flexio\Jobs;
 
 class Process
 {
+    // events are passed in a callback function along with info
+    // to track info about the process
+    const EVENT_PROCESS_STARTING       = 'process.starting';
+    const EVENT_PROCESS_STARTING_TASK  = 'process.starting.task';
+    const EVENT_PROCESS_FINISHED       = 'process.finished';
+    const EVENT_PROCESS_FINISHED_TASK  = 'process.finished.task';
+
+    const PROCESS_MODE_UNDEFINED  = '';
+    const PROCESS_MODE_BUILD      = 'B';
+    const PROCESS_MODE_RUN        = 'R';
+
+    const PROCESS_RESPONSE_NONE = 0;
+    const PROCESS_RESPONSE_NORMAL = 200;
+
     private static $manifest = array(
         'flexio.calc'      => '\Flexio\Jobs\CalcField',
         'flexio.comment'   => '\Flexio\Jobs\Comment',
@@ -52,9 +66,31 @@ class Process
         'flexio.list'      => '\Flexio\Jobs\List1'
     );
 
-    private $tasks = array();
-    private $input = array();
-    private $output = array();
+    private $mode;
+    private $tasks;  // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
+    private $stdin;  // initial stdin for the process; used to initialize the buffer
+    private $stdout; // final stdout for the process; set at the end of the process
+    private $response_code;
+    private $error;
+
+    // set internally
+    private $current_task; // current task that's getting processed
+    private $buffer;       // stream that gets processed by a task and that's set when a task is finished
+
+    public function __construct()
+    {
+        $this->mode = self::PROCESS_MODE_RUN;
+        $this->tasks = array();
+
+        $this->stdin = \Flexio\Base\StreamMemory::create();
+        $this->stdin->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
+
+        $this->stdout = \Flexio\Base\StreamMemory::create();
+        $this->stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
+
+        $this->response_code = self::PROCESS_RESPONSE_NONE;
+        $this->error = array();
+    }
 
     public static function create() : \Flexio\Jobs\Process
     {
@@ -62,9 +98,22 @@ class Process
         return $object;
     }
 
-    public function setTasks(array $tasks)
+    public function setMode(string $mode)
     {
-        $this->tasks = $tasks;
+        if (self::isValidMode($mode) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $this->mode = $mode;
+    }
+
+    public function getMode() : string
+    {
+        return $this->mode;
+    }
+
+    public function addTasks(array $tasks)
+    {
+        $this->tasks = array_merge($this->tasks, $tasks);
     }
 
     public function getTasks() : array
@@ -72,125 +121,121 @@ class Process
         return $this->tasks;
     }
 
-    public function setInput(array $input)
+    public function setStdin(\Flexio\Base\IStream $stdin)
     {
-        $this->input = $input;
+        $this->stdin = $stdin;
     }
 
-    public function getInput() : array
+    public function getStdout() : \Flexio\Base\IStream
     {
-        return $this->input;
+        return $this->stdout;
     }
 
-    public function setOutput(array $output)
+    public function setResponseCode(int $code)
     {
-        $this->output = $output;
+        $this->response_code = $code;
     }
 
-    public function getOutput() : array
+    public function getResponseCode() : int
     {
-        return $this->output;
+        return $this->response_code;
     }
 
-    public function execute(callable $start, callable $finish)
+    public function getError() : array
     {
-        // TODO: set appropriate status for failures
+        return $this->error;
+    }
 
-        // set initial job status
-        $process_params = array();
-        $process_params['started'] = self::getProcessTimestamp();
-        $process_params['process_status'] = \Model::PROCESS_STATUS_RUNNING;
-        $start($process_params);
+    public function hasError() : bool
+    {
+        if (empty($this->error))
+            return false;
 
+        return true;
+    }
 
-        // STEP 1: get the process properties
-        $process_tasks = $this->getTasks();
+    private function fail(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
+    {
+        // only save the first error we come to
+        if ($this->hasError())
+            return;
 
+        if (!isset($message))
+            $message = \Flexio\Base\Error::getDefaultMessage($code);
 
-        // STEP 3: create the initial process context; make sure stdin/stdout are initialized
-        // and initialize the context variables
-        $process_input = $current_process_properties['input'];
-        $context = \Flexio\Object\Context::fromString($process_input);
+        $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
+    }
 
-        $stdin = $context->getStdin();
-        if (!isset($stdin))
+    public function setBuffer(\Flexio\Base\IStream $buffer)
+    {
+        $this->buffer = $buffer;
+    }
+
+    public function getBuffer() : \Flexio\Base\IStream
+    {
+        return $this->buffer;
+    }
+
+    public function execute(callable $func = null)
+    {
+        // fire the starting event
+        $this->signal(self::EVENT_PROCESS_STARTING, $func);
+
+        // merge the user variables with the environment variables
+        //$environment_variables = $this->getEnvironmentParams();
+        //$user_variables = $context->getParams();
+        //$variables = array_merge($user_variables, $environment_variables);
+        //$context->setParams($variables);
+
+        // set the initial buffer from stdin and process the tasks
+        $this->setBuffer($this->getStdin());
+
+        while (true)
         {
-            $stdin = \Flexio\Base\StreamMemory::create();
-            $stdin->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
-            $context->setStdin($stdin);
-        }
+            // get the next task to process
+            $current_task = array_shift($this->tasks);
+            if (!isset($current_task))
+                break;
 
-        $stdout = $context->getStdout();
-        if (!isset($stdout))
-        {
-            $stdout = \Flexio\Base\StreamMemory::create();
-            $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
-            $context->setStdout($stdout);
-        }
+            // signal the start of the task
+            $this->signal(self::EVENT_PROCESS_TASK_STARTING, $func);
 
-        $environment_variables = $this->getEnvironmentParams();
-        $user_variables = $context->getParams();
-        $variables = array_merge($user_variables, $environment_variables);
-        $context->setParams($variables);
+            // execute the task
+            $this->executeTask($current_task);
 
-        // STEP 4: iterate through the tasks and run each one
-        $first_task = true;
-        foreach ($process_tasks as $task)
-        {
-            if ($first_task === false)
-            {
-                // set the stdin for the next job step to be the output from the stdout
-                // of the step just executed and create a new stdout
-                $context->setStdin($context->getStdout());
-                $stdout = \Flexio\Base\StreamMemory::create();
-                $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
-                $context->setStdout($stdout);
-            }
+            // signal the end of the task
+            $this->signal(self::EVENT_PROCESS_TASK_FINISHED, $func);
 
-            // execute the step
-            $log_eid = $this->startLog($task, $context);  // TODO: only log if in debug mode?
-            $this->executeTask($task, $context);
-            $this->finishLog($log_eid, $task, $context); // TODO: only log if in debug mode?
-            $first_task = false;
-
-            // if the step failed, stop the job
+            // if there's an error, stop the process
             if ($this->hasError())
                 break;
 
-            // if the step exited, stop the job
-            $response_code = $context->getExitCode();
-            if ($response_code !== null)
-            {
-                $this->response_code = $response_code;
+            // if the process was exited intentionally, stop the process
+            $response_code = $this->getResponseCode();
+            if ($response_code !== self::PROCESS_RESPONSE_NONE)
                 break;
-            }
         }
 
-        // save final job output and status
-        $process_params = array();
-        $process_params['output'] = \Flexio\Object\Context::toString($context);
-        $process_params['finished'] = self::getProcessTimestamp();
-        $process_params['process_status'] = $this->hasError() ? \Model::PROCESS_STATUS_FAILED : \Model::PROCESS_STATUS_COMPLETED;
-        $process_params['cache_used'] = 'N';
-        $finish($process_params);
+        // fire the finish event
+        $this->signal(self::EVENT_PROCESS_FINISHED, $func);
     }
 
-    private function executeTask(array $task, \Flexio\Object\Context &$context)
+    private function executeTask(array $task)
     {
         if (!IS_PROCESSTRYCATCH())
         {
             // during debugging, sometimes try/catch needs to be turned
             // of completely; this switch is implemented here and in Api.php
-            $job = \Flexio\Jobs\Factory::create($task);
-            $job->run($context);
+            $job = self::createTask($task);
+            $job->run($this);
             return;
         }
 
         try
         {
             // create the job with the task; set the job input, run the job, and get the output
-            $job = \Flexio\Jobs\Factory::create($task);
-            $job->run($context);
+            $job = self::createTask($task);
+            $job->run($this);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -253,5 +298,26 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $job;
+    }
+
+    private static function isValidMode(string $mode) : bool
+    {
+        switch ($mode)
+        {
+            default:
+                return false;
+
+            case self::PROCESS_MODE_BUILD:
+            case self::PROCESS_MODE_RUN:
+                return true;
+        }
+    }
+
+    private function signal(string $event, callable $func = null)
+    {
+        if (!isset($func))
+            return;
+
+        $func(self::EVENT_PROCESS_STARTING, $this);
     }
 }
