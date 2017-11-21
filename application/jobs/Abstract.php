@@ -18,17 +18,15 @@ namespace Flexio\Jobs;
 
 interface IProcess
 {
-    public function addTasks(array $tasks);
-    public function getTasks();
-    public function setStdin(\Flexio\Base\IStream $stdin);
-    public function getStdout();
+    public function addTasks(array $tasks);  // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
+    public function getTasks();              // stdin/stout buffer; stdin is what's set initially; stdout is the final result
+    public function setBuffer(\Flexio\Base\IStream $buffer);
+    public function getBuffer();
     public function setResponseCode(int $code);
     public function getResponseCode();
     public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);
     public function getError();
     public function hasError();
-    public function setBuffer(\Flexio\Base\IStream $buffer);
-    public function getBuffer();
     public function execute(callable $func = null);
 }
 

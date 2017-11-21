@@ -62,25 +62,20 @@ class Process implements \Flexio\Jobs\IJob
         'flexio.list'      => '\Flexio\Jobs\List1'
     );
 
-    private $tasks;  // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
-    private $stdin;  // initial stdin for the process; used to initialize the buffer
-    private $stdout; // final stdout for the process; set at the end of the process
+    private $tasks;        // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
+    private $buffer;       // stdin/stout buffer; stdin is what's set initially; stdout is the final result
     private $response_code;
     private $error;
 
     // set internally
     private $current_task; // current task that's getting processed
-    private $buffer;       // stream that gets processed by a task and that's set when a task is finished
 
     public function __construct()
     {
         $this->tasks = array();
 
-        $this->stdin = \Flexio\Base\StreamMemory::create();
-        $this->stdin->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
-
-        $this->stdout = \Flexio\Base\StreamMemory::create();
-        $this->stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
+        $this->buffer = \Flexio\Base\StreamMemory::create();
+        $this->buffer->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
 
         $this->response_code = self::PROCESS_RESPONSE_NONE;
         $this->error = array();
@@ -102,14 +97,14 @@ class Process implements \Flexio\Jobs\IJob
         return $this->tasks;
     }
 
-    public function setStdin(\Flexio\Base\IStream $stdin)
+    public function setBuffer(\Flexio\Base\IStream $buffer)
     {
-        $this->stdin = $stdin;
+        $this->buffer = $buffer;
     }
 
-    public function getStdout() : \Flexio\Base\IStream
+    public function getBuffer() : \Flexio\Base\IStream
     {
-        return $this->stdout;
+        return $this->buffer;
     }
 
     public function setResponseCode(int $code)
@@ -143,16 +138,6 @@ class Process implements \Flexio\Jobs\IJob
         return true;
     }
 
-    public function setBuffer(\Flexio\Base\IStream $buffer)
-    {
-        $this->buffer = $buffer;
-    }
-
-    public function getBuffer() : \Flexio\Base\IStream
-    {
-        return $this->buffer;
-    }
-
     public function execute(callable $func = null)
     {
         // fire the starting event
@@ -163,9 +148,6 @@ class Process implements \Flexio\Jobs\IJob
         //$user_variables = $context->getParams();
         //$variables = array_merge($user_variables, $environment_variables);
         //$context->setParams($variables);
-
-        // set the initial buffer from stdin and process the tasks
-        $this->setBuffer($this->getStdin());
 
         while (true)
         {
