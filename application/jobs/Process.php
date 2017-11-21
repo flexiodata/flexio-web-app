@@ -169,12 +169,6 @@ class Process implements \Flexio\Jobs\IProcess
         // fire the starting event
         $this->signal(self::EVENT_PROCESS_STARTING, $func);
 
-        // merge the user variables with the environment variables
-        //$environment_variables = $this->getEnvironmentParams();
-        //$user_variables = $context->getParams();
-        //$variables = array_merge($user_variables, $environment_variables);
-        //$context->setParams($variables);
-
         while (true)
         {
             // get the next task to process
