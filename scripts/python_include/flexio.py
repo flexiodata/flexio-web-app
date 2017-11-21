@@ -289,7 +289,7 @@ class Input(object):
             return None
         data = proxy.invoke('read', [self._handle, length])
         if data is False:
-            return None
+            return b''
         return data
 
     def readline(self):
