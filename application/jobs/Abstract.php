@@ -19,8 +19,13 @@ namespace Flexio\Jobs;
 interface IProcess
 {
     public function addTasks(array $tasks);  // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
-    public function getTasks();              // stdin/stout buffer; stdin is what's set initially; stdout is the final result
-    public function setBuffer(\Flexio\Base\IStream $buffer);
+    public function getTasks();
+    public function setParams(array $arr);   // variables that are used in the processing
+    public function getParams();
+    public function addStream(\Flexio\Base\IStream $stream); // streams that will be processed by jobs
+    public function getStreams();
+    public function clearStreams();
+    public function setBuffer(\Flexio\Base\IStream $buffer); // stdin/stout buffer that will be processed by jobs; stdin is what's set initially; stdout is the final result
     public function getBuffer();
     public function setResponseCode(int $code);
     public function getResponseCode();

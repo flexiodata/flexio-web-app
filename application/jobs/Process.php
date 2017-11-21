@@ -62,14 +62,18 @@ class Process implements \Flexio\Jobs\IProcess
         'flexio.list'      => '\Flexio\Jobs\List1'
     );
 
-    private $tasks;        // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
-    private $buffer;       // stdin/stout buffer; stdin is what's set initially; stdout is the final result
+    private $tasks;         // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
+    private $params;        // variables that are used in the processing
+    private $streams;       // additional streams that will be process by jobs
+    private $buffer;        // stdin/stout buffer; stdin is what's set initially; stdout is the final result
     private $response_code;
     private $error;
 
     public function __construct()
     {
         $this->tasks = array();
+        $this->params = array();
+        $this->streams = array();
 
         $this->buffer = \Flexio\Base\StreamMemory::create();
         $this->buffer->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
@@ -92,6 +96,31 @@ class Process implements \Flexio\Jobs\IProcess
     public function getTasks() : array
     {
         return $this->tasks;
+    }
+
+    public function setParams(array $arr)
+    {
+        $this->params = $arr;
+    }
+
+    public function getParams() : array
+    {
+        return $this->params;
+    }
+
+    public function addStream(\Flexio\Base\IStream $stream)
+    {
+        $this->streams[] = $stream;
+    }
+
+    public function getStreams() : array
+    {
+        return $this->streams;
+    }
+
+    public function clearStreams()
+    {
+        $this->streams = array();
     }
 
     public function setBuffer(\Flexio\Base\IStream $buffer)
