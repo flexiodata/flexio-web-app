@@ -16,6 +16,82 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
+class StorageFileReader implements \Flexio\Base\IStreamReader
+{
+    private $fspath = null;
+    private $file = null;
+
+    function __destruct()
+    {
+        $this->close();
+    }
+
+    public static function create($fspath) : \Flexio\Object\StreamReader
+    {
+        $object = new static();
+        $object->fspath = $fspath;
+
+        if (IS_DEBUG())
+            $this->file = fopen($fspath, 'rb');
+             else
+            $this->file = @fopen($fspath, 'rb');
+
+        if ($this->file === false)
+            return false;
+        
+        return $object;
+    }
+
+    public function read($length = 1024)
+    {
+        if ($this->isOk() === false)
+            return false;
+
+        return fread($this->file, $length);
+    }
+
+    public function readRow()
+    {
+        if ($this->isOk() === false)
+            return false;
+
+        return false;
+    }
+
+    public function getRows(int $offset, int $limit)
+    {
+        if ($this->isOk() === false)
+            return false;
+
+        return false; // $this->reader->getRows($offset, $limit);
+    }
+
+    public function getRowCount() : int
+    {
+        return $this->reader->getRowCount();
+    }
+
+    public function close() : bool
+    {
+        if ($this->isOk() === false)
+            return true;
+
+        fclose($this->file);
+        $this->file = null;
+        return true;
+    }
+
+    private function isOk() : bool
+    {
+        if ($this->file !== null)
+            return false;
+
+        return true;
+    }
+}
+
+
+
 class StorageFs
 {
     private $base_path = null;
@@ -40,6 +116,12 @@ class StorageFs
 
         return true;
     }
+
+    public function open(string $path) : \Flexio\Base\IStreamReader
+    {
+
+    }
+
 
     public function createDirectory(string $path) : bool
     {
