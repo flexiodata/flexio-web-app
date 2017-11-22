@@ -111,21 +111,6 @@ class Process implements \Flexio\Jobs\IProcess
         return $this->params;
     }
 
-    public function addStream(\Flexio\Base\IStream $stream)
-    {
-        $this->streams[] = $stream;
-    }
-
-    public function getStreams() : array
-    {
-        return $this->streams;
-    }
-
-    public function clearStreams()
-    {
-        $this->streams = array();
-    }
-
     public function getStdin() : \Flexio\Base\IStream
     {
         return $this->stdin;

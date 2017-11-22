@@ -38,17 +38,6 @@ class Search extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
         $this->processStream($instream, $outstream);
-
-        // process stream array
-        $input = $process->getStreams();
-        $process->clearStreams();
-
-        foreach ($input as $instream)
-        {
-            $outstream = \Flexio\Base\StreamMemory::create();
-            $this->processStream($instream, $outstream);
-            $process->addStream($outstream);
-        }
     }
 
     private function processStream(\Flexio\Base\IStream &$instream, Flexio\Object\IStream &$outstream)

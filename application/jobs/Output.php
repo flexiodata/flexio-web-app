@@ -51,7 +51,7 @@ class Output extends \Flexio\Jobs\Base
 
         // get an array of stream objects; don't clear the process streams: we simply want to
         // output each one to some external store and pass on the list as we received it
-        $this->streams = $process->getStreams();
+        $this->streams = array($process->getStdin());
 
         // resolve the output items, determining the appropriate connection type/eid for each item
         // in addition, a member will be populated called stream_idx, which will reference the

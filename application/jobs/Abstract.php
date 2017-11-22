@@ -22,9 +22,6 @@ interface IProcess
     public function getTasks();
     public function setParams(array $arr);   // variables that are used in the processing
     public function getParams();
-    public function addStream(\Flexio\Base\IStream $stream); // streams that will be processed by jobs
-    public function getStreams();
-    public function clearStreams();
     public function getStdin();
     public function getStdout();
     public function setResponseCode(int $code);

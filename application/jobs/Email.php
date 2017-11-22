@@ -67,7 +67,7 @@ class Email extends \Flexio\Jobs\Base
         sleep(self::EMAIL_WAIT_FREQUENCY);
 
         // build the email
-        $instream_list = $process->getStreams();
+        $instream_list = array($process->getStdin());
         $attachments = self::getAttachmentsFromInput($instream_list);
 
         $email_params = array(

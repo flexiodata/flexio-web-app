@@ -56,12 +56,7 @@ class Create extends \Flexio\Jobs\Base
         if (!isset($outstream))
             return;
 
-        // if no name is specified in the create job, send the content to stdout;
-        // otherwise, add it onto the list of files
-        if (!isset($job_definition['params']['name']))
-            $process->getStdout()->copy($outstream);
-             else
-            $process->addStream($outstream);
+        $process->getStdout()->copy($outstream);
     }
 
     private function createFileStream() : \Flexio\Base\IStream

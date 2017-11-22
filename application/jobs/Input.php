@@ -216,8 +216,6 @@ class Input extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-
-        $this->getProcess()->addStream($outstream);
         $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
@@ -256,8 +254,6 @@ class Input extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-
-        $this->getProcess()->addStream($outstream);
         $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
@@ -364,8 +360,6 @@ class Input extends \Flexio\Jobs\Base
             $outstream->set(array('size' => $streamwriter->getBytesWritten(),
                                   'mime_type' => $mime_type));
         }
-
-        $this->getProcess()->addStream($outstream);
         $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 

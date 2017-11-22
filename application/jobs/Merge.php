@@ -30,6 +30,14 @@ class Merge extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Jobs\IProcess $process)
     {
+        // TODO: logic for this job is perfectly good, but we're removing the
+        // notion right now of separate input streams in the process, so these
+        // functions will likely be removed from the process interface; however,
+        // we're looking to bring process for multiple streams back another way,
+        // probably using named parameters
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+
+
         parent::run($process);
 
         // note: no need to process the stdin buffer, since it's a single stream and the merged

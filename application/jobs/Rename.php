@@ -36,17 +36,6 @@ class Rename extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
         $this->processStream($instream, $outstream, $process->getParams());
-
-        // process stream array
-        $input = $process->getStreams();
-        $process->clearStreams();
-
-        foreach ($input as $instream)
-        {
-            $outstream = \Flexio\Base\StreamMemory::create();
-            $this->processStream($instream, $outstream, $process->getParams());
-            $process->addStream($outstream);
-        }
     }
 
     private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream, array $env)

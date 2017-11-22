@@ -30,9 +30,6 @@ class Render extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $input = $process->getStreams();
-        $process->clearStreams();
-
         $job_definition = $this->getProperties();
         $items = $job_definition['params']['items'] ?? null;
         $url = $job_definition['params']['url'] ?? null;
@@ -111,6 +108,12 @@ class Render extends \Flexio\Jobs\Base
 
         fclose($fp);
 /*
+        // we've removed the "looped stream" handling in the logic, so
+        // we no longer support arbitrary creation and subsequent processing
+        // an array of streams; we'll probably want to bring back this notion,
+        // but using parameters and explicit operations on those parameters
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+
         $counter = 0;
         foreach ($input as $item)
         {

@@ -791,6 +791,13 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_createOutputStream($properties)
     {
+        // we've removed the "looped stream" handling in the logic, so
+        // we no longer support arbitrary creation and subsequent processing
+        // an array of streams; we'll probably want to bring back this notion,
+        // but using parameters and explicit operations on those parameters
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+
+
         $name = $properties['name'] ?? '';
         $content_type = $properties['content_type'] ?? 'text/plain';
         $structure = $properties['structure'] ?? null;

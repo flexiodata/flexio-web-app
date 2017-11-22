@@ -505,23 +505,11 @@ class Process extends \Flexio\Object\Base
         if (isset($stdin))
             $process_engine->getStdin()->copy($context->getStdin());
 
-        $input_streams = $context->getStreams();
-        foreach ($input_streams as $s)
-        {
-            $process_engine->addStream($s);
-        }
-
         // STEP 5: execute the process; TODO: add the logging callbacks
         $process_engine->execute();
 
         // STEP 6: save the process output
-        $context->clearStreams();
         $context->setStdout($process_engine->getStdout());
-        $output_streams = $process_engine->getStreams();
-        foreach ($output_streams as $s)
-        {
-            $context->addStream($s);
-        }
 
         // STEP 7: save final job output and status
         $process_params = array();
@@ -870,7 +858,7 @@ class Process extends \Flexio\Object\Base
             return '';
 
         // require an input
-        $task_input = $context->getStreams();
+        $task_input = $context->getStdin();
         if (count($task_input) === 0)
             return '';
 
