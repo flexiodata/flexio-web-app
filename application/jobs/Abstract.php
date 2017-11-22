@@ -31,6 +31,7 @@ interface IProcess
     public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);
     public function getError();
     public function hasError();
+    public function getStatusInfo();              // returns info about the process, such as the current task being processed
     public function execute($func = null);        // $func is a callback that is either or a callable or array type (in the instance of a call to a class method)
 }
 

@@ -723,11 +723,13 @@ class Process extends \Flexio\Object\Base
     private function startLog(\Flexio\Jobs\IProcess $process_engine)
     {
         $storable_stream_info = self::getStreamLogInfo($process_engine);
+        $process_info = $process_engine->getStatusInfo();
+        $task = $process_info['current_task'] ?? array();
 
         // create a log record
         $params = array();
-        $params['task_type'] = ''; // TODO: add task type
-        $params['task'] = '';      // TODO: add task info
+        $params['task_type'] = $task['type'] ?? '';
+        $params['task'] = json_encode($task);
         $params['started'] = self::getProcessTimestamp();
         $params['input'] = json_encode($storable_stream_info);
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
@@ -748,11 +750,13 @@ class Process extends \Flexio\Object\Base
 
         $log_eid = $process_engine_metadata['log_eid'];
         $storable_stream_info = self::getStreamLogInfo($process_engine);
+        $process_info = $process_engine->getStatusInfo();
+        $task = $process_info['current_task'] ?? array();
 
         // update the log record
         $params = array();
-        $params['task_type'] = ''; // TODO: add task type
-        $params['task'] = '';      // TODO: add task info
+        $params['task_type'] = $task['type'] ?? '';
+        $params['task'] = json_encode($task);
         $params['finished'] = self::getProcessTimestamp();
         $params['output'] = json_encode($storable_stream_info);
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;

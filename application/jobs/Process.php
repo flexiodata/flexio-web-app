@@ -72,6 +72,7 @@ class Process implements \Flexio\Jobs\IProcess
     private $stdout;
     private $response_code;
     private $error;
+    private $status_info;
 
     public function __construct()
     {
@@ -85,6 +86,7 @@ class Process implements \Flexio\Jobs\IProcess
 
         $this->response_code = self::PROCESS_RESPONSE_NONE;
         $this->error = array();
+        $this->status_info = array();
     }
 
     public static function create() : \Flexio\Jobs\Process
@@ -164,6 +166,11 @@ class Process implements \Flexio\Jobs\IProcess
         return true;
     }
 
+    public function getStatusInfo() : array
+    {
+        return $this->status_info;
+    }
+
     public function execute($func = null)
     {
         // fire the starting event
@@ -185,10 +192,16 @@ class Process implements \Flexio\Jobs\IProcess
         $first = true;
         while (true)
         {
+            // reset the status info
+            $this->status_info = array();
+
             // get the next task to process
             $current_task = array_shift($this->tasks);
             if (!isset($current_task))
                 break;
+
+            // set the current status info
+            $this->status_info['current_task'] = $current_task;
 
             // signal the start of the task
             $this->signal(self::EVENT_PROCESS_STARTING_TASK, $func);
