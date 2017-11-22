@@ -76,8 +76,7 @@ class Process extends \Flexio\Object\Base
             $mime_type = substr($mime_type, 0, $semicolon_pos);
         if ($mime_type != 'application/x-www-form-urlencoded' && $mime_type != 'multipart/form-data')
         {
-            $context = \Flexio\Object\Context::create();
-            $context->setParams($form_params);
+            $stream = \Flexio\Base\StreamMemory::create();
 
             // post body is a data stream, post it as our pipe's stdin
             $first = true;
@@ -92,13 +91,9 @@ class Process extends \Flexio\Object\Base
 
                 if ($first && $data !== false && strlen($data) > 0)
                 {
-                    $stream = \Flexio\Base\StreamMemory::create();
-
                     $stream_info = array();
                     $stream_info['mime_type'] = $mime_type;
                     $stream->set($stream_info);
-
-                    $context->setStdin($stream);
                     $streamwriter = $stream->getWriter();
                 }
 
@@ -106,7 +101,8 @@ class Process extends \Flexio\Object\Base
                     $streamwriter->write($data);
             }
 
-            $process->setInput($context);
+            $process->setParams($form_params);
+            $process->setStdin($stream);
 
             return;
         }
@@ -119,9 +115,7 @@ class Process extends \Flexio\Object\Base
                 $stream = \Flexio\Object\Stream::create();
 
                 if ($content_type === false)
-                {
                     $content_type = \Flexio\Base\ContentType::getMimeType($filename, '');
-                }
 
                 // stream name will be the post variable name, not the multipart filename
                 // TODO: should we be using filename in the path and form name in the name?
@@ -153,16 +147,13 @@ class Process extends \Flexio\Object\Base
         });
         fclose($php_stream_handle);
 
-        $input = \Flexio\Object\Context::create();
-        $input->setParams($form_params);
-
+        $process->setParams($form_params);
         foreach ($post_streams as $s)
         {
-            // TODO: add streams to stdin instead?
-            $input->addStream($s);
+            // TODO: right now, we only have stdin; so we can only take the first stream
+            $process->setStdin($s);
+            break;
         }
-
-        $process->setInput($input);
     }
 
     public function set(array $properties) : \Flexio\Object\Process
@@ -371,36 +362,81 @@ class Process extends \Flexio\Object\Base
 
     public function setParams(array $params) : \Flexio\Object\Process
     {
-        // shorthand for setting just the parameters of the input;
-        // used in the test suite
-
-        // get the existing input
         $process_properties = $this->getModel()->process->get($this->getEid());
-        $input = $process_properties['input'];
-        $context = \Flexio\Object\Context::fromString($input);
-        $context->setParams($params);
-        $this->setInput($context);
-
+        $input = json_decode($process_properties['input'], true);
+        $input['params'] = $params;
+        $input = json_encode($input);
+        $this->getModel()->process->set($this->getEid(), array('input' => $input));
         return $this;
     }
 
-    public function setInput(\Flexio\Object\Context $context) : \Flexio\Object\Process
+    public function getParams() : array
     {
-        // TODO: deprecated
+        $process_properties = $this->getModel()->process->get($this->getEid());
+        $input = json_decode($process_properties['input'], true);
+        return $input['params'] ?? array();
+    }
 
-        // set the input
-        $input = \Flexio\Object\Context::toString($context);
+    public function setStdin(\Flexio\Base\IStream $stream)
+    {
+        $storable_stream = self::createStorableStream($stream);
+        $process_properties = $this->getModel()->process->get($this->getEid());
+        $input = json_decode($process_properties['input'], true);
+        $input['stream'] = $storable_stream->getEid();
+        $input = json_encode($input);
         $this->getModel()->process->set($this->getEid(), array('input' => $input));
+        return $this;
+    }
 
+    public function getStdin() : \Flexio\Base\IStream
+    {
+        $memory_stream = \Flexio\Base\StreamMemory::create();
+
+        $process_properties = $this->getModel()->process->get($this->getEid());
+        $input = json_decode($process_properties['input'], true);
+
+        if ($input === false)
+            return $memory_stream;
+        if (!isset($input['stream']))
+            return $memory_stream;
+
+        $storable_stream = \Flexio\Object\Stream::load($input['stream']);
+        if ($storable_stream === false)
+            return $memory_stream;
+
+        $memory_stream = self::createMemoryStream($storable_stream);
+        return $memory_stream;
+    }
+
+    public function setStdout(\Flexio\Base\IStream $stream)
+    {
+        $storable_stream = self::createStorableStream($stream);
+        $process_properties = $this->getModel()->process->get($this->getEid());
+        $output = json_decode($process_properties['output'], true);
+        $output['stream'] = $storable_stream->getEid();
+        $output = json_encode($output);
+        $this->getModel()->process->set($this->getEid(), array('output' => $output));
         return $this;
     }
 
     public function getStdout() : \Flexio\Base\IStream
     {
+        $memory_stream = \Flexio\Base\StreamMemory::create();
+
         $process_properties = $this->getModel()->process->get($this->getEid());
-        $output = $process_properties['output'];
-        $context = \Flexio\Object\Context::fromString($output);
-        return $context->getStdout();
+        $output = json_decode($process_properties['output'], true);
+
+        if ($output === false)
+            return $memory_stream;
+        if (!isset($output['stream']))
+            return $memory_stream;
+
+        $storable_stream = \Flexio\Object\Stream::load($output['stream']);
+        if ($storable_stream === false)
+            return $memory_stream;
+
+        $memory_stream = self::createMemoryStream($storable_stream);
+        return $memory_stream;
     }
 
     public function isBuildMode() : bool
@@ -498,22 +534,16 @@ class Process extends \Flexio\Object\Base
             // TODO: set process error, and we're done
         }
 
-        // STEP 3: create the initial process context; make sure stdin/stdout are initialized
-        // and initialize the context variables
-        $process_input = $current_process_properties['input'];
-        $context = \Flexio\Object\Context::fromString($process_input);
+        // STEP 3: get the parameters and add the environment variables in
         $environment_variables = $this->getEnvironmentParams();
-        $user_variables = $context->getParams();
+        $user_variables = $this->getParams();
         $variables = array_merge($user_variables, $environment_variables);
 
         // STEP 4: create the process engine and configure it
         $process_engine = \Flexio\Jobs\Process::create();
         $process_engine->addTasks($process_tasks);
         $process_engine->setParams($variables);
-
-        $stdin = $context->getStdin();
-        if (isset($stdin))
-            $process_engine->getStdin()->copy($context->getStdin());
+        $process_engine->getStdin()->copy($this->getStdin());
 
         // STEP 5: execute the process; TODO: add the logging callbacks
         if ($this->isBuildMode() === true)
@@ -521,21 +551,20 @@ class Process extends \Flexio\Object\Base
              else
             $process_engine->execute(); // if we're not in build mode (e.g. run mode), don't log anything
 
-        // STEP 6: save the process output
-        $context->setStdout($process_engine->getStdout());
-
-        // STEP 7: patch through the response code and any error
+        // STEP 6: patch through the response code and any error
         $this->response_code = $process_engine->getResponseCode();
         if ($process_engine->hasError())
             $this->error = $process_engine->getError();
 
-        // STEP 8: save final job output and status
+        // STEP 7: save final job output and status
         $process_params = array();
-        $process_params['output'] = \Flexio\Object\Context::toString($context);
         $process_params['finished'] = self::getProcessTimestamp();
         $process_params['process_status'] = $this->hasError() ? \Model::PROCESS_STATUS_FAILED : \Model::PROCESS_STATUS_COMPLETED;
         $process_params['cache_used'] = 'N';
         $this->getModel()->process->set($this->getEid(), $process_params);
+
+        // STEP 8: save the process output; TODO: saving stdout also writes to the database; could we consolidate with other writes for efficiency?
+        $this->setStdout($process_engine->getStdout());
 
         // clear the process object cache
         $this->clearCache();
@@ -717,58 +746,16 @@ class Process extends \Flexio\Object\Base
         $stdin = $process_engine->getStdin();
         $stdout = $process_engine->getStdout();
 
-        $stdin_info_to_copy = $stdin->get();
-        $stdout_info_to_copy = $stdout->get();
+        $storable_stdin = self::createStorableStream($stdin);
+        $storable_stdout = self::createStorableStream($stdout);
 
-        // whatever the input/output stream types, make a fixed stream from them
-        $storable_stdin = self::createStorableStream($stdin_info_to_copy);
-        $storable_stdout = self::createStorableStream($stdout_info_to_copy);
-
-        // copy the stdin data
-        $streamreader = $stdin->getReader();
-        $streamwriter = $storable_stdin->getWriter();
-
-
-        while (true)
-        {
-            $row = false;
-            if ($stdin_info_to_copy['mime_type'] === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-                $row = $streamreader->readRow();
-                 else
-                $row = $streamreader->read();
-
-            if ($row === false)
-                break;
-
-            $streamwriter->write($row);
-        }
-
-        // copy the stdout data
-        $streamreader = $stdout->getReader();
-        $streamwriter = $storable_stdout->getWriter();
-
-        while (true)
-        {
-            $row = false;
-            if ($stdout_info_to_copy['mime_type'] === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-                $row = $streamreader->readRow();
-                 else
-                $row = $streamreader->read();
-
-            if ($row === false)
-                break;
-
-            $streamwriter->write($row);
-        }
-
-        // return the eid of the stored stream
         $info = array();
         $info['stdin'] = array('eid' => $storable_stdin->getEid());
         $info['stdout'] = array('eid' => $storable_stdout->getEid());
         return $info;
     }
 
-    private static function createStorableStream(array $properties) : \Flexio\Object\Stream
+    private static function createStorableStream(\Flexio\Base\IStream $stream) : \Flexio\Object\Stream
     {
         // use default datastore connection
         $datastore_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();
@@ -778,7 +765,56 @@ class Process extends \Flexio\Object\Base
         // use random string for the store table
         $properties['connection_eid'] = $datastore_connection_eid;
         $properties['path'] = \Flexio\Base\Util::generateHandle();
-        return \Flexio\Object\Stream::create($properties);
+        $properties = array_merge($stream->get(), $properties);
+        $storable_stream = \Flexio\Object\Stream::create($properties);
+
+        // copy from the input stream to the storable stream
+        $streamreader = $stream->getReader();
+        $streamwriter = $storable_stream->getWriter();
+
+        while (true)
+        {
+            $row = false;
+            if ($stream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+                $row = $streamreader->readRow();
+                 else
+                $row = $streamreader->read();
+
+            if ($row === false)
+                break;
+
+            $streamwriter->write($row);
+        }
+
+        return $storable_stream;
+    }
+
+    private static function createMemoryStream(\Flexio\Base\IStream $stream) : \Flexio\Base\StreamMemory
+    {
+        $properties = $stream->get();
+        unset($properties['path']);
+        unset($properties['connection_eid']);
+        $stream_memory = \Flexio\Base\StreamMemory::create($properties);
+
+        // copy from the input stream to the memory stream
+        $streamreader = $stream->getReader();
+        $streamwriter = $stream_memory->getWriter();
+
+        while (true)
+        {
+            $row = false;
+            if ($stream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+                $row = $streamreader->readRow();
+                 else
+                $row = $streamreader->read();
+
+            if ($row === false)
+                break;
+
+            $streamwriter->write($row);
+        }
+
+        return $stream_memory;
     }
 
     private static function isValidProcessStatus(string $status) : bool
