@@ -193,6 +193,15 @@ class Process implements \Flexio\Jobs\IProcess
             // reset the status info
             $this->status_info = array();
 
+            // if there's an error, stop the process
+            if ($this->hasError())
+                break;
+
+            // if the process was exited intentionally, stop the process
+            $response_code = $this->getResponseCode();
+            if ($response_code !== self::PROCESS_RESPONSE_NONE)
+                break;
+
             // get the next task to process
             $current_task = array_shift($this->tasks);
             if (!isset($current_task))
@@ -217,15 +226,6 @@ class Process implements \Flexio\Jobs\IProcess
 
             // signal the end of the task
             $this->signal(self::EVENT_PROCESS_FINISHED_TASK, $func);
-
-            // if there's an error, stop the process
-            if ($this->hasError())
-                break;
-
-            // if the process was exited intentionally, stop the process
-            $response_code = $this->getResponseCode();
-            if ($response_code !== self::PROCESS_RESPONSE_NONE)
-                break;
         }
     }
 
