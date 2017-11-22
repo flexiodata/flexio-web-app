@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+// TODO:
+// merges tests are deprecated until the merge job is brought back to work on params
+return;
+
         // TODO: placeholder job to test basic functionality; fill out tests
 
         // SETUP
