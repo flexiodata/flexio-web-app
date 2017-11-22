@@ -26,7 +26,7 @@ class StorageFileReader implements \Flexio\Base\IStreamReader
         $this->close();
     }
 
-    public static function create($fspath) : \Flexio\Object\StreamReader
+    public static function create($fspath) : \Flexio\Services\StorageFileReader
     {
         $object = new static();
         $object->fspath = $fspath;
@@ -38,7 +38,7 @@ class StorageFileReader implements \Flexio\Base\IStreamReader
 
         if ($this->file === false)
             return false;
-        
+
         return $object;
     }
 
@@ -111,7 +111,7 @@ class StorageFs
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "'base_path' must be specified in StorageFs::create()");
         if (!is_dir($params['base_path']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "'base_path' does not exist");
-        
+
         $this->base_path = $params['base_path'];
 
         return true;
@@ -169,7 +169,7 @@ class StorageFs
                     'modified' => null,
                     'is_dir' => $isdir
                 );
-    
+
                 $arr[] = $file;
             }
             closedir($handle);
