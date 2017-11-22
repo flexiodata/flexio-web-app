@@ -194,7 +194,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
-        $outstream = self::createMemoryStream($stream_properties);
+        $outstream = $this->getProcess->getStdout();
         $streamwriter = $outstream->getWriter();
 
         // create the iterator
@@ -216,7 +216,6 @@ class Input extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function runElasticSearchImport($service, array $file_info) // TODO: set paramater type
@@ -242,7 +241,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
-        $outstream = self::createMemoryStream($stream_properties);
+        $outstream = $this->getProcess->getStdout();
         $streamwriter = $outstream->getWriter();
 
         // transfer the data
@@ -254,7 +253,6 @@ class Input extends \Flexio\Jobs\Base
 
         $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function runRemoteFileImport($service, array $file_info) // TODO: set paramater type
@@ -296,9 +294,8 @@ class Input extends \Flexio\Jobs\Base
                         // TODO: make sure the row we're inserting matches with any fieldname adjustments?
                     }
 
-                    // add an output stream
                     $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-                    $outstream = self::createMemoryStream($stream_properties);
+                    $outstream = $this->getProcess->getStdout();
                     $outstream->setStructure($structure);
                     $streamwriter = $outstream->getWriter();
                 }
@@ -307,8 +304,7 @@ class Input extends \Flexio\Jobs\Base
                     // $data payload contains binary/text data
                     $is_table = false;
 
-                    // add an output stream
-                    $outstream = self::createMemoryStream($stream_properties);
+                    $outstream = $this->getProcess->getStdout();
                     $streamwriter = $outstream->getWriter();
                 }
             }
@@ -361,12 +357,6 @@ class Input extends \Flexio\Jobs\Base
                                   'mime_type' => $mime_type));
         }
         $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
-    }
-
-    private function createMemoryStream(array $properties) : \Flexio\Base\StreamMemory
-    {
-        $properties['path'] = \Flexio\Base\Util::generateHandle();
-        return \Flexio\Base\StreamMemory::create($properties);
     }
 
     private function getConnectionInfoFromItem(array $params, array $item)
