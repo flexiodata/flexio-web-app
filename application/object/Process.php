@@ -865,39 +865,6 @@ class Process extends \Flexio\Object\Base
         return \Flexio\Object\Stream::create($properties);
     }
 
-    private static function generateTaskHash(string $implementation_version, array $task) : string
-    {
-        // task hash should uniquely identify the result; use
-        // a hash of:
-        //     1. implementation version (git version)
-        //     2. task type
-        //     3. task parameters
-        // leave out the job name or other identifiers, such as the
-        // the task eid
-
-        // if we dont' have an implementation version or an invalid implementation
-        // version (git revision), don't cache anything
-        if (strlen($implementation_version) < 40)
-            return '';
-
-        // make sure have a valid task
-        $task_type = $task['type'] ?? false;
-        $task_parameters = $task['params'] ?? false;
-
-        // make sure we have the params we need
-        if (is_string($task_type) === false || is_array($task_parameters) === false)
-            return '';
-
-        $encoded_task_parameters = json_encode($task_parameters);
-        $hash = md5(
-            $implementation_version .
-            $task_type .
-            $encoded_task_parameters
-        );
-
-        return $hash;
-    }
-
     private static function isValidProcessStatus(string $status) : bool
     {
         switch ($status)
