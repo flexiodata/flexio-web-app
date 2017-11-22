@@ -438,6 +438,26 @@ class Process extends \Flexio\Object\Base
         return true;
     }
 
+    public function writeLog(string $event, \Flexio\Jobs\IProcess $process_engine)
+    {
+        switch ($event)
+        {
+            // don't do anything if it's an event we don't care about
+            default:
+            case \Flexio\Jobs\Process::EVENT_PROCESS_STARTING:
+            case \Flexio\Jobs\Process::EVENT_PROCESS_FINISHED:
+                return;
+
+            case \Flexio\Jobs\Process::EVENT_PROCESS_STARTING_TASK:
+                $this->startLog($process_engine);
+                break;
+
+            case \Flexio\Jobs\Process::EVENT_PROCESS_FINISHED_TASK:
+                $this->finishLog($process_engine);
+                break;
+        }
+    }
+
     private function fail(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
     {
         // only save the first error we come to
@@ -448,10 +468,6 @@ class Process extends \Flexio\Object\Base
             $message = \Flexio\Base\Error::getDefaultMessage($code);
 
         $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
-    }
-
-    public function writeLog(string $event, \Flexio\Jobs\IProcess $process)
-    {
     }
 
     private function execute()
@@ -722,6 +738,45 @@ class Process extends \Flexio\Object\Base
         return true;
     }
 
+    private function startLog(\Flexio\Jobs\IProcess $process_engine) : string
+    {
+        // create a log record
+        $params = array();
+        $params['task_type'] = '';
+        $params['task'] = '';
+        $params['started'] = self::getProcessTimestamp();
+        $params['input'] = '';
+        $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
+        $params['message'] = '';
+
+        $log_eid = $this->getModel()->process->log(null, $this->getEid(), $params);
+
+        // pass on the log entry for the log finish function
+        $process_engine->setMetadata(array('log_eid' => $log_eid));
+    }
+
+    private function finishLog(\Flexio\Jobs\IProcess $process_engine)
+    {
+        // make sure we have a log eid record to complete
+        $process_engine_metadata = $process_engine->getMetadata();
+        if (!isset($process_engine_metadata['log_eid']))
+            return;
+
+        $log_eid = $process_engine_metadata['log_eid'];
+
+        // update the log record
+        $params = array();
+        $params['task_type'] = '';
+        $params['task'] = '';
+        $params['finished'] = self::getProcessTimestamp();
+        $params['output'] = '';
+        $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
+        $params['message'] = '';
+
+        $this->getModel()->process->log($log_eid, $this->getEid(), $params);
+    }
+
+/*
     private function startLog(array $task, \Flexio\Object\Context $context) : string
     {
         // convert memory streams to stored streams so we can access them with a stream eid
@@ -758,7 +813,7 @@ class Process extends \Flexio\Object\Base
 
         $this->getModel()->process->log($log_eid, $this->getEid(), $params);
     }
-
+*/
     private static function getStorableStreamInfo(\Flexio\Object\Context $context) : array
     {
         $stdin = $context->getStdin();

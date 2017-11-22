@@ -64,6 +64,7 @@ class Process implements \Flexio\Jobs\IProcess
         'flexio.list'      => '\Flexio\Jobs\List1'
     );
 
+    private $metadata;      // array of optional metadata info that can be used for passing info (such as info from the calling context) across callbacks
     private $tasks;         // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
     private $params;        // variables that are used in the processing
     private $streams;       // additional streams that will be process by jobs
@@ -74,6 +75,7 @@ class Process implements \Flexio\Jobs\IProcess
 
     public function __construct()
     {
+        $this->metadata = array();
         $this->tasks = array();
         $this->params = array();
         $this->streams = array();
@@ -89,6 +91,16 @@ class Process implements \Flexio\Jobs\IProcess
     {
         $object = new static();
         return $object;
+    }
+
+    public function setMetadata(array $metadata)
+    {
+        $this->metadata = $metadata;
+    }
+
+    public function getMetadata() : array
+    {
+        return $this->metadata;
     }
 
     public function addTasks(array $tasks)
