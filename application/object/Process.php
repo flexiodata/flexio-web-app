@@ -814,10 +814,10 @@ class Process extends \Flexio\Object\Base
         $this->getModel()->process->log($log_eid, $this->getEid(), $params);
     }
 */
-    private static function getStorableStreamInfo(\Flexio\Object\Context $context) : array
+    private static function getStorableStreamInfo(\Flexio\Jobs\IProcess $process_engine) : array
     {
-        $stdin = $context->getStdin();
-        $stdout = $context->getStdout();
+        $stdin = $process_engine->getStdin();
+        $stdout = $process_engine->getStdout();
 
         $stdin_info_to_copy = $stdin->get();
         $stdout_info_to_copy = $stdout->get();
