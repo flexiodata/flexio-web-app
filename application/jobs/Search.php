@@ -40,7 +40,7 @@ class Search extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\Base\IStream &$instream, Flexio\Object\IStream &$outstream)
+    private function processStream(\Flexio\Base\IStream &$instream, Flexio\Base\IStream &$outstream)
     {
         // TODO: right now, search works like a filter, so only run it on tables
         // and pass everything through; however search should be stream search
