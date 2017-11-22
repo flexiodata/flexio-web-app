@@ -67,7 +67,6 @@ class Process implements \Flexio\Jobs\IProcess
     private $metadata;      // array of optional metadata info that can be used for passing info (such as info from the calling context) across callbacks
     private $tasks;         // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
     private $params;        // variables that are used in the processing
-    private $streams;       // additional streams that will be process by jobs
     private $stdin;
     private $stdout;
     private $response_code;
@@ -79,7 +78,6 @@ class Process implements \Flexio\Jobs\IProcess
         $this->metadata = array();
         $this->tasks = array();
         $this->params = array();
-        $this->streams = array();
 
         $this->stdin = self::createStreamMemory();
         $this->stdout =  self::createStreamMemory();
