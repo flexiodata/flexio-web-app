@@ -98,9 +98,6 @@ class Process extends \Flexio\Object\Base
                     $stream_info['mime_type'] = $mime_type;
                     $stream->set($stream_info);
 
-                    //$context = $process->getInput();
-                    //$context->setStdin($stream);
-                    //$process->setInput($context);
                     $context->setStdin($stream);
                     $streamwriter = $stream->getWriter();
                 }
@@ -378,7 +375,9 @@ class Process extends \Flexio\Object\Base
         // used in the test suite
 
         // get the existing input
-        $context = $this->getInput();
+        $process_properties = $this->getModel()->process->get($this->getEid());
+        $input = $process_properties['input'];
+        $context = \Flexio\Object\Context::fromString($input);
         $context->setParams($params);
         $this->setInput($context);
 
@@ -387,6 +386,8 @@ class Process extends \Flexio\Object\Base
 
     public function setInput(\Flexio\Object\Context $context) : \Flexio\Object\Process
     {
+        // TODO: deprecated
+
         // set the input
         $input = \Flexio\Object\Context::toString($context);
         $this->getModel()->process->set($this->getEid(), array('input' => $input));
@@ -394,23 +395,12 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getInput() : \Flexio\Object\Context
-    {
-        $process_properties = $this->getModel()->process->get($this->getEid());
-        $input = $process_properties['input'];
-        return \Flexio\Object\Context::fromString($input);
-    }
-
-    public function getOutput() : \Flexio\Object\Context
+    public function getStdout() : \Flexio\Base\IStream
     {
         $process_properties = $this->getModel()->process->get($this->getEid());
         $output = $process_properties['output'];
-        return \Flexio\Object\Context::fromString($output);
-    }
-
-    public function getStdout() : \Flexio\Base\IStream
-    {
-        return $this->getOutput()->getStdout();
+        $context = \Flexio\Object\Context::fromString($output);
+        return $context->getStdout();
     }
 
     public function isBuildMode() : bool

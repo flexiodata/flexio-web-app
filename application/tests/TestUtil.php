@@ -312,7 +312,7 @@ class TestUtil
         if ($process->getProcessStatus() !== \Model::PROCESS_STATUS_COMPLETED)
             return false;
 
-        $stdout = $process->getOutput()->getStdout();
+        $stdout = $process->getStdout();
 
         if ($stdout->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
