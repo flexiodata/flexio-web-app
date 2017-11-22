@@ -47,7 +47,7 @@ class Duplicate extends \Flexio\Jobs\Base
         switch ($mime_type)
         {
             default:
-                $outstream = $instream;
+                $outstream->copy($instream);
                 return;
 
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:

@@ -130,7 +130,7 @@ class Transform extends \Flexio\Jobs\Base
         {
             // unhandled input
             default:
-                $outstream = $instream;
+                $outstream->copy($instream);
                 return;
 
             // table input
@@ -157,7 +157,7 @@ class Transform extends \Flexio\Jobs\Base
         // pointing to the original content
         if (count($column_expression_map) === 0)
         {
-            $outstream = $instream;
+            $outstream->copy($instream);
             return;
         };
 
@@ -221,7 +221,7 @@ class Transform extends \Flexio\Jobs\Base
         // pointing to the original content
         if (count($column_expression_map) === 0)
         {
-            $outstream = $instream;
+            $outstream->copy($instream);
             return;
         }
 
