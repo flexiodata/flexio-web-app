@@ -194,7 +194,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
-        $outstream = $this->getProcess->getStdout();
+        $outstream = $this->getProcess()->getStdout();
         $streamwriter = $outstream->getWriter();
 
         // create the iterator
@@ -241,7 +241,7 @@ class Input extends \Flexio\Jobs\Base
         $stream_properties = $file_info;
         $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
-        $outstream = $this->getProcess->getStdout();
+        $outstream = $this->getProcess()->getStdout();
         $streamwriter = $outstream->getWriter();
 
         // transfer the data
@@ -295,7 +295,7 @@ class Input extends \Flexio\Jobs\Base
                     }
 
                     $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
-                    $outstream = $this->getProcess->getStdout();
+                    $outstream = $this->getProcess()->getStdout();
                     $outstream->setStructure($structure);
                     $streamwriter = $outstream->getWriter();
                 }
@@ -304,7 +304,7 @@ class Input extends \Flexio\Jobs\Base
                     // $data payload contains binary/text data
                     $is_table = false;
 
-                    $outstream = $this->getProcess->getStdout();
+                    $outstream = $this->getProcess()->getStdout();
                     $streamwriter = $outstream->getWriter();
                 }
             }
