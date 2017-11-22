@@ -59,7 +59,7 @@ class Create extends \Flexio\Jobs\Base
         // if no name is specified in the create job, send the content to stdout;
         // otherwise, add it onto the list of files
         if (!isset($job_definition['params']['name']))
-            $process->setBuffer($outstream);
+            $process->getStdout()->copy($outstream);
              else
             $process->addStream($outstream);
     }

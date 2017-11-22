@@ -218,7 +218,7 @@ class Input extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
 
         $this->getProcess()->addStream($outstream);
-        $this->getProcess()->setBuffer($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
+        $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function runElasticSearchImport($service, array $file_info) // TODO: set paramater type
@@ -258,7 +258,7 @@ class Input extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
 
         $this->getProcess()->addStream($outstream);
-        $this->getProcess()->setBuffer($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
+        $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function runRemoteFileImport($service, array $file_info) // TODO: set paramater type
@@ -366,7 +366,7 @@ class Input extends \Flexio\Jobs\Base
         }
 
         $this->getProcess()->addStream($outstream);
-        $this->getProcess()->setBuffer($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
+        $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function createMemoryStream(array $properties) : \Flexio\Base\StreamMemory

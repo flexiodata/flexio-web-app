@@ -31,18 +31,13 @@ class Echo1 extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $instream = $process->getBuffer();
-        $outstream = \Flexio\Base\StreamMemory::create();
-        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
-        $outstream->set($instream->get());
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
+        $instream = $process->getStdin();
+        $outstream = $process->getStdout();
 
         $job_definition = $this->getProperties();
         $msg = $job_definition['params']['msg'] ?? '';
 
         $streamwriter = $outstream->getWriter();
         $streamwriter->write($msg);
-
-        $process->setBuffer($outstream);
     }
 }

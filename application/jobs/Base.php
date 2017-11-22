@@ -96,7 +96,7 @@ class Base implements \Flexio\Jobs\IJob
                         if ($varname == 'stdin')
                         {
                             $replacement = '';
-                            $stream = $process->getBuffer();
+                            $stream = $process->getStdin();
                             $streamreader = $stream->getReader();
                             while (($chunk = $streamreader->read()) !== false)
                             {

@@ -67,7 +67,8 @@ class Process implements \Flexio\Jobs\IProcess
     private $tasks;         // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
     private $params;        // variables that are used in the processing
     private $streams;       // additional streams that will be process by jobs
-    private $buffer;        // stdin/stout buffer; stdin is what's set initially; stdout is the final result
+    private $stdin;
+    private $stdout;
     private $response_code;
     private $error;
 
@@ -77,8 +78,8 @@ class Process implements \Flexio\Jobs\IProcess
         $this->params = array();
         $this->streams = array();
 
-        $this->buffer = \Flexio\Base\StreamMemory::create();
-        $this->buffer->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
+        $this->stdin = self::createDefaultStream();
+        $this->stdout =  self::createDefaultStream();
 
         $this->response_code = self::PROCESS_RESPONSE_NONE;
         $this->error = array();
@@ -125,14 +126,14 @@ class Process implements \Flexio\Jobs\IProcess
         $this->streams = array();
     }
 
-    public function setBuffer(\Flexio\Base\IStream $buffer)
+    public function getStdin() : \Flexio\Base\IStream
     {
-        $this->buffer = $buffer;
+        return $this->stdin;
     }
 
-    public function getBuffer() : \Flexio\Base\IStream
+    public function getStdout() : \Flexio\Base\IStream
     {
-        return $this->buffer;
+        return $this->stdout;
     }
 
     public function setResponseCode(int $code)
@@ -171,6 +172,20 @@ class Process implements \Flexio\Jobs\IProcess
         // fire the starting event
         $this->signal(self::EVENT_PROCESS_STARTING, $func);
 
+        // if we don't have any tasks, simply move the stdin to the stdout;
+        // otherwise, process the tasks
+        if (count($this->tasks) === 0)
+            $this->stdout = $this->stdin;
+             else
+            $this->executeAllTasks($func);
+
+        // fire the finish event
+        $this->signal(self::EVENT_PROCESS_FINISHED, $func);
+    }
+
+    private function executeAllTasks(callable $func = null)
+    {
+        $first = true;
         while (true)
         {
             // get the next task to process
@@ -181,8 +196,16 @@ class Process implements \Flexio\Jobs\IProcess
             // signal the start of the task
             $this->signal(self::EVENT_PROCESS_STARTING_TASK, $func);
 
+            if ($first === false)
+            {
+                // copy the stdout of the last task to the stdin; make a new stdout
+                $this->stdin = $this->stdout;
+                $this->stdout = self::createDefaultStream();
+            }
+
             // execute the task
             $this->executeTask($current_task);
+            $first = false;
 
             // signal the end of the task
             $this->signal(self::EVENT_PROCESS_FINISHED_TASK, $func);
@@ -196,9 +219,6 @@ class Process implements \Flexio\Jobs\IProcess
             if ($response_code !== self::PROCESS_RESPONSE_NONE)
                 break;
         }
-
-        // fire the finish event
-        $this->signal(self::EVENT_PROCESS_FINISHED, $func);
     }
 
     private function executeTask(array $task)
@@ -287,5 +307,12 @@ class Process implements \Flexio\Jobs\IProcess
             return;
 
         $func(self::EVENT_PROCESS_STARTING, $this);
+    }
+
+    private static function createDefaultStream() : \Flexio\Base\IStream
+    {
+        $stream = \Flexio\Base\StreamMemory::create();
+        $stream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
+        return $stream;
     }
 }

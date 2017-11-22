@@ -25,8 +25,8 @@ interface IProcess
     public function addStream(\Flexio\Base\IStream $stream); // streams that will be processed by jobs
     public function getStreams();
     public function clearStreams();
-    public function setBuffer(\Flexio\Base\IStream $buffer); // stdin/stout buffer that will be processed by jobs; stdin is what's set initially; stdout is the final result
-    public function getBuffer();
+    public function getStdin();
+    public function getStdout();
     public function setResponseCode(int $code);
     public function getResponseCode();
     public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);

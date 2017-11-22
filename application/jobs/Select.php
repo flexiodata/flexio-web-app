@@ -34,11 +34,10 @@ class Select extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        // process buffer
-        $instream = $process->getBuffer();
-        $outstream = \Flexio\Base\StreamMemory::create();
+        // stdin/stdout
+        $instream = $process->getStdin();
+        $outstream = $process->getStdout();
         $this->processStream($instream, $outstream);
-        $process->setBuffer($outstream);
 
         // process stream array
         $input = $process->getStreams();
@@ -79,7 +78,7 @@ class Select extends \Flexio\Jobs\Base
             // file doesn't match any of the paths; we're done
             if ($filematches === false)
             {
-                $outstream = $instream;
+                $outstream->copy($instream);
                 return;
             }
         }
@@ -90,7 +89,7 @@ class Select extends \Flexio\Jobs\Base
             // if we don't have a table, we only care about selecting the file,
             // so we're done
             default:
-                $outstream = $instream;
+                $outstream->copy($instream);
                 return;
 
             // if we have a table input, perform additional column selection

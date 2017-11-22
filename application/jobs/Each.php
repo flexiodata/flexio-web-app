@@ -30,11 +30,10 @@ class Each extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        // process buffer
-        $instream = $process->getBuffer();
-        $outstream = \Flexio\Base\StreamMemory::create();
+        // stdin/stdout
+        $instream = $process->getStdin();
+        $outstream = $process->getStdout();
         $this->processStream($instream, $outstream);
-        $process->setBuffer($outstream);
 
         // process stream array
         $input = $process->getStreams();
@@ -81,18 +80,15 @@ class Each extends \Flexio\Jobs\Base
             // create a new process; pass on the params, but set the stdin
             // to the content for the row; TODO: need to pass on the params from
             // the process
-            $rowinstream = \Flexio\Base\StreamMemory::create();
-            $rowinstream->write($row);
-
-            $process = \Flexio\Jobs\Process::create();
-            $process->addTasks($job_tasks);
-            $process->setBuffer($rowinstream);
-            $process->execute();
-            $rowoutstream = $process->getBuffer();
+            $subprocess = \Flexio\Jobs\Process::create();
+            $subprocess->addTasks($job_tasks);
+            $subprocess->getStdin()->write($row);
+            $subprocess->execute();
+            $subprocess_stdout = $subprcess->getStdout();
 
             while (true)
             {
-                $outrow = $rowoutstream->read();
+                $outrow = $subprocess_stdout->read();
                 if ($outrow === false)
                     break;
 

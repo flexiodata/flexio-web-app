@@ -63,6 +63,21 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         return $object;
     }
 
+    // copies a streams properties to $dest, overwriting $dest's properties
+    public function copy(\Flexio\Base\IStream $source)
+    {
+        $sourceimpl = $source->getImpl();
+
+        if (!($sourceimpl instanceof \Flexio\Object\Stream))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copy may only be used on stream objects of the same type");
+
+        $properties = $source->get();
+        unset($properties['eid']);
+        unset($properties['created']);
+        unset($properties['updated']);
+        $this->set($properties);
+    }
+
     public function set(array $properties) : \Flexio\Object\Stream
     {
         // TODO: add properties check
@@ -262,21 +277,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
 
             return $result;
         }
-    }
-
-    // copies a streams properties to $dest, overwriting $dest's properties
-    public function copyOver(\Flexio\Base\IStream $dest)
-    {
-        $destimpl = $dest->getImpl();
-
-        if (!($destimpl instanceof \Flexio\Object\Stream))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copyOver may only be used on stream objects of the same type");
-
-        $properties = $this->get();
-        unset($properties['eid']);
-        unset($properties['created']);
-        unset($properties['updated']);
-        $dest->set($properties);
     }
 
     public function getReader() : \Flexio\Base\IStreamReader

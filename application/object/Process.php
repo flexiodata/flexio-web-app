@@ -503,7 +503,7 @@ class Process extends \Flexio\Object\Base
 
         $stdin = $context->getStdin();
         if (isset($stdin))
-            $process_engine->setBuffer($context->getStdin());
+            $process_engine->getStdin()->copy($context->getStdin());
 
         $input_streams = $context->getStreams();
         foreach ($input_streams as $s)
@@ -516,7 +516,7 @@ class Process extends \Flexio\Object\Base
 
         // STEP 6: save the process output
         $context->clearStreams();
-        $context->setStdout($process_engine->getBuffer());
+        $context->setStdout($process_engine->getStdout());
         $output_streams = $process_engine->getStreams();
         foreach ($output_streams as $s)
         {

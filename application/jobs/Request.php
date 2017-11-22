@@ -263,8 +263,7 @@ class Request extends \Flexio\Jobs\Base
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-        $outstream = \Flexio\Base\StreamMemory::create();
-        $process->setBuffer($outstream);
+        $outstream = $process->getStdout();
 
         // make the call and get the result
         $outstream_properties = array(

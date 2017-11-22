@@ -32,9 +32,7 @@ class List1 extends \Flexio\Jobs\Base
         parent::run($process);
 
         // process buffer
-        $outstream = \Flexio\Base\StreamMemory::create();
-        $process->setBuffer($outstream);
-
+        $outstream = $process->getStdout();
         $job_definition = $this->getProperties();
         $path = $job_definition['params']['path'] ?? null;
 

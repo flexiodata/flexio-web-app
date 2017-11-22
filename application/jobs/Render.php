@@ -75,9 +75,7 @@ class Render extends \Flexio\Jobs\Base
         if ($url === null || strlen($url) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $outstream = \Flexio\Base\StreamMemory::create();
-        $process->setBuffer($outstream);
-
+        $outstream = $process->getStdout();
         $outstream_properties = array(
             'mime_type' => $content_type
         );

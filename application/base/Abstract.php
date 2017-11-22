@@ -19,8 +19,7 @@ namespace Flexio\Base;
 interface IStream
 {
     public function getImpl();   // returns the object implementing interface; (internal helper)
-    public function copy();
-    public function copyOver(\Flexio\Base\IStream $dest);
+    public function copy(\Flexio\Base\IStream $source);
     public function set(array $properties);
     public function get();
     public function setName(string $name);

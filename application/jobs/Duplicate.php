@@ -35,11 +35,10 @@ class Duplicate extends \Flexio\Jobs\Base
 
         parent::run($process);
 
-        // process buffer
-        $instream = $process->getBuffer();
-        $outstream = \Flexio\Base\StreamMemory::create();
+        // stdin/stdout
+        $instream = $process->getStdin();
+        $outstream = $process->getStdout();
         $this->processStream($instream, $outstream);
-        $process->setBuffer($outstream);
 
         // process stream array
         $input = $process->getStreams();

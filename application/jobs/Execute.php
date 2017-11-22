@@ -526,9 +526,7 @@ class Execute extends \Flexio\Jobs\Base
         }
         else if ($this->lang == 'html')
         {
-            $outstream = \Flexio\Base\StreamMemory::create();
-            $this->getContext()->setBuffer($outstream);
-
+            $outstream = $this->getContext()->getStdout();
             if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
             {
                 $streamreader = $instream->getReader();
@@ -554,7 +552,6 @@ class Execute extends \Flexio\Jobs\Base
             );
 
             $outstream->set($outstream_properties);
-
             $streamwriter = $outstream->getWriter();
             $streamwriter->write($code);
 
@@ -673,25 +670,16 @@ class Execute extends \Flexio\Jobs\Base
             return;
 
         if ($this->runjob_stdin === null)
-            $this->runjob_stdin = $this->getContext()->getBuffer();
-
-        $job = \Flexio\Jobs\Factory::create($task);
-
-
-        $runjob_stdout = \Flexio\Base\StreamMemory::create();
+            $this->runjob_stdin = $this->getContext()->getStdin();
 
         $process = \Flexio\Jobs\Process::create();
-        $task_list = array($task);
-        $process->addTasks($task_list);
-        $process->setBuffer($this->runjob_stdin);
+        $process->addTasks(array($task));
+        $process->getStdin()->copy($this->runjob_stdin);
         $process->execute();
 
-        // TODO: stdin/stdout are no longer separate; processes (context here) has a single buffer,
-        // so the following copyOver may not be necessary
-
         // stdin of the next invocation of runjob is the stdout of the job that just ran
-        $this->runjob_stdin = $process->getBuffer();
-        $runjob_stdout->copyOver($this->getContext()->getBuffer());
+        $this->runjob_stdin = $process->getStdout();
+        $this->getContext()->getStdout()->copy($this->runjob_stdin);
     }
 
     public function func_getInputEnv()
@@ -723,11 +711,7 @@ class Execute extends \Flexio\Jobs\Base
     {
         if ($name === '_fxstdin_')
         {
-            // the buffer can get overwritten; make sure to make a copy of the stream
-            $stdin = \Flexio\Base\StreamMemory::create();
-            $buffer = $this->context->getBuffer();
-            $stdin->copyOver($buffer);
-
+            $stdin = $this->context->getStdin();
             $this->input_streams[] = $stdin;
             return array('handle' => count($this->input_streams)-1,
                          'name' => '',
@@ -759,7 +743,7 @@ class Execute extends \Flexio\Jobs\Base
     {
         if ($name === '_fxstdout_')
         {
-            $stdout = $this->context->getBuffer();
+            $stdout = $this->context->getStdout();
             $this->output_streams[] = $stdout;
             return array('handle' => count($this->output_streams)-1,
                          'name' => '',
