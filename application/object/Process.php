@@ -761,44 +761,6 @@ class Process extends \Flexio\Object\Base
         $this->getModel()->process->log($log_eid, $this->getEid(), $params);
     }
 
-/*
-    private function startLog(array $task, \Flexio\Object\Context $context) : string
-    {
-        // convert memory streams to stored streams so we can access them with a stream eid
-        $storable_input_info = self::getStorableStreamInfo($context);
-
-        // create a log record
-        $params = array();
-        $params['task_type'] = $task['type'] ?? '';
-        $params['task'] = json_encode($task);
-        $params['started'] = self::getProcessTimestamp();
-        // $params['input'] = \Flexio\Object\Context::toString($context); // straight serialization is allowed, but without a stream eid
-        $params['input'] = json_encode($storable_input_info);
-        $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
-        $params['message'] = '';
-
-        $log_eid = $this->getModel()->process->log(null, $this->getEid(), $params);
-        return $log_eid;
-    }
-
-    private function finishLog(string $log_eid, array $task, \Flexio\Object\Context $context)
-    {
-        // convert memory streams to stored streams so we can access them with a stream eid
-        $storable_output_info = self::getStorableStreamInfo($context);
-
-        // update the log record
-        $params = array();
-        $params['task_type'] = $task['type'] ?? '';
-        $params['task'] = json_encode($task);
-        $params['finished'] = self::getProcessTimestamp();
-        // $params['output'] = \Flexio\Object\Context::toString($context); // straight serialization is allowed, but without a stream eid
-        $params['output'] = json_encode($storable_output_info);
-        $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
-        $params['message'] = '';
-
-        $this->getModel()->process->log($log_eid, $this->getEid(), $params);
-    }
-*/
     private static function getStreamLogInfo(\Flexio\Jobs\IProcess $process_engine) : array
     {
         $stdin = $process_engine->getStdin();
