@@ -313,22 +313,17 @@ class TestUtil
             return false;
 
         $stdout = $process->getOutput()->getStdout();
-        $streams = array($stdout);
 
-        $result = array();
-        foreach ($streams as $s)
+        if ($stdout->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
-            if ($s->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            {
-                $result[] = $s->content($start, $limit);
-            }
-             else
-            {
-                $r = array();
-                $r['columns'] = $s->getStructure()->get();
-                $r['rows'] = $s->content($start, $limit);
-                $result[] = $r;
-            }
+            $result[] = $stdout->content($start, $limit);
+        }
+         else
+        {
+            $r = array();
+            $r['columns'] = $stdout->getStructure()->get();
+            $r['rows'] = $stdout->content($start, $limit);
+            $result[] = $r;
         }
 
         return $result;
