@@ -720,7 +720,7 @@ class Process extends \Flexio\Object\Base
         return $properties;
     }
 
-    private function startLog(\Flexio\Jobs\IProcess $process_engine) : string
+    private function startLog(\Flexio\Jobs\IProcess $process_engine)
     {
         $storable_stream_info = self::getStreamLogInfo($process_engine);
 

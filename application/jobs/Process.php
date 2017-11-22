@@ -303,7 +303,7 @@ class Process implements \Flexio\Jobs\IProcess
         if (!isset($func))
             return;
 
-        call_user_func($func, self::EVENT_PROCESS_STARTING, $this);
+        call_user_func($func, $event, $this);
     }
 
     private static function createStreamMemory() : \Flexio\Base\IStream
