@@ -720,24 +720,6 @@ class Process extends \Flexio\Object\Base
         return $properties;
     }
 
-    private function findCachedResult(string $implementation_revision, array $task, \Flexio\Object\Context &$context) : bool
-    {
-        // find the hash for the input and the task
-        $hash = self::generateTaskHash($implementation_revision, $task, $context);
-        if (strlen($hash) === 0)
-            return false;
-
-        $process_output = $this->getModel()->process->getOutputByHash($hash);
-        if ($process_output === false)
-            return false;
-
-        $process_output_context = \Flexio\Object\Context::fromString($process_output);
-
-        $context->clear();
-        $context->set($process_output_context);
-        return true;
-    }
-
     private function startLog(\Flexio\Jobs\IProcess $process_engine) : string
     {
         // create a log record
