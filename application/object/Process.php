@@ -722,12 +722,14 @@ class Process extends \Flexio\Object\Base
 
     private function startLog(\Flexio\Jobs\IProcess $process_engine) : string
     {
+        $storable_stream_info = self::getStreamLogInfo($process_engine);
+
         // create a log record
         $params = array();
-        $params['task_type'] = '';
-        $params['task'] = '';
+        $params['task_type'] = ''; // TODO: add task type
+        $params['task'] = '';      // TODO: add task info
         $params['started'] = self::getProcessTimestamp();
-        $params['input'] = '';
+        $params['input'] = json_encode($storable_stream_info);
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
@@ -745,13 +747,14 @@ class Process extends \Flexio\Object\Base
             return;
 
         $log_eid = $process_engine_metadata['log_eid'];
+        $storable_stream_info = self::getStreamLogInfo($process_engine);
 
         // update the log record
         $params = array();
-        $params['task_type'] = '';
-        $params['task'] = '';
+        $params['task_type'] = ''; // TODO: add task type
+        $params['task'] = '';      // TODO: add task info
         $params['finished'] = self::getProcessTimestamp();
-        $params['output'] = '';
+        $params['output'] = json_encode($storable_stream_info);
         $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
@@ -796,7 +799,7 @@ class Process extends \Flexio\Object\Base
         $this->getModel()->process->log($log_eid, $this->getEid(), $params);
     }
 */
-    private static function getStorableStreamInfo(\Flexio\Jobs\IProcess $process_engine) : array
+    private static function getStreamLogInfo(\Flexio\Jobs\IProcess $process_engine) : array
     {
         $stdin = $process_engine->getStdin();
         $stdout = $process_engine->getStdout();
