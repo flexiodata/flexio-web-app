@@ -450,6 +450,10 @@ class Process extends \Flexio\Object\Base
         $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
     }
 
+    public function writeLog(string $event, \Flexio\Jobs\IProcess $process)
+    {
+    }
+
     private function execute()
     {
         // TODO: set appropriate status for failures
@@ -496,7 +500,10 @@ class Process extends \Flexio\Object\Base
             $process_engine->getStdin()->copy($context->getStdin());
 
         // STEP 5: execute the process; TODO: add the logging callbacks
-        $process_engine->execute();
+        if ($this->isBuildMode() === true)
+            $process_engine->execute([$this, 'writeLog']); // if we're in build mode, log info during execution
+             else
+            $process_engine->execute(); // if we're not in build mode (e.g. run mode), don't log anything
 
         // STEP 6: save the process output
         $context->setStdout($process_engine->getStdout());

@@ -152,7 +152,7 @@ class Process implements \Flexio\Jobs\IProcess
         return true;
     }
 
-    public function execute(callable $func = null)
+    public function execute($func = null)
     {
         // fire the starting event
         $this->signal(self::EVENT_PROCESS_STARTING, $func);
@@ -168,7 +168,7 @@ class Process implements \Flexio\Jobs\IProcess
         $this->signal(self::EVENT_PROCESS_FINISHED, $func);
     }
 
-    private function executeAllTasks(callable $func = null)
+    private function executeAllTasks($func = null)
     {
         $first = true;
         while (true)
@@ -286,12 +286,12 @@ class Process implements \Flexio\Jobs\IProcess
         return $job;
     }
 
-    private function signal(string $event, callable $func = null)
+    private function signal(string $event, $func = null)
     {
         if (!isset($func))
             return;
 
-        $func(self::EVENT_PROCESS_STARTING, $this);
+        call_user_func($func, self::EVENT_PROCESS_STARTING, $this);
     }
 
     private static function createStreamMemory() : \Flexio\Base\IStream
