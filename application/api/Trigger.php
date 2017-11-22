@@ -68,15 +68,13 @@ class Trigger
             $process->setRights($pipe->getRights()); // processes inherit rights from the pipe
 
             // set an environment variable (parameter) with the "from" email address
-            $input = \Flexio\Object\Context::create();
-
             $from_addresses = $parser->getFrom();
             if (count($from_addresses) > 0)
             {
                 $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
                 $params = array('email-from' => $from_addresses[0]['email'],
                                 'email-from-display' => $from_addresses[0]['display']);
-                $input->setParams($params);
+                $process->setParams($params);
             }
 
             // save the email attachments as streams, and if there
@@ -84,10 +82,10 @@ class Trigger
             $streams = self::saveAttachmentsToStreams($parser, $process);
             foreach ($streams as $s)
             {
-                $input->addStream($s);
+                // TODO: add the streams to the process; stdin only allows
+                // one; use some other technique?
             }
 
-            $process->setInput($input);
             $process->run(false); // handleEmail should be run in background from email processing script
         }
 
