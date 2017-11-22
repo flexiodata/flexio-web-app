@@ -34,7 +34,7 @@ class Request
         return (new static);
     }
 
-    public function copy() : \Flexio\Api\Request
+    public function clone() : \Flexio\Api\Request
     {
         // create a new object and set the properties
         $new_request = static::create();

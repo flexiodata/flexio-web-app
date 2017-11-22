@@ -113,12 +113,6 @@ class User extends \Flexio\Object\Base
         return $object;
     }
 
-    public function copy()
-    {
-        // user info is unique; don't allow users to be copied
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-    }
-
     public function set(array $properties) : \Flexio\Object\User
     {
         // TODO: add properties check

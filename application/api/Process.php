@@ -39,7 +39,7 @@ class Process
         $params['background'] = $params['background'] ?? false;
         $params['run'] = true;
 
-        $copied_request = $request->copy();
+        $copied_request = $request->clone();
         $copied_request->setPostParams($params);
 
         $process = self::create_internal($copied_request);

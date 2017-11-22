@@ -89,18 +89,6 @@ class Base implements IObject
         return $object;
     }
 
-    public function copy() : \Flexio\Object\Base
-    {
-        // get the parameters, reset the ename so the create doesn't
-        // fail on account of a duplicate name
-        $properties = $this->get();
-        unset($properties['ename']);
-
-        // call the create function on the derived class
-        $object = static::create($properties);
-        return $object;
-    }
-
     public function delete() : \Flexio\Object\Base
     {
         $this->clearCache();

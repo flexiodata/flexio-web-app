@@ -134,12 +134,12 @@ class Api
         // ROUTE 1: create a route for the request "as is" without looking for
         // any identifiers in the path; this gives precedence to api keywords over
         // eids and identifiers
-        $request_route1 = $request->copy();
+        $request_route1 = $request->clone();
         $url_params_route1 = $request_route1->getUrlParams();
 
         // ROUTE 2: create a route for the request using eids or identifiers for
         // the second and forth api parameters
-        $request_route2 = $request->copy();
+        $request_route2 = $request->clone();
         $url_params_route2 = $request_route2->getUrlParams();
 
         if (\Flexio\Base\Eid::isValid($url_params_route2['apiparam2']) || \Flexio\Base\Identifier::isValid($url_params_route2['apiparam2']))

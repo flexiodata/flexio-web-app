@@ -129,13 +129,6 @@ class Structure
         return self::create();
     }
 
-    public function copy() : \Flexio\Base\Structure
-    {
-        $object_copy = self::create();
-        $object_copy->columns = $this->columns;
-        return $object_copy;
-    }
-
     public function push(array $column) // TODO: add return type
     {
         // note: returns the added column, or false if the column couldn't be added
