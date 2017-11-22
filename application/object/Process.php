@@ -26,7 +26,7 @@ class Process extends \Flexio\Object\Base
     public function __construct()
     {
         $this->setType(\Model::TYPE_PROCESS);
-        $this->response_code = 200;
+        $this->response_code = \Flexio\Jobs\Process::PROCESS_RESPONSE_NORMAL;
         $this->error = array();
         $this->debug = false;
     }
@@ -472,7 +472,7 @@ class Process extends \Flexio\Object\Base
 
     private function execute()
     {
-        // TODO: set appropriate status for failures
+        // TODO: need to handle process cancellation
 
         // track what version of the task implementation we're using
         // (more granular than task version, which may or may not be updated
@@ -524,64 +524,12 @@ class Process extends \Flexio\Object\Base
         // STEP 6: save the process output
         $context->setStdout($process_engine->getStdout());
 
-        // STEP 7: save final job output and status
-        $process_params = array();
-        $process_params['output'] = \Flexio\Object\Context::toString($context);
-        $process_params['finished'] = self::getProcessTimestamp();
-        $process_params['process_status'] = $process_engine->hasError() ? \Model::PROCESS_STATUS_FAILED : \Model::PROCESS_STATUS_COMPLETED;
-        $process_params['cache_used'] = 'N';
-        $this->getModel()->process->set($this->getEid(), $process_params);
+        // STEP 7: patch through the response code and any error
+        $this->response_code = $process_engine->getResponseCode();
+        if ($process_engine->hasError())
+            $this->error = $process_engine->getError();
 
-        // clear the process object cache
-        $this->clearCache();
-
-/*
-        // iterate through the tasks and run each one
-        $first_task = true;
-        foreach ($process_tasks as $task)
-        {
-            if ($first_task === false)
-            {
-                // set the stdin for the next job step to be the output from the stdout
-                // of the step just executed and create a new stdout
-                $context->setStdin($context->getStdout());
-                $stdout = \Flexio\Base\StreamMemory::create();
-                $stdout->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
-                $context->setStdout($stdout);
-            }
-
-
-            // if we're in buld mode, log the task
-            if ($this->isBuildMode() === true)
-                $log_eid = $this->startLog($task, $context);
-
-                // execute the step
-            $this->executeTask($task, $context);
-            $first_task = false;
-
-            if ($this->isBuildMode() === true)
-                $this->finishLog($log_eid, $task, $context);
-
-            // if the implementation has changed during the task, the result is
-            // unreliable; set an error so that the process fails
-            //$implementation_revision_update = \Flexio\System\System::getGitRevision();
-            //if ($implementation_revision !== $implementation_revision_update)
-            //    $this->fail(\Flexio\Base\Error::GENERAL, '', __FILE__, __LINE__);
-
-            // if the step failed, stop the job
-            if ($this->hasError())
-                break;
-
-            // if the step exited, stop the job
-            $response_code = $context->getExitCode();
-            if ($response_code !== null)
-            {
-                $this->response_code = $response_code;
-                break;
-            }
-        }
-
-        // save final job output and status
+        // STEP 8: save final job output and status
         $process_params = array();
         $process_params['output'] = \Flexio\Object\Context::toString($context);
         $process_params['finished'] = self::getProcessTimestamp();
@@ -591,7 +539,6 @@ class Process extends \Flexio\Object\Base
 
         // clear the process object cache
         $this->clearCache();
-*/
     }
 
     public function getResponseCode() : int
