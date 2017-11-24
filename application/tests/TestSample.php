@@ -35,17 +35,17 @@ class TestSample
                 continue;
             }
 
-            $user_eid = TestUtil::createTestUser($user_name, $email, $password);
+            $user_eid = TestUtil::createUser($user_name, $email, $password);
 
             for ($project = 1; $project <= $project_count; ++$project)
             {
                 $project_name = "Project$project";
-                $project_eid = TestUtil::createTestProject($user_eid, $project_name);
+                $project_eid = TestUtil::createProject($user_eid, $project_name);
 
                 for ($pipe = 1; $pipe <= $pipe_count; ++$pipe)
                 {
                     $pipe_name = "Pipe$pipe";
-                    $pipe_eid = TestUtil::createTestPipe($user_eid, $project_eid, $pipe_name);
+                    $pipe_eid = TestUtil::createPipe($user_eid, $project_eid, $pipe_name);
                 }
             }
         }

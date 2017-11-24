@@ -29,10 +29,6 @@ class Duplicate extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Jobs\IProcess $process)
     {
-        // TODO: implementation dependent on SQL operations on the service;
-        // with memory streams, we can no longer rely on this
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
-
         parent::run($process);
 
         // stdin/stdout
@@ -47,9 +43,6 @@ class Duplicate extends \Flexio\Jobs\Base
         switch ($mime_type)
         {
             default:
-                $outstream->copy($instream);
-                return;
-
             case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
                 $this->getOutput($instream, $outstream);
                 return;
@@ -58,65 +51,6 @@ class Duplicate extends \Flexio\Jobs\Base
 
     private function getOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
     {
-        // input/output
-        $outstream->set($instream->get());
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
-
-        // create the output
-        $job_statement = self::prepareOutput($this->getProperties(), $instream, $outstream);
-        if ($job_statement === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $streamwriter = $outstream->getWriter();
-        if ($outstream->getService()->exec($job_statement) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-    }
-
-    private static function prepareOutput(array $job_definition, \Flexio\Base\IStream $instream, \Flexio\Base\IStream &$outstream)
-    {
-        $input_path = $instream->getPath();
-        $output_path = $outstream->getPath();
-
-        $input_structure = $instream->getStructure();
-        $input_columns = $input_structure->enum();
-
-        $specified_column_names = $job_definition['params']['columns'];
-        $duplicate_columns = $input_structure->enum($specified_column_names);
-
-        if (count($duplicate_columns) == 0)
-            return false;
-
-        // build up the output column string
-        $output_columns_str = '';
-        foreach ($input_columns as $col)
-        {
-            if (strlen($output_columns_str) > 0)
-                $output_columns_str .= ',';
-
-            $output_columns_str .= $col['store_name'];
-        }
-
-        // build up the duplicate column string
-        $duplicate_columns_str = '';
-        foreach ($duplicate_columns as $col)
-        {
-            if (strlen($duplicate_columns_str) > 0)
-                $duplicate_columns_str .= ',';
-
-            $duplicate_columns_str .= $col['store_name'];
-        }
-
-        $sql = "
-            insert into $output_path ($output_columns_str)
-             select $output_columns_str from (
-                select $output_columns_str,
-                count(*) over (partition by $duplicate_columns_str order by $duplicate_columns_str) as xdrowcnt
-                from $input_path
-            ) duplicate_rows
-            where
-            duplicate_rows.xdrowcnt > 1
-        ";
-
-        return $sql;
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 }

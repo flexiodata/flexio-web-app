@@ -28,74 +28,10 @@ class TestUtil
 {
     const EPSILON = 0.000000000001;
 
-    public static function evalExpression($expr)
-    {
-        // evaluate the expression with the native evaluator
-        $result = self::evalExpressionNative($expr);
-        return $result;
-    }
-
-    public static function evalExpressionNative($expr)
-    {
-        $retval = null;
-        $success = \Flexio\Base\ExprEvaluate::evaluate($expr, [], [], $retval);
-        if ($success === false)
-            return TestError::ERROR_BAD_PARSE;
-
-        return $retval;
-    }
-
     public static function getModel()
     {
         return new \Model;
     }
-
-    public static function getDefaultTestUser()
-    {
-        // returns the eid of a default test user; creates the user if the
-        // user doesn't exist
-        $user_name = "testuser";
-        $email = "test@flex.io";
-        $password = 'test@flex.io';
-
-        // see if the user already exists
-        $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
-        if (\Flexio\Base\Eid::isValid($user_eid))
-            return $user_eid;
-
-        $user_eid = TestUtil::createTestUser($user_name, $email, $password);
-        return $user_eid;
-    }
-
-    public static function getDefaultTestProject()
-    {
-        // returns the eid of a default test project; creates the project if the
-        // project doesn't exist
-        $project_name = 'Test Project';
-
-        // see if the project exists (look for a project named the same that's owned by
-        // the default test user)
-        $user_eid = self::getDefaultTestUser();
-
-        $search_path = "$user_eid->(".\Model::EDGE_OWNS.")->(".\Model::TYPE_PROJECT.")";
-        $projects = TestUtil::getModel()->search($search_path);
-
-        if ($projects !== false)
-        {
-            foreach ($projects as $project_eid)
-            {
-                $object = TestUtil::getModel()->get($project_eid);
-                if ($object['name'] === $project_name)
-                    return $project_eid;
-            }
-        }
-
-        // we couldn't find a default test project for the default test user;
-        // create a default project for the specified user
-        $project_eid = TestUtil::createTestProject($user_eid, $project_name);
-        return $project_eid;
-    }
-
 
     // $method = GET, POST, PUT, DELETE
     // $path = /api/v1/... + GET parameters
@@ -156,8 +92,63 @@ class TestUtil
         return [ 'code' => $http_code, 'response' => $result ];
     }
 
+    public static function evalExpression($expr)
+    {
+        $retval = null;
+        $success = \Flexio\Base\ExprEvaluate::evaluate($expr, [], [], $retval);
+        if ($success === false)
+            return TestError::ERROR_BAD_PARSE;
 
-    public static function createTestUser($username, $email, $password)
+        return $retval;
+    }
+
+    public static function getDefaultTestUser()
+    {
+        // returns the eid of a default test user; creates the user if the
+        // user doesn't exist
+        $user_name = "testuser";
+        $email = "test@flex.io";
+        $password = 'test@flex.io';
+
+        // see if the user already exists
+        $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
+        if (\Flexio\Base\Eid::isValid($user_eid))
+            return $user_eid;
+
+        $user_eid = TestUtil::createUser($user_name, $email, $password);
+        return $user_eid;
+    }
+
+    public static function getDefaultTestProject()
+    {
+        // returns the eid of a default test project; creates the project if the
+        // project doesn't exist
+        $project_name = 'Test Project';
+
+        // see if the project exists (look for a project named the same that's owned by
+        // the default test user)
+        $user_eid = self::getDefaultTestUser();
+
+        $search_path = "$user_eid->(".\Model::EDGE_OWNS.")->(".\Model::TYPE_PROJECT.")";
+        $projects = TestUtil::getModel()->search($search_path);
+
+        if ($projects !== false)
+        {
+            foreach ($projects as $project_eid)
+            {
+                $object = TestUtil::getModel()->get($project_eid);
+                if ($object['name'] === $project_name)
+                    return $project_eid;
+            }
+        }
+
+        // we couldn't find a default test project for the default test user;
+        // create a default project for the specified user
+        $project_eid = TestUtil::createProject($user_eid, $project_name);
+        return $project_eid;
+    }
+
+    public static function createUser($username, $email, $password)
     {
         $verify_code = \Flexio\Base\Util::generateHandle();
         $new_user_info = array('user_name' => $username,
@@ -171,7 +162,7 @@ class TestUtil
         return $user->getEid();
     }
 
-    public static function createTestProject($user_eid, $name = null, $description = null)
+    public static function createProject($user_eid, $name = null, $description = null)
     {
         $properties['name'] = $name ?? 'Test Project';
         $properties['description'] = $description ?? 'Test project with test data.';
@@ -183,7 +174,7 @@ class TestUtil
         return $project->getEid();
     }
 
-    public static function createTestPipe($user_eid, $project_eid, $pipe_name)
+    public static function createPipe($user_eid, $project_eid, $pipe_name)
     {
         $properties['name'] = $pipe_name;
 
@@ -197,6 +188,13 @@ class TestUtil
             $project->addPipe($pipe);
 
         return $pipe->getEid();
+    }
+
+    public static function createEmailAddress()
+    {
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Base\Util::generateHandle();
+        return $handle1 . '@' . $handle2 . '.com';
     }
 
     public static function getProcessResult($process, $start=0, $limit=100)
@@ -223,33 +221,6 @@ class TestUtil
             $r['columns'] = $stdout->getStructure()->get();
             $r['rows'] = $stdout->content($start, $limit);
             $result[] = $r;
-        }
-
-        return $result;
-    }
-
-    public static function getProcessSingleOutputResult($process, $with_keys=false, $start=0, $limit=100)
-    {
-        $result = self::getProcessResult($process, $start, $limit);
-        if ($result === false)
-            return false;
-
-        if (count($result) === 0)
-            return false;
-
-        $columns = $result[0]['columns'];
-        $rows = $result[0]['rows'];
-
-        $result = array();
-        $result['columns'] = $columns;
-        $result['content'] = array();
-
-        if (is_array($rows))
-        {
-            foreach ($rows as $r)
-            {
-                $result['content'][] = ($with_keys === true ? $r : array_values($r));
-            }
         }
 
         return $result;
@@ -330,13 +301,6 @@ class TestUtil
         }
 
         return $result;
-    }
-
-    public static function generateEmail()
-    {
-        $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = \Flexio\Base\Util::generateHandle();
-        return $handle1 . '@' . $handle2 . '.com';
     }
 
     public static function convertToNumber($size_str)

@@ -24,7 +24,7 @@ class Test
 
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
-        $email = TestUtil::generateEmail();
+        $email = TestUtil::TestUtil::createEmailAddress();
         $password = \Flexio\Base\Util::generatePassword();
 
         $params = json_decode('
