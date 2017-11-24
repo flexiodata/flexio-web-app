@@ -29,7 +29,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Base\StreamMemory::create();
-        $actual = 'Flexio\Object\StreamMemory';
+        $actual = 'Flexio\Base\StreamMemory';
         $expected = get_class($object);
         TestCheck::assertString('A.1', 'StreamMemory::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
@@ -41,7 +41,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Base\StreamMemory::create();
         $object = $object->set([]);
-        $actual =  'Flexio\Object\StreamMemory';
+        $actual =  'Flexio\Base\StreamMemory';
         $expected = get_class($object);
         TestCheck::assertString('D.1', 'StreamMemory::set(); return the object',  $actual, $expected, $results);
 
