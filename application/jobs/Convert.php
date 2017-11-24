@@ -658,9 +658,7 @@ class Convert extends \Flexio\Jobs\Base
 /*
         if ($determine_structure)
         {
-            $result = self::alterStructure($outstream, $structure);
-            if ($result === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         }
 */
 
@@ -887,68 +885,6 @@ class Convert extends \Flexio\Jobs\Base
         }
 
         return false;
-    }
-
-    private static function alterStructure(\Flexio\Base\IStream $outstream, array $structure) : bool
-    {
-        // TODO: streams no longer expose getService(); can no longer assume table implementation
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
-
-        $service = $outstream->getService();
-
-        $sql = 'ALTER TABLE '. $outstream->getPath() . ' ';
-
-        $cnt = 0;
-        foreach ($structure as $fld)
-        {
-            $name = $fld['store_name']; // use the internal fieldname
-
-            $detected_type = isset($fld['detected_type']) ? $fld['detected_type'] : '';
-
-            if ($detected_type == 'D1' || $detected_type == 'D2' || $detected_type == 'D3')
-            {
-                $cast = \Flexio\Base\ExprUtil::getCastExpression($name, $fld['type'], 'date');
-                $cast = \Flexio\Base\ExprTranslatorPostgres::translate($cast, $structure);
-
-                if ($cast !== false)
-                {
-                    $sql .= ($cnt>0?',':'') . 'ALTER COLUMN ' . $name . ' TYPE date USING ' . $cast;
-                    ++$cnt;
-                }
-            }
-
-            if ($detected_type == 'N')
-            {
-                $width = $fld['max_width'];
-                $scale = $fld['max_scale'];
-                $type = 'numeric';
-                if (!is_null($width))
-                {
-                    $type .= "($width";
-                    if (!is_null($scale))
-                        $type .= ",$scale)";
-                            else
-                        $type .= ')';
-                }
-
-                $cast = \Flexio\Base\ExprUtil::getCastExpression($name, $fld['type'], 'numeric', $width, $scale);
-                $cast = \Flexio\Base\ExprTranslatorPostgres::translate($cast, $structure);
-
-                if ($cast !== false)
-                {
-                    $sql .= ($cnt>0?',':'') . 'ALTER COLUMN ' . $name . ' TYPE '.$type.' USING ' . $cast;
-                    ++$cnt;
-                }
-            }
-        }
-
-        if ($cnt > 0)
-        {
-            if ($service->exec($sql) === false)
-                return false;
-        }
-
-        return true;
     }
 
     private static function conformValuesToStructure(array $structure, array $row) : array
