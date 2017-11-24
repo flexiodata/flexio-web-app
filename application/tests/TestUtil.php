@@ -205,7 +205,7 @@ class TestUtil
         $result[] = $r;
     }
 
-    public static function getContent(\Flexio\Base\IStream $stream) : array;
+    public static function getContent(\Flexio\Base\IStream $stream) : array
     {
         $content = $stream->content();
         $result = array();
