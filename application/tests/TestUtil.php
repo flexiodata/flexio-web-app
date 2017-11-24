@@ -28,74 +28,10 @@ class TestUtil
 {
     const EPSILON = 0.000000000001;
 
-    public static function evalExpression($expr)
-    {
-        // evaluate the expression with the native evaluator
-        $result = self::evalExpressionNative($expr);
-        return $result;
-    }
-
-    public static function evalExpressionNative($expr)
-    {
-        $retval = null;
-        $success = \Flexio\Base\ExprEvaluate::evaluate($expr, [], [], $retval);
-        if ($success === false)
-            return TestError::ERROR_BAD_PARSE;
-
-        return $retval;
-    }
-
     public static function getModel()
     {
         return new \Model;
     }
-
-    public static function getDefaultTestUser()
-    {
-        // returns the eid of a default test user; creates the user if the
-        // user doesn't exist
-        $user_name = "testuser";
-        $email = "test@flex.io";
-        $password = 'test@flex.io';
-
-        // see if the user already exists
-        $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
-        if (\Flexio\Base\Eid::isValid($user_eid))
-            return $user_eid;
-
-        $user_eid = TestUtil::createTestUser($user_name, $email, $password);
-        return $user_eid;
-    }
-
-    public static function getDefaultTestProject()
-    {
-        // returns the eid of a default test project; creates the project if the
-        // project doesn't exist
-        $project_name = 'Test Project';
-
-        // see if the project exists (look for a project named the same that's owned by
-        // the default test user)
-        $user_eid = self::getDefaultTestUser();
-
-        $search_path = "$user_eid->(".\Model::EDGE_OWNS.")->(".\Model::TYPE_PROJECT.")";
-        $projects = TestUtil::getModel()->search($search_path);
-
-        if ($projects !== false)
-        {
-            foreach ($projects as $project_eid)
-            {
-                $object = TestUtil::getModel()->get($project_eid);
-                if ($object['name'] === $project_name)
-                    return $project_eid;
-            }
-        }
-
-        // we couldn't find a default test project for the default test user;
-        // create a default project for the specified user
-        $project_eid = TestUtil::createTestProject($user_eid, $project_name);
-        return $project_eid;
-    }
-
 
     // $method = GET, POST, PUT, DELETE
     // $path = /api/v1/... + GET parameters
@@ -156,6 +92,68 @@ class TestUtil
         return [ 'code' => $http_code, 'response' => $result ];
     }
 
+    public static function evalExpression($expr)
+    {
+        // evaluate the expression with the native evaluator
+        $result = self::evalExpressionNative($expr);
+        return $result;
+    }
+
+    public static function evalExpressionNative($expr)
+    {
+        $retval = null;
+        $success = \Flexio\Base\ExprEvaluate::evaluate($expr, [], [], $retval);
+        if ($success === false)
+            return TestError::ERROR_BAD_PARSE;
+
+        return $retval;
+    }
+
+    public static function getDefaultTestUser()
+    {
+        // returns the eid of a default test user; creates the user if the
+        // user doesn't exist
+        $user_name = "testuser";
+        $email = "test@flex.io";
+        $password = 'test@flex.io';
+
+        // see if the user already exists
+        $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
+        if (\Flexio\Base\Eid::isValid($user_eid))
+            return $user_eid;
+
+        $user_eid = TestUtil::createTestUser($user_name, $email, $password);
+        return $user_eid;
+    }
+
+    public static function getDefaultTestProject()
+    {
+        // returns the eid of a default test project; creates the project if the
+        // project doesn't exist
+        $project_name = 'Test Project';
+
+        // see if the project exists (look for a project named the same that's owned by
+        // the default test user)
+        $user_eid = self::getDefaultTestUser();
+
+        $search_path = "$user_eid->(".\Model::EDGE_OWNS.")->(".\Model::TYPE_PROJECT.")";
+        $projects = TestUtil::getModel()->search($search_path);
+
+        if ($projects !== false)
+        {
+            foreach ($projects as $project_eid)
+            {
+                $object = TestUtil::getModel()->get($project_eid);
+                if ($object['name'] === $project_name)
+                    return $project_eid;
+            }
+        }
+
+        // we couldn't find a default test project for the default test user;
+        // create a default project for the specified user
+        $project_eid = TestUtil::createTestProject($user_eid, $project_name);
+        return $project_eid;
+    }
 
     public static function createTestUser($username, $email, $password)
     {
