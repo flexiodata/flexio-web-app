@@ -29,7 +29,7 @@ class StreamWriter implements \Flexio\Base\IStreamWriter
         $this->close();
     }
 
-    public static function create(\Flexio\Base\IStream $stream, bool $datastore_mode = true) : \Flexio\Object\StreamWriter
+    public static function create(\Flexio\Base\IStream $stream) : \Flexio\Object\StreamWriter
     {
         // TODO: StreamWriter is designed to work right now with database services;
         // the function calls rely on specific service functions rather than the service
@@ -47,11 +47,6 @@ class StreamWriter implements \Flexio\Base\IStreamWriter
         $stream_info['path'] = $stream_properties['path'] ?? false;
         $stream_info['mime_type'] = $stream_properties['mime_type'] ?? false;
         $stream_info['structure'] = $stream_properties['structure'] ?? false;
-
-        // write out data using datastore conventions by default (included a
-        // row identifier and use store_name, a safe fieldname convention, for
-        // the fieldnames)
-        $stream_info['datastore_mode'] = $datastore_mode;
 
         $mime_type = $stream_info['mime_type'];
         switch ($mime_type)
@@ -222,41 +217,14 @@ class StreamTableWriter
 
         $path = $object->stream_info['path'];
         $mime_type = $object->stream_info['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_NONE;
-        $structure = $object->stream_info['structure'] ?? false;
-
-        $store_structure = array();
-        if ($object->getDatastoreMode() === true)
-        {
-            $store_structure[] = array(
-                'name' => 'xdrowid',
-                'type' => 'bigserial',
-                'width' => 18,
-                'scale' => 0
-            );
-        }
-
-        // add on the columns from the structure, using either the values
-        // stored in the name or store_name as the fieldname, depending on
-        // the output mode
-        $output_fieldname_mode = 'name';
-        if ($object->getDatastoreMode() === true)
-            $output_fieldname_mode = 'store_name';
-
-        foreach ($structure as $column)
-        {
-            $store_column = $column;
-            $store_column['name'] = $store_column[$output_fieldname_mode];
-            unset($store_column[$output_fieldname_mode]);
-
-            $store_structure[] = $store_column;
-        }
+        $structure = $object->stream_info['structure'] ?? array();
 
         $service = $object->getService();
         if ($service === false)
             return false;
 
         // create the table
-        if (!$service->createTable($path, $store_structure))
+        if (!$service->createTable($path, $structure))
             return false;
 
         return $object;
@@ -276,20 +244,10 @@ class StreamTableWriter
             return false;
         $structure = $this->stream_info['structure'];
 
-        // don't allow xdrowid values to overwrite default internal values
-        unset($data['xdrowid']);
-
         if ($this->inserter === false)
         {
-            // get the column names to use when inserting values (either the ones stored
-            // in the structure 'name' field or the structure 'store_name' field) depending
-            // on the output mode
-            $output_fieldname_mode = 'name';
-            if ($this->getDatastoreMode() === true)
-                $output_fieldname_mode = 'store_name';
-
-            // get the fields from the structure using the store name
-            $flds = array_column($structure, $output_fieldname_mode);
+            // get the fields from the structure
+            $flds = array_column($structure, 'name');
             $this->inserter = $this->getService()->bulkInsert($path);
             if ($this->inserter !== false)
             {
@@ -358,17 +316,5 @@ class StreamTableWriter
 
         $this->service = $service;
         return $this->service;
-    }
-
-    private function getDatastoreMode()
-    {
-        $datastore_mode = false;
-        if (!isset($this->stream_info['datastore_mode']))
-            return false;
-
-        if ($this->stream_info['datastore_mode'] === true)
-            return true;
-
-        return false;
     }
 }

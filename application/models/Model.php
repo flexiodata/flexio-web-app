@@ -1006,12 +1006,7 @@ class Model
                           'directory_port'     => $g_config->directory_database_port,
                           'directory_username' => $g_config->directory_database_username,
                           'directory_password' => $g_config->directory_database_password,
-                          'directory_dbname'   => $g_config->directory_database_dbname,
-                          'datastore_host'     => $g_config->datastore_host,
-                          'datastore_port'     => $g_config->datastore_port,
-                          'datastore_username' => $g_config->datastore_username,
-                          'datastore_password' => $g_config->datastore_password,
-                          'datastore_dbname'   => $g_config->datastore_dbname
+                          'directory_dbname'   => $g_config->directory_database_dbname
                           );
 
         return $dbconfig;

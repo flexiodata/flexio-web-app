@@ -41,19 +41,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
             $properties['structure'] = json_encode($structure);
         }
 
-        // if a connection isn't specified, add a default connection to
-        // the datastore
-        if (!isset($properties['connection_eid']))
-        {
-            // default path
-            if (!isset($properties['path']))
-                $properties['path'] = \Flexio\Base\Util::generateHandle();
-
-            $default_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();
-            if (\Flexio\Base\Eid::isValid($default_connection_eid))
-                $properties['connection_eid'] = $default_connection_eid;
-        }
-
         $object = new static();
         $model = $object->getModel();
         $local_eid = $model->create($object->getType(), $properties);
@@ -132,7 +119,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
     public function setPath(string $path) : \Flexio\Object\Stream
     {
         $old_path = $this->getPath();
-        
+
         $storagefs = $this->getStorageFs();
         if ($storagefs->exists($old_path))
         {

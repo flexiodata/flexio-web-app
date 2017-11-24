@@ -621,12 +621,6 @@ class Structure
 
     private static function makeValidName(string $name) : string
     {
-        // TODO: for now, make names lowercase (the datastore stores fields
-        // in lowercase, so until we map the datastore structure to the
-        // stream structure using the store name, we need to do this so
-        // that there isn't a name mismatch between the stream and datastore
-        // structures
-
         // trim the name from leading/trailing spaces
         $name = strtolower($name);
         return trim($name);

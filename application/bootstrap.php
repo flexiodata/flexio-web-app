@@ -43,7 +43,6 @@ $g_store->date_format = 'm/d/Y';
 $g_store->timezone = 'UTC';
 $g_store->timestamp = null;
 $g_store->model = null;
-$g_store->datastores = [];
 $g_store->connections = [];
 $g_store->connection_enckey = '9i$8iw]aKmZzq12r8';
 

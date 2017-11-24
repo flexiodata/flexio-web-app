@@ -31,30 +31,8 @@ class TestUtil
     public static function evalExpression($expr)
     {
         // evaluate the expression with the native evaluator
-        $result1 = self::evalExpressionNative($expr);
-
-        // evaluate the expression with the postgres evaluator
-        $result2 = self::evalExpressionPostgres($expr);
-
-        if (is_double($result1) && is_double($result2))
-        {
-            if (self::dblcompare($result1, $result2) === 0)
-                return $result1;
-        }
-
-        // compare the results; if they're equal and of the same
-        // type, return the value, otherwise return a mismatch string
-        if ($result1 === $result2)
-            return $result1;
-
-        $error = TestError::ERROR_EVAL_MISMATCH . ": PHP evaluation returned (" . gettype($result1) . ") $result1; Postgres evaluation returned (" . gettype($result2) . ") $result2";
-
-        if (is_string($result1) && is_string($result2))
-        {
-            $error .= "; hex: " . bin2hex($result1) . " vs " . bin2hex($result2);
-        }
-
-        return $error;
+        $result = self::evalExpressionNative($expr);
+        return $result;
     }
 
     public static function evalExpressionNative($expr)
@@ -65,85 +43,6 @@ class TestUtil
             return TestError::ERROR_BAD_PARSE;
 
         return $retval;
-    }
-
-    public static function evalExpressionPostgres($expr)
-    {
-        global $g_store;
-
-        $dbconfig = \Model::getDatabaseConfig();
-
-        // first, try to parse the expression
-        $p = new \Flexio\Base\ExprTranslatorPostgres;
-        $err = $p->parse($expr);
-        if ($err === false)
-            return TestError::ERROR_BAD_PARSE;
-
-        $postgres_expr = $p->getResult();
-
-        // if the expression parses successfully, evaluate it
-        $params = array();
-        $params['host'] = $dbconfig['datastore_host'];
-        $params['port'] = $dbconfig['datastore_port'];
-        $params['database'] = $dbconfig['datastore_dbname'];
-        $params['username'] = $dbconfig['datastore_username'];
-        $params['password'] = $dbconfig['datastore_password'];
-
-        $datastore_id = $params['database'] . ';' . $params['host'];
-        if (!isset($g_store->datastores[$datastore_id]))
-            $g_store->datastores[$datastore_id] = \Flexio\Services\Postgres::create($params);
-
-        $datastore = $g_store->datastores[$datastore_id];
-        $pdo = $datastore->getPDO();
-
-        try
-        {
-            $stmt = $pdo->query("SELECT $postgres_expr AS testval");
-        }
-        catch (\Exception $e)
-        {
-            return 'Database Exception: ' . $e->getMessage();
-        }
-
-        $metadata = $stmt->getColumnMeta(0);
-
-        foreach ($stmt as $row)
-        {
-            if (!array_key_exists('testval', $row))
-            {
-                return 'Database Error: No value returned (SQL comment?).  Row Array: ' . var_export($row,true);
-            }
-
-            if (is_null($row['testval']))
-                return null;
-
-            if (!isset($metadata['pgsql:oid']))
-                return $row['testval'];
-
-            // cast the value to the right type
-            switch ($metadata['pgsql:oid'])
-            {
-                case 17:  // bytea
-                case 20:  // int8
-                case 21:  // int2
-                case 23:  // int4
-                case 26:  // oid
-                    return (int)$row['testval'];
-
-                case 1700: // numeric
-                case 790:  // money
-                case 700:  // float4
-                case 701:  // float8
-                    if ($row['testval'] == 'NaN')
-                        return NAN;
-                    return (float)$row['testval'];
-
-                default:
-                    return $row['testval'];
-            }
-        }
-
-        return '';
     }
 
     public static function getModel()

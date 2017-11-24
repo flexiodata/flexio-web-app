@@ -84,7 +84,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -98,7 +97,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -112,7 +110,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -126,7 +123,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -140,7 +136,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -154,7 +149,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -168,7 +162,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -182,7 +175,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -196,7 +188,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -210,7 +201,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -224,7 +214,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -238,7 +227,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -252,7 +240,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -266,7 +253,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -280,7 +266,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -294,7 +279,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -308,7 +292,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -322,7 +305,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -336,7 +318,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -350,7 +331,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -364,7 +344,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -378,7 +357,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -392,7 +370,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -406,7 +383,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -420,7 +396,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -434,7 +409,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -448,7 +422,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -462,7 +435,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -476,7 +448,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -490,7 +461,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -504,7 +474,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -518,7 +487,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -532,7 +500,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -546,7 +513,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -560,7 +526,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -574,7 +539,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -588,7 +552,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -602,7 +565,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -616,7 +578,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -630,7 +591,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -644,7 +604,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -658,7 +617,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -672,7 +630,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -686,7 +643,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -700,7 +656,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -714,7 +669,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -728,7 +682,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -742,7 +695,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -756,7 +708,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -770,7 +721,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -784,7 +734,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -798,7 +747,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -812,7 +760,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -826,7 +773,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -840,7 +786,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -854,7 +799,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -868,7 +812,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -882,7 +825,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -896,7 +838,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -910,7 +851,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -924,7 +864,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -938,7 +877,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -952,7 +890,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -966,7 +903,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -980,7 +916,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -994,7 +929,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1008,7 +942,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1022,7 +955,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1036,7 +968,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1050,7 +981,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1064,7 +994,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1078,7 +1007,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1092,7 +1020,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1106,7 +1033,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1120,7 +1046,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
@@ -1134,7 +1059,6 @@ class Test
 
         // BEGIN TEST
         $stream_info = array();
-        $stream_info['connection_eid'] = \Flexio\Object\Connection::getDatastoreConnectionEid();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();

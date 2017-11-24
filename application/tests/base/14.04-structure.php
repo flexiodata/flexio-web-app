@@ -1231,21 +1231,5 @@ class Test
         ]
         ',true);
         TestCheck::assertInArray('F.10', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
-
-
-
-        // TEST: Structure::enum(); make sure some types of columns are automatically
-        // filtered from the list of selected columns
-
-        // BEGIN TEST
-        $column_info = json_decode('
-        [
-            {"name":"xdrowid", "type":"character"}
-        ]
-        ',true);
-        $specified_columns = array('xdrowid');
-        $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
-        $expected = array();
-        TestCheck::assertInArray('G.1', 'Structure::enum(); filter out invalid column names',  $actual, $expected, $results);
     }
 }

@@ -757,13 +757,6 @@ class Process extends \Flexio\Object\Base
 
     private static function createStorableStream(\Flexio\Base\IStream $stream) : \Flexio\Object\Stream
     {
-        // use default datastore connection
-        $datastore_connection_eid = \Flexio\Object\Connection::getDatastoreConnectionEid();
-        if (!\Flexio\Base\Eid::isValid($datastore_connection_eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // use random string for the store table
-        $properties['connection_eid'] = $datastore_connection_eid;
         $properties['path'] = \Flexio\Base\Util::generateHandle();
         $properties = array_merge($stream->get(), $properties);
         $storable_stream = \Flexio\Object\Stream::create($properties);

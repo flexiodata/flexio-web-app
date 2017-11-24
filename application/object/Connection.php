@@ -18,27 +18,16 @@ namespace Flexio\Object;
 
 class Connection extends \Flexio\Object\Base
 {
-    // datastore locations
+/*
+    // TODO: create migration script to remove this from the registry
     const PROCESS_DATASTORE_1 = 'process.datastore.1';
+    $registry_model = \Flexio\System\System::getModel()->registry;
+    $connection_eid = $registry_model->getString('', self::PROCESS_DATASTORE_1);
+*/
 
     public function __construct()
     {
         $this->setType(\Model::TYPE_CONNECTION);
-    }
-
-    public static function getDatastoreConnectionEid() : string
-    {
-        $registry_model = \Flexio\System\System::getModel()->registry;
-        $connection_eid = $registry_model->getString('', self::PROCESS_DATASTORE_1);
-
-        if ($connection_eid !== false)
-            return $connection_eid;
-
-        $connection_eid = self::createDatastoreConnection();
-        if ($registry_model->setString('', self::PROCESS_DATASTORE_1, $connection_eid) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        return $connection_eid;
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Connection
@@ -370,59 +359,5 @@ class Connection extends \Flexio\Object\Base
             $properties['connection_info'] = $connection_info;
 
         return $properties;
-    }
-
-    private static function createDatastoreConnection() : string
-    {
-        $dbconfig = \Model::getDatabaseConfig();
-
-        // if we don't have a datastore configuration, we can't create a default connection;
-        // TODO: we'll want to add some ability to pull from a pool of available datastore
-        // so we can have multiple servers; but right now, we just have one
-        if (!isset($dbconfig['datastore_dbname']) || strlen($dbconfig['datastore_dbname']) === 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $connection_info = array();
-        $connection_info['host'] = $dbconfig['datastore_host'];
-        $connection_info['port'] = $dbconfig['datastore_port'];
-        $connection_info['database'] = $dbconfig['datastore_dbname'];
-        $connection_info['username'] = $dbconfig['datastore_username'];
-        $connection_info['password'] = $dbconfig['datastore_password'];
-        $connection_info_str = json_encode($connection_info);
-
-        $params = array('connection_type' => \Model::CONNECTION_TYPE_POSTGRES,
-                        'connection_info' => $connection_info_str
-                        );
-
-        $connection_eid = \Flexio\System\System::getModel()->create(\Model::TYPE_CONNECTION, $params);
-        return $connection_eid;
-    }
-
-    private static function createDatastore(string $host, int $port, string $database, string $username, string $password) : \Flexio\Services\Postgres
-    {
-        // note: this function isn't used right now, but is here for reference
-
-        $params = array();
-        $params['host'] = $host;
-        $params['port'] = $port;
-        $params['database'] = $database;
-        $params['username'] = $username;
-        $params['password'] = $password;
-
-        $db = \Flexio\Services\Postgres::create($params);
-        if (!$db)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        try
-        {
-            $qdb = \Flexio\Base\DbUtil::quoteIdentifierIfNecessary($database);
-            $db->execute("CREATE DATABASE $qdb ENCODING 'UTF8'");
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-        }
-
-        return $db;
     }
 }

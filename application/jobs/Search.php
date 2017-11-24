@@ -238,8 +238,7 @@ class Search extends \Flexio\Jobs\Base
         if (strlen($where) == 0)
             return false;
 
-
-        // build the datastore insert statement
+        // build the insert statement
         $columns = '';
         foreach ($output_columns as $col)
         {
