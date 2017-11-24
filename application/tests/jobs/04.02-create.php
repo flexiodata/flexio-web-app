@@ -42,7 +42,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process, true);
+        $actual = TestUtil::getProcessResult($process, true);
         $expected = '
         {
             "columns": [
@@ -79,7 +79,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process, true);
+        $actual = TestUtil::getProcessResult($process, true);
         $expected = '
         {
             "columns": [
@@ -119,7 +119,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process, true);
+        $actual = TestUtil::getProcessResult($process, true);
         $expected = '
         {
             "columns": [
@@ -159,7 +159,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process, true);
+        $actual = TestUtil::getProcessResult($process, true);
         $expected = '
         {
             "columns": [
@@ -199,7 +199,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process, true);
+        $actual = TestUtil::getProcessResult($process, true);
         $expected = '
         {
             "columns": [
@@ -239,7 +239,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process, true);
+        $actual = TestUtil::getProcessResult($process, true);
         $expected = '
         {
             "columns": [
@@ -279,7 +279,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process, true);
+        $actual = TestUtil::getProcessResult($process, true);
         $expected = '
         {
             "columns": [
@@ -328,7 +328,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputResult($process, true);
+        $actual = TestUtil::getProcessResult($process, true);
         $expected = '
         {
             "columns": [

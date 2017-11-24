@@ -226,33 +226,6 @@ class TestUtil
         return $result;
     }
 
-    public static function getProcessSingleOutputResult($process, $with_keys=false, $start=0, $limit=100)
-    {
-        $result = self::getProcessResult($process, $start, $limit);
-        if ($result === false)
-            return false;
-
-        if (count($result) === 0)
-            return false;
-
-        $columns = $result[0]['columns'];
-        $rows = $result[0]['rows'];
-
-        $result = array();
-        $result['columns'] = $columns;
-        $result['content'] = array();
-
-        if (is_array($rows))
-        {
-            foreach ($rows as $r)
-            {
-                $result['content'][] = ($with_keys === true ? $r : array_values($r));
-            }
-        }
-
-        return $result;
-    }
-
     public static function getProcessSingleOutputColumnResult($process)
     {
         $result = self::getProcessResult($process);
