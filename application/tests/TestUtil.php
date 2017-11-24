@@ -94,13 +94,6 @@ class TestUtil
 
     public static function evalExpression($expr)
     {
-        // evaluate the expression with the native evaluator
-        $result = self::evalExpressionNative($expr);
-        return $result;
-    }
-
-    public static function evalExpressionNative($expr)
-    {
         $retval = null;
         $success = \Flexio\Base\ExprEvaluate::evaluate($expr, [], [], $retval);
         if ($success === false)
