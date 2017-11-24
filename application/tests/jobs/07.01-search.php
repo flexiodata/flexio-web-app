@@ -20,8 +20,5 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: Search Job; missing parameters
-
-        // TODO: fill out
     }
 }
