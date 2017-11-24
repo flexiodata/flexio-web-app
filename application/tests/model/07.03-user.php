@@ -34,7 +34,7 @@ class Test
         for ($i = 0; $i < $total_count; $i++)
         {
             $handle1 = \Flexio\Base\Util::generateHandle();
-            $handle2 = TestUtil::generateEmail();
+            $handle2 = TestUtil::TestUtil::createEmailAddress();
             $info = array(
                 'user_name' => $handle1,
                 'email' => $handle2

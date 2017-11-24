@@ -115,7 +115,7 @@ class TestUtil
         if (\Flexio\Base\Eid::isValid($user_eid))
             return $user_eid;
 
-        $user_eid = TestUtil::createTestUser($user_name, $email, $password);
+        $user_eid = TestUtil::createUser($user_name, $email, $password);
         return $user_eid;
     }
 
@@ -144,11 +144,11 @@ class TestUtil
 
         // we couldn't find a default test project for the default test user;
         // create a default project for the specified user
-        $project_eid = TestUtil::createTestProject($user_eid, $project_name);
+        $project_eid = TestUtil::createProject($user_eid, $project_name);
         return $project_eid;
     }
 
-    public static function createTestUser($username, $email, $password)
+    public static function createUser($username, $email, $password)
     {
         $verify_code = \Flexio\Base\Util::generateHandle();
         $new_user_info = array('user_name' => $username,
@@ -162,7 +162,7 @@ class TestUtil
         return $user->getEid();
     }
 
-    public static function createTestProject($user_eid, $name = null, $description = null)
+    public static function createProject($user_eid, $name = null, $description = null)
     {
         $properties['name'] = $name ?? 'Test Project';
         $properties['description'] = $description ?? 'Test project with test data.';
@@ -174,7 +174,7 @@ class TestUtil
         return $project->getEid();
     }
 
-    public static function createTestPipe($user_eid, $project_eid, $pipe_name)
+    public static function createPipe($user_eid, $project_eid, $pipe_name)
     {
         $properties['name'] = $pipe_name;
 
@@ -188,6 +188,13 @@ class TestUtil
             $project->addPipe($pipe);
 
         return $pipe->getEid();
+    }
+
+    public static function createEmailAddress()
+    {
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Base\Util::generateHandle();
+        return $handle1 . '@' . $handle2 . '.com';
     }
 
     public static function getProcessResult($process, $start=0, $limit=100)
@@ -321,13 +328,6 @@ class TestUtil
         }
 
         return $result;
-    }
-
-    public static function generateEmail()
-    {
-        $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = \Flexio\Base\Util::generateHandle();
-        return $handle1 . '@' . $handle2 . '.com';
     }
 
     public static function convertToNumber($size_str)

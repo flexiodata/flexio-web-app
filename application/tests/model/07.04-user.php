@@ -32,7 +32,7 @@ class Test
         try
         {
             $handle1 = \Flexio\Base\Util::generateHandle();
-            $handle2 = TestUtil::generateEmail();
+            $handle2 = TestUtil::TestUtil::createEmailAddress();
             $info = array(
                 'user_name' => null,
                 'email' => $handle2,
@@ -55,7 +55,7 @@ class Test
         try
         {
             $handle1 = \Flexio\Base\Util::generateHandle();
-            $handle2 = TestUtil::generateEmail();
+            $handle2 = TestUtil::TestUtil::createEmailAddress();
             $info = array(
                 'user_name' => 'ab',
                 'email' => $handle2,
@@ -78,7 +78,7 @@ class Test
         try
         {
             $handle1 = \Flexio\Base\Util::generateHandle();
-            $handle2 = TestUtil::generateEmail();
+            $handle2 = TestUtil::TestUtil::createEmailAddress();
             $info = array(
                 'user_name' => $handle1,
                 'email' => null,
@@ -101,7 +101,7 @@ class Test
         try
         {
             $handle1 = \Flexio\Base\Util::generateHandle();
-            $handle2 = TestUtil::generateEmail();
+            $handle2 = TestUtil::TestUtil::createEmailAddress();
             $info = array(
                 'user_name' => $handle1,
                 'email' => 'abc',
@@ -121,7 +121,7 @@ class Test
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::generateEmail();
+        $handle2 = TestUtil::TestUtil::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
@@ -133,7 +133,7 @@ class Test
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::generateEmail();
+        $handle2 = TestUtil::TestUtil::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
