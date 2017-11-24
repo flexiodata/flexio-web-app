@@ -10,6 +10,8 @@
     "directory_authserv_directory_name": "",
     "directory_authserv_password": "",
 
+    "storage_root": "",
+
     "private_key": "2Uwr79paYAfUvu54SPuwReyUCeCRedeyTH4GufrU4ruK7zAnaphujA8W6TRa7uVE",
 
     "debug": true,
@@ -20,13 +22,6 @@
     "version_subminor": 0,
 
     "session_timeout": 7200,
-
-    "datastore_type": "postgres",
-    "datastore_host": "localhost",
-    "datastore_port": 5432,
-    "datastore_dbname": "fxdata",
-    "datastore_username": "fxdata",
-    "datastore_password": "fxdata",
 
     "/profiling": false,
     "/query_log": "<put path here>",
