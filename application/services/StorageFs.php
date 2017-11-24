@@ -46,7 +46,12 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
         if ($this->isOk() === false)
             return false;
 
-        return fread($this->file, $length);
+        $res = fread($this->file, $length);
+        if ($res === false)
+            return false;
+        if ($length > 0 && strlen($res) == 0)
+            return false;
+        return $res;
     }
 
     public function readRow()
@@ -103,7 +108,6 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
         }
 
         $res = fwrite($this->file, $data);
-        var_dump($res);
 
         if ($res === false)
         {
