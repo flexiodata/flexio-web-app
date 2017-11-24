@@ -274,20 +274,6 @@ class TestUtil
         return $result;
     }
 
-    public static function getColumns($stdout)
-    {
-        $result = array();
-        if (is_array($arr))
-        {
-            foreach ($arr as $r)
-            {
-                $result[] = array_values($r);
-            }
-        }
-
-        return $result;
-    }
-
     public static function getContent(\Flexio\Base\IStream $stdout)
     {
         $content = $stdout->content();
