@@ -169,7 +169,7 @@ class Stream
         }
     }
 
-    public static function upload(\Flexio\Api\Request $request) : array
+    public static function upload(\Flexio\Api\Request $request)
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -204,7 +204,9 @@ class Stream
         $stream_info = array();
         $stream_info['name'] = $filename;
         $stream_info['mime_type'] = $mime_type;
-        return $stream->set($stream_info);
+        $stream->set($stream_info);
+
+        return $stream->get();
     }
 
     public static function download(\Flexio\Api\Request $request) // TODO: set function return type
@@ -332,7 +334,7 @@ class Stream
         exit(0);
     }
 
-    public static function handleStreamUpload(array $params, \Flexio\Object\StreamWriter $stream, string &$filename, string &$mime_type)
+    public static function handleStreamUpload(array $params, \Flexio\Base\IStreamWriter $streamwriter, string &$filename, string &$mime_type)
     {
         $filename = '';
         $mime_type = '';

@@ -41,6 +41,7 @@ class Error
     const NO_MODEL               =  'no-model';
     const NO_SERVICE             =  'no-service';
     const NO_OBJECT              =  'no-object';
+    const OBJECT_ALREADY_EXISTS  =  'object-already-exists';
 
     public static function getDefaultMessage($code)
     {

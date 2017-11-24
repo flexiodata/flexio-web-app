@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class StorageFileReader implements \Flexio\Base\IStreamReader
+class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Base\IStreamWriter
 {
     private $fspath = null;
     private $file = null;
@@ -26,19 +26,18 @@ class StorageFileReader implements \Flexio\Base\IStreamReader
         $this->close();
     }
 
-    public static function create($fspath) : \Flexio\Services\StorageFileReader
+    public static function create($fspath) : \Flexio\Services\StorageFileReaderWriter
     {
         $object = new static();
         $object->fspath = $fspath;
 
+        $mode = file_exists($fspath) ? 'r+b' : 'w+b';
+
         if (IS_DEBUG())
-            $this->file = fopen($fspath, 'rb');
+            $object->file = fopen($fspath, $mode);
              else
-            $this->file = @fopen($fspath, 'rb');
-
-        if ($this->file === false)
-            return false;
-
+            $object->file = @fopen($fspath, $mode);
+        
         return $object;
     }
 
@@ -68,7 +67,8 @@ class StorageFileReader implements \Flexio\Base\IStreamReader
 
     public function getRowCount() : int
     {
-        return $this->reader->getRowCount();
+        return 0;
+       // return $this->reader->getRowCount();
     }
 
     public function close() : bool
@@ -84,9 +84,38 @@ class StorageFileReader implements \Flexio\Base\IStreamReader
     private function isOk() : bool
     {
         if ($this->file !== null)
-            return false;
+            return true;
 
-        return true;
+        return false;
+    }
+
+
+    // \Flexio\Base\IStreamWriter
+
+    private $first_write = true;
+    private $bytes_written = 0;
+
+    public function write($data)
+    {
+        if ($this->bytes_written == 0)
+        {
+            fseek($this->file, 0, SEEK_END);
+        }
+
+        $res = fwrite($this->file, $data);
+        var_dump($res);
+
+        if ($res === false)
+        {
+            return false; // error
+        }
+
+        $this->bytes_written += $res;
+    }
+
+    public function getBytesWritten()
+    {
+        return $this->bytes_written;
     }
 }
 
@@ -117,9 +146,34 @@ class StorageFs
         return true;
     }
 
-    public function open(string $path) : \Flexio\Base\IStreamReader
+    public function createFile(string $path) : bool
     {
+        $fspath = self::getFsPath($path);
 
+        if (IS_DEBUG())
+            $f = fopen($fspath, 'w+');
+             else
+            $f = @fopen($fspath, 'w+');
+        
+        if (!$f)
+        {
+            return false;
+        }
+
+        fclose($f);
+        return true;
+    }
+
+    public function open(string $path) : \Flexio\Services\StorageFileReaderWriter
+    {
+        $fspath = self::getFsPath($path);
+
+        if (!@file_exists($fspath))
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "File '$path' does not exist");
+        }
+        
+        return StorageFileReaderWriter::create($fspath);
     }
 
 
@@ -130,12 +184,7 @@ class StorageFs
         return @mkdir($fspath, 0750, true) ? true : false;
     }
 
-    public function createFile(string $path, string $import_file) : bool
-    {
-        $fspath = self::getFsPath($path);
 
-        return copy($import_file, $fspath);
-    }
 
     public function deleteFile(string $path) : bool
     {
@@ -145,7 +194,30 @@ class StorageFs
         return false;
     }
 
-    public function list($path)
+    public function move(string $old_path, string $new_path) : bool
+    {
+        $old_fspath = self::getFsPath($old_path);
+        $new_fspath = self::getFsPath($new_path);
+
+        if (!@file_exists($old_fspath))
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "File '$old_fspath' does not exist");
+        }
+
+        if (@file_exists($new_fspath))
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::OBJECT_ALREADY_EXISTS, "Target file '$new_fspath' already exists");
+        }
+
+        if (!@rename($old_fspath, $new_fspath))
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, "Unable to rename file");
+        }
+
+        return true;
+    }
+
+    public function list(string $path)
     {
         $fspath = self::getFsPath($path);
 
@@ -182,30 +254,44 @@ class StorageFs
     {
         $fspath = self::getFsPath($path);
 
-        if (@file_exists($fspath))
-            return true;
-        else if (@is_dir($fspath))
-            return true;
-        else
-            return false;
+        if (IS_DEBUG())
+        {
+            if (file_exists($fspath))
+                return true;
+            else if (is_dir($fspath))
+                return true;
+            else
+                return false;
+        }
+         else
+        {
+            if (@file_exists($fspath))
+                return true;
+            else if (@is_dir($fspath))
+                return true;
+            else
+                return false;
+        }
     }
 
 
 
     private function getFsPath(string $path) : string
     {
+        // trim off trailing/preceding slashes and whitespace
+        $path = trim($path, "\ \t\n\r\0\x0B");
+
+        foreach (explode('/', $path) as $part)
+        {
+            if ($part == '..')
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "relative paths not allowed");
+        }
+
         $str = $this->base_path . DIRECTORY_SEPARATOR . $path;
 
         if (DIRECTORY_SEPARATOR != '/')
             $str = str_replace('/', DIRECTORY_SEPARATOR, $str);
-
-        // resolve all .. and .
-        $str = realpath($str);
-
-        // make sure the path is still under the base path
-        if (substr($str, 0, strlen($this->base_path)) != $this->base_path)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "specified path does not fall within filesystem scope");
-
+ 
         return $str;
     }
 }

@@ -60,6 +60,13 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
 
         $object->setEid($local_eid);
         $object->clearCache();
+
+
+        // create empty store file
+        $storagefs = $object->getStorageFs();
+        $storagefs->createFile($properties['path']);
+
+
         return $object;
     }
 
@@ -124,6 +131,14 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
 
     public function setPath(string $path) : \Flexio\Object\Stream
     {
+        $old_path = $this->getPath();
+        
+        $storagefs = $this->getStorageFs();
+        if ($storagefs->exists($old_path))
+        {
+            $storagefs->move($old_path, $path);
+        }
+
         $properties = array();
         $properties['path'] = $path;
         return $this->set($properties);
@@ -281,12 +296,19 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
 
     public function getReader() : \Flexio\Base\IStreamReader
     {
-        return \Flexio\Object\StreamReader::create($this);
+        //return \Flexio\Object\StreamReader::create($this);
+        $storagefs = $this->getStorageFs();
+
+        return $storagefs->open($this->getPath());
     }
 
     public function getWriter() : \Flexio\Base\IStreamWriter
     {
-        return \Flexio\Object\StreamWriter::create($this, true);
+        //return \Flexio\Object\StreamWriter::create($this, true);
+        $storagefs = $this->getStorageFs();
+
+        $file = $storagefs->open($this->getPath());
+        return $file;
     }
 
     private function isCached() : bool
@@ -310,6 +332,31 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         $this->properties = $local_properties;
         $this->eid_status = $local_properties['eid_status'];
         return true;
+    }
+
+    private $storagefs = null;
+    private function getStorageFs() : \Flexio\Services\StorageFs
+    {
+        if ($this->storagefs === null)
+        {
+            $storage_root = $GLOBALS['g_config']->storage_root ?? '';
+            if (strlen($storage_root) == 0)
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            }
+
+            if (IS_DEBUG())
+            {
+                if (!is_writable($storage_root . DIRECTORY_SEPARATOR . 'streams'))
+                {
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, "Cannot write to streams store directory");
+                }
+            }
+
+            $this->storagefs = \Flexio\Services\StorageFs::create(['base_path' => $storage_root . DIRECTORY_SEPARATOR . 'streams']);
+        }
+
+        return $this->storagefs;
     }
 
     private function getProperties() : array
