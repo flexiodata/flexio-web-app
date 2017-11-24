@@ -32,6 +32,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
     {
         // structure is stored as json string; it needs to be validated
         // and encoded
+        $structure = null;
+
         if (isset($properties) && isset($properties['structure']))
         {
             // if the structure is set, make sure it's valid
@@ -50,9 +52,14 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
 
 
         // create empty store file
-        $storagefs = $object->getStorageFs();
-        $storagefs->createFile($properties['path']);
+        $create_params = [];
+        if (isset($structure) && count($structure) > 0)
+        {
+            $create_params['structure'] = $structure;
+        }
 
+        $storagefs = $object->getStorageFs();
+        $storagefs->createFile($properties['path'], $create_params);
 
         return $object;
     }
