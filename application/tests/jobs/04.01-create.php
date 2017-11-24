@@ -71,7 +71,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "text" }]';
         TestCheck::assertInArray('B.1', 'Create Job; text column creation, no scale',  $actual, $expected, $results);
 
@@ -91,7 +91,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "character", "width": null }]';
         TestCheck::assertInArray('C.1', 'Create Job; character column creation, no scale',  $actual, $expected, $results);
 
@@ -107,7 +107,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "character", "width": null, "scale": null }]';
         TestCheck::assertInArray('C.2', 'Create Job; character column creation, no scale',  $actual, $expected, $results);
 
@@ -123,7 +123,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "character", "width": 10 }]';
         TestCheck::assertInArray('C.3', 'Create Job; character column creation',  $actual, $expected, $results);
 
@@ -143,7 +143,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "numeric", "width": 14, "scale": 4 }]';
         TestCheck::assertInArray('D.1', 'Create Job; numeric column creation',  $actual, $expected, $results);
 
@@ -163,7 +163,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "double" }]';
         TestCheck::assertInArray('E.1', 'Create Job; double column creation',  $actual, $expected, $results);
 
@@ -183,7 +183,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "integer" }]';
         TestCheck::assertInArray('F.1', 'Create Job; integer column creation',  $actual, $expected, $results);
 
@@ -203,7 +203,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "date" }]';
         TestCheck::assertInArray('G.1', 'Create Job; date column creation',  $actual, $expected, $results);
 
@@ -223,7 +223,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "datetime" }]';
         TestCheck::assertInArray('H.1', 'Create Job; datetime column creation', $actual, $expected, $results);
 
@@ -243,7 +243,7 @@ class Test
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "boolean" }]';
         TestCheck::assertInArray('H.1', 'Create Job; datetime column creation',  $actual, $expected, $results);
 
@@ -291,7 +291,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '
         [
             { "name": "f1", "type": "character", "width": 10 },

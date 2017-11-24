@@ -197,86 +197,17 @@ class TestUtil
         return $handle1 . '@' . $handle2 . '.com';
     }
 
-    public static function getProcessResult($process, $start=0, $limit=100)
+    public static function getTable(\Flexio\Base\IStream $stream) : array
     {
-        // fail if we don't have a process
-        if (($process instanceof \Flexio\Object\Process) === false)
-            return false;
-
-        if ($process === false)
-            return false;
-
-        if ($process->getProcessStatus() !== \Model::PROCESS_STATUS_COMPLETED)
-            return false;
-
-        $stdout = $process->getStdout();
-
-        if ($stdout->getMimeType() !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-        {
-            $result[] = $stdout->content($start, $limit);
-        }
-         else
-        {
-            $r = array();
-            $r['columns'] = $stdout->getStructure()->get();
-            $r['rows'] = $stdout->content($start, $limit);
-            $result[] = $r;
-        }
-
-        return $result;
+        $r = array();
+        $r['columns'] = $stream->getStructure()->get();
+        $r['rows'] = $stream->content($start, $limit);
+        $result[] = $r;
     }
 
-    public static function getProcessSingleOutputColumnResult($process)
+    public static function getContent(\Flexio\Base\IStream $stream) : array;
     {
-        $result = self::getProcessResult($process);
-        if ($result === false)
-            return false;
-
-        if (count($result) === 0)
-            return false;
-
-        if (!isset($result[0]['columns']))
-            return false;
-
-        return $result[0]['columns'];
-    }
-
-    public static function getProcessSingleOutputColumnNameResult($process)
-    {
-        $info = TestUtil::getProcessSingleOutputColumnResult($process);
-        if ($info === false)
-            return false;
-
-        return array_column($info, 'name');
-    }
-
-    public static function getProcessSingleOutputRowResult($process, $with_keys = false)
-    {
-        $result = self::getProcessResult($process);
-        if ($result === false)
-            return false;
-
-        if (count($result) === 0)
-            return false;
-
-        if (!isset($result[0]['rows']))
-            return false;
-
-        $rows = $result[0]['rows'];
-
-        $result = array();
-
-        foreach ($rows as $r)
-        {
-            $result[] = ($with_keys === true ? $r : array_values($r));
-        }
-
-        return $result;
-    }
-
-    public static function getContent(\Flexio\Base\IStream $stdout)
-    {
-        $content = $stdout->content();
+        $content = $stream->content();
         $result = array();
         if (is_array($content))
         {

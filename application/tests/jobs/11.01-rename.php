@@ -58,7 +58,7 @@ class Test
 
         // BEGIN TEST
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = TestUtil::getProcessSingleOutputColumnResult($process);
+        $actual = $process->getStdout()->getStructure()->get();
         $expected = '
         [
             { "name": "field4", "type": "character", "width": 3 },

@@ -91,8 +91,7 @@ class Test
         ',true);
 
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $result = TestUtil::getProcessResult($process,0,50);
-        $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
+        $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'GIVENNAME,SURNAME,STREETADDRESS,CITY,STATE,ZIPCODE';
         TestCheck::assertString('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
 
@@ -169,7 +168,7 @@ class Test
         ',true);
 
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $result = TestUtil::getProcessResult($process,true,1535,1); // 1536 rows in output; get the last one
+        $result = $process->getStdout()->content(1535,1);
         $actual = $result['content'][0] ?? array();
         $expected = json_decode('
         {
@@ -280,7 +279,7 @@ class Test
             "filter" => "bootstrap"
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $result = TestUtil::getProcessResult($process,10,122);
+        $result = $process->getStdout()->content(10,122);
         $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
         $expected = 'http:\\/\\/saastr.libsyn.com\\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-laura-roeder-founder-ceo-edgar';
         TestCheck::assertString('A.3', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);

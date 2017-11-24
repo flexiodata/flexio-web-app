@@ -59,8 +59,7 @@ return;
 
         // BEGIN TEST
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $result = TestUtil::getProcessResult($process,0,50);
-        $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
+        $actual = $process->getStdout()->getReader()->readRow();
         $expected = "a\nbc\nde";
         TestCheck::assertString('A.1', 'Merge Job; check basic functionality',  $actual, $expected, $results);
     }

@@ -73,7 +73,8 @@ class Test
         $process_info = \Flexio\Api\Trigger::handleEmail($file, $pipe->getEid());
         unlink($file);
         $process_eid = $process_info['eid'];
-        $actual = TestUtil::getProcessSingleOutputRowResult($process_eid);
+        $process = \Flexio\Object\Process::load($process_eid);
+        $actual = TestUtil::getContent($process->getStdout());
         $expected = '
         [
             ["31","BOISE FIELDS","699 JACKSON","#500","NAMPA","ID","83686","","","30","0","2013/03/07"],
