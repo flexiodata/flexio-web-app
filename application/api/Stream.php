@@ -138,7 +138,7 @@ class Stream
         {
             // return content as-is
             header('Content-Type: ' . $response_content_type);
-            $result = $stream->content($start, $limit);
+            $result = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
             if (isset($encode))
             {
                 // user wants us to re-encode the data payload on a preview-only basis
@@ -161,7 +161,7 @@ class Stream
             if ($metadata === true)
                 $result['columns'] = $stream->getStructure()->get();
 
-            $result['rows'] = $stream->content($start, $limit);
+            $result['rows'] = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
             $result = json_encode($result);
 
             echo($result);
@@ -281,7 +281,7 @@ class Stream
         if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
         {
             // get the content in one chunk and return it as-is
-            $content = $stream->content($start, $limit);
+            $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
             $out = fopen('php://output', 'w');
             fwrite($out, $content);
             fclose($out);
@@ -306,7 +306,7 @@ class Stream
                     break;
 
                 // get the rows
-                $content = $stream->content($current_offset, $rowreadsize);
+                $content = \Flexio\Base\Util::getStreamContents($stream, $current_offset, $rowreadsize);
 
                 // if we've run out of rows, we're done
                 if (count($content) === 0)

@@ -391,7 +391,7 @@ class Pipe
         $mime_type = $stream_info['mime_type'];
         $start = 0;
         $limit = PHP_INT_MAX;
-        $content = $stream->content($start, $limit);
+        $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
         $response_code = $process->getResponseCode();
 
 

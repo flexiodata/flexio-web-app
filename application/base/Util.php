@@ -883,6 +883,78 @@ class Util
 
         return $code;
     }
+
+
+    public static function getStreamContents($stream, int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */) // returns array for table or string for data buffer
+    {
+        if ($start < 0 )
+            $start = 0;
+        if ($limit < 0)
+            $limit = 0;
+        if ($readsize <= 0)
+            $readsize = 1;
+
+        $mime_type = $stream->getMimeType();
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        {
+            return $stream->getReader()->getRows($start,$limit);
+        }
+        else
+        {
+            // read table content
+            $offset1 = 0;
+            $offset2 = 0;
+
+            // the starting and ending position we want
+            $range1 = $start;
+            $range2 = $start + $limit;
+
+            $result = '';
+            $reader = $stream->getReader();
+
+            while (true)
+            {
+                $chunk = $reader->read($readsize);
+                if ($chunk === false)
+                    break;
+
+                $offset2 = $offset1 + strlen($chunk);
+
+                // if we haven't reached the part we want, keep reading
+                if ($offset2 < $range1)
+                {
+                    $offset1 = $offset2;
+                    continue;
+                }
+
+                // if we're past the part we want, we're done
+                if ($offset1 > $range2)
+                    break;
+
+                // case 1: chunk read is contained entirely in the range we want
+                if ($offset1 >= $range1 && $offset2 <= $range2)
+                    $result .= $chunk;
+
+                // case 2: chunk read covers the range we want
+                if ($offset1 < $range1 && $offset2 > $range2)
+                    $result .= substr($chunk, $range1 - $offset1, $range2 - $range1);
+
+                // case 3: chunk read covers first part of the range we want
+                if ($offset1 < $range1 && $offset2 <= $range2)
+                    $result .= substr($chunk, $range1 - $offset1);
+
+                // case 4: chunk read covers second part of the range we want
+                if ($offset1 >= $range1 && $offset2 > $range2)
+                    $result .= substr($chunk, 0, $range2 - $offset1);
+
+                // set the new starting offset position
+                $offset1 = $offset2;
+            }
+
+            return $result;
+        }
+    }
+
 }
 
 

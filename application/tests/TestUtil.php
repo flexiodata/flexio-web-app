@@ -201,13 +201,13 @@ class TestUtil
     {
         $r = array();
         $r['columns'] = $stream->getStructure()->get();
-        $r['rows'] = $stream->content($start, $limit);
+        $r['rows'] = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
         $result[] = $r;
     }
 
     public static function getContent(\Flexio\Base\IStream $stream) : array
     {
-        $content = $stream->content();
+        $content = \Flexio\Base\Util::getStreamContents($stream);
         $result = array();
         if (is_array($content))
         {

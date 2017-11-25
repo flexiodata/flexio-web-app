@@ -34,7 +34,6 @@ interface IStream
     public function setStructure($structure);
     public function getStructure();
     public function getFileInfo();
-    public function content(int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */);
     public function getReader() : \Flexio\Base\IStreamReader;
     public function getWriter() : \Flexio\Base\IStreamWriter;
 }

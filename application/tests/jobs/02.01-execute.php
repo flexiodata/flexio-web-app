@@ -38,7 +38,7 @@ EOD;
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,50);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0,50);
         $expected = 'Hello, World!';
         TestCheck::assertString('A.1', 'Execute Job; check basic python execution functionality',  $actual, $expected, $results);
 
@@ -57,7 +57,7 @@ EOD;
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,50);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0,50);
         $expected = 'Hello, World!';
         TestCheck::assertString('A.2', 'Execute Job; check basic javascript execution functionality',  $actual, $expected, $results);
 
@@ -76,7 +76,7 @@ EOD;
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,50);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0, 50);
         $expected = 'Hello,World!';
         TestCheck::assertString('B.1', 'Execute Job; sha256 integrity check',  $actual, $expected, $results);
 
@@ -91,7 +91,7 @@ EOD;
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,50);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0, 50);
         $expected = 'Hello,World!';
         TestCheck::assertString('B.2', 'Execute Job; sha256 integrity check with uppercase sha256 code',  $actual, $expected, $results);
 
@@ -155,7 +155,7 @@ EOD;
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,50);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0, 50);
         $expected = 'Hello,World!';
         TestCheck::assertString('C.1', 'Execute Job; sha384 integrity check',  $actual, $expected, $results);
 
@@ -189,7 +189,7 @@ EOD;
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,50);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0, 50);
         $expected = 'Hello,World!';
         TestCheck::assertString('D.1', 'Execute Job; sha512 integrity check',  $actual, $expected, $results);
 
@@ -221,7 +221,7 @@ EOD;
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,50);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0, 50);
         $expected = 'Hello, World!';
         TestCheck::assertString('E.1', 'Execute Job; remote execution',  $actual, $expected, $results);
 
@@ -235,7 +235,7 @@ EOD;
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,50);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0, 50);
         $expected = 'Hello, World!';
         TestCheck::assertString('E.2', 'Execute Job; remote execution with sha256 check',  $actual, $expected, $results);
 
@@ -258,7 +258,7 @@ EOD;
             }
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,50);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0, 50);
         $expected = 'This is local.';
         TestCheck::assertString('F.1', 'Execute Job; local code override',  $actual, $expected, $results);
     }

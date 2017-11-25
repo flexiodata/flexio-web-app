@@ -40,7 +40,7 @@ class Test
 
         // BEGIN TEST
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->content(0,27);
+        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout(), 0, 27);
         $expected = 'def flexio_handler(context)';
         TestCheck::assertString('A.1', 'Request; check basic functionality',  $actual, $expected, $results);
     }

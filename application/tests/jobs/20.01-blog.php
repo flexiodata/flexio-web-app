@@ -168,7 +168,7 @@ class Test
         ',true);
 
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $result = $process->getStdout()->content(1535,1);
+        $result = \Flexio\Base\Util::getStreamContents($process->getStdout(), 1535, 1);
         $actual = $result['content'][0] ?? array();
         $expected = json_decode('
         {
@@ -279,7 +279,7 @@ class Test
             "filter" => "bootstrap"
         ];
         $process = \Flexio\Object\Process::create()->setTask($task)->setParams($params)->run(false);
-        $result = $process->getStdout()->content(10,122);
+        $result = \Flexio\Base\Util::getStreamContents($process->getStdout(), 10, 122);
         $actual = is_array($result) && isset($result[0]) ? $result[0] : '';
         $expected = 'http:\\/\\/saastr.libsyn.com\\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-laura-roeder-founder-ceo-edgar';
         TestCheck::assertString('A.3', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
