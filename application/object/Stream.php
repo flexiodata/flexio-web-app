@@ -30,6 +30,11 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
 
     public static function create(array $properties = null) : \Flexio\Object\Stream
     {
+        if (is_null($properties))
+        {
+            $properties = [];
+        }
+
         // structure is stored as json string; it needs to be validated
         // and encoded
         $structure = null;
@@ -42,6 +47,10 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
             $structure = $structure_object->enum();
             $properties['structure'] = json_encode($structure);
         }
+
+        // default path
+        if (!isset($properties['path']))
+            $properties['path'] = \Flexio\Base\Util::generateHandle();
 
         $object = new static();
         $model = $object->getModel();
