@@ -104,7 +104,23 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
         if ($this->isOk() === false)
             return false;
 
-        return false; // $this->reader->getRows($offset, $limit);
+        $sql = 'select * from fxtbl';
+
+        if (isset($limit) && (int)$limit < PHP_INT_MAX)
+            $sql .= ' limit ' . (int)$limit;
+
+        if (isset($offset) && (int)$offset > 0)
+            $sql .= ' offset ' . (int)$offset;
+
+        $result = $this->sqlite->query($sql);
+        
+        if (!$result)
+            return [];
+
+        $res = [];
+        while (($row = $result->fetchArray(SQLITE3_ASSOC)) !== false)
+            $res[] = $row;
+        return $res;
     }
 
     public function getRowCount() : int
