@@ -293,7 +293,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         //return \Flexio\Object\StreamReader::create($this);
         $storagefs = $this->getStorageFs();
 
-        return $storagefs->open($this->getPath());
+        $file = $storagefs->open($this->getPath());
+        return $file;
     }
 
     public function getWriter() : \Flexio\Base\IStreamWriter

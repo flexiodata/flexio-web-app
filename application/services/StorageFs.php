@@ -88,14 +88,12 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
 
         if ($this->sqlite)
         {
-            if ($this->result)
-            {
-                return $this->result->fetchArray(SQLITE3_ASSOC);
-            }
-             else
+            if (!$this->result)
             {
                 $this->result = $this->sqlite->query('select * from fxtbl');
             }
+
+            return $this->result->fetchArray(SQLITE3_ASSOC); // returns false if eof
         }
 
         return false;
@@ -132,7 +130,12 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             $this->file = null;
         }
 
-        $this->sqlite = null;
+        if ($this->sqlite)
+        {
+            $this->flushRows();
+            $this->sqlite = null;
+        }
+
         return true;
     }
 
@@ -150,11 +153,34 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
     private $first_write = true;
     private $bytes_written = 0;
 
+    private $last_schema = null;
+    private $insert_rows = [];
+
     public function write($data)
     {
         if ($this->sqlite)
         {
-            // insert row
+            if (!is_array($data))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "data must be presented in array format");
+            
+            // check if the column schema being inserted is the same as the last;
+            // if it's different, flush rows in buffer
+
+            $cur_schema = array_keys($data);
+            if ($cur_schema !== $this->last_schema)
+            {
+                $this->flushRows();
+                $this->last_schema = $cur_schema;
+            }
+
+            if (count($this->insert_rows) >= 100)
+            {
+                $this->flushRows();
+                $this->last_schema = $cur_schema;
+            }
+
+            $this->insert_rows[] = $data;
+
             return;
         }
 
@@ -178,6 +204,63 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
     public function getBytesWritten()
     {
         return $this->bytes_written;
+    }
+
+    private function flushRows()
+    {
+        if (!$this->sqlite)
+            return;
+        if (count($this->insert_rows) == 0)
+            return;
+
+        $sql = 'insert into fxtbl ';
+        
+        // because we checked column schema in write(), all
+        // arrays have the same schema in this function
+
+        if (\Flexio\Base\Util::isAssociativeArray($this->insert_rows[0]))
+        {
+            $sql .= '(';
+
+            $keys = array_keys($this->insert_rows[0]);
+            for ($i = 0; $i < count($keys); ++$i)
+            {
+                if ($i > 0)
+                    $sql .= ',';
+                $sql .= StorageFs::quoteIdentifierIfNecessary($keys[$i]);
+            }
+
+            $sql .= ') ';
+        }
+
+        $sql .= 'values ';
+
+        $first = true;
+        foreach ($this->insert_rows as $row)
+        {
+            $row = array_values($row);
+            foreach ($row as &$val)
+            {
+                if (strpos($val, "'") !== false)
+                {
+                    $val = str_replace("'", "''", $val);
+                }
+                $val = "'$val'";
+            }
+            
+            if ($first)
+            {
+                $first = false;
+            }
+             else
+            {
+                $sql .= ',';
+            }
+
+            $sql .= '(' . join(',', $row) . ')';
+        }
+
+        $this->sqlite->exec($sql);
     }
 }
 
@@ -405,7 +488,7 @@ class StorageFs
         if (!isset($field['type']))
             return '';
 
-        $name = $field['name'];
+        $name = $field['store_name'] ?? $field['name'];
         $type = $field['type'];
         $width = isset($field['width']) ? $field['width'] : null;
         $scale = isset($field['scale']) ? $field['scale'] : null;
