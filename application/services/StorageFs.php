@@ -231,6 +231,14 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
 
         $sql = 'insert into fxtbl ';
         
+        if (count($this->insert_rows[0]) == 0)
+        {
+            $sql .= 'default values';
+            $res = @$this->sqlite->exec($sql);
+            $this->insert_rows = [];
+            return;
+        }
+
         // because we checked column schema in write(), all
         // arrays have the same schema in this function
 
@@ -277,8 +285,36 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             $sql .= '(' . join(',', $row) . ')';
         }
 
-        $this->sqlite->exec($sql);
+        //var_dump($this->fspath);
+        //echo $sql;
+
+        $res = @$this->sqlite->exec($sql);
+
+        if (!$res)
+        {
+            $errstr = $this->sqlite->lastErrorMsg();
+            $marker = strpos($errstr, "has no column named ");
+            if ($marker !== false)
+            {
+                $bad_field = trim(substr($errstr, $marker + 20));
+                foreach ($this->insert_rows as &$row)
+                    unset($row[$bad_field]);
+
+                return $this->flushRows();
+            }
+
+            // var_dump($this->sqlite->lastErrorCode());
+            $this->insert_rows = [];
+            return false;
+        }
+
+
+
+        $this->insert_rows = [];
+        return true;
     }
+
+
 }
 
 
