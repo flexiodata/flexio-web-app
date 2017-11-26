@@ -17,8 +17,230 @@ namespace Flexio\Base;
 
 
 require_once dirname(__DIR__) . '/base/Abstract.php';
-require_once dirname(__DIR__) . '/base/StreamReader.php';
-require_once dirname(__DIR__) . '/base/StreamWriter.php';
+
+
+
+
+
+class StreamMemoryReader implements \Flexio\Base\IStreamReader
+{
+    private $stream;
+    private $offset;
+
+    public function __construct()
+    {
+        $this->offset = 0;
+    }
+
+    public static function create(\Flexio\Base\StreamMemory $stream) : \Flexio\Base\StreamMemoryReader
+    {
+        $object = new static();
+        $object->stream = $stream;
+        return $object;
+    }
+
+    public function read($length = 1024)
+    {
+        $mime_type = $this->getStream()->getMimeType();
+        switch ($mime_type)
+        {
+            default:
+                $str = $this->readString($this->offset, $length);
+                if ($str === false)
+                    return false;
+                $this->offset += strlen($str);
+                return $str;
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        }
+    }
+
+    public function readRow()
+    {
+        $mime_type = $this->getStream()->getMimeType();
+        switch ($mime_type)
+        {
+            default:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                $rows = $this->readArrayRows($this->offset, 1);
+                if ($rows === false)
+                    return false;
+
+                $this->offset++;
+                return $rows[0];
+        }
+    }
+
+    public function getRows(int $offset, int $limit)
+    {
+        if ($offset < 0)
+            $offset = 0;
+        if ($limit < 0)
+            $limit = 0;
+
+        // only implemented for table type streams
+        $mime_type = $this->getStream()->getMimeType();
+        if ($mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+        $result = $this->readArrayRows($offset, $limit);
+        if ($result === false)
+            return false;
+
+        return $result;
+    }
+
+    public function close() : bool
+    {
+        return true;
+    }
+
+    private function getStream() : \Flexio\Base\StreamMemory
+    {
+        return $this->stream;
+    }
+
+    private function readString(int $offset, int $limit)
+    {
+        $buffer = $this->getStream()->buffer;
+        if (!is_string($buffer))
+            return false;
+
+        if ($offset >= strlen($this->getStream()->buffer))
+            return false;
+
+        return substr($this->getStream()->buffer, $this->offset, $limit);
+    }
+
+    private function readArrayRows(int $start, int $limit)
+    {
+        $buffer = $this->getStream()->buffer;
+        if (!is_array($buffer))
+            return false;
+
+        if ($start > count($buffer) - 1)
+            return false;
+
+        $rows = array_slice($buffer, $start, $limit);
+
+        // data may be stored either with keys or as simple values; combine these
+        // with the structure when returning the result
+
+        $columns = $this->getStream()->getStructure()->enum();
+        $result = array();
+        foreach ($rows as $r)
+        {
+            $row_is_associative = \Flexio\Base\Util::isAssociativeArray($r);
+
+            $idx = 0;
+            $mapped_row = array();
+            foreach ($columns as $c)
+            {
+                $column_name = $c['name'];
+                if ($row_is_associative)
+                {
+                    if (array_key_exists($column_name, $r))
+                        $mapped_row[$column_name] = $r[$column_name];
+                         else
+                        $mapped_row[$column_name] = null;
+                }
+                 else
+                {
+                    $mapped_row[$column_name] = $r[$idx] ?? null;
+                }
+                $idx++;
+            }
+
+            $result[] = $mapped_row;
+        }
+
+        return $result;
+    }
+}
+
+
+
+
+class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
+{
+    private $stream;
+    private $bytes_written;
+
+    public function __construct()
+    {
+        $this->bytes_written = 0;
+    }
+
+    public static function create(\Flexio\Base\StreamMemory $stream) : \Flexio\Base\StreamMemoryWriter
+    {
+        $object = new static();
+        $object->stream = $stream;
+        return $object;
+    }
+
+    public function write($data)
+    {
+        // write the data, depending on the type
+        $bytes_written = 0;
+        $mime_type = $this->getStream()->getMimeType();
+        switch ($mime_type)
+        {
+            default:
+                $this->writeString($data, $bytes_written);
+                break;
+
+            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+                $this->writeArray($data, $bytes_written);
+                break;
+        }
+
+        // increment the total bytes written
+        $this->bytes_written += $bytes_written;
+    }
+
+    public function getBytesWritten() : int
+    {
+        return $this->bytes_written;
+    }
+
+    public function close() : bool
+    {
+        return true;
+    }
+
+    private function getStream() : \Flexio\Base\StreamMemory
+    {
+        return $this->stream;
+    }
+
+    private function writeString(string $data, int &$bytes_written)
+    {
+        $bytes_written = 0;
+        if (is_string($this->getStream()->buffer) === false) // initialize buffer
+            $this->getStream()->buffer = '';
+
+        $this->getStream()->buffer .= $data;
+        $bytes_written = strlen($data);
+        return true;
+    }
+
+    private function writeArray(array $data, int &$bytes_written)
+    {
+        $bytes_written = 0;
+        if (is_array($this->getStream()->buffer) === false) // initialize buffer
+            $this->getStream()->buffer = array();
+
+        array_push($this->getStream()->buffer, $data);
+
+        // set the bytes written
+        $content_str = implode('', $data);
+        $bytes_written = strlen($content_str);
+        return true;
+    }
+}
 
 
 class StreamMemory implements \Flexio\Base\IStream
