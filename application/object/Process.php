@@ -318,23 +318,6 @@ class Process extends \Flexio\Object\Base
         return $this->properties['process_info'];
     }
 
-    public function getEnvironmentParams() : array
-    {
-        // return a list of environment parameters;
-        // TODO: determine list; for now, include current user information and time
-        // TODO: do we want to "namespace" the variables? right now, variables are
-        // limited to alphanumeric, but maybe we want to do something like:
-        // "flexio.user_firstname", "flexio.user_lastname", etc
-        $environment_params = array();
-
-        $environment_params['process.user.firstname'] = \Flexio\System\System::getCurrentUserFirstName();
-        $environment_params['process.user.lastname'] = \Flexio\System\System::getCurrentUserLastName();
-        $environment_params['process.user.email'] = \Flexio\System\System::getCurrentUserEmail();
-        $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
-
-        return $environment_params;
-    }
-
     public function setTask(array $task) : \Flexio\Object\Process
     {
         $properties = array();
@@ -801,6 +784,23 @@ class Process extends \Flexio\Object\Base
             case \Model::PROCESS_STATUS_COMPLETED:
                 return true;
         }
+    }
+
+    private static function getEnvironmentParams() : array
+    {
+        // return a list of environment parameters;
+        // TODO: determine list; for now, include current user information and time
+        // TODO: do we want to "namespace" the variables? right now, variables are
+        // limited to alphanumeric, but maybe we want to do something like:
+        // "flexio.user_firstname", "flexio.user_lastname", etc
+        $environment_params = array();
+
+        $environment_params['process.user.firstname'] = \Flexio\System\System::getCurrentUserFirstName();
+        $environment_params['process.user.lastname'] = \Flexio\System\System::getCurrentUserLastName();
+        $environment_params['process.user.email'] = \Flexio\System\System::getCurrentUserEmail();
+        $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
+
+        return $environment_params;
     }
 
     private static function getProcessTimestamp() : string
