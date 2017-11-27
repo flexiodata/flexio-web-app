@@ -277,17 +277,6 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setProcessStatus(string $status) : \Flexio\Object\Process
-    {
-        if (self::isValidProcessStatus($status) === false)
-            return $this;
-
-        $this->clearCache();
-        $process_model = $this->getModel()->process;
-        $process_model->setProcessStatus($this->getEid(), $status);
-        return $this;
-    }
-
     public function getProcessStatus() : string
     {
         if ($this->isCached() === false)
@@ -631,7 +620,6 @@ class Process extends \Flexio\Object\Base
         return $properties;
     }
 
-
     private function setProcessInfo(array $info) : \Flexio\Object\Process
     {
         // pack the process info
@@ -766,25 +754,6 @@ class Process extends \Flexio\Object\Base
         }
 
         return $stream_memory;
-    }
-
-    private static function isValidProcessStatus(string $status) : bool
-    {
-        switch ($status)
-        {
-            default:
-                return false;
-
-            case \Flexio\Jobs\Process::STATUS_UNDEFINED:
-            case \Flexio\Jobs\Process::STATUS_PENDING:
-            case \Flexio\Jobs\Process::STATUS_WAITING:
-            case \Flexio\Jobs\Process::STATUS_RUNNING:
-            case \Flexio\Jobs\Process::STATUS_CANCELLED:
-            case \Flexio\Jobs\Process::STATUS_PAUSED:
-            case \Flexio\Jobs\Process::STATUS_FAILED:
-            case \Flexio\Jobs\Process::STATUS_COMPLETED:
-                return true;
-        }
     }
 
     private static function getEnvironmentParams() : array
