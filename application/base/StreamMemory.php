@@ -243,6 +243,8 @@ class StreamMemory implements \Flexio\Base\IStream
 
     public function __construct()
     {
+        //$this->id = \Flexio\Base\Util::generateRandomString(5);
+
         $this->buffer = false;
 
         // note: default values match model defaults
@@ -305,11 +307,23 @@ class StreamMemory implements \Flexio\Base\IStream
         return $object;
     }
 
+    private $structure_stamp = '';
     private function prepareStorage()
     {
         if (isset($this->properties['structure']) && is_array($this->properties['structure']) && count($this->properties['structure']) > 0)
             $this->is_table = true;
 
+        if ($this->is_table)
+        {
+            // start out with memory table
+
+            $structure_stamp = md5(serialize($this->properties['structure']));
+            if ($structure_stamp != $this->structure_stamp)
+            {
+                $this->structure_stamp = $structure_stamp;
+                $this->memory_db = $this->getStorageFs()->createFile('', [ 'structure' => $this->properties['structure'], 'memory' => true ]);
+            }
+        }
     }
 
     public function switchToDiskStorage(\Flexio\Base\StreamMemoryWriter $writer) : \Flexio\Base\IStreamWriter
@@ -417,7 +431,6 @@ class StreamMemory implements \Flexio\Base\IStream
         if (isset($properties['file_modified']))
             $this->properties['file_modified'] = $properties['file_modified'];
 
-        $this->prepareStorage();
         return $this;
     }
 
@@ -514,25 +527,37 @@ class StreamMemory implements \Flexio\Base\IStream
 
     public function getReader() : \Flexio\Base\IStreamReader
     {
-        if (is_null($this->storagefs_path))
+        if ($this->memory_db)
         {
-            return \Flexio\Base\StreamMemoryReader::create($this);
+            //echo "Reading {$this->id}...";
+            return $this->memory_db->getReader();
+        }
+         else if (!is_null($this->storagefs_path))
+        {
+            return $this->getStorageFs()->open($this->storagefs_path);
         }
          else
         {
-            return $this->getStorageFs()->open($this->storagefs_path);
+            return \Flexio\Base\StreamMemoryReader::create($this);
         }
     }
 
     public function getWriter() : \Flexio\Base\IStreamWriter
     {
-        if (is_null($this->storagefs_path))
+        $this->prepareStorage();
+
+        if ($this->memory_db)
         {
-            return \Flexio\Base\StreamMemoryWriter::create($this);
+            //echo "Writing {$this->id}...";
+            return $this->memory_db->getWriter();
+        }
+         else if (!is_null($this->storagefs_path))
+        {
+            return $this->getStorageFs()->open($this->storagefs_path);
         }
          else 
         {
-            return $this->getStorageFs()->open($this->storagefs_path);
+            return \Flexio\Base\StreamMemoryWriter::create($this);
         }
     }
 }
