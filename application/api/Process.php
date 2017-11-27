@@ -59,7 +59,7 @@ class Process
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'parent_eid'   => array('type' => 'identifier', 'required' => false),
-                'process_mode' => array('type' => 'string', 'required' => false, 'default' => \Flexio\Jobs\Process::PROCESS_MODE_RUN),
+                'process_mode' => array('type' => 'string', 'required' => false, 'default' => \Flexio\Jobs\Process::MODE_RUN),
                 'task'         => array('type' => 'object', 'required' => false),
                 'background'   => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'debug'        => array('type' => 'boolean', 'required' => false, 'default' => false),
@@ -460,9 +460,9 @@ class Process
 
         // if the job is cancelled, failed, or completed, then it's in
         // the final state, so there's nothing to wait for
-        if ($status_initial === \Flexio\Jobs\Process::PROCESS_STATUS_CANCELLED ||
-            $status_initial === \Flexio\Jobs\Process::PROCESS_STATUS_FAILED ||
-            $status_initial === \Flexio\Jobs\Process::PROCESS_STATUS_COMPLETED)
+        if ($status_initial === \Flexio\Jobs\Process::STATUS_CANCELLED ||
+            $status_initial === \Flexio\Jobs\Process::STATUS_FAILED ||
+            $status_initial === \Flexio\Jobs\Process::STATUS_COMPLETED)
             return;
 
         $time_waited = 0;
