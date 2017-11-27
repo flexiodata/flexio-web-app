@@ -431,6 +431,23 @@ class Process extends \Flexio\Object\Base
         return true;
     }
 
+    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
+    {
+        // only save the first error we come to
+        if ($this->hasError())
+            return;
+
+        if (!isset($message))
+            $message = \Flexio\Base\Error::getDefaultMessage($code);
+
+        $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
+    }
+
+    public function getResponseCode() : int
+    {
+        return $this->response_code;
+    }
+
     public function writeLog(string $event, \Flexio\Jobs\IProcess $process_engine)
     {
         switch ($event)
@@ -449,18 +466,6 @@ class Process extends \Flexio\Object\Base
                 $this->finishLog($process_engine);
                 break;
         }
-    }
-
-    private function fail(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
-    {
-        // only save the first error we come to
-        if ($this->hasError())
-            return;
-
-        if (!isset($message))
-            $message = \Flexio\Base\Error::getDefaultMessage($code);
-
-        $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
     }
 
     private function execute()
@@ -525,11 +530,6 @@ class Process extends \Flexio\Object\Base
 
         // clear the process object cache
         $this->clearCache();
-    }
-
-    public function getResponseCode() : int
-    {
-        return $this->response_code;
     }
 
     public function getLog() : array
