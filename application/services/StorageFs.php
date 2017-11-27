@@ -132,6 +132,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
         $res = [];
         while (($row = $result->fetchArray(SQLITE3_ASSOC)) !== false)
             $res[] = $row;
+        
         return $res;
     }
 
@@ -211,8 +212,6 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
 
             return;
         }
-
-
 
         if ($this->bytes_written == 0)
         {
@@ -402,8 +401,13 @@ class StorageFs
             if (!is_array($params['structure']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "params['structure'] must be an array");
 
+            $is_memory_database = $params['memory'] ?? false;
+            if ($is_memory_database)
+                $sqlite = new \SQLite3(':memory:');
+                 else
+                $sqlite = new \SQLite3($fspath);
+
             $fields = $this->getStructureSql($params['structure']);
-            $sqlite = new \SQLite3($fspath);
             $sql = 'create table fxtbl (' . $fields . ')';
 
             $sqlite->exec($sql);
