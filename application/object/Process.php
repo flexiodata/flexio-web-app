@@ -27,7 +27,6 @@ class Process extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_PROCESS);
         $this->response_code = \Flexio\Jobs\Process::PROCESS_RESPONSE_NORMAL;
         $this->error = array();
-        $this->debug = false;
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Process
