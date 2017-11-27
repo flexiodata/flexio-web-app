@@ -37,7 +37,7 @@ class Test
         ',true);
 
 
-        // TEST: Request Job
+        // TEST: Render Job
 
         // BEGIN TEST
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
