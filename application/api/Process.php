@@ -131,8 +131,7 @@ class Process
             $pipe->addProcess($process);
         }
 
-        if ($debug === true)
-            $process->setDebug(true);
+        // note: removed debug setting
 
         // STEP 3: run the process and return the process info
         if ($autorun === true)
