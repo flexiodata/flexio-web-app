@@ -41,18 +41,17 @@ class StreamMemoryReader implements \Flexio\Base\IStreamReader
 
     public function read($length = 1024)
     {
-        $mime_type = $this->getStream()->getMimeType();
-        switch ($mime_type)
+        if ($this->stream->is_table)
         {
-            default:
-                $str = $this->readString($this->offset, $length);
-                if ($str === false)
-                    return false;
-                $this->offset += strlen($str);
-                return $str;
-
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        }
+         else
+        {
+            $str = $this->readString($this->offset, $length);
+            if ($str === false)
+                return false;
+            $this->offset += strlen($str);
+            return $str;
         }
     }
 
