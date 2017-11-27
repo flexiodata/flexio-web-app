@@ -62,12 +62,6 @@ class Output extends \Flexio\Jobs\Base
         if ($items === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // current behavior is to only allow outputs in runtime;
-        // right now, we only use runtime, so disable this for now
-        // TODO: need to implement isRunMode() by checking environment variable
-        // if ($this->isRunMode() === false)
-        //     return;
-
         // many variants of the output job specify a job-scope connection
         foreach ($items as $item)
         {

@@ -427,26 +427,12 @@ class Process extends \Flexio\Object\Base
         return $memory_stream;
     }
 
-    public function isBuildMode() : bool
+    public function getMode() : string
     {
         if ($this->isCached() === false)
             $this->populateCache();
 
-        if ($this->properties['process_mode'] === \Model::PROCESS_MODE_BUILD)
-            return true;
-
-        return false;
-    }
-
-    public function isRunMode() : bool
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        if ($this->properties['process_mode'] === \Model::PROCESS_MODE_RUN)
-            return true;
-
-        return false;
+        return $this->properties['process_mode'];
     }
 
     public function getError() : array
@@ -534,7 +520,7 @@ class Process extends \Flexio\Object\Base
         $process_engine->getStdin()->copy($this->getStdin());
 
         // STEP 5: execute the process; TODO: add the logging callbacks
-        if ($this->isBuildMode() === true)
+        if ($this->getMode() === \Model::PROCESS_MODE_BUILD)
             $process_engine->execute([$this, 'writeLog']); // if we're in build mode, log info during execution
              else
             $process_engine->execute(); // if we're not in build mode (e.g. run mode), don't log anything
