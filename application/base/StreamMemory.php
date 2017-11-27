@@ -183,22 +183,14 @@ class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
 
     public function write($data)
     {
-        // write the data, depending on the type
-        $bytes_written = 0;
-        $mime_type = $this->getStream()->getMimeType();
-        switch ($mime_type)
+        if ($this->stream->is_table)
         {
-            default:
-                $this->writeString($data, $bytes_written);
-                break;
-
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                $this->writeArray($data, $bytes_written);
-                break;
+            $this->writeArray($data);
         }
-
-        // increment the total bytes written
-        $this->bytes_written += $bytes_written;
+         else
+        {
+            $this->writeString($data);
+        }
     }
 
     public function getBytesWritten() : int
@@ -216,18 +208,18 @@ class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
         return $this->stream;
     }
 
-    private function writeString(string $data, int &$bytes_written)
+    private function writeString(string $data)
     {
         $bytes_written = 0;
         if (is_string($this->getStream()->buffer) === false) // initialize buffer
             $this->getStream()->buffer = '';
 
         $this->getStream()->buffer .= $data;
-        $bytes_written = strlen($data);
+        $this->bytes_written += strlen($data);
         return true;
     }
 
-    private function writeArray(array $data, int &$bytes_written)
+    private function writeArray(array $data)
     {
         $bytes_written = 0;
         if (is_array($this->getStream()->buffer) === false) // initialize buffer
@@ -237,7 +229,6 @@ class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
 
         // set the bytes written
         $content_str = implode('', $data);
-        $bytes_written = strlen($content_str);
         return true;
     }
 }
@@ -246,7 +237,8 @@ class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
 class StreamMemory implements \Flexio\Base\IStream
 {
     // data buffer; use reader/writer to access
-    public $buffer;
+    public $is_table = false;
+    public $buffer = null;
 
     // properties
     private $properties;
@@ -310,7 +302,15 @@ class StreamMemory implements \Flexio\Base\IStream
         if (isset($properties['file_modified']))
             $object->properties['file_modified'] = $properties['file_modified'];
 
+        $object->prepareStorage();
+
         return $object;
+    }
+
+    private function prepareStorage()
+    {
+        if (isset($this->properties['structure']) && is_array($this->properties['structure']) && count($this->properties['structure']) > 0)
+            $this->is_table = true;
     }
 
     public function copy(\Flexio\Base\IStream $source) : \Flexio\Base\StreamMemory
@@ -362,6 +362,7 @@ class StreamMemory implements \Flexio\Base\IStream
         if (isset($properties['file_modified']))
             $this->properties['file_modified'] = $properties['file_modified'];
 
+        $this->prepareStorage();
         return $this;
     }
 
