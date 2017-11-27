@@ -53,8 +53,10 @@ class Email extends \Flexio\Jobs\Base
     {
         // get the parameters
         $job_definition = $this->getProperties();
-        $to_param = $job_definition['params']['to'];
-        $to = implode(',', $to_param);
+        $to = $job_definition['params']['to'] ?? array();
+        if (is_string($to))
+            $to = explode(',', $to);
+
         $subject = isset($job_definition['params']['subject']) ? $job_definition['params']['subject'] : '';
         $body_text = isset($job_definition['params']['body_text']) ? $job_definition['params']['body_text'] : '';
         $body_html = isset($job_definition['params']['body_html']) ? $job_definition['params']['body_html'] : '';
@@ -62,7 +64,7 @@ class Email extends \Flexio\Jobs\Base
         // enforce basic rate limits to prevent spam; only allow a max of 25 people to get
         // an email at once; also, only allow one email notice a second; of course multiple
         // jobs could be fired, but this at least helps throttle emails used within a loop
-        if (count($to_param) > self::EMAIL_TO_ADDRESS_MAX_SIZE)
+        if (count($to) > self::EMAIL_TO_ADDRESS_MAX_SIZE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::SIZE_LIMIT_EXCEEDED);
         sleep(self::EMAIL_WAIT_FREQUENCY);
 
