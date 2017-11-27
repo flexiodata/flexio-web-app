@@ -233,7 +233,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         $storagefs = $this->getStorageFs();
 
         $file = $storagefs->open($this->getPath());
-        return $file;
+        return $file->getReader();
     }
 
     public function getWriter() : \Flexio\Base\IStreamWriter
@@ -242,7 +242,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         $storagefs = $this->getStorageFs();
 
         $file = $storagefs->open($this->getPath());
-        return $file;
+        return $file->getWriter();
     }
 
     private function isCached() : bool

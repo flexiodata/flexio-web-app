@@ -30,8 +30,20 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
         $this->close();
     }
 
-    public function init($fspath) : bool
+    public function init($fspath /* can be string, or handle, or sqlite object */) : bool
     {
+        if ($fspath instanceof \Sqlite3)
+        {
+            $this->sqlite = $fspath;
+            return true;
+        }
+         else if (!is_string($fspath))
+        {
+            $this->file = $fspath;
+            return true;
+        }
+
+
         $exists = file_exists($fspath);
         $mode =  $exists ? 'r+b' : 'w+b';
         
@@ -308,15 +320,49 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             return false;
         }
 
-
-
         $this->insert_rows = [];
         return true;
     }
-
-
 }
 
+
+class StorageFsFile
+{
+    public $sqlite = null;
+    public $fspath = null;
+    public $file = null;
+
+    public function getReader() : \Flexio\Base\IStreamReader
+    {
+        return $this->openStream();
+    }
+
+    public function getWriter() : \Flexio\Base\IStreamWriter
+    {
+        return $this->openStream();
+    }
+
+    private function openStream() : \Flexio\Services\StorageFileReaderWriter
+    {
+        $stream = new StorageFileReaderWriter();
+        
+        if ($this->sqlite)
+        {
+            $stream->init($this->sqlite);
+        }
+        else if ($this->file)
+        {
+            $stream->init($this->file);
+            $this->file = null;
+        }
+        else
+        {
+            $stream->init($this->fspath);
+        }
+
+        return $stream;
+    }
+}
 
 
 class StorageFs
@@ -347,7 +393,7 @@ class StorageFs
     // createFile() creates a file; optionally $params['structure'] may be specified to
     // create a database table
 
-    public function createFile(string $path, array $params = []) : bool
+    public function createFile(string $path, array $params = []) : \Flexio\Services\StorageFsFile
     {
         $fspath = self::getFsPath($path);
 
@@ -357,10 +403,14 @@ class StorageFs
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "params['structure'] must be an array");
 
             $fields = $this->getStructureSql($params['structure']);
-            $db = new \SQLite3($fspath);
+            $sqlite = new \SQLite3($fspath);
             $sql = 'create table fxtbl (' . $fields . ')';
 
-            $db->exec($sql);
+            $sqlite->exec($sql);
+
+            $file = new StorageFsFile();
+            $file->sqlite = $sqlite;
+            return $file;
         }
          else
         {
@@ -374,13 +424,14 @@ class StorageFs
                 return false;
             }
 
-            fclose($f);
+            $file = new StorageFsFile();
+            $file->fspath = $fspath;
+            $file->file = $f;
+            return $file;
         }
-
-        return true;
     }
 
-    public function open(string $path) : \Flexio\Services\StorageFileReaderWriter
+    public function open(string $path) : \Flexio\Services\StorageFsFile
     {
         $fspath = self::getFsPath($path);
 
@@ -389,9 +440,8 @@ class StorageFs
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "File '$path' does not exist");
         }
         
-        $file = new StorageFileReaderWriter();
-        $file->init($fspath);
-
+        $file = new StorageFsFile();
+        $file->fspath = $fspath;
         return $file;
     }
 

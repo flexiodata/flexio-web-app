@@ -236,6 +236,7 @@ class StreamMemory implements \Flexio\Base\IStream
 
     private $storagefs = null;
     private $storagefs_path = null;
+    private $memory_db = null;
 
     // properties
     private $properties;
@@ -308,6 +309,7 @@ class StreamMemory implements \Flexio\Base\IStream
     {
         if (isset($this->properties['structure']) && is_array($this->properties['structure']) && count($this->properties['structure']) > 0)
             $this->is_table = true;
+
     }
 
     public function switchToDiskStorage(\Flexio\Base\StreamMemoryWriter $writer) : \Flexio\Base\IStreamWriter
