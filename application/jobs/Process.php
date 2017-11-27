@@ -30,6 +30,27 @@ class Process implements \Flexio\Jobs\IProcess
     const PROCESS_RESPONSE_NONE = 0;
     const PROCESS_RESPONSE_NORMAL = 200;
 
+
+
+    const PROCESS_MODE_UNDEFINED  = '';
+    const PROCESS_MODE_BUILD      = 'B';
+    const PROCESS_MODE_RUN        = 'R';
+
+    const PROCESS_STATUS_UNDEFINED = '';
+    const PROCESS_STATUS_PENDING   = 'S'; // 'S' for 'Starting'
+    const PROCESS_STATUS_WAITING   = 'W';
+    const PROCESS_STATUS_RUNNING   = 'R';
+    const PROCESS_STATUS_CANCELLED = 'X';
+    const PROCESS_STATUS_PAUSED    = 'P';
+    const PROCESS_STATUS_FAILED    = 'F';
+    const PROCESS_STATUS_COMPLETED = 'C';
+
+    const PROCESS_LOG_TYPE_UNDEFINED = '';
+    const PROCESS_LOG_TYPE_SYSTEM    = 'P'; // 'P' for process
+    const PROCESS_LOG_TYPE_USER      = 'U'; // 'U' for user
+
+
+
     private static $manifest = array(
         'flexio.calc'      => '\Flexio\Jobs\CalcField',
         'flexio.comment'   => '\Flexio\Jobs\Comment',

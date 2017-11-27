@@ -107,7 +107,7 @@ EOD;
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = \Model::PROCESS_STATUS_FAILED;
+        $expected = \Flexio\Jobs\Process::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.3', 'Execute Job; check code integrity; sha256 integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -122,7 +122,7 @@ EOD;
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = \Model::PROCESS_STATUS_FAILED;
+        $expected = \Flexio\Jobs\Process::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.4', 'Execute Job; check code integrity; sha256 format (sha512 indicated) integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -137,7 +137,7 @@ EOD;
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = \Model::PROCESS_STATUS_FAILED;
+        $expected = \Flexio\Jobs\Process::PROCESS_STATUS_FAILED;
         TestCheck::assertString('B.5', 'Execute Job; check code integrity; md5 integrity failure; md5 not supported',  $actual, $expected, $results);
 
 
@@ -171,7 +171,7 @@ EOD;
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = \Model::PROCESS_STATUS_FAILED;
+        $expected = \Flexio\Jobs\Process::PROCESS_STATUS_FAILED;
         TestCheck::assertString('C.2', 'Execute Job; check code integrity; sha384 integrity failure',  $actual, $expected, $results);
 
 
@@ -205,7 +205,7 @@ EOD;
         }',true));
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getProcessStatus();
-        $expected = \Model::PROCESS_STATUS_FAILED;
+        $expected = \Flexio\Jobs\Process::PROCESS_STATUS_FAILED;
         TestCheck::assertString('D.2', 'Execute Job; check code integrity; sha512 integrity failure',  $actual, $expected, $results);
 
 

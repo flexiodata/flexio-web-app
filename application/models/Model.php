@@ -107,23 +107,6 @@ class Model
     const PIPE_STATUS_ACTIVE     = 'A';
     const PIPE_STATUS_INACTIVE   = 'I';
 
-    const PROCESS_MODE_UNDEFINED  = '';
-    const PROCESS_MODE_BUILD      = 'B';
-    const PROCESS_MODE_RUN        = 'R';
-
-    const PROCESS_STATUS_UNDEFINED = '';
-    const PROCESS_STATUS_PENDING   = 'S'; // 'S' for 'Starting'
-    const PROCESS_STATUS_WAITING   = 'W';
-    const PROCESS_STATUS_RUNNING   = 'R';
-    const PROCESS_STATUS_CANCELLED = 'X';
-    const PROCESS_STATUS_PAUSED    = 'P';
-    const PROCESS_STATUS_FAILED    = 'F';
-    const PROCESS_STATUS_COMPLETED = 'C';
-
-    const PROCESS_LOG_TYPE_UNDEFINED = '';
-    const PROCESS_LOG_TYPE_SYSTEM    = 'P'; // 'P' for process
-    const PROCESS_LOG_TYPE_USER      = 'U'; // 'U' for user
-
     private $objs = array();
     private $database = null;
     private $dbtype = '';

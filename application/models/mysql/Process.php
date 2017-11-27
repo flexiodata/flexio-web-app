@@ -38,7 +38,7 @@ class Process extends ModelBase
                 'started'        => $params['started'] ?? null,
                 'finished'       => $params['finished'] ?? null,
                 'process_info'   => $params['process_info'] ?? '{}',
-                'process_status' => $params['process_status'] ?? \Model::PROCESS_STATUS_PENDING,
+                'process_status' => $params['process_status'] ?? '',
                 'cache_used'     => $params['cache_used'] ?? '',
                 'created'        => $timestamp,
                 'updated'        => $timestamp
@@ -212,7 +212,7 @@ class Process extends ModelBase
                     'output'       => $params['output'] ?? '{}',
                     'started'      => $params['started'] ?? null,
                     'finished'     => $params['finished'] ?? null,
-                    'log_type'     => $params['log_type'] ?? \Model::PROCESS_LOG_TYPE_UNDEFINED,
+                    'log_type'     => $params['log_type'] ?? '',
                     'message'      => $params['message'] ?? '',
                     'created'      => $timestamp,
                     'updated'      => $timestamp
@@ -351,7 +351,7 @@ class Process extends ModelBase
     {
         $process_info = $this->get($eid);
         if ($process_info === false)
-            return \Model::PROCESS_STATUS_UNDEFINED;
+            return '';
 
         return $process_info['process_status'];
     }
