@@ -296,28 +296,6 @@ class Process extends \Flexio\Object\Base
         return $this->properties['process_status'];
     }
 
-    public function setProcessInfo(array $info) : \Flexio\Object\Process
-    {
-        // pack the process info
-        $params = array();
-        $params['process_info'] = json_encode($info);
-
-        // set the info
-        $this->clearCache();
-        $process_model = $this->getModel()->process;
-        $process_model->set($this->getEid(), $params);
-
-        return $this;
-    }
-
-    public function getProcessInfo() : array
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        return $this->properties['process_info'];
-    }
-
     public function setTask(array $task) : \Flexio\Object\Process
     {
         $properties = array();
@@ -651,6 +629,29 @@ class Process extends \Flexio\Object\Base
         }
 
         return $properties;
+    }
+
+
+    private function setProcessInfo(array $info) : \Flexio\Object\Process
+    {
+        // pack the process info
+        $params = array();
+        $params['process_info'] = json_encode($info);
+
+        // set the info
+        $this->clearCache();
+        $process_model = $this->getModel()->process;
+        $process_model->set($this->getEid(), $params);
+
+        return $this;
+    }
+
+    private function getProcessInfo() : array
+    {
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties['process_info'];
     }
 
     private function startLog(\Flexio\Jobs\IProcess $process_engine)
