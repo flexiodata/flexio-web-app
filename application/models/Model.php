@@ -78,27 +78,6 @@ class Model
     const CONNECTION_STATUS_UNAVAILABLE = 'U';
     const CONNECTION_STATUS_ERROR       = 'E';
 
-    const CONNECTION_TYPE_UNDEFINED     = '';
-    const CONNECTION_TYPE_FLEXIO        = 'flexio';
-    const CONNECTION_TYPE_FTP           = 'ftp';
-    const CONNECTION_TYPE_SFTP          = 'sftp';
-    const CONNECTION_TYPE_MYSQL         = 'mysql';
-    const CONNECTION_TYPE_POSTGRES      = 'postgres';
-    const CONNECTION_TYPE_ELASTICSEARCH = 'elasticsearch';
-    const CONNECTION_TYPE_DROPBOX       = 'dropbox';
-    const CONNECTION_TYPE_BOX           = 'box';
-    const CONNECTION_TYPE_GOOGLEDRIVE   = 'googledrive';
-    const CONNECTION_TYPE_GOOGLESHEETS  = 'googlesheets';
-    const CONNECTION_TYPE_GITHUB        = 'github';
-    const CONNECTION_TYPE_AMAZONS3      = 'amazons3';
-    const CONNECTION_TYPE_EMAIL         = 'email';
-    const CONNECTION_TYPE_HTTP          = 'http';
-    const CONNECTION_TYPE_RSS           = 'rss';
-    const CONNECTION_TYPE_SOCRATA       = 'socrata';
-    const CONNECTION_TYPE_PIPELINEDEALS = 'pipelinedeals';
-    const CONNECTION_TYPE_MAILJET       = 'mailjet';
-    const CONNECTION_TYPE_TWILIO        = 'twilio';
-
     const PIPE_STATUS_UNDEFINED  = '';
     const PIPE_STATUS_ACTIVE     = 'A';
     const PIPE_STATUS_INACTIVE   = 'I';

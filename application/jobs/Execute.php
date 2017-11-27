@@ -362,7 +362,7 @@ class Execute extends \Flexio\Jobs\Base
     {
         // load the service
         $connection_info = array(
-            'connection_type' => \Model::CONNECTION_TYPE_HTTP
+            'connection_type' => \Flexio\Services\Factory::TYPE_HTTP
         );
 
         $service = \Flexio\Services\Factory::create($connection_info);
