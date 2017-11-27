@@ -57,7 +57,7 @@ class StreamMemoryReader implements \Flexio\Base\IStreamReader
 
     public function readRow()
     {
-        if ($this->stream->is_table)
+        if (!$this->stream->is_table)
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         }
@@ -182,12 +182,26 @@ class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
     {
         if ($this->stream->is_table)
         {
-            $this->writeArray($data);
+            $bytes_written = 0;
+            if (is_array($this->getStream()->buffer) === false) // initialize buffer
+                $this->getStream()->buffer = array();
+    
+            array_push($this->getStream()->buffer, $data);
+    
+            // set the bytes written
+            $content_str = implode('', $data);
         }
          else
         {
-            $this->writeString($data);
+            $bytes_written = 0;
+            if (is_string($this->getStream()->buffer) === false) // initialize buffer
+                $this->getStream()->buffer = '';
+    
+            $this->getStream()->buffer .= $data;
+            $this->bytes_written += strlen($data);
         }
+
+        return true;
     }
 
     public function getBytesWritten() : int
@@ -203,30 +217,6 @@ class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
     private function getStream() : \Flexio\Base\StreamMemory
     {
         return $this->stream;
-    }
-
-    private function writeString(string $data)
-    {
-        $bytes_written = 0;
-        if (is_string($this->getStream()->buffer) === false) // initialize buffer
-            $this->getStream()->buffer = '';
-
-        $this->getStream()->buffer .= $data;
-        $this->bytes_written += strlen($data);
-        return true;
-    }
-
-    private function writeArray(array $data)
-    {
-        $bytes_written = 0;
-        if (is_array($this->getStream()->buffer) === false) // initialize buffer
-            $this->getStream()->buffer = array();
-
-        array_push($this->getStream()->buffer, $data);
-
-        // set the bytes written
-        $content_str = implode('', $data);
-        return true;
     }
 }
 
