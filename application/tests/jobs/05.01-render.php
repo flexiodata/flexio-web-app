@@ -41,8 +41,8 @@ class Test
 
         // BEGIN TEST
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->getReader()->read();
-        $expected = '';
+        $actual = $process->getStdout()->getMimeType();
+        $expected = 'image/png';
         TestCheck::assertString('A.1', 'Render; check basic functionality',  $actual, $expected, $results);
     }
 }
