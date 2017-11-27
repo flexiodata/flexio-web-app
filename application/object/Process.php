@@ -415,8 +415,12 @@ class Process extends \Flexio\Object\Base
         return $this->response_code;
     }
 
-    public function writeLog(string $event, \Flexio\Jobs\IProcess $process_engine)
+    public function handleEvent(string $event, \Flexio\Jobs\IProcess $process_engine)
     {
+        // if we're not in build mode, don't do anything with events
+        if ($this->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
+            return;
+
         switch ($event)
         {
             // don't do anything if it's an event we don't care about
@@ -473,12 +477,10 @@ class Process extends \Flexio\Object\Base
         $process_engine->addTasks($process_tasks);
         $process_engine->setParams($variables);
         $process_engine->getStdin()->copy($this->getStdin());
+        $process_engine->addEventHandler([$this, 'handleEvent']);
 
-        // STEP 5: execute the process; TODO: add the logging callbacks
-        if ($this->getMode() === \Flexio\Jobs\Process::MODE_BUILD)
-            $process_engine->execute([$this, 'writeLog']); // if we're in build mode, log info during execution
-             else
-            $process_engine->execute(); // if we're not in build mode (e.g. run mode), don't log anything
+        // STEP 5: execute the job
+        $process_engine->execute();
 
         // STEP 6: patch through the response code and any error
         $this->response_code = $process_engine->getResponseCode();
