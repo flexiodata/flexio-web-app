@@ -20,15 +20,35 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 class Process implements \Flexio\Jobs\IProcess
 {
+    // note: the following constants may be stored in the database;
+    // if they are changed, the database values need to be migrated
+
+    const MODE_UNDEFINED  = '';
+    const MODE_BUILD      = 'B';
+    const MODE_RUN        = 'R';
+
+    const STATUS_UNDEFINED = '';
+    const STATUS_PENDING   = 'S'; // 'S' for 'Starting'
+    const STATUS_WAITING   = 'W';
+    const STATUS_RUNNING   = 'R';
+    const STATUS_CANCELLED = 'X';
+    const STATUS_PAUSED    = 'P';
+    const STATUS_FAILED    = 'F';
+    const STATUS_COMPLETED = 'C';
+
+    const RESPONSE_NONE = 0;
+    const RESPONSE_NORMAL = 200;
+
+    const LOG_TYPE_UNDEFINED = '';
+    const LOG_TYPE_SYSTEM    = 'P'; // 'P' for process
+    const LOG_TYPE_USER      = 'U'; // 'U' for user
+
     // events are passed in a callback function along with info
     // to track info about the process
-    const EVENT_PROCESS_STARTING       = 'process.starting';
-    const EVENT_PROCESS_STARTING_TASK  = 'process.starting.task';
-    const EVENT_PROCESS_FINISHED       = 'process.finished';
-    const EVENT_PROCESS_FINISHED_TASK  = 'process.finished.task';
-
-    const PROCESS_RESPONSE_NONE = 0;
-    const PROCESS_RESPONSE_NORMAL = 200;
+    const EVENT_STARTING       = 'process.starting';
+    const EVENT_STARTING_TASK  = 'process.starting.task';
+    const EVENT_FINISHED       = 'process.finished';
+    const EVENT_FINISHED_TASK  = 'process.finished.task';
 
     private static $manifest = array(
         'flexio.calc'      => '\Flexio\Jobs\CalcField',
@@ -82,7 +102,7 @@ class Process implements \Flexio\Jobs\IProcess
         $this->stdin = self::createStreamMemory();
         $this->stdout =  self::createStreamMemory();
 
-        $this->response_code = self::PROCESS_RESPONSE_NONE;
+        $this->response_code = self::RESPONSE_NONE;
         $this->error = array();
         $this->status_info = array();
     }
@@ -172,7 +192,7 @@ class Process implements \Flexio\Jobs\IProcess
     public function execute($func = null)
     {
         // fire the starting event
-        $this->signal(self::EVENT_PROCESS_STARTING, $func);
+        $this->signal(self::EVENT_STARTING, $func);
 
         // if we don't have any tasks, simply move the stdin to the stdout;
         // otherwise, process the tasks
@@ -182,7 +202,7 @@ class Process implements \Flexio\Jobs\IProcess
             $this->executeAllTasks($func);
 
         // fire the finish event
-        $this->signal(self::EVENT_PROCESS_FINISHED, $func);
+        $this->signal(self::EVENT_FINISHED, $func);
     }
 
     private function executeAllTasks($func = null)
@@ -199,7 +219,7 @@ class Process implements \Flexio\Jobs\IProcess
 
             // if the process was exited intentionally, stop the process
             $response_code = $this->getResponseCode();
-            if ($response_code !== self::PROCESS_RESPONSE_NONE)
+            if ($response_code !== self::RESPONSE_NONE)
                 break;
 
             // get the next task to process
@@ -211,7 +231,7 @@ class Process implements \Flexio\Jobs\IProcess
             $this->status_info['current_task'] = $current_task;
 
             // signal the start of the task
-            $this->signal(self::EVENT_PROCESS_STARTING_TASK, $func);
+            $this->signal(self::EVENT_STARTING_TASK, $func);
 
             if ($first === false)
             {
@@ -225,7 +245,7 @@ class Process implements \Flexio\Jobs\IProcess
             $first = false;
 
             // signal the end of the task
-            $this->signal(self::EVENT_PROCESS_FINISHED_TASK, $func);
+            $this->signal(self::EVENT_FINISHED_TASK, $func);
         }
     }
 

@@ -212,9 +212,9 @@ class Connection extends \Flexio\Object\Base
         $connection_type = $connection_properties['connection_type'] ?? '';
         switch ($connection_type)
         {
-            case \Model::CONNECTION_TYPE_BOX:
-            case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
-            case \Model::CONNECTION_TYPE_GOOGLESHEETS:
+            case \Flexio\Services\Factory::TYPE_BOX:
+            case \Flexio\Services\Factory::TYPE_GOOGLEDRIVE:
+            case \Flexio\Services\Factory::TYPE_GOOGLESHEETS:
             {
                 // if access token was refreshed (via refresh token), write it out
                 // to the tbl_connection table so that we don't refresh the access token

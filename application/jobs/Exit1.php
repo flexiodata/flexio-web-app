@@ -32,7 +32,7 @@ class Exit1 extends \Flexio\Jobs\Base
         parent::run($process);
 
         $job_definition = $this->getProperties();
-        $code = $job_definition['params']['code'] ?? \Flexio\Jobs\Process::PROCESS_RESPONSE_NORMAL;
+        $code = $job_definition['params']['code'] ?? \Flexio\Jobs\Process::RESPONSE_NORMAL;
 
         // this next line will cause the proces loop to exit
         // and return the http response code in $code

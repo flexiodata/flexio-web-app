@@ -21,14 +21,12 @@ class Process extends \Flexio\Object\Base
     // variables and errors
     private $response_code;
     private $error;
-    private $debug;
 
     public function __construct()
     {
         $this->setType(\Model::TYPE_PROCESS);
-        $this->response_code = \Flexio\Jobs\Process::PROCESS_RESPONSE_NORMAL;
+        $this->response_code = \Flexio\Jobs\Process::RESPONSE_NORMAL;
         $this->error = array();
-        $this->debug = false;
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Process
@@ -42,7 +40,7 @@ class Process extends \Flexio\Object\Base
 
         // if not process mode is specified, run everything
         if (!isset($properties['process_mode']))
-            $properties['process_mode'] = \Model::PROCESS_MODE_RUN;
+            $properties['process_mode'] = \Flexio\Jobs\Process::MODE_RUN;
 
         $object = new static();
         $model = $object->getModel();
@@ -196,26 +194,26 @@ class Process extends \Flexio\Object\Base
         {
             // run job; fall through
             default:
-            case \Model::PROCESS_STATUS_UNDEFINED:
-            case \Model::PROCESS_STATUS_PENDING:
+            case \Flexio\Jobs\Process::STATUS_UNDEFINED:
+            case \Flexio\Jobs\Process::STATUS_PENDING:
                 break;
 
             // job is already running or has been run, so don't do anything
-            case \Model::PROCESS_STATUS_WAITING:
-            case \Model::PROCESS_STATUS_RUNNING:
-            case \Model::PROCESS_STATUS_CANCELLED:
-            case \Model::PROCESS_STATUS_FAILED:
-            case \Model::PROCESS_STATUS_COMPLETED:
+            case \Flexio\Jobs\Process::STATUS_WAITING:
+            case \Flexio\Jobs\Process::STATUS_RUNNING:
+            case \Flexio\Jobs\Process::STATUS_CANCELLED:
+            case \Flexio\Jobs\Process::STATUS_FAILED:
+            case \Flexio\Jobs\Process::STATUS_COMPLETED:
                 return $this;
 
             // job is paused, so resume it
-            case \Model::PROCESS_STATUS_PAUSED:
-                $process_model->setProcessStatus($this->getEid(), \Model::PROCESS_STATUS_RUNNING);
+            case \Flexio\Jobs\Process::STATUS_PAUSED:
+                $process_model->setProcessStatus($this->getEid(), \Flexio\Jobs\Process::STATUS_RUNNING);
                 return $this;
         }
 
         // STEP 2: set the status
-        $process_model->setProcessStatus($this->getEid(), \Model::PROCESS_STATUS_RUNNING);
+        $process_model->setProcessStatus($this->getEid(), \Flexio\Jobs\Process::STATUS_RUNNING);
 
         // STEP 3: run the job
         if ($background !== true)
@@ -252,8 +250,8 @@ class Process extends \Flexio\Object\Base
         switch ($process_status)
         {
             // only allow jobs that are running to be paused
-            case \Model::PROCESS_STATUS_RUNNING:
-                $process_model->setProcessStatus($this->getEid(), \Model::PROCESS_STATUS_PAUSED);
+            case \Flexio\Jobs\Process::STATUS_RUNNING:
+                $process_model->setProcessStatus($this->getEid(), \Flexio\Jobs\Process::STATUS_PAUSED);
                 break;
         }
 
@@ -269,13 +267,13 @@ class Process extends \Flexio\Object\Base
         switch ($process_status)
         {
             // if a job is already completed, don't allow it to be cancelled
-            case \Model::PROCESS_STATUS_CANCELLED:
-            case \Model::PROCESS_STATUS_FAILED:
-            case \Model::PROCESS_STATUS_COMPLETED:
+            case \Flexio\Jobs\Process::STATUS_CANCELLED:
+            case \Flexio\Jobs\Process::STATUS_FAILED:
+            case \Flexio\Jobs\Process::STATUS_COMPLETED:
                 return $this;
         }
 
-        $process_model->setProcessStatus($this->getEid(), \Model::PROCESS_STATUS_CANCELLED);
+        $process_model->setProcessStatus($this->getEid(), \Flexio\Jobs\Process::STATUS_CANCELLED);
         return $this;
     }
 
@@ -318,33 +316,6 @@ class Process extends \Flexio\Object\Base
             $this->populateCache();
 
         return $this->properties['process_info'];
-    }
-
-    public function setDebug(bool $debug)
-    {
-        $this->debug = $debug;
-    }
-
-    public function getDebug() : bool
-    {
-        return $this->debug;
-    }
-
-    public function getEnvironmentParams() : array
-    {
-        // return a list of environment parameters;
-        // TODO: determine list; for now, include current user information and time
-        // TODO: do we want to "namespace" the variables? right now, variables are
-        // limited to alphanumeric, but maybe we want to do something like:
-        // "flexio.user_firstname", "flexio.user_lastname", etc
-        $environment_params = array();
-
-        $environment_params['process.user.firstname'] = \Flexio\System\System::getCurrentUserFirstName();
-        $environment_params['process.user.lastname'] = \Flexio\System\System::getCurrentUserLastName();
-        $environment_params['process.user.email'] = \Flexio\System\System::getCurrentUserEmail();
-        $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
-
-        return $environment_params;
     }
 
     public function setTask(array $task) : \Flexio\Object\Process
@@ -439,26 +410,12 @@ class Process extends \Flexio\Object\Base
         return $memory_stream;
     }
 
-    public function isBuildMode() : bool
+    public function getMode() : string
     {
         if ($this->isCached() === false)
             $this->populateCache();
 
-        if ($this->properties['process_mode'] === \Model::PROCESS_MODE_BUILD)
-            return true;
-
-        return false;
-    }
-
-    public function isRunMode() : bool
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        if ($this->properties['process_mode'] === \Model::PROCESS_MODE_RUN)
-            return true;
-
-        return false;
+        return $this->properties['process_mode'];
     }
 
     public function getError() : array
@@ -474,27 +431,7 @@ class Process extends \Flexio\Object\Base
         return true;
     }
 
-    public function writeLog(string $event, \Flexio\Jobs\IProcess $process_engine)
-    {
-        switch ($event)
-        {
-            // don't do anything if it's an event we don't care about
-            default:
-            case \Flexio\Jobs\Process::EVENT_PROCESS_STARTING:
-            case \Flexio\Jobs\Process::EVENT_PROCESS_FINISHED:
-                return;
-
-            case \Flexio\Jobs\Process::EVENT_PROCESS_STARTING_TASK:
-                $this->startLog($process_engine);
-                break;
-
-            case \Flexio\Jobs\Process::EVENT_PROCESS_FINISHED_TASK:
-                $this->finishLog($process_engine);
-                break;
-        }
-    }
-
-    private function fail(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
+    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
     {
         // only save the first error we come to
         if ($this->hasError())
@@ -504,6 +441,31 @@ class Process extends \Flexio\Object\Base
             $message = \Flexio\Base\Error::getDefaultMessage($code);
 
         $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
+    }
+
+    public function getResponseCode() : int
+    {
+        return $this->response_code;
+    }
+
+    public function writeLog(string $event, \Flexio\Jobs\IProcess $process_engine)
+    {
+        switch ($event)
+        {
+            // don't do anything if it's an event we don't care about
+            default:
+            case \Flexio\Jobs\Process::EVENT_STARTING:
+            case \Flexio\Jobs\Process::EVENT_FINISHED:
+                return;
+
+            case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
+                $this->startLog($process_engine);
+                break;
+
+            case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
+                $this->finishLog($process_engine);
+                break;
+        }
     }
 
     private function execute()
@@ -518,7 +480,7 @@ class Process extends \Flexio\Object\Base
         // set initial job status
         $process_params = array();
         $process_params['started'] = self::getProcessTimestamp();
-        $process_params['process_status'] = \Model::PROCESS_STATUS_RUNNING;
+        $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_RUNNING;
         //$process_params['impl_revision'] = $implementation_revision;
         $this->getModel()->process->set($this->getEid(), $process_params);
 
@@ -546,7 +508,7 @@ class Process extends \Flexio\Object\Base
         $process_engine->getStdin()->copy($this->getStdin());
 
         // STEP 5: execute the process; TODO: add the logging callbacks
-        if ($this->isBuildMode() === true)
+        if ($this->getMode() === \Flexio\Jobs\Process::MODE_BUILD)
             $process_engine->execute([$this, 'writeLog']); // if we're in build mode, log info during execution
              else
             $process_engine->execute(); // if we're not in build mode (e.g. run mode), don't log anything
@@ -559,7 +521,7 @@ class Process extends \Flexio\Object\Base
         // STEP 7: save final job output and status
         $process_params = array();
         $process_params['finished'] = self::getProcessTimestamp();
-        $process_params['process_status'] = $this->hasError() ? \Model::PROCESS_STATUS_FAILED : \Model::PROCESS_STATUS_COMPLETED;
+        $process_params['process_status'] = $this->hasError() ? \Flexio\Jobs\Process::STATUS_FAILED : \Flexio\Jobs\Process::STATUS_COMPLETED;
         $process_params['cache_used'] = 'N';
         $this->getModel()->process->set($this->getEid(), $process_params);
 
@@ -568,11 +530,6 @@ class Process extends \Flexio\Object\Base
 
         // clear the process object cache
         $this->clearCache();
-    }
-
-    public function getResponseCode() : int
-    {
-        return $this->response_code;
     }
 
     public function getLog() : array
@@ -708,7 +665,7 @@ class Process extends \Flexio\Object\Base
         $params['task'] = json_encode($task);
         $params['started'] = self::getProcessTimestamp();
         $params['input'] = json_encode($storable_stream_info);
-        $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
+        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
         $log_eid = $this->getModel()->process->log(null, $this->getEid(), $params);
@@ -735,7 +692,7 @@ class Process extends \Flexio\Object\Base
         $params['task'] = json_encode($task);
         $params['finished'] = self::getProcessTimestamp();
         $params['output'] = json_encode($storable_stream_info);
-        $params['log_type'] = \Model::PROCESS_LOG_TYPE_SYSTEM;
+        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
         $this->getModel()->process->log($log_eid, $this->getEid(), $params);
@@ -817,16 +774,33 @@ class Process extends \Flexio\Object\Base
             default:
                 return false;
 
-            case \Model::PROCESS_STATUS_UNDEFINED:
-            case \Model::PROCESS_STATUS_PENDING:
-            case \Model::PROCESS_STATUS_WAITING:
-            case \Model::PROCESS_STATUS_RUNNING:
-            case \Model::PROCESS_STATUS_CANCELLED:
-            case \Model::PROCESS_STATUS_PAUSED:
-            case \Model::PROCESS_STATUS_FAILED:
-            case \Model::PROCESS_STATUS_COMPLETED:
+            case \Flexio\Jobs\Process::STATUS_UNDEFINED:
+            case \Flexio\Jobs\Process::STATUS_PENDING:
+            case \Flexio\Jobs\Process::STATUS_WAITING:
+            case \Flexio\Jobs\Process::STATUS_RUNNING:
+            case \Flexio\Jobs\Process::STATUS_CANCELLED:
+            case \Flexio\Jobs\Process::STATUS_PAUSED:
+            case \Flexio\Jobs\Process::STATUS_FAILED:
+            case \Flexio\Jobs\Process::STATUS_COMPLETED:
                 return true;
         }
+    }
+
+    private static function getEnvironmentParams() : array
+    {
+        // return a list of environment parameters;
+        // TODO: determine list; for now, include current user information and time
+        // TODO: do we want to "namespace" the variables? right now, variables are
+        // limited to alphanumeric, but maybe we want to do something like:
+        // "flexio.user_firstname", "flexio.user_lastname", etc
+        $environment_params = array();
+
+        $environment_params['process.user.firstname'] = \Flexio\System\System::getCurrentUserFirstName();
+        $environment_params['process.user.lastname'] = \Flexio\System\System::getCurrentUserLastName();
+        $environment_params['process.user.email'] = \Flexio\System\System::getCurrentUserEmail();
+        $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
+
+        return $environment_params;
     }
 
     private static function getProcessTimestamp() : string
@@ -837,15 +811,5 @@ class Process extends \Flexio\Object\Base
         $time_micropart = sprintf("%06d", ($time_exact - $time_rounded) * 1000000);
         $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, (int)$time_rounded));
         return ($date->format("Y-m-d H:i:s.u"));
-    }
-
-    private static function logExceptionIfConfigured($exception, $task)
-    {
-        if (isset($GLOBALS['g_config']->debug_error_log))
-        {
-            $message = $exception->getMessage();
-            $json = json_encode($task);
-            file_put_contents($GLOBALS['g_config']->debug_error_log, "Job exception caught '$message'; json was $json\n\n", FILE_APPEND);
-        }
     }
 }

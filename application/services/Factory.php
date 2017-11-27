@@ -18,6 +18,28 @@ namespace Flexio\Services;
 
 class Factory
 {
+    const TYPE_UNDEFINED     = '';
+    const TYPE_FLEXIO        = 'flexio';
+    const TYPE_FTP           = 'ftp';
+    const TYPE_SFTP          = 'sftp';
+    const TYPE_MYSQL         = 'mysql';
+    const TYPE_POSTGRES      = 'postgres';
+    const TYPE_ELASTICSEARCH = 'elasticsearch';
+    const TYPE_DROPBOX       = 'dropbox';
+    const TYPE_BOX           = 'box';
+    const TYPE_GOOGLEDRIVE   = 'googledrive';
+    const TYPE_GOOGLESHEETS  = 'googlesheets';
+    const TYPE_GITHUB        = 'github';
+    const TYPE_AMAZONS3      = 'amazons3';
+    const TYPE_EMAIL         = 'email';
+    const TYPE_HTTP          = 'http';
+    const TYPE_RSS           = 'rss';
+    const TYPE_SOCRATA       = 'socrata';
+    const TYPE_PIPELINEDEALS = 'pipelinedeals';
+    const TYPE_MAILJET       = 'mailjet';
+    const TYPE_TWILIO        = 'twilio';
+
+
     public static function create(array $connection_properties)
     {
         global $g_store;
@@ -39,21 +61,21 @@ class Factory
             default:
                 return false;
 
-            case \Model::CONNECTION_TYPE_HTTP:
+            case self::TYPE_HTTP:
                     $auth_params = array(
                         // TODO: add parameters for basic auth?
                     );
                     $service = \Flexio\Services\Http::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_RSS:
+            case self::TYPE_RSS:
                     $auth_params = array(
                         // TODO: add parameters for basic auth?
                     );
                     $service = \Flexio\Services\Rss::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_FTP:
+            case self::TYPE_FTP:
                     $auth_params = array(
                         'host' => $connection_info['host'] ?? '',
                         'port' => $connection_info['port'] ?? '',
@@ -63,7 +85,7 @@ class Factory
                     $service = \Flexio\Services\Ftp::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_SFTP:
+            case self::TYPE_SFTP:
                     $auth_params = array(
                         'host' => $connection_info['host'] ?? '',
                         'port' => $connection_info['port'] ?? '',
@@ -73,7 +95,7 @@ class Factory
                     $service = \Flexio\Services\Sftp::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_MYSQL:
+            case self::TYPE_MYSQL:
                     $auth_params = array(
                         'host' => $connection_info['host'] ?? '',
                         'port' => $connection_info['port'] ?? '',
@@ -84,7 +106,7 @@ class Factory
                     $service = \Flexio\Services\MySql::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_POSTGRES:
+            case self::TYPE_POSTGRES:
                     $auth_params = array(
                         'host' => $connection_info['host'] ?? '',
                         'port' => $connection_info['port'] ?? '',
@@ -95,7 +117,7 @@ class Factory
                     $service = \Flexio\Services\Postgres::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_ELASTICSEARCH:
+            case self::TYPE_ELASTICSEARCH:
                     $auth_params = array(
                         'host' => $connection_info['host'] ?? '',
                         'port' => $connection_info['port'] ?? '',
@@ -106,14 +128,14 @@ class Factory
                     $service = \Flexio\Services\ElasticSearch::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_DROPBOX:
+            case self::TYPE_DROPBOX:
                     $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? ''
                     );
                     $service = \Flexio\Services\Dropbox::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_BOX:
+            case self::TYPE_BOX:
                     $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? '',
                         'refresh_token' => $connection_info['refresh_token'] ?? '',
@@ -122,7 +144,7 @@ class Factory
                     $service = \Flexio\Services\Box::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
+            case self::TYPE_GOOGLEDRIVE:
                     $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? '',
                         'refresh_token' => $connection_info['refresh_token'] ?? '',
@@ -131,7 +153,7 @@ class Factory
                     $service = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_GOOGLESHEETS:
+            case self::TYPE_GOOGLESHEETS:
                     $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? '',
                         'refresh_token' => $connection_info['refresh_token'] ?? '',
@@ -140,7 +162,7 @@ class Factory
                     $service = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_GITHUB:
+            case self::TYPE_GITHUB:
                 $auth_params = array(
                     'access_token' => $connection_info['access_token'] ?? '',
                     'refresh_token' => $connection_info['refresh_token'] ?? '',
@@ -149,7 +171,7 @@ class Factory
                 $service = \Flexio\Services\GitHub::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_AMAZONS3:
+            case self::TYPE_AMAZONS3:
                     $auth_params = array(
                         'region' => $connection_info['host'] ?? '',
                         'bucket' => $connection_info['database'] ?? '',
@@ -159,7 +181,7 @@ class Factory
                     $service = \Flexio\Services\AmazonS3::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_SOCRATA:
+            case self::TYPE_SOCRATA:
                    $auth_params = array(
                         'host' => $connection_info['host'] ?? '',
                         'port' => $connection_info['port'] ?? '',
@@ -169,14 +191,14 @@ class Factory
                     $service = \Flexio\Services\Socrata::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_PIPELINEDEALS:
+            case self::TYPE_PIPELINEDEALS:
                    $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? ''
                     );
                     $service = \Flexio\Services\PipelineDeals::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_MAILJET:
+            case self::TYPE_MAILJET:
                    $auth_params = array(
                         'username' => $connection_info['username'] ?? '',
                         'password' => $connection_info['password'] ?? ''
@@ -184,7 +206,7 @@ class Factory
                     $service = \Flexio\Services\MailJet::create($auth_params);
                 break;
 
-            case \Model::CONNECTION_TYPE_TWILIO:
+            case self::TYPE_TWILIO:
                     $auth_params = array(
                         'key' => $connection_info['username'] ?? '',
                         'access_token' => $connection_info['access_token'] ?? ''

@@ -26,23 +26,24 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.render",
+                "type": "flexio.email",
                 "params": {
-                    "url": "https://www.flex.io",
-                    "width": 300,
-                    "height": 200
+                    "to": "",
+                    "subject": "Test",
+                    "body_text": "This is a test"
                 }
             }
         ]
         ',true);
 
 
-        // TEST: Render Job
+
+        // TEST: Email Job
 
         // BEGIN TEST
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->getMimeType();
-        $expected = 'image/png';
-        TestCheck::assertString('A.1', 'Render; check basic functionality',  $actual, $expected, $results);
+        $actual = $process->getStdout()->getReader()->read();
+        $expected = '';
+        TestCheck::assertString('A.1', 'Email; check basic functionality',  $actual, $expected, $results);
     }
 }

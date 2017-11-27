@@ -62,12 +62,6 @@ class Output extends \Flexio\Jobs\Base
         if ($items === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // current behavior is to only allow outputs in runtime;
-        // right now, we only use runtime, so disable this for now
-        // TODO: need to implement isRunMode() by checking environment variable
-        // if ($this->isRunMode() === false)
-        //     return;
-
         // many variants of the output job specify a job-scope connection
         foreach ($items as $item)
         {
@@ -155,7 +149,7 @@ class Output extends \Flexio\Jobs\Base
 
             // does the item's path contain a url?
             if (substr($path,0,7) == 'http://' || substr($path,0,8) == 'https://')
-                return array('connection_type' => \Model::CONNECTION_TYPE_HTTP);
+                return array('connection_type' => \Flexio\Services\Factory::TYPE_HTTP);
         }
 
         if (isset($params['connection']))
@@ -253,26 +247,26 @@ class Output extends \Flexio\Jobs\Base
         // route the request based on the connection type
         switch ($connection_type)
         {
-            case \Model::CONNECTION_TYPE_MYSQL:
-            case \Model::CONNECTION_TYPE_POSTGRES:
+            case \Flexio\Services\Factory::TYPE_MYSQL:
+            case \Flexio\Services\Factory::TYPE_POSTGRES:
                 return $this->runDatabaseExport($instream, $service, $output_info);
 
-            case \Model::CONNECTION_TYPE_ELASTICSEARCH:
+            case \Flexio\Services\Factory::TYPE_ELASTICSEARCH:
                 return $this->runElasticSearchExport($instream, $service, $output_info);
 
-            case \Model::CONNECTION_TYPE_FTP:
-            case \Model::CONNECTION_TYPE_SFTP:
-            case \Model::CONNECTION_TYPE_DROPBOX:
-            case \Model::CONNECTION_TYPE_BOX:
-            case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
-            case \Model::CONNECTION_TYPE_GITHUB:
-            case \Model::CONNECTION_TYPE_AMAZONS3:
+            case \Flexio\Services\Factory::TYPE_FTP:
+            case \Flexio\Services\Factory::TYPE_SFTP:
+            case \Flexio\Services\Factory::TYPE_DROPBOX:
+            case \Flexio\Services\Factory::TYPE_BOX:
+            case \Flexio\Services\Factory::TYPE_GOOGLEDRIVE:
+            case \Flexio\Services\Factory::TYPE_GITHUB:
+            case \Flexio\Services\Factory::TYPE_AMAZONS3:
                 return $this->runRemoteFileExport($instream, $service, $output_info);
 
-            case \Model::CONNECTION_TYPE_GOOGLESHEETS:
+            case \Flexio\Services\Factory::TYPE_GOOGLESHEETS:
                 return $this->runGoogleSheetsExport($instream, $service, $output_info);
 
-            case \Model::CONNECTION_TYPE_MAILJET:
+            case \Flexio\Services\Factory::TYPE_MAILJET:
                 return $this->runMailJetExport($instream, $service, $output_info);
         }
     }

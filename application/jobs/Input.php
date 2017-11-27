@@ -131,9 +131,9 @@ class Input extends \Flexio\Jobs\Base
         if ($connection_info)
         {
             $connection_type = $connection_info['connection_type'] ?? null;
-            if ($connection_type == \Model::CONNECTION_TYPE_HTTP)
+            if ($connection_type == \Flexio\Services\Factory::TYPE_HTTP)
                 $service = \Flexio\Services\Http::create();
-            else if ($connection_type == \Model::CONNECTION_TYPE_RSS)
+            else if ($connection_type == \Flexio\Services\Factory::TYPE_RSS)
                 $service = \Flexio\Services\Http::create();
             else
                 $service = \Flexio\Services\Factory::create($connection_info);
@@ -150,31 +150,31 @@ class Input extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             // database data
-            case \Model::CONNECTION_TYPE_MYSQL:
-            case \Model::CONNECTION_TYPE_POSTGRES:
+            case \Flexio\Services\Factory::TYPE_MYSQL:
+            case \Flexio\Services\Factory::TYPE_POSTGRES:
                 return $this->runDatabaseImport($service, $file_info);
 
-            case \Model::CONNECTION_TYPE_ELASTICSEARCH:
+            case \Flexio\Services\Factory::TYPE_ELASTICSEARCH:
                 return $this->runElasticSearchImport($service, $file_info);
 
             // api table type data
-            case \Model::CONNECTION_TYPE_RSS:
-            case \Model::CONNECTION_TYPE_MAILJET:
-            case \Model::CONNECTION_TYPE_PIPELINEDEALS:
-            case \Model::CONNECTION_TYPE_SOCRATA:
-            case \Model::CONNECTION_TYPE_TWILIO:
+            case \Flexio\Services\Factory::TYPE_RSS:
+            case \Flexio\Services\Factory::TYPE_MAILJET:
+            case \Flexio\Services\Factory::TYPE_PIPELINEDEALS:
+            case \Flexio\Services\Factory::TYPE_SOCRATA:
+            case \Flexio\Services\Factory::TYPE_TWILIO:
                 return $this->runApiTableImport($service, $file_info);
 
             // remote file type data
-            case \Model::CONNECTION_TYPE_HTTP:
-            case \Model::CONNECTION_TYPE_FTP:
-            case \Model::CONNECTION_TYPE_SFTP:
-            case \Model::CONNECTION_TYPE_DROPBOX:
-            case \Model::CONNECTION_TYPE_BOX:
-            case \Model::CONNECTION_TYPE_GOOGLEDRIVE:
-            case \Model::CONNECTION_TYPE_GOOGLESHEETS:
-            case \Model::CONNECTION_TYPE_GITHUB:
-            case \Model::CONNECTION_TYPE_AMAZONS3:
+            case \Flexio\Services\Factory::TYPE_HTTP:
+            case \Flexio\Services\Factory::TYPE_FTP:
+            case \Flexio\Services\Factory::TYPE_SFTP:
+            case \Flexio\Services\Factory::TYPE_DROPBOX:
+            case \Flexio\Services\Factory::TYPE_BOX:
+            case \Flexio\Services\Factory::TYPE_GOOGLEDRIVE:
+            case \Flexio\Services\Factory::TYPE_GOOGLESHEETS:
+            case \Flexio\Services\Factory::TYPE_GITHUB:
+            case \Flexio\Services\Factory::TYPE_AMAZONS3:
                 return $this->runRemoteFileImport($service, $file_info);
         }
     }
@@ -367,7 +367,7 @@ class Input extends \Flexio\Jobs\Base
 
         // does the item's path contain a url?
         if (substr($path,0,7) == 'http://' || substr($path,0,8) == 'https://')
-            return array('connection_type' => \Model::CONNECTION_TYPE_HTTP);
+            return array('connection_type' => \Flexio\Services\Factory::TYPE_HTTP);
 
         if (isset($params['connection']))
         {
@@ -417,7 +417,7 @@ class Input extends \Flexio\Jobs\Base
         // notion of directory lookup is included so we don't have to keep adding these
         // types for other connections that may not support wildcard lookup
         $connection_type = $connection_info['connection_type'] ?? false;
-        if ($connection_type == \Model::CONNECTION_TYPE_HTTP || $connection_type == \Model::CONNECTION_TYPE_RSS)
+        if ($connection_type == \Flexio\Services\Factory::TYPE_HTTP || $connection_type == \Flexio\Services\Factory::TYPE_RSS)
         {
             $matching_paths[] = $file_info;
             return $matching_paths;

@@ -35,12 +35,12 @@ class Test
         ',true);
 
 
-        // TEST: Request Job
+        // TEST: Exit Job
 
         // BEGIN TEST
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
-        $actual = $process->getStdout()->getReader()->read();
-        $expected = '';
-        TestCheck::assertString('A.1', 'Exit; check basic functionality',  $actual, $expected, $results);
+        $actual = $process->getResponseCode();
+        $expected = 404;
+        TestCheck::assertNumber('A.1', 'Exit; check basic functionality',  $actual, $expected, $results);
     }
 }

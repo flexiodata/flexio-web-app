@@ -22,51 +22,5 @@ class Test
     {
         // SETUP
         $model = TestUtil::getModel();
-
-
-
-        // TODO: need to add tests for process set(), get(), delete(), etc
-
-        // TEST: task status constant tests
-
-        // BEGIN TEST
-        $actual = \Model::PROCESS_STATUS_UNDEFINED;
-        $expected = '';
-        TestCheck::assertString('A.1', 'Process task status constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::PROCESS_STATUS_PENDING;
-        $expected = 'S';
-        TestCheck::assertString('A.2', 'Process task status constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::PROCESS_STATUS_WAITING;
-        $expected = 'W';
-        TestCheck::assertString('A.3', 'Process task status constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::PROCESS_STATUS_RUNNING;
-        $expected = 'R';
-        TestCheck::assertString('A.4', 'Process task status constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::PROCESS_STATUS_CANCELLED;
-        $expected = 'X';
-        TestCheck::assertString('A.5', 'Process task status constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::PROCESS_STATUS_PAUSED;
-        $expected = 'P';
-        TestCheck::assertString('A.6', 'Process task status constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::PROCESS_STATUS_FAILED;
-        $expected = 'F';
-        TestCheck::assertString('A.7', 'Process task status constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::PROCESS_STATUS_COMPLETED;
-        $expected = 'C';
-        TestCheck::assertString('A.8', 'Process task status constant',  $actual, $expected, $results);
     }
 }

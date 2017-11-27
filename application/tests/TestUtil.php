@@ -199,10 +199,11 @@ class TestUtil
 
     public static function getTable(\Flexio\Base\IStream $stream) : array
     {
-        $r = array();
-        $r['columns'] = $stream->getStructure()->get();
-        $r['rows'] = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
-        $result[] = $r;
+        $content = \Flexio\Base\Util::getStreamContents($stream);
+        $result = array();
+        $result['columns'] = $stream->getStructure()->get();
+        $result['content'] = is_array($content) ? $content : array();
+        return $result;
     }
 
     public static function getContent(\Flexio\Base\IStream $stream) : array

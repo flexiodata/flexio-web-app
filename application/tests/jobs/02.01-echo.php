@@ -35,7 +35,7 @@ class Test
         ',true);
 
 
-        // TEST: Request Job
+        // TEST: Echo Job
 
         // BEGIN TEST
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
