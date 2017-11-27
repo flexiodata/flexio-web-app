@@ -826,14 +826,4 @@ class Process extends \Flexio\Object\Base
         $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, (int)$time_rounded));
         return ($date->format("Y-m-d H:i:s.u"));
     }
-
-    private static function logExceptionIfConfigured($exception, $task)
-    {
-        if (isset($GLOBALS['g_config']->debug_error_log))
-        {
-            $message = $exception->getMessage();
-            $json = json_encode($task);
-            file_put_contents($GLOBALS['g_config']->debug_error_log, "Job exception caught '$message'; json was $json\n\n", FILE_APPEND);
-        }
-    }
 }
