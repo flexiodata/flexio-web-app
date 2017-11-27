@@ -301,28 +301,6 @@ class Test
         // databases
 
         // BEGIN TEST
-        $actual = \Model::CONNECTION_CONFIG_TYPE_UNDEFINED;
-        $expected = '';
-        TestCheck::assertString('G.1', 'Connection configuration constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::CONNECTION_CONFIG_TYPE_DATABASE;
-        $expected = 'database';
-        TestCheck::assertString('G.2', 'Connection configuration constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::CONNECTION_CONFIG_TYPE_OAUTH2;
-        $expected = 'oauth2';
-        TestCheck::assertString('G.3', 'Connection configuration constant',  $actual, $expected, $results);
-
-
-
-        // TEST: Model connection constants; the database stores raw values for
-        // some of these constants, so these tests ensure that the constants
-        // are consistent between various models and the values in the
-        // databases
-
-        // BEGIN TEST
         $actual = \Model::CONNECTION_TYPE_UNDEFINED;
         $expected = '';
         TestCheck::assertString('H.1', 'Connection type constant',  $actual, $expected, $results);

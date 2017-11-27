@@ -78,10 +78,6 @@ class Model
     const CONNECTION_STATUS_UNAVAILABLE = 'U';
     const CONNECTION_STATUS_ERROR       = 'E';
 
-    const CONNECTION_CONFIG_TYPE_UNDEFINED = '';
-    const CONNECTION_CONFIG_TYPE_DATABASE  = 'database';
-    const CONNECTION_CONFIG_TYPE_OAUTH2    = 'oauth2';
-
     const CONNECTION_TYPE_UNDEFINED     = '';
     const CONNECTION_TYPE_FLEXIO        = 'flexio';
     const CONNECTION_TYPE_FTP           = 'ftp';
