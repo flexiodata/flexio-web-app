@@ -21,7 +21,6 @@ class Process extends \Flexio\Object\Base
     // variables and errors
     private $response_code;
     private $error;
-    private $debug;
 
     public function __construct()
     {
@@ -318,16 +317,6 @@ class Process extends \Flexio\Object\Base
             $this->populateCache();
 
         return $this->properties['process_info'];
-    }
-
-    public function setDebug(bool $debug)
-    {
-        $this->debug = $debug;
-    }
-
-    public function getDebug() : bool
-    {
-        return $this->debug;
     }
 
     public function getEnvironmentParams() : array
