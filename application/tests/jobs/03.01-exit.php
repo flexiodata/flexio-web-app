@@ -41,6 +41,6 @@ class Test
         $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
         $actual = $process->getStdout()->getReader()->read();
         $expected = '';
-        TestCheck::assertString('A.1', 'Echo; check basic functionality',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'Exit; check basic functionality',  $actual, $expected, $results);
     }
 }
