@@ -326,7 +326,11 @@ class Stream implements \Flexio\Base\IStream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copy may only be used on stream objects of the same type");
 
         $this->buffer = $sourceimpl->buffer;
-
+        $this->is_table = $sourceimpl->is_table;
+        $this->storagefs = $sourceimpl->storagefs;
+        $this->storagefs_path = $sourceimpl->storagefs_path;
+        $this->memory_db = $sourceimpl->memory_db;
+        
         $properties = $source->get();
         unset($properties['eid']);
         unset($properties['created']);
