@@ -93,6 +93,7 @@ class Process implements \Flexio\Jobs\IProcess
     private $error;
     private $status_info;
     private $handlers;     // array of callbacks invoked for each event
+    private $files;        // array of streams of files (similar to php's $_FILES)
 
     public function __construct()
     {
@@ -107,6 +108,7 @@ class Process implements \Flexio\Jobs\IProcess
         $this->error = array();
         $this->status_info = array();
         $this->handlers = array();
+        $this->files = array();
     }
 
     public static function create() : \Flexio\Jobs\Process
@@ -148,6 +150,11 @@ class Process implements \Flexio\Jobs\IProcess
     public function getParams() : array
     {
         return $this->params;
+    }
+
+    public function addFile(string $name, \Flexio\Base\IStream $stream)
+    {
+        $this->files[$name] = $stream;
     }
 
     public function getStdin() : \Flexio\Base\IStream
