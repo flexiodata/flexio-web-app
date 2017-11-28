@@ -92,7 +92,7 @@ class Process implements \Flexio\Jobs\IProcess
     private $response_code;
     private $error;
     private $status_info;
-    private $hanlders;     // array of callbacks invoked for each event
+    private $handlers;     // array of callbacks invoked for each event
 
     public function __construct()
     {
