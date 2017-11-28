@@ -466,7 +466,8 @@ class StreamMemory implements \Flexio\Base\IStream
         }
          else if (!is_null($this->storagefs_path))
         {
-            return $this->getStorageFs()->open($this->storagefs_path);
+            $file = $this->getStorageFs()->open($this->storagefs_path);
+            return $file->getReader();
         }
          else
         {
@@ -488,7 +489,8 @@ class StreamMemory implements \Flexio\Base\IStream
         }
          else if (!is_null($this->storagefs_path))
         {
-            return $this->getStorageFs()->open($this->storagefs_path);
+            $file = $this->getStorageFs()->open($this->storagefs_path);
+            return $file->getWriter();
         }
          else 
         {
