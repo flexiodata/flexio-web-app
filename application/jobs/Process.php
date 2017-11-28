@@ -92,6 +92,7 @@ class Process implements \Flexio\Jobs\IProcess
     private $response_code;
     private $error;
     private $status_info;
+    private $hanlders;     // array of callbacks invoked for each event
 
     public function __construct()
     {
@@ -105,12 +106,18 @@ class Process implements \Flexio\Jobs\IProcess
         $this->response_code = self::RESPONSE_NONE;
         $this->error = array();
         $this->status_info = array();
+        $this->handlers = array();
     }
 
     public static function create() : \Flexio\Jobs\Process
     {
         $object = new static();
         return $object;
+    }
+
+    public function addEventHandler($handler)
+    {
+        $this->handlers[] = $handler;
     }
 
     public function setMetadata(array $metadata)
@@ -189,23 +196,23 @@ class Process implements \Flexio\Jobs\IProcess
         return $this->status_info;
     }
 
-    public function execute($func = null)
+    public function execute()
     {
         // fire the starting event
-        $this->signal(self::EVENT_STARTING, $func);
+        $this->invokeEventHandlers(self::EVENT_STARTING);
 
         // if we don't have any tasks, simply move the stdin to the stdout;
         // otherwise, process the tasks
         if (count($this->tasks) === 0)
             $this->stdout = $this->stdin;
              else
-            $this->executeAllTasks($func);
+            $this->executeAllTasks();
 
         // fire the finish event
-        $this->signal(self::EVENT_FINISHED, $func);
+        $this->invokeEventHandlers(self::EVENT_FINISHED);
     }
 
-    private function executeAllTasks($func = null)
+    private function executeAllTasks()
     {
         $first = true;
         while (true)
@@ -231,7 +238,7 @@ class Process implements \Flexio\Jobs\IProcess
             $this->status_info['current_task'] = $current_task;
 
             // signal the start of the task
-            $this->signal(self::EVENT_STARTING_TASK, $func);
+            $this->invokeEventHandlers(self::EVENT_STARTING_TASK);
 
             if ($first === false)
             {
@@ -245,7 +252,7 @@ class Process implements \Flexio\Jobs\IProcess
             $first = false;
 
             // signal the end of the task
-            $this->signal(self::EVENT_FINISHED_TASK, $func);
+            $this->invokeEventHandlers(self::EVENT_FINISHED_TASK);
         }
     }
 
@@ -329,12 +336,12 @@ class Process implements \Flexio\Jobs\IProcess
         return $job;
     }
 
-    private function signal(string $event, $func = null)
+    private function invokeEventHandlers(string $event)
     {
-        if (!isset($func))
-            return;
-
-        call_user_func($func, $event, $this);
+        foreach ($this->handlers as $handler)
+        {
+            call_user_func($handler, $event, $this);
+        }
     }
 
     private static function createStreamMemory() : \Flexio\Base\IStream
