@@ -278,6 +278,7 @@ class StreamMemory implements \Flexio\Base\IStream
             while (($row = $reader->readRow()) !== false)
                 $writer->write($row);
             $this->memory_db = null;
+            $this->storagefs_path = $path;
         }
          else
         {
