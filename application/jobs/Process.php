@@ -80,6 +80,7 @@ class Process implements \Flexio\Jobs\IProcess
         'flexio.settype'   => '\Flexio\Jobs\SetType',
         'flexio.sleep'     => '\Flexio\Jobs\Sleep',
         'flexio.sort'      => '\Flexio\Jobs\Sort',
+        'flexio.task'      => '\Flexio\Jobs\Task',       // general task whose parameters are another task; for internal use only
         'flexio.transform' => '\Flexio\Jobs\Transform',
         'flexio.list'      => '\Flexio\Jobs\List1'
     );

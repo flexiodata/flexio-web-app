@@ -185,6 +185,10 @@ class Process extends \Flexio\Object\Base
 
     public function run(bool $background = true) : \Flexio\Object\Process
     {
+// DEBUG:
+$background = false;
+
+
         // STEP 1: check the status; don't run the job in certain circumstances
         $this->clearCache();
         $process_model = $this->getModel()->process;

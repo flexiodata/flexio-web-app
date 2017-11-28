@@ -384,6 +384,48 @@
 
 
 
+    // general purpose task mapper; internal use only
+
+    this.args.task= ['value'];
+    this.hints.task = {
+    };
+    this.keywords.task = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.task",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.task);
+
+      if (params.hasOwnProperty('value'))
+      {
+        json.params = JSON.parse(params['value'].value);
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.task"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "task";
+
+      if (json.params)
+      {
+        res = this.append(res, "value: " + JSON.stringify(json.params));
+      }
+
+      return res;
+    };
+
+
+
+
 
 
 
