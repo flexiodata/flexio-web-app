@@ -47,7 +47,10 @@ class StreamMemoryReader implements \Flexio\Base\IStreamReader
         }
          else
         {
-            $str = $this->readString($this->offset, $length);
+            if ($this->offset >= strlen($this->stream->buffer))
+                return false;
+
+            $str = substr($this->stream->buffer, $this->offset, $length);
             if ($str === false)
                 return false;
             $this->offset += strlen($str);
@@ -57,99 +60,19 @@ class StreamMemoryReader implements \Flexio\Base\IStreamReader
 
     public function readRow()
     {
-        if (!$this->stream->is_table)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        }
-         else
-        {
-            $rows = $this->readArrayRows($this->offset, 1);
-            if ($rows === false)
-                return false;
-
-            $this->offset++;
-            return $rows[0];
-        }
+        // this class not used for tables
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function getRows(int $offset, int $limit)
     {
-        if ($offset < 0)
-            $offset = 0;
-        if ($limit < 0)
-            $limit = 0;
-
-        // only implemented for table type streams
-        $mime_type = $this->stream->getMimeType();
-        if ($mime_type != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-
-        $result = $this->readArrayRows($offset, $limit);
-        if ($result === false)
-            return false;
-
-        return $result;
+        // this class not used for tables
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function close() : bool
     {
         return true;
-    }
-
-    private function readString(int $offset, int $limit)
-    {
-        if (!is_string($this->stream->buffer))
-            return false;
-
-        if ($offset >= strlen($this->stream->buffer))
-            return false;
-
-        return substr($this->stream->buffer, $this->offset, $limit);
-    }
-
-    private function readArrayRows(int $start, int $limit)
-    {
-        $buffer = $this->stream->buffer;
-        if (!is_array($buffer))
-            return false;
-
-        if ($start > count($buffer) - 1)
-            return false;
-
-        $rows = array_slice($buffer, $start, $limit);
-
-        // data may be stored either with keys or as simple values; combine these
-        // with the structure when returning the result
-
-        $columns = $this->stream->getStructure()->enum();
-        $result = array();
-        foreach ($rows as $r)
-        {
-            $row_is_associative = \Flexio\Base\Util::isAssociativeArray($r);
-
-            $idx = 0;
-            $mapped_row = array();
-            foreach ($columns as $c)
-            {
-                $column_name = $c['name'];
-                if ($row_is_associative)
-                {
-                    if (array_key_exists($column_name, $r))
-                        $mapped_row[$column_name] = $r[$column_name];
-                         else
-                        $mapped_row[$column_name] = null;
-                }
-                 else
-                {
-                    $mapped_row[$column_name] = $r[$idx] ?? null;
-                }
-                $idx++;
-            }
-
-            $result[] = $mapped_row;
-        }
-
-        return $result;
     }
 }
 
@@ -161,6 +84,7 @@ class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
     private $stream;
     private $bytes_written;
     private $storagefs_writer = null;
+    public $memory_table_writer = null;
 
     public function __construct()
     {
@@ -181,20 +105,18 @@ class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
 
         if ($this->stream->is_table)
         {
-            $bytes_written = 0;
-            if (is_array($this->stream->buffer) === false) // initialize buffer
-                $this->stream->buffer = array();
-    
-            array_push($this->stream->buffer, $data);
-    
-            // set the bytes written
-            $content_str = implode('', $data);
+            if ($this->bytes_written > 1000000)
+            {
+                $this->storagefs_writer = $this->stream->switchToDiskStorage($this);
+                $memory_table_writer = null;
+                return $this->storagefs_writer->write($data);
+            }
+
+            $this->memory_table_writer->write($data);
+            $this->bytes_written += strlen(serialize($data));
         }
          else
         {
-            if (is_string($this->stream->buffer) === false) // initialize buffer
-                $this->stream->buffer = '';
-
             $curlen = strlen($this->stream->buffer);
             $datalen = strlen($data);
             if ($curlen + $datalen > 2000000) // if memory buffer is greater than 2MB, convert to a disk stream
@@ -230,9 +152,8 @@ class StreamMemoryWriter implements \Flexio\Base\IStreamWriter
 
 class StreamMemory implements \Flexio\Base\IStream
 {
-    // data buffer; use reader/writer to access
+    public $buffer = '';             // data buffer; use reader/writer to access
     public $is_table = false;
-    public $buffer = null;
 
     private $storagefs = null;
     private $storagefs_path = null;
@@ -245,7 +166,7 @@ class StreamMemory implements \Flexio\Base\IStream
     {
         //$this->id = \Flexio\Base\Util::generateRandomString(5);
 
-        $this->buffer = false;
+        $this->buffer = '';
 
         // note: default values match model defaults
         $this->properties = array();
@@ -341,7 +262,9 @@ class StreamMemory implements \Flexio\Base\IStream
         $writer = null;
         if ($storagefs->createFile($path, $create_params))
         {
-            $writer = $storagefs->open($path);
+            $file = $storagefs->open($path);
+            if ($file)
+                $writer = $file->getWriter();
         }
 
         if (is_null($writer))
@@ -349,9 +272,19 @@ class StreamMemory implements \Flexio\Base\IStream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, "Could not create temporary storage stream");
         }
 
-        $writer->write($this->buffer);
-        $this->buffer = null;
-        $this->storagefs_path = $path;
+        if ($this->memory_db)
+        {
+            $reader = $this->memory_db->getReader();
+            while (($row = $reader->readRow()) !== false)
+                $writer->write($row);
+            $this->memory_db = null;
+        }
+         else
+        {
+            $writer->write($this->buffer);
+            $this->buffer = null;
+            $this->storagefs_path = $path;
+        }
 
         return $writer;
     }
@@ -529,7 +462,6 @@ class StreamMemory implements \Flexio\Base\IStream
     {
         if ($this->memory_db)
         {
-            //echo "Reading {$this->id}...";
             return $this->memory_db->getReader();
         }
          else if (!is_null($this->storagefs_path))
@@ -544,12 +476,15 @@ class StreamMemory implements \Flexio\Base\IStream
 
     public function getWriter() : \Flexio\Base\IStreamWriter
     {
+        $this->buffer = '';
+
         $this->prepareStorage();
 
         if ($this->memory_db)
         {
-            //echo "Writing {$this->id}...";
-            return $this->memory_db->getWriter();
+            $writer = \Flexio\Base\StreamMemoryWriter::create($this);
+            $writer->memory_table_writer = $this->memory_db->getWriter();
+            return $writer;
         }
          else if (!is_null($this->storagefs_path))
         {
