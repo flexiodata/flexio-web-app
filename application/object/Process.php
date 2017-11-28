@@ -315,6 +315,11 @@ class Process extends \Flexio\Object\Base
         return $input['params'] ?? array();
     }
 
+    public function addFile(string $name, \Flexio\Base\IStream $stream)
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function setStdin(\Flexio\Base\IStream $stream)
     {
         $storable_stream = self::createStorableStream($stream);

@@ -24,6 +24,7 @@ interface IProcess
     public function getTasks();
     public function setParams(array $arr);        // variables that are used in the processing
     public function getParams();
+    public function addFile(string $name, \Flexio\Base\IStream $stream);
     public function getStdin();
     public function getStdout();
     public function setResponseCode(int $code);
@@ -32,7 +33,7 @@ interface IProcess
     public function getError();
     public function hasError();
     public function getStatusInfo();              // returns info about the process, such as the current task being processed
-    public function execute();        // $func is a callback that is either or a callable or array type (in the instance of a call to a class method)
+    public function execute();                    // $func is a callback that is either or a callable or array type (in the instance of a call to a class method)
 }
 
 interface IJob
