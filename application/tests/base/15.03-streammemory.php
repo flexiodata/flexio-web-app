@@ -44,7 +44,7 @@ class Test
             {"name" : "char_1h", "type" : "character", "width" : 254, "scale" : 0}
         ]
         ',true))->get();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('
         [
@@ -122,7 +122,7 @@ class Test
             {"name" : "num_1h", "type" : "numeric", "width" : 18, "scale" : 12}
         ]
         ',true))->get();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('
         [
@@ -199,7 +199,7 @@ class Test
             {"name" : "num_2h", "type" : "double", "width" : 8, "scale" : 12}
         ]
         ',true))->get();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('
         [
@@ -276,7 +276,7 @@ class Test
             {"name" : "num_3h", "type" : "integer", "width" : 4, "scale" : 0}
         ]
         ',true))->get();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('
         [
@@ -353,7 +353,7 @@ class Test
             {"name" : "date_1h", "type" : "date", "width" : 4, "scale" : 0}
         ]
         ',true))->get();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('
         [
@@ -431,7 +431,7 @@ class Test
             {"name" : "date_2h", "type" : "datetime", "width" : 8, "scale" : 0}
         ]
         ',true))->get();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('
         [
@@ -509,7 +509,7 @@ class Test
             {"name" : "bool_1h", "type" : "boolean", "width" : 1, "scale" : 0}
         ]
         ',true))->get();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $stream->getWriter();
         $data = json_decode('
         [

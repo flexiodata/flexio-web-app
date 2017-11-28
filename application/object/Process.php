@@ -74,7 +74,7 @@ class Process extends \Flexio\Object\Base
             $mime_type = substr($mime_type, 0, $semicolon_pos);
         if ($mime_type != 'application/x-www-form-urlencoded' && $mime_type != 'multipart/form-data')
         {
-            $stream = \Flexio\Base\StreamMemory::create();
+            $stream = \Flexio\Base\Stream::create();
 
             // post body is a data stream, post it as our pipe's stdin
             $first = true;
@@ -328,7 +328,7 @@ class Process extends \Flexio\Object\Base
 
     public function getStdin() : \Flexio\Base\IStream
     {
-        $memory_stream = \Flexio\Base\StreamMemory::create();
+        $memory_stream = \Flexio\Base\Stream::create();
 
         $process_properties = $this->getModel()->process->get($this->getEid());
         $input = json_decode($process_properties['input'], true);
@@ -359,7 +359,7 @@ class Process extends \Flexio\Object\Base
 
     public function getStdout() : \Flexio\Base\IStream
     {
-        $memory_stream = \Flexio\Base\StreamMemory::create();
+        $memory_stream = \Flexio\Base\Stream::create();
 
         $process_properties = $this->getModel()->process->get($this->getEid());
         $output = json_decode($process_properties['output'], true);
@@ -730,12 +730,12 @@ class Process extends \Flexio\Object\Base
         return $storable_stream;
     }
 
-    private static function createMemoryStream(\Flexio\Base\IStream $stream) : \Flexio\Base\StreamMemory
+    private static function createMemoryStream(\Flexio\Base\IStream $stream) : \Flexio\Base\Stream
     {
         $properties = $stream->get();
         unset($properties['path']);
         unset($properties['connection_eid']);
-        $stream_memory = \Flexio\Base\StreamMemory::create($properties);
+        $stream_memory = \Flexio\Base\Stream::create($properties);
 
         // copy from the input stream to the memory stream
         $streamreader = $stream->getReader();

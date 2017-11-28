@@ -814,7 +814,7 @@ class Execute extends \Flexio\Jobs\Base
             $properties['structure'] = $structure;
         }
 
-        $stream = \Flexio\Base\StreamMemory::create($properties);
+        $stream = \Flexio\Base\Stream::create($properties);
         $this->getContext()->addStream($stream);
         $this->output_streams[] = $stream;
 

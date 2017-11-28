@@ -28,10 +28,10 @@ class Test
         // TEST: object creation
 
         // BEGIN TEST
-        $object = \Flexio\Base\StreamMemory::create();
-        $actual = 'Flexio\Base\StreamMemory';
+        $object = \Flexio\Base\Stream::create();
+        $actual = 'Flexio\Base\Stream';
         $expected = get_class($object);
-        TestCheck::assertString('A.1', 'StreamMemory::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'Stream::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
 
 
@@ -39,25 +39,25 @@ class Test
         // TEST: object property setting
 
         // BEGIN TEST
-        $object = \Flexio\Base\StreamMemory::create();
+        $object = \Flexio\Base\Stream::create();
         $object = $object->set([]);
-        $actual =  'Flexio\Base\StreamMemory';
+        $actual =  'Flexio\Base\Stream';
         $expected = get_class($object);
-        TestCheck::assertString('D.1', 'StreamMemory::set(); return the object',  $actual, $expected, $results);
+        TestCheck::assertString('D.1', 'Stream::set(); return the object',  $actual, $expected, $results);
 
 
 
         // TEST: object property retrieval
 
         // BEGIN TEST
-        $object = \Flexio\Base\StreamMemory::create();
+        $object = \Flexio\Base\Stream::create();
         $properties = $object->get();
         $actual =  is_array($properties);
         $expected = true;
-        TestCheck::assertString('E.1', 'StreamMemory::get(); return the properties as an array',  $actual, $expected, $results);
+        TestCheck::assertString('E.1', 'Stream::get(); return the properties as an array',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $object = \Flexio\Base\StreamMemory::create();
+        $object = \Flexio\Base\Stream::create();
         $properties = $object->get();
         $actual =  $properties;
         $expected = json_decode('
@@ -76,7 +76,7 @@ class Test
             "updated" : null
         }
         ',true);
-        TestCheck::assertArrayKeys('E.2', 'StreamMemory::get(); return the properties as an array',  $actual, $expected, $results);
+        TestCheck::assertArrayKeys('E.2', 'Stream::get(); return the properties as an array',  $actual, $expected, $results);
 
 
 
@@ -87,7 +87,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -100,7 +100,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -113,7 +113,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -126,7 +126,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -139,7 +139,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -152,7 +152,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -165,7 +165,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -178,7 +178,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -191,7 +191,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -204,7 +204,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -217,7 +217,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -230,7 +230,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -243,7 +243,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -256,7 +256,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -269,7 +269,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -282,7 +282,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -295,7 +295,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -308,7 +308,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -321,7 +321,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -334,7 +334,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -347,7 +347,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -360,7 +360,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -373,7 +373,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -386,7 +386,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -399,7 +399,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -412,7 +412,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -425,7 +425,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -438,7 +438,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -451,7 +451,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -464,7 +464,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -477,7 +477,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -490,7 +490,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -503,7 +503,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -516,7 +516,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -529,7 +529,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -542,7 +542,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -555,7 +555,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -568,7 +568,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -581,7 +581,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -594,7 +594,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -607,7 +607,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -620,7 +620,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -633,7 +633,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -646,7 +646,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -659,7 +659,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -672,7 +672,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -685,7 +685,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -698,7 +698,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -711,7 +711,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -724,7 +724,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -737,7 +737,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -750,7 +750,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -763,7 +763,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -776,7 +776,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -789,7 +789,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -802,7 +802,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -815,7 +815,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -828,7 +828,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -841,7 +841,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -854,7 +854,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -867,7 +867,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -880,7 +880,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -893,7 +893,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -906,7 +906,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -919,7 +919,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -932,7 +932,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -945,7 +945,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -958,7 +958,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -971,7 +971,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -984,7 +984,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -997,7 +997,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -1010,7 +1010,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -1023,7 +1023,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -1036,7 +1036,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -1049,7 +1049,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();
@@ -1062,7 +1062,7 @@ class Test
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
         $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_TXT;
         $stream_info['structure'] = array();
-        $stream = \Flexio\Base\StreamMemory::create($stream_info);
+        $stream = \Flexio\Base\Stream::create($stream_info);
         $writer = $writer = $stream->getWriter();
         $writer->write("abcdefg");
         $writer->close();

@@ -100,8 +100,8 @@ class Process implements \Flexio\Jobs\IProcess
         $this->tasks = array();
         $this->params = array();
 
-        $this->stdin = self::createStreamMemory();
-        $this->stdout =  self::createStreamMemory();
+        $this->stdin = self::createStream();
+        $this->stdout =  self::createStream();
 
         $this->response_code = self::RESPONSE_NONE;
         $this->error = array();
@@ -244,7 +244,7 @@ class Process implements \Flexio\Jobs\IProcess
             {
                 // copy the stdout of the last task to the stdin; make a new stdout
                 $this->stdin = $this->stdout;
-                $this->stdout = self::createStreamMemory();
+                $this->stdout = self::createStream();
             }
 
             // execute the task
@@ -344,9 +344,9 @@ class Process implements \Flexio\Jobs\IProcess
         }
     }
 
-    private static function createStreamMemory() : \Flexio\Base\IStream
+    private static function createStream() : \Flexio\Base\IStream
     {
-        $stream = \Flexio\Base\StreamMemory::create();
+        $stream = \Flexio\Base\Stream::create();
         $stream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
         return $stream;
     }
