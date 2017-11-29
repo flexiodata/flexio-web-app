@@ -49,6 +49,7 @@ class Stream extends ModelBase
                 'connection_eid'       => $params['connection_eid'] ?? '',
                 'cache_path'           => $params['cache_path'] ?? '',
                 'cache_connection_eid' => $params['cache_connection_eid'] ?? '',
+                'expires'              => $params['expires'] ?? null,
                 'created'              => $timestamp,
                 'updated'              => $timestamp
             );
@@ -102,7 +103,8 @@ class Stream extends ModelBase
                 'file_modified'        => array('type' => 'string',  'required' => false),
                 'connection_eid'       => array('type' => 'eid',     'required' => false),
                 'cache_path'           => array('type' => 'string',  'required' => false),
-                'cache_connection_eid' => array('type' => 'eid',     'required' => false)
+                'cache_connection_eid' => array('type' => 'eid',     'required' => false),
+                'expires'              => array('type' => 'any',     'required' => false)    // TODO: workaround null problem; any = allow nulls
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -156,6 +158,7 @@ class Stream extends ModelBase
                                         tst.connection_eid as connection_eid,
                                         tst.cache_path as cache_path,
                                         tst.cache_connection_eid as cache_connection_eid,
+                                        tst.expires as expires,
                                         tob.eid_status as eid_status,
                                         tob.created as created,
                                         tob.updated as updated
@@ -185,6 +188,7 @@ class Stream extends ModelBase
                      'connection_eid'       => $row['connection_eid'],
                      'cache_path'           => $row['cache_path'],
                      'cache_connection_eid' => $row['cache_connection_eid'],
+                     'expires'              => $row['expires'],
                      'eid_status'           => $row['eid_status'],
                      'created'              => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'              => \Flexio\Base\Util::formatDate($row['updated']));

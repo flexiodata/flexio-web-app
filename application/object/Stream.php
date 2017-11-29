@@ -308,6 +308,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
             "file_created" : null,
             "file_modified" : null,
             "connection_eid" :  null,
+            "expires" : null,
             "created" : null,
             "updated" : null
         }

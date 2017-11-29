@@ -30,7 +30,8 @@ class Stream
                 'size'          => array('type' => 'integer', 'required' => false),
                 'mime_type'     => array('type' => 'string',  'required' => false),
                 'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
-                'file_modified' => array('type' => 'string',  'required' => false)  // TODO: date type?
+                'file_modified' => array('type' => 'string',  'required' => false), // TODO: date type?
+                'expires'       => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -52,7 +53,8 @@ class Stream
                 'size'          => array('type' => 'integer', 'required' => false),
                 'mime_type'     => array('type' => 'string',  'required' => false),
                 'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
-                'file_modified' => array('type' => 'string',  'required' => false)  // TODO: date type?
+                'file_modified' => array('type' => 'string',  'required' => false), // TODO: date type?
+                'expires'       => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -182,6 +184,7 @@ class Stream
                 'mime_type'     => array('type' => 'string',  'required' => false),
                 'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
                 'file_modified' => array('type' => 'string',  'required' => false), // TODO: date type?
+                'expires'       => array('type' => 'string',  'required' => false),
                 'filename_hint' => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
