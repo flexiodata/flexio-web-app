@@ -277,6 +277,7 @@ CREATE TABLE tbl_stream (
   connection_eid varchar(12) NOT NULL default '',
   cache_path text default '',
   cache_connection_eid varchar(12) NOT NULL default '',
+  expires timestamp NULL default NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
