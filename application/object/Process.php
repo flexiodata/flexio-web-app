@@ -52,7 +52,6 @@ class Process extends \Flexio\Object\Base
         return $object;
     }
 
-
     public function set(array $properties) : \Flexio\Object\Process
     {
         // TODO: add properties check
