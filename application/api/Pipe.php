@@ -370,7 +370,7 @@ class Pipe
         // STEP 2: parse the content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');
         $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
-         \Flexio\Object\Process::addProcessInputFromStream($php_stream_handle, $post_content_type, $process);
+         \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $process);
 
          // STEP 3: run the process
         $process->run($background);
