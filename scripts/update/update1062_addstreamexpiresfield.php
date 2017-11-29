@@ -51,7 +51,7 @@ try
     // STEP 1: add the new field
     $sql = <<<EOT
         alter table tbl_stream
-            expires timestamp NULL default NULL
+            add expires timestamp NULL default NULL
 EOT;
     $db->exec($sql);
 }
