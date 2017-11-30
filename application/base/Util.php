@@ -1014,13 +1014,11 @@ class Util
         $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params, &$post_streams) {
             if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
             {
-                $stream = \Flexio\Object\Stream::create();
+                $stream = \Flexio\Base\Stream::create();
 
                 if ($content_type === false)
                     $content_type = \Flexio\Base\ContentType::getMimeType($filename, '');
 
-                // stream name will be the post variable name, not the multipart filename
-                // TODO: should we be using filename in the path and form name in the name?
                 $stream_info = array();
                 $stream_info['name'] = $name;
                 $stream_info['mime_type'] = $content_type;
@@ -1038,8 +1036,8 @@ class Util
             }
             else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_END)
             {
-                $post_streams[] = $stream;
                 $streamwriter = false;
+                $process->addFile($name, $stream);
                 $stream = false;
             }
             else if ($type == \Flexio\Base\MultipartParser::TYPE_KEY_VALUE)
@@ -1050,12 +1048,6 @@ class Util
         fclose($php_stream_handle);
 
         $process->setParams($form_params);
-        foreach ($post_streams as $s)
-        {
-            // TODO: right now, we only have stdin; so we can only take the first stream
-            $process->setStdin($s);
-            break;
-        }
     }
 
 }
