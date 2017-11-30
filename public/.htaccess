@@ -13,6 +13,9 @@ php_flag enable_post_data_reading off
 <If "%{THE_REQUEST} =~ m#POST /api/v1/processes/.*/input#">
 php_flag enable_post_data_reading off
 </If>
+<If "%{THE_REQUEST} =~ m#POST /api/v1/processes/.*/run#">
+php_flag enable_post_data_reading off
+</If>
 <If "%{THE_REQUEST} =~ m#POST /api/v1/pipes/.*/run#">
 php_flag enable_post_data_reading off
 </If>
