@@ -138,6 +138,11 @@ class Process implements \Flexio\Jobs\IProcess
         $this->tasks = array_merge($this->tasks, $tasks);
     }
 
+    public function setTasks(array $tasks)
+    {
+        $this->tasks = $tasks;
+    }
+
     public function getTasks() : array
     {
         return $this->tasks;
