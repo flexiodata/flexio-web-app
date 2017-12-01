@@ -40,6 +40,14 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         return $object;
     }
 
+    public static function load($process_eid) : \Flexio\Jobs\StoredProcess
+    {
+        $object = new static();
+        $object->loadFromProcessEid($process_eid);
+        return $object;
+    }
+
+
     public function addEventHandler($handler)
     {
         return $this->engine->addEventHandler($handler);
@@ -165,6 +173,20 @@ class StoredProcess implements \Flexio\Jobs\IProcess
     }
 
 
+    public function loadFromProcessEid(string $process_eid)
+    {
+        // this function loads a \Flexio\Object\Process object into $this->procobj, and
+        // then deserializes it into \Flexio\Jobs\Process $this->engine
+
+        $this->procobj = \Flexio\Object\Process::load($process_eid);
+        $this->owner = null;
+        $this->created_by = null;
+        $this->rights = null;
+        $this->assoc_pipe = null;
+
+        $this->engine->setTasks($this->procobj->getTask());
+    }
+
 
 
 
@@ -199,25 +221,22 @@ class StoredProcess implements \Flexio\Jobs\IProcess
                 'stdin' => $stdin->getEid()
             ];
 
-
             $this->procobj->set(['input' => $input]);
 
-            \Flexio\System\Program::runInBackground("\Flexio\Object\Process::background_entry('$process_eid')");
+            \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
         }
          else
         {
-            return $this->run_internal();
+            //return $this->run_internal();
+            \Flexio\Jobs\StoredProcess::background_entry($this->procobj->getEid());
         }
-
-        $process_eid = $procobj->getEid();
 
         return $this;
     }
 
-    public static function background_entry() : \Flexio\Jobs\StoredProcess
+    public static function background_entry($process_eid) : \Flexio\Jobs\StoredProcess
     {
-        $proc = \Flexio\Object\StoredProcess::create();
-
+        $proc = \Flexio\Jobs\StoredProcess::load($process_eid);
         return $proc->run_internal();
     }
 
@@ -234,19 +253,13 @@ class StoredProcess implements \Flexio\Jobs\IProcess
             //'impl_revision' => $implementation_revision
         ]);
 
-
         // STEP 2: add the environment variables in
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getParams();
         $this->engine->setParams(array_merge($user_variables, $environment_variables));
         
-        // STEP 3: create the process engine and configure it
-        //$process_engine = \Flexio\Jobs\Process::create();
-        //$process_engine->addTasks($process_tasks);
-        //$process_engine->setParams($variables);
-        //$process_engine->setStdin($this->getStdin());
-        //$process_engine->addEventHandler([$this, 'handleEvent']);
-        $this->engine->addEventHandler([$this, 'handleEvent']);
+        // STEP 3: get events for logging, if necessary
+        $this->engine->addEventHandler([$this->procobj, 'handleEvent']);
 
         // STEP 4: execute the job
         $this->engine->execute();
@@ -258,32 +271,9 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         $process_params['cache_used'] = 'N';
         $this->procobj->set($process_params);
 
+        //var_dump($this->procobj->get());
+        
         return $this;
-    }
-
-
-    public function handleEvent(string $event, \Flexio\Jobs\IProcess $process_engine)
-    {
-        // if we're not in build mode, don't do anything with events
-        if ($this->procobj->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
-            return;
-
-        switch ($event)
-        {
-            // don't do anything if it's an event we don't care about
-            default:
-            case \Flexio\Jobs\Process::EVENT_STARTING:
-            case \Flexio\Jobs\Process::EVENT_FINISHED:
-                return;
-
-            case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
-                $this->startLog($process_engine);
-                break;
-
-            case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
-                $this->finishLog($process_engine);
-                break;
-        }
     }
 
 
