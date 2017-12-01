@@ -198,12 +198,20 @@ class StoredProcess implements \Flexio\Jobs\IProcess
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {
-        if (!$this->procobj)
+        if ($this->procobj)
+        {
+            $this->procobj->set([
+                'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING,
+                'started' => self::getProcessTimestamp()
+            ]);
+        }
+         else
         {
             // create a new process object
             $this->procobj = \Flexio\Object\Process::create([
-                'process_mode' => \Flexio\Jobs\Process::STATUS_RUNNING,
-                'task' => $this->engine->getTasks()
+                'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING,
+                'task' => $this->engine->getTasks(),
+                'started' => self::getProcessTimestamp()
             ]);
         }
 
@@ -258,17 +266,6 @@ class StoredProcess implements \Flexio\Jobs\IProcess
 
     private function run_internal() : \Flexio\Jobs\StoredProcess
     {
-        // track what version of the task implementation we're using (more granular than task version,
-        // which may or may not be updated with small logic changes)
-        //$implementation_revision = \Flexio\System\System::getGitRevision();
-
-        // set initial job status
-        $this->procobj->set([
-            'started' => self::getProcessTimestamp(),
-            'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING
-            //'impl_revision' => $implementation_revision
-        ]);
-
         // STEP 2: add the environment variables in
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getParams();
