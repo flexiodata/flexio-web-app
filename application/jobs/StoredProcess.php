@@ -245,19 +245,15 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         $variables = array_merge($user_variables, $environment_variables);
 
         // STEP 3: create the process engine and configure it
-        $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->addTasks($process_tasks);
-        $process_engine->setParams($variables);
-        $process_engine->getStdin()->copy($this->getStdin());
-        $process_engine->addEventHandler([$this, 'handleEvent']);
+        //$process_engine = \Flexio\Jobs\Process::create();
+        //$process_engine->addTasks($process_tasks);
+        //$process_engine->setParams($variables);
+        //$process_engine->setStdin($this->getStdin());
+        //$process_engine->addEventHandler([$this, 'handleEvent']);
+        $this->engine->addEventHandler([$this, 'handleEvent']);
 
         // STEP 4: execute the job
-        $process_engine->execute();
-
-        // STEP 5: patch through the response code and any error
-        $this->response_code = $process_engine->getResponseCode();
-        if ($process_engine->hasError())
-            $this->error = $process_engine->getError();
+        $this->engine->execute();
 
         // STEP 6: save final job output and status
         $process_params = array();
@@ -267,7 +263,7 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         $this->procobj->set($process_params);
 
         // STEP 8: save the process output; TODO: saving stdout also writes to the database; could we consolidate with other writes for efficiency?
-        $this->setStdout($process_engine->getStdout());
+        //$this->setStdout($process_engine->getStdout());
 
         return $this;
     }
