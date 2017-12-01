@@ -198,11 +198,14 @@ class StoredProcess implements \Flexio\Jobs\IProcess
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {
-        // create a new process object
-        $this->procobj = \Flexio\Object\Process::create([
-            'process_mode' => \Flexio\Jobs\Process::STATUS_RUNNING,
-            'task' => $this->engine->getTasks()
-        ]);
+        if (!$this->procobj)
+        {
+            // create a new process object
+            $this->procobj = \Flexio\Object\Process::create([
+                'process_mode' => \Flexio\Jobs\Process::STATUS_RUNNING,
+                'task' => $this->engine->getTasks()
+            ]);
+        }
 
         if (!is_null($this->owner))         $this->procobj->setOwner($this->owner);
         if (!is_null($this->created_by))    $this->procobj->setCreatedBy($this->created_by);
@@ -221,21 +224,27 @@ class StoredProcess implements \Flexio\Jobs\IProcess
             // params
 
             $storable_stdin = self::createStorableStream($this->engine->getStdin());
+            $storable_stdout = self::createStorableStream($this->engine->getStdout());
 
             $input = [
                 'params' => $this->engine->getParams(),
-                'stdin' => $storable_stdin->getEid()
+                'stream' => $storable_stdin->getEid()
             ];
 
-            $this->procobj->set(['input' => json_encode($input)]);
+            $output = [
+                'stream' => $storable_stdout->getEid()
+            ];
+
+            $this->procobj->set(['input' => json_encode($input), 'output' => json_encode($output)]);
             $process_eid = $this->procobj->getEid();
             
             \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
+            //\Flexio\Jobs\StoredProcess::background_entry($this->procobj->getEid());
         }
          else
         {
-            //return $this->run_internal();
-            \Flexio\Jobs\StoredProcess::background_entry($this->procobj->getEid());
+            return $this->run_internal();
+            //return \Flexio\Jobs\StoredProcess::background_entry($this->procobj->getEid());
         }
 
         return $this;
