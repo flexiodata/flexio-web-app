@@ -320,8 +320,8 @@ class Input(object):
         else:
             buf = b''
             while True:
-                chunk = self.read(length=4096)
-                if chunk is None:
+                chunk = proxy.invoke('read', [self._handle, 4096])
+                if chunk is False:
                     break
                 buf += chunk
             return buf
