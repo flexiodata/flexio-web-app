@@ -231,19 +231,15 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         $this->procobj->set([
             'started' => self::getProcessTimestamp(),
             'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING
-            //'impl_revision' => $implementation_revision;
+            //'impl_revision' => $implementation_revision
         ]);
 
 
-        // STEP 1: get the process properties
-        $current_process_properties = $this->procobj->get();
-        $process_tasks = $current_process_properties['task'];
-
-        // STEP 2: get the parameters and add the environment variables in
+        // STEP 2: add the environment variables in
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getParams();
-        $variables = array_merge($user_variables, $environment_variables);
-
+        $this->engine->setParams(array_merge($user_variables, $environment_variables));
+        
         // STEP 3: create the process engine and configure it
         //$process_engine = \Flexio\Jobs\Process::create();
         //$process_engine->addTasks($process_tasks);
@@ -261,9 +257,6 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         $process_params['process_status'] = $this->hasError() ? \Flexio\Jobs\Process::STATUS_FAILED : \Flexio\Jobs\Process::STATUS_COMPLETED;
         $process_params['cache_used'] = 'N';
         $this->procobj->set($process_params);
-
-        // STEP 8: save the process output; TODO: saving stdout also writes to the database; could we consolidate with other writes for efficiency?
-        //$this->setStdout($process_engine->getStdout());
 
         return $this;
     }
