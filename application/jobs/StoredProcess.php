@@ -40,10 +40,16 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         return $object;
     }
 
-    public static function load($process_eid) : \Flexio\Jobs\StoredProcess
+    public static function load(string $process_eid) : \Flexio\Jobs\StoredProcess
+    {
+        $procobj = \Flexio\Object\Process::load($process_eid);
+        return self::attach($procobj);
+    }
+
+    public static function attach(\Flexio\Object\Process $procobj) : \Flexio\Jobs\StoredProcess
     {
         $object = new static();
-        $object->loadFromProcessEid($process_eid);
+        $object->loadFromProcess($procobj);
         return $object;
     }
 
@@ -173,12 +179,12 @@ class StoredProcess implements \Flexio\Jobs\IProcess
     }
 
 
-    public function loadFromProcessEid(string $process_eid)
+    public function loadFromProcess(\Flexio\Object\Process $procobj)
     {
         // this function loads a \Flexio\Object\Process object into $this->procobj, and
         // then deserializes it into \Flexio\Jobs\Process $this->engine
 
-        $this->procobj = \Flexio\Object\Process::load($process_eid);
+        $this->procobj = $procobj;
         $this->owner = null;
         $this->created_by = null;
         $this->rights = null;
@@ -218,11 +224,12 @@ class StoredProcess implements \Flexio\Jobs\IProcess
 
             $input = [
                 'params' => $this->engine->getParams(),
-                'stdin' => $stdin->getEid()
+                'stdin' => $storable_stdin->getEid()
             ];
 
-            $this->procobj->set(['input' => $input]);
-
+            $this->procobj->set(['input' => json_encode($input)]);
+            $process_eid = $this->procobj->getEid();
+            
             \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
         }
          else

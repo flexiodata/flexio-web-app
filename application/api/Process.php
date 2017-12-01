@@ -135,7 +135,10 @@ class Process
 
         // STEP 3: run the process and return the process info
         if ($autorun === true)
-            $process->run($background);
+        {
+            $engine = \Flexio\Jobs\StoredProcess::attach($process);
+            $engine->run($background);
+        }
 
         return $process;
     }
