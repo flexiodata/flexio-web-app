@@ -158,14 +158,19 @@ class Process implements \Flexio\Jobs\IProcess
         $this->files[$name] = $stream;
     }
 
-    public function setStdin(\Flexio\Base\IStream $stdin)
+    public function setStdin(\Flexio\Base\IStream $stream)
     {
-        return $this->stdin = $stdin;
+        return $this->stdin = $stream;
     }
 
     public function getStdin() : \Flexio\Base\IStream
     {
         return $this->stdin;
+    }
+
+    public function setStdout(\Flexio\Base\IStream $stream)
+    {
+        return $this->stdout = $stream;
     }
 
     public function getStdout() : \Flexio\Base\IStream
