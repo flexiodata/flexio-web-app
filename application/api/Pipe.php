@@ -339,7 +339,6 @@ class Pipe
 
         $validated_params = $validator->getParams();
         $pipe_identifier = $validated_params['eid'];
-        $background = false;
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
@@ -351,8 +350,7 @@ class Pipe
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // STEP 1: create a new process
-        $process_properties = array();
-        $process = \Flexio\Object\Process::create($process_properties);
+        $process = \Flexio\Jobs\StoredProcess::create();
         $process->setOwner($pipe->getOwner());
 
         if ($requesting_user_eid === \Flexio\Object\User::MEMBER_PUBLIC)
@@ -361,11 +359,10 @@ class Pipe
             $process->setCreatedBy($requesting_user_eid);
 
         $process->setRights($pipe->getRights());
-        $pipe->addProcess($process);
+        $process->setAssocPipe($pipe);
 
         $pipe_properties = $pipe->get();
-        $process_properties['task'] = $pipe_properties['task'];
-        $process->set($process_properties);
+        $process->addTasks($pipe_properties['task']);
 
         // STEP 2: parse the content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');
@@ -373,7 +370,7 @@ class Pipe
          \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $process);
 
          // STEP 3: run the process
-        $process->run($background);
+        $process->run(false /*background*/);
 
         if ($process->hasError())
         {
