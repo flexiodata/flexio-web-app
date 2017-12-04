@@ -341,6 +341,7 @@ class StorageFsFile
     public $sqlite = null;
     public $fspath = null;
     public $file = null;
+    public $structure = null;
 
     public function getReader() : \Flexio\Base\IStreamReader
     {
@@ -350,6 +351,12 @@ class StorageFsFile
     public function getWriter() : \Flexio\Base\IStreamWriter
     {
         return $this->openStream();
+    }
+
+    public function setStructure(array $structure)
+    {
+        // optional ability to set structure
+        $this->structure = $structure;
     }
 
     private function openStream() : \Flexio\Services\StorageFileReaderWriter
@@ -425,6 +432,7 @@ class StorageFs
 
             $file = new StorageFsFile();
             $file->sqlite = $sqlite;
+            $file->structure = $params['structure'];
             return $file;
         }
          else

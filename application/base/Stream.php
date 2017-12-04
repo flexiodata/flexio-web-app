@@ -41,7 +41,7 @@ class StreamReader implements \Flexio\Base\IStreamReader
 
     public function read($length = 1024)
     {
-        if ($this->stream->is_table)
+        if ($this->stream->isTable())
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         }
@@ -103,7 +103,7 @@ class StreamWriter implements \Flexio\Base\IStreamWriter
         if ($this->storagefs_writer)
             return $this->storagefs_writer->write($data);
 
-        if ($this->stream->is_table)
+        if ($this->stream->isTable())
         {
             if ($this->bytes_written > 1000000)
             {
@@ -156,8 +156,6 @@ class StreamWriter implements \Flexio\Base\IStreamWriter
 class Stream implements \Flexio\Base\IStream
 {
     public $buffer = '';             // data buffer; use reader/writer to access
-    public $is_table = false;
-
     private $storagefs = null;
     private $storagefs_path = null;
     private $memory_db = null;
@@ -231,13 +229,15 @@ class Stream implements \Flexio\Base\IStream
         return $object;
     }
 
+    public function isTable() : bool
+    {
+        return count($this->properties['structure']) > 0 ? true : false;
+    }
+
     private $structure_stamp = '';
     private function prepareStorage()
     {
-        if (isset($this->properties['structure']) && is_array($this->properties['structure']) && count($this->properties['structure']) > 0)
-            $this->is_table = true;
-
-        if ($this->is_table)
+        if ($this->isTable())
         {
             // start out with memory table
 
@@ -329,7 +329,6 @@ class Stream implements \Flexio\Base\IStream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copy may only be used on stream objects of the same type");
 
         $this->buffer = $sourceimpl->buffer;
-        $this->is_table = $sourceimpl->is_table;
         $this->storagefs = $sourceimpl->storagefs;
         $this->storagefs_path = $sourceimpl->storagefs_path;
         $this->memory_db = $sourceimpl->memory_db;
