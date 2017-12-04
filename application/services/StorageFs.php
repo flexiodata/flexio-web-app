@@ -24,14 +24,32 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
     private $sqlite = null;
     private $result = null; // sqlite result object
     private $structure = null;
+    private $keyed_structure = null;  // structure with field names as key
     
     function __destruct()
     {
         $this->close();
     }
 
-    public function init($fspath /* can be string, or handle, or sqlite object */) : bool
+    public function init($fspath /* can be string, or handle, or sqlite object */, $structure = null) : bool
     {
+        if ($structure !== null && count($structure) > 0)
+        {
+            $this->structure = $structure;
+            $this->keyed_structure = [];
+            foreach ($this->structure as $col)
+            {
+                // only store columns in $this->keyed_structure that we need for type casting
+                if (isset($col['name']) && isset($col['type']) && $col['type'] == 'boolean')
+                {
+                    $this->keyed_structure[$col['name']] = $col;
+                }
+            }
+
+            if (count($this->keyed_structure) == 0)
+                $this->keyed_structure = null; // no type casting necessary
+        }
+
         if ($fspath instanceof \Sqlite3)
         {
             $this->sqlite = $fspath;
@@ -105,7 +123,10 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
                 $this->result = $this->sqlite->query('select * from fxtbl');
             }
 
-            return $this->result->fetchArray(SQLITE3_ASSOC); // returns false if eof
+            $row = $this->result->fetchArray(SQLITE3_ASSOC); // returns false if eof
+            if ($row === false)
+                return false;
+            return $this->applyStructureToRow($row);
         }
 
         return false;
@@ -131,9 +152,33 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
 
         $res = [];
         while (($row = $result->fetchArray(SQLITE3_ASSOC)) !== false)
-            $res[] = $row;
+            $res[] = $this->applyStructureToRow($row);
         
         return $res;
+    }
+
+    private function applyStructureToRow(array $row) : array
+    {
+        if ($this->keyed_structure === null)
+            return $row;
+
+        foreach ($row as $col => &$value)
+        {
+            if (isset($this->keyed_structure[$col]))
+            {
+                if ($this->keyed_structure[$col]['type'] == 'boolean')
+                {
+                    if ($value === 0 || $value === '0' || $value === false)
+                        $value = false;
+                         else
+                        $value = true;
+                }
+            }
+
+        }
+
+
+        return $row;
     }
 
     public function getRowCount() : int
@@ -362,19 +407,19 @@ class StorageFsFile
     private function openStream() : \Flexio\Services\StorageFileReaderWriter
     {
         $stream = new StorageFileReaderWriter();
-        
+
         if ($this->sqlite)
         {
-            $stream->init($this->sqlite);
+            $stream->init($this->sqlite, $this->structure);
         }
         else if ($this->file)
         {
-            $stream->init($this->file);
+            $stream->init($this->file, $this->structure);
             $this->file = null;
         }
         else
         {
-            $stream->init($this->fspath);
+            $stream->init($this->fspath, $this->structure);
         }
 
         return $stream;

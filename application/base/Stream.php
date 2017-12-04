@@ -43,6 +43,7 @@ class StreamReader implements \Flexio\Base\IStreamReader
     {
         if ($this->stream->isTable())
         {
+            // this class not used for tables -- see StorageFileReaderWriter
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         }
          else
@@ -60,13 +61,13 @@ class StreamReader implements \Flexio\Base\IStreamReader
 
     public function readRow()
     {
-        // this class not used for tables
+        // this class not used for tables -- see StorageFileReaderWriter
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function getRows(int $offset, int $limit)
     {
-        // this class not used for tables
+        // this class not used for tables -- see StorageFileReaderWriter
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
@@ -255,7 +256,7 @@ class Stream implements \Flexio\Base\IStream
         $storagefs = $this->getStorageFs();
 
         $create_params = [];
-        if (isset($this->properties['structure']) && is_array($this->properties['structure']) && count($this->properties['structure']) > 0)
+        if ($this->isTable())
         {
             $create_params['structure'] = $this->properties['structure'];
         }
@@ -263,11 +264,11 @@ class Stream implements \Flexio\Base\IStream
         $path = \Flexio\Base\Util::generateRandomString(20);
 
         $writer = null;
-        if ($storagefs->createFile($path, $create_params))
+        $file = $storagefs->createFile($path, $create_params);
+
+        if ($file)
         {
-            $file = $storagefs->open($path);
-            if ($file)
-                $writer = $file->getWriter();
+            $writer = $file->getWriter();
         }
 
         if (is_null($writer))
