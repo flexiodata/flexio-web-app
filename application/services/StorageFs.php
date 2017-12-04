@@ -276,12 +276,19 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             $row = array_values($row);
             foreach ($row as &$val)
             {
-                $val = (string)$val;
-                if (strpos($val, "'") !== false)
+                if (is_null($val))
                 {
-                    $val = str_replace("'", "''", $val);
+                    $val = 'null';
                 }
-                $val = "'$val'";
+                 else
+                {
+                    $val = (string)$val;
+                    if (strpos($val, "'") !== false)
+                    {
+                        $val = str_replace("'", "''", $val);
+                    }
+                    $val = "'$val'";
+                }
             }
             
             if ($first)
