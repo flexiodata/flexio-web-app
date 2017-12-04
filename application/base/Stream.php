@@ -145,6 +145,9 @@ class StreamWriter implements \Flexio\Base\IStreamWriter
         if ($this->storagefs_writer)
             return $this->storagefs_writer->close();
         
+        if ($this->memory_table_writer)
+            return $this->memory_table_writer->close();
+        
         return true;
     }
 }
