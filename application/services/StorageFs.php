@@ -280,6 +280,10 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
                 {
                     $val = 'null';
                 }
+                 else if (is_bool($val))
+                {
+                    $val = $val ? '1' : '0';
+                }
                  else
                 {
                     $val = (string)$val;
