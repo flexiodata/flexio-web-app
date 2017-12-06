@@ -20,6 +20,14 @@ namespace Flexio\Services;
 
 class Vfs // TODO: implements \Flexio\Services\IFileSystem
 {
+    private $process_context_service = null;
+
+    public function setProcessContext(\Flexio\Jobs\IProcess $process)
+    {
+        $this->process_context_service = new \Flexio\Services\ProcessContext($process);
+    }
+
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
