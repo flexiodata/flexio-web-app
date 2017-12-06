@@ -83,7 +83,8 @@ class Process implements \Flexio\Jobs\IProcess
         'flexio.sort'      => '\Flexio\Jobs\Sort',
         'flexio.task'      => '\Flexio\Jobs\Task',       // general task whose parameters are another task; for internal use only
         'flexio.transform' => '\Flexio\Jobs\Transform',
-        'flexio.list'      => '\Flexio\Jobs\List1'
+        'flexio.list'      => '\Flexio\Jobs\List1',
+        'flexio.write'     => '\Flexio\Jobs\Write'
     );
 
     private $metadata;      // array of optional metadata info that can be used for passing info (such as info from the calling context) across callbacks

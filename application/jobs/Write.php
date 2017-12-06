@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Benjamin I. Williams
- * Created:  2017-12-05
+ * Created:  2017-12-06
  *
  * @package flexio
  * @subpackage Jobs
@@ -18,34 +18,35 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.read",
+    "type": "flexio.write",
     "params": {
         "path": ""
     }
 }
 */
 
-class Read extends \Flexio\Jobs\Base
+class Write extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\Jobs\IProcess $process)
     {
         parent::run($process);
 
-        // process buffer
+        $instream = $process->getStdin();
         $outstream = $process->getStdout();
+
+        $outstream->copy($instream);
+
         $job_definition = $this->getProperties();
         $path = $job_definition['params']['path'] ?? null;
 
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
 
-        $outstream->setMimeType('text/plain');
-
-        $streamwriter = $outstream->getWriter();
+        $streamreader = $instream->getReader();
 
         $vfs = new \Flexio\Services\Vfs();
-        $files = $vfs->read($path, function($data) use (&$streamwriter) {
-            $streamwriter->write($data);
+        $files = $vfs->write($path, function($length) use (&$streamreader) {
+            return $streamreader->read($length);
         });
     }
 }

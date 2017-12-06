@@ -1313,6 +1313,53 @@
 
 
 
+    this.args.write = ['path'];
+    this.hints.write = {
+    };
+    this.keywords.write = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.write",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.write);
+
+      if (params.hasOwnProperty('path'))
+      {
+        json.params.path = params['path'].value;
+      }
+       else
+      {
+          this.errors.push({ "code":     "missing-parameter",
+                             "message":  "Missing parameter 'path:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.write"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "write";
+
+      if (json.params.hasOwnProperty('path'))
+      {
+        res = this.append(res, "path: " + json.params['path']);
+      }
+
+      return res;
+    };
+
+
+
+
     this.args.fail = ['code','message'];
     this.hints.fail = {
       "code":       [ 'general', 'unimplemented', 'unauthorized' ]
@@ -2599,10 +2646,11 @@
         //'rename',
         'render',
         'request',
-        'select'
+        'select',
         //'settype',
         //'sort',
-        //'transform'
+        //'transform',
+        'write'
       ]
     },
 
