@@ -63,6 +63,7 @@ class Process implements \Flexio\Jobs\IProcess
         'flexio.request'   => '\Flexio\Jobs\Request',
         'flexio.output'    => '\Flexio\Jobs\Output',
         'flexio.filter'    => '\Flexio\Jobs\Filter',
+        'flexio.read'      => '\Flexio\Jobs\Read',
         'flexio.replace'   => '\Flexio\Jobs\Replace',
         'flexio.grep'      => '\Flexio\Jobs\Grep',
         'flexio.group'     => '\Flexio\Jobs\Group',

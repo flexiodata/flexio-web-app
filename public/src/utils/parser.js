@@ -1265,6 +1265,53 @@
 
 
 
+    
+    this.args.read = ['path'];
+    this.hints.read = {
+    };
+    this.keywords.read = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.read",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.read);
+
+      if (params.hasOwnProperty('path'))
+      {
+        json.params.path = params['path'].value;
+      }
+       else
+      {
+          this.errors.push({ "code":     "missing-parameter",
+                             "message":  "Missing parameter 'path:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.read"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "read";
+
+      if (json.params.hasOwnProperty('path'))
+      {
+        res = this.append(res, "path: " + json.params['path']);
+      }
+
+      return res;
+    };
+
+
+
 
     this.args.fail = ['code','message'];
     this.hints.fail = {
@@ -2546,8 +2593,9 @@
         'exit',
         'filter',
         //'limit',
-        //'list',
+        'list',
         //'merge',
+        'read',
         //'rename',
         'render',
         'request',
