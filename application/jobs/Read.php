@@ -44,6 +44,7 @@ class Read extends \Flexio\Jobs\Base
         $streamwriter = $outstream->getWriter();
 
         $vfs = new \Flexio\Services\Vfs();
+        $vfs->setProcess($process);
         $files = $vfs->read($path, function($data) use (&$streamwriter) {
             $streamwriter->write($data);
         });

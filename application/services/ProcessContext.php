@@ -43,10 +43,36 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
             return array();
 
         $folder = trim($path,'/');
+        $folder = explode('/', $folder);
+        $folder = $folder[0] ?? '';
+        if ($folder == '')
+            return array();
 
         $result = array();
         if (!$this->isOk())
             return $result;
+
+        if ($folder == 'query')
+        {
+            $params = $this->process->getParams();
+            foreach ($params as $k => $v)
+            {
+                if (substr($k, 0, 6) != 'query.')
+                    continue;
+                $k = substr($k, 6);
+
+                // TODO: filter based on the path
+
+                $result[] = array(
+                    'name' => $k,
+                    'path' => $k,
+                    'size' => null,
+                    'modified' => null,
+                    'is_dir' => false,
+                    'root' => 'ProcessContext'
+                );
+            }
+        }
 
         if ($folder == 'params')
         {
@@ -78,16 +104,66 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
 
     public function read(array $params, callable $callback)
     {
-        // TODO: implement
-        $path = $params['path'] ?? '';
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $path = $params['path'] ?? (is_string($params) ? $params : '');
+        $path = trim($path,'/');
+        $parts = explode('/', $path);
+        $folder = $parts[0] ?? '';
+        $file = $parts[1] ?? '';
+
+        if ($file == '')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        if ($folder == 'params')
+        {
+            $params = $this->process->getParams();
+            if (!isset($params[$file]))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            
+            if ($params[$file] instanceof \Flexio\Base\Stream)
+            {
+                $reader = $params[$file]->getReader();
+                while (($buf = $reader->read(16384)) !== false)
+                    $callback($buf);
+            }
+             else
+            {
+                $callback($params[$file]);
+            }
+        }
+         else
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);            
+        }
     }
 
     public function write(array $params, callable $callback)
     {
-        $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $path = $params['path'] ?? (is_string($params) ? $params : '');
+        $path = trim($path,'/');
+        $parts = explode('/', $path);
+        $folder = $parts[0] ?? '';
+        $file = $parts[1] ?? '';
+
+        if ($file == '')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        if ($folder == 'params')
+        {
+            $stream = \Flexio\Base\Stream::create();
+
+            $params = $this->process->getParams();
+            $params[$file] = $stream;
+            $this->process->setParams($params);
+
+            $streamwriter = $stream->getWriter();
+
+            while (($buf = $callback(16384)) !== false)
+                $streamwriter->write($buf);
+        }
+         else
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);            
+        }
     }
 
     ////////////////////////////////////////////////////////////

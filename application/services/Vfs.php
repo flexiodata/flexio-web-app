@@ -195,10 +195,10 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         if (strlen($path) == 0)
             return [];
 
-        if (substr($path, 0, 9) == 'flexio://')
+        if (substr($path, 0, 10) == 'context://')
         {
-            // split off the schema portion flexio://; the path portion will retain the preceding slash
-            return [ substr($path, 0, 9), substr($path, 8) ];
+            // split off the schema portion context://; the path portion will retain the preceding slash
+            return [ substr($path, 0, 10), substr($path, 9) ];
         }
 
         $off = ($path[0] == '/' ? 1:0);
@@ -216,7 +216,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
 
     private function getService(string $connection_identifier)
     {
-        if ($connection_identifier == 'flexio://')
+        if ($connection_identifier == 'context://')
         {
             if ($this->process_context_service === null)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
