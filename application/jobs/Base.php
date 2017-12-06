@@ -60,6 +60,8 @@ class Base implements \Flexio\Jobs\IJob
         // normally, $process is an object that exposes the \Flexio\Jobs\IProcess interface; however, for the
         // convenience of the test suite, a key/value array may be passed instead
 
+        // $value is the array or value that we will replace tokens on
+
         if (is_array($process))
             $variables = $process;
              else
@@ -99,13 +101,21 @@ class Base implements \Flexio\Jobs\IJob
                             $stream = $process->getStdin();
                             $streamreader = $stream->getReader();
                             while (($chunk = $streamreader->read()) !== false)
-                            {
                                 $replacement .= $chunk;
-                            }
                         }
                          else if (isset($variables[$varname]))
                         {
-                            $replacement = $variables[$varname];
+                            if ($variables[$varname] instanceof \Flexio\Base\Stream)
+                            {
+                                $replacement = '';
+                                $streamreader = $variables[$varname]->getReader();
+                                while (($chunk = $streamreader->read()) !== false)
+                                    $replacement .= $chunk;
+                            }
+                             else
+                            {
+                                $replacement = (string)$variables[$varname];
+                            }
                         }
 
                         // use true/false text for boolean value replacements in a string

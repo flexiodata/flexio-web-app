@@ -89,14 +89,14 @@ class Process implements \Flexio\Jobs\IProcess
 
     private $metadata;      // array of optional metadata info that can be used for passing info (such as info from the calling context) across callbacks
     private $tasks;         // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
-    private $params;        // variables that are used in the processing
+    private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)
     private $stdin;
     private $stdout;
     private $response_code;
     private $error;
     private $status_info;
     private $handlers;     // array of callbacks invoked for each event
-    private $files;        // array of streams of files (similar to php's $_FILES)
+    //private $files;        // array of streams of files (similar to php's $_FILES)
 
     public function __construct()
     {
@@ -152,6 +152,16 @@ class Process implements \Flexio\Jobs\IProcess
 
     public function setParams(array $arr)
     {
+        foreach ($arr as $k => &$v)
+        {
+            if (!($v instanceof \Flexio\Base\Stream))
+            {
+                $stream = \Flexio\Base\Stream::create();
+                $stream->buffer = (string)$v;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+                $v = $stream;
+            }
+        }
+
         $this->params = $arr;
     }
 
