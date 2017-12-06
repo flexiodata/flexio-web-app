@@ -42,6 +42,7 @@ class List1 extends \Flexio\Jobs\Base
         $streamwriter = $outstream->getWriter();
 
         $vfs = new \Flexio\Services\Vfs();
+        $vfs->setProcess($process);
         $files = $vfs->list($path);
 
         $results = [];

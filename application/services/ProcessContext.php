@@ -22,7 +22,7 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
 {
     private $process = null;
 
-    public function __construct(\Flexio\Base\IProcess $process)
+    public function __construct(\Flexio\Jobs\IProcess $process)
     {
         $this->process = $process;
     }

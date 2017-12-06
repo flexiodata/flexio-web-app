@@ -12,9 +12,9 @@
  */
 
 
+
 declare(strict_types=1);
 namespace Flexio\Services;
-
 
 // TODO: require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
@@ -22,7 +22,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
 {
     private $process_context_service = null;
 
-    public function setProcessContext(\Flexio\Jobs\IProcess $process)
+    public function setProcess(\Flexio\Jobs\IProcess $process)
     {
         $this->process_context_service = new \Flexio\Services\ProcessContext($process);
     }
@@ -98,28 +98,13 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
 
-
         if ($connection_identifier == 'local')
         {
             return $this->listLocal();
         }
 
 
-
-        // load the connection
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the connection
-        if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $connection_info = $connection->get();
-
-        $service = \Flexio\Services\Factory::create($connection_info);
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service = $this->getService($connection_identifier);
 
         $results = $service->list($rpath);
         if (is_array($results))
@@ -180,19 +165,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
 
-        // load the connection
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the connection
-        if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $connection_info = $connection->get();
-        $service = \Flexio\Services\Factory::create($connection_info);
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service = $this->getService($connection_identifier);
 
         return $service->read([ 'path' => $rpath ], $callback);
     }
@@ -211,19 +184,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
 
-        // load the connection
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the connection
-        if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $connection_info = $connection->get();
-        $service = \Flexio\Services\Factory::create($connection_info);
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+        $service = $this->getService($connection_identifier);
 
         return $service->write([ 'path' => $rpath ], $callback);
     }
@@ -233,6 +194,12 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         $path = trim($path);
         if (strlen($path) == 0)
             return [];
+
+        if (substr($path, 0, 9) == 'flexio://')
+        {
+            // split off the schema portion flexio://; the path portion will retain the preceding slash
+            return [ substr($path, 0, 9), substr($path, 8) ];
+        }
 
         $off = ($path[0] == '/' ? 1:0);
 
@@ -245,5 +212,32 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         {
             return [ substr($path, $off, $pos-$off), substr($path, $pos) ];
         }
+    }
+
+    private function getService(string $connection_identifier)
+    {
+        if ($connection_identifier == 'flexio://')
+        {
+            if ($this->process_context_service === null)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+            return $this->process_context_service;
+        }
+
+        // load the connection
+        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        if ($connection === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the connection
+        if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $connection_info = $connection->get();
+
+        $service = \Flexio\Services\Factory::create($connection_info);
+        if ($service === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        return $service;
     }
 }
