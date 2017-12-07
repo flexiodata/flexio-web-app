@@ -57,6 +57,12 @@ try
             add column stream_type varchar(3) NOT NULL default ''
 EOT;
     $db->exec($sql);
+
+    // STEP 2: create an index on the parent_eid
+    $sql = <<<EOT
+    create index idx_stream_parent_eid on tbl_stream (parent_eid);
+EOT;
+$db->exec($sql);
 }
 catch(\Exception $e)
 {
