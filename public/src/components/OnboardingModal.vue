@@ -87,10 +87,12 @@
         this.$refs['dialog'].open()
       },
       close(close_type) {
+        /*
         if (close_type == 'close')
-          analytics.track('Closed Onboarding Modal: Close Button', { close_type })
+          //analytics.track('Closed Onboarding Modal: Close Button', { close_type })
            else if (close_type == 'skip')
-          analytics.track('Closed Onboarding Modal: Skip Button', { close_type })
+          //analytics.track('Closed Onboarding Modal: Skip Button', { close_type })
+        */
 
         this.$refs['dialog'].close()
       },
