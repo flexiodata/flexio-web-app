@@ -103,7 +103,7 @@
         this.$emit('signed-up-signed-in')
         this.view = 'sign-up-success'
       },
-      getUserInfo() {
+      getUserInfo(include_label) {
         var info = this.user_info
         var user_info = _.pick(info, ['first_name', 'last_name', 'email'])
 
@@ -115,6 +115,14 @@
           createdAt: _.get(info, 'created')
         })
 
+        // add current pathname as 'label' (for Google Analytics)
+        if (include_label === true)
+        {
+          _.assign(user_info, {
+            label: window.location.pathname
+          })
+        }
+
         return user_info
       },
       fireIdentify() {
@@ -125,7 +133,7 @@
         setTimeout(() => {
           if (window.analytics)
           {
-            window.analytics.track('Signed In', this.getUserInfo())
+            window.analytics.track('Signed In', this.getUserInfo(true))
             setTimeout(function() { window.location = '/app' }, 300)
           }
         }, 50)
@@ -133,7 +141,7 @@
       fireSignUp() {
         setTimeout(() => {
           if (window.analytics)
-            window.analytics.track('Signed Up', this.getUserInfo())
+            window.analytics.track('Signed Up', this.getUserInfo(true))
         }, 50)
       }
     }
