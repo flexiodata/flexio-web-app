@@ -56,13 +56,16 @@
       show_intercom_button() {
         switch (_.get(this.$route, 'name', ''))
         {
-          case null:
           case ROUTE_EMBED:
           case ROUTE_SIGNIN:
           case ROUTE_SIGNUP:
           case ROUTE_FORGOTPASSWORD:
           case ROUTE_RESETPASSWORD:
             return false
+
+          // 404
+          case null:
+            return true
         }
 
         return true

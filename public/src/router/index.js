@@ -20,6 +20,7 @@ import SignIn from '../components/SignIn.vue'
 import SignUp from '../components/SignUp.vue'
 import ForgotPassword from '../components/ForgotPassword.vue'
 import ResetPassword from '../components/ResetPassword.vue'
+import PageNotFound from '../components/PageNotFound.vue'
 
 // use VueRouter for handling browser history
 Vue.use(VueRouter)
@@ -42,7 +43,8 @@ const routes = [
   { path: '/signin',         name: ROUTE_SIGNIN,         component: SignIn         },
   { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUp         },
   { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPassword },
-  { path: '/resetpassword',  name: ROUTE_RESETPASSWORD,  component: ResetPassword  }
+  { path: '/resetpassword',  name: ROUTE_RESETPASSWORD,  component: ResetPassword  },
+  { path: "*",                                           component: PageNotFound   }
 ]
 
 export default new VueRouter({
