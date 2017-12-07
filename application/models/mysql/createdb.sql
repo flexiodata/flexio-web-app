@@ -283,6 +283,8 @@ DROP TABLE IF EXISTS tbl_stream;
 CREATE TABLE tbl_stream (
   id int UNSIGNED NOT NULL auto_increment,
   eid varchar(12) NOT NULL default '',
+  parent_eid varchar(12) NOT NULL default '',
+  stream_type varchar(3) NOT NULL default '',
   name text default '',
   path text default '',
   size numeric(12,0) default 0,
@@ -292,8 +294,6 @@ CREATE TABLE tbl_stream (
   file_created timestamp NULL default NULL,
   file_modified timestamp NULL default NULL,
   connection_eid varchar(12) NOT NULL default '',
-  cache_path text default '',
-  cache_connection_eid varchar(12) NOT NULL default '',
   expires timestamp NULL default NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,

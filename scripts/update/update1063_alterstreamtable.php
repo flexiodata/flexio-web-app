@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2017-11-29
+ * Created:  2017-12-07
  *
  * @package flexio
  * @subpackage Database_Update
@@ -48,10 +48,13 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: add the new field
+    // STEP 1: alter the stream table
     $sql = <<<EOT
         alter table tbl_stream
-            add column expires timestamp NULL default NULL
+            drop column cache_path,
+            drop cache_connection_eid,
+            add column parent_eid varchar(12) NOT NULL default '',
+            add column stream_type varchar(3) NOT NULL default ''
 EOT;
     $db->exec($sql);
 }

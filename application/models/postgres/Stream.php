@@ -38,6 +38,8 @@ class Stream extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'                  => $eid,
+                'parent_eid'           => $params['parent_eid'] ?? '',
+                'stream_type'          => $params['stream_type'] ?? '',
                 'name'                 => $params['name'] ?? '',
                 'path'                 => $params['path'] ?? '',
                 'size'                 => $size,
@@ -47,8 +49,6 @@ class Stream extends ModelBase
                 'file_created'         => $params['file_created'] ?? null,
                 'file_modified'        => $params['file_modified'] ?? null,
                 'connection_eid'       => $params['connection_eid'] ?? '',
-                'cache_path'           => $params['cache_path'] ?? '',
-                'cache_connection_eid' => $params['cache_connection_eid'] ?? '',
                 'expires'              => $params['expires'] ?? null,
                 'created'              => $timestamp,
                 'updated'              => $timestamp
@@ -93,6 +93,8 @@ class Stream extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
+                'parent_eid'           => array('type' => 'eid',     'required' => false),
+                'stream_type'          => array('type' => 'string',  'required' => false),
                 'name'                 => array('type' => 'string',  'required' => false),
                 'path'                 => array('type' => 'string',  'required' => false),
                 'size'                 => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
@@ -102,8 +104,6 @@ class Stream extends ModelBase
                 'file_created'         => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
                 'file_modified'        => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
                 'connection_eid'       => array('type' => 'eid',     'required' => false),
-                'cache_path'           => array('type' => 'string',  'required' => false),
-                'cache_connection_eid' => array('type' => 'eid',     'required' => false),
                 'expires'              => array('type' => 'any',     'required' => false)  // TODO: workaround null problem; any = allow nulls
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -147,6 +147,8 @@ class Stream extends ModelBase
         {
             $row = $db->fetchRow("select tob.eid as eid,
                                         tob.eid_type as eid_type,
+                                        tst.parent_eid as parent_eid,
+                                        tst.stream_type as stream_type,
                                         tst.name as name,
                                         tst.path as path,
                                         tst.size as size,
@@ -156,8 +158,6 @@ class Stream extends ModelBase
                                         tst.file_created as file_created,
                                         tst.file_modified as file_modified,
                                         tst.connection_eid as connection_eid,
-                                        tst.cache_path as cache_path,
-                                        tst.cache_connection_eid as cache_connection_eid,
                                         tst.expires as expires,
                                         tob.eid_status as eid_status,
                                         tob.created as created,
@@ -177,6 +177,8 @@ class Stream extends ModelBase
 
         return array('eid'                  => $row['eid'],
                      'eid_type'             => $row['eid_type'],
+                     'parent_eid'           => $row['parent_eid'],
+                     'stream_type'          => $row['stream_type'],
                      'name'                 => $row['name'],
                      'path'                 => $row['path'],
                      'size'                 => $row['size'],
@@ -186,8 +188,6 @@ class Stream extends ModelBase
                      'file_created'         => $row['file_created'],
                      'file_modified'        => $row['file_modified'],
                      'connection_eid'       => $row['connection_eid'],
-                     'cache_path'           => $row['cache_path'],
-                     'cache_connection_eid' => $row['cache_connection_eid'],
                      'expires'              => $row['expires'],
                      'eid_status'           => $row['eid_status'],
                      'created'              => \Flexio\Base\Util::formatDate($row['created']),
