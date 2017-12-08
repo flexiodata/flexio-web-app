@@ -196,15 +196,40 @@ class Stream extends ModelBase
 
 
 
-    public function getChildStreams(string $eid) // TODO: add return type
+    public function queryStreams(array $conditions) : array
     {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
         $row = false;
         $db = $this->getDatabase();
         try
         {
+            $where = '';
+            $where_arr = [];
+            if (isset($conditions['parent_eid']))
+            {
+                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'tst.parent_eid = ?';
+                $where_arr[] = $conditions['parent_eid'];
+                unset($conditions['parent_eid']);
+            }
+            if (isset($conditions['name']))
+            {
+                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'tst.name = ?';
+                $where_arr[] = $conditions['name'];
+                unset($conditions['name']);
+            }
+            if (isset($conditions['stream_type']))
+            {
+                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'tst.stream_type = ?';
+                $where_arr[] = $conditions['stream_type'];
+                unset($conditions['stream_type']);
+            }
+
+            if (count($where_arr) == 0 || count($conditions) > 0)
+            {
+                // refuse to query with no conditions;
+                // also refuse to query if unknown conditions are specified
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            }
+
             $rows = $db->fetchAll("select tob.eid as eid,
                                           tob.eid_type as eid_type,
                                           tst.parent_eid as parent_eid,
@@ -224,8 +249,8 @@ class Stream extends ModelBase
                                           tob.updated as updated
                                 from tbl_object tob
                                 inner join tbl_stream tst on tob.eid = tst.eid
-                                where tst.parent_eid = ?
-                                ", $eid);
+                                where $where
+                                ", $where_arr);
         }
         catch (\Exception $e)
         {
@@ -263,61 +288,4 @@ class Stream extends ModelBase
 
 
 
-
-    public function getProcessLogEntries(string $eid) // TODO: add return type
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        $db = $this->getDatabase();
-        $rows = array();
-        try
-        {
-            $rows = $db->fetchAll("select tpl.eid as eid,
-                                          tpl.process_eid as process_eid,
-                                          tpl.task_type as task_type,
-                                          tpl.task_version as task_version,
-                                          tpl.task as task,
-                                          tpl.input as input,
-                                          tpl.output as output,
-                                          tpl.started as started,
-                                          tpl.finished as finished,
-                                          tpl.log_type as log_type,
-                                          tpl.message as message,
-                                          tpl.created as created,
-                                          tpl.updated as updated
-                                   from tbl_processlog tpl
-                                   where tpl.process_eid = ?
-                                   order by tpl.id
-                                  ", $eid);
-         }
-         catch (\Exception $e)
-         {
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-         }
-
-        if (!$rows)
-            return array();
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $output[] = array('eid'              => $row['eid'],
-                              'process_eid'      => $row['process_eid'],
-                              'task_type'        => $row['task_type'],
-                              'task_version'     => $row['task_version'],
-                              'task'             => $row['task'],
-                              'input'            => $row['input'],
-                              'output'           => $row['output'],
-                              'started'          => $row['started'],
-                              'finished'         => $row['finished'],
-                              'duration'         => \Flexio\Base\Util::formatDateDiff($row['started'], $row['finished']),
-                              'log_type'         => $row['log_type'],
-                              'message'          => $row['message'],
-                              'created'          => \Flexio\Base\Util::formatDate($row['created']),
-                              'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
-        }
-
-        return $output;
-    }
 }

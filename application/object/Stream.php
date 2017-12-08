@@ -72,6 +72,23 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         return $object;
     }
 
+    public static function load(array $properties) // : ?\Flexio\Object\Stream
+    {
+        $object = new static();
+
+        $arr = $this->getModel()->stream->queryStreams($properties);
+
+        // query must yield exactly one record
+        if (count($arr) != 1)
+        {
+            // throw exception instead?
+            return null;
+        }
+
+        $object->set($arr[0]);
+        return $object;
+    }
+
     // copies a streams properties to $dest, overwriting $dest's properties
     public function copy(\Flexio\Base\IStream $source)
     {
@@ -226,15 +243,27 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         return $info;
     }
 
-    public function getChildStreams() : array
+    public function getChildStreams($name = null) : array
     {
         // return an array of \Flexio\Object\Stream objects that have a
-        // parent_eid = this object's eid
+        // parent_eid = this object's eid;
+        // if name is specified, the result set will be additionally filtered with name
 
-        $arr = $this->getModel()->stream->getChildStreams($this->getEid());
+        $where = [ 'parent_eid' => $this->getEid() ];
+        if (!is_null($name))
+            $where['name'] = $name;
 
-        var_dump($arr);
+        $arr = $this->getModel()->stream->queryStreams($where);
 
+        $results = [];
+        foreach ($arr as $a)
+        {
+            $object = new static();
+            $object->set($a);
+            $results[] = $object;
+        }
+
+        return $results;
     }
 
     public function getReader() : \Flexio\Base\IStreamReader
