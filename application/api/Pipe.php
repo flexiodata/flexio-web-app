@@ -256,7 +256,7 @@ class Pipe
 
         // get the pipes
         $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $pipes = $user->getObjects($filter);
+        $pipes = $user->getObjectList($filter);
 
         $result = array();
         foreach ($pipes as $p)

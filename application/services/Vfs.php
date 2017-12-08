@@ -20,7 +20,7 @@ namespace Flexio\Services;
 
 class Vfs // TODO: implements \Flexio\Services\IFileSystem
 {
-    private $process_context_service = null;    
+    private $process_context_service = null;
     private $store_service = null;
 
     public function setProcess(\Flexio\Jobs\IProcess $process)
@@ -54,7 +54,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
 
             // get the connections
             $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-            $connections = $user->getObjects($filter);
+            $connections = $user->getObjectList($filter);
 
             // add an entry for local storage
             $results[] = array(

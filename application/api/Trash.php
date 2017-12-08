@@ -201,7 +201,7 @@ class Trash
 
         // get the pipes
         $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_TRASH));
-        $pipes = $user->getObjects($filter);
+        $pipes = $user->getObjectList($filter);
 
         $result = array();
         foreach ($pipes as $p)

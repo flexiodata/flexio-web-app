@@ -205,7 +205,7 @@ class Connection
 
         // get the connections
         $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $connections = $user->getObjects($filter);
+        $connections = $user->getObjectList($filter);
 
         $result = array();
         foreach ($connections as $c)

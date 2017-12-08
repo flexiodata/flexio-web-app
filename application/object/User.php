@@ -168,7 +168,7 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getObjects(array $filter = null) : array
+    public function getObjectList(array $filter = null) : array
     {
         // filter can be contain combinations of the following:
         //$filter = array(
@@ -202,7 +202,7 @@ class User extends \Flexio\Object\Base
     public function getRightsList(array $filter = null) : array
     {
         // get the objects for the user
-        $objects = $this->getObjects($filter);
+        $objects = $this->getObjectList($filter);
 
         // return the rights for the objects
         $res = array();
