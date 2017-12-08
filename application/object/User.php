@@ -120,6 +120,37 @@ class User extends \Flexio\Object\Base
         return $this->properties;
     }
 
+    public function getObjectList(array $filter = null) : array
+    {
+        // filter can be contain combinations of the following:
+        //$filter = array(
+        //    'target_eids' => array(/* index array of eids */),
+        //    'eid_type' => array(/* index array of eid types */),
+        //    'eid_status' => array(/* index array of eid statuses */)
+        //);
+
+        // get the objects owned/followed by the user
+        $user_eid = $this->getEid();
+
+        $objects_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $filter);
+        $objects_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $filter);
+        $objects = array_merge($objects_owned, $objects_followed);
+
+        $res = array();
+        foreach ($objects as $object_info)
+        {
+            $object_eid = $object_info['eid'];
+            $object_eid_type = $object_info['eid_type'];
+            $object = \Flexio\Object\Store::load($object_eid, $object_eid_type);
+            if ($object === false)
+                continue;
+
+            $res[] = $object;
+        }
+
+        return $res;
+    }
+
     public function getProjectList() : array
     {
         $eid = $this->getEid();
@@ -163,37 +194,6 @@ class User extends \Flexio\Object\Base
                 continue;
 
             $res[] = $process;
-        }
-
-        return $res;
-    }
-
-    public function getObjectList(array $filter = null) : array
-    {
-        // filter can be contain combinations of the following:
-        //$filter = array(
-        //    'target_eids' => array(/* index array of eids */),
-        //    'eid_type' => array(/* index array of eid types */),
-        //    'eid_status' => array(/* index array of eid statuses */)
-        //);
-
-        // get the objects owned/followed by the user
-        $user_eid = $this->getEid();
-
-        $objects_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $filter);
-        $objects_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $filter);
-        $objects = array_merge($objects_owned, $objects_followed);
-
-        $res = array();
-        foreach ($objects as $object_info)
-        {
-            $object_eid = $object_info['eid'];
-            $object_eid_type = $object_info['eid_type'];
-            $object = \Flexio\Object\Store::load($object_eid, $object_eid_type);
-            if ($object === false)
-                continue;
-
-            $res[] = $object;
         }
 
         return $res;
