@@ -1085,6 +1085,8 @@ class Model
             case \Model::EDGE_HAS_COMMENT:
             case \Model::EDGE_PROCESS_OF:
             case \Model::EDGE_HAS_PROCESS:
+            case \Model::EDGE_STORE_FOR:
+            case \Model::EDGE_HAS_STORE:
                 return true;
         }
     }

@@ -139,6 +139,7 @@ class User extends \Flexio\Object\Base
         // we don't have a root; so create one
         $properties = array();
         $properties['name'] = '';
+        $properties['path'] = '';
         $properties['stream_type'] = \Flexio\Object\Stream::TYPE_DIRECTORY;
         $stream = \Flexio\Object\Stream::create($properties);
 
