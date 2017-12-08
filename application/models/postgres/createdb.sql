@@ -284,6 +284,7 @@ CREATE TABLE tbl_stream (
   UNIQUE (eid)
 );
 
+CREATE INDEX idx_stream_parent_eid ON tbl_stream (parent_eid);
 CREATE INDEX idx_stream_connection_eid ON tbl_stream (connection_eid);
 
 
