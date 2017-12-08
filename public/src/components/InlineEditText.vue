@@ -15,10 +15,16 @@
       v-show="is_editing"
       v-deferred-focus
     ></textarea>
-    <div class="flex flex-row items-center hide-child" :class="[
-      allowEdit ? staticCls : '',
-      allowEdit ? 'hover-black' : ''
-    ]" v-if="!is_editing">
+    <div
+      class="flex flex-row items-center hide-child"
+      :class="[
+        allowEdit ? staticCls : '',
+        allowEdit ? 'hover-black' : '',
+        !showEditButton && tooltip.length > 0 ? tooltipCls : ''
+      ]"
+      :aria-label="!showEditButton && tooltip.length > 0 ? tooltip : null"
+      v-if="!is_editing"
+    >
       <div
         class="marked"
         :class="{ 'flex-fill': isBlock }"
@@ -42,8 +48,8 @@
       </div>
       <button
         class="br1 child"
-        :class="[editButtonTooltipCls, isBlock ? 'ma1 pa1 self-start' : '']"
-        :aria-label="editButtonLabel"
+        :class="[tooltipCls, isBlock ? 'ma1 pa1 self-start' : '']"
+        :aria-label="tooltip"
         @click="startEdit('edit-button')"
         v-if="!is_editing && showEditButton && allowEdit"
       ><i class="db material-icons f6">edit</i>
@@ -82,11 +88,11 @@
         type: String,
         default: ''
       },
-      'edit-button-label': {
+      'tooltip': {
         type: String,
         default: 'Click to edit'
       },
-      'edit-button-tooltip-cls': {
+      'tooltip-cls': {
         type: String,
         default: 'hint--top'
       },
