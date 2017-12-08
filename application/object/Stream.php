@@ -226,6 +226,17 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         return $info;
     }
 
+    public function getChildStreams() : array
+    {
+        // return an array of \Flexio\Object\Stream objects that have a
+        // parent_eid = this object's eid
+
+        $arr = $this->getModel()->stream->getChildStreams($this->getEid());
+
+        var_dump($arr);
+
+    }
+
     public function getReader() : \Flexio\Base\IStreamReader
     {
         //return \Flexio\Object\StreamReader::create($this);
@@ -299,6 +310,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
             "eid" : null,
             "eid_type" : "'.\Model::TYPE_STREAM.'",
             "eid_status" : null,
+            "stream_type" : null,
+            "parent_eid" : null,
             "name" : null,
             "path" : null,
             "size" : null,

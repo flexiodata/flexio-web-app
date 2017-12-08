@@ -193,4 +193,131 @@ class Stream extends ModelBase
                      'created'              => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
     }
+
+
+
+    public function getChildStreams(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false; // don't flag an error, but acknowledge that object doesn't exist
+
+        $row = false;
+        $db = $this->getDatabase();
+        try
+        {
+            $rows = $db->fetchAll("select tob.eid as eid,
+                                          tob.eid_type as eid_type,
+                                          tst.parent_eid as parent_eid,
+                                          tst.stream_type as stream_type,
+                                          tst.name as name,
+                                          tst.path as path,
+                                          tst.size as size,
+                                          tst.hash as hash,
+                                          tst.mime_type as mime_type,
+                                          tst.structure as structure,
+                                          tst.file_created as file_created,
+                                          tst.file_modified as file_modified,
+                                          tst.connection_eid as connection_eid,
+                                          tst.expires as expires,
+                                          tob.eid_status as eid_status,
+                                          tob.created as created,
+                                          tob.updated as updated
+                                from tbl_object tob
+                                inner join tbl_stream tst on tob.eid = tst.eid
+                                where tst.parent_eid = ?
+                                ", $eid);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        if (!$rows)
+            return array(); // don't flag an error, but acknowledge that object doesn't exist
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] =  array('eid'                  => $row['eid'],
+                               'eid_type'             => $row['eid_type'],
+                               'parent_eid'           => $row['parent_eid'],
+                               'stream_type'          => $row['stream_type'],
+                               'name'                 => $row['name'],
+                               'path'                 => $row['path'],
+                               'size'                 => $row['size'],
+                               'hash'                 => $row['hash'],
+                               'mime_type'            => $row['mime_type'],
+                               'structure'            => $row['structure'],
+                               'file_created'         => $row['file_created'],
+                               'file_modified'        => $row['file_modified'],
+                               'connection_eid'       => $row['connection_eid'],
+                               'expires'              => $row['expires'],
+                               'eid_status'           => $row['eid_status'],
+                               'created'              => \Flexio\Base\Util::formatDate($row['created']),
+                               'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
+
+
+
+
+    public function getProcessLogEntries(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false; // don't flag an error, but acknowledge that object doesn't exist
+
+        $db = $this->getDatabase();
+        $rows = array();
+        try
+        {
+            $rows = $db->fetchAll("select tpl.eid as eid,
+                                          tpl.process_eid as process_eid,
+                                          tpl.task_type as task_type,
+                                          tpl.task_version as task_version,
+                                          tpl.task as task,
+                                          tpl.input as input,
+                                          tpl.output as output,
+                                          tpl.started as started,
+                                          tpl.finished as finished,
+                                          tpl.log_type as log_type,
+                                          tpl.message as message,
+                                          tpl.created as created,
+                                          tpl.updated as updated
+                                   from tbl_processlog tpl
+                                   where tpl.process_eid = ?
+                                   order by tpl.id
+                                  ", $eid);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'              => $row['eid'],
+                              'process_eid'      => $row['process_eid'],
+                              'task_type'        => $row['task_type'],
+                              'task_version'     => $row['task_version'],
+                              'task'             => $row['task'],
+                              'input'            => $row['input'],
+                              'output'           => $row['output'],
+                              'started'          => $row['started'],
+                              'finished'         => $row['finished'],
+                              'duration'         => \Flexio\Base\Util::formatDateDiff($row['started'], $row['finished']),
+                              'log_type'         => $row['log_type'],
+                              'message'          => $row['message'],
+                              'created'          => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
 }

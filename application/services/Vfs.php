@@ -20,7 +20,8 @@ namespace Flexio\Services;
 
 class Vfs // TODO: implements \Flexio\Services\IFileSystem
 {
-    private $process_context_service = null;
+    private $process_context_service = null;    
+    private $store_service = null;
 
     public function setProcess(\Flexio\Jobs\IProcess $process)
     {
@@ -98,12 +99,6 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
 
-        if ($connection_identifier == 'local')
-        {
-            return $this->listLocal();
-        }
-
-
         $service = $this->getService($connection_identifier);
 
         $results = $service->list($rpath);
@@ -126,30 +121,6 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         return false;
     }
 
-    public function listLocal() : array
-    {
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-
-        // load the object
-        $user = \Flexio\Object\User::load($current_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // get the pipes
-        $filter = array('eid_type' => array(\Model::TYPE_STREAM), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $streams = $user->getObjects($filter);
-
-        $result = array();
-        foreach ($streams as $s)
-        {
-            if ($s->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-                continue;
-
-            $result[] = $s->get();
-        }
-
-        return $result;
-    }
 
     public function read($path, callable $callback)
     {
@@ -201,6 +172,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
             return [ substr($path, 0, 10), substr($path, 9) ];
         }
 
+
         $off = ($path[0] == '/' ? 1:0);
 
         $pos = strpos($path, '/', $off);
@@ -221,6 +193,13 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
             if ($this->process_context_service === null)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
             return $this->process_context_service;
+        }
+
+        if ($connection_identifier == 'local')
+        {
+            if ($this->store_service === null)
+                $this->store_service = \Flexio\Services\Store::create();
+            return $this->store_service;
         }
 
         // load the connection
