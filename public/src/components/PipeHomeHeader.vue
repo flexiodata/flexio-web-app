@@ -1,100 +1,118 @@
 <template>
-  <div class="flex flex-row items-start min-w5">
-    <router-link class="pv1 dark-gray hover-blue css-back-button" to="/pipes">
-      <div class="hint--bottom-right" aria-label="Back to pipe list">
-        <i class="material-icons md-24">chevron_left</i>
-      </div>
-    </router-link>
-    <div class="flex-fill mb1 mr2">
-      <div class="flex flex-column flex-row-l items-center-l">
-        <inline-edit-text
-          class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr2-l"
-          input-key="name"
-          :val="pipe_name"
-          @save="editPipeName">
-        </inline-edit-text>
-        <div class="flex flex-row items-center">
+  <nav class="z-1" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
+    <div class="flex flex-row bg-white pa2 pl3-ns pr2-ns items-start" style="min-height: 54px">
+      <router-link
+        to="/pipes"
+        class="flex flex-row items-center link mid-gray hover-black pv1"
+      >
+        <div class="hint--bottom-right" aria-label="Back to pipe list">
+          <i class="material-icons md-24">home</i>
+        </div>
+      </router-link>
+      <i class="material-icons md-24 black-20 rotate-270 pv1">arrow_drop_down</i>
+      <div class="flex-fill mb1 mr2">
+        <div class="flex flex-column flex-row-l items-center-l">
           <inline-edit-text
-            class="dib f7 v-mid silver bg-black-05 pv1 ph2 mr1"
-            placeholder="Add an alias"
-            input-key="ename"
-            :val="pipe_ename"
-            :show-edit-button="false"
-            @save="editPipeAlias">
+            class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr2-l"
+            input-key="name"
+            :val="pipe_name"
+            @save="editPipeName">
           </inline-edit-text>
-          <div
-            class="hint--bottom hint--large cursor-default dib"
-            aria-label="When using the Flex.io command line interface (CLI) or API, pipes may be referenced either via their object ID or via an alias created here. Aliases are unique across the app, so we recommend prefixing your username to the alias (e.g., username-foo)."
-            v-if="pipe_ename.length == 0"
-          >
-            <i class="material-icons blue md-18">info</i>
+          <div class="flex flex-row items-center">
+            <inline-edit-text
+              class="dib f7 v-mid silver bg-black-05 pv1 ph2 mr1"
+              placeholder="Add an alias"
+              input-key="ename"
+              :val="pipe_ename"
+              :show-edit-button="false"
+              @save="editPipeAlias">
+            </inline-edit-text>
+            <div
+              class="hint--bottom hint--large cursor-default dib"
+              aria-label="When using the Flex.io command line interface (CLI) or API, pipes may be referenced either via their object ID or via an alias created here. Aliases are unique across the app, so we recommend prefixing your username to the alias (e.g., username-foo)."
+              v-if="pipe_ename.length == 0"
+            >
+              <i class="material-icons blue">info</i>
+            </div>
           </div>
         </div>
+        <inline-edit-text
+          class="f6 lh-title gray mt1 dn db-l"
+          placeholder="Add a description"
+          placeholder-cls="fw6 black-20 hover-black-40"
+          input-key="description"
+          :val="pipe_description"
+          @save="editPipeDescription">
+        </inline-edit-text>
       </div>
-      <inline-edit-text
-        class="f6 lh-title gray mt1"
-        placeholder="Add a description"
-        placeholder-cls="fw6 black-20 hover-black-40"
-        input-key="description"
-        :val="pipe_description"
-        @save="editPipeDescription">
-      </inline-edit-text>
-    </div>
-    <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
-      <btn
-        btn-md
-        btn-primary
-        class="ttu b mr2"
-        @click="openCopyPipeModal"
-        v-if="is_superuser"
-      >Get Template JSON</btn>
-      <btn
-        btn-md
-        btn-primary
-        class="ttu b"
-        @click="cancelProcess"
-        v-if="isPrompting || isProcessRunning"
-      >Cancel</btn>
-      <div
-        class="hint--bottom-left"
-        :aria-label="run_button_tooltip"
-        v-else
-      >
+      <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns self-center-ns">
+        <btn
+          btn-md
+          btn-primary
+          class="ttu b mr2"
+          @click="openCopyPipeModal"
+          v-if="is_superuser"
+        >Get Template JSON</btn>
         <btn
           btn-md
           btn-primary
           class="ttu b"
-          :disabled="!is_run_allowed"
-          @click="runPipe"
-        >Run</btn>
+          @click="cancelProcess"
+          v-if="isPrompting || isProcessRunning"
+        >Cancel</btn>
+        <div
+          class="hint--bottom-left"
+          :aria-label="run_button_tooltip"
+          v-else
+        >
+          <btn
+            btn-md
+            btn-primary
+            class="ttu b"
+            :disabled="!is_run_allowed"
+            @click="runPipe"
+          >Run</btn>
+        </div>
+        <div class="dn db-ns flex-none ml2 ml3-ns mr2">
+          <div v-if="user_fetching"></div>
+          <user-dropdown v-else-if="logged_in"></user-dropdown>
+          <div v-else>
+            <router-link to="/signin" class="link underline-hover dib f6 f6-ns ttu b black-60 ph2 pv1 mr1 mr2-ns">Sign in</router-link>
+            <router-link to="/signup" class="link no-underline dib f6 f6-ns ttu b br1 white bg-orange darken-10 ph2 ph3-ns pv2 mv1">
+              <span class="di dn-ns">Sign up</span>
+              <span class="dn di-ns">Sign up for free</span>
+            </router-link>
+          </div>
+        </div>
       </div>
+
+      <!-- copy pipe modal -->
+      <copy-pipe-modal
+        ref="modal-copy-pipe"
+        @hide="show_copy_pipe_modal = false"
+        v-if="show_copy_pipe_modal"
+      ></copy-pipe-modal>
+
+      <!-- alert modal -->
+      <alert-modal
+        ref="modal-alert"
+        title="Error"
+        @hide="show_alert_modal = false"
+        v-if="show_alert_modal"
+      >
+        <div class="lh-copy">{{ename_error}}</div>
+      </alert-modal>
     </div>
-
-    <!-- copy pipe modal -->
-    <copy-pipe-modal
-      ref="modal-copy-pipe"
-      @hide="show_copy_pipe_modal = false"
-      v-if="show_copy_pipe_modal"
-    ></copy-pipe-modal>
-
-    <!-- alert modal -->
-    <alert-modal
-      ref="modal-alert"
-      title="Error"
-      @hide="show_alert_modal = false"
-      v-if="show_alert_modal"
-    >
-      <div class="lh-copy">{{ename_error}}</div>
-    </alert-modal>
-  </div>
+  </nav>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_TYPE_INPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
+  import UserDropdown from './UserDropdown.vue'
   import CopyPipeModal from './CopyPipeModal.vue'
   import AlertModal from './AlertModal.vue'
   import Validation from './mixins/validation'
@@ -120,6 +138,7 @@
     components: {
       Btn,
       InlineEditText,
+      UserDropdown,
       CopyPipeModal,
       AlertModal
     },
@@ -131,6 +150,9 @@
       }
     },
     computed: {
+      ...mapState([
+        'user_fetching'
+      ]),
       pipe() {
         return _.get(this.$store, 'state.objects.'+this.pipeEid, {})
       },
@@ -162,6 +184,12 @@
       },
       ename_error() {
         return _.get(this.ss_errors, 'ename.message', '')
+      },
+      user_eid() {
+        return _.get(this.getActiveUser(), 'eid', '')
+      },
+      logged_in() {
+        return this.user_eid.length > 0
       }
     },
     methods: {

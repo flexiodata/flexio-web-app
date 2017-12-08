@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <app-navbar class="flex-none" v-if="show_intercom_button"></app-navbar>
+    <app-navbar class="flex-none" v-if="show_intercom_button && show_navbar"></app-navbar>
     <router-view class="flex-fill"></router-view>
 
     <!-- onboarding modal -->
@@ -26,7 +26,8 @@
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
     ROUTE_FORGOTPASSWORD,
-    ROUTE_RESETPASSWORD
+    ROUTE_RESETPASSWORD,
+    ROUTE_PIPES
   } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
   import AppNavbar from './AppNavbar.vue'
@@ -53,8 +54,15 @@
       ...mapState([
         'active_user_eid'
       ]),
+      route_name() {
+        return _.get(this.$route, 'name', '')
+
+      },
+      show_navbar() {
+        return this.route_name == ROUTE_PIPES ? false : true
+      },
       show_intercom_button() {
-        switch (_.get(this.$route, 'name', ''))
+        switch (this.route_name)
         {
           case ROUTE_EMBED:
           case ROUTE_SIGNIN:
