@@ -192,6 +192,16 @@ class Test
         $expected = 'HPR';
         TestCheck::assertString('C.21', 'Model edge constant',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $actual = \Model::EDGE_STORE_FOR;
+        $expected = 'STF';
+        TestCheck::assertString('C.22', 'Model edge constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::EDGE_HAS_STORE;
+        $expected = 'HST';
+        TestCheck::assertString('C.23', 'Model edge constant',  $actual, $expected, $results);
+
 
 
         // TEST: Model status constants; the database stores raw values for

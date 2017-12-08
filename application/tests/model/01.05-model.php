@@ -336,6 +336,16 @@ class Test
         $expected = true;
         TestCheck::assertBoolean('B.27', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $actual = \Model::isValidEdge(\Model::EDGE_STORE_FOR);
+        $expected = true;
+        TestCheck::assertBoolean('B.28', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::isValidEdge(\Model::EDGE_HAS_STORE);
+        $expected = true;
+        TestCheck::assertBoolean('B.29', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
+
 
 
         // TEST: Model valid status FUNCTION
