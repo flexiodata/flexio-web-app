@@ -301,7 +301,7 @@ class Pipe
 
         // get the processes that are accessible
         $processes_accessible = array();
-        $processes = $pipe->getProcesses();
+        $processes = $pipe->getProcessList();
         foreach ($processes as $p)
         {
             // a pipe can be run by different users; make sure the given user can only see

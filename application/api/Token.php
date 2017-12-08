@@ -136,7 +136,7 @@ class Token
 
         // get the tokens
         $result = array();
-        $tokens = $user->getTokens();
+        $tokens = $user->getTokenList();
         foreach ($tokens as $t)
         {
             $result[] = $t->get();

@@ -283,7 +283,7 @@ class Process
 
         // get the processes
         $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $processes = $user->getProcesses($filter);
+        $processes = $user->getProcessList($filter);
 
         $result = array();
         foreach ($processes as $p)

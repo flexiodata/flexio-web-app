@@ -120,7 +120,7 @@ class User extends \Flexio\Object\Base
         return $this->properties;
     }
 
-    public function getProjects() : array
+    public function getProjectList() : array
     {
         $eid = $this->getEid();
 
@@ -146,7 +146,7 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getProcesses() : array
+    public function getProcessList() : array
     {
         $eid = $this->getEid();
 
@@ -218,7 +218,7 @@ class User extends \Flexio\Object\Base
         return $total_objects;
     }
 
-    public function getObjectRights(array $filter = null) : array
+    public function getRightsList(array $filter = null) : array
     {
         // get the objects for the user
         $objects = $this->getObjects($filter);
@@ -237,7 +237,7 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getTokens() : array
+    public function getTokenList() : array
     {
         $res = array();
         $token_items = $this->getModel()->token->getInfoFromUserEid($this->getEid());

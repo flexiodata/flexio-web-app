@@ -161,7 +161,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getProcesses() : array
+    public function getProcessList() : array
     {
         $result = array();
 
