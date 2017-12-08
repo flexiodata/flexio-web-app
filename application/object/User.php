@@ -120,6 +120,34 @@ class User extends \Flexio\Object\Base
         return $this->properties;
     }
 
+    public function getStoreRoot() : \Flexio\Object\Stream
+    {
+        // get the store root for the current user; if we can't find one, create one
+        $user_eid = $this->getEid();
+
+        // see if we already have a store root; if we do, return it
+        $items = $this->getModel()->assoc_range($user_eid, \Model::EDGE_HAS_STORE);
+        if (count($items) > 0)
+        {
+            $store_root_eid = $items[0]['eid'];
+            $stream = \Flexio\Object\Stream::load($store_root_eid);
+            if ($stream === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            return $stream;
+        }
+
+        // we don't have a root; so create one
+        $properties = array();
+        $properties['name'] = '';
+        $properties['stream_type'] = \Flexio\Object\Stream::TYPE_DIRECTORY;
+        $stream = \Flexio\Object\Stream::create($properties);
+
+        $this->getModel()->assoc_add($user_eid, \Model::EDGE_HAS_STORE, $stream->getEid());
+        $this->getModel()->assoc_add($stream->getEid(), \Model::EDGE_STORE_FOR, $user_eid);
+
+        return $stream;
+    }
+
     public function getObjectList(array $filter = null) : array
     {
         // filter can be contain combinations of the following:

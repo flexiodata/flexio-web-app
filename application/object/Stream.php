@@ -20,6 +20,10 @@ require_once dirname(__DIR__) . '/base/Abstract.php';
 
 class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
 {
+    // TODO: add tests for these constants
+    const TYPE_DIRECTORY = 'SD';
+    const TYPE_FILE = 'SF';
+
     public function __construct()
     {
         $this->setType(\Model::TYPE_STREAM);
@@ -69,23 +73,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         $storagefs = $object->getStorageFs();
         $storagefs->createFile($properties['path'], $create_params);
 
-        return $object;
-    }
-
-    public static function load(array $properties) // : ?\Flexio\Object\Stream
-    {
-        $object = new static();
-
-        $arr = $this->getModel()->stream->queryStreams($properties);
-
-        // query must yield exactly one record
-        if (count($arr) != 1)
-        {
-            // throw exception instead?
-            return null;
-        }
-
-        $object->set($arr[0]);
         return $object;
     }
 

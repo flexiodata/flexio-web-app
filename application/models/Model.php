@@ -33,25 +33,27 @@ class Model
 
     const EDGE_UNDEFINED     = '';     // undefind edge
     const EDGE_CREATED       = 'CRT';  // user A created object B
-    const EDGE_CREATED_BY    = 'CRB';  // object B was created by user A
+    const EDGE_CREATED_BY    = 'CRB';  // object A was created by user B
     const EDGE_OWNS          = 'OWN';  // user A owns object B
-    const EDGE_OWNED_BY      = 'OWB';  // object B is owned by user A
+    const EDGE_OWNED_BY      = 'OWB';  // object A is owned by user B
     const EDGE_INVITED       = 'INV';  // user A invited user B
-    const EDGE_INVITED_BY    = 'INB';  // user B was invited by user A
+    const EDGE_INVITED_BY    = 'INB';  // user A was invited by user B
     const EDGE_SHARED_WITH   = 'SHW';  // user A shared with user B
-    const EDGE_SHARED_FROM   = 'SHF';  // user B was shared something from user A
-    const EDGE_FOLLOWING     = 'FLW';  // user B is following object A
+    const EDGE_SHARED_FROM   = 'SHF';  // user A was shared something from user B
+    const EDGE_FOLLOWING     = 'FLW';  // user A is following object B
     const EDGE_FOLLOWED_BY   = 'FLB';  // object A is followed by user B
     const EDGE_MEMBER_OF     = 'MBO';  // object A is a member of object B
-    const EDGE_HAS_MEMBER    = 'HMB';  // object B has member object A
+    const EDGE_HAS_MEMBER    = 'HMB';  // object A has member object B
     const EDGE_LINKED_TO     = 'LKT';  // object A links to object B
-    const EDGE_LINKED_FROM   = 'LKF';  // object A links from object A
+    const EDGE_LINKED_FROM   = 'LKF';  // object A links from object B
     const EDGE_COPIED_TO     = 'CPT';  // object A copied to object B
-    const EDGE_COPIED_FROM   = 'CPF';  // object B copied from object A
+    const EDGE_COPIED_FROM   = 'CPF';  // object A copied from object B
     const EDGE_COMMENT_ON    = 'CMO';  // comment A is a comment on object B
-    const EDGE_HAS_COMMENT   = 'HCM';  // object B has comment A
+    const EDGE_HAS_COMMENT   = 'HCM';  // object A has comment B
     const EDGE_PROCESS_OF    = 'PRO';  // object A is a process of object B
-    const EDGE_HAS_PROCESS   = 'HPR';  // object B has process of object A
+    const EDGE_HAS_PROCESS   = 'HPR';  // object A has process that is object B
+    const EDGE_STORE_FOR     = 'STF';  // object A is a store for object B
+    const EDGE_HAS_STORE     = 'HST';  // object A has store a store that is object B
 
     const STATUS_UNDEFINED = '';
     const STATUS_PENDING   = 'P';
