@@ -13,39 +13,44 @@
       <div class="flex-fill mb1 mr2">
         <div class="flex flex-column flex-row-l items-center-l">
           <inline-edit-text
-            class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr2-l"
+            class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr3-l"
             input-key="name"
+            tooltip-cls="hint--bottom"
             :val="pipe_name"
+            :show-edit-button="false"
             @save="editPipeName">
           </inline-edit-text>
           <div class="flex flex-row items-center">
             <inline-edit-text
-              class="dib f7 v-mid silver bg-black-05 pv1 ph2 mr1"
+              class="dib f7 v-mid silver pv1 ph2 mr1 bg-black-05"
               placeholder="Add an alias"
               input-key="ename"
+              tooltip-cls="hint--bottom"
               :val="pipe_ename"
               :show-edit-button="false"
               @save="editPipeAlias">
             </inline-edit-text>
             <div
-              class="hint--bottom hint--large cursor-default dib"
+              class="hint--bottom hint--large cursor-default"
               aria-label="When using the Flex.io command line interface (CLI) or API, pipes may be referenced either via their object ID or via an alias created here. Aliases are unique across the app, so we recommend prefixing your username to the alias (e.g., username-foo)."
               v-if="pipe_ename.length == 0"
             >
-              <i class="material-icons blue">info</i>
+              <i class="material-icons blue v-mid" style="font-size: 21px">info</i>
             </div>
           </div>
         </div>
         <inline-edit-text
-          class="f6 lh-title gray mt1 dn db-l"
+          class="f6 lh-copy gray mw7 mt1 dn db-l"
           placeholder="Add a description"
           placeholder-cls="fw6 black-20 hover-black-40"
           input-key="description"
+          tooltip-cls="hint--bottom"
           :val="pipe_description"
+          :show-edit-button="false"
           @save="editPipeDescription">
         </inline-edit-text>
       </div>
-      <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns self-center-ns">
+      <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
         <btn
           btn-md
           btn-primary
@@ -73,7 +78,7 @@
             @click="runPipe"
           >Run</btn>
         </div>
-        <div class="dn db-ns flex-none ml2 ml3-ns mr2">
+        <div class="dn db-ns flex-none mh2">
           <div v-if="user_fetching"></div>
           <user-dropdown v-else-if="logged_in"></user-dropdown>
           <div v-else>
