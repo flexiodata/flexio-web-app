@@ -28,21 +28,6 @@ class User extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_USER);
     }
 
-    public static function isValidType(string $member) : bool
-    {
-        switch ($member)
-        {
-            default:
-            case self::MEMBER_UNDEFINED:
-                return false;
-
-            case self::MEMBER_OWNER:
-            case self::MEMBER_GROUP:
-            case self::MEMBER_PUBLIC:
-                return true;
-        }
-    }
-
     public static function create(array $properties = null) : \Flexio\Object\User
     {
         // config is stored as a json string, so it needs to be encoded
