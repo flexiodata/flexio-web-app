@@ -174,24 +174,9 @@ class User extends \Flexio\Object\Base
 
     public function getProcessList() : array
     {
-        $eid = $this->getEid();
-
-        // get the processes for the user that are either owned (process may have been created by somebody else) or created by the user
-        $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_CREATED.")->(".\Model::TYPE_PROCESS.")";
-        $processes = \Flexio\Object\Search::exec($search_path);
-
-        $res = array();
-        foreach ($processes as $p)
-        {
-            // load the object
-            $process = \Flexio\Object\Process::load($p);
-            if ($process === false)
-                continue;
-
-            $res[] = $process;
-        }
-
-        return $res;
+        $filter = array('eid_type' => array(\Model::TYPE_PROCESS), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $objects = $this->getObjectList($filter);
+        return $objects;
     }
 
     public function getRightsList(array $filter = null) : array
