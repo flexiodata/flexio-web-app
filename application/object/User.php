@@ -199,25 +199,6 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getObjectCount(array $filter = null) : int
-    {
-        // filter can be contain combinations of the following:
-        //$filter = array(
-        //    'target_eids' => array(/* index array of eids */),
-        //    'eid_type' => array(/* index array of eid types */),
-        //    'eid_status' => array(/* index array of eid statuses */)
-        //);
-
-        // get the counts of the objects owned/followed by the user
-        $user_eid = $this->getEid();
-
-        $objects_owned = $this->getModel()->assoc_count($user_eid, \Model::EDGE_OWNS, $filter);
-        $objects_followed = $this->getModel()->assoc_count($user_eid, \Model::EDGE_FOLLOWING, $filter);
-        $total_objects = $objects_owned + $objects_followed;
-
-        return $total_objects;
-    }
-
     public function getRightsList(array $filter = null) : array
     {
         // get the objects for the user
