@@ -53,8 +53,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // get the connections
-            $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-            $connections = $user->getObjectList($filter);
+            $connections = $user->getConnectionList();
 
             // add an entry for local storage
             $results[] = array(

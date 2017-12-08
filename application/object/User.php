@@ -153,28 +153,23 @@ class User extends \Flexio\Object\Base
 
     public function getProjectList() : array
     {
-        $eid = $this->getEid();
+        $filter = array('eid_type' => array(\Model::TYPE_PROJECT), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $objects = $this->getObjectList($filter);
+        return $objects;
+    }
 
-        // get the projects for the user based on projects the user owns or is following
-        $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")";
-        $projects = \Flexio\Object\Search::exec($search_path);
+    public function getPipeList() : array
+    {
+        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $objects = $this->getObjectList($filter);
+        return $objects;
+    }
 
-        $res = array();
-        foreach ($projects as $p)
-        {
-            // load the object
-            $project = \Flexio\Object\Project::load($p);
-            if ($project === false)
-                continue;
-
-            // only show projects that are available
-            if ($project->getStatus() !== \Model::STATUS_AVAILABLE)
-                continue;
-
-            $res[] = $project;
-        }
-
-        return $res;
+    public function getConnectionList() : array
+    {
+        $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $objects = $this->getObjectList($filter);
+        return $objects;
     }
 
     public function getProcessList() : array

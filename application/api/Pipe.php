@@ -255,10 +255,9 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the pipes
-        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $pipes = $user->getObjectList($filter);
-
         $result = array();
+
+        $pipes = $user->getPipeList();
         foreach ($pipes as $p)
         {
             if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)

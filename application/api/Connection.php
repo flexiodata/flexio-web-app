@@ -204,10 +204,9 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the connections
-        $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $connections = $user->getObjectList($filter);
-
         $result = array();
+
+        $connections = $user->getConnectionList();
         foreach ($connections as $c)
         {
             if ($c->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
