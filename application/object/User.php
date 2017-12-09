@@ -131,8 +131,14 @@ class User extends \Flexio\Object\Base
         {
             $store_root_eid = $items[0]['eid'];
             $stream = \Flexio\Object\Stream::load($store_root_eid);
+
             if ($stream === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            // the following line makes sure that tbl_stream record actually exists
+            // and will throw an exception if it doesn't
+            $stream->get();
+
             return $stream;
         }
 
