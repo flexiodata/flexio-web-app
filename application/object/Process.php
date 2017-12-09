@@ -503,7 +503,9 @@ class Process extends \Flexio\Object\Base
         // get the primary process info
         $query = json_decode($query);
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
-        if (!$properties)
+
+        // sanity check: if the data record is missing, then eid will be null
+        if (!$properties || ($properties['eid'] ?? null) === null)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the primary process task json

@@ -351,7 +351,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
 
         // sanity check: if the data record is missing, then eid will be null
-        if ($properties === false || ($properties['eid'] ?? null) === null)
+        if (!$properties || ($properties['eid'] ?? null) === null)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the structure json
