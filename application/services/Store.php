@@ -75,7 +75,7 @@ class Store implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
         $last_slash = strrpos('/', $path);
         if ($last_slash === false)
         {
-            $parent_stream = $this->getRootStream();
+            $parent_stream = $this->getStreamFromPath('/');
             $name = $path;
         }
          else
@@ -85,7 +85,32 @@ class Store implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
             $parent_stream = $this->getStreamFromPath($path);
         }
 
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);            
+        if (!$parent_stream)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);            
+        
+        // if the stream already exists, overwrite it
+        $arr = $parent_stream->getChildStreams($name);
+        $stream = $arr[0] ?? null;
+
+        if ($stream === null)
+        {
+            // stream doesn't exist yet; create one
+
+            $stream = \Flexio\Object\Stream::create([
+                'parent_eid' => $parent_stream->getEid(),
+                'name' => $name,
+                'stream_type' => 'SF',
+                'path' => \Flexio\Base\Util::generateRandomString(20)
+            ]);
+        }
+
+        if (!$stream)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);            
+
+        $streamwriter = $stream->getWriter();
+        
+        while (($buf = $callback(16384)) !== false)
+            $streamwriter->write($buf);      
     }
 
     ////////////////////////////////////////////////////////////
@@ -103,24 +128,25 @@ class Store implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
     }
 
 
-    private function getRootStream() // : ?\Flexio\Object\Stream
-    {
-        return \Flexio\Object\Store::load(['stream_type' => 'SR']);
-    }
-
-
     private function getStreamFromPath(string $path) // : ?\Flexio\Object\Stream
     {
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        $user = \Flexio\Object\User::load($current_user_eid);
+        if ($user === false)
+            return $user;
+        
+        $stream = $user->getStoreRoot();
+        if (!$stream)
+            return null;
+
+        if ($path == '/')
+            return $stream; // return the root
+        
         $path = trim($path, "/ \t\n\r\0\x0B");
         if (strlen($path) == 0)
             return null;
         
         $parts = explode('/', $path);
-
-        $stream = $this->getRootStream();
-        if (!$stream)
-            return null;
-        
         foreach ($parts as $part)
         {
             $arr = $stream->getChildStreams($part);

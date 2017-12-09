@@ -70,8 +70,11 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
             $create_params['structure'] = $structure;
         }
 
-        $storagefs = $object->getStorageFs();
-        $storagefs->createFile($properties['path'], $create_params);
+        if (strlen($properties['path']) > 0)
+        {
+            $storagefs = $object->getStorageFs();
+            $storagefs->createFile($properties['path'], $create_params);
+        }
 
         return $object;
     }
@@ -246,7 +249,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         foreach ($arr as $a)
         {
             $object = new static();
-            $object->set($a);
+            $object->properties = $a;
+            $object->setEid($a['eid']);
             $results[] = $object;
         }
 
