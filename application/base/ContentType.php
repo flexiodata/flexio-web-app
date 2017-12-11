@@ -57,7 +57,7 @@ class ContentType
         // type, then the mime is based off the filename
 
         // if we have an empty buffer and extension, return the empty mime type
-        if ($extension ==   = ''  && $buffer ==   = '')
+        if ($extension === ''  && $buffer === '')
             return ContentType::EMPTY;
 
         // the extension may be a path; if it is, get the actual extension
