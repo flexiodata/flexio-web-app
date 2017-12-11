@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class ProcessContext implements \Flexio\Services\IFileSystem
+class ProcessContext implements \Flexio\IFace\IFileSystem
 {
     private $process = null;
 

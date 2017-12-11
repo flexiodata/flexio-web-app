@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Socrata implements \Flexio\Services\IFileSystem
+class Socrata implements \Flexio\IFace\IFileSystem
 {
     private $host;
     private $port;

@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Store implements \Flexio\Services\IFileSystem
+class Store implements \Flexio\IFace\IFileSystem
 {
     public static function create(array $params = null) : \Flexio\Services\Store
     {

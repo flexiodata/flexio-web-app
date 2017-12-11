@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class MailJet implements \Flexio\Services\IFileSystem
+class MailJet implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $username = '';

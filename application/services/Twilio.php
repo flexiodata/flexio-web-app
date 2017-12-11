@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Twilio implements \Flexio\Services\IFileSystem
+class Twilio implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $key = '';

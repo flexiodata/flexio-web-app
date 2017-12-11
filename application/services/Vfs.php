@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 // TODO: require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Vfs // TODO: implements \Flexio\Services\IFileSystem
+class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 {
     private $process_context_service = null;
     private $store_service = null;

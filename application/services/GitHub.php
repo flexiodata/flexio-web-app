@@ -19,7 +19,7 @@ namespace Flexio\Services;
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class GitHub implements \Flexio\Services\IFileSystem
+class GitHub implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $access_token = '';

@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Postgres implements \Flexio\Services\IFileSystem
+class Postgres implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $db = null;

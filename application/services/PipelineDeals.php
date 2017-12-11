@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class PipelineDeals implements \Flexio\Services\IFileSystem
+class PipelineDeals implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $access_token = '';
