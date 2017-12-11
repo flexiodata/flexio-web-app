@@ -76,7 +76,6 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                 $this->sqlite = new \SQLite3($fspath);
                 $fields = StorageFs::getStructureSql($structure);
                 $sql = 'create table fxtbl (' . $fields . ')';
-                var_dump($structure);die();
                 $this->sqlite->exec($sql);
             }
             catch (\Exception $e)
