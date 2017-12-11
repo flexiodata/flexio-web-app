@@ -480,9 +480,12 @@ class StorageFs
             }
              else
             {
-                if (@unlink($fspath) === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
+                if (@file_exists($fspath))
+                {
+                    if (@unlink($fspath) === false)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+                }
+                
                 $sqlite = new \SQLite3($fspath);
             }
 
