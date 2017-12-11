@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Base\IStreamWriter
+class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IFaceBase\IStreamWriter
 {
     private $fspath = null;
     private $file = null;
@@ -25,7 +25,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
     private $result = null; // sqlite result object
     private $structure = null;
     private $keyed_structure = null;  // structure with field names as key
-    
+
     function __destruct()
     {
         $this->close();
@@ -73,7 +73,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             $mode =  $exists ? 'r+b' : 'w+b';
         }
 
-        
+
         $this->fspath = $fspath;
 
         if (IS_DEBUG())
@@ -155,14 +155,14 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             $sql .= ' offset ' . (int)$offset;
 
         $result = $this->sqlite->query($sql);
-        
+
         if (!$result)
             return [];
 
         $res = [];
         while (($row = $result->fetchArray(SQLITE3_ASSOC)) !== false)
             $res[] = $this->applyStructureToRow($row);
-        
+
         return $res;
     }
 
@@ -231,7 +231,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
     }
 
 
-    // \Flexio\Base\IStreamWriter
+    // \Flexio\IFace\IStreamWriter
 
     private $first_write = true;
     private $bytes_written = 0;
@@ -245,7 +245,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
         {
             if (!is_array($data))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "data must be presented in array format");
-            
+
             // check if the column schema being inserted is the same as the last;
             // if it's different, flush rows in buffer
 
@@ -295,7 +295,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             return;
 
         $sql = 'insert into fxtbl ';
-        
+
         if (count($this->insert_rows[0]) == 0)
         {
             $sql .= 'default values';
@@ -348,7 +348,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
                     $val = "'$val'";
                 }
             }
-            
+
             if ($first)
             {
                 $first = false;
@@ -397,12 +397,12 @@ class StorageFsFile
     public $file = null;
     public $structure = null;
 
-    public function getReader() : \Flexio\Base\IStreamReader
+    public function getReader() : \Flexio\IFace\IStreamReader
     {
         return $this->openStream();
     }
 
-    public function getWriter() : \Flexio\Base\IStreamWriter
+    public function getWriter() : \Flexio\IFace\IStreamWriter
     {
         return $this->openStream(true);
     }
@@ -482,7 +482,7 @@ class StorageFs
             {
                 if (@unlink($fspath) === false)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-                
+
                 $sqlite = new \SQLite3($fspath);
             }
 
@@ -502,7 +502,7 @@ class StorageFs
                 $f = fopen($fspath, 'w+');
                 else
                 $f = @fopen($fspath, 'w+');
-            
+
             if (!$f)
             {
                 return false;
@@ -523,7 +523,7 @@ class StorageFs
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "File '$path' does not exist");
         }
-        
+
         $file = new StorageFsFile();
         $file->fspath = $fspath;
         return $file;
@@ -644,7 +644,7 @@ class StorageFs
 
         if (DIRECTORY_SEPARATOR != '/')
             $str = str_replace('/', DIRECTORY_SEPARATOR, $str);
- 
+
         return $str;
     }
 

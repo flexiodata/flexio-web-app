@@ -170,27 +170,27 @@ class Process implements \Flexio\IFace\IProcess
         return $this->params;
     }
 
-    public function addFile(string $name, \Flexio\Base\IStream $stream)
+    public function addFile(string $name, \Flexio\IFace\IStream $stream)
     {
         $this->files[$name] = $stream;
     }
 
-    public function setStdin(\Flexio\Base\IStream $stream)
+    public function setStdin(\Flexio\IFace\IStream $stream)
     {
         return $this->stdin = $stream;
     }
 
-    public function getStdin() : \Flexio\Base\IStream
+    public function getStdin() : \Flexio\IFace\IStream
     {
         return $this->stdin;
     }
 
-    public function setStdout(\Flexio\Base\IStream $stream)
+    public function setStdout(\Flexio\IFace\IStream $stream)
     {
         return $this->stdout = $stream;
     }
 
-    public function getStdout() : \Flexio\Base\IStream
+    public function getStdout() : \Flexio\IFace\IStream
     {
         return $this->stdout;
     }
@@ -379,7 +379,7 @@ class Process implements \Flexio\IFace\IProcess
         }
     }
 
-    private static function createStream() : \Flexio\Base\IStream
+    private static function createStream() : \Flexio\IFace\IStream
     {
         $stream = \Flexio\Base\Stream::create();
         $stream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type

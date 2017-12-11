@@ -197,7 +197,7 @@ class TestUtil
         return $handle1 . '@' . $handle2 . '.com';
     }
 
-    public static function getTable(\Flexio\Base\IStream $stream) : array
+    public static function getTable(\Flexio\IFace\IStream $stream) : array
     {
         $content = \Flexio\Base\Util::getStreamContents($stream);
         $result = array();
@@ -206,7 +206,7 @@ class TestUtil
         return $result;
     }
 
-    public static function getContent(\Flexio\Base\IStream $stream) : array
+    public static function getContent(\Flexio\IFace\IStream $stream) : array
     {
         $content = \Flexio\Base\Util::getStreamContents($stream);
         $result = array();

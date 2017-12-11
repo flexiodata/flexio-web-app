@@ -271,7 +271,7 @@ class Output extends \Flexio\Jobs\Base
         }
     }
 
-    private function runDatabaseExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runDatabaseExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = $instream->getReader();
@@ -310,7 +310,7 @@ class Output extends \Flexio\Jobs\Base
         $inserter->finishInsert();
     }
 
-    private function runElasticSearchExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runElasticSearchExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = $instream->getReader();
@@ -337,7 +337,7 @@ class Output extends \Flexio\Jobs\Base
         });
     }
 
-    private function runRemoteFileExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runRemoteFileExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = $instream->getReader();
@@ -352,7 +352,7 @@ class Output extends \Flexio\Jobs\Base
         });
     }
 
-    private function runGoogleSheetsExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runGoogleSheetsExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // prefix the name
         $output_info['name'] = str_replace('/','_', $output_info['name']);
@@ -401,7 +401,7 @@ class Output extends \Flexio\Jobs\Base
         $inserter->finishInsert();
     }
 
-    private function runMailJetExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runMailJetExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = $instream->getReader();

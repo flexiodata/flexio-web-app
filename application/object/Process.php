@@ -213,12 +213,12 @@ class Process extends \Flexio\Object\Base
         return $input['params'] ?? array();
     }
 
-    public function addFile(string $name, \Flexio\Base\IStream $stream)
+    public function addFile(string $name, \Flexio\IFace\IStream $stream)
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function setStdin(\Flexio\Base\IStream $stream)
+    public function setStdin(\Flexio\IFace\IStream $stream)
     {
         $storable_stream = self::createStorableStream($stream);
         $process_properties = $this->getModel()->process->get($this->getEid());
@@ -229,7 +229,7 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getStdin() : \Flexio\Base\IStream
+    public function getStdin() : \Flexio\IFace\IStream
     {
         $memory_stream = \Flexio\Base\Stream::create();
 
@@ -249,7 +249,7 @@ class Process extends \Flexio\Object\Base
         return $memory_stream;
     }
 
-    public function setStdout(\Flexio\Base\IStream $stream)
+    public function setStdout(\Flexio\IFace\IStream $stream)
     {
         $storable_stream = self::createStorableStream($stream);
         $process_properties = $this->getModel()->process->get($this->getEid());
@@ -260,7 +260,7 @@ class Process extends \Flexio\Object\Base
         return $this;
     }
 
-    public function getStdout() : \Flexio\Base\IStream
+    public function getStdout() : \Flexio\IFace\IStream
     {
         $memory_stream = \Flexio\Base\Stream::create();
 
@@ -608,7 +608,7 @@ class Process extends \Flexio\Object\Base
         return $info;
     }
 
-    private static function createStorableStream(\Flexio\Base\IStream $stream) : \Flexio\Object\Stream
+    private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
     {
         $properties['path'] = \Flexio\Base\Util::generateHandle();
         $properties = array_merge($stream->get(), $properties);
@@ -635,7 +635,7 @@ class Process extends \Flexio\Object\Base
         return $storable_stream;
     }
 
-    private static function createMemoryStream(\Flexio\Base\IStream $stream) : \Flexio\Base\Stream
+    private static function createMemoryStream(\Flexio\IFace\IStream $stream) : \Flexio\Base\Stream
     {
         $properties = $stream->get();
         unset($properties['path']);

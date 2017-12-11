@@ -89,27 +89,27 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getParams();
     }
 
-    public function addFile(string $name, \Flexio\Base\IStream $stream)
+    public function addFile(string $name, \Flexio\IFace\IStream $stream)
     {
         return $this->engine->addFile($name, $stream);
     }
 
-    public function setStdin(\Flexio\Base\IStream $stream)
+    public function setStdin(\Flexio\IFace\IStream $stream)
     {
         return $this->engine->setStdin($stream);
     }
 
-    public function getStdin() : \Flexio\Base\IStream
+    public function getStdin() : \Flexio\IFace\IStream
     {
         return $this->engine->getStdin();
     }
 
-    public function setStdout(\Flexio\Base\IStream $stream)
+    public function setStdout(\Flexio\IFace\IStream $stream)
     {
         return $this->engine->setStdout($stream);
     }
 
-    public function getStdout() : \Flexio\Base\IStream
+    public function getStdout() : \Flexio\IFace\IStream
     {
         return $this->engine->getStdout();
     }
@@ -290,7 +290,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
     }
 
 
-    private static function createStorableStream(\Flexio\Base\IStream $stream) : \Flexio\Object\Stream
+    private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
     {
         $properties['path'] = \Flexio\Base\Util::generateHandle();
         $properties = array_merge($stream->get(), $properties);

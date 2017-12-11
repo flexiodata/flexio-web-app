@@ -19,7 +19,7 @@ namespace Flexio\Base;
 interface IStream
 {
     public function getImpl();   // returns the object implementing interface; (internal helper)
-    public function copy(\Flexio\Base\IStream $source);
+    public function copy(\Flexio\IFace\IStream $source);
     public function set(array $properties);
     public function get();
     public function setName(string $name);
@@ -34,8 +34,8 @@ interface IStream
     public function setStructure($structure);
     public function getStructure();
     public function getFileInfo();
-    public function getReader() : \Flexio\Base\IStreamReader;
-    public function getWriter() : \Flexio\Base\IStreamWriter;
+    public function getReader() : \Flexio\IFace\IStreamReader;
+    public function getWriter() : \Flexio\IFace\IStreamWriter;
 }
 
 interface IStreamReader

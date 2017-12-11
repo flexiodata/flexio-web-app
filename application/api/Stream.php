@@ -337,7 +337,7 @@ class Stream
         exit(0);
     }
 
-    public static function handleStreamUpload(array $params, \Flexio\Base\IStreamWriter $streamwriter, string &$filename, string &$mime_type)
+    public static function handleStreamUpload(array $params, \Flexio\IFace\IStreamWriter $streamwriter, string &$filename, string &$mime_type)
     {
         $filename = '';
         $mime_type = '';

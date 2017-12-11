@@ -24,7 +24,7 @@ interface IProcess
     public function getTasks();
     public function setParams(array $arr);        // variables that are used in the processing
     public function getParams();
-    public function addFile(string $name, \Flexio\Base\IStream $stream);
+    public function addFile(string $name, \Flexio\IFace\IStream $stream);
     public function getStdin();
     public function getStdout();
     public function setResponseCode(int $code);

@@ -37,7 +37,7 @@ class Limit extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -61,7 +61,7 @@ class Limit extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // input/output
         $outstream->set($instream->get());

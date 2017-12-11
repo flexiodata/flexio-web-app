@@ -65,7 +65,7 @@ class Create extends \Flexio\Jobs\Base
         }
     }
 
-    private function createFile(\Flexio\Base\IStream &$outstream)
+    private function createFile(\Flexio\IFace\IStream &$outstream)
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New File');
@@ -96,7 +96,7 @@ class Create extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createTable(\Flexio\Base\IStream &$outstream)
+    private function createTable(\Flexio\IFace\IStream &$outstream)
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New Table');

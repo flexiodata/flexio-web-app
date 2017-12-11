@@ -18,7 +18,7 @@ namespace Flexio\Object;
 
 require_once dirname(__DIR__) . '/base/Abstract.php';
 
-class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
+class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
 {
     // TODO: add tests for these constants
     const TYPE_DIRECTORY = 'SD';
@@ -80,7 +80,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
     }
 
     // copies a streams properties to $dest, overwriting $dest's properties
-    public function copy(\Flexio\Base\IStream $source)
+    public function copy(\Flexio\IFace\IStream $source)
     {
         $sourceimpl = $source->getImpl();
 
@@ -257,7 +257,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         return $results;
     }
 
-    public function getReader() : \Flexio\Base\IStreamReader
+    public function getReader() : \Flexio\IFace\IStreamReader
     {
         //return \Flexio\Object\StreamReader::create($this);
         $storagefs = $this->getStorageFs();
@@ -266,7 +266,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         return $file->getReader();
     }
 
-    public function getWriter() : \Flexio\Base\IStreamWriter
+    public function getWriter() : \Flexio\IFace\IStreamWriter
     {
         //return \Flexio\Object\StreamWriter::create($this, true);
         $storagefs = $this->getStorageFs();
