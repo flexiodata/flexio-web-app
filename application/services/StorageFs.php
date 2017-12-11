@@ -31,7 +31,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
         $this->close();
     }
 
-    public function init($fspath /* can be string, or handle, or sqlite object */, $structure = null) : bool
+    public function init($fspath /* can be string, or handle, or sqlite object */, $structure = null, $truncate = false) : bool
     {
         if ($structure !== null && count($structure) > 0)
         {
@@ -61,9 +61,18 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             return true;
         }
 
-
         $exists = file_exists($fspath);
-        $mode =  $exists ? 'r+b' : 'w+b';
+
+        if ($truncate)
+        {
+            $mode = 'w+b';
+        }
+         else
+        {
+
+            $mode =  $exists ? 'r+b' : 'w+b';
+        }
+
         
         $this->fspath = $fspath;
 
@@ -395,7 +404,7 @@ class StorageFsFile
 
     public function getWriter() : \Flexio\Base\IStreamWriter
     {
-        return $this->openStream();
+        return $this->openStream(true);
     }
 
     public function setStructure(array $structure)
@@ -404,22 +413,22 @@ class StorageFsFile
         $this->structure = $structure;
     }
 
-    private function openStream() : \Flexio\Services\StorageFileReaderWriter
+    private function openStream($truncate = false) : \Flexio\Services\StorageFileReaderWriter
     {
         $stream = new StorageFileReaderWriter();
 
         if ($this->sqlite)
         {
-            $stream->init($this->sqlite, $this->structure);
+            $stream->init($this->sqlite, $this->structure, $truncate);
         }
         else if ($this->file)
         {
-            $stream->init($this->file, $this->structure);
+            $stream->init($this->file, $this->structure, false);
             $this->file = null;
         }
         else
         {
-            $stream->init($this->fspath, $this->structure);
+            $stream->init($this->fspath, $this->structure, $truncate);
         }
 
         return $stream;
@@ -466,9 +475,16 @@ class StorageFs
 
             $is_memory_database = $params['memory'] ?? false;
             if ($is_memory_database)
+            {
                 $sqlite = new \SQLite3(':memory:');
-                 else
+            }
+             else
+            {
+                if (@unlink($fspath) === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+                
                 $sqlite = new \SQLite3($fspath);
+            }
 
             $fields = $this->getStructureSql($params['structure']);
             $sql = 'create table fxtbl (' . $fields . ')';
