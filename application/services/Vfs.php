@@ -113,6 +113,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         return $results;
     }
 
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -120,6 +121,13 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         return false;
     }
 
+
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return false;
+    }
 
     public function read($path, callable $callback)
     {

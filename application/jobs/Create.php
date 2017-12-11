@@ -35,6 +35,17 @@ class Create extends \Flexio\Jobs\Base
 
         // create job adds new streams; don't clear existing streams
         $job_definition = $this->getProperties();
+        $params = $job_definition['params'] ?? [];
+
+
+        if (isset($params['path']))
+        {
+            $vfs = new \Flexio\Services\Vfs();
+            $vfs->setProcess($process);
+            $files = $vfs->read($path, function($data) use (&$streamwriter) {
+                $streamwriter->write($data);
+            });
+        }
 
         $outstream = $process->getStdout();
         $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
