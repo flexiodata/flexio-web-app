@@ -95,7 +95,7 @@ EOD;
         TestCheck::assertString('A.7', '\Flexio\Base\ContentType::getMimeAndContentType(); mime type for a gif',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getGifExample()),0,\Flexio\Base\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getGifExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $mime_type = null;
         $content_type = null;
         $result = \Flexio\Base\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
@@ -113,7 +113,7 @@ EOD;
         TestCheck::assertString('A.9', '\Flexio\Base\ContentType::getMimeAndContentType(); mime type for a png',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getPngExample()),0,\Flexio\Base\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getPngExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $mime_type = null;
         $content_type = null;
         $result = \Flexio\Base\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
@@ -131,7 +131,7 @@ EOD;
         TestCheck::assertString('A.11', '\Flexio\Base\ContentType::getMimeAndContentType(); mime type for a jpg',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getJpgExample()),0,\Flexio\Base\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getJpgExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $mime_type = null;
         $content_type = null;
         $result = \Flexio\Base\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
@@ -149,7 +149,7 @@ EOD;
         TestCheck::assertString('A.13', '\Flexio\Base\ContentType::getMimeAndContentType(); mime type for a bmp',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getBmpExample()),0,\Flexio\Base\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getBmpExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $mime_type = null;
         $content_type = null;
         $result = \Flexio\Base\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
@@ -167,7 +167,7 @@ EOD;
         TestCheck::assertString('A.15', '\Flexio\Base\ContentType::getMimeAndContentType(); mime type for a pdf',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getPdfExample()),0,\Flexio\Base\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getPdfExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $mime_type = null;
         $content_type = null;
         $result = \Flexio\Base\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
@@ -185,7 +185,7 @@ EOD;
         TestCheck::assertString('A.17', '\Flexio\Base\ContentType::getMimeAndContentType(); mime type for an xlsx',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Base\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $mime_type = null;
         $content_type = null;
         $result = \Flexio\Base\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);
@@ -203,7 +203,7 @@ EOD;
         TestCheck::assertString('A.19', '\Flexio\Base\ContentType::getMimeAndContentType(); mime type for a zip',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $buffer = substr(base64_decode(getZipExample()),0,\Flexio\Base\ContentType::TEST_BUFFER_LENGTH);
+        $buffer = substr(base64_decode(getZipExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $mime_type = null;
         $content_type = null;
         $result = \Flexio\Base\ContentType::getMimeAndContentType($buffer, $mime_type, $content_type);

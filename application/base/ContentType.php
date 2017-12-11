@@ -18,8 +18,6 @@ namespace Flexio\Base;
 
 class ContentType
 {
-    const TEST_BUFFER_LENGTH = 2048;
-
     // standard content mime types
     const MIME_TYPE_BMP     = 'image/x-ms-bmp';
     const MIME_TYPE_CSS     = 'text/css';

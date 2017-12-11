@@ -27,6 +27,7 @@ class TestError
 class TestUtil
 {
     const EPSILON = 0.000000000001;
+    const CONTENT_TYPE_BUFFER_TEST_SIZE = 2048;
 
     public static function getModel()
     {
