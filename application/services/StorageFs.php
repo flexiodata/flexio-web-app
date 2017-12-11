@@ -16,6 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
+
+
 class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IFace\IStreamWriter
 {
     private $fspath = null;
@@ -62,6 +64,28 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         }
 
         $exists = file_exists($fspath);
+
+
+        if ($truncate && $structure !== null)
+        {
+            // caller wants to start a new table
+            try
+            {
+                if ($exists)
+                    @unlink($fspath);
+                $this->sqlite = new \SQLite3($fspath);
+                $fields = StorageFs::getStructureSql($structure);
+                $sql = 'create table fxtbl (' . $fields . ')';
+                var_dump($structure);die();
+                $this->sqlite->exec($sql);
+            }
+            catch (\Exception $e)
+            {
+                return false;
+            }
+            return true;
+        }
+
 
         if ($truncate)
         {
@@ -489,7 +513,7 @@ class StorageFs
                 $sqlite = new \SQLite3($fspath);
             }
 
-            $fields = $this->getStructureSql($params['structure']);
+            $fields = self::getStructureSql($params['structure']);
             $sql = 'create table fxtbl (' . $fields . ')';
 
             $sqlite->exec($sql);
@@ -518,7 +542,7 @@ class StorageFs
         }
     }
 
-    public function open(string $path) : \Flexio\Services\StorageFsFile
+    public function open(string $path, array $params = []) : \Flexio\Services\StorageFsFile
     {
         $fspath = self::getFsPath($path);
 
@@ -529,6 +553,12 @@ class StorageFs
 
         $file = new StorageFsFile();
         $file->fspath = $fspath;
+
+        if (isset($params['structure']))
+        {
+            $file->setStructure($params['structure']);
+        }
+
         return $file;
     }
 
@@ -658,7 +688,7 @@ class StorageFs
 
     // helper functions for table functionality
 
-    private static function getStructureSql(array $structure) : string
+    public static function getStructureSql(array $structure) : string
     {
         // map each field into an sql definition
         $fieldsql = '';

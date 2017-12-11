@@ -257,19 +257,35 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
 
     public function getReader() : \Flexio\IFace\IStreamReader
     {
+        if ($this->isCached() === false)
+            $this->populateCache();
+
         //return \Flexio\Object\StreamReader::create($this);
         $storagefs = $this->getStorageFs();
 
-        $file = $storagefs->open($this->getPath());
+        // pass along structure
+        $props = [];
+        if (count($this->properties['structure']) > 0)
+            $props['structure'] = $this->properties['structure'];
+
+        $file = $storagefs->open($this->getPath(), $props);
         return $file->getReader();
     }
 
     public function getWriter() : \Flexio\IFace\IStreamWriter
     {
+        if ($this->isCached() === false)
+            $this->populateCache();
+        
         //return \Flexio\Object\StreamWriter::create($this, true);
         $storagefs = $this->getStorageFs();
 
-        $file = $storagefs->open($this->getPath());
+        // pass along structure
+        $props = [];
+        if (count($this->properties['structure']) > 0)
+            $props['structure'] = $this->properties['structure'];
+
+        $file = $storagefs->open($this->getPath(), $props);
         return $file->getWriter();
     }
 
