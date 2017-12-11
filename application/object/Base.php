@@ -18,7 +18,7 @@ namespace Flexio\Object;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Base implements IObject
+class Base implements \Flexio\IFace\IObject
 {
     private $model;
     private $eid;
