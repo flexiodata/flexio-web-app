@@ -48,7 +48,7 @@ class Copy extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\IFaceBase\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
