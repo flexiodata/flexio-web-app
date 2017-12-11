@@ -37,7 +37,7 @@ EOD;
             {
                 "type": "flexio.create",
                 "params": {
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
+                    "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
                     "content": "'. base64_encode(trim($data)) .'"
                 }
             },

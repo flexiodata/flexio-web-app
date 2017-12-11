@@ -33,7 +33,7 @@ return;
                 "type": "flexio.create",
                 "params": {
                     "name": "file1",
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_TXT.'",
+                    "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_TXT.'",
                     "content": "'.base64_encode("a\nbc").'"
                 }
             },
@@ -41,7 +41,7 @@ return;
                 "type": "flexio.create",
                 "params": {
                     "name": "file2",
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_TXT.'",
+                    "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_TXT.'",
                     "content": "'.base64_encode("\nde").'"
                 }
             },

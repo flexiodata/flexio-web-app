@@ -59,7 +59,7 @@ class TestSample
         {
             "type": "flexio.create",
             "params": {
-                "mime_type": "application/vnd.flexio.table",
+                "content_type": "application/vnd.flexio.table",
                 "columns" : [
                     {"name" : "id", "type" : "integer", "width" : 4, "scale" : 0},
                     {"name" : "char_1a", "type" : "character", "width" : 10, "scale" : 0},

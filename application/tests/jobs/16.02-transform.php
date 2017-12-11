@@ -32,7 +32,7 @@ class Test
             {
                 "type": "flexio.create",
                 "params": {
-                    "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_TXT.'",
+                    "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_TXT.'",
                     "content": "'. base64_encode(trim('some content')) . '"
                 }
             },
