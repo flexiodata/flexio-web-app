@@ -113,7 +113,7 @@ class Transform extends \Flexio\Jobs\Base
     const CHARACTER_CLASS_XDIGIT = 'xdigit';
 
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 

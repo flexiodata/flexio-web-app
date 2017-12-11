@@ -353,7 +353,7 @@ class Execute extends \Flexio\Jobs\Base
         return $this->context;
     }
 
-    private function setContext(\Flexio\Jobs\IProcess $process)
+    private function setContext(\Flexio\IFace\IProcess $process)
     {
         $this->context = $process;
     }
@@ -378,7 +378,7 @@ class Execute extends \Flexio\Jobs\Base
         return $contents;
     }
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 

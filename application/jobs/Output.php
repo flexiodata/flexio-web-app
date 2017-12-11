@@ -32,7 +32,7 @@ class Output extends \Flexio\Jobs\Base
     private $cached_connection_properties = null;
     private $streams = [];
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 

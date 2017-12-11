@@ -20,6 +20,6 @@ interface IJob
 {
     public static function create(array $properties = null);
     public function getProperties() : array;
-    public function run(\Flexio\Jobs\IProcess $process);
+    public function run(\Flexio\IFace\IProcess $process);
 }
 

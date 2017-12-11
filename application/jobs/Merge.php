@@ -28,7 +28,7 @@ EXAMPLE:
 
 class Merge extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         // TODO: logic for this job is perfectly good, but we're removing the
         // notion right now of separate input streams in the process, so these
@@ -76,7 +76,7 @@ class Merge extends \Flexio\Jobs\Base
         }
     }
 
-    private function mergeStreams(\Flexio\Jobs\IProcess $process)
+    private function mergeStreams(\Flexio\IFace\IProcess $process)
     {
         $input = $process->getStreams();
         $process->clearStreams();
@@ -109,7 +109,7 @@ class Merge extends \Flexio\Jobs\Base
         $process->addStream($outstream);
     }
 
-    private function mergeTables(\Flexio\Jobs\IProcess $process)
+    private function mergeTables(\Flexio\IFace\IProcess $process)
     {
         $input = $process->getStreams();
         $process->clearStreams();

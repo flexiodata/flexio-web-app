@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class StoredProcess implements \Flexio\Jobs\IProcess
+class StoredProcess implements \Flexio\IFace\IProcess
 {
     private $engine;            // instance of \Flexio\Jobs\Process
     private $procobj;           // instance of \Flexio\Object\Process -- used only during execution phase
@@ -245,7 +245,7 @@ class StoredProcess implements \Flexio\Jobs\IProcess
 
             $this->procobj->set(['input' => json_encode($input), 'output' => json_encode($output)]);
             $process_eid = $this->procobj->getEid();
-            
+
             \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
             //\Flexio\Jobs\StoredProcess::background_entry($this->procobj->getEid());
         }
@@ -270,7 +270,7 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getParams();
         $this->engine->setParams(array_merge($user_variables, $environment_variables));
-        
+
         // STEP 3: get events for logging, if necessary
         $this->engine->addEventHandler([$this->procobj, 'handleEvent']);
 
@@ -285,7 +285,7 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         $this->procobj->set($process_params);
 
         //var_dump($this->procobj->get());
-        
+
         return $this;
     }
 

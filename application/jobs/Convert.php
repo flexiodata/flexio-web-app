@@ -56,7 +56,7 @@ class Convert extends \Flexio\Jobs\Base
     const FORMAT_PDF            = 'pdf';
     const FORMAT_TABLE          = 'table';
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 

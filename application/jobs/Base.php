@@ -44,7 +44,7 @@ class Base implements \Flexio\IFace\IJob
         return $this->properties;
     }
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         $this->replaceParameterTokens($process);
     }
@@ -57,7 +57,7 @@ class Base implements \Flexio\IFace\IJob
 
     private function replaceParameterTokensRecurse($process, &$value)
     {
-        // normally, $process is an object that exposes the \Flexio\Jobs\IProcess interface; however, for the
+        // normally, $process is an object that exposes the \Flexio\IFace\IProcess interface; however, for the
         // convenience of the test suite, a key/value array may be passed instead
 
         // $value is the array or value that we will replace tokens on

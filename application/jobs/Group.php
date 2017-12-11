@@ -48,7 +48,7 @@ namespace Flexio\Jobs;
 
 class Group extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 

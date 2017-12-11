@@ -22,7 +22,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
 {
     private $process = null;
 
-    public function __construct(\Flexio\Jobs\IProcess $process)
+    public function __construct(\Flexio\IFace\IProcess $process)
     {
         $this->process = $process;
     }

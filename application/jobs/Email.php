@@ -42,14 +42,14 @@ class Email extends \Flexio\Jobs\Base
     const EMAIL_WAIT_FREQUENCY = 1; // wait time between emails that are sent
     const EMAIL_TO_ADDRESS_MAX_SIZE = 25; // maximum number of users that an email can be sent to at once
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
         $this->sendEmail($process);
     }
 
-    private function sendEmail(\Flexio\Jobs\IProcess $process)
+    private function sendEmail(\Flexio\IFace\IProcess $process)
     {
         // get the parameters
         $job_definition = $this->getProperties();

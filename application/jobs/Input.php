@@ -37,12 +37,12 @@ class Input extends \Flexio\Jobs\Base
         return $this->process;
     }
 
-    private function setProcess(\Flexio\Jobs\IProcess $process)
+    private function setProcess(\Flexio\IFace\IProcess $process)
     {
         $this->process = $process;
     }
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 

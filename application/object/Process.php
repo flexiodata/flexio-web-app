@@ -318,7 +318,7 @@ class Process extends \Flexio\Object\Base
         return $this->response_code;
     }
 
-    public function handleEvent(string $event, \Flexio\Jobs\IProcess $process_engine)
+    public function handleEvent(string $event, \Flexio\IFace\IProcess $process_engine)
     {
         // if we're not in build mode, don't do anything with events
         if ($this->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
@@ -549,7 +549,7 @@ class Process extends \Flexio\Object\Base
         return $this->properties['process_info'];
     }
 
-    private function startLog(\Flexio\Jobs\IProcess $process_engine)
+    private function startLog(\Flexio\IFace\IProcess $process_engine)
     {
         $storable_stream_info = self::getStreamLogInfo($process_engine);
         $process_info = $process_engine->getStatusInfo();
@@ -570,7 +570,7 @@ class Process extends \Flexio\Object\Base
         $process_engine->setMetadata(array('log_eid' => $log_eid));
     }
 
-    private function finishLog(\Flexio\Jobs\IProcess $process_engine)
+    private function finishLog(\Flexio\IFace\IProcess $process_engine)
     {
         // make sure we have a log eid record to complete
         $process_engine_metadata = $process_engine->getMetadata();
@@ -594,7 +594,7 @@ class Process extends \Flexio\Object\Base
         $this->getModel()->process->log($log_eid, $this->getEid(), $params);
     }
 
-    private static function getStreamLogInfo(\Flexio\Jobs\IProcess $process_engine) : array
+    private static function getStreamLogInfo(\Flexio\IFace\IProcess $process_engine) : array
     {
         $stdin = $process_engine->getStdin();
         $stdout = $process_engine->getStdout();

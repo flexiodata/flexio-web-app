@@ -23,7 +23,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     private $process_context_service = null;
     private $store_service = null;
 
-    public function setProcess(\Flexio\Jobs\IProcess $process)
+    public function setProcess(\Flexio\IFace\IProcess $process)
     {
         $this->process_context_service = new \Flexio\Services\ProcessContext($process);
     }
