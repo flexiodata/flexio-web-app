@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Base implements \Flexio\Jobs\IJob
+class Base implements \Flexio\IFace\IJob
 {
     // properties for derived classes; these the job parameters
     protected $properties;

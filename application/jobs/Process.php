@@ -338,7 +338,7 @@ class Process implements \Flexio\Jobs\IProcess
         }
     }
 
-    private static function createTask(array $task) : \Flexio\Jobs\IJob
+    private static function createTask(array $task) : \Flexio\IFace\IJob
     {
         if (!isset($task['type']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
