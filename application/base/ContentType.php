@@ -18,8 +18,6 @@ namespace Flexio\Base;
 
 class ContentType
 {
-    const TEST_BUFFER_LENGTH = 2048;
-
     // standard content mime types
     const MIME_TYPE_BMP     = 'image/x-ms-bmp';
     const MIME_TYPE_CSS     = 'text/css';
@@ -28,9 +26,9 @@ class ContentType
     const MIME_TYPE_DOCX    = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     const MIME_TYPE_EMPTY   = 'application/x-empty';
     const MIME_TYPE_GIF     = 'image/gif';
-    const MIME_TYPE_GZ      = 'application/x-gzip';
+    const MIME_TYPE_GZIP    = 'application/x-gzip';
     const MIME_TYPE_HTML    = 'text/html';
-    const MIME_TYPE_JPG     = 'image/jpeg';
+    const MIME_TYPE_JPEG    = 'image/jpeg';
     const MIME_TYPE_JS      = 'application/javascript';
     const MIME_TYPE_JSON    = 'application/json';
     const MIME_TYPE_MD      = 'text/markdown';
@@ -122,9 +120,9 @@ class ContentType
             case self::MIME_TYPE_DOC:
             case self::MIME_TYPE_DOCX:
             case self::MIME_TYPE_GIF:
-            case self::MIME_TYPE_GZ:
+            case self::MIME_TYPE_GZIP:
             case self::MIME_TYPE_HTML:
-            case self::MIME_TYPE_JPG:
+            case self::MIME_TYPE_JPEG:
             case self::MIME_TYPE_JS:
             case self::MIME_TYPE_JSON:
             case self::MIME_TYPE_PDF:
@@ -156,11 +154,11 @@ class ContentType
             case "doc":   return self::MIME_TYPE_DOC;
             case "docx":  return self::MIME_TYPE_DOCX;
             case "gif":   return self::MIME_TYPE_GIF;
-            case "gz":    return self::MIME_TYPE_GZ;
+            case "gz":    return self::MIME_TYPE_GZIP;
             case "html":
             case "htm":   return self::MIME_TYPE_HTML;
             case "jpeg":
-            case "jpg":   return self::MIME_TYPE_JPG;
+            case "jpg":   return self::MIME_TYPE_JPEG;
             case "js":    return self::MIME_TYPE_JS;
             case "json":  return self::MIME_TYPE_JSON;
             case "md":    return self::MIME_TYPE_MD;
