@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-require_once dirname(__DIR__) . '/base/Abstract.php';
-
 class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
 {
     // TODO: add tests for these constants

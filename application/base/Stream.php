@@ -16,12 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Base;
 
 
-require_once dirname(__DIR__) . '/base/Abstract.php';
-
-
-
-
-
 class StreamReader implements \Flexio\IFace\IStreamReader
 {
     private $stream;

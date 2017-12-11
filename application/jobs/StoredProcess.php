@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
 class StoredProcess implements \Flexio\IFace\IProcess
 {
     private $engine;            // instance of \Flexio\Jobs\Process

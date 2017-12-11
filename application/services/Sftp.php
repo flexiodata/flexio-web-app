@@ -33,8 +33,6 @@ spl_autoload_register(function ($class) {
 });
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
 class Sftp implements \Flexio\IFace\IFileSystem
 {
     private $host;

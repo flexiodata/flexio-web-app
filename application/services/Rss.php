@@ -15,21 +15,8 @@
 declare(strict_types=1);
 namespace Flexio\Services;
 
-/*
-// include for RSS library
-if (!isset($GLOBALS['simplepie_included']))
-{
-    $GLOBALS['simplepie_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'simplepie' . DIRECTORY_SEPARATOR . 'library'));
-}
-*/
 
 require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'autoloader.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
-//require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'idn' . DIRECTORY_SEPARATOR . 'idna_convert.class.php';
-
-
 
 class Rss implements \Flexio\IFace\IFileSystem
 {

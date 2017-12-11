@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
 class ElasticSearch implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;

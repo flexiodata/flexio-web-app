@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
 class Process implements \Flexio\IFace\IProcess
 {
     // note: the following constants may be stored in the database;
